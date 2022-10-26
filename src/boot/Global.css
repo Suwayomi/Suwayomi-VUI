@@ -1,0 +1,27 @@
+.lightSB::-webkit-scrollbar {
+  width: 15px;
+}
+
+.lightSB::-webkit-scrollbar-thumb {
+  background: var(--q-light);
+  border: solid 3px var(--q-light-page);
+  border-radius: 7px;
+}
+
+.lightSB::-webkit-scrollbar-thumb:hover {
+  background: var(--q-dark);
+}
+
+.darkSB::-webkit-scrollbar {
+  width: 15px;
+}
+
+.darkSB::-webkit-scrollbar-thumb {
+  background: var(--q-dark);
+  border: solid 3px var(--q-dark-page);
+  border-radius: 7px;
+}
+
+.darkSB::-webkit-scrollbar-thumb:hover {
+  background: var(--q-light);
+}
