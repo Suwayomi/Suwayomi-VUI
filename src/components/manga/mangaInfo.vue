@@ -2,10 +2,25 @@
   <div
     class="q-px-md q-py-md col MangaInfo"
     :class="scrollbarTheme"
-    style="overflow-y: auto; max-height: calc(100vh - 50px)"
+    style="overflow-y: auto"
+    :style="
+      $q.screen.sm || $q.screen.xs
+        ? ``
+        : `max-height: calc(100vh - ` + offset + `)`
+    "
   >
+    <q-img
+      v-if="$q.screen.sm || $q.screen.xs"
+      style="width: fit-content; max-width: 100%"
+      loading="lazy"
+      class="rounded-borders q-mx-md"
+      img-class="test"
+      :src="imgdata"
+      fit="scale-down"
+    />
     <div class="flex no-wrap">
       <q-img
+        v-if="!($q.screen.sm || $q.screen.xs)"
         style="width: fit-content; max-width: 50%"
         loading="lazy"
         class="rounded-borders"
@@ -15,7 +30,9 @@
       >
       </q-img>
       <div v-if="manga" class="q-mx-md" style="display: inline-block">
-        <h3>{{ manga.title }}</h3>
+        <h3 :class="$q.screen.sm || $q.screen.xs ? `q-my-sm` : ``">
+          {{ manga.title }}
+        </h3>
         <div class="text-h5 q-my-xs" v-if="manga.author">
           Author: <span class="text-subtitle1">{{ manga.author }}</span>
         </div>
@@ -64,13 +81,26 @@ export default defineComponent({
   name: 'mangaInfo',
   props: {
     manga: {
-      type: Object as PropType<manga>,
-      required: true
+      type: Object as PropType<manga>
+    },
+    offset: {
+      type: Number as PropType<number>,
+      default: () => Number
     }
   },
   created: function () {
     if (!this.imgdata && this.manga) {
       this.getImg();
+    } else {
+      const unwatch = this.$watch(
+        () => [this.imgdata, this.manga],
+        () => {
+          if (!this.imgdata && this.manga) {
+            this.getImg();
+            unwatch();
+          }
+        }
+      );
     }
   },
   computed: {

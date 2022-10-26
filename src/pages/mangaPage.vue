@@ -1,8 +1,12 @@
 <template>
-  <q-page class="row nowrap" :style-fn="myTweak">
-    <mangaInfo @inlib="getonline" :manga="manga" v-if="manga" class="col-6">
+  <q-page
+    class="nowrap"
+    :class="$q.screen.sm || $q.screen.xs ? `col` : `row`"
+    :style-fn="myTweak"
+  >
+    <mangaInfo @inlib="getonline" :manga="manga" :offset="offset" class="col-6">
     </mangaInfo>
-    <mangaChapters :offset="offset" class="col-6"></mangaChapters>
+    <mangaChapters class="col-6"></mangaChapters>
   </q-page>
 </template>
 
