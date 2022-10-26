@@ -175,14 +175,17 @@ export default defineComponent({
       return mangas;
     },
     filterTxt(mangas: manga[]) {
-      return mangas.filter((manga) =>
-        manga.title
-          .toLowerCase()
-          .includes(`${this.$route.query['q'] || ''}`.toLowerCase())
-      );
+      if (this.$route.query['q']) {
+        return mangas.filter((manga) =>
+          manga.title
+            .toLowerCase()
+            .includes(`${this.$route.query['q'] || ''}`.toLowerCase())
+        );
+      }
+      return mangas;
     },
     filterUR(mangas: manga[]) {
-      if (this.filters.unread != null) {
+      if (this.filters.unread != 'null') {
         mangas = mangas.filter((manga) =>
           this.filters.unread ? !!manga.unreadCount : !manga.unreadCount
         );
@@ -190,7 +193,7 @@ export default defineComponent({
       return mangas;
     },
     filterDL(mangas: manga[]) {
-      if (this.filters.downloaded != null) {
+      if (this.filters.downloaded != 'null') {
         mangas = mangas.filter((manga) =>
           this.filters.downloaded ? !!manga.downloadCount : !manga.downloadCount
         );
