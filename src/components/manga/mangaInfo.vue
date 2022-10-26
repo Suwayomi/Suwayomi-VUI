@@ -6,7 +6,7 @@
     :style="
       $q.screen.sm || $q.screen.xs
         ? ``
-        : `max-height: calc(100vh - ` + offset + `)`
+        : `max-height: calc(100vh - ` + offset + `px)`
     "
   >
     <q-img
@@ -85,7 +85,7 @@ export default defineComponent({
     },
     offset: {
       type: Number as PropType<number>,
-      default: () => Number
+      default: () => 0
     }
   },
   created: function () {
