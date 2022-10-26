@@ -1,0 +1,155 @@
+<template>
+  <q-page class="flex items-center justify-center">
+    <div v-if="!downloads.length && Emitter.isConnected">No Downloads</div>
+    <q-virtual-scroll
+      v-if="downloads.length"
+      :items="downloads"
+      v-slot="{ item }"
+      class="self-start"
+      style="max-height: calc(100vh - 50px); flex: auto"
+      :dark="$q.dark.isActive"
+    >
+      <q-item clickable v-ripple class="q-pa-lg">
+        <q-item-section avatar>
+          <q-icon name="drag_handle" size="sm"></q-icon>
+        </q-item-section>
+
+        <q-item-section>
+          <q-item-label class="text-weight-medium text-h6">
+            {{ item.manga.title }}
+          </q-item-label>
+          <q-item-label caption>
+            Chapter {{ item.chapterIndex }} ({{
+              (item.progress * 100).toFixed(2)
+            }}%) => state:
+            {{ item.state }}
+          </q-item-label>
+        </q-item-section>
+        <q-item-section avatar>
+          <q-btn
+            @click.prevent
+            @click="delet(item)"
+            round
+            flat
+            icon="delete"
+            class="flex-right"
+          ></q-btn>
+        </q-item-section>
+      </q-item>
+    </q-virtual-scroll>
+    <q-dialog v-model="goodBase" persistent>
+      <q-card style="min-width: 350px">
+        <q-card-section class=""
+          ><q-item>
+            <q-item-section>
+              <q-item-label class="text-h6 text-negative">
+                Downloads webhook may not work with authentication.
+              </q-item-label>
+              <q-item-label class="text-info q-pt-lg">
+                <div>
+                  1. Move this UI to the same origin as the server (Recomended)
+                </div>
+              </q-item-label>
+              <q-item-label caption class="text-info">
+                <div>replace the default webui files with this ones files</div>
+                <div>or some reverse proxy jank</div>
+              </q-item-label>
+              <q-item-label class="text-info q-pt-lg">
+                <div>2. dissable authentication on the webhook url</div>
+              </q-item-label>
+              <q-item-label caption class="text-info">
+                <div>/api/v1/downloads</div>
+                <div>with some reverse proxy jank</div>
+              </q-item-label>
+              <q-item-label class="text-info q-pt-lg">
+                <div>3. dissable authentication</div>
+              </q-item-label>
+              <q-item-label caption class="text-info">
+                <div>in server configs</div>
+              </q-item-label>
+              <q-item-label class="text-info q-pt-lg">
+                <div>4. Go to the default webUI and login</div>
+              </q-item-label>
+              <q-item-label caption class="text-info">
+                <div>per browser</div>
+                <div>
+                  this is a temporary fix as it will clear after a month (i
+                  think)
+                </div>
+              </q-item-label>
+            </q-item-section>
+          </q-item>
+        </q-card-section>
+        <q-card-actions align="right" class="text-primary">
+          <q-btn flat label="Ok" v-close-popup />
+          <q-btn
+            flat
+            label="Dont show again"
+            v-close-popup
+            @click="dontshowagain"
+          />
+        </q-card-actions>
+      </q-card>
+    </q-dialog>
+  </q-page>
+</template>
+
+<script lang="ts">
+import useDlSock from 'src/components/global/useDlSock';
+import { ref } from 'vue';
+import { download, dlsock, isdlsock } from 'src/components/global/models';
+import { useQuasar } from 'quasar';
+import useInBar from 'src/components/global/inBar';
+import DLTopBar from 'src/components/downloads/TopBar.vue';
+import fetcher from 'src/components/global/fetcher';
+
+export default {
+  methods: {
+    async delet(download: download) {
+      fetcher(
+        `/api/v1/download/${download.mangaId}/chapter/${download.chapterIndex}`,
+        { method: 'DELETE' }
+      );
+      fetcher(
+        `/api/v1/manga/${download.mangaId}/chapter/${download.chapterIndex}`,
+        { method: 'DELETE' }
+      );
+    },
+    dontshowagain() {
+      this.$q.localStorage.set('dontshowagainWH', true);
+    }
+  },
+  watch: {
+    'Emitter.eventsFromServer'(val) {
+      const tmp = <dlsock>JSON.parse(val);
+      if (isdlsock(tmp)) {
+        this.downloads = <download[]>tmp.queue;
+      }
+    }
+  },
+  setup(_props, { emit }) {
+    emit('setTitle', 'Downloads');
+    const Bar = useInBar();
+    Bar.setInBar(DLTopBar);
+    const $q = useQuasar();
+    const Emitt = useDlSock();
+    const Emitter = ref(Emitt);
+    const base = $q.localStorage.getItem('baseUrl') as string;
+    Emitter.value.eventsFromServer = '';
+    if (Emitter.value.isConnected) {
+      Emitt.sendMsg('STATUS');
+    }
+    let downloads = ref(<download[]>[]);
+    const goodBase = ref(
+      new URL(base).origin != location.origin &&
+        !$q.localStorage.getItem('dontshowagainWH') &&
+        !!$q.localStorage.getItem('auth')
+    );
+    return {
+      downloads,
+      goodBase,
+      Emitter
+    };
+  }
+};
+</script>
