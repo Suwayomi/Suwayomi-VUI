@@ -9,6 +9,7 @@
           ? ``
           : `max-height: calc(100vh - ` + calcHeight() + `px)`
       "
+      :class="scrollbarTheme"
     >
       <q-intersection
         v-for="item in chapters"
