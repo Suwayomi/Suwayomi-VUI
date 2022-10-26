@@ -94,8 +94,10 @@ export default defineComponent({
           this.filters.alphabetical,
           this.filters.ByID
         ],
-        () => {
-          this.goAgain(false);
+        (vals: (boolean | 'null' | null)[]) => {
+          if (vals.filter((ele) => ele === 'null').length == 2) {
+            this.goAgain(false);
+          }
         }
       );
     } catch (e) {
@@ -140,7 +142,7 @@ export default defineComponent({
       this.fltmangas = mangas;
     },
     sortL2R(mangas: manga[]) {
-      if (this.filters.leftToRead != null) {
+      if (this.filters.leftToRead != 'null') {
         mangas = mangas.sort((a, b) => {
           if (this.filters.leftToRead) {
             return a.unreadCount > b.unreadCount ? -1 : 1;
@@ -151,7 +153,7 @@ export default defineComponent({
       return mangas;
     },
     sortAlph(mangas: manga[]) {
-      if (this.filters.alphabetical != null) {
+      if (this.filters.alphabetical != 'null') {
         mangas = mangas.sort((a, b) => {
           if (this.filters.alphabetical) {
             return a.title > b.title ? -1 : 1;
@@ -162,7 +164,7 @@ export default defineComponent({
       return mangas;
     },
     sortByID(mangas: manga[]) {
-      if (this.filters.ByID != null) {
+      if (this.filters.ByID != 'null') {
         mangas = mangas.sort((a, b) => {
           if (this.filters.ByID) {
             return a.id > b.id ? -1 : 1;
