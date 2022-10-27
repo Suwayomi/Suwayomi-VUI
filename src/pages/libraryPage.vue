@@ -3,16 +3,10 @@
     <div ref="MLspinner">
       <TabPanel active :tabs="tabs"></TabPanel>
     </div>
-    <MangaGrid
-      v-if="!failedFetch"
-      :mangas="dosrt"
-      style="overflow-y: auto"
-      :class="scrollbarTheme"
-    >
-    </MangaGrid>
+    <MangaGrid v-if="!failedFetch"> </MangaGrid>
     <q-dialog v-model="failedFetch" persistent>
       <q-card style="min-width: 350px">
-        <q-card-section class=""
+        <q-card-section
           ><q-item>
             <q-item-section>
               <q-item-label class="text-h6 text-negative"
@@ -33,21 +27,6 @@
         </q-card-actions>
       </q-card>
     </q-dialog>
-
-    <q-inner-loading
-      style="
-        position: fixed;
-        left: 50%;
-        top: 50%;
-        transform: translate(-50%, -50%);
-        width: fit-content;
-        height: fit-content;
-        background-color: transparent;
-      "
-      :showing="!dosrt.length"
-      color="primary"
-    >
-    </q-inner-loading>
   </q-page>
 </template>
 
@@ -55,7 +34,7 @@
 import { tab } from 'src/components/global/models';
 import TabPanel from 'src/components/library/TabPanel.vue';
 import { defineComponent, ref } from 'vue';
-import { cat, manga } from 'src/components/global/models';
+import { cat } from 'src/components/global/models';
 import MangaGrid from 'src/components/library/MangaGrid.vue';
 import fetcher from 'src/components/global/fetcher';
 import useInBar from 'src/components/global/inBar';
@@ -77,7 +56,6 @@ export default defineComponent({
           tabID: cat.id
         };
       });
-      this.getManga();
     } catch (e) {
       this.failedFetch = true;
     }
@@ -85,67 +63,9 @@ export default defineComponent({
   computed: {
     scrollbarTheme(): string {
       return this.$q.dark.isActive ? 'darkSB' : 'lightSB';
-    },
-    doFilt(): manga[] {
-      let mangas = this.mangas;
-      if (this.$route.query['q']) {
-        return mangas.filter((manga) =>
-          manga.title
-            .toLowerCase()
-            .includes(`${this.$route.query['q'] || ''}`.toLowerCase())
-        );
-      }
-      if (this.filters.unread != null) {
-        mangas = mangas.filter((manga) =>
-          this.filters.unread ? !!manga.unreadCount : !manga.unreadCount
-        );
-      }
-      if (this.filters.downloaded != null) {
-        mangas = mangas.filter((manga) =>
-          this.filters.downloaded ? !!manga.downloadCount : !manga.downloadCount
-        );
-      }
-      return mangas;
-    },
-    dosrt(): manga[] {
-      let mangas = this.doFilt;
-      if (this.filters.leftToRead != null) {
-        mangas = mangas.sort((a, b) => {
-          if (this.filters.leftToRead) {
-            return a.unreadCount > b.unreadCount ? -1 : 1;
-          }
-          return a.unreadCount < b.unreadCount ? -1 : 1;
-        });
-      }
-      if (this.filters.alphabetical != null) {
-        mangas = mangas.sort((a, b) => {
-          if (this.filters.alphabetical) {
-            return a.title > b.title ? -1 : 1;
-          }
-          return a.title < b.title ? -1 : 1;
-        });
-      }
-      if (this.filters.ByID != null) {
-        mangas = mangas.sort((a, b) => {
-          if (this.filters.ByID) {
-            return a.id > b.id ? -1 : 1;
-          }
-          return a.id < b.id ? -1 : 1;
-        });
-      }
-      return mangas;
     }
   },
   methods: {
-    async getManga() {
-      if (this.$route.query['tab'] != undefined) {
-        const resp = await fetcher(
-          `/api/v1/category/${this.$route.query['tab']}`
-        );
-        let mangas = <manga[]>await resp.json();
-        this.mangas = mangas;
-      }
-    },
     myTweak(offset: number) {
       return {
         height: offset ? `calc(100vh - ${offset}px)` : '100vh'
@@ -156,11 +76,9 @@ export default defineComponent({
     const filters = ref(Filters());
     emit('setTitle', 'Library');
     const tabs = ref<tab[]>([]);
-    const mangas = ref<manga[]>([]);
     const failedFetch = ref(false);
     return {
       tabs,
-      mangas,
       filters,
       failedFetch
     };
