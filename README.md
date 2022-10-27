@@ -1,4 +1,4 @@
-# Quasar App (webuia2)
+# Quasar App (Robonau's vue tachidesk webui)
 
 A Quasar Project
 
