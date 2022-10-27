@@ -29,7 +29,7 @@ export default defineComponent({
     async getonline(TF = 'false', retry = 3) {
       try {
         const resp = await fetcher(
-          `/api/v1/manga/${this.$route.params['id']}/?onlineFetch=${TF}`
+          `/api/v1/manga/${this.$route.params['mangaID']}/?onlineFetch=${TF}`
         );
         this.manga = <manga>await resp.json();
       } catch (error) {
