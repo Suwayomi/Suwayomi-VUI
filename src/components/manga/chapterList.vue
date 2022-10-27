@@ -1,7 +1,12 @@
 <!-- eslint-disable vue/no-parsing-error -->
 <template>
   <div>
-    <h4 class="q-ma-md" ref="chapHead">{{ chapters.length }} chapters</h4>
+    <div class="row justify-between items-center" ref="chapHead">
+      <h4 class="q-ma-md">{{ chapters.length }} chapters</h4>
+      <div style="padding-right: 12px">
+        <filterr @checkchange="checkchange()"></filterr>
+      </div>
+    </div>
     <div
       style="overflow-y: auto"
       :style="
@@ -12,7 +17,7 @@
       :class="scrollbarTheme"
     >
       <q-intersection
-        v-for="item in chapters"
+        v-for="item in chaptersfilt"
         :key="item.index"
         style="height: 58px"
       >
@@ -35,7 +40,9 @@
             </q-item-label>
           </q-item-section>
           <q-item-section>
-            <q-item-label>{{ item.name }}</q-item-label>
+            <q-item-label>{{
+              disp == 'source' ? item.name : 'Chapter ' + item.chapterNumber
+            }}</q-item-label>
             <q-item-label caption>
               {{ item.scanlator }}
               {{ new Date(item.uploadDate).toLocaleDateString() }}
@@ -108,12 +115,16 @@
 import { defineComponent, ref } from 'vue';
 import { chapter } from 'src/components/global/models';
 import fetcher from 'src/components/global/fetcher';
+import filterr from './Filter.vue';
+import { chaptersFilter } from './filters';
+import { useRoute } from 'vue-router';
 
 export default defineComponent({
   name: 'mangaChapters',
   created: async function () {
     this.getonline();
   },
+  components: { filterr },
   methods: {
     calcHeight() {
       const tmp = <Element | undefined>this.$refs['chapHead'];
@@ -130,6 +141,7 @@ export default defineComponent({
           `/api/v1/manga/${this.$route.params['id']}/chapters?onlineFetch=${TF}`
         );
         this.chapters = <chapter[]>await resp.json();
+        this.doFilters();
       } catch (e) {
         retry--;
         if (retry >= 0) {
@@ -165,6 +177,89 @@ export default defineComponent({
         { method: 'PATCH', body: fd }
       );
       this.getonline();
+    },
+    doFilters() {
+      this.chaptersfilt = this.chapters;
+      this.doUnread(this.chaptersfilt);
+      this.doDownloaded(this.chaptersfilt);
+      this.doBookmarked(this.chaptersfilt);
+
+      this.doSorts();
+    },
+    doSorts() {
+      this.doSource(this.chaptersfilt);
+      this.doFetchDate(this.chaptersfilt);
+    },
+    doUnread(chapt: chapter[]) {
+      if (this.filters.Unread != null) {
+        this.chaptersfilt = chapt.filter((ele) =>
+          this.filters.Unread ? ele.read : !ele.read
+        );
+      }
+    },
+    doDownloaded(chapt: chapter[]) {
+      if (this.filters.Downloaded != null) {
+        this.chaptersfilt = chapt.filter((ele) =>
+          this.filters.Downloaded ? ele.downloaded : !ele.downloaded
+        );
+      }
+    },
+    doBookmarked(chapt: chapter[]) {
+      if (this.filters.Bookmarked != null) {
+        this.chaptersfilt = chapt.filter((ele) =>
+          this.filters.Bookmarked ? ele.bookmarked : !ele.bookmarked
+        );
+      }
+    },
+    doSource(chapt: chapter[]) {
+      if (this.filters.Source != null) {
+        this.chaptersfilt = chapt.sort((a, b) =>
+          this.filters.Source
+            ? a.index > b.index
+              ? 1
+              : -1
+            : a.index < b.index
+            ? 1
+            : -1
+        );
+      }
+    },
+    doFetchDate(chapt: chapter[]) {
+      if (this.filters.FetchDate != null) {
+        this.chaptersfilt = chapt.sort((a, b) =>
+          this.filters.FetchDate
+            ? a.fetchedAt > b.fetchedAt
+              ? -1
+              : 1
+            : a.fetchedAt < b.fetchedAt
+            ? -1
+            : 1
+        );
+      }
+    },
+    checkchange() {
+      const tmp = chaptersFilter(parseInt(`${this.$route.params['id']}`));
+      if (
+        this.filters.Unread != tmp.Unread ||
+        this.filters.Bookmarked != tmp.Bookmarked ||
+        this.filters.Downloaded != tmp.Downloaded
+      ) {
+        this.filters = tmp;
+        this.doFilters();
+      }
+      if (
+        this.filters.Source != tmp.Source ||
+        this.filters.FetchDate != tmp.FetchDate
+      ) {
+        if ((tmp.Source == null) != (tmp.FetchDate == null)) {
+          this.filters = tmp;
+          this.doSorts();
+        }
+      }
+      if (this.filters.Display != tmp.Display) {
+        this.filters = tmp;
+        this.disp = tmp.Display;
+      }
     }
   },
   computed: {
@@ -173,8 +268,17 @@ export default defineComponent({
     }
   },
   setup() {
+    const route = useRoute();
+    const filters = ref(chaptersFilter(parseInt(`${route.params['id']}`)));
     const chapters = ref(<chapter[]>[]);
-    return { chapters };
+    const chaptersfilt = ref(<chapter[]>[]);
+    return {
+      chapters,
+      chaptersfilt,
+      filters,
+      disp: ref(filters.value.Display),
+      mangaid: parseInt(`${route.params['id']}`)
+    };
   }
 });
 </script>
