@@ -5,7 +5,7 @@ if (LocalStorage.isEmpty()) {
   LocalStorage.set('lbLeftToRead', null);
   LocalStorage.set('lbAlphabetical', null);
   LocalStorage.set('lbByid', true);
-  LocalStorage.set('baseUrl', 'http://localhost:4567');
+  LocalStorage.set('baseUrl', '');
   LocalStorage.set('useCache', true);
   LocalStorage.set('auth', null);
   LocalStorage.set('MitemW', 300);

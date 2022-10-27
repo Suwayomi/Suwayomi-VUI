@@ -103,6 +103,26 @@
         </q-card-section>
       </div>
 
+      <div v-if="tab == 'display'">
+        <q-item class="q-mx-lg q-pt-md q-pb-xs">
+          <q-item-section thumbnail class="q-pr-sm">
+            <q-icon name="display_settings" />
+          </q-item-section>
+          <q-item-section>
+            <q-item-label>DISPLAY MODE</q-item-label>
+          </q-item-section>
+        </q-item>
+        <q-card-section class="q-px-md q-py-xs">
+          <q-radio v-model="disp" val="null" label="Compact grid" />
+        </q-card-section>
+        <q-card-section class="q-px-md q-py-xs">
+          <q-radio v-model="disp" val="true" label="Comfortable grid" />
+        </q-card-section>
+        <q-card-section class="q-px-md q-pt-xs q-pb-md">
+          <q-radio v-model="disp" val="false" label="list" />
+        </q-card-section>
+      </div>
+
       <!-- TODO: grid display options -->
     </q-card>
   </q-dialog>
@@ -147,6 +167,10 @@ export default defineComponent({
 
         console.log(this.ByID);
       }
+    },
+    disp() {
+      if (this.disp == 'null') this.filters.setDisplay(null);
+      else this.filters.setDisplay(this.disp == 'true');
     }
   },
   setup() {
@@ -156,6 +180,7 @@ export default defineComponent({
     const leftToRead = ref(<boolean | null>filters.leftToRead.value);
     const alphabetical = ref(<boolean | null>filters.alphabetical.value);
     const ByID = ref(<boolean | null>filters.ByID.value);
+    const disp = ref(<'null' | 'true' | 'false'>`${filters.Display.value}`);
     return {
       dialo: ref(false),
       tab: ref('filter'),
@@ -164,6 +189,7 @@ export default defineComponent({
       leftToRead,
       alphabetical,
       ByID,
+      disp,
       filters
     };
   }

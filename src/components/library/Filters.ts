@@ -7,6 +7,7 @@ const downloaded = ref(<Boon>LocalStorage.getItem('lbDownloaded'));
 const leftToRead = ref(<Boon>LocalStorage.getItem('lbLeftToRead'));
 const alphabetical = ref(<Boon>LocalStorage.getItem('lbAlphabetical'));
 const ByID = ref(<Boon>LocalStorage.getItem('lbByid'));
+const Display = ref(<Boon>LocalStorage.getItem('lbDisplay'));
 
 type Boon = boolean | null;
 
@@ -19,6 +20,11 @@ export default function useInBar() {
     storeSet('lbDownloaded', data);
     downloaded.value = data;
   };
+  const setDisplay = (data: Boon) => {
+    storeSet('lbDisplay', data);
+    Display.value = data;
+  };
+
   const setLeftToRead = (data: Boon) => {
     if (data != null) {
       storeSet('lbLeftToRead', data);
@@ -50,10 +56,12 @@ export default function useInBar() {
     setLeftToRead,
     setAlphabetical,
     setByID,
+    setDisplay,
     unread,
     downloaded,
     leftToRead,
     alphabetical,
-    ByID
+    ByID,
+    Display
   };
 }
