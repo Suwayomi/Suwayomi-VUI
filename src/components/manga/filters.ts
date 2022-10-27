@@ -1,56 +1,61 @@
 import { LocalStorage } from 'quasar';
+import { ref } from 'vue';
+import { storeSet } from '../global/usefull';
 
 type bnn = boolean | null;
 
 type disp = 'source' | 'chapter';
 
+const Unread = ref(<bnn>null);
+const Downloaded = ref(<bnn>null);
+const Bookmarked = ref(<bnn>null);
+const Source = ref(<bnn>null);
+const FetchDate = ref(<bnn>null);
+const Display = ref(<disp>'source');
+
 export function chaptersFilter(mangaID: number) {
-  let Unread = <bnn>LocalStorage.getItem(`${mangaID}ChUnread`);
-  let Downloaded = <bnn>LocalStorage.getItem(`${mangaID}ChDownloaded`);
-  let Bookmarked = <bnn>LocalStorage.getItem(`${mangaID}ChBookmarked`);
-  let Source = <bnn>LocalStorage.getItem(`${mangaID}ChSource`);
-  let FetchDate = <bnn>LocalStorage.getItem(`${mangaID}ChFetchDate`);
-  let Display = <disp>LocalStorage.getItem(`${mangaID}ChDisplay`);
+  Unread.value = <bnn>LocalStorage.getItem(`${mangaID}ChUnread`);
+  Downloaded.value = <bnn>LocalStorage.getItem(`${mangaID}ChDownloaded`);
+  Bookmarked.value = <bnn>LocalStorage.getItem(`${mangaID}ChBookmarked`);
+  Source.value = <bnn>LocalStorage.getItem(`${mangaID}ChSource`);
+  FetchDate.value = <bnn>LocalStorage.getItem(`${mangaID}ChFetchDate`);
+  Display.value = <disp>LocalStorage.getItem(`${mangaID}ChDisplay`);
+
   const setUnread = function (value: bnn) {
     if (value == null) LocalStorage.remove(`${mangaID}ChUnread`);
     else LocalStorage.set(`${mangaID}ChUnread`, value);
-    Unread = value;
+    Unread.value = value;
   };
   const setDownloaded = function (value: bnn) {
-    if (value == null) LocalStorage.remove(`${mangaID}ChDownloaded`);
-    else LocalStorage.set(`${mangaID}ChDownloaded`, value);
-    Downloaded = value;
+    storeSet(`${mangaID}ChDownloaded`, value);
+    Downloaded.value = value;
   };
   const setBookmarked = function (value: bnn) {
-    if (value == null) LocalStorage.remove(`${mangaID}ChBookmarked`);
-    else LocalStorage.set(`${mangaID}ChBookmarked`, value);
-    Bookmarked = value;
+    storeSet(`${mangaID}ChBookmarked`, value);
+    Bookmarked.value = value;
   };
   const setSource = function (value: bnn) {
     if (value != null) {
-      LocalStorage.set(`${mangaID}ChSource`, value);
-      // LocalStorage.set(`${mangaID}ChFetchDate`, null);
+      storeSet(`${mangaID}ChSource`, value);
       LocalStorage.remove(`${mangaID}ChFetchDate`);
     }
-    Source = value;
+    Source.value = value;
   };
   const setFetchDate = function (value: bnn) {
     if (value != null) {
-      // LocalStorage.set(`${mangaID}ChSource`, null);
-      LocalStorage.set(`${mangaID}ChFetchDate`, value);
+      storeSet(`${mangaID}ChFetchDate`, value);
       LocalStorage.remove(`${mangaID}ChSource`);
     }
-    FetchDate = value;
+    FetchDate.value = value;
   };
   const setDisplay = function (value: 'source' | 'chapter') {
-    if (value == 'source') LocalStorage.remove(`${mangaID}ChDisplay`);
-    else LocalStorage.set(`${mangaID}ChDisplay`, value);
-    Display = value;
+    storeSet(`${mangaID}ChDisplay`, value, 'source');
+    Display.value = value;
   };
 
   // needs a default if no sort is set
-  if (Source == null && FetchDate == null) Source = false;
-  if (Display == null) Display = 'source';
+  if (Source.value == null && FetchDate.value == null) Source.value = false;
+  if (Display.value == null) Display.value = 'source';
 
   return {
     Unread,
