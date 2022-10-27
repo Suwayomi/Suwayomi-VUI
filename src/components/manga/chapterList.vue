@@ -190,7 +190,7 @@ export default defineComponent({
     async getonline(TF = 'false', retry = 2) {
       try {
         const resp = await fetcher(
-          `/api/v1/manga/${this.$route.params['id']}/chapters?onlineFetch=${TF}`
+          `/api/v1/manga/${this.$route.params['mangaID']}/chapters?onlineFetch=${TF}`
         );
         this.chapters = <chapter[]>await resp.json();
       } catch (e) {
@@ -208,12 +208,12 @@ export default defineComponent({
     },
     async download(index: number) {
       await fetcher(
-        `/api/v1/download/${this.$route.params['id']}/chapter/${index}`
+        `/api/v1/download/${this.$route.params['mangaID']}/chapter/${index}`
       );
     },
     async dele(index: number) {
       await fetcher(
-        `/api/v1/manga/${this.$route.params['id']}/chapter/${index}`,
+        `/api/v1/manga/${this.$route.params['mangaID']}/chapter/${index}`,
         { method: 'DELETE' }
       );
       this.getonline();
@@ -224,7 +224,7 @@ export default defineComponent({
         fd.append(...dat);
       });
       await fetcher(
-        `/api/v1/manga/${this.$route.params['id']}/chapter/${index}`,
+        `/api/v1/manga/${this.$route.params['mangaID']}/chapter/${index}`,
         { method: 'PATCH', body: fd }
       );
       this.getonline();
@@ -232,7 +232,7 @@ export default defineComponent({
   },
   setup() {
     const route = useRoute();
-    const filters = ref(chaptersFilter(parseInt(`${route.params['id']}`)));
+    const filters = ref(chaptersFilter(parseInt(`${route.params['mangaID']}`)));
     const chapters = ref(<chapter[]>[]);
     const chaptersfilt = ref(<chapter[]>[]);
     return {

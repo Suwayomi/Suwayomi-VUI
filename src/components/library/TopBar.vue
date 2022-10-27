@@ -12,9 +12,19 @@
     <q-card>
       <q-card-section class="q-pa-none">
         <q-tabs v-model="tab" class="text-teal">
-          <q-tab name="filter" icon="filter_list" label="Filter" />
-          <q-tab name="sort" icon="sort" label="Sort" />
-          <q-tab name="display" icon="display_settings" label="Display" />
+          <q-tab
+            class="q-px-xl"
+            name="filter"
+            icon="filter_list"
+            label="Filter"
+          />
+          <q-tab class="q-px-xl" name="sort" icon="sort" label="Sort" />
+          <q-tab
+            class="q-px-xl"
+            name="display"
+            icon="display_settings"
+            label="Display"
+          />
         </q-tabs>
       </q-card-section>
 

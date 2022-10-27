@@ -19,9 +19,19 @@
     <q-card>
       <q-card-section class="q-pa-none">
         <q-tabs v-model="tab" class="text-teal">
-          <q-tab name="filter" icon="filter_list" label="Filter" />
-          <q-tab name="sort" icon="sort" label="Sort" />
-          <q-tab name="display" icon="display_settings" label="Display" />
+          <q-tab
+            class="q-px-xl"
+            name="filter"
+            icon="filter_list"
+            label="Filter"
+          />
+          <q-tab class="q-px-xl" name="sort" icon="sort" label="Sort" />
+          <q-tab
+            class="q-px-xl"
+            name="display"
+            icon="display_settings"
+            label="Display"
+          />
         </q-tabs>
       </q-card-section>
 
@@ -41,7 +51,7 @@
             color="primary"
           />
         </q-card-section>
-        <q-card-section class="q-px-md q-pt-xs q-pb-md">
+        <q-card-section class="q-px-md q-py-xs">
           <q-checkbox
             style="width: 100%"
             toggle-indeterminate
@@ -162,7 +172,7 @@ export default defineComponent({
   },
   setup() {
     const route = useRoute();
-    const filt = chaptersFilter(parseInt(`${route.params['id']}`));
+    const filt = chaptersFilter(parseInt(`${route.params['mangaID']}`));
     const filters = ref(filt);
 
     return {
