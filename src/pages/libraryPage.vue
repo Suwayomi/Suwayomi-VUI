@@ -5,7 +5,7 @@
     </div>
     <MangaGrid
       v-if="!failedFetch"
-      :mangas="fltmangas"
+      :mangas="dosrt"
       style="overflow-y: auto"
       :class="scrollbarTheme"
     >
@@ -44,7 +44,7 @@
         height: fit-content;
         background-color: transparent;
       "
-      :showing="!fltmangas.length"
+      :showing="!dosrt.length"
       color="primary"
     >
     </q-inner-loading>
@@ -78,70 +78,37 @@ export default defineComponent({
         };
       });
       this.getManga();
-      this.$watch(
-        () => [
-          this.$route.query['q'],
-          this.filters.unread,
-          this.filters.downloaded
-        ],
-        () => {
-          this.goAgain();
-        }
-      );
-      this.$watch(
-        () => [
-          this.filters.leftToRead,
-          this.filters.alphabetical,
-          this.filters.ByID
-        ],
-        (vals: (boolean | null)[]) => {
-          if (vals.filter((ele) => ele === null).length == 2) {
-            this.goAgain(false);
-          }
-        }
-      );
     } catch (e) {
       this.failedFetch = true;
     }
   },
-  watch: {
-    '$route.query.tab'() {
-      this.doFilters([]);
-      this.getManga();
-    }
-  },
-  methods: {
-    goAgain(doFilter = true) {
-      if (doFilter) {
-        this.doFilters(this.mangas);
-      } else {
-        this.doSorts(this.fltmangas);
-      }
+  computed: {
+    scrollbarTheme(): string {
+      return this.$q.dark.isActive ? 'darkSB' : 'lightSB';
     },
-    async getManga() {
-      if (this.$route.query['tab'] != undefined) {
-        const resp = await fetcher(
-          `/api/v1/category/${this.$route.query['tab']}`
+    doFilt(): manga[] {
+      let mangas = this.mangas;
+      if (this.$route.query['q']) {
+        return mangas.filter((manga) =>
+          manga.title
+            .toLowerCase()
+            .includes(`${this.$route.query['q'] || ''}`.toLowerCase())
         );
-        let mangas = <manga[]>await resp.json();
-        this.mangas = mangas;
-        this.doFilters(this.mangas);
       }
+      if (this.filters.unread != null) {
+        mangas = mangas.filter((manga) =>
+          this.filters.unread ? !!manga.unreadCount : !manga.unreadCount
+        );
+      }
+      if (this.filters.downloaded != null) {
+        mangas = mangas.filter((manga) =>
+          this.filters.downloaded ? !!manga.downloadCount : !manga.downloadCount
+        );
+      }
+      return mangas;
     },
-    doFilters(mangas: manga[]) {
-      mangas = this.filterTxt(mangas);
-      mangas = this.filterUR(mangas);
-      mangas = this.filterDL(mangas);
-
-      this.doSorts(mangas);
-    },
-    doSorts(mangas: manga[]) {
-      mangas = this.sortL2R(mangas);
-      mangas = this.sortAlph(mangas);
-      mangas = this.sortByID(mangas);
-      this.fltmangas = mangas;
-    },
-    sortL2R(mangas: manga[]) {
+    dosrt(): manga[] {
+      let mangas = this.doFilt;
       if (this.filters.leftToRead != null) {
         mangas = mangas.sort((a, b) => {
           if (this.filters.leftToRead) {
@@ -150,9 +117,6 @@ export default defineComponent({
           return a.unreadCount < b.unreadCount ? -1 : 1;
         });
       }
-      return mangas;
-    },
-    sortAlph(mangas: manga[]) {
       if (this.filters.alphabetical != null) {
         mangas = mangas.sort((a, b) => {
           if (this.filters.alphabetical) {
@@ -161,9 +125,6 @@ export default defineComponent({
           return a.title < b.title ? -1 : 1;
         });
       }
-      return mangas;
-    },
-    sortByID(mangas: manga[]) {
       if (this.filters.ByID != null) {
         mangas = mangas.sort((a, b) => {
           if (this.filters.ByID) {
@@ -173,32 +134,17 @@ export default defineComponent({
         });
       }
       return mangas;
-    },
-    filterTxt(mangas: manga[]) {
-      if (this.$route.query['q']) {
-        return mangas.filter((manga) =>
-          manga.title
-            .toLowerCase()
-            .includes(`${this.$route.query['q'] || ''}`.toLowerCase())
+    }
+  },
+  methods: {
+    async getManga() {
+      if (this.$route.query['tab'] != undefined) {
+        const resp = await fetcher(
+          `/api/v1/category/${this.$route.query['tab']}`
         );
+        let mangas = <manga[]>await resp.json();
+        this.mangas = mangas;
       }
-      return mangas;
-    },
-    filterUR(mangas: manga[]) {
-      if (this.filters.unread != null) {
-        mangas = mangas.filter((manga) =>
-          this.filters.unread ? !!manga.unreadCount : !manga.unreadCount
-        );
-      }
-      return mangas;
-    },
-    filterDL(mangas: manga[]) {
-      if (this.filters.downloaded != null) {
-        mangas = mangas.filter((manga) =>
-          this.filters.downloaded ? !!manga.downloadCount : !manga.downloadCount
-        );
-      }
-      return mangas;
     },
     myTweak(offset: number) {
       return {
@@ -206,22 +152,15 @@ export default defineComponent({
       };
     }
   },
-  computed: {
-    scrollbarTheme(): string {
-      return this.$q.dark.isActive ? 'darkSB' : 'lightSB';
-    }
-  },
   setup(_props, { emit }) {
     const filters = ref(Filters());
     emit('setTitle', 'Library');
     const tabs = ref<tab[]>([]);
     const mangas = ref<manga[]>([]);
-    const fltmangas = ref<manga[]>([]);
     const failedFetch = ref(false);
     return {
       tabs,
       mangas,
-      fltmangas,
       filters,
       failedFetch
     };

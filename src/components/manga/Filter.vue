@@ -121,38 +121,31 @@ import { useRoute } from 'vue-router';
 
 export default defineComponent({
   name: 'libraryTopBar',
-  emits: ['checkchange'],
   //setFilter(value: bnn, mangaID: number, whatChange: keykeys) {
   watch: {
     unread() {
       this.filt.setUnread(this.unread);
-      this.$emit('checkchange');
     },
     downloaded() {
       this.filt.setDownloaded(this.downloaded);
-      this.$emit('checkchange');
     },
     bookmarked() {
       this.filt.setBookmarked(this.bookmarked);
-      this.$emit('checkchange');
     },
     Source() {
       this.filt.setSource(this.Source);
       if (this.Source != null) {
         this.FetchDate = null;
       }
-      this.$emit('checkchange');
     },
     FetchDate() {
       this.filt.setFetchDate(this.FetchDate);
       if (this.FetchDate != null) {
         this.Source = null;
       }
-      this.$emit('checkchange');
     },
     disp() {
       this.filt.setDisplay(this.disp);
-      this.$emit('checkchange');
     }
   },
   methods: {
