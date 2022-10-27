@@ -31,8 +31,7 @@
             indeterminate-icon="check_box_outline_blank"
             keep-color
             size="lg"
-            color="primary"
-            indeterminate-value="null"
+            color="blue"
           />
         </q-card-section>
         <q-card-section class="q-px-md q-pt-xs q-pb-md">
@@ -47,8 +46,7 @@
             indeterminate-icon="check_box_outline_blank"
             keep-color
             size="lg"
-            color="primary"
-            indeterminate-value="null"
+            color="green"
           />
         </q-card-section>
       </div>
@@ -117,25 +115,25 @@ export default defineComponent({
     },
     leftToRead() {
       this.filters.setLeftToRead(this.leftToRead);
-      if (this.leftToRead != 'null') {
-        this.alphabetical = 'null';
-        this.ByID = 'null';
+      if (this.leftToRead != null) {
+        this.alphabetical = null;
+        this.ByID = null;
       }
     },
     alphabetical() {
       this.filters.setAlphabetical(this.alphabetical);
-      if (this.alphabetical != 'null') {
-        this.leftToRead = 'null';
-        this.ByID = 'null';
+      if (this.alphabetical != null) {
+        this.leftToRead = null;
+        this.ByID = null;
 
         console.log(this.alphabetical);
       }
     },
     ByID() {
       this.filters.setByID(this.ByID);
-      if (this.ByID != 'null') {
-        this.alphabetical = 'null';
-        this.leftToRead = 'null';
+      if (this.ByID != null) {
+        this.alphabetical = null;
+        this.leftToRead = null;
 
         console.log(this.ByID);
       }
@@ -143,13 +141,11 @@ export default defineComponent({
   },
   setup() {
     const filters = Filters();
-    const unread = ref(<boolean | null | 'null'>filters.unread.value);
-    const downloaded = ref(<boolean | null | 'null'>filters.downloaded.value);
-    const leftToRead = ref(<boolean | null | 'null'>filters.leftToRead.value);
-    const alphabetical = ref(
-      <boolean | null | 'null'>filters.alphabetical.value
-    );
-    const ByID = ref(<boolean | null | 'null'>filters.ByID.value);
+    const unread = ref(<boolean | null>filters.unread.value);
+    const downloaded = ref(<boolean | null>filters.downloaded.value);
+    const leftToRead = ref(<boolean | null>filters.leftToRead.value);
+    const alphabetical = ref(<boolean | null>filters.alphabetical.value);
+    const ByID = ref(<boolean | null>filters.ByID.value);
     return {
       dialo: ref(false),
       tab: ref('filter'),
