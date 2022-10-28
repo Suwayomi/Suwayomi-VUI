@@ -11,7 +11,7 @@
 
 <script lang="ts">
 import { defineComponent, ref } from 'vue';
-import useDlSock from 'src/components/global/useDlSock';
+import useDlSock from 'src/components/downloads/useDlSock';
 import { dlsock, isdlsock } from '../global/models';
 import fetcher from '../global/fetcher';
 
