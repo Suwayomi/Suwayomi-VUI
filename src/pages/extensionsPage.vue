@@ -146,7 +146,7 @@ export default defineComponent({
   setup(_props, { emit }) {
     emit('setTitle', 'Extentions');
     const filt = Filters();
-    const filters = ref(filt);
+    const filters = filt;
     const list = ref(<extention[]>[]);
     const langs = ref(filt.langs);
     return { list, allLangs: <string[]>[], filters, langs };

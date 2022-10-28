@@ -129,3 +129,14 @@ export function isArrExtention(
 ): msg is extention[] {
   return <extention[]>msg !== undefined;
 }
+
+export interface source {
+  id: string;
+  name: string;
+  lang: string;
+  iconUrl: string;
+  supportsLatest: boolean;
+  isConfigurable: boolean;
+  isNsfw: boolean;
+  displayName: string;
+}

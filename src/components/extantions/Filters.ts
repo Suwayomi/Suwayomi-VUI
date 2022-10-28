@@ -13,7 +13,7 @@ export default function useInBar() {
   const setlangs = (data: string[]) => {
     LocalStorage.set(
       'ExtLangFilt',
-      data.filter((e) => ['all', 'updates pending', 'installed'].includes(e))
+      data.filter((e) => !['all', 'updates pending', 'installed'].includes(e))
     );
     langs.value = [...data];
   };
