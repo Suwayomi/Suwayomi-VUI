@@ -143,7 +143,6 @@ export default defineComponent({
   methods: {
     clog(data: boolean) {
       this.$bus.emit('miniDrawer', data);
-      console.log(data);
     },
     setTitle(titl: string) {
       this.title = titl;
@@ -162,7 +161,6 @@ export default defineComponent({
   },
   setup() {
     const $q = useQuasar();
-    console.log($q.screen);
     const bar = useInBar();
     $q.dark.set(<boolean>$q.localStorage.getItem('dark'));
     const leftDrawerOpen = ref(true);
