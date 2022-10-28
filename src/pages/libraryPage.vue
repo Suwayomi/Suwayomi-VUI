@@ -73,8 +73,8 @@ export default defineComponent({
     }
   },
   setup(_props, { emit }) {
-    const filters = ref(Filters());
     emit('setTitle', 'Library');
+    const filters = ref(Filters());
     const tabs = ref<tab[]>([]);
     const failedFetch = ref(false);
     return {

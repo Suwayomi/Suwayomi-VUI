@@ -30,7 +30,7 @@ module.exports = configure(function (/* ctx */) {
     // --> boot files are part of "main.js"
     // https://v2.quasar.dev/quasar-cli-vite/boot-files
     boot: [
-      'Global.css', 'StoreDefaults'
+      'Global.css', 'StoreDefaults', 'bus.ts'
     ],
 
     // https://v2.quasar.dev/quasar-cli-vite/quasar-config-js#css

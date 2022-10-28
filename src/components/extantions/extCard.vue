@@ -11,6 +11,12 @@
             class="rounded-borders items-center justify-center"
             no-spinner
           >
+            <q-inner-loading
+              :showing="!imgdata"
+              color="primary"
+              class="bg-transparent"
+            >
+            </q-inner-loading>
           </q-img>
         </q-item-section>
         <q-item-section class="flex-grow">

@@ -2,7 +2,8 @@
   <q-card
     v-ripple
     flat
-    class="q-ma-sm my-card"
+    class="my-card"
+    :class="!($q.screen.sm || $q.screen.xs) ? `q-ma-sm` : `q-ma-xs`"
     :style="Display == `list` ? `` : `background: transparent`"
   >
     <router-link
@@ -66,25 +67,22 @@
           {{ manga.title }}
         </div>
       </q-img>
-      <div class="row items-center col-grow">
+      <!-- list display mode -->
+      <div class="row items-center col-grow no-wrap">
         <q-img
           v-if="Display == `list`"
           :src="imgdata"
           loading="lazy"
           spinner-color="white"
           style="height: 93px; aspect-ratio: 225/350; width: fit-content"
-          class="rounded-borders items-center justify-center"
+          class="rounded-borders items-center justify-center col-1"
           no-spinner
         >
           <q-inner-loading :showing="!imgdata" color="primary">
           </q-inner-loading>
         </q-img>
         <div
-          :class="
-            Display == `list`
-              ? `text-left q-mx-md text-h5 col-grow`
-              : `text-center text-subtitle1`
-          "
+          :class="listdivClass"
           v-if="Display != `compact`"
           :title="manga.title"
           style="
@@ -94,12 +92,16 @@
             -webkit-box-orient: vertical;
             text-overflow: ellipsis;
             overflow: hidden;
+            width: 100%;
           "
           :style="Display == `list` ? `` : `height: 5.25rem;`"
         >
           {{ manga.title }}
         </div>
-        <div class="justify-end q-mr-lg">
+        <div
+          class="justify-end flex items-end col-grow"
+          :class="!($q.screen.sm || $q.screen.xs) ? `q-mr-lg` : `q-mr-xs`"
+        >
           <q-badge
             color="blue"
             v-if="manga.unreadCount && Display == `list`"
@@ -146,6 +148,13 @@ export default defineComponent({
     Display: {
       type: String as PropType<'compact' | 'comfort' | 'list'>,
       default: 'compact'
+    }
+  },
+  computed: {
+    listdivClass(): string {
+      return this.Display == 'list'
+        ? 'text-left q-ml-md text-h5 col-shrink'
+        : 'text-center text-subtitle1';
     }
   },
   created: function () {

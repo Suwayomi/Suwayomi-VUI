@@ -7,7 +7,8 @@ import { defineComponent } from 'vue';
 
 export default defineComponent({
   name: 'sourcesPage',
-  setup() {
+  setup(_props, { emit }) {
+    emit('setTitle', 'Sources');
     return {};
   }
 });
