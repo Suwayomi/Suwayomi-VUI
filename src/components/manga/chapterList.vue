@@ -1,4 +1,3 @@
-<!-- eslint-disable vue/no-parsing-error -->
 <template>
   <div>
     <div class="row justify-between items-center" ref="chapHead">
@@ -132,7 +131,7 @@ export default defineComponent({
       return this.$q.dark.isActive ? 'darkSB' : 'lightSB';
     },
     doFilt(): chapter[] {
-      let chapts = this.chapters;
+      let chapts: chapter[] = this.chapters;
       if (this.filters.Unread != null) {
         chapts = chapts.filter((ele) =>
           this.filters.Unread ? !ele.read : ele.read
@@ -151,7 +150,7 @@ export default defineComponent({
       return chapts;
     },
     doSrt(): chapter[] {
-      let chapts = this.doFilt;
+      let chapts: chapter[] = this.doFilt;
       if (this.filters.Source != null) {
         chapts = chapts.sort((a, b) =>
           this.filters.Source

@@ -198,6 +198,7 @@
 <script lang="ts">
 import { useQuasar } from 'quasar';
 import { defineComponent, ref } from 'vue';
+import { resetBase } from 'src/components/global/fetcher';
 
 export default defineComponent({
   name: 'settingsPage',
@@ -210,6 +211,7 @@ export default defineComponent({
         'baseUrl',
         val.endsWith('/') ? val.slice(0, -1) : val
       );
+      this.resetBase();
     },
     setserverAuth(username = '', password = '') {
       if (username == '' || password == '') {
@@ -254,7 +256,8 @@ export default defineComponent({
       serverAddr,
       baut: ref(false),
       busr: ref(auth != null ? auth.username : ''),
-      bpsw: ref(auth != null ? auth.password : '')
+      bpsw: ref(auth != null ? auth.password : ''),
+      resetBase
     };
   }
 });

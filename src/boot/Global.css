@@ -25,3 +25,7 @@
 .darkSB::-webkit-scrollbar-thumb:hover {
   background: var(--q-light);
 }
+
+.darkSB::-webkit-scrollbar-track-piece {
+  background: var(--q-dark-page);
+}
