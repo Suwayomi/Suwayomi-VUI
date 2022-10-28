@@ -129,7 +129,8 @@ export default defineComponent({
       return list;
     }
   },
-  setup() {
+  setup(_props, { emit }) {
+    emit('setTitle', 'Extentions');
     const filt = Filters();
     const filters = ref(filt);
     const list = ref(<extention[]>[]);

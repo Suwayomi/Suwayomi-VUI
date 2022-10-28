@@ -5,7 +5,6 @@
       :key="manga.id"
       :style="widt"
       transition="fade"
-      :threshold="0"
       ssr-prerender
     >
       <MangaCard :Display="Displ" :manga="manga"></MangaCard>
@@ -98,14 +97,14 @@ export default defineComponent({
     widt(): string {
       return this.Displ == 'list'
         ? 'width:100%; height: 109px;'
-        : `width: calc(100% / ${this.devider}); aspect-ratio: 225/350;transition: width 0.5s;`;
+        : `width: calc(100% / ${this.devider}); aspect-ratio: 225/350;transition: width 0.5s ease-out;`;
     }
   },
   methods: {
-    calcWidth() {
-      const grid = this.$refs['MangaGrid'] as { clientWidth: number };
+    calcWidth(_event: unknown, mini = 0) {
+      const grid = <Element>this.$refs['MangaGrid'];
       const ideal = <number>this.$q.localStorage.getItem('MitemW');
-      this.devider = Math.round(grid.clientWidth / ideal);
+      this.devider = Math.round((grid.clientWidth - mini) / ideal);
     },
     calcHeight() {
       const parent = this.$parent?.$el;
@@ -118,6 +117,9 @@ export default defineComponent({
     }
   },
   created: async function () {
+    this.$bus.on('miniDrawer', (mini: boolean) => {
+      this.calcWidth(null, mini ? -(300 - 57) : 300);
+    });
     if (this.$route.query['tab'] != undefined) {
       const resp = await fetcher(
         `/api/v1/category/${this.$route.query['tab']}`
@@ -127,18 +129,13 @@ export default defineComponent({
     }
   },
   mounted: function () {
-    this.calcWidth();
+    this.calcWidth(null);
     this.$nextTick(() => {
       window.addEventListener('resize', this.calcWidth);
     });
   },
   beforeUnmount() {
     window.removeEventListener('resize', this.calcWidth);
-  },
-  watch: {
-    '$refs.MangaGrid.clientWidth'() {
-      this.calcWidth();
-    }
   },
   setup() {
     const filters = ref(Filters());

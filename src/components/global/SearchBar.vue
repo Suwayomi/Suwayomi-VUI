@@ -5,7 +5,8 @@
     v-model="text"
     debounce="500"
     input-class="text-right"
-    class="q-ml-md"
+    class="q-ml-xs"
+    :class="text ? `col-grow` : `col-shrink`"
     @keyup.enter="searchEnt()"
   >
     <template v-slot:append>

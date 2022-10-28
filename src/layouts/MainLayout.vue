@@ -17,7 +17,7 @@
           @click="leftDrawerOpen = !leftDrawerOpen"
         />
 
-        <q-toolbar-title>
+        <q-toolbar-title class="col-grow q-pr-none">
           {{ title }}
         </q-toolbar-title>
 
@@ -52,6 +52,7 @@
     </q-footer>
 
     <q-drawer
+      @mini-state="clog"
       v-if="!($q.screen.sm || $q.screen.xs)"
       v-model="tru"
       show-if-above
@@ -140,6 +141,10 @@ export default defineComponent({
     }
   },
   methods: {
+    clog(data: boolean) {
+      this.$bus.emit('miniDrawer', data);
+      console.log(data);
+    },
     setTitle(titl: string) {
       this.title = titl;
     }
