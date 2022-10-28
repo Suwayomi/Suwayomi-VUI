@@ -1,4 +1,5 @@
 import { LocalStorage } from 'quasar';
+let base = LocalStorage.getItem('baseUrl') as string;
 
 export function authOptions(options: RequestInit | undefined = undefined) {
   const update = { ...options };
@@ -14,12 +15,14 @@ export function authOptions(options: RequestInit | undefined = undefined) {
   return update;
 }
 
+export function resetBase() {
+  base = LocalStorage.getItem('baseUrl') as string;
+}
+
 export default function fetcher(
   url: RequestInfo | URL,
   options: RequestInit | undefined = undefined
 ) {
-  return fetch(
-    (LocalStorage.getItem('baseUrl') as string) + url,
-    authOptions(options)
-  );
+  const tmp = base + url;
+  return fetch(tmp, authOptions(options));
 }

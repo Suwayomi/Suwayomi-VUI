@@ -105,3 +105,27 @@ function isdownload(msg: download | unknown): msg is download {
     (<download>msg).mangaId !== undefined
   );
 }
+
+export interface extention {
+  apkName: string;
+  hasUpdate: boolean;
+  iconUrl: string;
+  installed: boolean;
+  isNsfw: boolean;
+  lang: string;
+  name: string;
+  obsolete: boolean;
+  pkgName: string;
+  versionCode: number;
+  versionName: string;
+}
+
+export interface groupedExtention {
+  [key: string]: extention[];
+}
+
+export function isArrExtention(
+  msg: extention[] | undefined
+): msg is extention[] {
+  return <extention[]>msg !== undefined;
+}
