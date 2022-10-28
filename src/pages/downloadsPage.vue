@@ -95,7 +95,7 @@
 </template>
 
 <script lang="ts">
-import useDlSock from 'src/components/global/useDlSock';
+import useDlSock from 'src/components/downloads/useDlSock';
 import { ref } from 'vue';
 import { download, dlsock, isdlsock } from 'src/components/global/models';
 import { useQuasar } from 'quasar';
