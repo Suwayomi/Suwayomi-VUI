@@ -155,8 +155,6 @@ export default defineComponent({
       if (this.alphabetical != null) {
         this.leftToRead = null;
         this.ByID = null;
-
-        console.log(this.alphabetical);
       }
     },
     ByID() {
@@ -164,8 +162,6 @@ export default defineComponent({
       if (this.ByID != null) {
         this.alphabetical = null;
         this.leftToRead = null;
-
-        console.log(this.ByID);
       }
     },
     disp() {
