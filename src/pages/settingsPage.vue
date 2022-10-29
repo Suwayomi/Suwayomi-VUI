@@ -127,15 +127,24 @@
             v-model="busr"
             name="username"
             class="q-my-sm"
-          ></q-input>
+          >
+          </q-input>
           <q-input
             standout
             label="Password"
-            type="password"
+            :type="isPwd ? 'password' : 'text'"
             v-model="bpsw"
             class="q-my-sm"
             name="password"
-          ></q-input>
+          >
+            <template v-slot:append>
+              <q-icon
+                :name="isPwd ? 'visibility_off' : 'visibility'"
+                class="cursor-pointer"
+                @click="isPwd = !isPwd"
+              />
+            </template>
+          </q-input>
 
           <q-card-actions align="right">
             <q-btn
@@ -257,7 +266,8 @@ export default defineComponent({
       baut: ref(false),
       busr: ref(auth != null ? auth.username : ''),
       bpsw: ref(auth != null ? auth.password : ''),
-      resetBase
+      resetBase,
+      isPwd: ref(false)
     };
   }
 });

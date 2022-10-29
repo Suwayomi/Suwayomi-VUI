@@ -63,25 +63,25 @@ export default defineComponent({
       if (this.filters.leftToRead != null) {
         mangas = mangas.sort((a, b) => {
           if (this.filters.leftToRead) {
-            return a.unreadCount > b.unreadCount ? -1 : 1;
+            return a.unreadCount >= b.unreadCount ? -1 : 1;
           }
-          return a.unreadCount < b.unreadCount ? -1 : 1;
+          return a.unreadCount <= b.unreadCount ? -1 : 1;
         });
       }
       if (this.filters.alphabetical != null) {
         mangas = mangas.sort((a, b) => {
           if (this.filters.alphabetical) {
-            return a.title > b.title ? -1 : 1;
+            return a.title >= b.title ? -1 : 1;
           }
-          return a.title < b.title ? -1 : 1;
+          return a.title <= b.title ? -1 : 1;
         });
       }
       if (this.filters.ByID != null) {
         mangas = mangas.sort((a, b) => {
           if (this.filters.ByID) {
-            return a.id > b.id ? -1 : 1;
+            return a.id >= b.id ? -1 : 1;
           }
-          return a.id < b.id ? -1 : 1;
+          return a.id <= b.id ? -1 : 1;
         });
       }
       return mangas;
