@@ -52,7 +52,6 @@
     </q-footer>
 
     <q-drawer
-      @mini-state="clog"
       v-if="!($q.screen.sm || $q.screen.xs)"
       v-model="tru"
       show-if-above
@@ -90,7 +89,7 @@ const linksList = [
     title: 'Library',
     caption: '',
     icon: 'o_collections_bookmark',
-    link: '/library'
+    link: '/library?tab=0'
   },
   {
     title: 'Updates',
@@ -141,9 +140,6 @@ export default defineComponent({
     }
   },
   methods: {
-    clog(data: boolean) {
-      this.$bus.emit('miniDrawer', data);
-    },
     setTitle(titl: string) {
       this.title = titl;
     }

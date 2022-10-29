@@ -65,13 +65,13 @@ export default defineComponent({
     capitalizeFirstLetter(string: string): string {
       return string.charAt(0).toUpperCase() + string.slice(1);
     },
-    HandleExt() {
+    async HandleExt() {
       if (this.exten.hasUpdate) {
-        fetcher(`/api/v1/extension/update/${this.exten.pkgName}`);
+        await fetcher(`/api/v1/extension/update/${this.exten.pkgName}`);
       } else if (this.exten.installed) {
-        fetcher(`/api/v1/extension/uninstall/${this.exten.pkgName}`);
+        await fetcher(`/api/v1/extension/uninstall/${this.exten.pkgName}`);
       } else {
-        fetcher(`/api/v1/extension/install/${this.exten.pkgName}`);
+        await fetcher(`/api/v1/extension/install/${this.exten.pkgName}`);
       }
       this.$emit('reload');
     }
