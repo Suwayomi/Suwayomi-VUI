@@ -102,11 +102,11 @@ export default defineComponent({
     }
   },
   methods: {
-    calcWidth(_event: unknown, mini = 0) {
+    calcWidth() {
       const grid = <Element>this.$refs['MangaGrid'];
       const ideal = <number>this.$q.localStorage.getItem('MitemW');
       if (grid.clientWidth == undefined) return;
-      this.devider = Math.round((grid.clientWidth - mini) / ideal);
+      this.devider = Math.round(grid.clientWidth / ideal);
     },
     calcHeight() {
       const parent = this.$parent?.$el;
@@ -130,9 +130,6 @@ export default defineComponent({
   },
   created: async function () {
     this.calcWidth = debounce(this.calcWidth, 500);
-    this.$bus.on('miniDrawer', (mini: boolean) => {
-      this.calcWidth(null, mini ? -(300 - 57) : 300);
-    });
     this.reload(this.$route.query['tab'] as number | undefined);
   },
   watch: {
@@ -141,7 +138,7 @@ export default defineComponent({
     }
   },
   mounted: function () {
-    this.calcWidth(null);
+    this.calcWidth();
     this.$nextTick(() => {
       window.addEventListener('resize', this.calcWidth);
     });
@@ -152,11 +149,13 @@ export default defineComponent({
   setup() {
     const filters = ref(Filters());
     const devider = ref<number>(0);
+    const clwidth = ref<number>(0);
     const mangas = ref(<manga[]>[]);
     return {
       devider,
       mangas,
-      filters
+      filters,
+      clwidth
     };
   }
 });
