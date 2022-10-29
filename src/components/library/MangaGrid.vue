@@ -32,6 +32,7 @@ import { manga } from 'src/components/global/models';
 import MangaCard from './MangaCard.vue';
 import Filters from './Filters';
 import fetcher from '../global/fetcher';
+import { debounce } from 'quasar';
 
 export default defineComponent({
   name: 'MangaGrid',
@@ -104,6 +105,7 @@ export default defineComponent({
     calcWidth(_event: unknown, mini = 0) {
       const grid = <Element>this.$refs['MangaGrid'];
       const ideal = <number>this.$q.localStorage.getItem('MitemW');
+      if (grid.clientWidth == undefined) return;
       this.devider = Math.round((grid.clientWidth - mini) / ideal);
     },
     calcHeight() {
@@ -114,18 +116,28 @@ export default defineComponent({
         return Height;
       }
       return 0;
+    },
+    async reload(val: number | undefined) {
+      if (val != undefined) {
+        this.mangas = [];
+        const resp = await fetcher(
+          `/api/v1/category/${this.$route.query['tab']}`
+        );
+        let mangas = <manga[]>await resp.json();
+        this.mangas = mangas;
+      }
     }
   },
   created: async function () {
+    this.calcWidth = debounce(this.calcWidth, 500);
     this.$bus.on('miniDrawer', (mini: boolean) => {
       this.calcWidth(null, mini ? -(300 - 57) : 300);
     });
-    if (this.$route.query['tab'] != undefined) {
-      const resp = await fetcher(
-        `/api/v1/category/${this.$route.query['tab']}`
-      );
-      let mangas = <manga[]>await resp.json();
-      this.mangas = mangas;
+    this.reload(this.$route.query['tab'] as number | undefined);
+  },
+  watch: {
+    '$route.query.tab': async function (val: number | undefined) {
+      this.reload(val);
     }
   },
   mounted: function () {

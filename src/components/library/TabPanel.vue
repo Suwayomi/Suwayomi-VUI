@@ -6,7 +6,7 @@
         inline-label
         :style="
           `background-color:` +
-          ($q.dark.isActive ? `var(--q-primaryD)` : `var(--q-primary)`)
+          ($q.dark.isActive ? `var(--q-dark-page)` : `white`)
         "
       >
         <q-route-tab
@@ -15,6 +15,7 @@
           :name="tabb.tabID"
           :label="tabb.tabname"
           class="col-grow"
+          flat
           :to="{ query: { ...$route.query, tab: tabb.tabID } }"
         />
       </q-tabs>
