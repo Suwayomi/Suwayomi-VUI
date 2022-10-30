@@ -132,7 +132,7 @@
           <q-input
             standout
             label="Password"
-            :type="isPwd ? 'password' : 'text'"
+            :type="!isPwd ? 'password' : 'text'"
             v-model="bpsw"
             class="q-my-sm"
             name="password"
@@ -320,7 +320,9 @@ export default defineComponent({
       username: string;
       password: string;
     } | null;
-    const SReadModel = ($q.localStorage.getItem('vue_RM') || 'RTL') as string;
+    const SReadModel = ref(
+      ($q.localStorage.getItem('vue_RM') || 'RTL') as string
+    );
     const SreadMargins = ref(
       ($q.localStorage.getItem('vue_WT') || false) as boolean
     );
@@ -335,7 +337,7 @@ export default defineComponent({
       useCache,
       Saddr: ref(false),
       SRead: ref(false),
-      SReadModel: ref(SReadModel),
+      SReadModel,
       SReadoptions: ['RTL', 'LTR', 'SinglePage', 'Vertical'],
       SreadMargins,
       SreadScale,

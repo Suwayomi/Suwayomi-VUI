@@ -16,6 +16,7 @@
           aria-label="Menu"
           @click="leftDrawerOpen = !leftDrawerOpen"
         />
+        <q-btn icon="arrow_back" flat round @click="$router.go(-1)" />
 
         <q-toolbar-title class="col-grow q-pr-none">
           {{ title }}
