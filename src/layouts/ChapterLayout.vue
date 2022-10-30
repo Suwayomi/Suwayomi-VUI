@@ -1,7 +1,41 @@
 <template>
-  <q-layout>
+  <q-layout view="hHh Lpr fFf">
+    <q-drawer
+      v-model="leftDrawerOpen"
+      elevated
+      class="fixed"
+      :breakpoint="0"
+      :style="
+        `background-color:` +
+        ($q.dark.isActive ? `var(--q-secondaryD)` : `var(--q-secondary)`)
+      "
+    >
+      <q-item class="justify-between">
+        <q-btn icon="arrow_back" flat round @click="$router.go(-1)" />
+        <q-btn
+          icon="close"
+          flat
+          round
+          @click="leftDrawerOpen = !leftDrawerOpen"
+        />
+      </q-item>
+      <leftDrawerVue></leftDrawerVue>
+    </q-drawer>
     <q-page-container>
       <router-view :class="$q.dark.isActive ? `dark-page` : `white`" />
+      <q-page-sticky
+        position="top-left"
+        :offset="[18, 18]"
+        v-if="!leftDrawerOpen"
+        class="fabb"
+      >
+        <q-btn
+          fab
+          icon="menu"
+          color="primary"
+          @click="leftDrawerOpen = !leftDrawerOpen"
+        />
+      </q-page-sticky>
     </q-page-container>
   </q-layout>
 </template>
@@ -12,9 +46,11 @@ import {
   RouteLocationNormalized,
   RouteLocationNormalizedLoaded
 } from 'vue-router';
+import leftDrawerVue from 'src/components/reader/leftDrawerCont.vue';
 
 export default defineComponent({
   name: 'chapterLayout',
+  components: { leftDrawerVue },
   watch: {
     scrollbarTheme(neww, old) {
       document.body.classList.remove(old);
@@ -52,9 +88,17 @@ export default defineComponent({
   },
   setup() {
     return {
-      tru: ref(true),
-      leftDrawerOpen: ref(true)
+      leftDrawerOpen: ref(false)
     };
   }
 });
 </script>
+
+<style scoped>
+.fabb {
+  opacity: 0.2;
+}
+.fabb:hover {
+  opacity: 1;
+}
+</style>

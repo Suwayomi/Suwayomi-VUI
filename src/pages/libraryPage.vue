@@ -39,7 +39,6 @@ import MangaGrid from 'src/components/library/MangaGrid.vue';
 import fetcher from 'src/components/global/fetcher';
 import useInBar from 'src/components/global/inBar';
 import libraryTopBar from 'src/components/library/TopBar.vue';
-import Filters from 'src/components/library/Filters';
 
 export default defineComponent({
   name: 'libraryPage',
@@ -74,12 +73,10 @@ export default defineComponent({
   },
   setup(_props, { emit }) {
     emit('setTitle', 'Library');
-    const filters = ref(Filters());
     const tabs = ref<tab[]>([]);
     const failedFetch = ref(false);
     return {
       tabs,
-      filters,
       failedFetch
     };
   }

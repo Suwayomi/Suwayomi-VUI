@@ -6,15 +6,25 @@
         :offset="$q.screen.height / 2"
         ref="infiniteScroll"
       >
-        <div v-for="(item, index) in items" :key="index" class="caption">
+        <div v-for="(item, index) in items" :key="index" :class="divClass">
+          <div style="width: 50%" v-if="vue_Offset && isBook2"></div>
           <displayPage
-            :pageNum="index"
+            :pageNum="
+              vue_RM == 'RTL' ? (index % 2 ? index - 1 : index + 1) : index
+            "
             :chapterID="item.index"
             v-for="(_page, index) in item.pageCount"
             :key="index"
+            :vue_RM="vue_RM"
+            :vue_WT="vue_WT"
+            :vue_Scale="vue_Scale"
           >
           </displayPage>
-          <q-card style="height: 50vh" class="column text-center">
+          <q-card
+            style="height: 50vh"
+            :style="isBook2 ? `width:100%` : ``"
+            class="column text-center q-ml-md"
+          >
             <h5 class="col">End of {{ item.name }}</h5>
             <p class="col">
               {{
@@ -42,6 +52,7 @@ import { chapter } from 'src/components/global/models';
 import { defineComponent, ref } from 'vue';
 import { useRoute } from 'vue-router';
 import displayPage from 'src/components/reader/displayPage.vue';
+import { chapterMeta } from 'src/components/reader/readerSettings';
 
 export default defineComponent({
   name: 'chapterPage',
@@ -68,12 +79,30 @@ export default defineComponent({
         });
     }
   },
+  computed: {
+    isBook(): boolean {
+      return ['RTL', 'LTR', 'SinglePage'].includes(this.vue_RM);
+    },
+    isBook2(): boolean {
+      return ['RTL', 'LTR'].includes(this.vue_RM);
+    },
+    divClass(): string {
+      if (this.isBook2) {
+        return 'row items-center';
+      }
+      return '';
+    }
+  },
   setup() {
-    console.log('hi');
-    const route = useRoute();
     const items = ref(<chapter[]>[]);
+    const route = useRoute();
     const currchapter = ref(<number>parseInt(`${route.params['chapterID']}`));
-    return { items, currchapter };
+    const options = chapterMeta(parseInt(`${route.params['mangaID']}`));
+    const vue_RM = options.vue_RM;
+    const vue_WT = options.vue_WT;
+    const vue_Scale = options.vue_Scale;
+    const vue_Offset = options.vue_Offset;
+    return { items, currchapter, vue_RM, vue_WT, vue_Scale, vue_Offset };
   }
 });
 </script>

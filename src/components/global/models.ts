@@ -73,6 +73,7 @@ export interface chapter {
 }
 
 export interface myMeta {
+  vue_Offset: string;
   vue_RM?: string;
   vue_WT?: string;
   vue_Scale?: string;
