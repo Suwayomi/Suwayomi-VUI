@@ -55,6 +55,7 @@ import { useQuasar } from 'quasar';
 import fetcher from '../global/fetcher';
 import { source } from '../global/models';
 import { langCodeToName } from 'src/components/extantions/language';
+import { getImgBlob } from '../global/usefull';
 
 export default defineComponent({
   name: 'sourceCard',
@@ -71,16 +72,11 @@ export default defineComponent({
     },
     langCodeToName,
     getSetImg() {
-      fetcher(this.source.iconUrl + '?useCache=' + this.useCache)
-        .then((resp) => resp.blob())
-        .then((blob) => {
-          let reader = new FileReader();
-          reader.readAsDataURL(blob);
-          reader.onloadend = () => {
-            var base64data = reader.result as string;
-            this.imgdata = base64data;
-          };
-        });
+      getImgBlob(this.source.iconUrl + '?useCache=' + this.useCache).then(
+        (value) => {
+          this.imgdata = value;
+        }
+      );
     }
   },
   created: function () {

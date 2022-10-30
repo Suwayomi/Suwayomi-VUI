@@ -136,7 +136,7 @@
 import { defineComponent, PropType, ref } from 'vue';
 import { manga } from 'src/components/global/models';
 import { useQuasar } from 'quasar';
-import fetcher from '../global/fetcher';
+import { getImgBlob } from '../global/usefull';
 
 export default defineComponent({
   name: 'MangaCard',
@@ -158,16 +158,11 @@ export default defineComponent({
     }
   },
   created: function () {
-    fetcher(this.manga.thumbnailUrl + '?useCache=' + this.useCache)
-      .then((resp) => resp.blob())
-      .then((blob) => {
-        let reader = new FileReader();
-        reader.readAsDataURL(blob);
-        reader.onloadend = () => {
-          var base64data = reader.result as string;
-          this.imgdata = base64data;
-        };
-      });
+    getImgBlob(this.manga.thumbnailUrl + '?useCache=' + this.useCache).then(
+      (value) => {
+        this.imgdata = value;
+      }
+    );
   },
   setup() {
     const $q = useQuasar();

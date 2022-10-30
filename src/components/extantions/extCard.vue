@@ -44,6 +44,7 @@ import { defineComponent, PropType, ref } from 'vue';
 import { useQuasar } from 'quasar';
 import fetcher from '../global/fetcher';
 import { extention } from '../global/models';
+import { getImgBlob } from '../global/usefull';
 
 export default defineComponent({
   name: 'extCard',
@@ -77,16 +78,11 @@ export default defineComponent({
     }
   },
   created: function () {
-    fetcher(this.exten.iconUrl + '?useCache=' + this.useCache)
-      .then((resp) => resp.blob())
-      .then((blob) => {
-        let reader = new FileReader();
-        reader.readAsDataURL(blob);
-        reader.onloadend = () => {
-          var base64data = reader.result as string;
-          this.imgdata = base64data;
-        };
-      });
+    getImgBlob(this.exten.iconUrl + '?useCache=' + this.useCache).then(
+      (value) => {
+        this.imgdata = value;
+      }
+    );
   },
   setup() {
     const $q = useQuasar();

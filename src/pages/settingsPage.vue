@@ -15,7 +15,22 @@
       </q-item-section>
       <q-toggle color="blue" v-model="darkmode" val="battery" />
     </q-item>
-    <!-- manga width -->
+    <!-- use cache -->
+    <q-item
+      clickable
+      v-ripple
+      @click="useCache = !useCache"
+      class="row justify-between"
+    >
+      <q-item-section avatar>
+        <q-icon name="cached" />
+      </q-item-section>
+      <q-item-section>
+        <q-item-label>Use imanga cache</q-item-label>
+      </q-item-section>
+      <q-toggle color="blue" v-model="useCache" val="battery" />
+    </q-item>
+    <!-- manga grid width -->
     <q-item clickable v-ripple @click="Mitem = true">
       <q-item-section avatar>
         <q-icon name="view_module" />
@@ -46,7 +61,7 @@
             <q-btn flat label="Cancel" color="primary" v-close-popup />
             <q-btn
               flat
-              label="OK"
+              label="Save"
               color="primary"
               v-close-popup
               @click="setMitemW(MitemW)"
@@ -54,21 +69,6 @@
           </q-card-actions>
         </q-card>
       </q-dialog>
-    </q-item>
-    <!-- use cache -->
-    <q-item
-      clickable
-      v-ripple
-      @click="useCache = !useCache"
-      class="row justify-between"
-    >
-      <q-item-section avatar>
-        <q-icon name="cached" />
-      </q-item-section>
-      <q-item-section>
-        <q-item-label>Use imanga cache</q-item-label>
-      </q-item-section>
-      <q-toggle color="blue" v-model="useCache" val="battery" />
     </q-item>
     <!-- server address -->
     <q-item clickable v-ripple @click="Saddr = true">
@@ -98,7 +98,7 @@
             <q-btn flat label="Cancel" color="primary" v-close-popup />
             <q-btn
               flat
-              label="OK"
+              label="Save"
               color="primary"
               v-close-popup
               @click="setserverAddr(serverAddr)"
@@ -157,10 +157,65 @@
             <q-btn flat label="Cancel" color="primary" v-close-popup />
             <q-btn
               flat
-              label="OK"
+              label="Save"
               color="primary"
               v-close-popup
               @click="setserverAuth(busr, bpsw)"
+            />
+          </q-card-actions>
+        </q-card>
+      </q-dialog>
+    </q-item>
+    <!-- Reader Defaults -->
+    <q-item clickable v-ripple @click="SRead = true">
+      <q-item-section avatar>
+        <q-icon name="menu_book" />
+      </q-item-section>
+      <q-item-section>
+        <q-item-label>Default Reader Settings</q-item-label>
+      </q-item-section>
+
+      <q-dialog v-model="SRead">
+        <q-card class="q-px-sm">
+          <q-card-section>
+            <div class="text-h6">Default Reader Settings</div>
+          </q-card-section>
+          <q-card-section>
+            <q-item
+              class="row justify-between no-wrap items-center rounded-borders"
+              clickable
+              v-ripple
+              @click="SreadMargins = !SreadMargins"
+            >
+              <q-item-label>Page Margins</q-item-label>
+              <q-toggle color="blue" v-model="SreadMargins" />
+            </q-item>
+            <q-separator></q-separator>
+            <q-item
+              class="row justify-between no-wrap items-center rounded-borders"
+              clickable
+              v-ripple
+              @click="SreadScale = !SreadScale"
+            >
+              <q-item-label>Page Scale</q-item-label>
+              <q-toggle color="blue" v-model="SreadScale" />
+            </q-item>
+            <q-separator></q-separator>
+            <q-select
+              standout
+              label="Reader Mode"
+              v-model="SReadModel"
+              :options="SReadoptions"
+            >
+            </q-select>
+          </q-card-section>
+          <q-card-actions align="right">
+            <q-btn
+              flat
+              label="Save"
+              color="primary"
+              v-close-popup
+              @click="setReaderOptions"
             />
           </q-card-actions>
         </q-card>
@@ -173,7 +228,12 @@
       label="Backup"
       default-closed
     >
-      <q-item clickable v-ripple class="q-pl-xl">
+      <q-item
+        clickable
+        v-ripple
+        class="q-pl-xl"
+        :href="serverAddr + `/api/v1/backup/export/file`"
+      >
         <q-item-section>
           <q-item-label>Create Backup</q-item-label>
           <q-item-label caption
@@ -233,6 +293,11 @@ export default defineComponent({
     },
     btoa(val: string) {
       return btoa(val);
+    },
+    setReaderOptions() {
+      this.$q.localStorage.set('vue_RM', this.SReadModel);
+      this.$q.localStorage.set('vue_WT', this.SreadMargins);
+      this.$q.localStorage.set('vue_Scale', this.SreadScale);
     }
   },
   watch: {
@@ -255,6 +320,13 @@ export default defineComponent({
       username: string;
       password: string;
     } | null;
+    const SReadModel = ($q.localStorage.getItem('vue_RM') || 'RTL') as string;
+    const SreadMargins = ref(
+      ($q.localStorage.getItem('vue_WT') || false) as boolean
+    );
+    const SreadScale = ref(
+      ($q.localStorage.getItem('vue_Scale') || false) as boolean
+    );
 
     return {
       darkmode,
@@ -262,6 +334,11 @@ export default defineComponent({
       MitemW,
       useCache,
       Saddr: ref(false),
+      SRead: ref(false),
+      SReadModel: ref(SReadModel),
+      SReadoptions: ['RTL', 'LTR', 'SinglePage', 'Vertical'],
+      SreadMargins,
+      SreadScale,
       serverAddr,
       baut: ref(false),
       busr: ref(auth != null ? auth.username : ''),
