@@ -56,7 +56,11 @@ const routes: RouteRecordRaw[] = [
     path: '/manga/:mangaID/chapter/:chapterID',
     component: () => import('layouts/ChapterLayout.vue'),
     children: [
-      { path: '', component: () => import('src/pages/chapterPage.vue') }
+      {
+        name: 'chapterpage',
+        path: '',
+        component: () => import('src/pages/chapterPage.vue')
+      }
     ]
   },
   // Always leave this as last one,

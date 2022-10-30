@@ -45,7 +45,7 @@ export interface manga {
   inLibrary: boolean;
   inLibraryAt: number;
   source: source | null;
-  meta: unknown;
+  meta: myMeta;
   realUrl: string;
   freshData: boolean;
   unreadCount: number;
@@ -69,7 +69,13 @@ export interface chapter {
   downloaded: boolean;
   pageCount: number;
   chapterCount: number;
-  meta: object;
+  meta: myMeta;
+}
+
+export interface myMeta {
+  vue_RM?: string;
+  vue_WT?: string;
+  vue_Scale?: string;
 }
 
 export interface dlsock {
