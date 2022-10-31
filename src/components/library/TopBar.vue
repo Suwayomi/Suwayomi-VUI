@@ -122,8 +122,6 @@
           <q-radio v-model="disp" val="false" label="list" />
         </q-card-section>
       </div>
-
-      <!-- TODO: grid display options -->
     </q-card>
   </q-dialog>
 </template>

@@ -22,7 +22,10 @@
       <leftDrawerVue></leftDrawerVue>
     </q-drawer>
     <q-page-container>
-      <router-view :class="$q.dark.isActive ? `dark-page` : `white`" />
+      <router-view
+        @setTitle="setTitle"
+        :class="$q.dark.isActive ? `dark-page` : `white`"
+      />
       <q-page-sticky
         position="top-left"
         :offset="[18, 18]"
@@ -47,6 +50,7 @@ import {
   RouteLocationNormalizedLoaded
 } from 'vue-router';
 import leftDrawerVue from 'src/components/reader/leftDrawerCont.vue';
+import { useMeta } from 'quasar';
 
 export default defineComponent({
   name: 'chapterLayout',
@@ -84,11 +88,22 @@ export default defineComponent({
     toggledark() {
       this.$q.dark.toggle();
       this.$q.localStorage.set('dark', this.$q.dark.isActive);
+    },
+    setTitle(titl: string) {
+      this.title = titl;
     }
   },
   setup() {
+    const title = ref('');
+    useMeta(() => {
+      return {
+        title: title.value,
+        titleTemplate: (title) => `${title} - Reading - Tachidesk Quasar `
+      };
+    });
     return {
-      leftDrawerOpen: ref(false)
+      leftDrawerOpen: ref(false),
+      title
     };
   }
 });

@@ -53,6 +53,11 @@ export interface manga {
   chapterCount: number;
 }
 
+export interface sourcepage {
+  hasNextPage: boolean;
+  mangaList: manga[];
+}
+
 export interface chapter {
   url: string;
   name: string;

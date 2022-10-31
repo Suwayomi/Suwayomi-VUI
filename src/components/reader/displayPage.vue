@@ -17,7 +17,7 @@
     </q-img>
     <q-card
       flat
-      style="height: 100vh; background-color: transparent; width: 100%"
+      style="height: 50vh; background-color: transparent; width: 100%"
       v-if="!imgdata"
     >
       <q-inner-loading
@@ -54,6 +54,10 @@ export default defineComponent({
       default: false
     },
     vue_Scale: {
+      type: Boolean as PropType<boolean>,
+      default: false
+    },
+    vue_Offset: {
       type: Boolean as PropType<boolean>,
       default: false
     }
@@ -123,15 +127,20 @@ export default defineComponent({
       if (this.vue_Scale) {
         if (this.isBook) {
           if (this.isBook2) {
-            const es =
-              this.pageNum % 2
-                ? this.vue_RM == 'RTL'
-                  ? 'end'
-                  : 'start'
-                : this.vue_RM == 'RTL'
-                ? 'start'
-                : 'end';
-            return 'width:50%;height:100vh;align-items:' + es;
+            let tmp = 1;
+            if (this.pageNum % 2) {
+              tmp *= -1;
+            }
+            if (this.vue_RM == 'RTL') {
+              tmp *= -1;
+            }
+            if (this.vue_Offset) {
+              tmp *= -1;
+            }
+            return (
+              'width:50%;height:100vh;align-items:' +
+              (tmp == -1 ? 'start' : 'end')
+            );
           }
           return 'max-width:100%;height:100vh';
         }

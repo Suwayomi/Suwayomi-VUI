@@ -9,7 +9,13 @@ const routes: RouteRecordRaw[] = [
     path: '/library',
     component: () => import('layouts/MainLayout.vue'),
     children: [
-      { path: '', component: () => import('src/pages/libraryPage.vue') }
+      {
+        path: '',
+        components: {
+          default: () => import('src/pages/libraryPage.vue'),
+          inBar: () => import('src/components/library/TopBar.vue')
+        }
+      }
     ]
   },
   {
@@ -23,21 +29,46 @@ const routes: RouteRecordRaw[] = [
     path: '/extensions',
     component: () => import('layouts/MainLayout.vue'),
     children: [
-      { path: '', component: () => import('src/pages/extensionsPage.vue') }
+      {
+        path: '',
+        components: {
+          default: () => import('src/pages/extensionsPage.vue'),
+          inBar: () => import('src/components/extantions/TopBar.vue')
+        }
+      }
     ]
   },
   {
     path: '/sources',
     component: () => import('layouts/MainLayout.vue'),
     children: [
-      { path: '', component: () => import('src/pages/sourcesPage.vue') }
+      {
+        path: '',
+        components: {
+          default: () => import('src/pages/sourcesPage.vue'),
+          inBar: () => import('src/components/extantions/TopBar.vue')
+        }
+      },
+      {
+        path: ':sourceID/popular/',
+        components: {
+          default: () => import('src/pages/SourceSearchPage.vue'),
+          inBar: () => import('src/components/sourceSearch/SourceTopBar.vue')
+        }
+      }
     ]
   },
   {
     path: '/downloads',
     component: () => import('layouts/MainLayout.vue'),
     children: [
-      { path: '', component: () => import('src/pages/downloadsPage.vue') }
+      {
+        path: '',
+        components: {
+          default: () => import('src/pages/downloadsPage.vue'),
+          inBar: () => import('src/components/downloads/TopBar.vue')
+        }
+      }
     ]
   },
   {

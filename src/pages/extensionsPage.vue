@@ -44,16 +44,12 @@ import {
 } from 'src/components/global/models';
 import extCard from 'src/components/extantions/extCard.vue';
 import { langSortCmp } from 'src/components/extantions/language';
-import useInBar from 'src/components/global/inBar';
-import SearchBar from 'src/components/extantions/TopBar.vue';
 import Filters from 'src/components/extantions/Filters';
 
 export default defineComponent({
   name: 'sourcesPage',
   components: { extCard },
   created: function () {
-    const Bar = useInBar();
-    Bar.setInBar(SearchBar);
     this.reload();
   },
   methods: {

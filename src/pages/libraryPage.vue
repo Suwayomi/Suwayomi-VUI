@@ -1,8 +1,6 @@
 <template>
   <q-page :style-fn="myTweak">
-    <div ref="MLspinner">
-      <TabPanel active :tabs="tabs"></TabPanel>
-    </div>
+    <TabPanel active :tabs="tabs"></TabPanel>
     <MangaGrid v-if="!failedFetch"> </MangaGrid>
     <q-dialog v-model="failedFetch" persistent>
       <q-card style="min-width: 350px">
@@ -37,15 +35,11 @@ import { defineComponent, ref } from 'vue';
 import { cat } from 'src/components/global/models';
 import MangaGrid from 'src/components/library/MangaGrid.vue';
 import fetcher from 'src/components/global/fetcher';
-import useInBar from 'src/components/global/inBar';
-import libraryTopBar from 'src/components/library/TopBar.vue';
 
 export default defineComponent({
   name: 'libraryPage',
   components: { TabPanel, MangaGrid },
   created: async function () {
-    const Bar = useInBar();
-    Bar.setInBar(libraryTopBar);
     try {
       const resp = await fetcher('/api/v1/category');
       const jsn: cat[] = await resp.json();
