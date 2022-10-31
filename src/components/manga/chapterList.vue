@@ -24,7 +24,7 @@
           clickable
           v-ripple
           :dark="$q.dark.isActive"
-          class="q-ma-sm rounded-borders"
+          class="q-ma-sm rounded-borders lisitem"
           :class="item.read ? `text-grey` : ``"
           :style="
             `background-color:` +
@@ -242,3 +242,9 @@ export default defineComponent({
   }
 });
 </script>
+
+<style scoped>
+.lisitem:hover {
+  opacity: 0.5;
+}
+</style>

@@ -19,10 +19,10 @@
         <q-btn icon="arrow_back" flat round @click="$router.go(-1)" />
 
         <q-toolbar-title class="col-grow q-pr-none">
-          {{ title }}
+          {{ !$q.screen.xs ? title : `` }}
         </q-toolbar-title>
 
-        <component :is="componInBar"></component>
+        <router-view name="inBar" />
 
         <q-btn
           elevated
@@ -72,7 +72,7 @@
 
     <q-page-container>
       <router-view
-        @setTitle.once="setTitle"
+        @setTitle="setTitle"
         :class="$q.dark.isActive ? `dark-page` : `white`"
       />
     </q-page-container>
@@ -80,10 +80,10 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, shallowRef, watch } from 'vue';
+import { defineComponent, ref /*shallowRef, watch*/ } from 'vue';
 import EssentialLink from 'src/components/mainLayout/EssentialLink.vue';
 import { useQuasar } from 'quasar';
-import useInBar from 'src/components/global/inBar';
+import { useMeta } from 'quasar';
 
 const linksList = [
   {
@@ -131,10 +131,6 @@ export default defineComponent({
     EssentialLink
   },
   watch: {
-    '$route.path'() {
-      const bar = useInBar();
-      bar.setInBar();
-    },
     scrollbarTheme(neww, old) {
       document.body.classList.remove(old);
       document.body.classList.add(neww);
@@ -158,15 +154,17 @@ export default defineComponent({
   },
   setup() {
     const $q = useQuasar();
-    const bar = useInBar();
+    const title = ref('Quasar App');
+    useMeta(() => {
+      return {
+        title: title.value,
+        titleTemplate: (title) => `${title} - Tachidesk Quasar`
+      };
+    });
     $q.dark.set(<boolean>$q.localStorage.getItem('dark'));
     const leftDrawerOpen = ref(true);
-    let componInBar = shallowRef();
-    watch(bar.inbar, () => {
-      componInBar.value = bar.inbar.value;
-    });
     return {
-      title: ref('Quasar App'),
+      title,
       essentialLinks: linksList,
       tru: ref(true),
       leftDrawerOpen,
@@ -175,8 +173,8 @@ export default defineComponent({
         $q.localStorage.set('dark', $q.dark.isActive);
       },
       doSearch: ref(false),
-      Searchenter: ref(false),
-      componInBar
+      Searchenter: ref(false)
+      // componInBar
     };
   }
 });

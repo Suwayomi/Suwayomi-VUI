@@ -1,10 +1,10 @@
 <template>
-  <q-page>
+  <q-page @click="goNextIntersector80">
     <div>
       <q-infinite-scroll
         @load="onLoad"
-        :offset="$q.screen.height / 2"
-        ref="infiniteScroll"
+        :offset="$q.screen.height * 5"
+        ref="infiniteScrol"
       >
         <div v-for="(item, index) in items" :key="index" :class="divClass">
           <div style="width: 50%" v-if="vue_Offset && isBook2"></div>
@@ -15,9 +15,14 @@
             :chapterID="item.index"
             v-for="(_page, index) in item.pageCount"
             :key="index"
+            :data-pid="index"
+            :data-cid="item.index"
+            :data-pcount="item.pageCount"
+            v-intersection="onIntersection"
             :vue_RM="vue_RM"
             :vue_WT="vue_WT"
             :vue_Scale="vue_Scale"
+            :vue_Offset="vue_Offset"
           >
           </displayPage>
           <q-card
@@ -57,6 +62,7 @@ import { chapterMeta } from 'src/components/reader/readerSettings';
 export default defineComponent({
   name: 'chapterPage',
   components: { displayPage },
+  emits: ['setTitle'],
   methods: {
     onLoad(_index: number, done: () => void) {
       fetcher(
@@ -73,11 +79,117 @@ export default defineComponent({
             );
           }
           done();
+          this.chapname = data.name;
+          this.$emit('setTitle', `${this.vue_title} ${data.name}`);
           if (this.currchapter >= data.chapterCount)
-            (this.$refs['infiniteScroll'] as QInfiniteScroll).stop();
+            (this.$refs['infiniteScrol'] as QInfiniteScroll).stop();
           this.currchapter++;
         });
+    },
+    onIntersection(entry: IntersectionObserverEntry) {
+      const element = entry.target as HTMLElement;
+      if (entry.isIntersecting) {
+        this.pageIntersectEleArr.push(element);
+        this.setReadPages(element);
+      } else {
+        this.pageIntersectEleArr = this.pageIntersectEleArr.filter(
+          (ele) =>
+            !(
+              ele.dataset['pid'] == element.dataset['pid'] &&
+              ele.dataset['cid'] == element.dataset['cid']
+            )
+        );
+      }
+      console.log(this.pageIntersectEleArr);
+    },
+    setReadPages(ele: HTMLElement) {
+      const fd = new FormData();
+      fd.append(
+        'lastPageRead',
+        `${parseInt(ele.dataset['pid'] as string) + 1}`
+      );
+      fetcher(
+        `/api/v1/manga/${this.$route.params['mangaID']}/chapter/${ele.dataset['cid']}`,
+        {
+          method: 'PATCH',
+          body: fd
+        }
+      );
+      if (
+        parseInt(ele.dataset['pid'] as string) >=
+        parseInt(ele.dataset['pcount'] as string) - 1
+      ) {
+        const fd = new FormData();
+        fd.append('read', 'true');
+        fetcher(
+          `/api/v1/manga/${this.$route.params['mangaID']}/chapter/${ele.dataset['cid']}`,
+          {
+            method: 'PATCH',
+            body: fd
+          }
+        );
+      }
+    },
+    goNextIntersector80() {
+      if (this.scrolltimeout) {
+        this.scrolltimeout = false;
+        setTimeout(() => {
+          this.scrolltimeout = true;
+        }, 500);
+
+        if (this.pageIntersectEleArr.length > 1) {
+          const element =
+            this.pageIntersectEleArr[this.pageIntersectEleArr.length - 1];
+          if (element) {
+            const vp = window.visualViewport as VisualViewport;
+            if (
+              element.offsetTop > vp.pageTop + vp.height ||
+              element.offsetTop < vp.pageTop
+            ) {
+              this.pageIntersectEleArr = this.pageIntersectEleArr.filter(
+                (ele) =>
+                  !(
+                    ele.dataset['pid'] == element.dataset['pid'] &&
+                    ele.dataset['cid'] == element.dataset['cid']
+                  )
+              );
+              console.log('after remove last', this.pageIntersectEleArr);
+              this.goNextIntersector80();
+            } else {
+              this.pageIntersectEleArr = [element];
+              const top = element.offsetTop + 1;
+              window.scrollTo({
+                top,
+                left: 0,
+                behavior: 'smooth'
+              });
+            }
+          }
+        } else {
+          this.scroll80();
+        }
+      }
+    },
+    scroll80() {
+      const vp = window.visualViewport as VisualViewport;
+      window.scrollTo({
+        top: vp.pageTop + vp.height * 0.8,
+        left: 0,
+        behavior: 'smooth'
+      });
+    },
+    keyHandeler(e: KeyboardEvent) {
+      if (e.key == ' ') {
+        e.preventDefault();
+        this.goNextIntersector80();
+      }
     }
+  },
+  created() {
+    window.addEventListener('keydown', this.keyHandeler);
+  },
+  beforeUnmount() {
+    window.removeEventListener('keydown', this.keyHandeler);
   },
   computed: {
     isBook(): boolean {
@@ -93,7 +205,13 @@ export default defineComponent({
       return '';
     }
   },
+  watch: {
+    vue_title() {
+      this.$emit('setTitle', `${this.chapname} ${this.vue_title}`);
+    }
+  },
   setup() {
+    const pageIntersectEleArr = ref(<HTMLElement[]>[]);
     const items = ref(<chapter[]>[]);
     const route = useRoute();
     const currchapter = ref(<number>parseInt(`${route.params['chapterID']}`));
@@ -102,7 +220,20 @@ export default defineComponent({
     const vue_WT = options.vue_WT;
     const vue_Scale = options.vue_Scale;
     const vue_Offset = options.vue_Offset;
-    return { items, currchapter, vue_RM, vue_WT, vue_Scale, vue_Offset };
+    const vue_title = options.vue_title;
+    const chapname = ref(<string>'');
+    return {
+      items,
+      currchapter,
+      vue_RM,
+      vue_WT,
+      vue_Scale,
+      vue_Offset,
+      chapname,
+      vue_title,
+      pageIntersectEleArr,
+      scrolltimeout: ref(true)
+    };
   }
 });
 </script>

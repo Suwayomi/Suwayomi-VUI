@@ -37,10 +37,8 @@
 
 <script lang="ts">
 import fetcher from 'src/components/global/fetcher';
-import useInBar from 'src/components/global/inBar';
 import { source } from 'src/components/global/models';
 import { defineComponent, ref } from 'vue';
-import SearchBar from 'src/components/extantions/TopBar.vue';
 import Filters from 'src/components/extantions/Filters';
 import sourcecard from 'src/components/sources/sourceCard.vue';
 import { is } from 'quasar';
@@ -50,8 +48,6 @@ export default defineComponent({
   name: 'sourcesPage',
   components: { sourcecard },
   created: function () {
-    const Bar = useInBar();
-    Bar.setInBar(SearchBar);
     this.reload();
   },
   methods: {

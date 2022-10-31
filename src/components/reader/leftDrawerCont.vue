@@ -36,7 +36,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref } from 'vue';
+import { defineComponent } from 'vue';
 import { chapterMeta } from 'src/components/reader/readerSettings';
 import { useRoute } from 'vue-router';
 
@@ -59,10 +59,10 @@ export default defineComponent({
   setup() {
     const route = useRoute();
     const options = chapterMeta(parseInt(`${route.params['mangaID']}`));
-    const SReadModel = ref(options.vue_RM.value);
-    const SreadMargins = ref(options.vue_WT.value);
-    const SreadScale = ref(options.vue_Scale.value);
-    const sReadOffset = ref(options.vue_Offset.value);
+    const SReadModel = options.vue_RM;
+    const SreadMargins = options.vue_WT;
+    const SreadScale = options.vue_Scale;
+    const sReadOffset = options.vue_Offset;
     return {
       SreadMargins,
       SreadScale,

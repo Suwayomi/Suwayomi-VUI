@@ -99,8 +99,6 @@ import useDlSock from 'src/components/downloads/useDlSock';
 import { ref } from 'vue';
 import { download, dlsock, isdlsock } from 'src/components/global/models';
 import { useQuasar } from 'quasar';
-import useInBar from 'src/components/global/inBar';
-import DLTopBar from 'src/components/downloads/TopBar.vue';
 import fetcher from 'src/components/global/fetcher';
 
 export default {
@@ -129,8 +127,6 @@ export default {
   },
   setup(_props, { emit }) {
     emit('setTitle', 'Downloads');
-    const Bar = useInBar();
-    Bar.setInBar(DLTopBar);
     const $q = useQuasar();
     const Emitt = useDlSock();
     const Emitter = ref(Emitt);

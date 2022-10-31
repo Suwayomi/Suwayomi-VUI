@@ -7,6 +7,7 @@ const vue_RM = ref(<string>'RTL');
 const vue_WT = ref(<boolean>false);
 const vue_Scale = ref(<boolean>false);
 const vue_Offset = ref(<boolean>false);
+const vue_title = ref(<string>'');
 
 function tobool(data: string): boolean {
   return data == 'true';
@@ -32,6 +33,7 @@ export function chapterMeta(mangaID: number) {
       vue_Offset.value = manga.meta.vue_Offset
         ? tobool(manga.meta.vue_Offset)
         : ((LocalStorage.getItem('vue_Offset') || false) as boolean);
+      vue_title.value = manga.title
     });
 
   function setRM(data: string) {
@@ -66,6 +68,7 @@ export function chapterMeta(mangaID: number) {
     vue_WT,
     vue_Scale,
     vue_Offset,
+    vue_title,
     setRM,
     setWT,
     setScale,

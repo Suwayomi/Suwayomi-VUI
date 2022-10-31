@@ -34,6 +34,7 @@
           color="blue"
           label="latest"
           :to="`/sources/` + source.id + `/latest/`"
+          v-if="source.supportsLatest"
         >
         </q-btn>
         <q-btn
@@ -52,7 +53,6 @@
 <script lang="ts">
 import { defineComponent, PropType, ref } from 'vue';
 import { useQuasar } from 'quasar';
-import fetcher from '../global/fetcher';
 import { source } from '../global/models';
 import { langCodeToName } from 'src/components/extantions/language';
 import { getImgBlob } from '../global/usefull';

@@ -5,7 +5,6 @@
       :key="manga.id"
       :style="widt"
       transition="fade"
-      ssr-prerender
     >
       <MangaCard :Display="Displ" :manga="manga"></MangaCard>
     </q-intersection>
@@ -29,9 +28,9 @@
 <script lang="ts">
 import { defineComponent, ref } from 'vue';
 import { manga } from 'src/components/global/models';
-import MangaCard from './MangaCard.vue';
-import Filters from './Filters';
-import fetcher from '../global/fetcher';
+import MangaCard from 'src/components/library/MangaCard.vue';
+import Filters from 'src/components/library/Filters';
+import fetcher from 'src/components/global/fetcher';
 import { debounce } from 'quasar';
 
 export default defineComponent({
