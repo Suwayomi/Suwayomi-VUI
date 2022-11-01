@@ -100,7 +100,6 @@ export default defineComponent({
             )
         );
       }
-      console.log(this.pageIntersectEleArr);
     },
     setReadPages(ele: HTMLElement) {
       const fd = new FormData();
