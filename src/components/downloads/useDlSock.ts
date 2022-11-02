@@ -38,16 +38,10 @@ export default function useDlSock() {
   const sendMsg = (data: string) => {
     socket.send(data);
   };
-  const closeSock = () => {
-    if (socket.readyState == 3) {
-      socket.close();
-    }
-  };
 
   return {
     eventsFromServer,
     isConnected,
-    sendMsg,
-    closeSock
+    sendMsg
   };
 }
