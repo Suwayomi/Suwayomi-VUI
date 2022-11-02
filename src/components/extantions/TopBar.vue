@@ -10,7 +10,6 @@
       <q-card-section
         class="q-pt-none"
         style="max-height: 30vh; overflow-y: auto"
-        :class="scrollbarTheme"
       >
         <q-card-section
           v-for="(filt, index) in filters.currlangs"
@@ -47,11 +46,6 @@ export default defineComponent({
   watch: {
     curr() {
       this.filters.setlangs(this.curr);
-    }
-  },
-  computed: {
-    scrollbarTheme(): string {
-      return this.$q.dark.isActive ? 'darkSB' : 'lightSB';
     }
   },
   setup() {

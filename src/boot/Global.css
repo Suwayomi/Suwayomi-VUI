@@ -1,31 +1,38 @@
+.lightSB ::-webkit-scrollbar,
 .lightSB::-webkit-scrollbar {
   width: 15px;
 }
 
+.lightSB ::-webkit-scrollbar-thumb,
 .lightSB::-webkit-scrollbar-thumb {
   background: var(--q-light);
   border: solid 3px var(--q-light-page);
   border-radius: 7px;
 }
 
+.lightSB ::-webkit-scrollbar-thumb:hover,
 .lightSB::-webkit-scrollbar-thumb:hover {
   background: var(--q-dark);
 }
 
+.darkSB ::-webkit-scrollbar,
 .darkSB::-webkit-scrollbar {
   width: 15px;
 }
 
+.darkSB ::-webkit-scrollbar-thumb,
 .darkSB::-webkit-scrollbar-thumb {
   background: var(--q-dark);
   border: solid 3px var(--q-dark-page);
   border-radius: 7px;
 }
 
+.darkSB ::-webkit-scrollbar-thumb:hover,
 .darkSB::-webkit-scrollbar-thumb:hover {
   background: var(--q-light);
 }
 
+.darkSB ::-webkit-scrollbar-track-piece,
 .darkSB::-webkit-scrollbar-track-piece {
   background: var(--q-dark-page);
 }

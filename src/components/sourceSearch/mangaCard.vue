@@ -122,7 +122,6 @@ export default defineComponent({
     }
   },
   mounted: function () {
-    console.log(this.Display);
     getImgBlob(this.manga.thumbnailUrl + '?useCache=' + this.useCache).then(
       (value) => {
         this.imgdata = value;

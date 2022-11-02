@@ -7,7 +7,7 @@
 <script lang="ts">
 import { defineComponent } from 'vue';
 import { source } from 'src/components/global/models';
-import sourceGrid from 'src/components/sourceSearch/mangaSourceGrid.vue';
+import sourceGrid from 'src/components/sourceSearch/sourceMangaGrid.vue';
 import { fetchJSON } from 'src/components/global/fetcher';
 import { isConfig } from 'src/components/sourceSearch/isConfigurable';
 
@@ -25,11 +25,6 @@ export default defineComponent({
       this.isConfi.setConfigurable(jsn.isConfigurable);
     } catch (e) {
       console.error(e);
-    }
-  },
-  computed: {
-    scrollbarTheme(): string {
-      return this.$q.dark.isActive ? 'darkSB' : 'lightSB';
     }
   },
   methods: {

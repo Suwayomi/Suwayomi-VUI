@@ -52,11 +52,6 @@ export default defineComponent({
       this.failedFetch = true;
     }
   },
-  computed: {
-    scrollbarTheme(): string {
-      return this.$q.dark.isActive ? 'darkSB' : 'lightSB';
-    }
-  },
   methods: {
     myTweak(offset: number) {
       return {
