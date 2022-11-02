@@ -21,7 +21,7 @@
 import { defineComponent, ref } from 'vue';
 import { manga, sourcepage } from 'src/components/global/models';
 import MangaCard from 'src/components/sourceSearch/mangaCard.vue';
-import fetcher from 'src/components/global/fetcher';
+import { fetchJSON } from 'src/components/global/fetcher';
 import { debounce, QInfiniteScroll } from 'quasar';
 import Filters from 'src/components/library/Filters';
 
@@ -60,10 +60,11 @@ export default defineComponent({
       return 0;
     },
     async reload(num = 1) {
-      const resp = await fetcher(
-        `/api/v1/source/${this.$route.params['sourceID']}/popular/${num}`
+      return <sourcepage>(
+        await fetchJSON(
+          `/api/v1/source/${this.$route.params['sourceID']}/popular/${num}`
+        )
       );
-      return <sourcepage>await resp.json();
     },
     onLoad(_index: number, done: () => void) {
       this.reload(this.currpage).then((data: sourcepage) => {

@@ -115,7 +115,7 @@
 <script lang="ts">
 import { defineComponent, ref } from 'vue';
 import { chapter } from 'src/components/global/models';
-import fetcher from 'src/components/global/fetcher';
+import fetcher, { fetchJSON } from 'src/components/global/fetcher';
 import filterr from './Filter.vue';
 import { chaptersFilter } from './filters';
 import { useRoute } from 'vue-router';
@@ -188,10 +188,9 @@ export default defineComponent({
     },
     async getonline(TF = 'false', retry = 2) {
       try {
-        const resp = await fetcher(
+        this.chapters = <chapter[]> await fetchJSON(
           `/api/v1/manga/${this.$route.params['mangaID']}/chapters?onlineFetch=${TF}`
         );
-        this.chapters = <chapter[]>await resp.json();
       } catch (e) {
         retry--;
         if (retry >= 0) {

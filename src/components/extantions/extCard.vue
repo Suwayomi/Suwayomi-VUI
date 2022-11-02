@@ -77,7 +77,7 @@ export default defineComponent({
       this.$emit('reload');
     }
   },
-  created: function () {
+  mounted: function () {
     getImgBlob(this.exten.iconUrl + '?useCache=' + this.useCache).then(
       (value) => {
         this.imgdata = value;

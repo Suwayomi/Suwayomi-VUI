@@ -15,7 +15,7 @@ import { defineComponent, ref } from 'vue';
 import { manga } from 'src/components/global/models';
 import mangaInfo from 'src/components/manga/mangaInfo.vue';
 import mangaChapters from 'src/components/manga/chapterList.vue';
-import fetcher from 'src/components/global/fetcher';
+import { fetchJSON } from 'src/components/global/fetcher';
 
 export default defineComponent({
   name: 'mangaPage',
@@ -28,10 +28,11 @@ export default defineComponent({
   methods: {
     async getonline(TF = 'false', retry = 3) {
       try {
-        const resp = await fetcher(
-          `/api/v1/manga/${this.$route.params['mangaID']}/?onlineFetch=${TF}`
+        this.manga = <manga>(
+          await fetchJSON(
+            `/api/v1/manga/${this.$route.params['mangaID']}/?onlineFetch=${TF}`
+          )
         );
-        this.manga = <manga>await resp.json();
       } catch (error) {
         if (retry >= 1) await this.getonline(TF, retry - 1);
       }

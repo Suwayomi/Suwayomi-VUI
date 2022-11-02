@@ -79,7 +79,7 @@ export default defineComponent({
       );
     }
   },
-  created: function () {
+  mounted: function () {
     this.getSetImg();
   },
   watch: {

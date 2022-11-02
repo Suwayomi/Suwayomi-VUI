@@ -52,7 +52,7 @@
 
 <script lang="ts">
 import { QInfiniteScroll } from 'quasar';
-import fetcher from 'src/components/global/fetcher';
+import fetcher, { fetchJSON } from 'src/components/global/fetcher';
 import { chapter } from 'src/components/global/models';
 import { defineComponent, ref } from 'vue';
 import { useRoute } from 'vue-router';
@@ -65,26 +65,24 @@ export default defineComponent({
   emits: ['setTitle'],
   methods: {
     onLoad(_index: number, done: () => void) {
-      fetcher(
+      fetchJSON(
         `/api/v1/manga/${this.$route.params['mangaID']}/chapter/${this.currchapter}`
-      )
-        .then((res) => res.json())
-        .then((data: chapter) => {
-          this.items.push(data);
-          if (
-            this.currchapter != parseInt(`${this.$route.params['chapterID']}`)
-          ) {
-            this.$router.replace(
-              `/manga/${this.$route.params['mangaID']}/chapter/${this.currchapter}`
-            );
-          }
-          done();
-          this.chapname = data.name;
-          this.$emit('setTitle', `${this.vue_title} ${data.name}`);
-          if (this.currchapter >= data.chapterCount)
-            (this.$refs['infiniteScrol'] as QInfiniteScroll).stop();
-          this.currchapter++;
-        });
+      ).then((data: chapter) => {
+        this.items.push(data);
+        if (
+          this.currchapter != parseInt(`${this.$route.params['chapterID']}`)
+        ) {
+          this.$router.replace(
+            `/manga/${this.$route.params['mangaID']}/chapter/${this.currchapter}`
+          );
+        }
+        done();
+        this.chapname = data.name;
+        this.$emit('setTitle', `${this.vue_title} ${data.name}`);
+        if (this.currchapter >= data.chapterCount)
+          (this.$refs['infiniteScrol'] as QInfiniteScroll).stop();
+        this.currchapter++;
+      });
     },
     onIntersection(entry: IntersectionObserverEntry) {
       const element = entry.target as HTMLElement;

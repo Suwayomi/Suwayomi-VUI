@@ -30,7 +30,7 @@ import { defineComponent, ref } from 'vue';
 import { manga } from 'src/components/global/models';
 import MangaCard from 'src/components/library/MangaCard.vue';
 import Filters from 'src/components/library/Filters';
-import fetcher from 'src/components/global/fetcher';
+import { fetchJSON } from 'src/components/global/fetcher';
 import { debounce } from 'quasar';
 
 export default defineComponent({
@@ -119,11 +119,9 @@ export default defineComponent({
     async reload(val: number | undefined) {
       if (val != undefined) {
         this.mangas = [];
-        const resp = await fetcher(
-          `/api/v1/category/${this.$route.query['tab']}`
+        this.mangas = <manga[]>(
+          await fetchJSON(`/api/v1/category/${this.$route.query['tab']}`)
         );
-        let mangas = <manga[]>await resp.json();
-        this.mangas = mangas;
       }
     }
   },
