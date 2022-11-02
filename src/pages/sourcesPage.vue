@@ -64,8 +64,17 @@ export default defineComponent({
   },
   computed: {
     uselist(): source[] {
-      return this.list.filter((ele) => {
+      const tmp = this.list.filter((ele) => {
         return this.langs.includes(ele.lang);
+      });
+      return tmp.sort((a, b) => {
+        if (a.lang < b.lang) {
+          return 1;
+        }
+        if (a.lang > b.lang) {
+          return -1;
+        }
+        return 0;
       });
     }
   },
