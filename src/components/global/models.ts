@@ -155,10 +155,10 @@ export interface source {
 
 interface preference {
   type: string;
-  props: props;
+  props: prefprops;
 }
 
-interface props {
+interface prefprops {
   key: string;
   summary: string;
   title: string;
@@ -167,7 +167,7 @@ interface props {
   defaultValueType: string;
 }
 
-interface propsListPreference extends props {
+interface propsListPreference extends prefprops {
   defaultValueType: 'String';
   currentValue: string;
   defaultValue: string;
@@ -184,7 +184,7 @@ export function isListPreference(pref: preferences): pref is ListPreference {
   return (<ListPreference>pref).type == 'ListPreference';
 }
 
-interface propsSwitchPreferenceCompat extends props {
+interface propsSwitchPreferenceCompat extends prefprops {
   defaultValueType: 'Boolean';
   currentValue: boolean;
   defaultValue: boolean;
@@ -201,7 +201,7 @@ export function isSwitchPreferenceCompat(
   return (<SwitchPreferenceCompat>pref).type == 'SwitchPreferenceCompat';
 }
 
-interface propsMultiSelectListPreference extends props {
+interface propsMultiSelectListPreference extends prefprops {
   defaultValueType: 'Set<String>';
   currentValue: string[];
   defaultValue: string[];
@@ -220,7 +220,7 @@ export function isMultiSelectListPreference(
   return (<MultiSelectListPreference>pref).type == 'MultiSelectListPreference';
 }
 
-interface propsEditTextPreference extends props {
+interface propsEditTextPreference extends prefprops {
   defaultValueType: 'String';
   currentValue: string;
   defaultValue: string | null;
@@ -237,7 +237,7 @@ export function isEditTextPreference(
   return (<EditTextPreference>pref).type == 'EditTextPreference';
 }
 
-interface propsCheckBoxPreference extends props {
+interface propsCheckBoxPreference extends prefprops {
   defaultValueType: 'Boolean';
   currentValue: boolean;
   defaultValue: boolean;
@@ -260,3 +260,104 @@ export type preferences =
   | MultiSelectListPreference
   | SwitchPreferenceCompat
   | ListPreference;
+
+interface filterResp {
+  type: string;
+  filter: filter;
+}
+interface filter {
+  name: string;
+  state: unknown;
+}
+interface CheckBox extends filter {
+  state: boolean;
+}
+export interface filterCheckBox extends filterResp {
+  type: 'CheckBox';
+  filter: CheckBox;
+}
+export function isfilterCheckBox(pref: filters): pref is filterCheckBox {
+  return (<filterCheckBox>pref).type == 'CheckBox';
+}
+interface filterGroup extends filterResp {
+  type: 'Group';
+  filter: Group;
+}
+export function isfilterGroup(pref: filters): pref is filterGroup {
+  return (<filterGroup>pref).type == 'Group';
+}
+interface Group extends filter {
+  state: filters[];
+}
+export interface filterSort extends filterResp {
+  type: 'Sort';
+  filter: Sort;
+}
+export function isfilterSort(pref: filters): pref is filterSort {
+  return (<filterSort>pref).type == 'Sort';
+}
+export interface Sort extends filter {
+  state: sortstate;
+  values: string[];
+}
+export interface sortstate {
+  index: number;
+  ascending: boolean;
+}
+export function isSortState(pref: unknown): pref is sortstate {
+  return (<sortstate>pref).index != undefined;
+}
+export interface filterSelect extends filterResp {
+  type: 'Select';
+  filter: Select;
+}
+export function isfilterSelect(pref: filters): pref is filterSelect {
+  return (<filterSelect>pref).type == 'Select';
+}
+interface Select extends filter {
+  displayValues: string[];
+  state: number;
+  values: { title: string; value: string }[];
+}
+interface TriState extends filter {
+  state: number;
+}
+export interface filterTriState extends filterResp {
+  type: 'TriState';
+  filter: TriState;
+}
+export function isfilterTriState(pref: filters): pref is filterTriState {
+  return (<filterTriState>pref).type == 'TriState';
+}
+export interface filterHeader extends filterResp {
+  type: 'Header';
+}
+export function isfilterHeader(pref: filters): pref is filterHeader {
+  return (<filterHeader>pref).type == 'Header';
+}
+export interface filterSeparator extends filterResp {
+  type: 'Separator';
+}
+export function isfilterSeparator(pref: filters): pref is filterSeparator {
+  return (<filterSeparator>pref).type == 'Separator';
+}
+export interface filterText extends filterResp {
+  type: 'Text';
+  filter: Text;
+}
+export function isfilterText(pref: filters): pref is filterText {
+  return (<filterText>pref).type == 'Text';
+}
+interface Text extends filter {
+  state: string;
+}
+
+export type filters =
+  | filterCheckBox
+  | filterGroup
+  | filterSort
+  | filterSelect
+  | filterTriState
+  | filterText
+  | filterHeader
+  | filterSeparator;

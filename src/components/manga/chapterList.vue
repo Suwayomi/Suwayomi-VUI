@@ -13,7 +13,6 @@
           ? ``
           : `max-height: calc(100vh - ` + calcHeight() + `px)`
       "
-      :class="scrollbarTheme"
     >
       <q-intersection
         v-for="item in doSrt"
@@ -127,9 +126,6 @@ export default defineComponent({
   },
   components: { filterr },
   computed: {
-    scrollbarTheme(): string {
-      return this.$q.dark.isActive ? 'darkSB' : 'lightSB';
-    },
     doFilt(): chapter[] {
       let chapts: chapter[] = this.chapters;
       if (this.filters.Unread != null) {
@@ -188,8 +184,10 @@ export default defineComponent({
     },
     async getonline(TF = 'false', retry = 2) {
       try {
-        this.chapters = <chapter[]> await fetchJSON(
-          `/api/v1/manga/${this.$route.params['mangaID']}/chapters?onlineFetch=${TF}`
+        this.chapters = <chapter[]>(
+          await fetchJSON(
+            `/api/v1/manga/${this.$route.params['mangaID']}/chapters?onlineFetch=${TF}`
+          )
         );
       } catch (e) {
         retry--;

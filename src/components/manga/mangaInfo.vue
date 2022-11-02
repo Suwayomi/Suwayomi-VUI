@@ -1,7 +1,6 @@
 <template>
   <div
     class="q-px-md q-py-md col MangaInfo"
-    :class="scrollbarTheme"
     style="overflow-y: auto"
     :style="
       $q.screen.sm || $q.screen.xs
@@ -102,11 +101,6 @@ export default defineComponent({
           }
         }
       );
-    }
-  },
-  computed: {
-    scrollbarTheme(): string {
-      return this.$q.dark.isActive ? 'darkSB' : 'lightSB';
     }
   },
   methods: {

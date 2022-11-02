@@ -150,7 +150,6 @@ export default defineComponent({
                     ele.dataset['cid'] == element.dataset['cid']
                   )
               );
-              console.log('after remove last', this.pageIntersectEleArr);
               this.goNextIntersector80();
             } else {
               this.pageIntersectEleArr = [element];
