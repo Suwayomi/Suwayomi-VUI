@@ -55,6 +55,12 @@ const routes: RouteRecordRaw[] = [
           default: () => import('src/pages/SourceSearchPage.vue'),
           inBar: () => import('src/components/sourceSearch/SourceTopBar.vue')
         }
+      },
+      {
+        path: ':sourceID/config/',
+        components: {
+          default: () => import('src/pages/sourceConfigPage.vue')
+        }
       }
     ]
   },
