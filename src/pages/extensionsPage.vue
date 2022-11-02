@@ -35,7 +35,7 @@
 </template>
 
 <script lang="ts">
-import fetcher from 'src/components/global/fetcher';
+import { fetchJSON } from 'src/components/global/fetcher';
 import { defineComponent, ref } from 'vue';
 import {
   extention,
@@ -54,11 +54,9 @@ export default defineComponent({
   },
   methods: {
     reload() {
-      fetcher('/api/v1/extension/list')
-        .then((resp) => resp.json())
-        .then((data: extention[]) => {
-          this.list = data;
-        });
+      fetchJSON('/api/v1/extension/list').then((data: extention[]) => {
+        this.list = data;
+      });
     },
     groupExtensions(extensions: extention[]) {
       this.allLangs = []; // empty the array

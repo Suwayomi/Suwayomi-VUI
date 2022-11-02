@@ -1,5 +1,5 @@
 import { ref } from 'vue';
-import fetcher from '../global/fetcher';
+import fetcher, { fetchJSON } from '../global/fetcher';
 import { manga } from '../global/models';
 import { LocalStorage } from 'quasar';
 
@@ -18,8 +18,7 @@ export function chapterMeta(mangaID: number) {
   vue_WT.value = (LocalStorage.getItem('vue_WT') || false) as boolean;
   vue_Scale.value = (LocalStorage.getItem('vue_Scale') || false) as boolean;
   vue_Offset.value = (LocalStorage.getItem('vue_Offset') || false) as boolean;
-  fetcher(`/api/v1/manga/${mangaID}`)
-    .then((resp): Promise<manga> => resp.json())
+  fetchJSON(`/api/v1/manga/${mangaID}`)
     .then((manga: manga): void => {
       vue_RM.value = manga.meta.vue_RM
         ? manga.meta.vue_RM

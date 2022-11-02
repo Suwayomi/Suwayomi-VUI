@@ -121,7 +121,7 @@ export default defineComponent({
         : 'text-center text-subtitle1';
     }
   },
-  created: function () {
+  mounted: function () {
     console.log(this.Display);
     getImgBlob(this.manga.thumbnailUrl + '?useCache=' + this.useCache).then(
       (value) => {

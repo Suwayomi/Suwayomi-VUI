@@ -26,3 +26,11 @@ export default function fetcher(
   const tmp = base + url;
   return fetch(tmp, authOptions(options));
 }
+
+export async function fetchJSON(
+  url: RequestInfo | URL,
+  options: RequestInit | undefined = undefined
+) {
+  const tmp = await fetcher(url, options);
+  return tmp.json();
+}

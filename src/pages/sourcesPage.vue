@@ -36,7 +36,7 @@
 </template>
 
 <script lang="ts">
-import fetcher from 'src/components/global/fetcher';
+import { fetchJSON } from 'src/components/global/fetcher';
 import { source } from 'src/components/global/models';
 import { defineComponent, ref } from 'vue';
 import Filters from 'src/components/extantions/Filters';
@@ -52,27 +52,20 @@ export default defineComponent({
   },
   methods: {
     reload() {
-      fetcher('/api/v1/source/list')
-        .then((resp) => resp.json())
-        .then((data: source[]) => {
-          this.list = data;
-          this.filters.setcurrlangs(this.extractLangs(data));
-        });
+      fetchJSON('/api/v1/source/list').then((data: source[]) => {
+        this.list = data;
+        this.filters.setcurrlangs(this.extractLangs(data));
+      });
     },
     langCodeToName,
     extractLangs(lis: source[]): string[] {
-      return Array.from(new Set(lis.map((ele) => ele.lang))).filter((elee) => {
-        if ('all' == elee) {
-          return false;
-        }
-        return true;
-      });
+      return Array.from(new Set(lis.map((ele) => ele.lang)));
     }
   },
   computed: {
     uselist(): source[] {
       return this.list.filter((ele) => {
-        return [...this.langs, 'all'].includes(ele.lang);
+        return this.langs.includes(ele.lang);
       });
     }
   },
