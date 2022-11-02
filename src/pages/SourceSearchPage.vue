@@ -9,6 +9,7 @@ import { defineComponent } from 'vue';
 import { source } from 'src/components/global/models';
 import sourceGrid from 'src/components/sourceSearch/mangaSourceGrid.vue';
 import fetcher from 'src/components/global/fetcher';
+import { isConfig } from 'src/components/sourceSearch/isConfigurable';
 
 export default defineComponent({
   name: 'ScourceSearchPage',
@@ -22,6 +23,7 @@ export default defineComponent({
       );
       const jsn: source = await resp.json();
       this.$emit('setTitle', jsn.displayName);
+      this.isConfi.setConfigurable(jsn.isConfigurable);
     } catch (e) {
       console.error(e);
     }
@@ -40,7 +42,8 @@ export default defineComponent({
   },
   setup(_props, { emit }) {
     emit('setTitle', 'Source Search Page');
-    return {};
+
+    return { isConfi: isConfig() };
   }
 });
 </script>

@@ -152,3 +152,111 @@ export interface source {
   isNsfw: boolean;
   displayName: string;
 }
+
+interface preference {
+  type: string;
+  props: props;
+}
+
+interface props {
+  key: string;
+  summary: string;
+  title: string;
+  currentValue: unknown;
+  defaultValue: unknown;
+  defaultValueType: string;
+}
+
+interface propsListPreference extends props {
+  defaultValueType: 'String';
+  currentValue: string;
+  defaultValue: string;
+  entries: string[];
+  entryValues: string[];
+}
+
+export interface ListPreference extends preference {
+  type: 'ListPreference';
+  props: propsListPreference;
+}
+
+export function isListPreference(pref: preferences): pref is ListPreference {
+  return (<ListPreference>pref).type == 'ListPreference';
+}
+
+interface propsSwitchPreferenceCompat extends props {
+  defaultValueType: 'Boolean';
+  currentValue: boolean;
+  defaultValue: boolean;
+}
+
+export interface SwitchPreferenceCompat extends preference {
+  type: 'SwitchPreferenceCompat';
+  props: propsSwitchPreferenceCompat;
+}
+
+export function isSwitchPreferenceCompat(
+  pref: preferences
+): pref is SwitchPreferenceCompat {
+  return (<SwitchPreferenceCompat>pref).type == 'SwitchPreferenceCompat';
+}
+
+interface propsMultiSelectListPreference extends props {
+  defaultValueType: 'Set<String>';
+  currentValue: string[];
+  defaultValue: string[];
+  entries: string[];
+  entryValues: string[];
+}
+
+export interface MultiSelectListPreference extends preference {
+  type: 'MultiSelectListPreference';
+  props: propsMultiSelectListPreference;
+}
+
+export function isMultiSelectListPreference(
+  pref: preferences
+): pref is MultiSelectListPreference {
+  return (<MultiSelectListPreference>pref).type == 'MultiSelectListPreference';
+}
+
+interface propsEditTextPreference extends props {
+  defaultValueType: 'String';
+  currentValue: string;
+  defaultValue: string | null;
+}
+
+export interface EditTextPreference extends preference {
+  type: 'EditTextPreference';
+  props: propsEditTextPreference;
+}
+
+export function isEditTextPreference(
+  pref: preferences
+): pref is EditTextPreference {
+  return (<EditTextPreference>pref).type == 'EditTextPreference';
+}
+
+interface propsCheckBoxPreference extends props {
+  defaultValueType: 'Boolean';
+  currentValue: boolean;
+  defaultValue: boolean;
+}
+
+export interface CheckBoxPreference extends preference {
+  type: 'CheckBoxPreference';
+  props: propsCheckBoxPreference;
+}
+
+export function isCheckBoxPreference(
+  pref: preferences
+): pref is CheckBoxPreference {
+  return (<CheckBoxPreference>pref).type == 'CheckBoxPreference';
+}
+
+export type preferences =
+  | CheckBoxPreference
+  | EditTextPreference
+  | MultiSelectListPreference
+  | SwitchPreferenceCompat
+  | ListPreference;

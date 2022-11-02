@@ -42,12 +42,22 @@
       </div>
     </q-card>
   </q-dialog>
+
+  <q-btn
+    flat
+    round
+    class="q-ml-sm"
+    icon="settings"
+    v-if="isConfigurable"
+    to="../config"
+  ></q-btn>
 </template>
 
 <script lang="ts">
 import SearchBar from 'src/components/global/SearchBar.vue';
 import { defineComponent, ref } from 'vue';
 import Filters from 'src/components/library/Filters';
+import { isConfig } from 'src/components/sourceSearch/isConfigurable';
 
 export default defineComponent({
   name: 'libraryTopBar',
@@ -60,12 +70,14 @@ export default defineComponent({
   },
   setup() {
     const filters = Filters();
+    const isConfigurable = ref(isConfig().isConfigurable);
     const disp = ref(<'null' | 'true' | 'false'>`${filters.Display.value}`);
     return {
       dialo: ref(false),
       tab: ref('display'),
       disp,
-      filters
+      filters,
+      isConfigurable
     };
   }
 });
