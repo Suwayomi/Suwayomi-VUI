@@ -183,7 +183,7 @@ export default defineComponent({
     this.$nextTick(() => {
       window.addEventListener('resize', this.calcWidth);
     });
-    this.getFilts();
+    this.getFilts(true);
   },
   beforeUnmount() {
     window.removeEventListener('resize', this.calcWidth);

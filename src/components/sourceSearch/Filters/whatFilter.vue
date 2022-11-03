@@ -9,7 +9,16 @@
     <q-select
       v-model="val"
       style="width: 100%"
-      :options="filter.filter.values"
+      :options="
+        filter.filter.displayValues.map((ele, inde) => {
+          return {
+            label: ele,
+            value: inde
+          };
+        })
+      "
+      emit-value
+      map-options
       :label="filter.filter.name"
     />
   </q-item>
@@ -141,7 +150,7 @@ export default defineComponent({
         <{ index: number; ascending: boolean }>props.filter.filter.state
       );
     } else if (isfilterSelect(props.filter)) {
-      val = ref(props.filter.filter.values[props.filter.filter.state]);
+      val = ref(props.filter.filter.state);
     } else if (isfilterTriState(props.filter)) {
       val = ref(<number>props.filter.filter.state);
     } else if (isfilterHeader(props.filter)) {
