@@ -74,7 +74,6 @@
 import { defineComponent, PropType, ref } from 'vue';
 import { manga } from 'src/components/global/models';
 import { useQuasar } from 'quasar';
-import fetcher from '../global/fetcher';
 import { getImgBlob } from '../global/usefull';
 
 export default defineComponent({
@@ -107,11 +106,11 @@ export default defineComponent({
     async InLibrary() {
       this.inLib = !this.inLib;
       if (this.inLib) {
-        await fetcher(
+        await this.$fetch(
           `/api/v1/manga/${this.$route.params['mangaID']}/library/`
         );
       } else {
-        await fetcher(
+        await this.$fetch(
           `/api/v1/manga/${this.$route.params['mangaID']}/library/`,
           {
             method: 'DELETE'

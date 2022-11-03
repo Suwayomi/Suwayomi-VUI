@@ -119,7 +119,6 @@
 </template>
 
 <script lang="ts">
-import fetcher from 'src/components/global/fetcher';
 import {
   isCheckBoxPreference,
   isEditTextPreference,
@@ -151,10 +150,13 @@ export default defineComponent({
       } else {
         tmp = (this.val as boolean | string).toString();
       }
-      fetcher(`/api/v1/source/${this.$route.params['sourceID']}/preferences`, {
-        method: 'POST',
-        body: JSON.stringify({ position: this.position, value: tmp })
-      }).then(() => {
+      this.$fetch(
+        `/api/v1/source/${this.$route.params['sourceID']}/preferences`,
+        {
+          method: 'POST',
+          body: JSON.stringify({ position: this.position, value: tmp })
+        }
+      ).then(() => {
         this.$emit('getPrefs');
       });
     }

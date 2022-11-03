@@ -1,3 +1,4 @@
+import { boot } from 'quasar/wrappers';
 import { LocalStorage } from 'quasar';
 let base = LocalStorage.getItem('baseUrl') as string;
 
@@ -19,7 +20,7 @@ export function resetBase() {
   base = LocalStorage.getItem('baseUrl') as string;
 }
 
-export default function fetcher(
+export function fetcher(
   url: RequestInfo | URL,
   options: RequestInit | undefined = undefined
 ) {
@@ -33,4 +34,21 @@ export async function fetchJSON(
 ) {
   const tmp = await fetcher(url, options);
   return tmp.json();
+}
+
+export default boot(({ app }) => {
+  // for Options API
+  app.config.globalProperties['$fetch'] = fetcher;
+  app.config.globalProperties['$fetchJSON'] = fetchJSON;
+
+  // for Composition API
+  app.provide('fetch', fetcher);
+  app.provide('fetchJSON', fetchJSON);
+});
+
+declare module '@vue/runtime-core' {
+  interface ComponentCustomProperties {
+    $fetch: typeof fetcher;
+    $fetchJSON: typeof fetchJSON;
+  }
 }

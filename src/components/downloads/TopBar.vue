@@ -13,16 +13,15 @@
 import { defineComponent, ref } from 'vue';
 import useDlSock from 'src/components/downloads/useDlSock';
 import { dlsock, isdlsock } from '../global/models';
-import fetcher from '../global/fetcher';
 
 export default defineComponent({
   name: 'SearchBar',
   methods: {
     toggleplay() {
       if (!this.PlayPause) {
-        fetcher('/api/v1/downloads/start');
+        this.$fetch('/api/v1/downloads/start');
       } else {
-        fetcher('/api/v1/downloads/stop');
+        this.$fetch('/api/v1/downloads/stop');
       }
     }
   },

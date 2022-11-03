@@ -1,5 +1,5 @@
 import { LocalStorage } from 'quasar';
-import fetcher from './fetcher';
+import { fetcher } from 'src/boot/fetcher';
 
 export function storeSet(
   key: string,

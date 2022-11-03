@@ -35,7 +35,6 @@
 </template>
 
 <script lang="ts">
-import { fetchJSON } from 'src/components/global/fetcher';
 import { defineComponent, ref } from 'vue';
 import {
   extention,
@@ -54,7 +53,7 @@ export default defineComponent({
   },
   methods: {
     reload() {
-      fetchJSON('/api/v1/extension/list').then((data: extention[]) => {
+      this.$fetchJSON('/api/v1/extension/list').then((data: extention[]) => {
         this.list = data;
       });
     },

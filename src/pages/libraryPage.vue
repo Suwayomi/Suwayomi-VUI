@@ -34,14 +34,13 @@ import TabPanel from 'src/components/library/TabPanel.vue';
 import { defineComponent, ref } from 'vue';
 import { cat } from 'src/components/global/models';
 import MangaGrid from 'src/components/library/MangaGrid.vue';
-import { fetchJSON } from 'src/components/global/fetcher';
 
 export default defineComponent({
   name: 'libraryPage',
   components: { TabPanel, MangaGrid },
   created: async function () {
     try {
-      const jsn: cat[] = await fetchJSON('/api/v1/category');
+      const jsn: cat[] = await this.$fetchJSON('/api/v1/category');
       this.tabs = jsn.map((cat) => {
         return {
           tabname: cat.name,

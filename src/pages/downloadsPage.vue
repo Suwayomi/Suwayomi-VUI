@@ -99,16 +99,15 @@ import useDlSock from 'src/components/downloads/useDlSock';
 import { ref } from 'vue';
 import { download, dlsock, isdlsock } from 'src/components/global/models';
 import { useQuasar } from 'quasar';
-import fetcher from 'src/components/global/fetcher';
 
 export default {
   methods: {
     async delet(download: download) {
-      fetcher(
+      this.$fetch(
         `/api/v1/download/${download.mangaId}/chapter/${download.chapterIndex}`,
         { method: 'DELETE' }
       );
-      fetcher(
+      this.$fetch(
         `/api/v1/manga/${download.mangaId}/chapter/${download.chapterIndex}`,
         { method: 'DELETE' }
       );
