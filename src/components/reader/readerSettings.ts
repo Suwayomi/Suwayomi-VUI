@@ -1,6 +1,7 @@
 import { ref } from 'vue';
 import { manga } from '../global/models';
 import { LocalStorage } from 'quasar';
+import { fetcher, fetchJSON } from 'src/boot/fetcher';
 
 const vue_RM = ref(<string>'RTL');
 const vue_WT = ref(<boolean>false);
@@ -17,7 +18,7 @@ export function chapterMeta(mangaID: number) {
   vue_WT.value = (LocalStorage.getItem('vue_WT') || false) as boolean;
   vue_Scale.value = (LocalStorage.getItem('vue_Scale') || false) as boolean;
   vue_Offset.value = (LocalStorage.getItem('vue_Offset') || false) as boolean;
-  this.$fetchJSON(`/api/v1/manga/${mangaID}`).then((manga: manga): void => {
+  fetchJSON(`/api/v1/manga/${mangaID}`).then((manga: manga): void => {
     vue_RM.value = manga.meta.vue_RM
       ? manga.meta.vue_RM
       : ((LocalStorage.getItem('vue_RM') || 'RTL') as string);
@@ -54,7 +55,7 @@ export function chapterMeta(mangaID: number) {
     const fd = new FormData();
     fd.append('key', key);
     fd.append('value', data);
-    this.$fetch(`/api/v1/manga/${mangaID}/meta`, {
+    fetcher(`/api/v1/manga/${mangaID}/meta`, {
       method: 'PATCH',
       body: fd
     });
