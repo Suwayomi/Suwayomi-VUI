@@ -8,7 +8,6 @@
 import { defineComponent } from 'vue';
 import { source } from 'src/components/global/models';
 import sourceGrid from 'src/components/sourceSearch/sourceMangaGrid.vue';
-import { fetchJSON } from 'src/components/global/fetcher';
 import { isConfig } from 'src/components/sourceSearch/isConfigurable';
 
 export default defineComponent({
@@ -18,7 +17,7 @@ export default defineComponent({
   },
   created: async function () {
     try {
-      const jsn: source = await fetchJSON(
+      const jsn: source = await this.$fetchJSON(
         `/api/v1/source/${this.$route.params['sourceID']}`
       );
       this.$emit('setTitle', jsn.displayName);

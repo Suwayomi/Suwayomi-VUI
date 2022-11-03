@@ -11,7 +11,6 @@
 </template>
 
 <script lang="ts">
-import { fetchJSON } from 'src/components/global/fetcher';
 import { preferences } from 'src/components/global/models';
 import { defineComponent, ref } from 'vue';
 import whatis from 'src/components/sourceSearch/config/whatIs.vue';
@@ -21,7 +20,7 @@ export default defineComponent({
   components: { whatis },
   methods: {
     getPrefs() {
-      fetchJSON(
+      this.$fetchJSON(
         `/api/v1/source/${this.$route.params['sourceID']}/preferences`
       ).then((data: preferences[]) => (this.preferences = data));
     }

@@ -114,7 +114,6 @@
 <script lang="ts">
 import { defineComponent, ref } from 'vue';
 import { chapter } from 'src/components/global/models';
-import fetcher, { fetchJSON } from 'src/components/global/fetcher';
 import filterr from './Filter.vue';
 import { chaptersFilter } from './filters';
 import { useRoute } from 'vue-router';
@@ -185,7 +184,7 @@ export default defineComponent({
     async getonline(TF = 'false', retry = 2) {
       try {
         this.chapters = <chapter[]>(
-          await fetchJSON(
+          await this.$fetchJSON(
             `/api/v1/manga/${this.$route.params['mangaID']}/chapters?onlineFetch=${TF}`
           )
         );
@@ -203,12 +202,12 @@ export default defineComponent({
       }
     },
     async download(index: number) {
-      await fetcher(
+      await this.$fetch(
         `/api/v1/download/${this.$route.params['mangaID']}/chapter/${index}`
       );
     },
     async dele(index: number) {
-      await fetcher(
+      await this.$fetch(
         `/api/v1/manga/${this.$route.params['mangaID']}/chapter/${index}`,
         { method: 'DELETE' }
       );
@@ -219,7 +218,7 @@ export default defineComponent({
       FD.forEach((dat) => {
         fd.append(...dat);
       });
-      await fetcher(
+      await this.$fetch(
         `/api/v1/manga/${this.$route.params['mangaID']}/chapter/${index}`,
         { method: 'PATCH', body: fd }
       );

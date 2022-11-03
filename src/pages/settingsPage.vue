@@ -267,7 +267,7 @@
 <script lang="ts">
 import { useQuasar } from 'quasar';
 import { defineComponent, ref } from 'vue';
-import { resetBase } from 'src/components/global/fetcher';
+import { resetBase } from 'src/boot/fetcher';
 
 export default defineComponent({
   name: 'settingsPage',

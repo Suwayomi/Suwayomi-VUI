@@ -44,14 +44,14 @@
         />
       </q-card-actions>
       <q-list>
-        <isGroup
+        <isItGroup
           @stateChange="stateChange"
           v-for="(filt, index) in filters"
           :filter="filt"
           :position="index"
           :key="index"
         >
-        </isGroup>
+        </isItGroup>
       </q-list>
     </q-card>
   </q-dialog>
@@ -61,10 +61,9 @@
 import { defineComponent, ref } from 'vue';
 import { manga, sourcepage } from 'src/components/global/models';
 import MangaCard from 'src/components/sourceSearch/mangaCard.vue';
-import fetcher, { fetchJSON } from 'src/components/global/fetcher';
 import { debounce, QInfiniteScroll } from 'quasar';
 import Display from 'src/components/library/Filters';
-import isGroup from 'src/components/sourceSearch/Filters/isGroup.vue';
+import isItGroup from 'src/components/sourceSearch/Filters/isItGroup.vue';
 
 interface posState {
   position: number;
@@ -73,7 +72,7 @@ interface posState {
 
 export default defineComponent({
   name: 'mangaSourceGrid',
-  components: { MangaCard, isGroup },
+  components: { MangaCard, isItGroup },
   computed: {
     Displ() {
       if (this.display.Display == null) {
@@ -106,17 +105,17 @@ export default defineComponent({
       return 0;
     },
     async reload(num = 1) {
-      if (this.Smitted || this.$route.params['q']) {
+      if (this.Smitted || this.$route.query['q']) {
         return <sourcepage>(
-          await fetchJSON(
+          await this.$fetchJSON(
             `/api/v1/source/${
               this.$route.params['sourceID']
-            }/search?searchTerm=${this.$route.params['q'] || ''}&pageNum=${num}`
+            }/search?searchTerm=${this.$route.query['q'] || ''}&pageNum=${num}`
           )
         );
       } else {
         return <sourcepage>(
-          await fetchJSON(
+          await this.$fetchJSON(
             `/api/v1/source/${this.$route.params['sourceID']}/popular/${num}`
           )
         );
@@ -141,7 +140,7 @@ export default defineComponent({
       (this.$refs['infiniteScrol'] as QInfiniteScroll).poll();
     },
     getFilts(reset = false) {
-      fetchJSON(
+      this.$fetchJSON(
         `/api/v1/source/${this.$route.params['sourceID']}/filters${
           reset ? '?reset=true' : ''
         }`
@@ -163,7 +162,7 @@ export default defineComponent({
       }
     },
     async submitFilters() {
-      await fetcher(
+      await this.$fetch(
         `/api/v1/source/${this.$route.params['sourceID']}/filters`,
         {
           method: 'POST',
@@ -188,6 +187,11 @@ export default defineComponent({
   },
   beforeUnmount() {
     window.removeEventListener('resize', this.calcWidth);
+  },
+  watch: {
+    '$route.query.q': function () {
+      this.resetScroll();
+    }
   },
   setup() {
     return {

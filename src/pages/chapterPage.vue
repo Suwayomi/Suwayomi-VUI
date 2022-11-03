@@ -52,7 +52,6 @@
 
 <script lang="ts">
 import { QInfiniteScroll } from 'quasar';
-import fetcher, { fetchJSON } from 'src/components/global/fetcher';
 import { chapter } from 'src/components/global/models';
 import { defineComponent, ref } from 'vue';
 import { useRoute } from 'vue-router';
@@ -65,7 +64,7 @@ export default defineComponent({
   emits: ['setTitle'],
   methods: {
     onLoad(_index: number, done: () => void) {
-      fetchJSON(
+      this.$fetchJSON(
         `/api/v1/manga/${this.$route.params['mangaID']}/chapter/${this.currchapter}`
       ).then((data: chapter) => {
         this.items.push(data);
@@ -105,7 +104,7 @@ export default defineComponent({
         'lastPageRead',
         `${parseInt(ele.dataset['pid'] as string) + 1}`
       );
-      fetcher(
+      this.$fetch(
         `/api/v1/manga/${this.$route.params['mangaID']}/chapter/${ele.dataset['cid']}`,
         {
           method: 'PATCH',
@@ -118,7 +117,7 @@ export default defineComponent({
       ) {
         const fd = new FormData();
         fd.append('read', 'true');
-        fetcher(
+        this.$fetch(
           `/api/v1/manga/${this.$route.params['mangaID']}/chapter/${ele.dataset['cid']}`,
           {
             method: 'PATCH',

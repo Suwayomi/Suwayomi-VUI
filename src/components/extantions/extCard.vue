@@ -42,7 +42,6 @@
 <script lang="ts">
 import { defineComponent, PropType, ref } from 'vue';
 import { useQuasar } from 'quasar';
-import fetcher from '../global/fetcher';
 import { extention } from '../global/models';
 import { getImgBlob } from '../global/usefull';
 
@@ -68,11 +67,11 @@ export default defineComponent({
     },
     async HandleExt() {
       if (this.exten.hasUpdate) {
-        await fetcher(`/api/v1/extension/update/${this.exten.pkgName}`);
+        await this.$fetch(`/api/v1/extension/update/${this.exten.pkgName}`);
       } else if (this.exten.installed) {
-        await fetcher(`/api/v1/extension/uninstall/${this.exten.pkgName}`);
+        await this.$fetch(`/api/v1/extension/uninstall/${this.exten.pkgName}`);
       } else {
-        await fetcher(`/api/v1/extension/install/${this.exten.pkgName}`);
+        await this.$fetch(`/api/v1/extension/install/${this.exten.pkgName}`);
       }
       this.$emit('reload');
     }

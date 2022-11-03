@@ -36,7 +36,6 @@
 </template>
 
 <script lang="ts">
-import { fetchJSON } from 'src/components/global/fetcher';
 import { source } from 'src/components/global/models';
 import { defineComponent, ref } from 'vue';
 import Filters from 'src/components/extantions/Filters';
@@ -52,7 +51,7 @@ export default defineComponent({
   },
   methods: {
     reload() {
-      fetchJSON('/api/v1/source/list').then((data: source[]) => {
+      this.$fetchJSON('/api/v1/source/list').then((data: source[]) => {
         this.list = data;
         this.filters.setcurrlangs(this.extractLangs(data));
       });

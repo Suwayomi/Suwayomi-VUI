@@ -1,5 +1,4 @@
 import { ref } from 'vue';
-import fetcher, { fetchJSON } from '../global/fetcher';
 import { manga } from '../global/models';
 import { LocalStorage } from 'quasar';
 
@@ -18,22 +17,21 @@ export function chapterMeta(mangaID: number) {
   vue_WT.value = (LocalStorage.getItem('vue_WT') || false) as boolean;
   vue_Scale.value = (LocalStorage.getItem('vue_Scale') || false) as boolean;
   vue_Offset.value = (LocalStorage.getItem('vue_Offset') || false) as boolean;
-  fetchJSON(`/api/v1/manga/${mangaID}`)
-    .then((manga: manga): void => {
-      vue_RM.value = manga.meta.vue_RM
-        ? manga.meta.vue_RM
-        : ((LocalStorage.getItem('vue_RM') || 'RTL') as string);
-      vue_WT.value = manga.meta.vue_WT
-        ? tobool(manga.meta.vue_WT)
-        : ((LocalStorage.getItem('vue_WT') || false) as boolean);
-      vue_Scale.value = manga.meta.vue_Scale
-        ? tobool(manga.meta.vue_Scale)
-        : ((LocalStorage.getItem('vue_Scale') || false) as boolean);
-      vue_Offset.value = manga.meta.vue_Offset
-        ? tobool(manga.meta.vue_Offset)
-        : ((LocalStorage.getItem('vue_Offset') || false) as boolean);
-      vue_title.value = manga.title
-    });
+  this.$fetchJSON(`/api/v1/manga/${mangaID}`).then((manga: manga): void => {
+    vue_RM.value = manga.meta.vue_RM
+      ? manga.meta.vue_RM
+      : ((LocalStorage.getItem('vue_RM') || 'RTL') as string);
+    vue_WT.value = manga.meta.vue_WT
+      ? tobool(manga.meta.vue_WT)
+      : ((LocalStorage.getItem('vue_WT') || false) as boolean);
+    vue_Scale.value = manga.meta.vue_Scale
+      ? tobool(manga.meta.vue_Scale)
+      : ((LocalStorage.getItem('vue_Scale') || false) as boolean);
+    vue_Offset.value = manga.meta.vue_Offset
+      ? tobool(manga.meta.vue_Offset)
+      : ((LocalStorage.getItem('vue_Offset') || false) as boolean);
+    vue_title.value = manga.title;
+  });
 
   function setRM(data: string) {
     vue_RM.value = data;
@@ -56,7 +54,7 @@ export function chapterMeta(mangaID: number) {
     const fd = new FormData();
     fd.append('key', key);
     fd.append('value', data);
-    fetcher(`/api/v1/manga/${mangaID}/meta`, {
+    this.$fetch(`/api/v1/manga/${mangaID}/meta`, {
       method: 'PATCH',
       body: fd
     });
