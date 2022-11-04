@@ -1,0 +1,11 @@
+version: '3.7'
+services:
+  quasar:
+    build:
+      context: .
+      target: 'develop-stage'
+    ports:
+      - '9012:9012'
+    volumes:
+      - '.:/app'
+    command: /bin/sh -c "npm i && quasar dev"
