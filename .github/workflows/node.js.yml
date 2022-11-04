@@ -33,7 +33,7 @@ jobs:
       run: |
         genTag="r$(git rev-list HEAD --count)"
         echo "$genTag"
-        echo "::set-output name=value::$genTag"
+        echo "value=$genTag" >> $GITHUB_OUTPUT
     - uses: montudor/action-zip@v1
       with:
         args: zip -qq -r dist.zip . -i main/dist/spa
@@ -41,4 +41,4 @@ jobs:
       uses: ncipollo/release-action@v1
       with:
         artifacts: "dist.zip"
-        tag: ${{ steps.GenTagName.outputs.value }}
+        tag: ${{ state.value }}
