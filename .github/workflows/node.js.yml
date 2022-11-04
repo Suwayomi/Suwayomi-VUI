@@ -37,8 +37,5 @@ jobs:
     - name: Upload CI Release
       uses: ncipollo/release-action@v1
       with:
-        token: ${{ secrets.DEPLOY_PREVIEW_TOKEN }}
         artifacts: "main/dist/spa/*"
-        owner: "Robonau"
-        repo: "Tachidesk-VUI"
         tag: ${{ steps.GenTagName.outputs.value }}
