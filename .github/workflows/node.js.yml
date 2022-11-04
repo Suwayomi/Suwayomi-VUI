@@ -39,10 +39,14 @@ jobs:
 #         args: zip -qq -r dist.zip main/dist/
     - uses: vimtor/action-zip@v1
       with:
-        files: dist/
+        files: main/dist/
         dest: dist.zip
-    - name: Upload CI Release
-      uses: ncipollo/release-action@v1
+    - uses: actions/upload-artifact@v1
       with:
-        artifacts: "dist.zip"
-        tag: ${{ steps.GenTagName.outputs.value }}
+        name: my-artifact
+        path: ${{ github.workspace }}/dist.zip
+#     - name: Upload CI Release
+#       uses: ncipollo/release-action@v1
+#       with:
+#         artifacts: "dist.zip"
+#         tag: ${{ steps.GenTagName.outputs.value }}
