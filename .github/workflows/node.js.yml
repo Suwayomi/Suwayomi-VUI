@@ -31,7 +31,6 @@ jobs:
     - name: Generate Tag Name
       id: GenTagName
       run: |
-        cd main
         genTag="r$(git rev-list HEAD --count)"
         echo "$genTag"
         echo "::set-output name=value::$genTag"
