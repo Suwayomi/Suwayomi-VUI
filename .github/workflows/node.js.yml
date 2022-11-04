@@ -27,17 +27,19 @@ jobs:
         node-version: ${{ matrix.node-version }}
         cache: 'npm'
     - run: npm ci
-    - run: npm run build --if-present
+    - run: npm run build
     - name: Generate Tag Name
       id: GenTagName
       run: |
         genTag="r$(git rev-list HEAD --count)"
         echo "$genTag"
-        ls
         echo "value=$genTag" >> $GITHUB_OUTPUT
 #     - uses: montudor/action-zip@v1
 #       with:
 #         args: zip -qq -r dist.zip main/dist/
+    - name: List files in the repository
+      run: |
+        ls ${{ github.workspace }}
     - uses: vimtor/action-zip@v1
       with:
         files: dist/
