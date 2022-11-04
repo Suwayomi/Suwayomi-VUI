@@ -1,6 +1,6 @@
-# Tachidesk-VUI (Robonau's Vue + Quasar tachidesk UI)
+# Tachidesk-VUI
 
-Tachidesk-VUI
+Robonau's Vue + Quasar tachidesk UI
 
 ## Install the dependencies
 
