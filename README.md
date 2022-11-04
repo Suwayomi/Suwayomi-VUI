@@ -1,6 +1,6 @@
-# Quasar App (Robonau's vue tachidesk webui)
+# Tachidesk-VUI (Robonau's Vue + Quasar tachidesk UI)
 
-A Quasar Project
+Tachidesk-VUI
 
 ## Install the dependencies
 
@@ -17,14 +17,12 @@ quasar dev
 ### Lint the files
 
 ```bash
-
 npm run lint
 ```
 
 ### Format the files
 
 ```bash
-
 npm run format
 ```
 
