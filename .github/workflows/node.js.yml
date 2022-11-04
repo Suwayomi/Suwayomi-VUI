@@ -34,22 +34,18 @@ jobs:
         genTag="r$(git rev-list HEAD --count)"
         echo "$genTag"
         echo "value=$genTag" >> $GITHUB_OUTPUT
-#     - uses: montudor/action-zip@v1
-#       with:
-#         args: zip -qq -r dist.zip main/dist/
     - name: List files in the repository
       run: |
         ls ${{ github.workspace }}
-    - uses: vimtor/action-zip@v1
+    - uses: montudor/action-zip@v1
       with:
-        files: dist/
-        dest: dist.zip
-    - uses: actions/upload-artifact@v1
-      with:
-        name: my-artifact
-        path: ${{ github.workspace }}/dist.zip
-#     - name: Upload CI Release
-#       uses: ncipollo/release-action@v1
+        args: zip -qq -r dist.zip /dist/spa
+#     - uses: actions/upload-artifact@v1
 #       with:
-#         artifacts: "dist.zip"
-#         tag: ${{ steps.GenTagName.outputs.value }}
+#         name: my-artifact
+#         path: ${{ github.workspace }}/dist.zip
+    - name: Upload CI Release
+      uses: ncipollo/release-action@v1
+      with:
+        artifacts: "dist.zip"
+        tag: ${{ steps.GenTagName.outputs.value }}
