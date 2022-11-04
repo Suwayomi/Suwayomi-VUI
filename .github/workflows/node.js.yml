@@ -39,13 +39,13 @@ jobs:
         ls ${{ github.workspace }}
     - uses: montudor/action-zip@v1
       with:
-        args: zip -qq -r dist.zip . -i /dist/spa
-#     - uses: actions/upload-artifact@v1
-#       with:
-#         name: my-artifact
-#         path: ${{ github.workspace }}/dist.zip
-    - name: Upload CI Release
-      uses: ncipollo/release-action@v1
+        args: zip -qq -r dist.zip dist/spa
+    - uses: actions/upload-artifact@v1
       with:
-        artifacts: "dist.zip"
-        tag: ${{ steps.GenTagName.outputs.value }}
+        name: my-artifact
+        path: ${{ github.workspace }}/dist.zip
+#     - name: Upload CI Release
+#       uses: ncipollo/release-action@v1
+#       with:
+#         artifacts: "dist.zip"
+#         tag: ${{ steps.GenTagName.outputs.value }}
