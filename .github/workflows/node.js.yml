@@ -17,8 +17,6 @@ jobs:
     strategy:
       matrix:
         node-version: [18.x]
-        # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
-
     steps:
     - uses: actions/checkout@v3
     - name: Use Node.js ${{ matrix.node-version }}
@@ -40,12 +38,8 @@ jobs:
     - uses: montudor/action-zip@v1
       with:
         args: zip -qq -r dist.zip dist/spa
-    - uses: actions/upload-artifact@v1
+    - name: Upload CI Release
+      uses: ncipollo/release-action@v1
       with:
-        name: my-artifact
-        path: ${{ github.workspace }}/dist.zip
-#     - name: Upload CI Release
-#       uses: ncipollo/release-action@v1
-#       with:
-#         artifacts: "dist.zip"
-#         tag: ${{ steps.GenTagName.outputs.value }}
+        artifacts: "dist.zip"
+        tag: ${{ steps.GenTagName.outputs.value }}
