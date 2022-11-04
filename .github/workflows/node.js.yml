@@ -39,7 +39,7 @@ jobs:
 #         args: zip -qq -r dist.zip main/dist/
     - uses: vimtor/action-zip@v1
       with:
-        files: main/dist/
+        files: dist/
         dest: dist.zip
     - uses: actions/upload-artifact@v1
       with:
