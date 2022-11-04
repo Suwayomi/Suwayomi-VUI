@@ -36,9 +36,9 @@ jobs:
         echo "value=$genTag" >> $GITHUB_OUTPUT
     - uses: montudor/action-zip@v1
       with:
-        args: zip -qq -r dist.zip dist/spa/
+        args: zip -qq -r release.zip dist/spa/
     - name: Upload CI Release
       uses: ncipollo/release-action@v1
       with:
-        artifacts: "dist.zip"
+        artifacts: "release.zip"
         tag: ${{ steps.GenTagName.outputs.value }}
