@@ -34,8 +34,11 @@ jobs:
         genTag="r$(git rev-list HEAD --count)"
         echo "$genTag"
         echo "::set-output name=value::$genTag"
+    - uses: montudor/action-zip@v1
+      with:
+        args: zip -qq -r dist.zip main/dist/spa/
     - name: Upload CI Release
       uses: ncipollo/release-action@v1
       with:
-        artifacts: "main/dist/spa/*"
+        artifacts: "dist.zip"
         tag: ${{ steps.GenTagName.outputs.value }}
