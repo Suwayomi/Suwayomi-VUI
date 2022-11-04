@@ -34,9 +34,13 @@ jobs:
         genTag="r$(git rev-list HEAD --count)"
         echo "$genTag"
         echo "value=$genTag" >> $GITHUB_OUTPUT
-    - uses: montudor/action-zip@v1
+#     - uses: montudor/action-zip@v1
+#       with:
+#         args: zip -qq -r dist.zip main/dist/
+    - uses: vimtor/action-zip@v1
       with:
-        args: zip -qq -r dist.zip main/dist/
+        files: dist/
+        dest: dist.zip
     - name: Upload CI Release
       uses: ncipollo/release-action@v1
       with:
