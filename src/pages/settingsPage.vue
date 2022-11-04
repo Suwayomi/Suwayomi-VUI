@@ -284,7 +284,7 @@ export default defineComponent({
     },
     setserverAuth(username = '', password = '') {
       if (username == '' || password == '') {
-        this.$q.localStorage.set('auth', null);
+        this.$q.localStorage.remove('auth');
         this.busr = '';
         this.bpsw = '';
       } else {
