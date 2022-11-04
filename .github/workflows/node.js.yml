@@ -34,11 +34,9 @@ jobs:
         genTag="r$(git rev-list HEAD --count)"
         echo "$genTag"
         echo "value=$genTag" >> $GITHUB_OUTPUT
-    - name: Install zip
-      uses: montudor/action-zip@v1
-    - name: Zip output
-      run: zip -qq -r release.zip spa
-      working-directory: ${{ github.workspace }}/dist
+    - uses: montudor/action-zip@v1
+      with:
+        args: zip -qq -r release.zip dist/spa
     - name: Upload CI Release
       uses: ncipollo/release-action@v1
       with:
