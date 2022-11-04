@@ -28,3 +28,18 @@ jobs:
         cache: 'npm'
     - run: npm ci
     - run: npm run build --if-present
+    - name: Generate Tag Name
+      id: GenTagName
+      run: |
+        cd master/build
+        genTag="r$(git rev-list HEAD --count)"
+        echo "$genTag"
+        echo "::set-output name=value::$genTag"
+    - name: Upload CI Release
+      uses: ncipollo/release-action@v1
+      with:
+        token: ${{ secrets.DEPLOY_PREVIEW_TOKEN }}
+        artifacts: "master/dist/spa/*"
+        owner: "Robonau"
+        repo: "Tachidesk-VUI"
+        tag: ${{ steps.GenTagName.outputs.value }}
