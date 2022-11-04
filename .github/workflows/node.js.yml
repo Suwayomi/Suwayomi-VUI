@@ -31,7 +31,7 @@ jobs:
     - name: Generate Tag Name
       id: GenTagName
       run: |
-        cd master/dist/spa
+        cd main/dist/spa
         genTag="r$(git rev-list HEAD --count)"
         echo "$genTag"
         echo "::set-output name=value::$genTag"
@@ -39,7 +39,7 @@ jobs:
       uses: ncipollo/release-action@v1
       with:
         token: ${{ secrets.DEPLOY_PREVIEW_TOKEN }}
-        artifacts: "master/dist/spa/*"
+        artifacts: "main/dist/spa/*"
         owner: "Robonau"
         repo: "Tachidesk-VUI"
         tag: ${{ steps.GenTagName.outputs.value }}
