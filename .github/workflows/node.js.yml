@@ -39,7 +39,7 @@ jobs:
         ls ${{ github.workspace }}
     - uses: montudor/action-zip@v1
       with:
-        args: zip -qq -r dist.zip /dist/spa
+        args: zip -qq -r dist.zip ${{ github.workspace }}/dist/spa/
 #     - uses: actions/upload-artifact@v1
 #       with:
 #         name: my-artifact
