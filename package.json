@@ -1,9 +1,9 @@
 {
-  "name": "webuia2",
+  "name": "tachidesk-vui",
   "version": "0.0.1",
-  "description": "A Quasar Project",
-  "productName": "Quasar App",
-  "author": "",
+  "description": "A tachidesk UI made with Vue + Quasar",
+  "productName": "Tachidesk-VUI",
+  "author": "Robonau",
   "private": true,
   "scripts": {
     "lint": "eslint --ext .js,.ts,.vue ./",
