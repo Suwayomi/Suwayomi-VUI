@@ -1,7 +1,7 @@
 version: '3.7'
 services:
 
-  quasar-dev:
+  tachideskvui-dev:
     build:
       context: .
       target: 'develop-stage'
@@ -10,9 +10,11 @@ services:
     volumes:
       - '.:/app'
     command: /bin/sh -c "npm i && quasar dev"
+    restart: unless-stopped
 
-  quasar-prod:
+  tachideskvui-prod:
     build:
       context: .
     ports:
       - '9013:80'
+    restart: unless-stopped

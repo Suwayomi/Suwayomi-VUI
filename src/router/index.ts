@@ -18,6 +18,20 @@ import routes from './routes';
  */
 
 export default route(function (/* { store, ssrContext } */) {
+  // i honistly dont know the proper fix for this
+  if (window.process == undefined) {
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    window.process = {
+      env: {
+        SERVER: '',
+        NODE_ENV: '',
+        VUE_ROUTER_MODE: 'hash',
+        VUE_ROUTER_BASE: '/'
+      }
+    };
+  }
+
   const createHistory = process.env['SERVER']
     ? createMemoryHistory
     : process.env.VUE_ROUTER_MODE === 'history'
@@ -34,6 +48,7 @@ export default route(function (/* { store, ssrContext } */) {
     // Leave this as is and make changes in quasar.conf.js instead!
     // quasar.conf.js -> build -> vueRouterMode
     // quasar.conf.js -> build -> publicPath
+
     history: createHistory(process.env.VUE_ROUTER_BASE)
   });
 
