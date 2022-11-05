@@ -26,7 +26,7 @@
           >
           </displayPage>
           <q-card
-            style="height: 50vh"
+            style="height: 100vh; max-height: 500px"
             :style="isBook2 ? `width:100%` : ``"
             class="column text-center q-ml-md"
           >
@@ -41,7 +41,7 @@
           </q-card>
         </div>
         <template v-slot:loading>
-          <div class="row justify-center q-my-md">
+          <div class="row justify-center q-py-md">
             <q-spinner-dots color="primary" size="40px" />
           </div>
         </template>
