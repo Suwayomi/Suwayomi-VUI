@@ -5,10 +5,6 @@ if (LocalStorage.isEmpty()) {
   LocalStorage.set('useCache', true);
   LocalStorage.set('MitemW', 300);
   LocalStorage.set('dark', true);
+  LocalStorage.set('ExtLangFilt', ['en']);
   Dark.set(true);
-  // LocalStorage.set('', '');
-  // LocalStorage.set('', '');
-  // LocalStorage.set('', '');
-  // LocalStorage.set('', '');
-  // LocalStorage.set('', '');
 }
