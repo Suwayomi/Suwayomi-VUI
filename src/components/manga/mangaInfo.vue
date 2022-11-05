@@ -26,8 +26,7 @@
         img-class="test"
         :src="imgdata"
         fit="scale-down"
-      >
-      </q-img>
+      />
       <div v-if="manga" class="q-mx-md" style="display: inline-block">
         <h3 :class="$q.screen.sm || $q.screen.xs ? `q-my-sm` : ``">
           {{ manga.title }}

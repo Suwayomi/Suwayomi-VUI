@@ -1,6 +1,7 @@
 <template>
   <q-layout view="hHh Lpr fFf">
     <q-drawer
+      overlay
       v-model="leftDrawerOpen"
       elevated
       class="fixed"
@@ -11,13 +12,13 @@
       "
     >
       <q-item class="justify-between">
-        <q-btn icon="arrow_back" flat round @click="$router.go(-1)" />
         <q-btn
           icon="close"
           flat
           round
           @click="leftDrawerOpen = !leftDrawerOpen"
         />
+        <q-btn icon="arrow_back" flat round @click="$router.go(-1)" />
       </q-item>
       <leftDrawerVue></leftDrawerVue>
     </q-drawer>
