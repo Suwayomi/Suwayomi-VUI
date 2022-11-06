@@ -1,5 +1,14 @@
 <template>
   <q-list separator :dark="$q.dark.isActive ? true : false">
+    <!-- categories -->
+    <q-item to="/settings/categories">
+      <q-item-section avatar>
+        <q-icon name="category" />
+      </q-item-section>
+      <q-item-section>
+        <q-item-label>Categories</q-item-label>
+      </q-item-section>
+    </q-item>
     <!-- dark mode -->
     <q-item
       clickable
