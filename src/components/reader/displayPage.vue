@@ -17,7 +17,7 @@
     </q-img>
     <q-card
       flat
-      style="height: 50vh; background-color: transparent; width: 100%"
+      style="height: 100vh; background-color: transparent; width: 100%"
       v-if="!imgdata"
     >
       <q-inner-loading
