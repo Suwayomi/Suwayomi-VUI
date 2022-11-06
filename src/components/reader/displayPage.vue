@@ -62,7 +62,7 @@ export default defineComponent({
       default: false
     }
   },
-  created: function () {
+  mounted: function () {
     this.getImg();
   },
   computed: {

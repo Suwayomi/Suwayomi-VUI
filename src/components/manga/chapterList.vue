@@ -113,10 +113,11 @@
 
 <script lang="ts">
 import { defineComponent, ref } from 'vue';
-import { chapter } from 'src/components/global/models';
+import { chapter, dlsock, isdlsock } from 'src/components/global/models';
 import filterr from './Filter.vue';
 import { chaptersFilter } from './filters';
 import { useRoute } from 'vue-router';
+import useDlSock from '../downloads/useDlSock';
 
 export default defineComponent({
   name: 'mangaChapters',
@@ -225,15 +226,38 @@ export default defineComponent({
       this.getonline();
     }
   },
+  watch: {
+    'Emitter.eventsFromServer'(val) {
+      const tmp = <dlsock>JSON.parse(val);
+      if (isdlsock(tmp)) {
+        const tmpp = tmp.queue.filter(
+          (ele) => ele.mangaId == parseInt(`${this.$route.params['mangaID']}`)
+        ).length;
+        if (this.downloads > tmpp) {
+          this.getonline();
+        }
+        this.downloads = tmpp;
+      }
+    }
+  },
   setup() {
     const route = useRoute();
     const filters = ref(chaptersFilter(parseInt(`${route.params['mangaID']}`)));
     const chapters = ref(<chapter[]>[]);
     const chaptersfilt = ref(<chapter[]>[]);
+
+    const Emitt = useDlSock();
+    const Emitter = ref(Emitt);
+    Emitter.value.eventsFromServer = '';
+    if (Emitter.value.isConnected) {
+      Emitt.sendMsg('STATUS');
+    }
     return {
       chapters,
       chaptersfilt,
-      filters
+      filters,
+      Emitter,
+      downloads: ref(0)
     };
   }
 });

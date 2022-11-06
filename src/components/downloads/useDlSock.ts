@@ -6,7 +6,6 @@ const isConnected = ref(false);
 let base = LocalStorage.getItem('baseUrl') as string;
 base =
   base == '' ? document.location.origin + document.location.pathname : base;
-console.log(base);
 const url = new URL(base);
 url.protocol = url.protocol == 'https:' ? 'wss:' : 'ws:';
 let socket: WebSocket;
