@@ -5,6 +5,7 @@ const routes: RouteRecordRaw[] = [
     path: '/',
     redirect: '/library'
   },
+  // library
   {
     path: '/library',
     component: () => import('layouts/MainLayout.vue'),
@@ -18,6 +19,7 @@ const routes: RouteRecordRaw[] = [
       }
     ]
   },
+  // updates
   {
     path: '/updates',
     component: () => import('layouts/MainLayout.vue'),
@@ -25,6 +27,7 @@ const routes: RouteRecordRaw[] = [
       { path: '', component: () => import('src/pages/updatesPage.vue') }
     ]
   },
+  // extensions
   {
     path: '/extensions',
     component: () => import('layouts/MainLayout.vue'),
@@ -38,6 +41,7 @@ const routes: RouteRecordRaw[] = [
       }
     ]
   },
+  // sources
   {
     path: '/sources',
     component: () => import('layouts/MainLayout.vue'),
@@ -64,6 +68,7 @@ const routes: RouteRecordRaw[] = [
       }
     ]
   },
+  // downloads
   {
     path: '/downloads',
     component: () => import('layouts/MainLayout.vue'),
@@ -77,18 +82,25 @@ const routes: RouteRecordRaw[] = [
       }
     ]
   },
+  // settings
   {
     path: '/settings',
     component: () => import('layouts/MainLayout.vue'),
     children: [
-      { path: '', component: () => import('src/pages/settingsPage.vue') }
+      { path: '', component: () => import('src/pages/settingsPage.vue') },
+      {
+        path: 'categories',
+        component: () => import('src/pages/categoriesSetringsPage.vue')
+      }
     ]
   },
+  // manga
   {
     path: '/manga/:mangaID',
     component: () => import('layouts/MainLayout.vue'),
     children: [{ path: '', component: () => import('src/pages/mangaPage.vue') }]
   },
+  // chapter
   {
     path: '/manga/:mangaID/chapter/:chapterID',
     component: () => import('layouts/ChapterLayout.vue'),
