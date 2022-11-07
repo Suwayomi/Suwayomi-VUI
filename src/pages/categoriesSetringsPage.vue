@@ -41,9 +41,50 @@
           icon="keyboard_double_arrow_down"
         />
         <catEdit :cat="cat" />
-        <q-btn round flat icon="delete" />
+        <q-btn round flat icon="delete" @click="delcat(cat.id)" />
       </q-item>
     </q-list>
+    <q-page-sticky position="bottom-right" :offset="[18, 18]">
+      <q-btn
+        fab
+        class="text-black"
+        icon="add"
+        color="blue"
+        @click="newDialog = true"
+      />
+    </q-page-sticky>
+    <q-dialog v-model="newDialog">
+      <q-card>
+        <q-card-section>
+          <div class="text-h5">New Category</div>
+        </q-card-section>
+        <q-item>
+          <q-input
+            style="width: 100%"
+            type="text"
+            label="Category Name"
+            outlined
+            v-model="edittxt"
+          ></q-input>
+        </q-item>
+        <q-item>
+          <q-toggle
+            label="Default category when adding new manga to library"
+            color="blue"
+            v-model="defaul"
+          />
+        </q-item>
+        <q-card-actions align="right">
+          <q-btn
+            flat
+            label="Save"
+            color="primary"
+            v-close-popup
+            @click="savetxt"
+          />
+        </q-card-actions>
+      </q-card>
+    </q-dialog>
   </q-page>
 </template>
 <script lang="ts">
@@ -84,19 +125,38 @@ export default defineComponent({
       }
       arr.splice(new_index, 0, arr.splice(old_index, 1)[0]);
       return arr;
+    },
+    savetxt() {
+      console.log();
+      const fd = new FormData();
+      fd.append('name', this.edittxt);
+      fd.append('default', this.defaul.toString());
+      this.$fetch('/api/v1/category/', {
+        method: 'POST',
+        body: fd
+      }).then(() => this.getcats());
+    },
+    getcats() {
+      this.$fetchJSON('/api/v1/category/').then((data: cat[]) => {
+        this.catag = data.slice(1);
+      });
+    },
+    delcat(id: number) {
+      this.$fetch(`/api/v1/category/${id}`, { method: 'DELETE' }).then(() =>
+        this.getcats()
+      );
     }
   },
   mounted: function () {
-    this.$fetchJSON('/api/v1/category/').then((data: cat[]) => {
-      console.log(data);
-      this.catag = data.slice(1);
-    });
+    this.getcats();
   },
   setup() {
     return {
       catag: ref(<cat[]>[]),
       editdialog: ref(false),
-      edittxt: ref('')
+      newDialog: ref(false),
+      edittxt: ref(''),
+      defaul: ref(false)
     };
   }
 });
