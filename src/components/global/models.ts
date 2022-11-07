@@ -75,6 +75,7 @@ export interface chapter {
   pageCount: number;
   chapterCount: number;
   meta: myMeta;
+  id: number;
 }
 
 export interface myMeta {
