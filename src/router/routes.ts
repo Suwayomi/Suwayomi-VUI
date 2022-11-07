@@ -98,7 +98,15 @@ const routes: RouteRecordRaw[] = [
   {
     path: '/manga/:mangaID',
     component: () => import('layouts/MainLayout.vue'),
-    children: [{ path: '', component: () => import('src/pages/mangaPage.vue') }]
+    children: [
+      {
+        path: '',
+        components: {
+          default: () => import('src/pages/mangaPage.vue'),
+          inBar: () => import('src/components/manga/topbar.vue')
+        }
+      }
+    ]
   },
   // chapter
   {

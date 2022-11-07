@@ -20,10 +20,10 @@
         style="height: 58px"
       >
         <q-item
-          clickable
           v-ripple
+          clickable
           :dark="$q.dark.isActive"
-          class="q-ma-sm rounded-borders lisitem"
+          class="q-ma-sm rounded-borders"
           :class="item.read ? `text-grey` : ``"
           :style="
             `background-color:` +
@@ -264,7 +264,7 @@ export default defineComponent({
 </script>
 
 <style scoped>
-.lisitem:hover {
-  opacity: 0.5;
-}
+/* .lisitem:hover {
+  background-color: transparent !important;
+} */
 </style>
