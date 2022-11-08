@@ -3,6 +3,74 @@
     <div class="row justify-between items-center" ref="chapHead">
       <h4 class="q-ma-md">{{ chapters.length }} chapters</h4>
       <div style="padding-right: 12px">
+        <q-btn
+          flat
+          round
+          icon="select_all"
+          v-if="selectMode"
+          @click="selectall"
+        />
+        <q-btn
+          flat
+          round
+          :icon="selectMode ? `flip_to_front` : `flip_to_back`"
+          @click="selectMode = !selectMode"
+        />
+        <q-btn round flat icon="more_vert">
+          <q-menu anchor="bottom end" self="top right">
+            <q-list style="width: fit-content">
+              <q-item clickable>
+                <q-item-section side>
+                  <q-icon name="keyboard_arrow_left" />
+                </q-item-section>
+                <q-item-section>download</q-item-section>
+                <q-menu
+                  anchor="top start"
+                  self="top end"
+                  style="white-space: nowrap"
+                >
+                  <q-list>
+                    <q-item
+                      v-close-popup
+                      clickable
+                      @click="
+                        dl(
+                          doSrt
+                            .filter((ele) => !ele.downloaded)
+                            .map((ele) => ele.id)
+                        )
+                      "
+                    >
+                      <q-item-section>Download All</q-item-section>
+                    </q-item>
+                    <q-item
+                      v-close-popup
+                      clickable
+                      @click="
+                        dl(
+                          doSrt
+                            .filter((ele) => !ele.downloaded)
+                            .slice(0, 5)
+                            .map((ele) => ele.id)
+                        )
+                      "
+                    >
+                      <q-item-section>Download Next 5</q-item-section>
+                    </q-item>
+                    <q-item
+                      clickable
+                      v-if="selectMode"
+                      @click="dl(selected)"
+                      v-close-popup
+                    >
+                      <q-item-section>Download Selected</q-item-section>
+                    </q-item>
+                  </q-list>
+                </q-menu>
+              </q-item>
+            </q-list>
+          </q-menu>
+        </q-btn>
         <filterr></filterr>
       </div>
     </div>
@@ -13,6 +81,7 @@
           ? ``
           : `max-height: calc(100vh - ` + calcHeight() + `px)`
       "
+      :class="selectMode ? ` selectmode` : ``"
     >
       <q-intersection
         v-for="item in doSrt"
@@ -20,16 +89,24 @@
         style="height: 58px"
       >
         <q-item
+          v-touch-hold.mouse="(event:TouchHold) => handleHold(event,item.id)"
+          :id="item.id"
           v-ripple
           clickable
           :dark="$q.dark.isActive"
           class="q-ma-sm rounded-borders"
-          :class="item.read ? `text-grey` : ``"
-          :style="
-            `background-color:` +
-            ($q.dark.isActive ? `var(--q-dark)` : `var(--q-light)`)
+          :class="
+            (item.read ? `text-grey` : ``) +
+            ` ` +
+            (selected.includes(item.id) && selectMode ? `selected` : ``)
           "
-          :to="`/manga/` + item.mangaId + `/chapter/` + item.index"
+          :style="itemstyle"
+          :to="
+            selectMode
+              ? undefined
+              : `/manga/` + item.mangaId + `/chapter/` + item.index
+          "
+          @click="selectMode ? selectthis(item.id) : undefined"
           :key="item.index"
         >
           <q-item-section v-if="item.bookmarked" side>
@@ -47,8 +124,37 @@
               {{ item.scanlator }}
               {{ new Date(item.uploadDate).toLocaleDateString() }}
               {{ item.downloaded ? '• downloaded' : '' }}
+              {{
+                downloads.find((ele) => ele.chapterIndex == item.index)?.state
+                  ? `• ` +
+                    downloads.find((ele) => ele.chapterIndex == item.index)
+                      ?.state
+                  : ``
+              }}
+              <q-linear-progress
+                v-if="
+                  downloads.find((ele) => ele.chapterIndex == item.index)
+                    ?.state == `Downloading`
+                "
+                :value="
+                  downloads.find((ele) => ele.chapterIndex == item.index)
+                    ?.progress
+                "
+              />
             </q-item-label>
           </q-item-section>
+          <q-icon
+            v-if="selectMode"
+            class="flex-right self-center"
+            size="md"
+            :color="selected.includes(item.id) ? `blue` : ``"
+            :name="
+              selected.includes(item.id)
+                ? `check_box`
+                : `check_box_outline_blank`
+            "
+            flat
+          ></q-icon>
           <q-btn @click.prevent round flat icon="more_vert" class="flex-right">
             <q-menu>
               <q-list style="width: fit-content">
@@ -113,11 +219,17 @@
 
 <script lang="ts">
 import { defineComponent, ref } from 'vue';
-import { chapter, dlsock, isdlsock } from 'src/components/global/models';
+import {
+  chapter,
+  dlsock,
+  download,
+  isdlsock
+} from 'src/components/global/models';
 import filterr from './Filter.vue';
 import { chaptersFilter } from './filters';
 import { useRoute } from 'vue-router';
 import useDlSock from '../downloads/useDlSock';
+import { TouchHold } from 'quasar';
 
 export default defineComponent({
   name: 'mangaChapters',
@@ -170,6 +282,12 @@ export default defineComponent({
         );
       }
       return chapts;
+    },
+    itemstyle(): string {
+      return (
+        'background-color:' +
+        (this.$q.dark.isActive ? 'var(--q-dark)' : 'var(--q-light)')
+      );
     }
   },
   methods: {
@@ -224,6 +342,31 @@ export default defineComponent({
         { method: 'PATCH', body: fd }
       );
       this.getonline();
+    },
+    handleHold(_event: TouchHold, id: number) {
+      this.selectMode = true;
+      this.selectthis(id);
+    },
+    selectthis(id: number) {
+      if (this.selected.includes(id)) {
+        this.selected = this.selected.filter((e) => e !== id);
+      } else {
+        this.selected.push(id);
+      }
+    },
+    selectall() {
+      if (!this.selected.length) {
+        this.selected = this.doSrt.map((ele) => ele.id);
+      } else {
+        this.selected = [];
+      }
+    },
+    dl(list: number[]) {
+      const fd = { chapterIds: list };
+      this.$fetch('/api/v1/download/batch', {
+        method: 'POST',
+        body: JSON.stringify(fd)
+      });
     }
   },
   watch: {
@@ -232,10 +375,11 @@ export default defineComponent({
       if (isdlsock(tmp)) {
         const tmpp = tmp.queue.filter(
           (ele) => ele.mangaId == parseInt(`${this.$route.params['mangaID']}`)
-        ).length;
-        if (this.downloads > tmpp) {
+        );
+        if (this.downloadsnum != tmpp.length) {
           this.getonline();
         }
+        this.downloadsnum = tmpp.length;
         this.downloads = tmpp;
       }
     }
@@ -257,14 +401,20 @@ export default defineComponent({
       chaptersfilt,
       filters,
       Emitter,
-      downloads: ref(0)
+      downloadsnum: ref(0),
+      downloads: ref(<download[]>[]),
+      selectMode: ref(false),
+      selected: ref(<number[]>[])
     };
   }
 });
 </script>
 
 <style scoped>
-/* .lisitem:hover {
-  background-color: transparent !important;
-} */
+.selected {
+  opacity: 1 !important;
+}
+.selectmode .q-item {
+  opacity: 0.5;
+}
 </style>
