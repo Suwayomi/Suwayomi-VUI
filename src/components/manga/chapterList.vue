@@ -89,7 +89,7 @@
         style="height: 58px"
       >
         <q-item
-          v-touch-hold.mouse="(event:TouchHold) => handleHold(event,item.id)"
+          v-touch-hold.mouse="() => handleHold(item.id)"
           :id="item.id"
           v-ripple
           clickable
@@ -213,6 +213,18 @@
           </q-btn>
         </q-item>
       </q-intersection>
+      <q-page-sticky position="bottom-right" :offset="fabPos">
+        <q-btn
+          fab
+          class="Fabconsist"
+          label="Resume"
+          color="blue"
+          icon="drag_indicator"
+          :disable="draggingFab"
+          @click="Resume"
+          v-touch-pan.prevent.mouse="moveFab"
+        />
+      </q-page-sticky>
     </div>
   </div>
 </template>
@@ -229,7 +241,6 @@ import filterr from './Filter.vue';
 import { chaptersFilter } from './filters';
 import { useRoute } from 'vue-router';
 import useDlSock from '../downloads/useDlSock';
-import { TouchHold } from 'quasar';
 
 export default defineComponent({
   name: 'mangaChapters',
@@ -291,6 +302,24 @@ export default defineComponent({
     }
   },
   methods: {
+    Resume() {
+      const notRead = this.doSrt.filter((ele) => !ele.read);
+      if (notRead[0]) {
+        this.$router.push(
+          '/manga/' + notRead[0].mangaId + '/chapter/' + notRead[0].index
+        );
+      }
+    },
+    moveFab(ev: {
+      isFirst: boolean;
+      isFinal: boolean;
+      delta: { x: number; y: number };
+    }) {
+      // would like to use TouchPan type but it doesnt seem to be correct(or not the correct type idk)
+      this.draggingFab = ev.isFirst !== true && ev.isFinal !== true;
+
+      this.fabPos = [this.fabPos[0] - ev.delta.x, this.fabPos[1] - ev.delta.y];
+    },
     calcHeight() {
       const tmp = <Element | undefined>this.$refs['chapHead'];
       if (tmp == undefined) return 0;
@@ -343,7 +372,7 @@ export default defineComponent({
       );
       this.getonline();
     },
-    handleHold(_event: TouchHold, id: number) {
+    handleHold(id: number) {
       this.selectMode = true;
       this.selectthis(id);
     },
@@ -389,22 +418,39 @@ export default defineComponent({
     const filters = ref(chaptersFilter(parseInt(`${route.params['mangaID']}`)));
     const chapters = ref(<chapter[]>[]);
     const chaptersfilt = ref(<chapter[]>[]);
-
     const Emitt = useDlSock();
     const Emitter = ref(Emitt);
-    Emitter.value.eventsFromServer = '';
+
+    const downloads = ref(<download[]>[]);
+    const downloadsnum = ref(0);
+    const tmp = Emitt.eventsFromServer.value
+      ? JSON.parse(Emitt.eventsFromServer.value)
+      : [];
+    if (isdlsock(tmp)) {
+      const tmpp = tmp.queue.filter(
+        (ele) => ele.mangaId == parseInt(`${route.params['mangaID']}`)
+      );
+      downloadsnum.value = tmpp.length;
+      downloads.value = tmpp;
+    }
     if (Emitter.value.isConnected) {
       Emitt.sendMsg('STATUS');
     }
+
+    const fabPos = ref(<[number, number]>[18, 18]);
+    const draggingFab = ref<boolean>(false);
+
     return {
       chapters,
       chaptersfilt,
       filters,
       Emitter,
-      downloadsnum: ref(0),
-      downloads: ref(<download[]>[]),
+      downloadsnum,
+      downloads,
       selectMode: ref(false),
-      selected: ref(<number[]>[])
+      selected: ref(<number[]>[]),
+      fabPos,
+      draggingFab
     };
   }
 });
@@ -416,5 +462,11 @@ export default defineComponent({
 }
 .selectmode .q-item {
   opacity: 0.5;
+}
+</style>
+
+<style>
+.Fabconsist .q-btn__content {
+  flex-wrap: nowrap;
 }
 </style>
