@@ -389,20 +389,32 @@ export default defineComponent({
     const filters = ref(chaptersFilter(parseInt(`${route.params['mangaID']}`)));
     const chapters = ref(<chapter[]>[]);
     const chaptersfilt = ref(<chapter[]>[]);
-
     const Emitt = useDlSock();
     const Emitter = ref(Emitt);
-    Emitter.value.eventsFromServer = '';
+
+    const downloads = ref(<download[]>[]);
+    const downloadsnum = ref(0);
+    const tmp = Emitt.eventsFromServer.value
+      ? JSON.parse(Emitt.eventsFromServer.value)
+      : [];
+    if (isdlsock(tmp)) {
+      const tmpp = tmp.queue.filter(
+        (ele) => ele.mangaId == parseInt(`${route.params['mangaID']}`)
+      );
+      downloadsnum.value = tmpp.length;
+      downloads.value = tmpp;
+    }
     if (Emitter.value.isConnected) {
       Emitt.sendMsg('STATUS');
     }
+
     return {
       chapters,
       chaptersfilt,
       filters,
       Emitter,
-      downloadsnum: ref(0),
-      downloads: ref(<download[]>[]),
+      downloadsnum,
+      downloads,
       selectMode: ref(false),
       selected: ref(<number[]>[])
     };

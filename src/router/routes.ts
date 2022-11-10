@@ -50,11 +50,11 @@ const routes: RouteRecordRaw[] = [
         path: '',
         components: {
           default: () => import('src/pages/sourcesPage.vue'),
-          inBar: () => import('src/components/extantions/TopBar.vue')
+          inBar: () => import('src/components/sources/TopBar.vue')
         }
       },
       {
-        path: ':sourceID/popular/',
+        path: ':sourceID/:poplate(popular|latest)/',
         components: {
           default: () => import('src/pages/SourceSearchPage.vue'),
           inBar: () => import('src/components/sourceSearch/SourceTopBar.vue')
@@ -64,6 +64,13 @@ const routes: RouteRecordRaw[] = [
         path: ':sourceID/config/',
         components: {
           default: () => import('src/pages/sourceConfigPage.vue')
+        }
+      },
+      {
+        path: 'Global/',
+        components: {
+          default: () => import('src/pages/SSearchAll.vue'),
+          inBar: () => import('src/components/global/SearchBar.vue')
         }
       }
     ]

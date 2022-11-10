@@ -48,7 +48,6 @@ export default defineComponent({
   },
   methods: {
     savetxt() {
-      console.log();
       const fd = new FormData();
       fd.append('name', this.edittxt);
       fd.append('default', this.defaul.toString());

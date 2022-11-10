@@ -36,11 +36,20 @@ export default defineComponent({
   setup() {
     const Emitt = useDlSock();
     const Emitter = ref(Emitt);
+
+    const PlayPause = ref();
+    const tmp = Emitt.eventsFromServer.value
+      ? JSON.parse(Emitt.eventsFromServer.value)
+      : [];
+    if (isdlsock(tmp)) {
+      PlayPause.value = tmp.status == 'Started';
+    }
     if (Emitter.value.isConnected) {
       Emitt.sendMsg('STATUS');
     }
+
     return {
-      PlayPause: ref(),
+      PlayPause,
       Emitter
     };
   }
