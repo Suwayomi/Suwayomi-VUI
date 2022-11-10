@@ -5,9 +5,9 @@ name: Node.js CI
 
 on:
   push:
-    branches: [ "main" ]
+    branches: [ "Release" ]
   pull_request:
-    branches: [ "main" ]
+    branches: [ "Release" ]
 env:
   REGISTRY: ghcr.io
   IMAGE_NAME: ${{ github.repository }}
