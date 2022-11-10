@@ -18,11 +18,17 @@
           <q-item-label class="text-weight-medium text-h6">
             {{ item.manga.title }}
           </q-item-label>
-          <q-item-label caption>
-            Chapter {{ item.chapterIndex }} ({{
-              (item.progress * 100).toFixed(2)
-            }}%) => state:
-            {{ item.state }}
+          <q-item-label caption class="">
+            <div class="col-6">
+              Chapter {{ item.chapterIndex }} ({{
+                (item.progress * 100).toFixed(2)
+              }}%) => state:
+              {{ item.state }}
+            </div>
+            <q-linear-progress
+              :value="item.progress"
+              style="width: 100%; max-width: 500px"
+            />
           </q-item-label>
         </q-item-section>
         <q-item-section avatar>
@@ -96,11 +102,11 @@
 
 <script lang="ts">
 import useDlSock from 'src/components/downloads/useDlSock';
-import { ref } from 'vue';
+import { defineComponent, ref } from 'vue';
 import { download, dlsock, isdlsock } from 'src/components/global/models';
 import { useQuasar } from 'quasar';
 
-export default {
+export default defineComponent({
   methods: {
     async delet(download: download) {
       this.$fetch(
@@ -130,11 +136,18 @@ export default {
     const Emitt = useDlSock();
     const Emitter = ref(Emitt);
     const base = $q.localStorage.getItem('baseUrl') as string;
-    Emitter.value.eventsFromServer = '';
+
+    const downloads = ref(<download[]>[]);
+    const tmp = Emitt.eventsFromServer.value
+      ? JSON.parse(Emitt.eventsFromServer.value)
+      : [];
+    if (isdlsock(tmp)) {
+      downloads.value = <download[]>tmp.queue;
+    }
     if (Emitter.value.isConnected) {
       Emitt.sendMsg('STATUS');
     }
-    let downloads = ref(<download[]>[]);
+
     const goodBase = ref(
       new URL(base).origin != location.origin &&
         !$q.localStorage.getItem('dontshowagainWH') &&
@@ -146,5 +159,5 @@ export default {
       Emitter
     };
   }
-};
+});
 </script>

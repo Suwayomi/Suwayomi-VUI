@@ -18,9 +18,13 @@
         loading="lazy"
         spinner-color="white"
         style="max-width: 100%; aspect-ratio: 225/350"
+        :style="
+          `background-color:` +
+          ($q.dark.isActive ? `var(--q-dark)` : `var(--q-light)`)
+        "
         class="rounded-borders"
         :img-style="manga.inLibrary ? { filter: 'brightness(0.4)' } : {}"
-        no-spinner
+        :alt="manga.title"
       >
         <q-inner-loading :showing="!imgdata" color="primary"> </q-inner-loading>
         <div
@@ -51,6 +55,7 @@
           {{ manga.title }}
         </div>
       </q-img>
+
       <!-- list display mode -->
       <div class="row items-center col-grow no-wrap">
         <q-img
