@@ -116,7 +116,7 @@ export default defineComponent({
       } else {
         return <sourcepage>(
           await this.$fetchJSON(
-            `/api/v1/source/${this.$route.params['sourceID']}/popular/${num}`
+            `/api/v1/source/${this.$route.params['sourceID']}/${this.$route.params['poplate']}/${num}`
           )
         );
       }
