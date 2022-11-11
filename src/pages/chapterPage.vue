@@ -71,9 +71,11 @@ export default defineComponent({
         if (
           this.currchapter != parseInt(`${this.$route.params['chapterID']}`)
         ) {
-          this.$router.replace(
-            `/manga/${this.$route.params['mangaID']}/chapter/${this.currchapter}`
-          );
+          if (this.$route.name?.toString() == 'chapterpage') {
+            this.$router.replace(
+              `/manga/${this.$route.params['mangaID']}/chapter/${this.currchapter}`
+            );
+          }
         }
         done();
         this.chapname = data.name;
