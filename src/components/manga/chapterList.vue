@@ -214,16 +214,20 @@
         </q-item>
       </q-intersection>
       <q-page-sticky position="bottom-right" :offset="fabPos">
-        <q-btn
-          fab
-          class="Fabconsist"
-          label="Resume"
-          color="blue"
-          icon="drag_indicator"
-          :disable="draggingFab"
-          @click="Resume"
-          v-touch-pan.prevent.mouse="moveFab"
-        />
+        <router-link
+          style="text-decoration: none; color: inherit"
+          :is="draggingFab ? 'span' : 'router-link'"
+          :to="res"
+        >
+          <q-btn
+            fab
+            class="Fabconsist"
+            label="Resume"
+            color="blue"
+            icon="drag_indicator"
+            v-touch-pan.prevent.mouse="moveFab"
+          />
+        </router-link>
       </q-page-sticky>
     </div>
   </div>
@@ -299,14 +303,28 @@ export default defineComponent({
         'background-color:' +
         (this.$q.dark.isActive ? 'var(--q-dark)' : 'var(--q-light)')
       );
+    },
+    res(): string {
+      const notRead = this.doSrt.filter((ele) => !ele.read);
+      if (!notRead.length) {
+        return `/manga/${this.$route.params['mangaID']}/chapter/${1}`;
+      } else {
+        const notreadchap = <chapter>notRead[notRead.length - 1];
+        return `/manga/${notreadchap.mangaId}/chapter/${notreadchap.index}`;
+      }
     }
   },
   methods: {
     Resume() {
       const notRead = this.doSrt.filter((ele) => !ele.read);
-      if (notRead[0]) {
+      if (!notRead.length) {
         this.$router.push(
-          '/manga/' + notRead[0].mangaId + '/chapter/' + notRead[0].index
+          `/manga/${this.$route.params['mangaID']}/chapter/${1}`
+        );
+      } else {
+        const notreadchap = <chapter>notRead[notRead.length - 1];
+        this.$router.push(
+          `/manga/${notreadchap.mangaId}/chapter/${notreadchap.index}`
         );
       }
     },
