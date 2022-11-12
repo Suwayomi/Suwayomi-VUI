@@ -137,7 +137,7 @@ export default defineComponent({
     resetScroll() {
       this.items = [];
       (this.$refs['infiniteScrol'] as QInfiniteScroll).reset();
-      (this.$refs['infiniteScrol'] as QInfiniteScroll).poll();
+      (this.$refs['infiniteScrol'] as QInfiniteScroll).resume();
     },
     getFilts(reset = false) {
       this.$fetchJSON(

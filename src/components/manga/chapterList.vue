@@ -19,6 +19,7 @@
         <q-btn round flat icon="more_vert">
           <q-menu anchor="bottom end" self="top right">
             <q-list style="width: fit-content">
+              <!-- download -->
               <q-item clickable>
                 <q-item-section side>
                   <q-icon name="keyboard_arrow_left" />
@@ -50,7 +51,7 @@
                         dl(
                           doSrt
                             .filter((ele) => !ele.downloaded)
-                            .slice(0, 5)
+                            .slice(-5)
                             .map((ele) => ele.id)
                         )
                       "
@@ -64,6 +65,218 @@
                       v-close-popup
                     >
                       <q-item-section>Download Selected</q-item-section>
+                    </q-item>
+                  </q-list>
+                </q-menu>
+              </q-item>
+
+              <!-- read -->
+              <q-item clickable>
+                <q-item-section side>
+                  <q-icon name="keyboard_arrow_left" />
+                </q-item-section>
+                <q-item-section>Read</q-item-section>
+                <q-menu
+                  anchor="top start"
+                  self="top end"
+                  style="white-space: nowrap"
+                >
+                  <q-list>
+                    <q-item
+                      v-close-popup
+                      clickable
+                      @click="
+                        read(
+                          doSrt.filter((ele) => !ele.read).map((ele) => ele.id)
+                        )
+                      "
+                    >
+                      <q-item-section>Read All</q-item-section>
+                    </q-item>
+                    <q-item
+                      v-close-popup
+                      clickable
+                      @click="
+                        read(
+                          doSrt
+                            .filter((ele) => !ele.read)
+                            .slice(-5)
+                            .map((ele) => ele.id)
+                        )
+                      "
+                    >
+                      <q-item-section>Read Next 5</q-item-section>
+                    </q-item>
+                    <q-item
+                      clickable
+                      v-if="selectMode"
+                      @click="read(selected)"
+                      v-close-popup
+                    >
+                      <q-item-section>Read Selected</q-item-section>
+                    </q-item>
+                  </q-list>
+                </q-menu>
+              </q-item>
+
+              <!-- unread -->
+              <q-item clickable>
+                <q-item-section side>
+                  <q-icon name="keyboard_arrow_left" />
+                </q-item-section>
+                <q-item-section>Unread</q-item-section>
+                <q-menu
+                  anchor="top start"
+                  self="top end"
+                  style="white-space: nowrap"
+                >
+                  <q-list>
+                    <q-item
+                      v-close-popup
+                      clickable
+                      @click="
+                        read(
+                          doSrt
+                            .filter((ele) => !!ele.read)
+                            .map((ele) => ele.id),
+                          false
+                        )
+                      "
+                    >
+                      <q-item-section>Unread All</q-item-section>
+                    </q-item>
+                    <q-item
+                      v-close-popup
+                      clickable
+                      @click="
+                        read(
+                          doSrt
+                            .filter((ele) => !!ele.read)
+                            .slice(0, 5)
+                            .map((ele) => ele.id),
+                          false
+                        )
+                      "
+                    >
+                      <q-item-section>Unread Last 5</q-item-section>
+                    </q-item>
+                    <q-item
+                      clickable
+                      v-if="selectMode"
+                      @click="read(selected, false)"
+                      v-close-popup
+                    >
+                      <q-item-section>Unread Selected</q-item-section>
+                    </q-item>
+                  </q-list>
+                </q-menu>
+              </q-item>
+
+              <!-- bookmark -->
+              <q-item clickable>
+                <q-item-section side>
+                  <q-icon name="keyboard_arrow_left" />
+                </q-item-section>
+                <q-item-section>Bookmark</q-item-section>
+                <q-menu
+                  anchor="top start"
+                  self="top end"
+                  style="white-space: nowrap"
+                >
+                  <q-list>
+                    <q-item
+                      v-close-popup
+                      clickable
+                      @click="
+                        read(
+                          doSrt
+                            .filter((ele) => !ele.bookmarked)
+                            .map((ele) => ele.id),
+                          true,
+                          'isBookmarked'
+                        )
+                      "
+                    >
+                      <q-item-section>Bookmark All</q-item-section>
+                    </q-item>
+                    <q-item
+                      v-close-popup
+                      clickable
+                      @click="
+                        read(
+                          doSrt
+                            .filter((ele) => !ele.bookmarked)
+                            .slice(-5)
+                            .map((ele) => ele.id),
+                          true,
+                          'isBookmarked'
+                        )
+                      "
+                    >
+                      <q-item-section>Bookmark Next 5</q-item-section>
+                    </q-item>
+                    <q-item
+                      clickable
+                      v-if="selectMode"
+                      @click="read(selected, true, 'isBookmarked')"
+                      v-close-popup
+                    >
+                      <q-item-section>Bookmark Selected</q-item-section>
+                    </q-item>
+                  </q-list>
+                </q-menu>
+              </q-item>
+
+              <!-- unbookmark -->
+              <q-item clickable>
+                <q-item-section side>
+                  <q-icon name="keyboard_arrow_left" />
+                </q-item-section>
+                <q-item-section>Unbookmark</q-item-section>
+                <q-menu
+                  anchor="top start"
+                  self="top end"
+                  style="white-space: nowrap"
+                >
+                  <q-list>
+                    <q-item
+                      v-close-popup
+                      clickable
+                      @click="
+                        read(
+                          doSrt
+                            .filter((ele) => !!ele.bookmarked)
+                            .map((ele) => ele.id),
+                          false,
+                          'isBookmarked'
+                        )
+                      "
+                    >
+                      <q-item-section>Unbookmark All</q-item-section>
+                    </q-item>
+                    <q-item
+                      v-close-popup
+                      clickable
+                      @click="
+                        read(
+                          doSrt
+                            .filter((ele) => !!ele.bookmarked)
+                            .slice(0, 5)
+                            .map((ele) => ele.id),
+                          false,
+                          'isBookmarked'
+                        )
+                      "
+                    >
+                      <q-item-section>Unbookmark Last 5</q-item-section>
+                    </q-item>
+                    <q-item
+                      clickable
+                      v-if="selectMode"
+                      @click="read(selected, false, 'isBookmarked')"
+                      v-close-popup
+                    >
+                      <q-item-section>Unbookmark Selected</q-item-section>
                     </q-item>
                   </q-list>
                 </q-menu>
@@ -315,19 +528,6 @@ export default defineComponent({
     }
   },
   methods: {
-    Resume() {
-      const notRead = this.doSrt.filter((ele) => !ele.read);
-      if (!notRead.length) {
-        this.$router.push(
-          `/manga/${this.$route.params['mangaID']}/chapter/${1}`
-        );
-      } else {
-        const notreadchap = <chapter>notRead[notRead.length - 1];
-        this.$router.push(
-          `/manga/${notreadchap.mangaId}/chapter/${notreadchap.index}`
-        );
-      }
-    },
     moveFab(ev: {
       isFirst: boolean;
       isFinal: boolean;
@@ -414,6 +614,16 @@ export default defineComponent({
         method: 'POST',
         body: JSON.stringify(fd)
       });
+    },
+    read(list: number[], tf = true, rb: 'isRead' | 'isBookmarked' = 'isRead') {
+      const fd = { chapterIds: list, change: { [rb]: tf } };
+      this.$fetch(
+        `/api/v1/manga/${this.$route.params['mangaID']}/chapter/batch`,
+        {
+          method: 'POST',
+          body: JSON.stringify(fd)
+        }
+      ).then(() => this.getonline());
     }
   },
   watch: {
