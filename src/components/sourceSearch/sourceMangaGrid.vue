@@ -104,21 +104,38 @@ export default defineComponent({
       }
       return 0;
     },
-    async reload(num = 1) {
-      if (this.Smitted || this.$route.query['q']) {
-        return <sourcepage>(
-          await this.$fetchJSON(
+    async reload(num = 1, signal: AbortSignal) {
+      if (this.noinit) {
+        if (this.Smitted || this.$route.query['q']) {
+          const sourcepage = <Promise<sourcepage>>this.$fetchJSON(
             `/api/v1/source/${
               this.$route.params['sourceID']
-            }/search?searchTerm=${this.$route.query['q'] || ''}&pageNum=${num}`
-          )
-        );
+            }/search?searchTerm=${this.$route.query['q'] || ''}&pageNum=${num}`,
+            {
+              signal
+            }
+          );
+          try {
+            return await sourcepage;
+          } catch (error) {
+            return undefined;
+          }
+        } else {
+          const sourcepage = <Promise<sourcepage>>this.$fetchJSON(
+            `/api/v1/source/${this.$route.params['sourceID']}/${this.$route.params['poplate']}/${num}`,
+            {
+              signal
+            }
+          );
+          try {
+            return await sourcepage;
+          } catch (error) {
+            return undefined;
+          }
+        }
       } else {
-        return <sourcepage>(
-          await this.$fetchJSON(
-            `/api/v1/source/${this.$route.params['sourceID']}/${this.$route.params['poplate']}/${num}`
-          )
-        );
+        this.noinit = true;
+        return undefined;
       }
     },
     onLoad(
@@ -127,17 +144,24 @@ export default defineComponent({
         return;
       }
     ) {
-      this.reload(index).then((data: sourcepage) => {
-        this.items.push(...data.mangaList);
-        done();
-        if (!data.hasNextPage)
-          (this.$refs['infiniteScrol'] as QInfiniteScroll).stop();
-      });
+      this.reload(index, this.controller.signal).then(
+        (data: sourcepage | undefined) => {
+          if (data != undefined) {
+            this.items.push(...data.mangaList);
+            if (!data.hasNextPage)
+              (this.$refs['infiniteScrol'] as QInfiniteScroll).stop();
+          }
+          done();
+        }
+      );
     },
     resetScroll() {
       this.items = [];
+      this.controller.abort();
+      this.controller = new AbortController();
       (this.$refs['infiniteScrol'] as QInfiniteScroll).reset();
-      (this.$refs['infiniteScrol'] as QInfiniteScroll).poll();
+      (this.$refs['infiniteScrol'] as QInfiniteScroll).resume();
+      // (this.$refs['infiniteScrol'] as QInfiniteScroll).trigger();
     },
     getFilts(reset = false) {
       this.$fetchJSON(
@@ -194,6 +218,7 @@ export default defineComponent({
     }
   },
   setup() {
+    const controller = ref(new AbortController());
     return {
       devider: ref<number>(0),
       mangas: ref(<manga[]>[]),
@@ -203,7 +228,9 @@ export default defineComponent({
       items: ref(<manga[]>[]),
       filterDial: ref(false),
       stateChanges: ref(<{ position: number; state: string }[]>[]),
-      Smitted: ref(false)
+      Smitted: ref(false),
+      noinit: ref(false),
+      controller
     };
   }
 });
