@@ -13,7 +13,7 @@ export const ISOLanguages = [
   {
     code: 'updates pending',
     name: 'Updates pending',
-    nativeName: 'Updates pending',
+    nativeName: 'Updates pending'
   },
 
   { code: 'other', name: 'other langs?', nativeName: 'Other' },
@@ -28,7 +28,7 @@ export const ISOLanguages = [
   {
     code: 'es-419',
     name: 'Spanish; Castilian',
-    nativeName: 'Español (Latinoamérica)',
+    nativeName: 'Español (Latinoamérica)'
   },
   { code: 'fr', name: 'French', nativeName: 'Français' },
   { code: 'id', name: 'Indonesian', nativeName: 'Indonesia' },
@@ -38,7 +38,7 @@ export const ISOLanguages = [
   {
     code: 'pt-br',
     name: 'Portuguese; Brasil',
-    nativeName: 'Português (Brasil)',
+    nativeName: 'Português (Brasil)'
   },
   { code: 'vi', name: 'Vietnamese', nativeName: 'Tiếng Việt' },
   { code: 'tr', name: 'Turkish', nativeName: 'Türkçe' },
@@ -87,7 +87,7 @@ export const ISOLanguages = [
   { code: 'be', name: 'Belarusian', nativeName: 'беларуская' },
   { code: 'bs', name: 'Bosnian', nativeName: 'bosanski' },
   { code: 'sv', name: 'Swedish', nativeName: 'svenska' },
-  { code: 'sv', name: 'Swedish', nativeName: 'svenska' },
+  { code: 'sv', name: 'Swedish', nativeName: 'svenska' }
 ];
 
 export function langCodeToName(code: string): string {

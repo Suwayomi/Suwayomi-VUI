@@ -1,4 +1,10 @@
-<template>
+<!-- /*
+ * Copyright (C) Contributors to the Suwayomi project
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/. */ -->
+ <template>
   <q-page>
     <q-list v-for="lang in filterList" :key="lang[0]">
       <div v-if="lang[1].length" class="text-h4 q-ml-xl q-my-lg">
