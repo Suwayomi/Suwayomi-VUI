@@ -27,9 +27,18 @@ export default defineComponent({
   },
   watch: {
     incat() {
-      this.$fetch(
-        `/api/v1/manga/${this.$route.params['mangaID']}/category/${this.cat.id}`
-      );
+      if (this.incat){
+        this.$fetch(
+          `/api/v1/manga/${this.$route.params['mangaID']}/category/${this.cat.id}`
+        );
+
+      }else{
+        this.$fetch(
+          `/api/v1/manga/${this.$route.params['mangaID']}/category/${this.cat.id}`,{
+            method:'DELETE'
+          }
+        );
+      }
     }
   },
   setup(props) {
