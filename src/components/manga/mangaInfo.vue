@@ -26,7 +26,7 @@
     <div class="flex no-wrap">
       <q-img
         v-if="!($q.screen.sm || $q.screen.xs)"
-        style="width: fit-content; max-width: 50%"
+        style="width: fit-content; max-width: 50%; flex: none"
         loading="lazy"
         class="rounded-borders"
         img-class="test"
