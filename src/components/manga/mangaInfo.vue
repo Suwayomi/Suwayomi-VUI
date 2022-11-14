@@ -145,11 +145,6 @@ export default defineComponent({
 </script>
 
 <style>
-.MangaInfo .test {
-  width: fit-content;
-  height: fit-content;
-  max-width: 100%;
-}
 .MangaInfo .q-img__container {
   position: unset;
 }
