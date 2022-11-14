@@ -89,7 +89,7 @@ module.exports = configure(function (/* ctx */) {
     // Full list of options: https://v2.quasar.dev/quasar-cli-vite/quasar-config-js#devServer
     devServer: {
       // https: true
-      port: 9012,
+      port: 443,
       open: false // opens browser window automatically
     },
 
@@ -176,7 +176,12 @@ module.exports = configure(function (/* ctx */) {
       injectPwaMetaTags: true,
       swFilename: 'sw.js',
       manifestFilename: 'manifest.json',
-      useCredentialsForManifestTag: false,
+      useCredentialsForManifestTag: true,
+      manifest: {
+        display: 'standalone',
+        background_color: '#121212',
+        theme_color: '#2d2d2d'
+      }
       // useFilenameHashes: true,
       // extendGenerateSWOptions (cfg) {}
       // extendInjectManifestOptions (cfg) {},
