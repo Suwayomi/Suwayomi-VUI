@@ -7,7 +7,7 @@
 <template>
   <div
     class="column items-center justify-center"
-    :class="vue_Scale && !isBook ? `` : `MangaInfo`"
+    :class="vue_Scale && !isBook ? `` : `displayPage`"
     :style="imgcontstyle"
   >
     <q-img
@@ -191,18 +191,18 @@ export default defineComponent({
 </script>
 
 <style>
-.MangaInfo .test {
+.displayPage .test {
   width: fit-content;
   height: fit-content;
   max-width: 100%;
 }
-.MangaInfo .q-img__container {
+.displayPage .q-img__container {
   position: unset;
   display: flex;
   justify-content: center;
   height: 100%;
 }
-.MangaInfo .q-img.q-img--menu :first-child {
+.displayPage .q-img.q-img--menu :first-child {
   padding: 0 !important;
 }
 </style>
