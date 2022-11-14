@@ -43,6 +43,6 @@
   background: var(--q-dark-page);
 }
 
-.q-img__image {
+.mainLayout .q-img__image {
   will-change: transform;
 }
