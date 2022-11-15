@@ -27,3 +27,37 @@
  *   }
  * }
  */
+
+import { contextBridge } from 'electron';
+import { BrowserWindow } from '@electron/remote';
+
+contextBridge.exposeInMainWorld('myWindowAPI', {
+  minimize() {
+    BrowserWindow.getFocusedWindow()?.minimize();
+  },
+
+  toggleMaximize() {
+    const win = BrowserWindow.getFocusedWindow();
+
+    if (win?.isMaximized()) {
+      win?.unmaximize();
+    } else {
+      win?.maximize();
+    }
+  },
+
+  close() {
+    BrowserWindow.getFocusedWindow()?.close();
+  }
+});
+
+const win = BrowserWindow.getFocusedWindow();
+win?.webContents.send('full-screen', win?.fullScreen || false);
+win?.addListener('enter-full-screen', () => {
+  const event = new CustomEvent('full-screen', { detail: true });
+  window.dispatchEvent(event);
+});
+win?.addListener('leave-full-screen', () => {
+  const event = new CustomEvent('full-screen', { detail: false });
+  window.dispatchEvent(event);
+});

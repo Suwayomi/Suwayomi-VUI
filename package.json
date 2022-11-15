@@ -12,6 +12,7 @@
     "build": "quasar build"
   },
   "dependencies": {
+    "@electron/remote": "^2.0.8",
     "@quasar/extras": "^1.0.0",
     "p-queue": "^7.3.0",
     "quasar": "^2.6.0",
