@@ -6,6 +6,46 @@
  * file, You can obtain one at https://mozilla.org/MPL/2.0/. */ -->
 <template>
   <q-layout view="hHh Lpr fFf">
+    <q-header
+      elevated
+      :style="
+        `background-color:` +
+        ($q.dark.isActive ? `var(--q-primaryD)` : `var(--q-primary)`)
+      "
+    >
+      <q-bar
+        v-if="$q.platform.is.electron"
+        class="q-electron-drag"
+        :class="FS ? `hidden` : ``"
+      >
+        <q-icon name="img:/favicon.ico" class="q-electron-drag--exception" />
+        <div>{{ `${title} - Tachidesk Quasar` }}</div>
+
+        <q-space />
+
+        <q-btn
+          dense
+          flat
+          icon="minimize"
+          @click="minimize"
+          class="q-electron-drag--exception"
+        />
+        <q-btn
+          dense
+          flat
+          icon="crop_square"
+          @click="toggleMaximize"
+          class="q-electron-drag--exception"
+        />
+        <q-btn
+          dense
+          flat
+          icon="close"
+          @click="closeApp"
+          class="q-electron-drag--exception"
+        />
+      </q-bar>
+    </q-header>
     <q-drawer
       overlay
       v-model="leftDrawerOpen"
@@ -84,6 +124,7 @@ export default defineComponent({
   },
   mounted() {
     document.body.classList.add(this.scrollbarTheme);
+    window.addEventListener('full-screen', (e) => this.isFS(e as CustomEvent));
   },
   unmounted() {
     document.body.classList.remove(this.scrollbarTheme);
@@ -98,6 +139,24 @@ export default defineComponent({
     },
     setTitle(titl: string) {
       this.title = titl;
+    },
+    minimize() {
+      if (process.env['MODE'] === 'electron') {
+        window.myWindowAPI.minimize();
+      }
+    },
+    toggleMaximize() {
+      if (process.env['MODE'] === 'electron') {
+        window.myWindowAPI.toggleMaximize();
+      }
+    },
+    closeApp() {
+      if (process.env['MODE'] === 'electron') {
+        window.myWindowAPI.close();
+      }
+    },
+    isFS(event: CustomEvent) {
+      this.FS = event.detail;
     }
   },
   setup() {
@@ -110,7 +169,8 @@ export default defineComponent({
     });
     return {
       leftDrawerOpen: ref(false),
-      title
+      title,
+      FS: ref(false)
     };
   }
 });
