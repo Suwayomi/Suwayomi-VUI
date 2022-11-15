@@ -89,7 +89,7 @@ module.exports = configure(function (/* ctx */) {
     // Full list of options: https://v2.quasar.dev/quasar-cli-vite/quasar-config-js#devServer
     devServer: {
       // https: true
-      port: 443,
+      port: 4443,
       open: false // opens browser window automatically
     },
 
@@ -206,7 +206,7 @@ module.exports = configure(function (/* ctx */) {
 
       inspectPort: 5858,
 
-      bundler: 'packager', // 'packager' or 'builder'
+      bundler: 'builder', // 'packager' or 'builder'
 
       packager: {
         // https://github.com/electron-userland/electron-packager/blob/master/docs/api.md#options
@@ -223,8 +223,57 @@ module.exports = configure(function (/* ctx */) {
 
       builder: {
         // https://www.electron.build/configuration/configuration
-
-        appId: 'webuia2'
+        appId: 'tachidesk-vui',
+        linux: {
+          icon: '512x512.png',
+          category: 'Utility',
+          // icon: 'public/icons/tachidesk-vui.png',
+          target: [
+            {
+              //   target: 'deb',
+              //   arch: [
+              //     'x64',
+              //   ],
+              // }, {
+              target: 'AppImage',
+              arch: [
+                'x64',
+              ]
+              // }, {
+              //   target: 'rpm',
+              //   arch: [
+              //     'x64',
+              //   ]
+              // }, {
+              //   target: 'pacman',
+              //   arch: [
+              //     'x64',
+              //   ]
+            }
+          ]
+        },
+        mac: {
+          target: [{
+            target: 'zip',
+            arch: [
+              // 'x64',
+              'arm64'
+            ]
+          }]
+        },
+        win: {
+          target: [{
+            target: 'nsis',
+            arch: [
+              'x64',
+            ]
+          }, {
+            target: 'portable',
+            arch: [
+              'x64',
+            ]
+          }]
+        }
       }
     },
 

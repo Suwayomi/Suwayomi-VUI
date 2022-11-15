@@ -5,7 +5,7 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at https://mozilla.org/MPL/2.0/. */ -->
 <template>
-  <q-page @click="goNextIntersector80">
+  <q-page @click="goNextIntersector80" :style-fn="myTweak">
     <div>
       <q-infinite-scroll
         @load="onLoad"
@@ -69,6 +69,11 @@ export default defineComponent({
   components: { displayPage },
   emits: ['setTitle'],
   methods: {
+    myTweak(offset: number) {
+      return {
+        height: offset ? `calc(100vh - ${offset}px)` : '100vh'
+      };
+    },
     onLoad(_index: number, done: () => void) {
       this.$fetchJSON(
         `/api/v1/manga/${this.$route.params['mangaID']}/chapter/${this.currchapter}`

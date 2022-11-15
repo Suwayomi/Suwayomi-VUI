@@ -5,7 +5,7 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at https://mozilla.org/MPL/2.0/. */ -->
 <template>
-  <q-page>
+  <q-page :style-fn="myTweak">
     <q-list>
       <div v-for="(source, index) in uselist" :key="index">
         <div
@@ -56,6 +56,11 @@ export default defineComponent({
     this.reload();
   },
   methods: {
+    myTweak(offset: number) {
+      return {
+        height: offset ? `calc(100vh - ${offset}px)` : '100vh'
+      };
+    },
     reload() {
       this.$fetchJSON('/api/v1/source/list').then((data: source[]) => {
         this.list = data;

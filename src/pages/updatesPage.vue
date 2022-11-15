@@ -5,7 +5,7 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at https://mozilla.org/MPL/2.0/. */ -->
 <template>
-  <q-page>
+  <q-page :style-fn="myTweak">
     <q-infinite-scroll
       @load="onLoad"
       :offset="$q.screen.height"
@@ -57,6 +57,11 @@ export default defineComponent({
   name: 'updatesPage',
   components: { UpdateCard },
   methods: {
+    myTweak(offset: number) {
+      return {
+        height: offset ? `calc(100vh - ${offset}px)` : '100vh'
+      };
+    },
     async onLoad(index: number, done: () => void) {
       const update: updatesreq = await this.$fetchJSON(
         `/api/v1/update/recentChapters/${index}`
