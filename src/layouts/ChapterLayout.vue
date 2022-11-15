@@ -18,7 +18,7 @@
         class="q-electron-drag"
         :class="FS ? `hidden` : ``"
       >
-        <q-icon name="img:/favicon.ico" class="q-electron-drag--exception" />
+        <q-icon name="img:favicon.ico" class="q-electron-drag--exception" />
         <div>{{ `${title} - Tachidesk Quasar` }}</div>
 
         <q-space />
@@ -141,17 +141,17 @@ export default defineComponent({
       this.title = titl;
     },
     minimize() {
-      if (process.env['MODE'] === 'electron') {
+      if (this.$q.platform.is.electron) {
         window.myWindowAPI.minimize();
       }
     },
     toggleMaximize() {
-      if (process.env['MODE'] === 'electron') {
+      if (this.$q.platform.is.electron) {
         window.myWindowAPI.toggleMaximize();
       }
     },
     closeApp() {
-      if (process.env['MODE'] === 'electron') {
+      if (this.$q.platform.is.electron) {
         window.myWindowAPI.close();
       }
     },
