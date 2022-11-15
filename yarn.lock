@@ -2698,7 +2698,7 @@ ejs@^3.1.6, ejs@^3.1.7:
   dependencies:
     jake "^10.8.5"
 
-electron-builder@^22.0.0, electron-builder@^22.4.0:
+electron-builder@^22.0.0, electron-builder@^22.10.3:
   version "22.14.13"
   resolved "https://registry.npmjs.org/electron-builder/-/electron-builder-22.14.13.tgz"
   integrity sha512-3fgLxqF2TXVKiUPeg74O4V3l0l3j7ERLazo8sUbRkApw0+4iVAf2BJkHsHMaXiigsgCoEzK/F4/rB5rne/VAnw==
