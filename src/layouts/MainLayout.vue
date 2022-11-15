@@ -18,32 +18,14 @@
         class="q-electron-drag"
         :class="FS ? `hidden` : ``"
       >
-        <q-icon name="img:/favicon.ico" class="q-electron-drag--exception" />
+        <q-icon name="img:favicon.ico" class="q-electron-drag--exception" />
         <div>{{ `${title} - Tachidesk Quasar` }}</div>
 
         <q-space />
 
-        <q-btn
-          dense
-          flat
-          icon="minimize"
-          @click="minimize"
-          class="q-electron-drag--exception"
-        />
-        <q-btn
-          dense
-          flat
-          icon="crop_square"
-          @click="toggleMaximize"
-          class="q-electron-drag--exception"
-        />
-        <q-btn
-          dense
-          flat
-          icon="close"
-          @click="closeApp"
-          class="q-electron-drag--exception"
-        />
+        <q-btn dense flat icon="minimize" @click="minimize" />
+        <q-btn dense flat icon="crop_square" @click="toggleMaximize" />
+        <q-btn dense flat icon="close" @click="closeApp" />
       </q-bar>
       <q-toolbar>
         <q-btn
@@ -112,6 +94,7 @@
       <router-view
         @setTitle="setTitle"
         :class="$q.dark.isActive ? `dark-page` : `white`"
+        style="overflow-y: auto"
       />
     </q-page-container>
   </q-layout>
@@ -179,17 +162,17 @@ export default defineComponent({
       this.title = titl;
     },
     minimize() {
-      if (process.env['MODE'] === 'electron') {
+      if (this.$q.platform.is.electron) {
         window.myWindowAPI.minimize();
       }
     },
     toggleMaximize() {
-      if (process.env['MODE'] === 'electron') {
+      if (this.$q.platform.is.electron) {
         window.myWindowAPI.toggleMaximize();
       }
     },
     closeApp() {
-      if (process.env['MODE'] === 'electron') {
+      if (this.$q.platform.is.electron) {
         window.myWindowAPI.close();
       }
     },
