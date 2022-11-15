@@ -7,7 +7,7 @@
 -->
 
 <template>
-  <q-list separator :dark="$q.dark.isActive ? true : false">
+  <q-list separator :dark="$q.dark.isActive ? true : false" :style-fn="myTweak">
     <whatis
       v-for="(pref, index) in preferences"
       :preference="pref"
@@ -27,6 +27,11 @@ export default defineComponent({
   name: 'settingsPage',
   components: { whatis },
   methods: {
+    myTweak(offset: number) {
+      return {
+        height: offset ? `calc(100vh - ${offset}px)` : '100vh'
+      };
+    },
     getPrefs() {
       this.$fetchJSON(
         `/api/v1/source/${this.$route.params['sourceID']}/preferences`

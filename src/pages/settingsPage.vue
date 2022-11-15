@@ -5,7 +5,7 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at https://mozilla.org/MPL/2.0/. */ -->
 <template>
-  <q-list separator :dark="$q.dark.isActive ? true : false">
+  <q-list separator :dark="$q.dark.isActive ? true : false" :style-fn="myTweak">
     <!-- categories -->
     <q-item to="/settings/categories">
       <q-item-section avatar>
@@ -287,6 +287,11 @@ import { resetBase } from 'src/boot/fetcher';
 export default defineComponent({
   name: 'settingsPage',
   methods: {
+    myTweak(offset: number) {
+      return {
+        height: offset ? `calc(100vh - ${offset}px)` : '100vh'
+      };
+    },
     setMitemW(val: number) {
       this.$q.localStorage.set('MitemW', val);
     },

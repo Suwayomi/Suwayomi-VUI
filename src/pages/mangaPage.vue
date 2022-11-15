@@ -45,7 +45,7 @@ export default defineComponent({
     myTweak(offset: number) {
       this.offset = offset;
       return {
-        minHeight: offset ? `calc(100vh - ${offset}px)` : '100vh'
+        height: offset ? `calc(100vh - ${offset}px)` : '100vh'
       };
     }
   },
