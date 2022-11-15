@@ -34,7 +34,10 @@
         fit="scale-down"
       />
       <div v-if="manga" class="q-mx-md" style="display: inline-block">
-        <h3 :class="$q.screen.sm || $q.screen.xs ? `q-my-sm` : ``">
+        <h3
+          style="overflow-wrap: anywhere"
+          :class="$q.screen.sm || $q.screen.xs ? `q-my-sm` : ``"
+        >
           {{ manga.title }}
         </h3>
         <div class="text-h5 q-my-xs" v-if="manga.author">

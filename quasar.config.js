@@ -223,8 +223,57 @@ module.exports = configure(function (/* ctx */) {
 
       builder: {
         // https://www.electron.build/configuration/configuration
-
-        appId: 'webuia2'
+        appId: 'tachidesk-vui',
+        linux: {
+          icon: '512x512.png',
+          category: 'Utility',
+          // icon: 'public/icons/tachidesk-vui.png',
+          target: [
+            {
+              //   target: 'deb',
+              //   arch: [
+              //     'x64',
+              //   ],
+              // }, {
+              target: 'AppImage',
+              arch: [
+                'x64',
+              ]
+              // }, {
+              //   target: 'rpm',
+              //   arch: [
+              //     'x64',
+              //   ]
+              // }, {
+              //   target: 'pacman',
+              //   arch: [
+              //     'x64',
+              //   ]
+            }
+          ]
+        },
+        mac: {
+          target: [{
+            target: 'zip',
+            arch: [
+              // 'x64',
+              'arm64'
+            ]
+          }]
+        },
+        win: {
+          target: [{
+            target: 'nsis',
+            arch: [
+              'x64',
+            ]
+          }, {
+            target: 'portable',
+            arch: [
+              'x64',
+            ]
+          }]
+        }
       }
     },
 
