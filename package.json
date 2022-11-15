@@ -3,7 +3,9 @@
   "version": "0.0.1",
   "description": "A tachidesk UI made with Vue + Quasar",
   "productName": "Tachidesk-VUI",
-  "author": "Robonau",
+  "author": "Robonau <robonau@gmail.com>",
+  "url": "https://github.com/Suwayomi/Tachidesk-VUI",
+  "license": "MPL-2.0",
   "private": true,
   "scripts": {
     "lint": "eslint --ext .js,.ts,.vue ./",
