@@ -5,7 +5,7 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at https://mozilla.org/MPL/2.0/. */ -->
 <template>
-  <q-page>
+  <q-page :style-fn="myTweak">
     <div ref="infiniteScrol">
       <div v-for="({ source, mangas }, index) in searchResults" :key="index">
         <div>
@@ -43,6 +43,11 @@ import Display from 'src/components/library/Filters';
 export default defineComponent({
   components: { mangaCard },
   methods: {
+    myTweak(offset: number) {
+      return {
+        height: offset ? `calc(100vh - ${offset}px)` : '100vh'
+      };
+    },
     calcWidth() {
       const grid = <Element>this.$refs['infiniteScrol'];
       const ideal = <number>this.$q.localStorage.getItem('MitemW');

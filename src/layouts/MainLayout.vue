@@ -13,6 +13,20 @@
         ($q.dark.isActive ? `var(--q-primaryD)` : `var(--q-primary)`)
       "
     >
+      <q-bar
+        v-if="$q.platform.is.electron"
+        class="q-electron-drag"
+        :class="FS ? `hidden` : ``"
+      >
+        <q-icon name="img:favicon.ico" class="q-electron-drag--exception" />
+        <div>{{ `${title} - Tachidesk Quasar` }}</div>
+
+        <q-space />
+
+        <q-btn dense flat icon="minimize" @click="minimize" />
+        <q-btn dense flat icon="crop_square" @click="toggleMaximize" />
+        <q-btn dense flat icon="close" @click="closeApp" />
+      </q-bar>
       <q-toolbar>
         <q-btn
           flat
@@ -80,13 +94,14 @@
       <router-view
         @setTitle="setTitle"
         :class="$q.dark.isActive ? `dark-page` : `white`"
+        style="overflow-y: auto"
       />
     </q-page-container>
   </q-layout>
 </template>
 
 <script lang="ts">
-import { defineComponent, ref /*shallowRef, watch*/ } from 'vue';
+import { defineComponent, ref } from 'vue';
 import EssentialLink from 'src/components/mainLayout/EssentialLink.vue';
 import { useQuasar } from 'quasar';
 import { useMeta } from 'quasar';
@@ -145,6 +160,25 @@ export default defineComponent({
   methods: {
     setTitle(titl: string) {
       this.title = titl;
+    },
+    minimize() {
+      if (this.$q.platform.is.electron) {
+        window.myWindowAPI.minimize();
+      }
+    },
+    toggleMaximize() {
+      if (this.$q.platform.is.electron) {
+        window.myWindowAPI.toggleMaximize();
+      }
+    },
+    closeApp() {
+      if (this.$q.platform.is.electron) {
+        window.myWindowAPI.close();
+      }
+    },
+    isFS(event: CustomEvent) {
+      console.log(event);
+      this.FS = event.detail;
     }
   },
   computed: {
@@ -154,6 +188,7 @@ export default defineComponent({
   },
   mounted() {
     document.body.classList.add(this.scrollbarTheme);
+    window.addEventListener('full-screen', (e) => this.isFS(e as CustomEvent));
   },
   unmounted() {
     document.body.classList.remove(this.scrollbarTheme);
@@ -179,8 +214,8 @@ export default defineComponent({
         $q.localStorage.set('dark', $q.dark.isActive);
       },
       doSearch: ref(false),
-      Searchenter: ref(false)
-      // componInBar
+      Searchenter: ref(false),
+      FS: ref(false)
     };
   }
 });

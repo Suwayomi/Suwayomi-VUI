@@ -293,12 +293,13 @@
         <filterr></filterr>
       </div>
     </div>
-    <div
-      style="overflow-y: auto"
+    <q-scroll-area
+      class="q-pr-xs"
+      :dark="$q.dark.isActive"
       :style="
         $q.screen.sm || $q.screen.xs
           ? ``
-          : `max-height: calc(100vh - ` + calcHeight() + `px)`
+          : `height: calc(100vh - ` + calcHeight() + `px)`
       "
       :class="selectMode ? ` selectmode` : ``"
     >
@@ -306,6 +307,7 @@
         v-for="item in doSrt"
         :key="item.index"
         style="height: 58px"
+        class=""
       >
         <q-item
           v-touch-hold.mouse="() => handleHold(item.id)"
@@ -448,7 +450,7 @@
           />
         </router-link>
       </q-page-sticky>
-    </div>
+    </q-scroll-area>
   </div>
 </template>
 
