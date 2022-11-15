@@ -10,9 +10,13 @@
     :class="$q.screen.sm || $q.screen.xs ? `col` : `row`"
     :style-fn="myTweak"
   >
-    <mangaInfo @inlib="getonline" :manga="manga" :offset="offset" class="col-6">
-    </mangaInfo>
-    <mangaChapters class="col-6"></mangaChapters>
+    <mangaInfo
+      @inlib="getonline"
+      :manga="manga"
+      :offset="offset"
+      class="col-6"
+    />
+    <mangaChapters class="col-6" />
   </q-page>
 </template>
 
