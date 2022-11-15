@@ -5,14 +5,14 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at https://mozilla.org/MPL/2.0/. */ -->
 <template>
-  <q-page class="flex items-center justify-center">
+  <q-page class="flex items-center justify-center" :style-fn="myTweak">
     <div v-if="!downloads.length && Emitter.isConnected">No Downloads</div>
     <q-virtual-scroll
       v-if="downloads.length"
       :items="downloads"
       v-slot="{ item }"
       class="self-start"
-      style="max-height: calc(100vh - 50px); flex: auto"
+      style="flex: auto"
       :dark="$q.dark.isActive"
     >
       <q-item clickable v-ripple class="q-pa-lg">
@@ -114,6 +114,11 @@ import { useQuasar } from 'quasar';
 
 export default defineComponent({
   methods: {
+    myTweak(offset: number) {
+      return {
+        height: offset ? `calc(100vh - ${offset}px)` : '100vh'
+      };
+    },
     async delet(download: download) {
       this.$fetch(
         `/api/v1/download/${download.mangaId}/chapter/${download.chapterIndex}`,
