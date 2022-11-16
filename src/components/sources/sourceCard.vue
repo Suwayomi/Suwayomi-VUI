@@ -5,8 +5,13 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at https://mozilla.org/MPL/2.0/. */ -->
 <template>
-  <q-card v-ripple flat class="q-ma-sm">
-    <q-item style="height: 100px">
+  <q-card flat class="q-ma-sm">
+    <q-item
+      v-ripple
+      clickable
+      style="height: 100px"
+      :to="`/sources/${source.id}/popular/`"
+    >
       <div class="row content-center col-grow">
         <q-item-section avatar>
           <q-img
@@ -39,7 +44,7 @@
           outline
           color="blue"
           label="latest"
-          :to="`/sources/` + source.id + `/latest/`"
+          :to="`/sources/${source.id}/latest/`"
           v-if="source.supportsLatest"
         >
         </q-btn>
@@ -48,7 +53,8 @@
           outline
           color="blue"
           label="browse"
-          :to="`/sources/` + source.id + `/popular/`"
+          v-if="!$q.screen.xs"
+          :to="`/sources/${source.id}/popular/`"
         >
         </q-btn>
       </div>

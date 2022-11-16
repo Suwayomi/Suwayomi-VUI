@@ -2326,7 +2326,7 @@ commander@2.9.0:
   resolved "https://registry.npmjs.org/commander/-/commander-2.9.0.tgz"
   integrity sha512-bmkUukX8wAOjHdN26xj5c4ctEV22TQ7dQYhSmuckKhToXrkUn0iIaolHdIxYYqD55nhpSPA9zPQ1yP57GdXP2A==
   dependencies:
-    graceful-readlink ">= 1.0.0"
+    graceful-readlink ">=1.0.0"
 
 common-tags@^1.8.0:
   version "1.8.2"
@@ -2353,7 +2353,7 @@ compressible@~2.0.16:
   resolved "https://registry.npmjs.org/compressible/-/compressible-2.0.18.tgz"
   integrity sha512-AF3r7P5dWxL8MxyITRMlORQNaOA2IkAFaTr4k7BUumjPtRpGDTZpl0Pb1XCO6JeDCBdp126Cgs9sMxqSjgYyRg==
   dependencies:
-    mime-db ">= 1.43.0 < 2"
+    mime-db ">=1.43.0<2"
 
 compression@^1.7.4:
   version "1.7.4"
@@ -3827,14 +3827,14 @@ iconv-lite@^0.4.24, iconv-lite@0.4.24:
   resolved "https://registry.npmjs.org/iconv-lite/-/iconv-lite-0.4.24.tgz"
   integrity sha512-v3MXnZAcvnywkTUEZomIActle7RXXeedOR31wwl7VlyoXO4Qi9arvSenNQWne1TcRwhCL1HwLI21bEqdpj8/rA==
   dependencies:
-    safer-buffer ">= 2.1.2 < 3"
+    safer-buffer ">=2.1.2<3"
 
 iconv-lite@^0.6.2:
   version "0.6.3"
   resolved "https://registry.npmjs.org/iconv-lite/-/iconv-lite-0.6.3.tgz"
   integrity sha512-4fCk79wshMdzMp2rH06qWrJE4iolqLhCUH+OiuIgU++RB0+94NlDL81atO7GX55uUKueo0txHNtvEyI6D7WdMw==
   dependencies:
-    safer-buffer ">= 2.1.2 < 3.0.0"
+    safer-buffer ">=2.1.2<3.0.0"
 
 idb@^7.0.1:
   version "7.1.1"
@@ -4620,7 +4620,7 @@ normalize-package-data@^2.3.2:
   dependencies:
     hosted-git-info "^2.1.4"
     resolve "^1.10.0"
-    semver "2 || 3 || 4 || 5"
+    semver "2||3||4||5"
     validate-npm-package-license "^3.0.1"
 
 normalize-path@^3.0.0, normalize-path@~3.0.0:
@@ -5377,7 +5377,7 @@ sass@*, sass@1.32.12:
   resolved "https://registry.npmjs.org/sass/-/sass-1.32.12.tgz"
   integrity sha512-zmXn03k3hN0KaiVTjohgkg98C3UowhL1/VSGdj4/VAAiMKGQOE80PFPxFP2Kyq0OUskPKcY5lImkhBKEHlypJA==
   dependencies:
-    chokidar ">=3.0.0 <4.0.0"
+    chokidar ">=3.0.0<4.0.0"
 
 sax@^1.2.4:
   version "1.2.4"
@@ -6151,7 +6151,7 @@ verror@^1.10.0:
     esbuild "^0.14.27"
     postcss "^8.4.13"
     resolve "^1.22.0"
-    rollup ">=2.59.0 <2.78.0"
+    rollup ">=2.59.0<2.78.0"
   optionalDependencies:
     fsevents "~2.3.2"
 
