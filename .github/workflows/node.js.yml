@@ -39,7 +39,7 @@ jobs:
       - uses: montudor/action-zip@v1
         if: github.event_name != 'pull_request'
         with:
-          args: zip -qq -r release.zip dist/spa
+          args: zip -qq -r release.zip dist/pwa
       - name: Upload CI Release
         if: github.event_name != 'pull_request'
         uses: ncipollo/release-action@v1
