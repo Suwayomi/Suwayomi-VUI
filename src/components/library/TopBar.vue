@@ -13,7 +13,9 @@
     :text-color="$q.dark.isActive ? `white` : `dark`"
     icon="filter_list"
     @click="dialo = true"
-  />
+  >
+    <q-tooltip> Sort / Filter / Display </q-tooltip>
+  </q-btn>
   <q-dialog v-model="dialo">
     <q-card>
       <q-card-section class="q-pa-none">
@@ -130,6 +132,16 @@
       </div>
     </q-card>
   </q-dialog>
+
+  <q-btn
+    flat
+    round
+    :text-color="$q.dark.isActive ? `white` : `dark`"
+    icon="refresh"
+    @click="update"
+  >
+    <q-tooltip> Update category </q-tooltip>
+  </q-btn>
 </template>
 
 <script lang="ts">
@@ -140,6 +152,14 @@ import Filters from './Filters';
 export default defineComponent({
   name: 'libraryTopBar',
   components: { SearchBar },
+  methods: {
+    update() {
+      this.$fetch('/api/v1/update/fetch', {
+        method: 'POST',
+        body: `categoryId=${this.$route.query['tab']}`
+      });
+    }
+  },
   watch: {
     unread() {
       this.filters.setUnread(this.unread);
