@@ -11,9 +11,23 @@
     class="q-ml-sm"
     round
     :text-color="$q.dark.isActive ? `white` : `dark`"
+    icon="clear_all"
+    @click="clear"
+  >
+    <q-tooltip> Clear all downloads </q-tooltip>
+  </q-btn>
+  <q-btn
+    elevated
+    class="q-ml-sm"
+    round
+    :text-color="$q.dark.isActive ? `white` : `dark`"
     :icon="PlayPause ? `pause` : `play_arrow`"
     @click="toggleplay"
-  />
+  >
+    <q-tooltip>
+      {{ PlayPause ? `stop downloads` : `start downloads` }}
+    </q-tooltip>
+  </q-btn>
 </template>
 
 <script lang="ts">
@@ -30,6 +44,9 @@ export default defineComponent({
       } else {
         this.$fetch('/api/v1/downloads/stop');
       }
+    },
+    clear() {
+      this.$fetch('/api/v1/downloads/clear');
     }
   },
   watch: {
