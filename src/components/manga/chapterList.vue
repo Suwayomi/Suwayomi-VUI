@@ -5,7 +5,7 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at https://mozilla.org/MPL/2.0/. */ -->
 <template>
-  <div>
+  <div ref="conta">
     <div class="row justify-between items-center" ref="chapHead">
       <h4 class="q-ma-md">{{ chapters.length }} chapters</h4>
       <div style="padding-right: 12px">
@@ -298,7 +298,7 @@
       :dark="$q.dark.isActive"
       :style="
         $q.screen.sm || $q.screen.xs
-          ? ``
+          ? `height: 50vh`
           : `height: calc(100vh - ` + calcHeight() + `px)`
       "
       :class="selectMode ? ` selectmode` : ``"
@@ -434,23 +434,25 @@
           </q-btn>
         </q-item>
       </q-intersection>
-      <q-page-sticky position="bottom-right" :offset="fabPos">
-        <router-link
-          style="text-decoration: none; color: inherit"
-          :is="draggingFab ? 'span' : 'router-link'"
-          :to="res"
-        >
-          <q-btn
-            fab
-            class="Fabconsist"
-            label="Resume"
-            color="blue"
-            icon="drag_indicator"
-            v-touch-pan.prevent.mouse="moveFab"
-          />
-        </router-link>
-      </q-page-sticky>
     </q-scroll-area>
+    <q-page-sticky position="bottom-right" :offset="fabPos" ref="sticky">
+      <router-link
+        style="text-decoration: none; color: inherit"
+        :is="draggingFab ? 'span' : 'router-link'"
+        :to="res"
+      >
+        <q-btn
+          fab
+          class="Fabconsist"
+          label="Resume"
+          color="blue"
+          icon="drag_indicator"
+          v-touch-pan.prevent.mouse="moveFab"
+        >
+          <q-tooltip> draggable </q-tooltip>
+        </q-btn>
+      </router-link>
+    </q-page-sticky>
   </div>
 </template>
 
@@ -466,10 +468,14 @@ import filterr from './Filter.vue';
 import { chaptersFilter } from './filters';
 import { useRoute } from 'vue-router';
 import useDlSock from '../downloads/useDlSock';
+import { QPageSticky } from 'quasar';
 
 export default defineComponent({
   name: 'mangaChapters',
   created: async function () {
+    this.$bus.on('updateManga', () => {
+      this.getonline('true');
+    });
     this.getonline();
   },
   components: { filterr },
@@ -543,8 +549,27 @@ export default defineComponent({
     }) {
       // would like to use TouchPan type but it doesnt seem to be correct(or not the correct type idk)
       this.draggingFab = ev.isFirst !== true && ev.isFinal !== true;
+      let x = this.fabPos[0] - ev.delta.x;
+      let y = this.fabPos[1] - ev.delta.y;
 
-      this.fabPos = [this.fabPos[0] - ev.delta.x, this.fabPos[1] - ev.delta.y];
+      const conta = (
+        (this.$refs['conta'] as HTMLElement).parentElement as HTMLElement
+      ).getBoundingClientRect();
+      const stick = (
+        this.$refs['sticky'] as QPageSticky
+      ).$el.getBoundingClientRect();
+
+      const maxy = conta.height;
+      const sticky = stick.height;
+      if (y > maxy - sticky) y = maxy - sticky;
+      if (y < 0) y = 0;
+
+      const maxx = conta.width;
+      const stickx = stick.width;
+      if (x > maxx - stickx) x = maxx - stickx;
+      if (x < 0) x = 0;
+
+      this.fabPos = [x, y];
     },
     calcHeight() {
       const tmp = <Element | undefined>this.$refs['chapHead'];
