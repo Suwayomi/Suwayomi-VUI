@@ -96,7 +96,7 @@ export default defineComponent({
     }
   },
   created: function () {
-    if (!this.imgdata && this.manga) {
+    if (this.imgdata && this.manga) {
       this.getImg();
     } else {
       const unwatch = this.$watch(
