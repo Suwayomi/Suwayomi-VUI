@@ -4,15 +4,14 @@
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at https://mozilla.org/MPL/2.0/. */ -->
- <template>
+<template>
   <q-input
     dense
     standout
     v-model="text"
     debounce="500"
     input-class="text-right"
-    class="q-ml-xs"
-    :class="text ? `col-grow` : `col-shrink`"
+    class="q-ml-xs col-shrink"
     @keyup.enter="searchEnt()"
   >
     <template v-slot:append>
