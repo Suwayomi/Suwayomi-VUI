@@ -12,7 +12,9 @@
     :text-color="$q.dark.isActive ? `white` : `dark`"
     icon="filter_list"
     @click="dialo = true"
-  />
+  >
+    <q-tooltip> set category </q-tooltip>
+  </q-btn>
   <q-dialog v-model="dialo">
     <q-card>
       <q-card-section class="q-px-xl">
@@ -28,6 +30,15 @@
       </topBcat>
     </q-card>
   </q-dialog>
+  <q-btn
+    flat
+    round
+    :text-color="$q.dark.isActive ? `white` : `dark`"
+    icon="refresh"
+    @click="update"
+  >
+    <q-tooltip> Update Manga </q-tooltip>
+  </q-btn>
 </template>
 
 <script lang="ts">
@@ -36,9 +47,13 @@ import topBcat from 'src/components/manga/TopBcat.vue';
 import { cat } from '../global/models';
 
 export default defineComponent({
-  name: 'libraryTopBar',
+  name: 'mangaTopBar',
   components: { topBcat },
-  watch: {},
+  methods: {
+    update() {
+      this.$bus.emit('updateManga');
+    }
+  },
   mounted: function () {
     this.$fetchJSON('/api/v1/category/').then((opt: cat[]) => {
       this.options = opt.slice(1);

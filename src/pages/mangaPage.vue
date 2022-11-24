@@ -30,9 +30,17 @@ export default defineComponent({
   name: 'mangaPage',
   components: { mangaInfo, mangaChapters },
   created: async function () {
+    this.$bus.on('updateManga', () => {
+      this.getonline('true');
+    });
     await this.getonline();
     this.$emit('setTitle', this.manga?.title || 'manga');
-    await this.getonline('true');
+    if (
+      new Date(this.manga.lastFetchedAt * 1000) <
+      new Date(new Date().setDate(new Date().getDate() - 1))
+    ) {
+      this.$bus.emit('updateManga');
+    }
   },
   methods: {
     async getonline(TF = 'false', retry = 3) {
@@ -54,7 +62,7 @@ export default defineComponent({
     }
   },
   setup() {
-    const manga = ref();
+    const manga = ref(<manga>{});
     return { manga, offset: ref(<number>Number()) };
   }
 });

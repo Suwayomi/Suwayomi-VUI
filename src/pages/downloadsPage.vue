@@ -12,7 +12,7 @@
       :items="downloads"
       v-slot="{ item }"
       class="self-start"
-      style="flex: auto"
+      style="flex: auto; height: 100%"
       :dark="$q.dark.isActive"
     >
       <q-item clickable v-ripple class="q-pa-lg">
