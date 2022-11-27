@@ -23,6 +23,9 @@
           class="col-grow"
           flat
           :to="{ query: { ...$route.query, tab: tabb.tabID } }"
+          :class="
+            $route.query['tab'] == tabb.tabID.toString() ? `text-primary` : ``
+          "
         />
       </q-tabs>
     </div>
