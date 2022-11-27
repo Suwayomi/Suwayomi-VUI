@@ -64,7 +64,14 @@
         :label="manga?.inLibrary ? `In Library` : `Add To Library`"
         @click="InLibrary"
       />
-      <q-btn flat color="grey-9" icon="public" label="Open Site" />
+      <q-btn
+        flat
+        color="grey-9"
+        icon="public"
+        label="Open Site"
+        :href="manga?.realUrl"
+        target="_blank"
+      />
     </div>
     <div v-if="manga?.description">
       <h6 class="q-my-sm">About:</h6>
