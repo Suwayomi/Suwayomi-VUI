@@ -15,7 +15,7 @@
     "
   >
     <q-img
-      v-if="$q.screen.sm || $q.screen.xs"
+      v-if="$q.screen.sm || $q.screen.xs || $q.screen.md"
       style="width: fit-content; max-width: 100%"
       loading="lazy"
       class="rounded-borders q-mx-md"
@@ -25,7 +25,7 @@
     />
     <div class="flex no-wrap">
       <q-img
-        v-if="!($q.screen.sm || $q.screen.xs)"
+        v-if="!($q.screen.sm || $q.screen.xs || $q.screen.md)"
         style="width: fit-content; max-width: 50%; flex: none"
         loading="lazy"
         class="rounded-borders"
@@ -36,7 +36,7 @@
       <div v-if="manga" class="q-mx-md" style="display: inline-block">
         <h3
           style="overflow-wrap: anywhere"
-          :class="$q.screen.sm || $q.screen.xs ? `q-my-sm` : ``"
+          :class="$q.screen.sm || $q.screen.xs || $q.screen.md ? `q-my-sm` : ``"
         >
           {{ manga.title }}
         </h3>
