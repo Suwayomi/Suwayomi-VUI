@@ -7,6 +7,53 @@
  -->
 <template>
   <q-btn
+    class="q-ml-sm"
+    round
+    :text-color="$q.dark.isActive ? `white` : `dark`"
+    icon="filter_list"
+    @click="dialo = true"
+  >
+    <q-tooltip>Filter</q-tooltip>
+  </q-btn>
+  <q-dialog v-model="dialo">
+    <q-card class="q-pa-md">
+      <q-card-section
+        v-for="(item, count) in ['Downloading', 'Queued', 'finished']"
+        :key="count"
+        class="q-py-xs"
+      >
+        <q-checkbox
+          style="width: 100%"
+          v-model="filter"
+          :dark="$q.dark.isActive"
+          :val="item"
+        >
+          <div style="margin-right: 12.5px">{{ item }}</div>
+        </q-checkbox>
+      </q-card-section>
+      <q-card-actions align="center">
+        <q-btn
+          flat
+          label="clear"
+          color="primary"
+          v-close-popup
+          @click="
+            filter = [];
+            dofilter();
+          "
+        />
+        <q-btn
+          flat
+          label="Save"
+          color="primary"
+          v-close-popup
+          @click="dofilter"
+        />
+      </q-card-actions>
+    </q-card>
+  </q-dialog>
+
+  <q-btn
     elevated
     class="q-ml-sm"
     round
@@ -47,6 +94,9 @@ export default defineComponent({
     },
     clear() {
       this.$fetch('/api/v1/downloads/clear');
+    },
+    dofilter() {
+      this.$bus.emit('DLFilter', this.filter);
     }
   },
   watch: {
@@ -73,6 +123,8 @@ export default defineComponent({
     }
 
     return {
+      dialo: ref(false),
+      filter: ref([]),
       PlayPause,
       Emitter
     };
