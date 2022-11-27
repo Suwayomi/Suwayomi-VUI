@@ -220,9 +220,3 @@ export default defineComponent({
   }
 });
 </script>
-
-<style scoped>
-.text-primary {
-  color: var(--q-primary) !important;
-}
-</style>
