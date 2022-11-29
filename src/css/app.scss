@@ -3,5 +3,53 @@
 // This Source Code Form is subject to the terms of the Mozilla Public
 // License, v. 2.0. If a copy of the MPL was not distributed with this
 // file, You can obtain one at http://mozilla.org/MPL/2.0/.
+.lightSB {
+  ::-webkit-scrollbar,
+  &::-webkit-scrollbar {
+    width: 15px;
+  }
 
-// app global css in SCSS form
+  ::-webkit-scrollbar-thumb,
+  &::-webkit-scrollbar-thumb {
+    background: $light;
+    border: solid 3px $light-page;
+    border-radius: 7px;
+  }
+
+  ::-webkit-scrollbar-thumb:hover,
+  &::-webkit-scrollbar-thumb:hover {
+    background: $dark;
+  }
+}
+
+.darkSB {
+  ::-webkit-scrollbar,
+  &::-webkit-scrollbar {
+    width: 15px;
+  }
+
+  ::-webkit-scrollbar-thumb,
+  &::-webkit-scrollbar-thumb {
+    background: $dark;
+    border: solid 3px $dark-page;
+    border-radius: 7px;
+  }
+
+  ::-webkit-scrollbar-thumb:hover,
+  &::-webkit-scrollbar-thumb:hover {
+    background: $light !important;
+  }
+
+  ::-webkit-scrollbar-track-piece,
+  &::-webkit-scrollbar-track-piece {
+    background: $dark-page;
+  }
+}
+
+.mainLayout .q-img__image {
+  will-change: transform;
+}
+
+.text-primary {
+  color: $primary !important;
+}

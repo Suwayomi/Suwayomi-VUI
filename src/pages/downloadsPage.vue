@@ -7,9 +7,12 @@
 <template>
   <q-page class="flex items-center justify-center" :style-fn="myTweak">
     <div v-if="!downloads.length && Emitter.isConnected">No Downloads</div>
+    <div v-if="!downlfilt.length && downloads.length && Emitter.isConnected">
+      No Downloads fit filter
+    </div>
     <q-virtual-scroll
-      v-if="downloads.length"
-      :items="downloads"
+      v-if="downlfilt.length"
+      :items="downlfilt"
       v-slot="{ item }"
       class="self-start"
       style="flex: auto; height: 100%"
@@ -113,6 +116,11 @@ import { download, dlsock, isdlsock } from 'src/components/global/models';
 import { useQuasar } from 'quasar';
 
 export default defineComponent({
+  created() {
+    this.$bus.on('DLFilter', (e: string[]) => {
+      this.filtering = e;
+    });
+  },
   methods: {
     myTweak(offset: number) {
       return {
@@ -141,6 +149,14 @@ export default defineComponent({
       }
     }
   },
+  computed: {
+    downlfilt(): download[] {
+      if (this.filtering.length) {
+        return this.downloads.filter((e) => this.filtering.includes(e.state));
+      }
+      return this.downloads;
+    }
+  },
   setup(_props, { emit }) {
     emit('setTitle', 'Downloads');
     const $q = useQuasar();
@@ -167,7 +183,8 @@ export default defineComponent({
     return {
       downloads,
       goodBase,
-      Emitter
+      Emitter,
+      filtering: ref(<string[]>[])
     };
   }
 });
