@@ -176,9 +176,7 @@ export default defineComponent({
       getImgBlob(
         `/api/v1/manga/${this.$route.params['mangaID']}/chapter/${
           this.chapterID
-        }/page/${this.pageNum}?useCache=${this.$q.localStorage.getItem(
-          'useCache'
-        )}`
+        }/page/${this.pageNum}?useCache=${this.$storeGet('useCache', true)}`
       ).then((value: string) => {
         this.imgdata = value;
       });

@@ -6,13 +6,20 @@
  * file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 import { ref } from 'vue';
 import { LocalStorage } from 'quasar';
-import { storeSet } from '../global/usefull';
+import { storeSet } from 'src/boot/StoreStuff';
 
 const unread = ref(<Boon>LocalStorage.getItem('lbUnread'));
 const downloaded = ref(<Boon>LocalStorage.getItem('lbDownloaded'));
+
 const leftToRead = ref(<Boon>LocalStorage.getItem('lbLeftToRead'));
 const alphabetical = ref(<Boon>LocalStorage.getItem('lbAlphabetical'));
-const ByID = ref(<Boon>LocalStorage.getItem('lbByid'));
+const tmp = LocalStorage.getItem('lbByid');
+const ByID = ref(
+  <Boon>leftToRead.value === null && alphabetical.value === null && tmp === null
+    ? true
+    : LocalStorage.getItem('lbByid')
+);
+
 const Display = ref(<Boon>LocalStorage.getItem('lbDisplay'));
 
 type Boon = boolean | null;

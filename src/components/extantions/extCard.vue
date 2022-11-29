@@ -47,9 +47,9 @@
 
 <script lang="ts">
 import { defineComponent, PropType, ref } from 'vue';
-import { useQuasar } from 'quasar';
 import { extention } from '../global/models';
 import { getImgBlob } from '../global/usefull';
+import { storeGet } from 'src/boot/StoreStuff';
 
 export default defineComponent({
   name: 'extCard',
@@ -90,8 +90,7 @@ export default defineComponent({
     );
   },
   setup() {
-    const $q = useQuasar();
-    const useCache = ref(`${$q.localStorage.getItem('useCache')}`);
+    const useCache = ref(`${storeGet('useCache', true)}`);
     const imgdata = ref('');
     return { useCache, imgdata };
   }

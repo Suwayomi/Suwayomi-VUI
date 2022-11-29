@@ -5,7 +5,7 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at https://mozilla.org/MPL/2.0/. */ -->
 <template>
-  <q-card clickable v-ripple :dark="$q.dark.isActive" class="q-pa-xs q-ma-sm">
+  <q-card clickable v-ripple class="q-pa-xs q-ma-sm">
     <q-item :to="`/manga/` + item.manga.id">
       <q-item-section avatar>
         <q-img
@@ -43,7 +43,7 @@
 </template>
 
 <script lang="ts">
-import { useQuasar } from 'quasar';
+import { storeGet } from 'src/boot/StoreStuff';
 import { defineComponent, PropType, ref } from 'vue';
 import { chapter, manga } from '../global/models';
 import { getImgBlob } from '../global/usefull';
@@ -72,8 +72,7 @@ export default defineComponent({
   },
   setup() {
     const imgdata = ref('');
-    const $q = useQuasar();
-    const useCache = ref(`${$q.localStorage.getItem('useCache')}`);
+    const useCache = ref(`${storeGet('useCache', true)}`);
     return { useCache, imgdata };
   }
 });

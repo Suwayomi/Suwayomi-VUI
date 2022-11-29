@@ -110,8 +110,8 @@
 <script lang="ts">
 import { defineComponent, PropType, ref } from 'vue';
 import { manga } from 'src/components/global/models';
-import { useQuasar } from 'quasar';
 import { getImgBlob } from 'src/components/global/usefull';
+import { storeGet } from 'src/boot/StoreStuff';
 
 export default defineComponent({
   name: 'MangaCard',
@@ -140,8 +140,7 @@ export default defineComponent({
     );
   },
   setup() {
-    const $q = useQuasar();
-    const useCache = ref(`${$q.localStorage.getItem('useCache')}`);
+    const useCache = ref(`${storeGet('useCache', true)}`);
     const imgdata = ref('');
     return { useCache, imgdata };
   }

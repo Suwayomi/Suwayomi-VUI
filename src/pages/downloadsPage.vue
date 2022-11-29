@@ -16,7 +16,6 @@
       v-slot="{ item }"
       class="self-start"
       style="flex: auto; height: 100%"
-      :dark="$q.dark.isActive"
     >
       <q-item clickable v-ripple class="q-pa-lg">
         <q-item-section avatar>
@@ -114,6 +113,7 @@ import useDlSock from 'src/components/downloads/useDlSock';
 import { defineComponent, ref } from 'vue';
 import { download, dlsock, isdlsock } from 'src/components/global/models';
 import { useQuasar } from 'quasar';
+import { storeGet } from 'src/boot/StoreStuff';
 
 export default defineComponent({
   created() {
@@ -162,7 +162,7 @@ export default defineComponent({
     const $q = useQuasar();
     const Emitt = useDlSock();
     const Emitter = ref(Emitt);
-    const base = $q.localStorage.getItem('baseUrl') as string;
+    const base = storeGet('baseUrl', location.origin) as string;
 
     const downloads = ref(<download[]>[]);
     const tmp = Emitt.eventsFromServer.value

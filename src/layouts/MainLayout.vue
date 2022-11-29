@@ -105,6 +105,7 @@ import { defineComponent, ref } from 'vue';
 import EssentialLink from 'src/components/mainLayout/EssentialLink.vue';
 import { useQuasar } from 'quasar';
 import { useMeta } from 'quasar';
+import { storeGet, storeSet } from 'src/boot/StoreStuff';
 
 const linksList = [
   {
@@ -202,7 +203,7 @@ export default defineComponent({
         titleTemplate: (title) => `${title} - Tachidesk Quasar`
       };
     });
-    $q.dark.set(<boolean>$q.localStorage.getItem('dark'));
+    $q.dark.set(<boolean>storeGet('dark', true));
     const leftDrawerOpen = ref(true);
     return {
       title,
@@ -211,7 +212,7 @@ export default defineComponent({
       leftDrawerOpen,
       toggledark() {
         $q.dark.toggle();
-        $q.localStorage.set('dark', $q.dark.isActive);
+        storeSet('dark', $q.dark.isActive, true);
       },
       doSearch: ref(false),
       Searchenter: ref(false),

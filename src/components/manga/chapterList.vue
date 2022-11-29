@@ -295,7 +295,6 @@
     </div>
     <q-scroll-area
       class="q-pr-xs"
-      :dark="$q.dark.isActive"
       :style="
         $q.screen.sm || $q.screen.xs
           ? `height: 50vh`
@@ -314,7 +313,6 @@
           :id="item.id"
           v-ripple
           clickable
-          :dark="$q.dark.isActive"
           class="q-ma-sm rounded-borders"
           :class="
             (item.read ? `text-grey` : ``) +

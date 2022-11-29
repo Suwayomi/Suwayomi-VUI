@@ -5,13 +5,11 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 import { ref } from 'vue';
-import { LocalStorage } from 'quasar';
+import { storeGet } from 'src/boot/StoreStuff';
 
 const eventsFromServer = ref('');
 const isConnected = ref(false);
-let base = LocalStorage.getItem('baseUrl') as string;
-base =
-  base == '' ? document.location.origin + document.location.pathname : base;
+const base = storeGet('baseUrl', location.origin) as string;
 const url = new URL(base);
 url.protocol = url.protocol == 'https:' ? 'wss:' : 'ws:';
 let socket: WebSocket;

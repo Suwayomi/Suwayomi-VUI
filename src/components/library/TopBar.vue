@@ -42,7 +42,6 @@
             style="width: 100%"
             toggle-indeterminate
             v-model="unread"
-            :dark="$q.dark.isActive"
             label="Unread"
             checked-icon="check_box"
             unchecked-icon="r_disabled_by_default"
@@ -58,7 +57,6 @@
             toggle-indeterminate
             v-model="downloaded"
             label="Downloaded"
-            :dark="$q.dark.isActive"
             checked-icon="check_box"
             unchecked-icon="r_disabled_by_default"
             indeterminate-icon="check_box_outline_blank"
@@ -80,7 +78,6 @@
             keep-color
             v-model="leftToRead"
             label="By left to Read"
-            :dark="$q.dark.isActive"
           />
         </q-card-section>
         <q-card-section class="q-px-md q-pt-xs q-pb-xs">
@@ -93,7 +90,6 @@
             keep-color
             v-model="alphabetical"
             label="Alphabetical"
-            :dark="$q.dark.isActive"
           />
         </q-card-section>
         <q-card-section class="q-px-md q-pt-xs q-pb-md">
@@ -106,7 +102,6 @@
             keep-color
             v-model="ByID"
             label="By ID"
-            :dark="$q.dark.isActive"
           />
         </q-card-section>
       </div>
