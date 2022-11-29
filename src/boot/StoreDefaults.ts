@@ -5,13 +5,5 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 
-import { LocalStorage, Dark } from 'quasar';
-if (LocalStorage.isEmpty()) {
-  LocalStorage.set('lbByid', true);
-  LocalStorage.set('baseUrl', location.origin);
-  LocalStorage.set('useCache', true);
-  LocalStorage.set('MitemW', 300);
-  LocalStorage.set('dark', true);
-  LocalStorage.set('ExtLangFilt', ['en']);
-  Dark.set(true);
-}
+import { LocalStorage } from 'quasar';
+if (!LocalStorage.has('ExtLangFilt')) LocalStorage.set('ExtLangFilt', ['en']);

@@ -88,8 +88,8 @@
 <script lang="ts">
 import { defineComponent, PropType, ref } from 'vue';
 import { manga } from 'src/components/global/models';
-import { useQuasar } from 'quasar';
 import { getImgBlob } from '../global/usefull';
+import { storeGet } from 'src/boot/StoreStuff';
 
 export default defineComponent({
   name: 'mangaInfo',
@@ -143,8 +143,7 @@ export default defineComponent({
     }
   },
   setup(props) {
-    const $q = useQuasar();
-    const useCache = $q.localStorage.getItem('useCache');
+    const useCache = storeGet('useCache', true);
     return {
       useCache,
       inLib: ref(props.manga?.inLibrary || false),

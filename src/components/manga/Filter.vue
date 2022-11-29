@@ -47,7 +47,6 @@
             style="width: 100%"
             toggle-indeterminate
             v-model="unread"
-            :dark="$q.dark.isActive"
             label="Unread"
             checked-icon="check_box"
             unchecked-icon="r_disabled_by_default"
@@ -63,7 +62,6 @@
             toggle-indeterminate
             v-model="downloaded"
             label="Downloaded"
-            :dark="$q.dark.isActive"
             checked-icon="check_box"
             unchecked-icon="r_disabled_by_default"
             indeterminate-icon="check_box_outline_blank"
@@ -78,7 +76,6 @@
             toggle-indeterminate
             v-model="bookmarked"
             label="Bookmarked"
-            :dark="$q.dark.isActive"
             checked-icon="check_box"
             unchecked-icon="r_disabled_by_default"
             indeterminate-icon="check_box_outline_blank"
@@ -100,7 +97,6 @@
             keep-color
             v-model="Source"
             label="By Source"
-            :dark="$q.dark.isActive"
           />
         </q-card-section>
         <q-card-section class="q-px-md q-pt-xs q-pb-md">
@@ -113,7 +109,6 @@
             keep-color
             v-model="FetchDate"
             label="By Fetch date"
-            :dark="$q.dark.isActive"
           />
         </q-card-section>
       </div>

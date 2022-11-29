@@ -5,10 +5,10 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 import { ref } from 'vue';
-import { LocalStorage } from 'quasar';
+import { storeGet, storeSet } from 'src/boot/StoreStuff';
 
 const langs = ref(<string[]>[
-  ...(<string[]>LocalStorage.getItem('ExtLangFilt') || []),
+  ...(<string[]>storeGet('ExtLangFilt', [])),
   'all',
   'updates pending',
   'installed'
@@ -17,9 +17,10 @@ const currlangs = ref(<string[]>[]);
 
 export default function useInBar() {
   const setlangs = (data: string[]) => {
-    LocalStorage.set(
+    storeSet(
       'ExtLangFilt',
-      data.filter((e) => !['all', 'updates pending', 'installed'].includes(e))
+      data.filter((e) => !['all', 'updates pending', 'installed'].includes(e)),
+      []
     );
     langs.value = [...data];
   };

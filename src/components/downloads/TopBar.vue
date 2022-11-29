@@ -22,12 +22,7 @@
         :key="count"
         class="q-py-xs"
       >
-        <q-checkbox
-          style="width: 100%"
-          v-model="filter"
-          :dark="$q.dark.isActive"
-          :val="item"
-        >
+        <q-checkbox style="width: 100%" v-model="filter" :val="item">
           <div style="margin-right: 12.5px">{{ item }}</div>
         </q-checkbox>
       </q-card-section>

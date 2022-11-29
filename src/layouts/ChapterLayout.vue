@@ -130,12 +130,12 @@ export default defineComponent({
     document.body.classList.remove(this.scrollbarTheme);
   },
   created: function () {
-    this.$q.dark.set(<boolean>this.$q.localStorage.getItem('dark'));
+    this.$q.dark.set(<boolean>this.$storeGet('dark', this.$q.dark.isActive));
   },
   methods: {
     toggledark() {
       this.$q.dark.toggle();
-      this.$q.localStorage.set('dark', this.$q.dark.isActive);
+      this.$storeSet('dark', this.$q.dark.isActive, true);
     },
     setTitle(titl: string) {
       this.title = titl;

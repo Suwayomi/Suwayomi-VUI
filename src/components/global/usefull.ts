@@ -4,18 +4,14 @@
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at https://mozilla.org/MPL/2.0/. */
-import { LocalStorage } from 'quasar';
 import { fetcher } from 'src/boot/fetcher';
 
-export function storeSet(
-  key: string,
-  data: null | unknown,
-  set: unknown = null
-): void {
-  if (data == set) LocalStorage.remove(key);
-  else LocalStorage.set(key, data);
-}
-
+/**
+ * It fetches an image from a URL, converts it to a blob, converts the blob to a data URL, and returns
+ * the data URL
+ * @param {string} imgUrl - The URL of the image you want to get the blob of.
+ * @returns A promise that resolves to a string.
+ */
 export async function getImgBlob(imgUrl: string): Promise<string> {
   const resp = await fetcher(imgUrl);
   if (resp.status == 200) {
