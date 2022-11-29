@@ -29,6 +29,11 @@ jobs:
           node-version: ${{ matrix.node-version }}
           cache: "npm"
       - run: npm ci
+      - run: PUBPATH=/Tachidesk-VUI/ npm run build
+      - name: Deploy Pages
+        uses: JamesIves/github-pages-deploy-action@v4
+        with:
+          folder: dist/pwa # The folder the action should deploy.
       - run: npm run build
       - name: Generate Tag Name
         id: GenTagName
@@ -36,7 +41,8 @@ jobs:
           genTag="r$(git rev-list HEAD --count)"
           echo "$genTag"
           echo "value=$genTag" >> $GITHUB_OUTPUT
-      - uses: montudor/action-zip@v1
+      - name: Generate zip
+        uses: montudor/action-zip@v1
         if: github.event_name != 'pull_request'
         with:
           args: zip -qq -r release.zip dist/pwa
