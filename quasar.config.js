@@ -68,7 +68,7 @@ module.exports = configure(function (/* ctx */) {
 
       // rebuildCache: true, // rebuilds Vite/linter/etc cache on startup
 
-      // publicPath: '/',
+      publicPath: process.env.PUBPATH ? '/Tachidesk-VUI/' : undefined,
       // analyze: true,
       // env: {},
       // rawDefine: {}
