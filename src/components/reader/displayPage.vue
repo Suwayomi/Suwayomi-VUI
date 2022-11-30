@@ -188,19 +188,18 @@ export default defineComponent({
 });
 </script>
 
-<style>
-.displayPage .test {
-  width: fit-content;
-  height: fit-content;
-  max-width: 100%;
-}
-.displayPage .q-img__container {
-  position: unset;
-  display: flex;
-  justify-content: center;
-  height: 100%;
-}
-.displayPage .q-img.q-img--menu :first-child {
-  padding: 0 !important;
-}
+<style lang="sass">
+.displayPage .test
+  width: fit-content
+  height: fit-content
+  max-width: 100%
+
+.displayPage .q-img__container
+  position: unset
+  display: flex
+  justify-content: center
+  height: 100%
+
+.displayPage .q-img.q-img--menu :first-child
+  padding: 0 !important
 </style>

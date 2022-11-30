@@ -5,7 +5,7 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at https://mozilla.org/MPL/2.0/. */ -->
 <template>
-  <q-list separator :dark="$q.dark.isActive ? true : false" :style-fn="myTweak">
+  <q-list separator :dark="$q.dark.isActive" :style-fn="myTweak">
     <!-- categories -->
     <q-item to="/settings/categories">
       <q-item-section avatar>

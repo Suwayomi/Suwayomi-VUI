@@ -9,7 +9,7 @@
   <q-btn
     class="q-ml-sm"
     round
-    :text-color="$q.dark.isActive ? `white` : `dark`"
+    :class="$q.dark.isActive ? `light` : `dark`"
     icon="filter_list"
     @click="dialo = true"
   >
@@ -52,7 +52,7 @@
     elevated
     class="q-ml-sm"
     round
-    :text-color="$q.dark.isActive ? `white` : `dark`"
+    :class="$q.dark.isActive ? `light` : `dark`"
     icon="clear_all"
     @click="clear"
   >
@@ -62,7 +62,7 @@
     elevated
     class="q-ml-sm"
     round
-    :text-color="$q.dark.isActive ? `white` : `dark`"
+    :class="$q.dark.isActive ? `light` : `dark`"
     :icon="PlayPause ? `pause` : `play_arrow`"
     @click="toggleplay"
   >

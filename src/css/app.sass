@@ -4,7 +4,8 @@
 // License, v. 2.0. If a copy of the MPL was not distributed with this
 // file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
-@import 'quasar.variables.sass';
+@import 'quasar.variables.scss'
+
 
 .lightSB
   ::-webkit-scrollbar,
@@ -45,3 +46,42 @@
 
 .text-primary
   color: $primary !important
+
+$color-map: ('primary' $primary, 'primaryD' $primaryD, 'secondary' $secondary,  'accent' $accent,  'dark' $dark,  'dark-page' $dark-page,  'light' $light,  'light-page' $light-page,  'positive' $positive,  'negative' $negative,  'info' $info,  'warning' $warning, 'secondaryD' $secondaryD)
+
+@for $i from 1 through 10
+  @each $name,$value in $color-map
+    @if $i > 5
+      .#{$name}-#{$i}
+        color: lighten($value, (11-$i) * 8)
+
+      .bg-#{$name}-#{$i}
+        background-color: lighten($value, (11-$i) * 8)
+
+      .border-#{$name}-#{$i}
+        border-color: lighten($value, (11-$i) * 8)
+    @else
+      @if $i < 5
+        .#{$name}-#{$i}
+          color: darken($value, (5-$i) * 8)
+
+        .bg-#{$name}-#{$i}
+          background-color: darken($value, (5-$i) * 8)
+
+        .border-#{$name}-#{$i}
+          border-color: darken($value, (5-$i) * 8)
+      @else
+        .#{$name}-5
+          color: $value
+        .bg-#{$name}-5
+          background-color: $value
+        .border-#{$name}-5
+          border-color: $value
+
+
+        .#{$name}
+          color: $value
+        .bg-#{$name}
+          background-color: $value
+        .border-#{$name}
+          border-color: $value

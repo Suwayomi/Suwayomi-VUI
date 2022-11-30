@@ -6,13 +6,7 @@
  * file, You can obtain one at https://mozilla.org/MPL/2.0/. */ -->
 <template>
   <q-layout view="hHh Lpr fFf">
-    <q-header
-      elevated
-      :style="
-        `background-color:` +
-        ($q.dark.isActive ? `var(--q-primaryD)` : `var(--q-primary)`)
-      "
-    >
+    <q-header elevated :class="$q.dark.isActive ? `bg-primaryD` : `bg-primary`">
       <q-bar
         v-if="$q.platform.is.electron"
         class="q-electron-drag"
@@ -52,10 +46,7 @@
       elevated
       class="fixed"
       :breakpoint="0"
-      :style="
-        `background-color:` +
-        ($q.dark.isActive ? `var(--q-secondaryD)` : `var(--q-secondary)`)
-      "
+      :class="$q.dark.isActive ? `bg-secondaryD` : `bg-secondary`"
     >
       <q-item class="justify-between">
         <q-btn
@@ -71,7 +62,7 @@
     <q-page-container>
       <router-view
         @setTitle="setTitle"
-        :class="$q.dark.isActive ? `dark-page` : `white`"
+        :class="$q.dark.isActive ? `bg-dark-page` : `bg-light-page`"
       />
       <q-page-sticky
         position="top-left"
@@ -176,11 +167,11 @@ export default defineComponent({
 });
 </script>
 
-<style scoped>
-.fabb {
-  opacity: 0.2;
-}
-.fabb:hover {
-  opacity: 1;
-}
+<style scoped lang="sass">
+.fabb
+  opacity: 0.2
+
+.fabb:hover
+  transition: opacity $generic-hover-transition
+  opacity: 1
 </style>
