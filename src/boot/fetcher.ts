@@ -5,14 +5,13 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 import { boot } from 'quasar/wrappers';
-import { LocalStorage } from 'quasar';
-let base = LocalStorage.getItem('baseUrl') as string;
+import { storeGet } from './StoreStuff';
+
+let base = storeGet('baseUrl', location.origin) as string;
 
 export function authOptions(options: RequestInit | undefined = undefined) {
   const update = { ...options };
-  const auth = <{ username: string; password: string } | null>(
-    LocalStorage.getItem('auth')
-  );
+  const auth = <{ username: string; password: string } | null>storeGet('auth');
   if (auth != null) {
     update.headers = {
       ...update.headers,
@@ -23,7 +22,7 @@ export function authOptions(options: RequestInit | undefined = undefined) {
 }
 
 export function resetBase() {
-  base = LocalStorage.getItem('baseUrl') as string;
+  base = storeGet('baseUrl', location.origin) as string;
 }
 
 export function fetcher(

@@ -16,7 +16,7 @@
       :to="`/manga/` + manga.id"
       class="cursor-pointer"
       style="text-decoration: none"
-      :class="$q.dark.isActive ? `text-white` : `text-dark`"
+      :class="$q.dark.isActive ? `light` : `dark`"
     >
       <q-img
         v-if="Display != `list`"
@@ -24,10 +24,7 @@
         loading="lazy"
         spinner-color="white"
         style="max-width: 100%; aspect-ratio: 225/350"
-        :style="
-          `background-color:` +
-          ($q.dark.isActive ? `var(--q-dark)` : `var(--q-light)`)
-        "
+        :class="$q.dark.isActive ? `bg-dark` : `bg-light`"
         class="rounded-borders"
         :img-style="manga.inLibrary ? { filter: 'brightness(0.4)' } : {}"
         :alt="manga.title"
@@ -110,8 +107,8 @@
 <script lang="ts">
 import { defineComponent, PropType, ref } from 'vue';
 import { manga } from 'src/components/global/models';
-import { useQuasar } from 'quasar';
 import { getImgBlob } from 'src/components/global/usefull';
+import { storeGet } from 'src/boot/StoreStuff';
 
 export default defineComponent({
   name: 'MangaCard',
@@ -140,16 +137,15 @@ export default defineComponent({
     );
   },
   setup() {
-    const $q = useQuasar();
-    const useCache = ref(`${$q.localStorage.getItem('useCache')}`);
+    const useCache = ref(`${storeGet('useCache', true)}`);
     const imgdata = ref('');
     return { useCache, imgdata };
   }
 });
 </script>
 
-<style scoped>
-.my-card div.q-img--menu:hover {
-  filter: brightness(0.7);
-}
+<style scoped lang="sass">
+.my-card div.q-img--menu:hover
+transition: filter $generic-hover-transition
+  filter: brightness(0.7)
 </style>

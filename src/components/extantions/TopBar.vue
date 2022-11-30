@@ -12,7 +12,7 @@
       <q-card-section>
         <div class="text-h6">Enabled Languages</div>
       </q-card-section>
-      <q-separator :dark="$q.dark.isActive" />
+      <q-separator />
       <q-card-section
         class="q-pt-none"
         style="max-height: 30vh; overflow-y: auto"
@@ -32,7 +32,7 @@
           </q-item>
         </q-card-section>
       </q-card-section>
-      <q-separator :dark="$q.dark.isActive" />
+      <q-separator />
       <q-card-actions align="right">
         <q-btn flat label="OK" color="primary" v-close-popup />
       </q-card-actions>

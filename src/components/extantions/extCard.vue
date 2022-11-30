@@ -5,7 +5,7 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at https://mozilla.org/MPL/2.0/. */ -->
 <template>
-  <q-card v-ripple flat class="q-ma-sm">
+  <q-card class="q-ma-sm" :class="$q.dark.isActive ? `` : 'bg-light'">
     <q-item style="height: 100px">
       <div class="row content-center col-grow">
         <q-item-section avatar>
@@ -35,10 +35,9 @@
       </div>
       <div class="flex items-center">
         <q-btn outline color="blue" @click="HandleExt">
-          <q-item-label
-            :class="$q.dark.isActive ? `text-white` : `text-dark`"
-            >{{ capitalizeFirstLetter(UpUnIn) }}</q-item-label
-          >
+          <q-item-label :class="$q.dark.isActive ? `light` : `dark`">{{
+            capitalizeFirstLetter(UpUnIn)
+          }}</q-item-label>
         </q-btn>
       </div>
     </q-item>
@@ -47,9 +46,9 @@
 
 <script lang="ts">
 import { defineComponent, PropType, ref } from 'vue';
-import { useQuasar } from 'quasar';
 import { extention } from '../global/models';
 import { getImgBlob } from '../global/usefull';
+import { storeGet } from 'src/boot/StoreStuff';
 
 export default defineComponent({
   name: 'extCard',
@@ -90,8 +89,7 @@ export default defineComponent({
     );
   },
   setup() {
-    const $q = useQuasar();
-    const useCache = ref(`${$q.localStorage.getItem('useCache')}`);
+    const useCache = ref(`${storeGet('useCache', true)}`);
     const imgdata = ref('');
     return { useCache, imgdata };
   }

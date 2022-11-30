@@ -33,7 +33,6 @@
       style="width: 100%"
       toggle-indeterminate
       v-model="val"
-      :dark="$q.dark.isActive"
       :label="filter.filter.name"
       checked-icon="check_box"
       unchecked-icon="r_disabled_by_default"

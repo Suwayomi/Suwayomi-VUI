@@ -6,13 +6,7 @@
  * file, You can obtain one at https://mozilla.org/MPL/2.0/. */ -->
 <template>
   <q-layout view="hHh Lpr lFr" :class="scrollbarTheme" class="mainLayout">
-    <q-header
-      elevated
-      :style="
-        `background-color:` +
-        ($q.dark.isActive ? `var(--q-primaryD)` : `var(--q-primary)`)
-      "
-    >
+    <q-header elevated :class="$q.dark.isActive ? `bg-primaryD` : `bg-primary`">
       <q-bar
         v-if="$q.platform.is.electron"
         class="q-electron-drag"
@@ -29,6 +23,7 @@
       </q-bar>
       <q-toolbar>
         <q-btn
+          v-if="!($q.screen.xs || $q.screen.sm)"
           flat
           dense
           round
@@ -48,7 +43,7 @@
           elevated
           class="q-ml-sm"
           round
-          :text-color="$q.dark.isActive ? `white` : `dark`"
+          :class="$q.dark.isActive ? `light` : `dark`"
           :icon="$q.dark.isActive ? `light_mode` : `dark_mode`"
           @click="toggledark"
         />
@@ -58,7 +53,7 @@
     <q-footer
       elevated
       class="text-primary flex no-wrap justify-evenly"
-      :class="$q.dark.isActive ? `bg-dark` : `bg-white`"
+      :class="$q.dark.isActive ? `bg-dark` : `bg-light`"
       v-if="$q.screen.sm || $q.screen.xs"
     >
       <q-item
@@ -78,10 +73,7 @@
       show-if-above
       :mini="leftDrawerOpen"
       :breakpoint="0"
-      :style="
-        `background-color:` +
-        ($q.dark.isActive ? `var(--q-secondaryD)` : `var(--q-secondary)`)
-      "
+      :class="$q.dark.isActive ? `bg-secondaryD` : `bg-secondary`"
     >
       <EssentialLink
         v-for="link in essentialLinks"
@@ -93,7 +85,7 @@
     <q-page-container>
       <router-view
         @setTitle="setTitle"
-        :class="$q.dark.isActive ? `dark-page` : `white`"
+        :class="$q.dark.isActive ? `bg-dark-page` : `bg-light-page`"
         style="overflow-y: auto"
       />
     </q-page-container>
@@ -105,6 +97,7 @@ import { defineComponent, ref } from 'vue';
 import EssentialLink from 'src/components/mainLayout/EssentialLink.vue';
 import { useQuasar } from 'quasar';
 import { useMeta } from 'quasar';
+import { storeGet, storeSet } from 'src/boot/StoreStuff';
 
 const linksList = [
   {
@@ -202,7 +195,7 @@ export default defineComponent({
         titleTemplate: (title) => `${title} - Tachidesk Quasar`
       };
     });
-    $q.dark.set(<boolean>$q.localStorage.getItem('dark'));
+    $q.dark.set(<boolean>storeGet('dark', true));
     const leftDrawerOpen = ref(true);
     return {
       title,
@@ -211,7 +204,7 @@ export default defineComponent({
       leftDrawerOpen,
       toggledark() {
         $q.dark.toggle();
-        $q.localStorage.set('dark', $q.dark.isActive);
+        storeSet('dark', $q.dark.isActive, true);
       },
       doSearch: ref(false),
       Searchenter: ref(false),

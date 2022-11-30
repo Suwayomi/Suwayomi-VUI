@@ -9,7 +9,7 @@
   <q-btn
     class="q-ml-sm"
     round
-    :text-color="$q.dark.isActive ? `white` : `dark`"
+    :class="$q.dark.isActive ? `light` : `dark`"
     icon="filter_list"
     @click="dialo = true"
   >
@@ -22,12 +22,7 @@
         :key="count"
         class="q-py-xs"
       >
-        <q-checkbox
-          style="width: 100%"
-          v-model="filter"
-          :dark="$q.dark.isActive"
-          :val="item"
-        >
+        <q-checkbox style="width: 100%" v-model="filter" :val="item">
           <div style="margin-right: 12.5px">{{ item }}</div>
         </q-checkbox>
       </q-card-section>
@@ -57,7 +52,7 @@
     elevated
     class="q-ml-sm"
     round
-    :text-color="$q.dark.isActive ? `white` : `dark`"
+    :class="$q.dark.isActive ? `light` : `dark`"
     icon="clear_all"
     @click="clear"
   >
@@ -67,7 +62,7 @@
     elevated
     class="q-ml-sm"
     round
-    :text-color="$q.dark.isActive ? `white` : `dark`"
+    :class="$q.dark.isActive ? `light` : `dark`"
     :icon="PlayPause ? `pause` : `play_arrow`"
     @click="toggleplay"
   >

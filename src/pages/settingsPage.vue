@@ -5,7 +5,7 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at https://mozilla.org/MPL/2.0/. */ -->
 <template>
-  <q-list separator :dark="$q.dark.isActive ? true : false" :style-fn="myTweak">
+  <q-list separator :dark="$q.dark.isActive" :style-fn="myTweak">
     <!-- categories -->
     <q-item to="/settings/categories">
       <q-item-section avatar>
@@ -92,9 +92,7 @@
       </q-item-section>
       <q-item-section>
         <q-item-label>Server Address</q-item-label>
-        <q-item-label caption>{{
-          $q.localStorage.getItem('baseUrl')
-        }}</q-item-label>
+        <q-item-label caption>{{ serverAddr }}</q-item-label>
       </q-item-section>
       <q-dialog v-model="Saddr">
         <q-card class="q-px-md">
@@ -283,6 +281,7 @@
 import { useQuasar } from 'quasar';
 import { defineComponent, ref } from 'vue';
 import { resetBase } from 'src/boot/fetcher';
+import { storeGet } from 'src/boot/StoreStuff';
 
 export default defineComponent({
   name: 'settingsPage',
@@ -296,9 +295,10 @@ export default defineComponent({
       this.$q.localStorage.set('MitemW', val);
     },
     setserverAddr: function (val: string) {
-      this.$q.localStorage.set(
+      this.$storeSet(
         'baseUrl',
-        val.endsWith('/') ? val.slice(0, -1) : val
+        val.endsWith('/') ? val.slice(0, -1) : val,
+        location.origin
       );
       this.resetBase();
     },
@@ -321,21 +321,24 @@ export default defineComponent({
     }
   },
   watch: {
+    '$q.dark.isActive': function () {
+      this.darkmode = this.$q.dark.isActive;
+    },
     darkmode: function (val) {
       this.$q.dark.set(val);
-      this.$q.localStorage.set('dark', val);
+      this.$storeSet('dark', val, true);
     },
     useCache: function (val) {
-      this.$q.localStorage.set('useCache', val);
+      this.$storeSet('useCache', val, true);
     }
   },
   setup(_props, { emit }) {
     emit('setTitle', 'Settings');
     const $q = useQuasar();
     const darkmode = ref($q.dark.isActive);
-    const MitemW = ref($q.localStorage.getItem('MitemW') as number);
-    const useCache = ref($q.localStorage.getItem('useCache') as boolean);
-    const serverAddr = ref($q.localStorage.getItem('baseUrl') as string);
+    const MitemW = ref(storeGet('MitemW', 300) as number);
+    const useCache = ref(storeGet('useCache', true) as boolean);
+    const serverAddr = ref(storeGet('baseUrl', location.origin) as string);
     const auth = $q.localStorage.getItem('auth') as {
       username: string;
       password: string;

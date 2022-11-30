@@ -30,12 +30,12 @@ module.exports = configure(function (/* ctx */) {
     // --> boot files are part of "main.js"
     // https://v2.quasar.dev/quasar-cli-vite/boot-files
     boot: [
-      'StoreDefaults', 'bus', 'fetcher'
+      'StoreDefaults', 'bus', 'fetcher', 'StoreStuff'
     ],
 
     // https://v2.quasar.dev/quasar-cli-vite/quasar-config-js#css
     css: [
-      'app.scss'
+      'app.sass'
     ],
 
     // https://github.com/quasarframework/quasar/tree/dev/extras
@@ -96,23 +96,24 @@ module.exports = configure(function (/* ctx */) {
     // https://v2.quasar.dev/quasar-cli-vite/quasar-config-js#framework
     framework: {
       config: {
-        brand: {
-          primary: '#1976d2',
-          primaryD: '#2d2d2d',
-          secondary: '#26A69A',
-          secondaryD: '#2d2d2d',
-          accent: '#9C27B0',
+        dark: true,
+        // brand: {
+        //   primary: '#1976d2',
+        //   primaryD: '#2d2d2d',
+        //   secondary: '#26A69A',
+        //   secondaryD: '#2d2d2d',
+        //   accent: '#9C27B0',
 
-          dark: '#2d2d2d',
-          light: '#ccc',
-          'dark-page': '#121212',
-          'light-page': '#fff',
+        //   dark: '#2d2d2d',
+        //   light: '#ccc',
+        //   'dark-page': '#121212',
+        //   'light-page': '#fff',
 
-          positive: '#21BA45',
-          negative: '#C10015',
-          info: '#31CCEC',
-          warning: '#F2C037'
-        }
+        //   positive: '#21BA45',
+        //   negative: '#C10015',
+        //   info: '#31CCEC',
+        //   warning: '#F2C037'
+        // }
       },
 
       // iconSet: 'material-icons', // Quasar icon set

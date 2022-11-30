@@ -108,7 +108,7 @@ export default defineComponent({
   methods: {
     calcWidth() {
       const grid = <Element>this.$refs['MangaGrid'];
-      const ideal = <number>this.$q.localStorage.getItem('MitemW');
+      const ideal = <number>this.$storeGet('MitemW', 300);
       if (grid.clientWidth == undefined) return;
       this.devider = Math.round(grid.clientWidth / ideal);
     },

@@ -7,7 +7,7 @@
 -->
 
 <template>
-  <q-list separator :dark="$q.dark.isActive ? true : false" :style-fn="myTweak">
+  <q-list separator :dark="$q.dark.isActive" :style-fn="myTweak">
     <whatis
       v-for="(pref, index) in preferences"
       :preference="pref"

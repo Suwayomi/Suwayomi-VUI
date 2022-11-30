@@ -295,7 +295,6 @@
     </div>
     <q-scroll-area
       class="q-pr-xs"
-      :dark="$q.dark.isActive"
       :style="
         $q.screen.sm || $q.screen.xs
           ? `height: 50vh`
@@ -314,14 +313,14 @@
           :id="item.id"
           v-ripple
           clickable
-          :dark="$q.dark.isActive"
           class="q-ma-sm rounded-borders"
           :class="
             (item.read ? `text-grey` : ``) +
             ` ` +
-            (selected.includes(item.id) && selectMode ? `selected` : ``)
+            (selected.includes(item.id) && selectMode ? `selected` : ``) +
+            ' ' +
+            ($q.dark.isActive ? `bg-dark` : `bg-light`)
           "
-          :style="itemstyle"
           :to="
             selectMode
               ? undefined
@@ -525,12 +524,6 @@ export default defineComponent({
       }
       return chapts;
     },
-    itemstyle(): string {
-      return (
-        'background-color:' +
-        (this.$q.dark.isActive ? 'var(--q-dark)' : 'var(--q-light)')
-      );
-    },
     res(): string {
       const notRead = this.doSrt.filter((ele) => !ele.read);
       if (!notRead.length) {
@@ -717,17 +710,15 @@ export default defineComponent({
 });
 </script>
 
-<style scoped>
-.selected {
-  opacity: 1 !important;
-}
-.selectmode .q-item {
-  opacity: 0.5;
-}
+<style scoped lang="sass">
+.selected
+  opacity: 1 !important
+
+.selectmode .q-item
+  opacity: 0.5
 </style>
 
-<style>
-.Fabconsist .q-btn__content {
-  flex-wrap: nowrap;
-}
+<style lang="sass">
+.Fabconsist .q-btn__content
+  flex-wrap: nowrap
 </style>

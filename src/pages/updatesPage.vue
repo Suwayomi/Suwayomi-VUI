@@ -16,12 +16,7 @@
       </div>
       <template v-slot:loading>
         <div v-for="(_, index) in 6" :key="index">
-          <q-card
-            clickable
-            v-ripple
-            :dark="$q.dark.isActive"
-            class="q-pa-xs q-ma-sm"
-          >
+          <q-card clickable v-ripple class="q-pa-xs q-ma-sm">
             <q-item>
               <q-item-section avatar>
                 <q-skeleton
