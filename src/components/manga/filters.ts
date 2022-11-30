@@ -6,7 +6,7 @@
  * file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 import { LocalStorage } from 'quasar';
 import { ref } from 'vue';
-import { storeSet } from '../global/usefull';
+import { storeSet } from 'src/boot/StoreStuff';
 
 type bnn = boolean | null;
 

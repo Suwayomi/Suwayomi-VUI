@@ -10,10 +10,7 @@
       <q-tabs
         v-model="tab"
         inline-label
-        :style="
-          `background-color:` +
-          ($q.dark.isActive ? `var(--q-dark-page)` : `white`)
-        "
+        :class="$q.dark.isActive ? `bg-dark-page` : `bg-light-page`"
       >
         <q-route-tab
           v-for="tabb in tabs"

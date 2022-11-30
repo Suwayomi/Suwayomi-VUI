@@ -9,7 +9,7 @@
     flat
     class="q-ml-sm"
     round
-    :text-color="$q.dark.isActive ? `white` : `dark`"
+    :class="$q.dark.isActive ? `light` : `dark`"
     icon="filter_list"
     @click="dialo = true"
   >
@@ -33,7 +33,7 @@
   <q-btn
     flat
     round
-    :text-color="$q.dark.isActive ? `white` : `dark`"
+    :class="$q.dark.isActive ? `light` : `dark`"
     icon="refresh"
     @click="update"
   >

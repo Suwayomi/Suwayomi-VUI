@@ -153,11 +153,10 @@ export default defineComponent({
 });
 </script>
 
-<style>
-.MangaInfo .q-img__container {
-  position: unset;
-}
-.MangaInfo .q-img.q-img--menu :first-child {
-  padding: 0 !important;
-}
+<style lang="sass">
+.MangaInfo .q-img__container
+  position: unset
+
+.MangaInfo .q-img.q-img--menu :first-child
+  padding: 0 !important
 </style>

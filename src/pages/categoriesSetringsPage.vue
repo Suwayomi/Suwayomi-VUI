@@ -6,7 +6,7 @@
  * file, You can obtain one at https://mozilla.org/MPL/2.0/. */ -->
 <template>
   <q-page :style-fn="myTweak">
-    <q-list separator :dark="$q.dark.isActive ? true : false">
+    <q-list separator :dark="$q.dark.isActive">
       <q-item
         v-for="(cat, index) in catag"
         :key="index"

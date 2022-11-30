@@ -16,7 +16,7 @@
       :to="`/manga/` + manga.id"
       class="cursor-pointer"
       style="text-decoration: none"
-      :class="$q.dark.isActive ? `text-white` : `text-dark`"
+      :class="$q.dark.isActive ? `light` : `dark`"
     >
       <q-img
         v-if="Display != `list`"
@@ -178,8 +178,8 @@ export default defineComponent({
 });
 </script>
 
-<style scoped>
-.my-card div.q-img--menu:hover {
-  filter: brightness(0.7);
-}
+<style scoped lang="sass">
+.my-card div.q-img--menu:hover
+  transition: filter $generic-hover-transition
+  filter: brightness(0.7)
 </style>

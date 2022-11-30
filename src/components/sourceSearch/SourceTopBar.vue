@@ -4,13 +4,13 @@
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at https://mozilla.org/MPL/2.0/. */ -->
- <template>
+<template>
   <SearchBar></SearchBar>
   <q-btn
     flat
     class="q-ml-sm"
     round
-    :text-color="$q.dark.isActive ? `white` : `dark`"
+    :class="$q.dark.isActive ? `light` : `dark`"
     icon="display_settings"
     @click="dialo = true"
   />
