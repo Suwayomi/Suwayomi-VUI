@@ -90,6 +90,7 @@ export interface myMeta {
   vue_RM?: string;
   vue_WT?: string;
   vue_Scale?: string;
+  vue_Paths?: keyof paths;
 }
 
 export interface dlsock {
@@ -369,3 +370,16 @@ export type filters =
   | filterText
   | filterHeader
   | filterSeparator;
+
+export interface path {
+  forward: [number, number][];
+  back: [number, number][];
+  menu?: [number, number][];
+}
+
+export interface paths {
+  L: path;
+  RAL: path;
+  Kindle: path;
+  Edge: path;
+}

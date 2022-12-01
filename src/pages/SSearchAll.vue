@@ -81,9 +81,10 @@ export default defineComponent({
                     mangas: (await request).mangaList
                   };
                 } catch (error) {
-                  console.log(error);
                   if (!(error instanceof DOMException)) {
                     return { source: source, mangas: [] };
+                  } else {
+                    console.error(error);
                   }
                 }
               }

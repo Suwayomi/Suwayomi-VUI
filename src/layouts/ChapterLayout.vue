@@ -63,6 +63,7 @@
       <router-view
         @setTitle="setTitle"
         :class="$q.dark.isActive ? `bg-dark-page` : `bg-light-page`"
+        @openMenu="leftDrawerOpen = !leftDrawerOpen"
       />
       <q-page-sticky
         position="top-left"

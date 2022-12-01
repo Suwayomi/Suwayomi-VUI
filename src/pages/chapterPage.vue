@@ -5,7 +5,7 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at https://mozilla.org/MPL/2.0/. */ -->
 <template>
-  <q-page @click="goNextIntersector80" :style-fn="myTweak">
+  <q-page @click="handleClick" :style-fn="myTweak">
     <div>
       <q-infinite-scroll
         @load="onLoad"
@@ -29,6 +29,7 @@
             :vue_WT="vue_WT"
             :vue_Scale="vue_Scale"
             :vue_Offset="vue_Offset"
+            :imdata="pagee(item.index, index)"
           >
           </displayPage>
           <q-card
@@ -53,6 +54,24 @@
         </template>
       </q-infinite-scroll>
     </div>
+    <div v-if="pathVisable">
+      <div
+        class="fixed"
+        style="background-color: rgba(0, 0, 255, 0.5)"
+        :style="clipPathF"
+      ></div>
+      <div
+        class="fixed"
+        style="background-color: rgba(255, 0, 0, 0.5)"
+        :style="clipPathB"
+      ></div>
+      <div
+        v-if="clipPathM"
+        class="fixed"
+        style="background-color: rgba(0, 255, 0, 0.5)"
+        :style="clipPathM"
+      ></div>
+    </div>
   </q-page>
 </template>
 
@@ -63,52 +82,174 @@ import { defineComponent, ref } from 'vue';
 import { useRoute } from 'vue-router';
 import displayPage from 'src/components/reader/displayPage.vue';
 import { chapterMeta } from 'src/components/reader/readerSettings';
+import { getImgBlob } from 'src/components/global/usefull';
+import { paths } from 'src/components/global/models';
+
+const pathss: paths = {
+  L: {
+    forward: [
+      [100, 100],
+      [100, 0],
+      [66, 0],
+      [66, 66],
+      [0, 66],
+      [0, 100]
+    ],
+    back: [
+      [33, 33],
+      [66, 33],
+      [66, 0],
+      [0, 0],
+      [0, 66],
+      [33, 66]
+    ],
+    menu: [
+      [33, 33],
+      [66, 33],
+      [66, 66],
+      [33, 66]
+    ]
+  },
+  RAL: {
+    forward: [
+      [66, 0],
+      [100, 0],
+      [100, 100],
+      [66, 100]
+    ],
+    back: [
+      [0, 0],
+      [33, 0],
+      [33, 100],
+      [0, 100]
+    ],
+    menu: [
+      [33, 0],
+      [66, 0],
+      [66, 100],
+      [33, 100]
+    ]
+  },
+  Kindle: {
+    forward: [
+      [33, 33],
+      [33, 100],
+      [100, 100],
+      [100, 33]
+    ],
+    back: [
+      [33, 33],
+      [33, 100],
+      [0, 100],
+      [0, 33]
+    ],
+    menu: [
+      [0, 0],
+      [100, 0],
+      [100, 33],
+      [0, 33]
+    ]
+  },
+  Edge: {
+    forward: [
+      [100, 0],
+      [100, 100],
+      [0, 100],
+      [0, 0],
+      [33, 0],
+      [33, 100],
+      [66, 100],
+      [66, 0]
+    ],
+    back: [
+      [33, 66],
+      [66, 66],
+      [66, 100],
+      [33, 100]
+    ],
+    menu: [
+      [33, 66],
+      [66, 66],
+      [66, 0],
+      [33, 0]
+    ]
+  }
+};
 
 export default defineComponent({
   name: 'chapterPage',
   components: { displayPage },
-  emits: ['setTitle'],
+  emits: ['setTitle', 'openMenu'],
   methods: {
+    async getImg(chapterID: number, pageNum: number): Promise<string> {
+      return getImgBlob(
+        `/api/v1/manga/${
+          this.$route.params['mangaID']
+        }/chapter/${chapterID}/page/${pageNum}?useCache=${this.$storeGet(
+          'useCache',
+          true
+        )}`
+      );
+    },
     myTweak(offset: number) {
       return {
         height: offset ? `calc(100vh - ${offset}px)` : '100vh'
       };
     },
-    onLoad(_index: number, done: () => void) {
-      this.$fetchJSON(
-        `/api/v1/manga/${this.$route.params['mangaID']}/chapter/${this.currchapter}`
-      ).then((data: chapter) => {
-        this.items.push(data);
-        if (
-          this.currchapter != parseInt(`${this.$route.params['chapterID']}`)
-        ) {
-          if (this.$route.name?.toString() == 'chapterpage') {
-            this.$router.replace(
-              `/manga/${this.$route.params['mangaID']}/chapter/${this.currchapter}`
-            );
-          }
+    onChapter(data: chapter, done: () => void) {
+      this.items.push(data);
+      if (this.currchapter != parseInt(`${this.$route.params['chapterID']}`)) {
+        if (this.$route.name?.toString() == 'chapterpage') {
+          this.$router.replace(
+            `/manga/${this.$route.params['mangaID']}/chapter/${this.currchapter}`
+          );
         }
-        done();
-        this.chapname = data.name;
-        this.$emit('setTitle', `${this.vue_title} ${data.name}`);
-        if (this.currchapter >= data.chapterCount)
-          (this.$refs['infiniteScrol'] as QInfiniteScroll).stop();
+      }
+      done();
+      this.chapname = data.name;
+      this.$emit('setTitle', `${this.vue_title} ${data.name}`);
+      if (this.currchapter >= data.chapterCount) {
+        (this.$refs['infiniteScrol'] as QInfiniteScroll).stop();
+      } else {
         this.currchapter++;
+        this.getNextChap();
+      }
+    },
+    onLoad(_index: number, done: () => void) {
+      if (this.nextChapter === undefined) {
+        this.$fetchJSON(
+          `/api/v1/manga/${this.$route.params['mangaID']}/chapter/${this.currchapter}`
+        ).then((data: chapter) => {
+          this.Pages[this.currchapter] = [];
+          for (let i = 0; i < data.pageCount; i++) {
+            this.Pages[this.currchapter]?.push(this.getImg(data.index, i));
+          }
+          this.onChapter(data, done);
+        });
+      } else {
+        this.nextChapter.then((data: chapter) => {
+          this.onChapter(data, done);
+        });
+      }
+    },
+    getNextChap() {
+      this.nextChapter = this.$fetchJSON(
+        `/api/v1/manga/${this.$route.params['mangaID']}/chapter/${this.currchapter}`
+      );
+      this.nextChapter.then((data: chapter) => {
+        this.Pages[this.currchapter] = [];
+        for (let i = 0; i < data.pageCount; i++) {
+          this.Pages[this.currchapter]?.push(this.getImg(data.index, i));
+        }
       });
     },
     onIntersection(entry: IntersectionObserverEntry) {
       const element = entry.target as HTMLElement;
       if (entry.isIntersecting) {
-        this.pageIntersectEleArr.push(element);
         this.setReadPages(element);
+        element.dataset['isint'] = 'true';
       } else {
-        this.pageIntersectEleArr = this.pageIntersectEleArr.filter(
-          (ele) =>
-            !(
-              ele.dataset['pid'] == element.dataset['pid'] &&
-              ele.dataset['cid'] == element.dataset['cid']
-            )
-        );
+        element.dataset['isint'] = undefined;
       }
     },
     setReadPages(ele: HTMLElement) {
@@ -146,32 +287,33 @@ export default defineComponent({
           this.scrolltimeout = true;
         }, 500);
 
-        if (this.pageIntersectEleArr.length > 1) {
-          const element =
-            this.pageIntersectEleArr[this.pageIntersectEleArr.length - 1];
-          if (element) {
-            const vp = window.visualViewport as VisualViewport;
-            if (
-              element.offsetTop > vp.pageTop + vp.height ||
-              element.offsetTop < vp.pageTop
-            ) {
-              this.pageIntersectEleArr = this.pageIntersectEleArr.filter(
-                (ele) =>
-                  !(
-                    ele.dataset['pid'] == element.dataset['pid'] &&
-                    ele.dataset['cid'] == element.dataset['cid']
-                  )
-              );
-              this.goNextIntersector80();
-            } else {
-              this.pageIntersectEleArr = [element];
-              const top = element.offsetTop + 1;
-              window.scrollTo({
-                top,
-                left: 0,
-                behavior: 'smooth'
-              });
-            }
+        const vp = window.visualViewport as VisualViewport;
+        const top = vp.pageTop;
+        const bottom = vp.pageTop + vp.height;
+        const intsect = Array.from(
+          (this.$refs['infiniteScrol'] as QInfiniteScroll).$el.querySelectorAll(
+            '[data-isint=true]'
+          )
+        ) as HTMLElement[];
+
+        if (intsect.length > 0) {
+          const ele = intsect[intsect.length - 1] as HTMLElement;
+          if (ele.offsetTop > bottom || ele.offsetTop <= top) {
+            ele.dataset['isint'] = undefined;
+            this.scrolltimeout = true;
+            this.goNextIntersector80();
+            return;
+          }
+
+          if (ele) {
+            intsect.forEach((elemen: HTMLElement) => {
+              elemen.dataset['isint'] = elemen == ele ? 'true' : undefined;
+            });
+            window.scrollTo({
+              top: ele.offsetTop,
+              left: 0,
+              behavior: 'smooth'
+            });
           }
         } else {
           this.scroll80();
@@ -186,11 +328,99 @@ export default defineComponent({
         behavior: 'smooth'
       });
     },
+    scrollUp80() {
+      if (this.scrolltimeout) {
+        this.scrolltimeout = false;
+        setTimeout(() => {
+          this.scrolltimeout = true;
+        }, 500);
+        const vp = window.visualViewport as VisualViewport;
+        window.scrollTo({
+          top: vp.pageTop - vp.height * 0.8,
+          left: 0,
+          behavior: 'smooth'
+        });
+      }
+    },
     keyHandeler(e: KeyboardEvent) {
       if (e.key == ' ') {
         e.preventDefault();
         this.goNextIntersector80();
       }
+    },
+    pagee(chapterID: number, pageNum: number): Promise<string> {
+      const tmp = this.Pages[chapterID] as
+        | (Promise<string> | undefined)[]
+        | undefined;
+      if (tmp?.length) {
+        const tmp2 = tmp[pageNum] as Promise<string> | undefined;
+        if (tmp2 != undefined) {
+          return tmp2;
+        }
+      }
+      return this.getImg(chapterID, pageNum);
+    },
+    handleClick(e: MouseEvent) {
+      if (
+        this.pointInPoly(
+          [e.x, e.y],
+          this.polyToPOLLY(pathss[this.usedpath].forward)
+        )
+      ) {
+        this.goNextIntersector80();
+      } else if (
+        this.pointInPoly(
+          [e.x, e.y],
+          this.polyToPOLLY(pathss[this.usedpath].back)
+        )
+      ) {
+        this.scrollUp80();
+      } else if (
+        pathss[this.usedpath].menu &&
+        this.pointInPoly(
+          [e.x, e.y],
+          this.polyToPOLLY(pathss[this.usedpath].menu)
+        )
+      ) {
+        this.$emit('openMenu');
+      }
+    },
+    polyToPOLLY(
+      polly: [number, number][] | undefined
+    ): [number, number][] | undefined {
+      if (polly == undefined) return undefined;
+      return polly.map((point) => {
+        return [
+          (point[0] * window.innerWidth) / 100,
+          (point[1] * window.innerHeight) / 100
+        ];
+      });
+    },
+    pointInPoly(
+      point: [number, number],
+      vs: [number, number][] | undefined
+    ): boolean {
+      // ray-casting algorithm based on
+      // https://wrf.ecse.rpi.edu/Research/Short_Notes/pnpoly.html/pnpoly.html
+      if (vs == undefined) return false;
+      const x = point[0],
+        y = point[1];
+
+      let inside = false;
+      for (let i = 0, j = vs.length - 1; i < vs.length; j = i++) {
+        const ii = vs[i] as [number, number];
+        const jj = vs[j] as [number, number];
+        const xi = ii[0],
+          yi = ii[1];
+        const xj = jj[0],
+          yj = jj[1];
+
+        const intersect =
+          yi > y != yj > y && x < ((xj - xi) * (y - yi)) / (yj - yi) + xi;
+        if (intersect) inside = !inside;
+      }
+
+      return inside;
     }
   },
   created() {
@@ -211,6 +441,52 @@ export default defineComponent({
         return 'row items-center';
       }
       return '';
+    },
+    clipPathF(): string {
+      const path = pathss[this.usedpath].forward;
+      return `clip-path: polygon(${path
+        .map((point) => {
+          return point
+            .map((persent) => {
+              return persent == 0 ? persent.toString() : `${persent}%`;
+            })
+            .join(' ');
+        })
+        .join(',')});top: 0;
+      bottom: 0;
+      left: 0;
+      right: 0;`;
+    },
+    clipPathB(): string {
+      const path = pathss[this.usedpath].back;
+      return `clip-path: polygon(${path
+        .map((point) => {
+          return point
+            .map((persent) => {
+              return persent == 0 ? persent.toString() : `${persent}%`;
+            })
+            .join(' ');
+        })
+        .join(',')});top: 0;
+      bottom: 0;
+      left: 0;
+      right: 0;`;
+    },
+    clipPathM(): string {
+      const path = pathss[this.usedpath].menu;
+      if (path === undefined) return '';
+      return `clip-path: polygon(${path
+        .map((point) => {
+          return point
+            .map((persent) => {
+              return persent == 0 ? persent.toString() : `${persent}%`;
+            })
+            .join(' ');
+        })
+        .join(',')});top: 0;
+      bottom: 0;
+      left: 0;
+      right: 0;`;
     }
   },
   watch: {
@@ -223,24 +499,34 @@ export default defineComponent({
     const items = ref(<chapter[]>[]);
     const route = useRoute();
     const currchapter = ref(<number>parseInt(`${route.params['chapterID']}`));
+    const nextChapter = ref(<Promise<chapter> | undefined>undefined);
+    const Pages = ref(<(Promise<string> | undefined)[][]>[]);
     const options = chapterMeta(parseInt(`${route.params['mangaID']}`));
     const vue_RM = options.vue_RM;
+    const vue_Path = options.vue_Paths;
+    const pathVisable = options.pathVisable;
     const vue_WT = options.vue_WT;
     const vue_Scale = options.vue_Scale;
     const vue_Offset = options.vue_Offset;
     const vue_title = options.vue_title;
     const chapname = ref(<string>'');
+    const usedpath = options.vue_Paths;
     return {
       items,
       currchapter,
+      nextChapter,
+      Pages,
       vue_RM,
+      vue_Path,
+      pathVisable,
       vue_WT,
       vue_Scale,
       vue_Offset,
       chapname,
       vue_title,
       pageIntersectEleArr,
-      scrolltimeout: ref(true)
+      scrolltimeout: ref(true),
+      usedpath
     };
   }
 });
