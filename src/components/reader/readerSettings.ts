@@ -8,12 +8,15 @@ import { ref } from 'vue';
 import { manga } from '../global/models';
 import { LocalStorage } from 'quasar';
 import { fetcher, fetchJSON } from 'src/boot/fetcher';
+import { paths } from 'src/components/global/models';
 
 const vue_RM = ref(<string>'RTL');
+const vue_Paths = ref(<keyof paths>'RTL');
 const vue_WT = ref(<boolean>false);
 const vue_Scale = ref(<boolean>false);
 const vue_Offset = ref(<boolean>false);
 const vue_title = ref(<string>'');
+const pathVisable = ref(<boolean>false);
 
 function tobool(data: string): boolean {
   return data == 'true';
@@ -21,6 +24,7 @@ function tobool(data: string): boolean {
 
 export function chapterMeta(mangaID: number) {
   vue_RM.value = (LocalStorage.getItem('vue_RM') || 'RTL') as string;
+  vue_Paths.value = (LocalStorage.getItem('vue_Paths') || 'L') as keyof paths;
   vue_WT.value = (LocalStorage.getItem('vue_WT') || false) as boolean;
   vue_Scale.value = (LocalStorage.getItem('vue_Scale') || false) as boolean;
   vue_Offset.value = (LocalStorage.getItem('vue_Offset') || false) as boolean;
@@ -28,6 +32,9 @@ export function chapterMeta(mangaID: number) {
     vue_RM.value = manga.meta.vue_RM
       ? manga.meta.vue_RM
       : ((LocalStorage.getItem('vue_RM') || 'RTL') as string);
+    vue_Paths.value = manga.meta.vue_Paths
+      ? manga.meta.vue_Paths
+      : ((LocalStorage.getItem('vue_Paths') || 'L') as keyof paths);
     vue_WT.value = manga.meta.vue_WT
       ? tobool(manga.meta.vue_WT)
       : ((LocalStorage.getItem('vue_WT') || false) as boolean);
@@ -43,6 +50,10 @@ export function chapterMeta(mangaID: number) {
   function setRM(data: string) {
     vue_RM.value = data;
     setFormData('vue_RM', data);
+  }
+  function setPaths(data: keyof paths) {
+    vue_Paths.value = data;
+    setFormData('vue_Paths', data);
   }
   function setWT(data: boolean) {
     vue_WT.value = data;
@@ -67,13 +78,22 @@ export function chapterMeta(mangaID: number) {
     });
   }
 
+  function toggPath() {
+    pathVisable.value = !pathVisable.value;
+    console.log(pathVisable.value);
+  }
+
   return {
     vue_RM,
+    vue_Paths,
+    pathVisable,
     vue_WT,
     vue_Scale,
     vue_Offset,
     vue_title,
     setRM,
+    setPaths,
+    toggPath,
     setWT,
     setScale,
     setOffset
