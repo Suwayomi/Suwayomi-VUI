@@ -203,7 +203,7 @@
               <q-item-label>Page Margins</q-item-label>
               <q-toggle color="blue" v-model="SreadMargins" />
             </q-item>
-            <q-separator></q-separator>
+            <q-separator class="q-my-xs"></q-separator>
             <q-item
               class="row justify-between no-wrap items-center rounded-borders"
               clickable
@@ -213,12 +213,20 @@
               <q-item-label>Page Scale</q-item-label>
               <q-toggle color="blue" v-model="SreadScale" />
             </q-item>
-            <q-separator></q-separator>
+            <q-separator class="q-my-xs"></q-separator>
             <q-select
               standout
               label="Reader Mode"
               v-model="SReadModel"
               :options="SReadoptions"
+            >
+            </q-select>
+            <q-separator class="q-my-xs"></q-separator>
+            <q-select
+              standout
+              label="Navigation layout"
+              v-model="SReadPath"
+              :options="PathOptions"
             >
             </q-select>
           </q-card-section>
@@ -282,6 +290,7 @@ import { useQuasar } from 'quasar';
 import { defineComponent, ref } from 'vue';
 import { resetBase } from 'src/boot/fetcher';
 import { storeGet } from 'src/boot/StoreStuff';
+import { paths } from 'src/components/global/models';
 
 export default defineComponent({
   name: 'settingsPage',
@@ -316,6 +325,7 @@ export default defineComponent({
     },
     setReaderOptions() {
       this.$q.localStorage.set('vue_RM', this.SReadModel);
+      this.$q.localStorage.set('vue_Paths', this.SReadPath);
       this.$q.localStorage.set('vue_WT', this.SreadMargins);
       this.$q.localStorage.set('vue_Scale', this.SreadScale);
     }
@@ -346,6 +356,9 @@ export default defineComponent({
     const SReadModel = ref(
       ($q.localStorage.getItem('vue_RM') || 'RTL') as string
     );
+    const SReadPath = ref(
+      ($q.localStorage.getItem('vue_Paths') || 'L') as keyof paths
+    );
     const SreadMargins = ref(
       ($q.localStorage.getItem('vue_WT') || false) as boolean
     );
@@ -361,6 +374,8 @@ export default defineComponent({
       Saddr: ref(false),
       SRead: ref(false),
       SReadModel,
+      SReadPath,
+      PathOptions: ['L', 'RAL', 'Kindle', 'Edge'],
       SReadoptions: ['RTL', 'LTR', 'SinglePage', 'Vertical'],
       SreadMargins,
       SreadScale,
