@@ -34,7 +34,6 @@
   </q-item>
   <q-select
     standout
-    style="width: 100%"
     label="Reader Mode"
     v-model="SReadModel"
     :options="SReadoptions"
