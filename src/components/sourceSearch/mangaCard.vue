@@ -146,6 +146,6 @@ export default defineComponent({
 
 <style scoped lang="sass">
 .my-card div.q-img--menu:hover
-transition: filter $generic-hover-transition
+  transition: filter $generic-hover-transition
   filter: brightness(0.7)
 </style>
