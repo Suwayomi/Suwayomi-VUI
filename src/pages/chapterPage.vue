@@ -309,9 +309,8 @@ export default defineComponent({
             intsect.forEach((elemen: HTMLElement) => {
               elemen.dataset['isint'] = elemen == ele ? 'true' : undefined;
             });
-            const top = ele.offsetTop;
             window.scrollTo({
-              top,
+              top: ele.offsetTop,
               left: 0,
               behavior: 'smooth'
             });
