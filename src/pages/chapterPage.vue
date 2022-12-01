@@ -298,7 +298,7 @@ export default defineComponent({
 
         if (intsect.length > 0) {
           const ele = intsect[intsect.length - 1] as HTMLElement;
-          if (ele.offsetTop < bottom || ele.offsetTop > top) {
+          if (ele.offsetTop > bottom || ele.offsetTop <= top) {
             ele.dataset['isint'] = undefined;
             this.scrolltimeout = true;
             this.goNextIntersector80();
@@ -368,7 +368,6 @@ export default defineComponent({
           this.polyToPOLLY(pathss[this.usedpath].forward)
         )
       ) {
-        console.log('forward');
         this.goNextIntersector80();
       } else if (
         this.pointInPoly(
@@ -376,7 +375,6 @@ export default defineComponent({
           this.polyToPOLLY(pathss[this.usedpath].back)
         )
       ) {
-        console.log('back');
         this.scrollUp80();
       } else if (
         pathss[this.usedpath].menu &&
