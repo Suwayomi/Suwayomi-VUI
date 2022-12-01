@@ -34,23 +34,52 @@
   </q-item>
   <q-select
     standout
+    style="width: 100%"
     label="Reader Mode"
     v-model="SReadModel"
     :options="SReadoptions"
   >
   </q-select>
+
+  <q-item
+    class="row justify-between no-wrap items-center rounded-borders"
+    clickable
+    v-ripple
+    @click="showPath = !showPath"
+  >
+    <q-item-label>View Path</q-item-label>
+    <q-toggle color="blue" v-model="showPath" />
+    <q-tooltip>
+      <div>blue = next</div>
+      <div>red = back</div>
+      <div>green = menu</div>
+    </q-tooltip>
+  </q-item>
+
+  <q-select
+    standout
+    style="width: 100%"
+    label="Navigation layout"
+    v-model="SReadPath"
+    :options="PathOptions"
+  >
+  </q-select>
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue';
+import { defineComponent, ref } from 'vue';
 import { chapterMeta } from 'src/components/reader/readerSettings';
 import { useRoute } from 'vue-router';
+import { paths } from '../global/models';
 
 export default defineComponent({
   name: 'readerDrawerCont',
   created: function () {
     this.$watch('SReadModel', (newer: string) => {
       this.options.setRM(newer);
+    });
+    this.$watch('SReadPath', (newer: keyof paths) => {
+      this.options.setPaths(newer);
     });
     this.$watch('SreadMargins', (newer: boolean) => {
       this.options.setWT(newer);
@@ -61,18 +90,26 @@ export default defineComponent({
     this.$watch('sReadOffset', (newer: boolean) => {
       this.options.setOffset(newer);
     });
+    this.$watch('showPath', () => {
+      this.options.toggPath();
+    });
   },
   setup() {
     const route = useRoute();
     const options = chapterMeta(parseInt(`${route.params['mangaID']}`));
     const SReadModel = options.vue_RM;
+    const SReadPath = options.vue_Paths;
     const SreadMargins = options.vue_WT;
     const SreadScale = options.vue_Scale;
     const sReadOffset = options.vue_Offset;
+    const showPath = ref(options.pathVisable.value);
     return {
       SreadMargins,
       SreadScale,
       SReadModel,
+      SReadPath,
+      PathOptions: ['L', 'RAL', 'Kindle', 'Edge'],
+      showPath,
       SReadoptions: ['RTL', 'LTR', 'SinglePage', 'Vertical'],
       sReadOffset,
       options

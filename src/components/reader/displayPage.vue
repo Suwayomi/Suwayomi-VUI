@@ -38,7 +38,6 @@
 
 <script lang="ts">
 import { defineComponent, PropType, ref } from 'vue';
-import { getImgBlob } from '../global/usefull';
 
 export default defineComponent({
   name: 'displayPage',
@@ -66,6 +65,10 @@ export default defineComponent({
     vue_Offset: {
       type: Boolean as PropType<boolean>,
       default: false
+    },
+    imdata: {
+      type: Promise as PropType<Promise<string>>,
+      default: undefined
     }
   },
   mounted: function () {
@@ -173,11 +176,7 @@ export default defineComponent({
   },
   methods: {
     getImg(): void {
-      getImgBlob(
-        `/api/v1/manga/${this.$route.params['mangaID']}/chapter/${
-          this.chapterID
-        }/page/${this.pageNum}?useCache=${this.$storeGet('useCache', true)}`
-      ).then((value: string) => {
+      this.imdata?.then((value: string) => {
         this.imgdata = value;
       });
     }
