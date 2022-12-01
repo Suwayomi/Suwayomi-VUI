@@ -80,7 +80,6 @@ export function chapterMeta(mangaID: number) {
 
   function toggPath() {
     pathVisable.value = !pathVisable.value;
-    console.log(pathVisable.value);
   }
 
   return {
