@@ -4,8 +4,8 @@
 name: Lint
 
 on:
-  push:
-    branches: ["Release", "main"]
+  # push:
+  #   branches: ["Release", "main"]
   pull_request:
     branches: ["Release", "main"]
 
