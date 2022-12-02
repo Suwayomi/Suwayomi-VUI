@@ -125,7 +125,8 @@ export default defineComponent({
       if (val != undefined) {
         this.mangas = [];
         this.mangas = <manga[]>(
-          await this.$fetchJSON(`/api/v1/category/${this.$route.query['tab']}`)
+          (await this.$api.get(`/api/v1/category/${this.$route.query['tab']}`))
+            .data
         );
       }
     }

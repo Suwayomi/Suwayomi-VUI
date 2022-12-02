@@ -9,6 +9,7 @@
     @load="onLoad"
     :offset="$q.screen.height / 2"
     ref="infiniteScrol"
+    class="notOflow"
   >
     <div class="flex">
       <q-intersection v-for="manga in items" :key="manga.id" :style="widt">
@@ -113,26 +114,32 @@ export default defineComponent({
     async reload(num = 1, signal: AbortSignal) {
       if (this.noinit) {
         if (this.Smitted || this.$route.query['q']) {
-          const sourcepage = <Promise<sourcepage>>this.$fetchJSON(
-            `/api/v1/source/${
-              this.$route.params['sourceID']
-            }/search?searchTerm=${this.$route.query['q'] || ''}&pageNum=${num}`,
-            {
-              signal
-            }
-          );
+          const sourcepage = <Promise<sourcepage>>(
+            await this.$api.get(
+              `/api/v1/source/${
+                this.$route.params['sourceID']
+              }/search?searchTerm=${
+                this.$route.query['q'] || ''
+              }&pageNum=${num}`,
+              {
+                signal
+              }
+            )
+          ).data;
           try {
             return await sourcepage;
           } catch (error) {
             return undefined;
           }
         } else {
-          const sourcepage = <Promise<sourcepage>>this.$fetchJSON(
-            `/api/v1/source/${this.$route.params['sourceID']}/${this.$route.params['poplate']}/${num}`,
-            {
-              signal
-            }
-          );
+          const sourcepage = <Promise<sourcepage>>(
+            await this.$api.get(
+              `/api/v1/source/${this.$route.params['sourceID']}/${this.$route.params['poplate']}/${num}`,
+              {
+                signal
+              }
+            )
+          ).data;
           try {
             return await sourcepage;
           } catch (error) {
@@ -167,17 +174,19 @@ export default defineComponent({
       this.controller = new AbortController();
       (this.$refs['infiniteScrol'] as QInfiniteScroll).reset();
       (this.$refs['infiniteScrol'] as QInfiniteScroll).resume();
-      // (this.$refs['infiniteScrol'] as QInfiniteScroll).trigger();
+      (this.$refs['infiniteScrol'] as QInfiniteScroll).trigger();
     },
     getFilts(reset = false) {
-      this.$fetchJSON(
-        `/api/v1/source/${this.$route.params['sourceID']}/filters${
-          reset ? '?reset=true' : ''
-        }`
-      ).then((data) => {
-        this.filters = data;
-        this.resetScroll();
-      });
+      this.$api
+        .get(
+          `/api/v1/source/${this.$route.params['sourceID']}/filters${
+            reset ? '?reset=true' : ''
+          }`
+        )
+        .then(({ data }) => {
+          this.filters = data;
+          this.resetScroll();
+        });
     },
     stateChange(state: string | posState[], pos: number) {
       this.stateChanges = this.stateChanges.filter(
@@ -192,16 +201,13 @@ export default defineComponent({
       }
     },
     async submitFilters() {
-      await this.$fetch(
+      await this.$api.post(
         `/api/v1/source/${this.$route.params['sourceID']}/filters`,
-        {
-          method: 'POST',
-          body: JSON.stringify(this.stateChanges)
-        }
+        this.stateChanges
       );
       this.Smitted = true;
       this.stateChanges = [];
-      this.resetScroll();
+      // this.resetScroll();
       this.getFilts();
     }
   },

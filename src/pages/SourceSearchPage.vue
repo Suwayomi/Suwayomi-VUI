@@ -8,7 +8,7 @@
 -->
 
 <template>
-  <q-page :style-fn="myTweak">
+  <q-page :style-fn="myTweak" class="notOflow">
     <sourceGrid> </sourceGrid>
   </q-page>
 </template>
@@ -49,3 +49,8 @@ export default defineComponent({
   }
 });
 </script>
+
+<style lang="sass" scoped>
+.OFlow.notOflow
+  overflow-y: unset
+</style>

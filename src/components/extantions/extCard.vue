@@ -72,11 +72,13 @@ export default defineComponent({
     },
     async HandleExt() {
       if (this.exten.hasUpdate) {
-        await this.$fetch(`/api/v1/extension/update/${this.exten.pkgName}`);
+        await this.$api.get(`/api/v1/extension/update/${this.exten.pkgName}`);
       } else if (this.exten.installed) {
-        await this.$fetch(`/api/v1/extension/uninstall/${this.exten.pkgName}`);
+        await this.$api.get(
+          `/api/v1/extension/uninstall/${this.exten.pkgName}`
+        );
       } else {
-        await this.$fetch(`/api/v1/extension/install/${this.exten.pkgName}`);
+        await this.$api.get(`/api/v1/extension/install/${this.exten.pkgName}`);
       }
       this.$emit('reload');
     }

@@ -4,7 +4,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at https://mozilla.org/MPL/2.0/. */
-import { fetcher } from 'src/boot/fetcher';
+import { api } from 'src/boot/axios';
 
 /**
  * It fetches an image from a URL, converts it to a blob, converts the blob to a data URL, and returns
@@ -13,9 +13,10 @@ import { fetcher } from 'src/boot/fetcher';
  * @returns A promise that resolves to a string.
  */
 export async function getImgBlob(imgUrl: string): Promise<string> {
-  const resp = await fetcher(imgUrl);
+  const resp = await api.get(imgUrl, { responseType: 'blob' });
+
   if (resp.status == 200) {
-    const blob = await resp.blob();
+    const blob = await resp.data;
     const reader = new FileReader();
     reader.readAsDataURL(blob);
     return await new Promise((resolve) => {

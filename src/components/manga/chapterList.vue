@@ -398,7 +398,7 @@
                   clickable
                   v-close-popup
                   @click="
-                    mpatch(item.index, [['bookmarked', `${!item.bookmarked}`]])
+                    mpatch(item.index, { bookmarked: `${!item.bookmarked}` })
                   "
                 >
                   <q-item-section>{{
@@ -407,10 +407,10 @@
                 </q-item>
                 <q-item
                   @click="
-                    mpatch(item.index, [
-                      ['read', `${!item.read}`],
-                      ['lastPageRead', '1']
-                    ])
+                    mpatch(item.index, {
+                      read: `${!item.read}`,
+                      lastPageRead: '1'
+                    })
                   "
                   clickable
                   v-close-popup
@@ -420,7 +420,7 @@
                   }}</q-item-section>
                 </q-item>
                 <q-item
-                  @click="mpatch(item.index, [['markPrevRead', 'true']])"
+                  @click="mpatch(item.index, { markPrevRead: 'true' })"
                   clickable
                   v-close-popup
                 >
@@ -576,9 +576,11 @@ export default defineComponent({
     async getonline(TF = 'false', retry = 2) {
       try {
         this.chapters = <chapter[]>(
-          await this.$fetchJSON(
-            `/api/v1/manga/${this.$route.params['mangaID']}/chapters?onlineFetch=${TF}`
-          )
+          (
+            await this.$api.get(
+              `/api/v1/manga/${this.$route.params['mangaID']}/chapters?onlineFetch=${TF}`
+            )
+          ).data
         );
       } catch (e) {
         retry--;
@@ -599,20 +601,15 @@ export default defineComponent({
       );
     },
     async dele(index: number) {
-      await this.$fetch(
-        `/api/v1/manga/${this.$route.params['mangaID']}/chapter/${index}`,
-        { method: 'DELETE' }
+      await this.$api.delete(
+        `/api/v1/manga/${this.$route.params['mangaID']}/chapter/${index}`
       );
       this.getonline();
     },
-    async mpatch(index: number, FD: [string, string][]) {
-      const fd = new FormData();
-      FD.forEach((dat) => {
-        fd.append(...dat);
-      });
-      await this.$fetch(
+    async mpatch(index: number, FD: { [key: string]: string }) {
+      await this.$api.patchForm(
         `/api/v1/manga/${this.$route.params['mangaID']}/chapter/${index}`,
-        { method: 'PATCH', body: fd }
+        FD
       );
       this.getonline();
     },
