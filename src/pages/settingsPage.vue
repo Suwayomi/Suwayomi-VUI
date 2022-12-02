@@ -288,7 +288,7 @@
 <script lang="ts">
 import { useQuasar } from 'quasar';
 import { defineComponent, ref } from 'vue';
-import { resetBase } from 'src/boot/fetcher';
+import { resetAxiosBase, resetAxiosAuth } from 'src/boot/axios';
 import { storeGet } from 'src/boot/StoreStuff';
 import { paths } from 'src/components/global/models';
 
@@ -309,7 +309,7 @@ export default defineComponent({
         val.endsWith('/') ? val.slice(0, -1) : val,
         location.origin
       );
-      this.resetBase();
+      this.resetAxiosBase();
     },
     setserverAuth(username = '', password = '') {
       if (username == '' || password == '') {
@@ -319,6 +319,7 @@ export default defineComponent({
       } else {
         this.$q.localStorage.set('auth', { username, password });
       }
+      this.resetAxiosAuth();
     },
     btoa(val: string) {
       return btoa(val);
@@ -383,7 +384,8 @@ export default defineComponent({
       baut: ref(false),
       busr: ref(auth != null ? auth.username : ''),
       bpsw: ref(auth != null ? auth.password : ''),
-      resetBase,
+      resetAxiosBase,
+      resetAxiosAuth,
       isPwd: ref(false)
     };
   }

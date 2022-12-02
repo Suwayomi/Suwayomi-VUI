@@ -1,0 +1,25 @@
+version: '3.7'
+services:
+
+  tachideskvui-dev:
+    build:
+      context: .
+      target: 'develop-stage'
+      # environment:
+      # - PORT=443 # will default to 443
+      # - TachideskURL=http://tachidesk:4567 # url of Tachidesk to proxy /api
+      # - TachideskAUTH=username:password # basic auth format username:password
+      # - PUBPATH=/tachidesk-vui/ # url path
+    ports:
+      - '4443:443'
+    volumes:
+      - '.:/app'
+    command: /bin/sh -c "npm i && quasar dev -m pwa"
+    restart: unless-stopped
+
+  tachideskvui-prod:
+    build:
+      context: .
+    ports:
+      - '9013:80'
+    restart: unless-stopped

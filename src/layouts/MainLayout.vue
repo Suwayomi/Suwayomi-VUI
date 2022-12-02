@@ -86,7 +86,7 @@
       <router-view
         @setTitle="setTitle"
         :class="$q.dark.isActive ? `bg-dark-page` : `bg-light-page`"
-        style="overflow-y: auto"
+        class="OFlow"
       />
     </q-page-container>
   </q-layout>
@@ -213,3 +213,8 @@ export default defineComponent({
   }
 });
 </script>
+
+<style lang="sass" scoped>
+.OFlow
+  overflow-y: auto
+</style>

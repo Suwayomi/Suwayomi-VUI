@@ -58,7 +58,7 @@ export default defineComponent({
   },
   methods: {
     async download(item: { manga: manga; chapter: chapter }) {
-      await this.$fetch(
+      await this.$api.get(
         `/api/v1/download/${item.manga.id}/chapter/${item.chapter.index}`
       );
     }

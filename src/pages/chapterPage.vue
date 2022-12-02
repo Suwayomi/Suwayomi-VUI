@@ -84,6 +84,7 @@ import displayPage from 'src/components/reader/displayPage.vue';
 import { chapterMeta } from 'src/components/reader/readerSettings';
 import { getImgBlob } from 'src/components/global/usefull';
 import { paths } from 'src/components/global/models';
+import { AxiosResponse } from 'axios';
 
 const pathss: paths = {
   L: {
@@ -217,15 +218,17 @@ export default defineComponent({
     },
     onLoad(_index: number, done: () => void) {
       if (this.nextChapter === undefined) {
-        this.$fetchJSON(
-          `/api/v1/manga/${this.$route.params['mangaID']}/chapter/${this.currchapter}`
-        ).then((data: chapter) => {
-          this.Pages[this.currchapter] = [];
-          for (let i = 0; i < data.pageCount; i++) {
-            this.Pages[this.currchapter]?.push(this.getImg(data.index, i));
-          }
-          this.onChapter(data, done);
-        });
+        this.$api
+          .get(
+            `/api/v1/manga/${this.$route.params['mangaID']}/chapter/${this.currchapter}`
+          )
+          .then(({ data }: AxiosResponse<chapter>) => {
+            this.Pages[this.currchapter] = [];
+            for (let i = 0; i < data.pageCount; i++) {
+              this.Pages[this.currchapter]?.push(this.getImg(data.index, i));
+            }
+            this.onChapter(data, done);
+          });
       } else {
         this.nextChapter.then((data: chapter) => {
           this.onChapter(data, done);
@@ -233,7 +236,7 @@ export default defineComponent({
       }
     },
     getNextChap() {
-      this.nextChapter = this.$fetchJSON(
+      this.nextChapter = this.$api.get(
         `/api/v1/manga/${this.$route.params['mangaID']}/chapter/${this.currchapter}`
       );
       this.nextChapter.then((data: chapter) => {
@@ -253,29 +256,20 @@ export default defineComponent({
       }
     },
     setReadPages(ele: HTMLElement) {
-      const fd = new FormData();
-      fd.append(
-        'lastPageRead',
-        `${parseInt(ele.dataset['pid'] as string) + 1}`
-      );
-      this.$fetch(
+      this.$api.patchForm(
         `/api/v1/manga/${this.$route.params['mangaID']}/chapter/${ele.dataset['cid']}`,
         {
-          method: 'PATCH',
-          body: fd
+          lastPageRead: `${parseInt(ele.dataset['pid'] as string) + 1}`
         }
       );
       if (
         parseInt(ele.dataset['pid'] as string) >=
         parseInt(ele.dataset['pcount'] as string) - 1
       ) {
-        const fd = new FormData();
-        fd.append('read', 'true');
-        this.$fetch(
+        this.$api.patchForm(
           `/api/v1/manga/${this.$route.params['mangaID']}/chapter/${ele.dataset['cid']}`,
           {
-            method: 'PATCH',
-            body: fd
+            read: 'true'
           }
         );
       }

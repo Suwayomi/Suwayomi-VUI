@@ -27,16 +27,13 @@ export default defineComponent({
   },
   watch: {
     incat() {
-      if (this.incat){
-        this.$fetch(
+      if (this.incat) {
+        this.$api.get(
           `/api/v1/manga/${this.$route.params['mangaID']}/category/${this.cat.id}`
         );
-
-      }else{
-        this.$fetch(
-          `/api/v1/manga/${this.$route.params['mangaID']}/category/${this.cat.id}`,{
-            method:'DELETE'
-          }
+      } else {
+        this.$api.delete(
+          `/api/v1/manga/${this.$route.params['mangaID']}/category/${this.cat.id}`
         );
       }
     }

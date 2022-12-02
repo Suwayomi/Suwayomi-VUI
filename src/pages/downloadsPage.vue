@@ -128,11 +128,10 @@ export default defineComponent({
       };
     },
     async delet(download: download) {
-      this.$fetch(
-        `/api/v1/download/${download.mangaId}/chapter/${download.chapterIndex}`,
-        { method: 'DELETE' }
+      this.$api.delete(
+        `/api/v1/download/${download.mangaId}/chapter/${download.chapterIndex}`
       );
-      this.$fetch(
+      this.$api.delete(
         `/api/v1/manga/${download.mangaId}/chapter/${download.chapterIndex}`,
         { method: 'DELETE' }
       );

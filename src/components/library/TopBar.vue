@@ -149,10 +149,10 @@ export default defineComponent({
   components: { SearchBar },
   methods: {
     update() {
-      this.$fetch('/api/v1/update/fetch', {
-        method: 'POST',
-        body: `categoryId=${this.$route.query['tab']}`
-      });
+      this.$api.post(
+        '/api/v1/update/fetch',
+        `categoryId=${this.$route.query['tab']}`
+      );
     }
   },
   watch: {

@@ -29,8 +29,11 @@ jobs:
           node-version: ${{ matrix.node-version }}
           cache: "npm"
       - run: npm ci
-      - run: PUBPATH=/Tachidesk-VUI/ npm run build
+      - name: build for pages
+        if: github.event_name != 'pull_request'
+        run: PUBPATH=/Tachidesk-VUI/ npm run build
       - name: Deploy Pages
+        if: github.event_name != 'pull_request'
         uses: JamesIves/github-pages-deploy-action@v4
         with:
           folder: dist/pwa # The folder the action should deploy.

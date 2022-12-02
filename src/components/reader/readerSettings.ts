@@ -7,8 +7,9 @@
 import { ref } from 'vue';
 import { manga } from '../global/models';
 import { LocalStorage } from 'quasar';
-import { fetcher, fetchJSON } from 'src/boot/fetcher';
 import { paths } from 'src/components/global/models';
+import { api } from 'src/boot/axios';
+import { AxiosResponse } from 'axios';
 
 const vue_RM = ref(<string>'RTL');
 const vue_Paths = ref(<keyof paths>'RTL');
@@ -28,24 +29,26 @@ export function chapterMeta(mangaID: number) {
   vue_WT.value = (LocalStorage.getItem('vue_WT') || false) as boolean;
   vue_Scale.value = (LocalStorage.getItem('vue_Scale') || false) as boolean;
   vue_Offset.value = (LocalStorage.getItem('vue_Offset') || false) as boolean;
-  fetchJSON(`/api/v1/manga/${mangaID}`).then((manga: manga): void => {
-    vue_RM.value = manga.meta.vue_RM
-      ? manga.meta.vue_RM
-      : ((LocalStorage.getItem('vue_RM') || 'RTL') as string);
-    vue_Paths.value = manga.meta.vue_Paths
-      ? manga.meta.vue_Paths
-      : ((LocalStorage.getItem('vue_Paths') || 'L') as keyof paths);
-    vue_WT.value = manga.meta.vue_WT
-      ? tobool(manga.meta.vue_WT)
-      : ((LocalStorage.getItem('vue_WT') || false) as boolean);
-    vue_Scale.value = manga.meta.vue_Scale
-      ? tobool(manga.meta.vue_Scale)
-      : ((LocalStorage.getItem('vue_Scale') || false) as boolean);
-    vue_Offset.value = manga.meta.vue_Offset
-      ? tobool(manga.meta.vue_Offset)
-      : ((LocalStorage.getItem('vue_Offset') || false) as boolean);
-    vue_title.value = manga.title;
-  });
+  api
+    .get(`/api/v1/manga/${mangaID}`)
+    .then(({ data: manga }: AxiosResponse<manga>): void => {
+      vue_RM.value = manga.meta.vue_RM
+        ? manga.meta.vue_RM
+        : ((LocalStorage.getItem('vue_RM') || 'RTL') as string);
+      vue_Paths.value = manga.meta.vue_Paths
+        ? manga.meta.vue_Paths
+        : ((LocalStorage.getItem('vue_Paths') || 'L') as keyof paths);
+      vue_WT.value = manga.meta.vue_WT
+        ? tobool(manga.meta.vue_WT)
+        : ((LocalStorage.getItem('vue_WT') || false) as boolean);
+      vue_Scale.value = manga.meta.vue_Scale
+        ? tobool(manga.meta.vue_Scale)
+        : ((LocalStorage.getItem('vue_Scale') || false) as boolean);
+      vue_Offset.value = manga.meta.vue_Offset
+        ? tobool(manga.meta.vue_Offset)
+        : ((LocalStorage.getItem('vue_Offset') || false) as boolean);
+      vue_title.value = manga.title;
+    });
 
   function setRM(data: string) {
     vue_RM.value = data;
@@ -69,12 +72,9 @@ export function chapterMeta(mangaID: number) {
   }
 
   function setFormData(key: string, data: string) {
-    const fd = new FormData();
-    fd.append('key', key);
-    fd.append('value', data);
-    fetcher(`/api/v1/manga/${mangaID}/meta`, {
-      method: 'PATCH',
-      body: fd
+    api.patchForm(`/api/v1/manga/${mangaID}/meta`, {
+      key: key,
+      value: data
     });
   }
 
