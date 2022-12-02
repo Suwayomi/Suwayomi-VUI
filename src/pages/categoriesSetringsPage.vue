@@ -97,6 +97,7 @@
 import { cat } from 'src/components/global/models';
 import { defineComponent, ref } from 'vue';
 import catEdit from 'src/components/catSetings/edit.vue';
+import { AxiosResponse } from 'axios';
 
 export default defineComponent({
   name: 'CategoriesSettingsPage',
@@ -118,12 +119,9 @@ export default defineComponent({
           ele.order = inde + 1;
           return ele;
         });
-        const fd = new FormData();
-        fd.append('from', curr.toString());
-        fd.append('to', to.toString());
-        this.$fetch('/api/v1/category/reorder', {
-          method: 'PATCH',
-          body: fd
+        this.$api.patchForm('/api/v1/category/reorder', {
+          from: curr.toString(),
+          to: to.toString()
         });
       }
     },
@@ -141,20 +139,22 @@ export default defineComponent({
       const fd = new FormData();
       fd.append('name', this.edittxt);
       fd.append('default', this.defaul.toString());
-      this.$fetch('/api/v1/category/', {
-        method: 'POST',
-        body: fd
-      }).then(() => this.getcats());
+      this.$api
+        .postForm('/api/v1/category/', {
+          name: this.edittxt,
+          default: this.defaul.toString()
+        })
+        .then(() => this.getcats());
     },
     getcats() {
-      this.$fetchJSON('/api/v1/category/').then((data: cat[]) => {
-        this.catag = data.slice(1);
-      });
+      this.$api
+        .get('/api/v1/category/')
+        .then(({ data }: AxiosResponse<cat[]>) => {
+          this.catag = data.slice(1);
+        });
     },
     delcat(id: number) {
-      this.$fetch(`/api/v1/category/${id}`, { method: 'DELETE' }).then(() =>
-        this.getcats()
-      );
+      this.$api.delete(`/api/v1/category/${id}`).then(() => this.getcats());
     }
   },
   mounted: function () {

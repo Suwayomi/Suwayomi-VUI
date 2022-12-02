@@ -30,7 +30,7 @@ module.exports = configure(function (/* ctx */) {
     // --> boot files are part of "main.js"
     // https://v2.quasar.dev/quasar-cli-vite/boot-files
     boot: [
-      'StoreDefaults', 'bus', 'fetcher', 'StoreStuff', 'axios'
+      'StoreDefaults', 'bus', 'StoreStuff', 'axios'
     ],
 
     // https://v2.quasar.dev/quasar-cli-vite/quasar-config-js#css
@@ -92,6 +92,8 @@ module.exports = configure(function (/* ctx */) {
         '/api': {
           target: process.env.TachideskURL ? process.env.TachideskURL : undefined,
           changeOrigin: true,
+          ws: true,
+          auth: process.env.TachideskAUTH ? process.env.TachideskAUTH : undefined
         }
       },
       port: process.env.PORT ? process.env.PORT : 443,

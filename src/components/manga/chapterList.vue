@@ -596,7 +596,7 @@ export default defineComponent({
       }
     },
     async download(index: number) {
-      await this.$fetch(
+      await this.$api.get(
         `/api/v1/download/${this.$route.params['mangaID']}/chapter/${index}`
       );
     },
@@ -632,21 +632,15 @@ export default defineComponent({
       }
     },
     dl(list: number[]) {
-      const fd = { chapterIds: list };
-      this.$fetch('/api/v1/download/batch', {
-        method: 'POST',
-        body: JSON.stringify(fd)
-      });
+      this.$api.post('/api/v1/download/batch', { chapterIds: list });
     },
     read(list: number[], tf = true, rb: 'isRead' | 'isBookmarked' = 'isRead') {
-      const fd = { chapterIds: list, change: { [rb]: tf } };
-      this.$fetch(
-        `/api/v1/manga/${this.$route.params['mangaID']}/chapter/batch`,
-        {
-          method: 'POST',
-          body: JSON.stringify(fd)
-        }
-      ).then(() => this.getonline());
+      this.$api
+        .post(`/api/v1/manga/${this.$route.params['mangaID']}/chapter/batch`, {
+          chapterIds: list,
+          change: { [rb]: tf }
+        })
+        .then(() => this.getonline());
     }
   },
   watch: {

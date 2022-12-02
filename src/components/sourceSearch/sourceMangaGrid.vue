@@ -66,11 +66,12 @@
 
 <script lang="ts">
 import { defineComponent, ref } from 'vue';
-import { manga, sourcepage } from 'src/components/global/models';
+import { filters, manga, sourcepage } from 'src/components/global/models';
 import MangaCard from 'src/components/sourceSearch/mangaCard.vue';
 import { debounce, QInfiniteScroll } from 'quasar';
 import Display from 'src/components/library/Filters';
 import isItGroup from 'src/components/sourceSearch/Filters/isItGroup.vue';
+import { AxiosResponse } from 'axios';
 
 interface posState {
   position: number;
@@ -111,40 +112,28 @@ export default defineComponent({
       }
       return 0;
     },
-    async reload(num = 1, signal: AbortSignal) {
+    async getlist(url: string) {
+      const sourcepage = this.$api.get(url, {
+        signal: this.controller.signal
+      }) as Promise<AxiosResponse<sourcepage>>;
+      try {
+        return (await sourcepage).data;
+      } catch (error) {
+        return undefined;
+      }
+    },
+    async reload(num = 1) {
       if (this.noinit) {
         if (this.Smitted || this.$route.query['q']) {
-          const sourcepage = <Promise<sourcepage>>(
-            await this.$api.get(
-              `/api/v1/source/${
-                this.$route.params['sourceID']
-              }/search?searchTerm=${
-                this.$route.query['q'] || ''
-              }&pageNum=${num}`,
-              {
-                signal
-              }
-            )
-          ).data;
-          try {
-            return await sourcepage;
-          } catch (error) {
-            return undefined;
-          }
+          return await this.getlist(
+            `/api/v1/source/${
+              this.$route.params['sourceID']
+            }/search?searchTerm=${this.$route.query['q'] || ''}&pageNum=${num}`
+          );
         } else {
-          const sourcepage = <Promise<sourcepage>>(
-            await this.$api.get(
-              `/api/v1/source/${this.$route.params['sourceID']}/${this.$route.params['poplate']}/${num}`,
-              {
-                signal
-              }
-            )
-          ).data;
-          try {
-            return await sourcepage;
-          } catch (error) {
-            return undefined;
-          }
+          return await this.getlist(
+            `/api/v1/source/${this.$route.params['sourceID']}/${this.$route.params['poplate']}/${num}`
+          );
         }
       } else {
         this.noinit = true;
@@ -157,16 +146,14 @@ export default defineComponent({
         return;
       }
     ) {
-      this.reload(index, this.controller.signal).then(
-        (data: sourcepage | undefined) => {
-          if (data != undefined) {
-            this.items.push(...data.mangaList);
-            if (!data.hasNextPage)
-              (this.$refs['infiniteScrol'] as QInfiniteScroll).stop();
-          }
-          done();
+      this.reload(index).then((data: sourcepage | undefined) => {
+        if (data != undefined) {
+          this.items.push(...data.mangaList);
+          if (!data.hasNextPage)
+            (this.$refs['infiniteScrol'] as QInfiniteScroll).stop();
         }
-      );
+        done();
+      });
     },
     resetScroll() {
       this.items = [];
@@ -183,7 +170,7 @@ export default defineComponent({
             reset ? '?reset=true' : ''
           }`
         )
-        .then(({ data }) => {
+        .then(({ data }: AxiosResponse<filters>) => {
           this.filters = data;
           this.resetScroll();
         });

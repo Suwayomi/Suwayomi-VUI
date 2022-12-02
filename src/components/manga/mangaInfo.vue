@@ -121,15 +121,12 @@ export default defineComponent({
     async InLibrary() {
       this.inLib = !this.inLib;
       if (this.inLib) {
-        await this.$fetch(
+        await this.$api.get(
           `/api/v1/manga/${this.$route.params['mangaID']}/library/`
         );
       } else {
-        await this.$fetch(
-          `/api/v1/manga/${this.$route.params['mangaID']}/library/`,
-          {
-            method: 'DELETE'
-          }
+        await this.$api.delete(
+          `/api/v1/manga/${this.$route.params['mangaID']}/library/`
         );
       }
       this.$emit('inlib');

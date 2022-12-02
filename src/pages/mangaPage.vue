@@ -25,6 +25,7 @@ import { defineComponent, ref } from 'vue';
 import { manga } from 'src/components/global/models';
 import mangaInfo from 'src/components/manga/mangaInfo.vue';
 import mangaChapters from 'src/components/manga/chapterList.vue';
+import { AxiosResponse } from 'axios';
 
 export default defineComponent({
   name: 'mangaPage',
@@ -45,11 +46,11 @@ export default defineComponent({
   methods: {
     async getonline(TF = 'false', retry = 3) {
       try {
-        this.manga = <manga>(
-          await this.$fetchJSON(
+        this.manga = (
+          (await this.$api.get(
             `/api/v1/manga/${this.$route.params['mangaID']}/?onlineFetch=${TF}`
-          )
-        );
+          )) as AxiosResponse<manga>
+        ).data;
       } catch (error) {
         if (retry >= 1) await this.getonline(TF, retry - 1);
       }
