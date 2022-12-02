@@ -54,12 +54,9 @@ export default defineComponent({
   },
   methods: {
     savetxt() {
-      const fd = new FormData();
-      fd.append('name', this.edittxt);
-      fd.append('default', this.defaul.toString());
-      this.$fetch(`/api/v1/category/${this.cat.id}`, {
-        method: 'PATCH',
-        body: fd
+      this.$api.patchForm(`/api/v1/category/${this.cat.id}`, {
+        name: this.edittxt,
+        default: this.defaul.toString()
       });
     }
   },

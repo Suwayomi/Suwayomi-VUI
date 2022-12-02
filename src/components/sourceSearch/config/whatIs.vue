@@ -4,7 +4,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at https://mozilla.org/MPL/2.0/. */ -->
- <template>
+<template>
   <q-item
     clickable
     v-ripple
@@ -156,15 +156,14 @@ export default defineComponent({
       } else {
         tmp = (this.val as boolean | string).toString();
       }
-      this.$fetch(
-        `/api/v1/source/${this.$route.params['sourceID']}/preferences`,
-        {
-          method: 'POST',
-          body: JSON.stringify({ position: this.position, value: tmp })
-        }
-      ).then(() => {
-        this.$emit('getPrefs');
-      });
+      this.$api
+        .post(`/api/v1/source/${this.$route.params['sourceID']}/preferences`, {
+          position: this.position,
+          value: tmp
+        })
+        .then(() => {
+          this.$emit('getPrefs');
+        });
     }
   },
   watch: {

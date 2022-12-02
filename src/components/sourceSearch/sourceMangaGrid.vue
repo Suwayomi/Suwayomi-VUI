@@ -9,6 +9,7 @@
     @load="onLoad"
     :offset="$q.screen.height / 2"
     ref="infiniteScrol"
+    class="notOflow"
   >
     <div class="flex">
       <q-intersection v-for="manga in items" :key="manga.id" :style="widt">
@@ -65,11 +66,12 @@
 
 <script lang="ts">
 import { defineComponent, ref } from 'vue';
-import { manga, sourcepage } from 'src/components/global/models';
+import { filters, manga, sourcepage } from 'src/components/global/models';
 import MangaCard from 'src/components/sourceSearch/mangaCard.vue';
 import { debounce, QInfiniteScroll } from 'quasar';
 import Display from 'src/components/library/Filters';
 import isItGroup from 'src/components/sourceSearch/Filters/isItGroup.vue';
+import { AxiosResponse } from 'axios';
 
 interface posState {
   position: number;
@@ -110,34 +112,28 @@ export default defineComponent({
       }
       return 0;
     },
-    async reload(num = 1, signal: AbortSignal) {
+    async getlist(url: string) {
+      const sourcepage = this.$api.get(url, {
+        signal: this.controller.signal
+      }) as Promise<AxiosResponse<sourcepage>>;
+      try {
+        return (await sourcepage).data;
+      } catch (error) {
+        return undefined;
+      }
+    },
+    async reload(num = 1) {
       if (this.noinit) {
         if (this.Smitted || this.$route.query['q']) {
-          const sourcepage = <Promise<sourcepage>>this.$fetchJSON(
+          return await this.getlist(
             `/api/v1/source/${
               this.$route.params['sourceID']
-            }/search?searchTerm=${this.$route.query['q'] || ''}&pageNum=${num}`,
-            {
-              signal
-            }
+            }/search?searchTerm=${this.$route.query['q'] || ''}&pageNum=${num}`
           );
-          try {
-            return await sourcepage;
-          } catch (error) {
-            return undefined;
-          }
         } else {
-          const sourcepage = <Promise<sourcepage>>this.$fetchJSON(
-            `/api/v1/source/${this.$route.params['sourceID']}/${this.$route.params['poplate']}/${num}`,
-            {
-              signal
-            }
+          return await this.getlist(
+            `/api/v1/source/${this.$route.params['sourceID']}/${this.$route.params['poplate']}/${num}`
           );
-          try {
-            return await sourcepage;
-          } catch (error) {
-            return undefined;
-          }
         }
       } else {
         this.noinit = true;
@@ -150,16 +146,14 @@ export default defineComponent({
         return;
       }
     ) {
-      this.reload(index, this.controller.signal).then(
-        (data: sourcepage | undefined) => {
-          if (data != undefined) {
-            this.items.push(...data.mangaList);
-            if (!data.hasNextPage)
-              (this.$refs['infiniteScrol'] as QInfiniteScroll).stop();
-          }
-          done();
+      this.reload(index).then((data: sourcepage | undefined) => {
+        if (data != undefined) {
+          this.items.push(...data.mangaList);
+          if (!data.hasNextPage)
+            (this.$refs['infiniteScrol'] as QInfiniteScroll).stop();
         }
-      );
+        done();
+      });
     },
     resetScroll() {
       this.items = [];
@@ -167,17 +161,19 @@ export default defineComponent({
       this.controller = new AbortController();
       (this.$refs['infiniteScrol'] as QInfiniteScroll).reset();
       (this.$refs['infiniteScrol'] as QInfiniteScroll).resume();
-      // (this.$refs['infiniteScrol'] as QInfiniteScroll).trigger();
+      (this.$refs['infiniteScrol'] as QInfiniteScroll).trigger();
     },
     getFilts(reset = false) {
-      this.$fetchJSON(
-        `/api/v1/source/${this.$route.params['sourceID']}/filters${
-          reset ? '?reset=true' : ''
-        }`
-      ).then((data) => {
-        this.filters = data;
-        this.resetScroll();
-      });
+      this.$api
+        .get(
+          `/api/v1/source/${this.$route.params['sourceID']}/filters${
+            reset ? '?reset=true' : ''
+          }`
+        )
+        .then(({ data }: AxiosResponse<filters>) => {
+          this.filters = data;
+          this.resetScroll();
+        });
     },
     stateChange(state: string | posState[], pos: number) {
       this.stateChanges = this.stateChanges.filter(
@@ -192,16 +188,13 @@ export default defineComponent({
       }
     },
     async submitFilters() {
-      await this.$fetch(
+      await this.$api.post(
         `/api/v1/source/${this.$route.params['sourceID']}/filters`,
-        {
-          method: 'POST',
-          body: JSON.stringify(this.stateChanges)
-        }
+        this.stateChanges
       );
       this.Smitted = true;
       this.stateChanges = [];
-      this.resetScroll();
+      // this.resetScroll();
       this.getFilts();
     }
   },

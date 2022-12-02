@@ -4,7 +4,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at https://mozilla.org/MPL/2.0/. */ -->
- <template>
+<template>
   <q-page :style-fn="myTweak">
     <TabPanel active :tabs="tabs"></TabPanel>
     <MangaGrid v-if="!failedFetch"> </MangaGrid>
@@ -40,14 +40,17 @@ import TabPanel from 'src/components/library/TabPanel.vue';
 import { defineComponent, ref } from 'vue';
 import { cat } from 'src/components/global/models';
 import MangaGrid from 'src/components/library/MangaGrid.vue';
+import { AxiosResponse } from 'axios';
 
 export default defineComponent({
   name: 'libraryPage',
   components: { TabPanel, MangaGrid },
   created: async function () {
     try {
-      const jsn: cat[] = await this.$fetchJSON('/api/v1/category');
-      this.tabs = jsn.map((cat) => {
+      const jsn = (await this.$api.get('/api/v1/category')) as AxiosResponse<
+        cat[]
+      >;
+      this.tabs = jsn.data.map((cat) => {
         return {
           tabname: cat.name,
           tabID: cat.id

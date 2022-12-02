@@ -39,6 +39,7 @@ import PQueue from 'p-queue';
 import mangaCard from 'src/components/sourceSearch/mangaCard.vue';
 import { debounce } from 'quasar';
 import Display from 'src/components/library/Filters';
+import { AxiosResponse } from 'axios';
 
 export default defineComponent({
   components: { mangaCard },
@@ -66,19 +67,21 @@ export default defineComponent({
           this.queue.add(
             async ({ signal }) => {
               if (signal) {
-                const request = <Promise<sourcepage>>this.$fetchJSON(
-                  `/api/v1/source/${source.id}/search?searchTerm=${
-                    this.$route.query['q'] || ''
-                  }&pageNum=1`,
-                  {
-                    signal
-                  }
+                const request = <Promise<AxiosResponse<sourcepage>>>(
+                  this.$api.get(
+                    `/api/v1/source/${source.id}/search?searchTerm=${
+                      this.$route.query['q'] || ''
+                    }&pageNum=1`,
+                    {
+                      signal
+                    }
+                  )
                 );
 
                 try {
                   return {
                     source: source,
-                    mangas: (await request).mangaList
+                    mangas: (await request).data.mangaList
                   };
                 } catch (error) {
                   if (!(error instanceof DOMException)) {
@@ -105,10 +108,12 @@ export default defineComponent({
   },
   created: function () {
     this.calcWidth = debounce(this.calcWidth, 500);
-    this.$fetchJSON('/api/v1/source/list').then((sources) => {
-      this.sources = sources;
-      this.doSearch();
-    });
+    this.$api
+      .get('/api/v1/source/list')
+      .then(({ data: sources }: AxiosResponse<source[]>) => {
+        this.sources = sources;
+        this.doSearch();
+      });
     this.queue.on(
       'completed',
       (result: { source: source; mangas: manga[] } | undefined) => {

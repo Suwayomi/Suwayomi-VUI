@@ -5,7 +5,7 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at https://mozilla.org/MPL/2.0/. */ -->
 <template>
-  <q-page :style-fn="myTweak">
+  <q-page :style-fn="myTweak" class="notOflow">
     <q-infinite-scroll
       @load="onLoad"
       :offset="$q.screen.height"
@@ -42,6 +42,7 @@ import { QInfiniteScroll } from 'quasar';
 import { chapter, manga } from 'src/components/global/models';
 import { defineComponent, ref } from 'vue';
 import UpdateCard from 'src/components/updates/updatecard.vue';
+import { AxiosResponse } from 'axios';
 
 interface updatesreq {
   hasNextPage: boolean;
@@ -58,7 +59,7 @@ export default defineComponent({
       };
     },
     async onLoad(index: number, done: () => void) {
-      const update: updatesreq = await this.$fetchJSON(
+      const { data: update }: AxiosResponse<updatesreq> = await this.$api.get(
         `/api/v1/update/recentChapters/${index}`
       );
       if (!update.hasNextPage)
@@ -73,3 +74,8 @@ export default defineComponent({
   }
 });
 </script>
+
+<style lang="sass" scoped>
+.OFlow.notOflow
+  overflow-y: unset
+</style>

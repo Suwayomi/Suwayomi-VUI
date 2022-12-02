@@ -82,13 +82,13 @@ export default defineComponent({
   methods: {
     toggleplay() {
       if (!this.PlayPause) {
-        this.$fetch('/api/v1/downloads/start');
+        this.$api.get('/api/v1/downloads/start');
       } else {
-        this.$fetch('/api/v1/downloads/stop');
+        this.$api.get('/api/v1/downloads/stop');
       }
     },
     clear() {
-      this.$fetch('/api/v1/downloads/clear');
+      this.$api.get('/api/v1/downloads/clear');
     },
     dofilter() {
       this.$bus.emit('DLFilter', this.filter);

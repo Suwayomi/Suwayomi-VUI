@@ -30,7 +30,7 @@ module.exports = configure(function (/* ctx */) {
     // --> boot files are part of "main.js"
     // https://v2.quasar.dev/quasar-cli-vite/boot-files
     boot: [
-      'StoreDefaults', 'bus', 'fetcher', 'StoreStuff'
+      'StoreDefaults', 'bus', 'StoreStuff', 'axios'
     ],
 
     // https://v2.quasar.dev/quasar-cli-vite/quasar-config-js#css
@@ -68,7 +68,7 @@ module.exports = configure(function (/* ctx */) {
 
       // rebuildCache: true, // rebuilds Vite/linter/etc cache on startup
 
-      publicPath: process.env.PUBPATH ? '/Tachidesk-VUI/' : undefined,
+      publicPath: process.env.PUBPATH ? process.env.PUBPATH : undefined,
       // analyze: true,
       // env: {},
       // rawDefine: {}
@@ -88,8 +88,16 @@ module.exports = configure(function (/* ctx */) {
 
     // Full list of options: https://v2.quasar.dev/quasar-cli-vite/quasar-config-js#devServer
     devServer: {
-      // https: true
-      port: 4443,
+      proxy: {
+        '/api': {
+          target: process.env.TachideskURL ? process.env.TachideskURL : undefined,
+          changeOrigin: true,
+          ws: true,
+          auth: process.env.TachideskAUTH ? process.env.TachideskAUTH : undefined
+        }
+      },
+      port: process.env.PORT ? process.env.PORT : 443,
+      host: '0.0.0.0',
       open: false // opens browser window automatically
     },
 
