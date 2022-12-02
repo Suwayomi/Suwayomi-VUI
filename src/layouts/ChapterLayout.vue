@@ -21,28 +21,28 @@
           dense
           flat
           icon="minimize"
-          @click="minimize"
           class="q-electron-drag--exception"
+          @click="minimize"
         />
         <q-btn
           dense
           flat
           icon="crop_square"
-          @click="toggleMaximize"
           class="q-electron-drag--exception"
+          @click="toggleMaximize"
         />
         <q-btn
           dense
           flat
           icon="close"
-          @click="closeApp"
           class="q-electron-drag--exception"
+          @click="closeApp"
         />
       </q-bar>
     </q-header>
     <q-drawer
-      overlay
       v-model="leftDrawerOpen"
+      overlay
       elevated
       class="fixed"
       :breakpoint="0"
@@ -61,14 +61,14 @@
     </q-drawer>
     <q-page-container>
       <router-view
-        @setTitle="setTitle"
         :class="$q.dark.isActive ? `bg-dark-page` : `bg-light-page`"
-        @openMenu="leftDrawerOpen = !leftDrawerOpen"
+        @set-title="setTitle"
+        @open-menu="leftDrawerOpen = !leftDrawerOpen"
       />
       <q-page-sticky
+        v-if="!leftDrawerOpen"
         position="top-left"
         :offset="[18, 18]"
-        v-if="!leftDrawerOpen"
         class="fabb"
       >
         <q-btn
@@ -86,14 +86,33 @@
 import { defineComponent, ref } from 'vue';
 import {
   RouteLocationNormalized,
-  RouteLocationNormalizedLoaded
+  RouteLocationNormalizedLoaded,
 } from 'vue-router';
 import leftDrawerVue from 'src/components/reader/leftDrawerCont.vue';
 import { useMeta } from 'quasar';
 
 export default defineComponent({
-  name: 'chapterLayout',
+  name: 'ChapterLayout',
   components: { leftDrawerVue },
+  setup() {
+    const title = ref('');
+    useMeta(() => {
+      return {
+        title: title.value,
+        titleTemplate: (title) => `${title} - Reading - Tachidesk Quasar `,
+      };
+    });
+    return {
+      leftDrawerOpen: ref(false),
+      title,
+      FS: ref(false),
+    };
+  },
+  computed: {
+    scrollbarTheme(): string {
+      return this.$q.dark.isActive ? 'darkSB' : 'lightSB';
+    },
+  },
   watch: {
     scrollbarTheme(neww, old) {
       document.body.classList.remove(old);
@@ -107,12 +126,7 @@ export default defineComponent({
       ) {
         this.$router.go(0);
       }
-    }
-  },
-  computed: {
-    scrollbarTheme(): string {
-      return this.$q.dark.isActive ? 'darkSB' : 'lightSB';
-    }
+    },
   },
   mounted() {
     document.body.classList.add(this.scrollbarTheme);
@@ -149,22 +163,8 @@ export default defineComponent({
     },
     isFS(event: CustomEvent) {
       this.FS = event.detail;
-    }
+    },
   },
-  setup() {
-    const title = ref('');
-    useMeta(() => {
-      return {
-        title: title.value,
-        titleTemplate: (title) => `${title} - Reading - Tachidesk Quasar `
-      };
-    });
-    return {
-      leftDrawerOpen: ref(false),
-      title,
-      FS: ref(false)
-    };
-  }
 });
 </script>
 

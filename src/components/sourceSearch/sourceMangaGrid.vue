@@ -6,17 +6,17 @@
  * file, You can obtain one at https://mozilla.org/MPL/2.0/. */ -->
 <template>
   <q-infinite-scroll
-    @load="onLoad"
-    :offset="$q.screen.height / 2"
     ref="infiniteScrol"
+    :offset="$q.screen.height / 2"
     class="notOflow"
+    @load="onLoad"
   >
     <div class="flex">
       <q-intersection v-for="manga in items" :key="manga.id" :style="widt">
-        <MangaCard :Display="Displ" :manga="manga"></MangaCard>
+        <MangaCard :display="Displ" :manga="manga"></MangaCard>
       </q-intersection>
     </div>
-    <template v-slot:loading>
+    <template #loading>
       <div class="row justify-center q-my-md">
         <q-spinner-dots color="primary" size="40px" />
       </div>
@@ -36,27 +36,27 @@
     <q-card style="width: 500px">
       <q-card-actions align="between">
         <q-btn
+          v-close-popup
           flat
           label="Reset"
           color="blue"
-          v-close-popup
           @click="getFilts(true)"
         />
         <q-btn
+          v-close-popup
           color="blue"
           class="text-black"
           label="Submit"
-          v-close-popup
           @click="submitFilters"
         />
       </q-card-actions>
       <q-list>
         <isItGroup
-          @stateChange="stateChange"
           v-for="(filt, index) in filters"
+          :key="index"
           :filter="filt"
           :position="index"
-          :key="index"
+          @state-change="stateChange"
         >
         </isItGroup>
       </q-list>
@@ -79,8 +79,24 @@ interface posState {
 }
 
 export default defineComponent({
-  name: 'mangaSourceGrid',
+  name: 'MangaSourceGrid',
   components: { MangaCard, isItGroup },
+  setup() {
+    const controller = ref(new AbortController());
+    return {
+      devider: ref<number>(0),
+      mangas: ref(<manga[]>[]),
+      clwidth: ref<number>(0),
+      display: ref(Display()),
+      filters: ref(<unknown>[]),
+      items: ref(<manga[]>[]),
+      filterDial: ref(false),
+      stateChanges: ref(<{ position: number; state: string }[]>[]),
+      Smitted: ref(false),
+      noinit: ref(false),
+      controller,
+    };
+  },
   computed: {
     Displ() {
       if (this.display.Display == null) {
@@ -94,7 +110,25 @@ export default defineComponent({
       return this.Displ == 'list'
         ? 'width:100%; height: 109px;'
         : `width: calc(100% / ${this.devider}); aspect-ratio: 225/350;transition: width 0.5s ease-out;`;
-    }
+    },
+  },
+  watch: {
+    '$route.query.q': function () {
+      this.resetScroll();
+    },
+  },
+  created: async function () {
+    this.calcWidth = debounce(this.calcWidth, 500);
+  },
+  mounted: function () {
+    this.calcWidth();
+    this.$nextTick(() => {
+      window.addEventListener('resize', this.calcWidth);
+    });
+    this.getFilts(true);
+  },
+  beforeUnmount() {
+    window.removeEventListener('resize', this.calcWidth);
   },
   methods: {
     calcWidth() {
@@ -114,7 +148,7 @@ export default defineComponent({
     },
     async getlist(url: string) {
       const sourcepage = this.$api.get(url, {
-        signal: this.controller.signal
+        signal: this.controller.signal,
       }) as Promise<AxiosResponse<sourcepage>>;
       try {
         return (await sourcepage).data;
@@ -196,41 +230,7 @@ export default defineComponent({
       this.stateChanges = [];
       // this.resetScroll();
       this.getFilts();
-    }
+    },
   },
-  created: async function () {
-    this.calcWidth = debounce(this.calcWidth, 500);
-  },
-  mounted: function () {
-    this.calcWidth();
-    this.$nextTick(() => {
-      window.addEventListener('resize', this.calcWidth);
-    });
-    this.getFilts(true);
-  },
-  beforeUnmount() {
-    window.removeEventListener('resize', this.calcWidth);
-  },
-  watch: {
-    '$route.query.q': function () {
-      this.resetScroll();
-    }
-  },
-  setup() {
-    const controller = ref(new AbortController());
-    return {
-      devider: ref<number>(0),
-      mangas: ref(<manga[]>[]),
-      clwidth: ref<number>(0),
-      display: ref(Display()),
-      filters: ref(<unknown>[]),
-      items: ref(<manga[]>[]),
-      filterDial: ref(false),
-      stateChanges: ref(<{ position: number; state: string }[]>[]),
-      Smitted: ref(false),
-      noinit: ref(false),
-      controller
-    };
-  }
 });
 </script>

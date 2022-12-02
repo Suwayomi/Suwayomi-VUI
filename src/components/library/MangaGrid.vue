@@ -5,14 +5,14 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at https://mozilla.org/MPL/2.0/. */ -->
 <template>
-  <div class="flex" ref="MangaGrid">
+  <div ref="MangaGrid" class="flex">
     <q-intersection
       v-for="manga in dosrt"
       :key="manga.id"
       :style="widt"
       transition="fade"
     >
-      <MangaCard :Display="Displ" :manga="manga"></MangaCard>
+      <MangaCard :display="Displ" :manga="manga"></MangaCard>
     </q-intersection>
   </div>
   <q-inner-loading
@@ -41,6 +41,18 @@ import { debounce } from 'quasar';
 export default defineComponent({
   name: 'MangaGrid',
   components: { MangaCard },
+  setup() {
+    const filters = ref(Filters());
+    const devider = ref<number>(0);
+    const clwidth = ref<number>(0);
+    const mangas = ref(<manga[]>[]);
+    return {
+      devider,
+      mangas,
+      filters,
+      clwidth,
+    };
+  },
   computed: {
     doFilt(): manga[] {
       let mangas = this.mangas;
@@ -103,7 +115,25 @@ export default defineComponent({
       return this.Displ == 'list'
         ? 'width:100%; height: 109px;'
         : `width: calc(100% / ${this.devider}); aspect-ratio: 225/350;transition: width 0.5s ease-out;`;
-    }
+    },
+  },
+  watch: {
+    '$route.query.tab': async function (val: number | undefined) {
+      this.reload(val);
+    },
+  },
+  created: async function () {
+    this.calcWidth = debounce(this.calcWidth, 500);
+    this.reload(this.$route.query['tab'] as number | undefined);
+  },
+  mounted: function () {
+    this.calcWidth();
+    this.$nextTick(() => {
+      window.addEventListener('resize', this.calcWidth);
+    });
+  },
+  beforeUnmount() {
+    window.removeEventListener('resize', this.calcWidth);
   },
   methods: {
     calcWidth() {
@@ -129,37 +159,7 @@ export default defineComponent({
             .data
         );
       }
-    }
+    },
   },
-  created: async function () {
-    this.calcWidth = debounce(this.calcWidth, 500);
-    this.reload(this.$route.query['tab'] as number | undefined);
-  },
-  watch: {
-    '$route.query.tab': async function (val: number | undefined) {
-      this.reload(val);
-    }
-  },
-  mounted: function () {
-    this.calcWidth();
-    this.$nextTick(() => {
-      window.addEventListener('resize', this.calcWidth);
-    });
-  },
-  beforeUnmount() {
-    window.removeEventListener('resize', this.calcWidth);
-  },
-  setup() {
-    const filters = ref(Filters());
-    const devider = ref<number>(0);
-    const clwidth = ref<number>(0);
-    const mangas = ref(<manga[]>[]);
-    return {
-      devider,
-      mangas,
-      filters,
-      clwidth
-    };
-  }
 });
 </script>

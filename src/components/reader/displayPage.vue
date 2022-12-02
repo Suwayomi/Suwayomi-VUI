@@ -7,24 +7,24 @@
 <template>
   <div
     class="column items-center justify-center"
-    :class="vue_Scale && !isBook ? `` : `displayPage`"
+    :class="vueScale && !isBook ? `` : `displayPage`"
     :style="imgcontstyle"
   >
     <q-img
       style="max-width: -webkit-fill-available"
       :style="imgstyle"
       loading="lazy"
-      :class="vue_WT ? (isBook2 ? `q-mx-md` : `q-ma-md`) : ``"
+      :class="vueWT ? (isBook2 ? `q-mx-md` : `q-ma-md`) : ``"
       :src="imgdata"
       :fit="imgfit"
-      :imgClass="imgClass"
-      :imgStyle="imgimgstyle"
+      :img-class="imgClass"
+      :img-style="imgimgstyle"
     >
     </q-img>
     <q-card
+      v-if="!imgdata"
       flat
       style="height: 100vh; background-color: transparent; width: 100%"
-      v-if="!imgdata"
     >
       <q-inner-loading
         :showing="!imgdata"
@@ -32,7 +32,7 @@
         class="bg-transparent"
       >
       </q-inner-loading>
-    </q-card>
+    <q-cardd>
   </div>
 </template>
 
@@ -40,49 +40,49 @@
 import { defineComponent, PropType, ref } from 'vue';
 
 export default defineComponent({
-  name: 'displayPage',
+  name: 'DisplayPage',
   props: {
     pageNum: {
       type: Number as PropType<number>,
-      required: true
+      required: true,
     },
     chapterID: {
       type: Number as PropType<number>,
-      required: true
+      required: true,
     },
-    vue_RM: {
+    vueRM: {
       type: String as PropType<string>,
-      default: 'RTL'
+      default: 'RTL',
     },
-    vue_WT: {
+    vueWT: {
       type: Boolean as PropType<boolean>,
-      default: false
+      default: false,
     },
-    vue_Scale: {
+    vueScale: {
       type: Boolean as PropType<boolean>,
-      default: false
+      default: false,
     },
-    vue_Offset: {
+    vueOffset: {
       type: Boolean as PropType<boolean>,
-      default: false
+      default: false,
     },
     imdata: {
       type: Promise as PropType<Promise<string>>,
-      default: undefined
-    }
+      default: undefined,
+    },
   },
-  mounted: function () {
-    this.getImg();
+  setup() {
+    return { imgdata: ref('') };
   },
   computed: {
     isBook(): boolean {
-      return ['RTL', 'LTR', 'SinglePage'].includes(this.vue_RM);
+      return ['RTL', 'LTR', 'SinglePage'].includes(this.vueRM);
     },
     isBook2(): boolean {
-      return ['RTL', 'LTR'].includes(this.vue_RM);
+      return ['RTL', 'LTR'].includes(this.vueRM);
     },
     imgstyle(): string {
-      if (this.vue_Scale) {
+      if (this.vueScale) {
         if (this.isBook) {
           if (this.isBook2) {
             return 'width: fit-content;';
@@ -94,7 +94,7 @@ export default defineComponent({
       return 'width: fit-content;max-width:100%';
     },
     imgClass(): string {
-      if (this.vue_Scale) {
+      if (this.vueScale) {
         if (this.isBook) {
           if (this.isBook2) {
             return 'test';
@@ -106,7 +106,7 @@ export default defineComponent({
       return 'test';
     },
     imgfit(): 'fill' | 'cover' | 'contain' | 'none' | 'scale-down' | undefined {
-      if (this.vue_Scale) {
+      if (this.vueScale) {
         if (this.isBook) {
           if (this.isBook2) {
             return 'scale-down';
@@ -118,7 +118,7 @@ export default defineComponent({
       return 'scale-down';
     },
     imgimgstyle(): Partial<CSSStyleDeclaration> {
-      if (this.vue_Scale) {
+      if (this.vueScale) {
         if (this.isBook) {
           if (this.isBook2) {
             return { height: '100%', width: 'fit-content' };
@@ -129,21 +129,21 @@ export default defineComponent({
       }
       return {
         width: 'fit-content',
-        maxWidth: '100%'
+        maxWidth: '100%',
       };
     },
     imgcontstyle(): string {
-      if (this.vue_Scale) {
+      if (this.vueScale) {
         if (this.isBook) {
           if (this.isBook2) {
             let tmp = 1;
             if (this.pageNum % 2) {
               tmp *= -1;
             }
-            if (this.vue_RM == 'RTL') {
+            if (this.vueRM == 'RTL') {
               tmp *= -1;
             }
-            if (this.vue_Offset) {
+            if (this.vueOffset) {
               tmp *= -1;
             }
             return (
@@ -158,32 +158,32 @@ export default defineComponent({
       if (this.isBook2) {
         const es =
           this.pageNum % 2
-            ? this.vue_RM == 'RTL'
+            ? this.vueRM == 'RTL'
               ? 'end'
               : 'start'
-            : this.vue_RM == 'RTL'
+            : this.vueRM == 'RTL'
             ? 'start'
             : 'end';
         return 'width:50%;align-items:' + es;
       }
       return 'max-width:100%';
-    }
+    },
   },
   watch: {
     pageNum() {
       this.getImg();
-    }
+    },
+  },
+  mounted: function () {
+    this.getImg();
   },
   methods: {
     getImg(): void {
       this.imdata?.then((value: string) => {
         this.imgdata = value;
       });
-    }
+    },
   },
-  setup() {
-    return { imgdata: ref('') };
-  }
 });
 </script>
 

@@ -9,7 +9,7 @@ import {
   createMemoryHistory,
   createRouter,
   createWebHashHistory,
-  createWebHistory
+  createWebHistory,
 } from 'vue-router';
 
 import routes from './routes';
@@ -33,8 +33,8 @@ export default route(function (/* { store, ssrContext } */) {
         SERVER: '',
         NODE_ENV: '',
         VUE_ROUTER_MODE: 'hash',
-        VUE_ROUTER_BASE: '/'
-      }
+        VUE_ROUTER_BASE: '/',
+      },
     };
   }
 
@@ -55,7 +55,7 @@ export default route(function (/* { store, ssrContext } */) {
     // quasar.conf.js -> build -> vueRouterMode
     // quasar.conf.js -> build -> publicPath
 
-    history: createHistory(process.env.VUE_ROUTER_BASE)
+    history: createHistory(process.env.VUE_ROUTER_BASE),
   });
 
   return Router;

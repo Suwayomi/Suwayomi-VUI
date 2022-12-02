@@ -74,7 +74,7 @@ export function chapterMeta(mangaID: number) {
   function setFormData(key: string, data: string) {
     api.patchForm(`/api/v1/manga/${mangaID}/meta`, {
       key: key,
-      value: data
+      value: data,
     });
   }
 
@@ -95,6 +95,6 @@ export function chapterMeta(mangaID: number) {
     toggPath,
     setWT,
     setScale,
-    setOffset
+    setOffset,
   };
 }

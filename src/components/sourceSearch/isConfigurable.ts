@@ -15,6 +15,6 @@ export function isConfig() {
   }
   return {
     setConfigurable,
-    isConfigurable
+    isConfigurable,
   };
 }

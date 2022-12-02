@@ -75,6 +75,6 @@ export default function useInBar() {
     leftToRead,
     alphabetical,
     ByID,
-    Display
+    Display,
   };
 }

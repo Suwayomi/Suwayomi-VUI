@@ -23,14 +23,20 @@ import { AxiosResponse } from 'axios';
 export default defineComponent({
   name: 'ScourceSearchPage',
   components: {
-    sourceGrid
+    sourceGrid,
+  },
+  emits: ['set-title'],
+  setup(_props, { emit }) {
+    emit('set-title', 'Source Search Page');
+
+    return { isConfi: isConfig() };
   },
   created: async function () {
     try {
       const { data: jsn } = (await this.$api.get(
         `/api/v1/source/${this.$route.params['sourceID']}`
       )) as AxiosResponse<source>;
-      this.$emit('setTitle', jsn.displayName);
+      this.$emit('set-title', jsn.displayName);
       this.isConfi.setConfigurable(jsn.isConfigurable);
     } catch (e) {
       console.error(e);
@@ -39,15 +45,10 @@ export default defineComponent({
   methods: {
     myTweak(offset: number) {
       return {
-        height: offset ? `calc(100vh - ${offset}px)` : '100vh'
+        height: offset ? `calc(100vh - ${offset}px)` : '100vh',
       };
-    }
+    },
   },
-  setup(_props, { emit }) {
-    emit('setTitle', 'Source Search Page');
-
-    return { isConfi: isConfig() };
-  }
 });
 </script>
 

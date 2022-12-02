@@ -11,7 +11,7 @@
       flat
       class="my-card"
       :class="!($q.screen.sm || $q.screen.xs) ? `q-ma-sm` : `q-ma-xs`"
-      :style="Display == `list` ? `` : `background: transparent`"
+      :style="display == `list` ? `` : `background: transparent`"
     >
       <router-link
         :to="`/manga/` + manga.id"
@@ -20,7 +20,7 @@
         :class="$q.dark.isActive ? `light` : `dark`"
       >
         <q-img
-          v-if="Display != `list`"
+          v-if="display != `list`"
           :src="imgdata"
           loading="lazy"
           spinner-color="white"
@@ -37,16 +37,16 @@
             style="padding: 0"
           >
             <q-badge
-              color="blue"
               v-if="manga.inLibrary"
+              color="blue"
               style="width: min-content; padding: 5px"
             >
               In Library
             </q-badge>
           </div>
           <div
+            v-if="display == `compact`"
             class="absolute-bottom text-subtitle1 text-center"
-            v-if="Display == `compact`"
             :title="manga.title"
             style="
               padding: 0;
@@ -64,7 +64,7 @@
         <!-- list display mode -->
         <div class="row items-center col-grow no-wrap">
           <q-img
-            v-if="Display == `list`"
+            v-if="display == `list`"
             :src="imgdata"
             loading="lazy"
             spinner-color="white"
@@ -76,8 +76,8 @@
             </q-inner-loading>
           </q-img>
           <div
-            :class="listdivClass"
             v-if="Display != `compact`"
+            :class="listdivClass"
             :title="manga.title"
             style="
               padding: 0;
@@ -93,9 +93,9 @@
             {{ manga.title }}
           </div>
           <div
+            v-if="manga.inLibrary && display == `list`"
             class="justify-end flex items-end col-grow"
             :class="!($q.screen.sm || $q.screen.xs) ? `q-mr-lg` : `q-mr-xs`"
-            v-if="manga.inLibrary && Display == `list`"
           >
             <q-badge color="blue" style="width: min-content; padding: 5px">
               In Library
@@ -118,19 +118,24 @@ export default defineComponent({
   props: {
     manga: {
       type: Object as PropType<manga>,
-      default: () => Object
+      default: () => Object,
     },
-    Display: {
+    display: {
       type: String as PropType<'compact' | 'comfort' | 'list'>,
-      default: 'compact'
-    }
+      default: 'compact',
+    },
+  },
+  setup() {
+    const useCache = ref(`${storeGet('useCache', true)}`);
+    const imgdata = ref('');
+    return { useCache, imgdata };
   },
   computed: {
     listdivClass(): string {
-      return this.Display == 'list'
+      return this.display == 'list'
         ? 'text-left q-ml-md text-h5 col-shrink'
         : 'text-center text-subtitle1';
-    }
+    },
   },
   mounted: function () {
     getImgBlob(this.manga.thumbnailUrl + '?useCache=' + this.useCache).then(
@@ -139,11 +144,6 @@ export default defineComponent({
       }
     );
   },
-  setup() {
-    const useCache = ref(`${storeGet('useCache', true)}`);
-    const imgdata = ref('');
-    return { useCache, imgdata };
-  }
 });
 </script>
 

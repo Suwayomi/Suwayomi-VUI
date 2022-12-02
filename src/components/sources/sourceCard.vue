@@ -40,20 +40,20 @@
       </div>
       <div class="flex items-center">
         <q-btn
+          v-if="source.supportsLatest"
           class="q-ma-sm"
           outline
           color="blue"
           label="latest"
           :to="`/sources/${source.id}/latest/`"
-          v-if="source.supportsLatest"
         >
         </q-btn>
         <q-btn
+          v-if="!$q.screen.xs"
           class="q-ma-sm"
           outline
           color="blue"
           label="browse"
-          v-if="!$q.screen.xs"
           :to="`/sources/${source.id}/popular/`"
         >
         </q-btn>
@@ -70,14 +70,28 @@ import { getImgBlob } from '../global/usefull';
 import { storeGet } from 'src/boot/StoreStuff';
 
 export default defineComponent({
-  name: 'sourceCard',
+  name: 'SourceCard',
   props: {
     source: {
       type: Object as PropType<source>,
-      required: true
-    }
+      required: true,
+    },
   },
   emits: ['reload'],
+  setup() {
+    const useCache = ref(`${storeGet('useCache', true)}`);
+    const imgdata = ref('');
+    return { useCache, imgdata };
+  },
+  watch: {
+    'source.iconUrl'() {
+      this.imgdata = '';
+      this.getSetImg();
+    },
+  },
+  mounted: function () {
+    this.getSetImg();
+  },
   methods: {
     capitalizeFirstLetter(string: string): string {
       return string.charAt(0).toUpperCase() + string.slice(1);
@@ -89,21 +103,7 @@ export default defineComponent({
           this.imgdata = value;
         }
       );
-    }
+    },
   },
-  mounted: function () {
-    this.getSetImg();
-  },
-  watch: {
-    'source.iconUrl'() {
-      this.imgdata = '';
-      this.getSetImg();
-    }
-  },
-  setup() {
-    const useCache = ref(`${storeGet('useCache', true)}`);
-    const imgdata = ref('');
-    return { useCache, imgdata };
-  }
 });
 </script>

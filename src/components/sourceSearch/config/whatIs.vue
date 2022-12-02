@@ -6,35 +6,35 @@
  * file, You can obtain one at https://mozilla.org/MPL/2.0/. */ -->
 <template>
   <q-item
-    clickable
-    v-ripple
-    @click="val = !val"
-    class="row justify-between"
     v-if="isSwitchPreferenceCompat(preference)"
+    v-ripple
+    clickable
+    class="row justify-between"
+    @click="val = !val"
   >
     <q-item-section>
       <q-item-label>{{ preference.props.title }}</q-item-label>
       <q-item-label caption>{{ preference.props.summary }}</q-item-label>
     </q-item-section>
-    <q-toggle color="blue" v-model="val" />
+    <q-toggle v-model="val" color="blue" />
   </q-item>
   <q-item
     v-if="isCheckBoxPreference(preference)"
-    clickable
     v-ripple
-    @click="val = !val"
+    clickable
     class="row justify-between"
+    @click="val = !val"
   >
     <q-item-section>
       <q-item-label>{{ preference.props.title }}</q-item-label>
       <q-item-label caption>{{ preference.props.summary }}</q-item-label>
     </q-item-section>
-    <q-checkbox color="blue" v-model="val"
+    <q-checkbox v-model="val" color="blue"
   /></q-item>
   <q-item
     v-if="isMultiSelectListPreference(preference)"
-    clickable
     v-ripple
+    clickable
     @click="dialog = true"
   >
     <q-item-section>
@@ -46,8 +46,8 @@
         <q-list>
           <div class="text-h5">{{ preference.props.title }}</div>
           <q-item
-            :key="index"
             v-for="(selec, index) in preference.props.entries"
+            :key="index"
           >
             <q-checkbox
               v-model="val"
@@ -62,8 +62,8 @@
   </q-item>
   <q-item
     v-if="isEditTextPreference(preference)"
-    clickable
     v-ripple
+    clickable
     @click="dialog = true"
   >
     <q-item-section>
@@ -72,13 +72,13 @@
     </q-item-section>
     <q-dialog v-model="dialog">
       <q-card class="q-pa-md">
-        <q-input v-if="typeof val == 'string'" outlined v-model="val" />
+        <q-input v-if="typeof val == 'string'" v-model="val" outlined />
         <q-card-actions align="right">
           <q-btn
+            v-close-popup
             flat
             label="OK"
             color="primary"
-            v-close-popup
             @click="saveText"
           />
         </q-card-actions>
@@ -87,8 +87,8 @@
   </q-item>
   <q-item
     v-if="isListPreference(preference)"
-    clickable
     v-ripple
+    clickable
     @click="dialog = true"
   >
     <q-item-section>
@@ -107,8 +107,8 @@
         <q-list>
           <div class="text-h5">{{ preference.props.title }}</div>
           <q-item
-            :key="index"
             v-for="(selec, index) in preference.props.entries"
+            :key="index"
           >
             <q-radio
               v-if="typeof val == 'string'"
@@ -131,48 +131,23 @@ import {
   isListPreference,
   isMultiSelectListPreference,
   isSwitchPreferenceCompat,
-  preferences
+  preferences,
 } from 'src/components/global/models';
 import { defineComponent, PropType, ref } from 'vue';
 
 export default defineComponent({
-  name: 'whatIs',
+  name: 'WhatIs',
   props: {
     preference: {
       type: Object as PropType<preferences>,
-      required: true
+      required: true,
     },
     position: {
       type: Number as PropType<number>,
-      required: true
-    }
+      required: true,
+    },
   },
-  emits: ['getPrefs'],
-  methods: {
-    saveText() {
-      let tmp: string;
-      if (typeof this.val == 'object') {
-        tmp = JSON.stringify(this.val);
-      } else {
-        tmp = (this.val as boolean | string).toString();
-      }
-      this.$api
-        .post(`/api/v1/source/${this.$route.params['sourceID']}/preferences`, {
-          position: this.position,
-          value: tmp
-        })
-        .then(() => {
-          this.$emit('getPrefs');
-        });
-    }
-  },
-  watch: {
-    val() {
-      if (!this.isEditTextPreference(this.preference)) {
-        this.saveText();
-      }
-    }
-  },
+  emits: ['get-prefs'],
   setup(props) {
     const dialog = ref(<boolean>false);
     let val: unknown;
@@ -194,8 +169,33 @@ export default defineComponent({
       isEditTextPreference,
       isMultiSelectListPreference,
       isSwitchPreferenceCompat,
-      isListPreference
+      isListPreference,
     };
-  }
+  },
+  watch: {
+    val() {
+      if (!this.isEditTextPreference(this.preference)) {
+        this.saveText();
+      }
+    },
+  },
+  methods: {
+    saveText() {
+      let tmp: string;
+      if (typeof this.val == 'object') {
+        tmp = JSON.stringify(this.val);
+      } else {
+        tmp = (this.val as boolean | string).toString();
+      }
+      this.$api
+        .post(`/api/v1/source/${this.$route.params['sourceID']}/preferences`, {
+          position: this.position,
+          value: tmp,
+        })
+        .then(() => {
+          this.$emit('get-prefs');
+        });
+    },
+  },
 });
 </script>

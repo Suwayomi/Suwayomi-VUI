@@ -40,17 +40,17 @@
         >
           {{ manga.title }}
         </h3>
-        <div class="text-h5 q-my-xs" v-if="manga.author">
+        <div v-if="manga.author" class="text-h5 q-my-xs">
           Author: <span class="text-subtitle1">{{ manga.author }}</span>
         </div>
-        <div class="text-h5 q-my-xs" v-if="manga.artist">
+        <div v-if="manga.artist" class="text-h5 q-my-xs">
           Artist:
           <span class="text-subtitle1">{{ manga.artist }}</span>
         </div>
-        <div class="text-h5 q-my-xs" v-if="manga.status">
+        <div v-if="manga.status" class="text-h5 q-my-xs">
           Status: <span class="text-subtitle1">{{ manga.status }}</span>
         </div>
-        <div class="text-h5 q-my-xs" v-if="manga.source?.displayName">
+        <div v-if="manga.source?.displayName" class="text-h5 q-my-xs">
           Source:
           <span class="text-subtitle1">{{ manga.source?.displayName }}</span>
         </div>
@@ -92,15 +92,25 @@ import { getImgBlob } from '../global/usefull';
 import { storeGet } from 'src/boot/StoreStuff';
 
 export default defineComponent({
-  name: 'mangaInfo',
+  name: 'MangaInfo',
   props: {
     manga: {
-      type: Object as PropType<manga>
+      type: Object as PropType<manga>,
+      default: Object,
     },
     offset: {
       type: Number as PropType<number>,
-      default: () => 0
-    }
+      default: () => 0,
+    },
+  },
+  emits: ['inlib'],
+  setup(props) {
+    const useCache = storeGet('useCache', true);
+    return {
+      useCache,
+      inLib: ref(props.manga?.inLibrary || false),
+      imgdata: ref(),
+    };
   },
   created: function () {
     if (this.imgdata && this.manga) {
@@ -137,16 +147,8 @@ export default defineComponent({
           this.imgdata = value;
         }
       );
-    }
+    },
   },
-  setup(props) {
-    const useCache = storeGet('useCache', true);
-    return {
-      useCache,
-      inLib: ref(props.manga?.inLibrary || false),
-      imgdata: ref()
-    };
-  }
 });
 </script>
 

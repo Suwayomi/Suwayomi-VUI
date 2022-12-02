@@ -13,26 +13,26 @@
       </q-card-section>
       <q-item>
         <q-input
+          v-model="edittxt"
           style="width: 100%"
           type="text"
           label="Category Name"
           outlined
-          v-model="edittxt"
         ></q-input>
       </q-item>
       <q-item>
         <q-toggle
+          v-model="defaul"
           label="Default category when adding new manga to library"
           color="blue"
-          v-model="defaul"
         />
       </q-item>
       <q-card-actions align="right">
         <q-btn
+          v-close-popup
           flat
           label="Save"
           color="primary"
-          v-close-popup
           @click="savetxt"
         />
       </q-card-actions>
@@ -49,23 +49,23 @@ export default defineComponent({
   props: {
     cat: {
       type: Object as PropType<cat>,
-      required: true
-    }
-  },
-  methods: {
-    savetxt() {
-      this.$api.patchForm(`/api/v1/category/${this.cat.id}`, {
-        name: this.edittxt,
-        default: this.defaul.toString()
-      });
-    }
+      required: true,
+    },
   },
   setup(props) {
     return {
       editdialog: ref(false),
       defaul: ref(props.cat.default),
-      edittxt: ref(props.cat.name)
+      edittxt: ref(props.cat.name),
     };
-  }
+  },
+  methods: {
+    savetxt() {
+      this.$api.patchForm(`/api/v1/category/${this.cat.id}`, {
+        name: this.edittxt,
+        default: this.defaul.toString(),
+      });
+    },
+  },
 });
 </script>

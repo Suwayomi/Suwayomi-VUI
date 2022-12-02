@@ -10,7 +10,7 @@ import axios from 'axios';
 import { storeGet } from './StoreStuff';
 
 let api = axios.create({
-  baseURL: storeGet('baseUrl', location.origin) as string
+  baseURL: storeGet('baseUrl', location.origin) as string,
 });
 
 export default boot(({ app }) => {
@@ -21,7 +21,7 @@ export default boot(({ app }) => {
 
 export function resetAxiosBase() {
   api = axios.create({
-    baseURL: storeGet('baseUrl', location.origin) as string
+    baseURL: storeGet('baseUrl', location.origin) as string,
   });
 }
 

@@ -10,7 +10,7 @@
     flat
     class="my-card"
     :class="!($q.screen.sm || $q.screen.xs) ? `q-ma-sm` : `q-ma-xs`"
-    :style="Display == `list` ? `` : `background: transparent`"
+    :style="display == `list` ? `` : `background: transparent`"
   >
     <router-link
       :to="`/manga/` + manga.id"
@@ -19,7 +19,7 @@
       :class="$q.dark.isActive ? `light` : `dark`"
     >
       <q-img
-        v-if="Display != `list`"
+        v-if="display != `list`"
         :src="imgdata"
         loading="lazy"
         spinner-color="white"
@@ -33,8 +33,8 @@
           style="padding: 0"
         >
           <q-badge
-            color="blue"
             v-if="manga.unreadCount"
+            color="blue"
             style="width: min-content; padding: 5px"
             :style="
               manga.downloadCount
@@ -45,8 +45,8 @@
             {{ manga.unreadCount }}
           </q-badge>
           <q-badge
-            color="green"
             v-if="manga.downloadCount"
+            color="green"
             style="width: min-content; padding: 5px"
             :style="
               manga.unreadCount
@@ -58,8 +58,8 @@
           </q-badge>
         </div>
         <div
+          v-if="display == `compact`"
           class="absolute-bottom text-subtitle1 text-center"
-          v-if="Display == `compact`"
           :title="manga.title"
           style="
             padding: 0;
@@ -76,7 +76,7 @@
       <!-- list display mode -->
       <div class="row items-center col-grow no-wrap">
         <q-img
-          v-if="Display == `list`"
+          v-if="display == `list`"
           :src="imgdata"
           loading="lazy"
           spinner-color="white"
@@ -88,8 +88,8 @@
           </q-inner-loading>
         </q-img>
         <div
+          v-if="display != `compact`"
           :class="listdivClass"
-          v-if="Display != `compact`"
           :title="manga.title"
           style="
             padding: 0;
@@ -100,7 +100,7 @@
             overflow: hidden;
             width: 100%;
           "
-          :style="Display == `list` ? `` : `height: 5.25rem;`"
+          :style="display == `list` ? `` : `height: 5.25rem;`"
         >
           {{ manga.title }}
         </div>
@@ -109,8 +109,8 @@
           :class="!($q.screen.sm || $q.screen.xs) ? `q-mr-lg` : `q-mr-xs`"
         >
           <q-badge
+            v-if="manga.unreadCount && display == `list`"
             color="blue"
-            v-if="manga.unreadCount && Display == `list`"
             style="width: min-content; padding: 5px"
             :style="
               manga.downloadCount
@@ -121,8 +121,8 @@
             {{ manga.unreadCount }}
           </q-badge>
           <q-badge
+            v-if="manga.downloadCount && display == `list`"
             color="green"
-            v-if="manga.downloadCount && Display == `list`"
             style="width: min-content; padding: 5px"
             :style="
               manga.unreadCount
@@ -149,19 +149,24 @@ export default defineComponent({
   props: {
     manga: {
       type: Object as PropType<manga>,
-      default: () => Object
+      default: () => Object,
     },
-    Display: {
+    display: {
       type: String as PropType<'compact' | 'comfort' | 'list'>,
-      default: 'compact'
-    }
+      default: 'compact',
+    },
+  },
+  setup() {
+    const useCache = ref(`${storeGet('useCache', true)}`);
+    const imgdata = ref('');
+    return { useCache, imgdata };
   },
   computed: {
     listdivClass(): string {
-      return this.Display == 'list'
+      return this.display == 'list'
         ? 'text-left q-ml-md text-h5 col-shrink'
         : 'text-center text-subtitle1';
-    }
+    },
   },
   mounted: function () {
     getImgBlob(this.manga.thumbnailUrl + '?useCache=' + this.useCache).then(
@@ -170,11 +175,6 @@ export default defineComponent({
       }
     );
   },
-  setup() {
-    const useCache = ref(`${storeGet('useCache', true)}`);
-    const imgdata = ref('');
-    return { useCache, imgdata };
-  }
 });
 </script>
 

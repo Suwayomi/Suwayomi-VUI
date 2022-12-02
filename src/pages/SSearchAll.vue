@@ -17,7 +17,7 @@
               :style="widt"
               style="display: inline-block"
             >
-              <mangaCard :manga="manga" :Display="Displ" />
+              <mangaCard :manga="manga" :display="Displ" />
             </div>
             <div v-if="!mangas.length" class="text-subtitle1 q-ma-md">
               No Manga
@@ -26,7 +26,7 @@
         </div>
       </div>
     </div>
-    <div class="row justify-center q-my-md" v-if="queue.pending">
+    <div v-if="queue.pending" class="row justify-center q-my-md">
       <q-spinner-dots color="primary" size="40px" />
     </div>
   </q-page>
@@ -43,68 +43,37 @@ import { AxiosResponse } from 'axios';
 
 export default defineComponent({
   components: { mangaCard },
-  methods: {
-    myTweak(offset: number) {
-      return {
-        height: offset ? `calc(100vh - ${offset}px)` : '100vh'
-      };
-    },
-    calcWidth() {
-      const grid = <Element>this.$refs['infiniteScrol'];
-      const ideal = <number>this.$q.localStorage.getItem('MitemW');
-      if (grid.clientWidth == undefined) return;
-      this.devider = Math.round(grid.clientWidth / ideal);
-    },
-    doSearch() {
-      if (this.$route.query['q']) {
-        this.queue.clear();
-        if (this.queue.pending) {
-          this.controller.abort();
-          this.controller = new AbortController();
-        }
-        this.searchResults = [];
-        this.sources.forEach((source) => {
-          this.queue.add(
-            async ({ signal }) => {
-              if (signal) {
-                const request = <Promise<AxiosResponse<sourcepage>>>(
-                  this.$api.get(
-                    `/api/v1/source/${source.id}/search?searchTerm=${
-                      this.$route.query['q'] || ''
-                    }&pageNum=1`,
-                    {
-                      signal
-                    }
-                  )
-                );
-
-                try {
-                  return {
-                    source: source,
-                    mangas: (await request).data.mangaList
-                  };
-                } catch (error) {
-                  if (!(error instanceof DOMException)) {
-                    return { source: source, mangas: [] };
-                  } else {
-                    console.error(error);
-                  }
-                }
-              }
-              return { source: source, mangas: [] };
-            },
-            {
-              signal: this.controller.signal
-            }
-          );
-        });
+  setup() {
+    const queue = new PQueue({ concurrency: 5 });
+    const controller = ref(new AbortController());
+    const searchResults = ref(<{ source: source; mangas: manga[] }[]>[]);
+    const sources = ref(<source[]>[]);
+    return {
+      searchResults,
+      queue,
+      controller,
+      sources,
+      display: ref(Display()),
+      devider: ref<number>(0),
+    };
+  },
+  computed: {
+    Displ() {
+      if (this.display.Display == null) {
+        return 'compact';
+      } else if (this.display.Display) {
+        return 'comfort';
       }
-    }
+      return 'compact';
+    },
+    widt(): string {
+      return `width: calc(100% / ${this.devider}); aspect-ratio: 225/350;transition: width 0.5s ease-out;height: fit-content;`;
+    },
   },
   watch: {
     '$route.query.q'() {
       this.doSearch();
-    }
+    },
   },
   created: function () {
     this.calcWidth = debounce(this.calcWidth, 500);
@@ -142,32 +111,63 @@ export default defineComponent({
   beforeUnmount() {
     window.removeEventListener('resize', this.calcWidth);
   },
-  computed: {
-    Displ() {
-      if (this.display.Display == null) {
-        return 'compact';
-      } else if (this.display.Display) {
-        return 'comfort';
-      }
-      return 'compact';
+  methods: {
+    myTweak(offset: number) {
+      return {
+        height: offset ? `calc(100vh - ${offset}px)` : '100vh',
+      };
     },
-    widt(): string {
-      return `width: calc(100% / ${this.devider}); aspect-ratio: 225/350;transition: width 0.5s ease-out;height: fit-content;`;
-    }
+    calcWidth() {
+      const grid = <Element>this.$refs['infiniteScrol'];
+      const ideal = <number>this.$q.localStorage.getItem('MitemW');
+      if (grid.clientWidth == undefined) return;
+      this.devider = Math.round(grid.clientWidth / ideal);
+    },
+    doSearch() {
+      if (this.$route.query['q']) {
+        this.queue.clear();
+        if (this.queue.pending) {
+          this.controller.abort();
+          this.controller = new AbortController();
+        }
+        this.searchResults = [];
+        this.sources.forEach((source) => {
+          this.queue.add(
+            async ({ signal }) => {
+              if (signal) {
+                const request = <Promise<AxiosResponse<sourcepage>>>(
+                  this.$api.get(
+                    `/api/v1/source/${source.id}/search?searchTerm=${
+                      this.$route.query['q'] || ''
+                    }&pageNum=1`,
+                    {
+                      signal,
+                    }
+                  )
+                );
+
+                try {
+                  return {
+                    source: source,
+                    mangas: (await request).data.mangaList,
+                  };
+                } catch (error) {
+                  if (!(error instanceof DOMException)) {
+                    return { source: source, mangas: [] };
+                  } else {
+                    console.error(error);
+                  }
+                }
+              }
+              return { source: source, mangas: [] };
+            },
+            {
+              signal: this.controller.signal,
+            }
+          );
+        });
+      }
+    },
   },
-  setup() {
-    const queue = new PQueue({ concurrency: 5 });
-    const controller = ref(new AbortController());
-    const searchResults = ref(<{ source: source; mangas: manga[] }[]>[]);
-    const sources = ref(<source[]>[]);
-    return {
-      searchResults,
-      queue,
-      controller,
-      sources,
-      display: ref(Display()),
-      devider: ref<number>(0)
-    };
-  }
 });
 </script>
