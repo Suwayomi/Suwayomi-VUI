@@ -51,20 +51,32 @@ import { getImgBlob } from '../global/usefull';
 import { storeGet } from 'src/boot/StoreStuff';
 
 export default defineComponent({
-  name: 'extCard',
+  name: 'ExtCard',
   props: {
     exten: {
       type: Object as PropType<extention>,
-      required: true
-    }
+      required: true,
+    },
   },
   emits: ['reload'],
+  setup() {
+    const useCache = ref(`${storeGet('useCache', true)}`);
+    const imgdata = ref('');
+    return { useCache, imgdata };
+  },
   computed: {
     UpUnIn(): string {
       if (this.exten.hasUpdate) return 'Update';
       if (this.exten.installed) return 'Uninstall';
       return 'Install';
-    }
+    },
+  },
+  mounted: function () {
+    getImgBlob(this.exten.iconUrl + '?useCache=' + this.useCache).then(
+      (value) => {
+        this.imgdata = value;
+      }
+    );
   },
   methods: {
     capitalizeFirstLetter(string: string): string {
@@ -81,19 +93,7 @@ export default defineComponent({
         await this.$api.get(`/api/v1/extension/install/${this.exten.pkgName}`);
       }
       this.$emit('reload');
-    }
+    },
   },
-  mounted: function () {
-    getImgBlob(this.exten.iconUrl + '?useCache=' + this.useCache).then(
-      (value) => {
-        this.imgdata = value;
-      }
-    );
-  },
-  setup() {
-    const useCache = ref(`${storeGet('useCache', true)}`);
-    const imgdata = ref('');
-    return { useCache, imgdata };
-  }
 });
 </script>

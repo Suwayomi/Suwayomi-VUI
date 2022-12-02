@@ -50,11 +50,11 @@
   </q-dialog>
 
   <q-btn
+    v-if="isConfigurable"
     flat
     round
     class="q-ml-sm"
     icon="settings"
-    v-if="isConfigurable"
     to="../config"
   ></q-btn>
 </template>
@@ -66,14 +66,8 @@ import Filters from 'src/components/library/Filters';
 import { isConfig } from 'src/components/sourceSearch/isConfigurable';
 
 export default defineComponent({
-  name: 'libraryTopBar',
+  name: 'LibraryTopBar',
   components: { SearchBar },
-  watch: {
-    disp() {
-      if (this.disp == 'null') this.filters.setDisplay(null);
-      else this.filters.setDisplay(this.disp == 'true');
-    }
-  },
   setup() {
     const filters = Filters();
     const isConfigurable = ref(isConfig().isConfigurable);
@@ -83,8 +77,14 @@ export default defineComponent({
       tab: ref('display'),
       disp,
       filters,
-      isConfigurable
+      isConfigurable,
     };
-  }
+  },
+  watch: {
+    disp() {
+      if (this.disp == 'null') this.filters.setDisplay(null);
+      else this.filters.setDisplay(this.disp == 'true');
+    },
+  },
 });
 </script>

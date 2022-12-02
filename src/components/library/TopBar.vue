@@ -39,9 +39,9 @@
       <div v-if="tab == 'filter'">
         <q-card-section class="q-px-md q-pt-md q-pb-xs">
           <q-checkbox
+            v-model="unread"
             style="width: 100%"
             toggle-indeterminate
-            v-model="unread"
             label="Unread"
             checked-icon="check_box"
             unchecked-icon="r_disabled_by_default"
@@ -53,9 +53,9 @@
         </q-card-section>
         <q-card-section class="q-px-md q-pt-xs q-pb-md">
           <q-checkbox
+            v-model="downloaded"
             style="width: 100%"
             toggle-indeterminate
-            v-model="downloaded"
             label="Downloaded"
             checked-icon="check_box"
             unchecked-icon="r_disabled_by_default"
@@ -70,37 +70,37 @@
       <div v-if="tab == 'sort'">
         <q-card-section class="q-px-md q-pt-md q-pb-xs">
           <q-checkbox
+            v-model="leftToRead"
             style="width: 100%"
             checked-icon="arrow_upward"
             unchecked-icon="arrow_downward"
             indeterminate-icon="null"
             color="primary"
             keep-color
-            v-model="leftToRead"
             label="By left to Read"
           />
         </q-card-section>
         <q-card-section class="q-px-md q-pt-xs q-pb-xs">
           <q-checkbox
+            v-model="alphabetical"
             style="width: 100%"
             checked-icon="arrow_upward"
             unchecked-icon="arrow_downward"
             indeterminate-icon="null"
             color="primary"
             keep-color
-            v-model="alphabetical"
             label="Alphabetical"
           />
         </q-card-section>
         <q-card-section class="q-px-md q-pt-xs q-pb-md">
           <q-checkbox
+            v-model="ByID"
             style="width: 100%"
             checked-icon="arrow_upward"
             unchecked-icon="arrow_downward"
             indeterminate-icon="null"
             color="primary"
             keep-color
-            v-model="ByID"
             label="By ID"
           />
         </q-card-section>
@@ -145,15 +145,27 @@ import { defineComponent, ref } from 'vue';
 import Filters from './Filters';
 
 export default defineComponent({
-  name: 'libraryTopBar',
+  name: 'LibraryTopBar',
   components: { SearchBar },
-  methods: {
-    update() {
-      this.$api.post(
-        '/api/v1/update/fetch',
-        `categoryId=${this.$route.query['tab']}`
-      );
-    }
+  setup() {
+    const filters = Filters();
+    const unread = ref(<boolean | null>filters.unread.value);
+    const downloaded = ref(<boolean | null>filters.downloaded.value);
+    const leftToRead = ref(<boolean | null>filters.leftToRead.value);
+    const alphabetical = ref(<boolean | null>filters.alphabetical.value);
+    const ByID = ref(<boolean | null>filters.ByID.value);
+    const disp = ref(<'null' | 'true' | 'false'>`${filters.Display.value}`);
+    return {
+      dialo: ref(false),
+      tab: ref('filter'),
+      unread,
+      downloaded,
+      leftToRead,
+      alphabetical,
+      ByID,
+      disp,
+      filters,
+    };
   },
   watch: {
     unread() {
@@ -186,27 +198,15 @@ export default defineComponent({
     disp() {
       if (this.disp == 'null') this.filters.setDisplay(null);
       else this.filters.setDisplay(this.disp == 'true');
-    }
+    },
   },
-  setup() {
-    const filters = Filters();
-    const unread = ref(<boolean | null>filters.unread.value);
-    const downloaded = ref(<boolean | null>filters.downloaded.value);
-    const leftToRead = ref(<boolean | null>filters.leftToRead.value);
-    const alphabetical = ref(<boolean | null>filters.alphabetical.value);
-    const ByID = ref(<boolean | null>filters.ByID.value);
-    const disp = ref(<'null' | 'true' | 'false'>`${filters.Display.value}`);
-    return {
-      dialo: ref(false),
-      tab: ref('filter'),
-      unread,
-      downloaded,
-      leftToRead,
-      alphabetical,
-      ByID,
-      disp,
-      filters
-    };
-  }
+  methods: {
+    update() {
+      this.$api.post(
+        '/api/v1/update/fetch',
+        `categoryId=${this.$route.query['tab']}`
+      );
+    },
+  },
 });
 </script>

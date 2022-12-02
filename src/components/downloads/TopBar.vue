@@ -22,26 +22,26 @@
         :key="count"
         class="q-py-xs"
       >
-        <q-checkbox style="width: 100%" v-model="filter" :val="item">
+        <q-checkbox v-model="filter" style="width: 100%" :val="item">
           <div style="margin-right: 12.5px">{{ item }}</div>
         </q-checkbox>
       </q-card-section>
       <q-card-actions align="center">
         <q-btn
+          v-close-popup
           flat
           label="clear"
           color="primary"
-          v-close-popup
           @click="
             filter = [];
             dofilter();
           "
         />
         <q-btn
+          v-close-popup
           flat
           label="Save"
           color="primary"
-          v-close-popup
           @click="dofilter"
         />
       </q-card-actions>
@@ -79,29 +79,6 @@ import { dlsock, isdlsock } from '../global/models';
 
 export default defineComponent({
   name: 'SearchBar',
-  methods: {
-    toggleplay() {
-      if (!this.PlayPause) {
-        this.$api.get('/api/v1/downloads/start');
-      } else {
-        this.$api.get('/api/v1/downloads/stop');
-      }
-    },
-    clear() {
-      this.$api.get('/api/v1/downloads/clear');
-    },
-    dofilter() {
-      this.$bus.emit('DLFilter', this.filter);
-    }
-  },
-  watch: {
-    'Emitter.eventsFromServer'(val) {
-      const tmp = <dlsock>JSON.parse(val);
-      if (isdlsock(tmp)) {
-        this.PlayPause = tmp.status == 'Started';
-      }
-    }
-  },
   setup() {
     const Emitt = useDlSock();
     const Emitter = ref(Emitt);
@@ -121,8 +98,31 @@ export default defineComponent({
       dialo: ref(false),
       filter: ref([]),
       PlayPause,
-      Emitter
+      Emitter,
     };
-  }
+  },
+  watch: {
+    'Emitter.eventsFromServer'(val) {
+      const tmp = <dlsock>JSON.parse(val);
+      if (isdlsock(tmp)) {
+        this.PlayPause = tmp.status == 'Started';
+      }
+    },
+  },
+  methods: {
+    toggleplay() {
+      if (!this.PlayPause) {
+        this.$api.get('/api/v1/downloads/start');
+      } else {
+        this.$api.get('/api/v1/downloads/stop');
+      }
+    },
+    clear() {
+      this.$api.get('/api/v1/downloads/clear');
+    },
+    dofilter() {
+      this.$bus.emit('DLFilter', this.filter);
+    },
+  },
 });
 </script>

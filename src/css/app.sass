@@ -6,7 +6,6 @@
 
 @import 'quasar.variables.scss'
 
-
 .lightSB
   ::-webkit-scrollbar,
   &::-webkit-scrollbar
@@ -47,7 +46,7 @@
 .text-primary
   color: $primary !important
 
-$color-map: ('primary' $primary, 'primaryD' $primaryD, 'secondary' $secondary,  'accent' $accent,  'dark' $dark,  'dark-page' $dark-page,  'light' $light,  'light-page' $light-page,  'positive' $positive,  'negative' $negative,  'info' $info,  'warning' $warning, 'secondaryD' $secondaryD)
+$color-map: ('primary' $primary, 'primaryD' $primaryD, 'secondary' $secondary, 'accent' $accent, 'dark' $dark, 'dark-page' $dark-page, 'light' $light, 'light-page' $light-page, 'positive' $positive, 'negative' $negative, 'info' $info, 'warning' $warning, 'secondaryD' $secondaryD)
 
 @for $i from 1 through 10
   @each $name,$value in $color-map
@@ -77,7 +76,6 @@ $color-map: ('primary' $primary, 'primaryD' $primaryD, 'secondary' $secondary,  
           background-color: $value
         .border-#{$name}-5
           border-color: $value
-
 
         .#{$name}
           color: $value

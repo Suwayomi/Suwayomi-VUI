@@ -6,48 +6,48 @@
  * file, You can obtain one at https://mozilla.org/MPL/2.0/. */ -->
 <template>
   <q-item
+    v-ripple
     class="row justify-between no-wrap items-center rounded-borders"
     clickable
-    v-ripple
     @click="SreadMargins = !SreadMargins"
   >
     <q-item-label>Page Margins</q-item-label>
-    <q-toggle color="blue" v-model="SreadMargins" />
+    <q-toggle v-model="SreadMargins" color="blue" />
   </q-item>
   <q-item
+    v-ripple
     class="row justify-between no-wrap items-center rounded-borders"
     clickable
-    v-ripple
     @click="SreadScale = !SreadScale"
   >
     <q-item-label>Page Scale</q-item-label>
-    <q-toggle color="blue" v-model="SreadScale" />
+    <q-toggle v-model="SreadScale" color="blue" />
   </q-item>
   <q-item
+    v-ripple
     class="row justify-between no-wrap items-center rounded-borders"
     clickable
-    v-ripple
     @click="sReadOffset = !sReadOffset"
   >
     <q-item-label>Page Offset</q-item-label>
-    <q-toggle color="blue" v-model="sReadOffset" />
+    <q-toggle v-model="sReadOffset" color="blue" />
   </q-item>
   <q-select
+    v-model="SReadModel"
     standout
     label="Reader Mode"
-    v-model="SReadModel"
     :options="SReadoptions"
   >
   </q-select>
 
   <q-item
+    v-ripple
     class="row justify-between no-wrap items-center rounded-borders"
     clickable
-    v-ripple
     @click="showPath = !showPath"
   >
     <q-item-label>View Path</q-item-label>
-    <q-toggle color="blue" v-model="showPath" />
+    <q-toggle v-model="showPath" color="blue" />
     <q-tooltip>
       <div>blue = next</div>
       <div>red = back</div>
@@ -56,10 +56,10 @@
   </q-item>
 
   <q-select
+    v-model="SReadPath"
     standout
     style="width: 100%"
     label="Navigation layout"
-    v-model="SReadPath"
     :options="PathOptions"
   >
   </q-select>
@@ -72,7 +72,28 @@ import { useRoute } from 'vue-router';
 import { paths } from '../global/models';
 
 export default defineComponent({
-  name: 'readerDrawerCont',
+  name: 'ReaderDrawerCont',
+  setup() {
+    const route = useRoute();
+    const options = chapterMeta(parseInt(`${route.params['mangaID']}`));
+    const SReadModel = options.vue_RM;
+    const SReadPath = options.vue_Paths;
+    const SreadMargins = options.vue_WT;
+    const SreadScale = options.vue_Scale;
+    const sReadOffset = options.vue_Offset;
+    const showPath = ref(options.pathVisable.value);
+    return {
+      SreadMargins,
+      SreadScale,
+      SReadModel,
+      SReadPath,
+      PathOptions: ['L', 'RAL', 'Kindle', 'Edge'],
+      showPath,
+      SReadoptions: ['RTL', 'LTR', 'SinglePage', 'Vertical'],
+      sReadOffset,
+      options,
+    };
+  },
   created: function () {
     this.$watch('SReadModel', (newer: string) => {
       this.options.setRM(newer);
@@ -93,26 +114,5 @@ export default defineComponent({
       this.options.toggPath();
     });
   },
-  setup() {
-    const route = useRoute();
-    const options = chapterMeta(parseInt(`${route.params['mangaID']}`));
-    const SReadModel = options.vue_RM;
-    const SReadPath = options.vue_Paths;
-    const SreadMargins = options.vue_WT;
-    const SreadScale = options.vue_Scale;
-    const sReadOffset = options.vue_Offset;
-    const showPath = ref(options.pathVisable.value);
-    return {
-      SreadMargins,
-      SreadScale,
-      SReadModel,
-      SReadPath,
-      PathOptions: ['L', 'RAL', 'Kindle', 'Edge'],
-      showPath,
-      SReadoptions: ['RTL', 'LTR', 'SinglePage', 'Vertical'],
-      sReadOffset,
-      options
-    };
-  }
 });
 </script>

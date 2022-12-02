@@ -6,14 +6,14 @@
  * file, You can obtain one at https://mozilla.org/MPL/2.0/. */ -->
 <template>
   <div ref="conta">
-    <div class="row justify-between items-center" ref="chapHead">
+    <div ref="chapHead" class="row justify-between items-center">
       <h4 class="q-ma-md">{{ chapters.length }} chapters</h4>
       <div style="padding-right: 12px">
         <q-btn
+          v-if="selectMode"
           flat
           round
           icon="select_all"
-          v-if="selectMode"
           @click="selectall"
         />
         <q-btn
@@ -65,10 +65,10 @@
                       <q-item-section>Download Next 5</q-item-section>
                     </q-item>
                     <q-item
-                      clickable
                       v-if="selectMode"
-                      @click="dl(selected)"
                       v-close-popup
+                      clickable
+                      @click="dl(selected)"
                     >
                       <q-item-section>Download Selected</q-item-section>
                     </q-item>
@@ -114,10 +114,10 @@
                       <q-item-section>Read Next 5</q-item-section>
                     </q-item>
                     <q-item
-                      clickable
                       v-if="selectMode"
-                      @click="read(selected)"
                       v-close-popup
+                      clickable
+                      @click="read(selected)"
                     >
                       <q-item-section>Read Selected</q-item-section>
                     </q-item>
@@ -167,10 +167,10 @@
                       <q-item-section>Unread Last 5</q-item-section>
                     </q-item>
                     <q-item
-                      clickable
                       v-if="selectMode"
-                      @click="read(selected, false)"
                       v-close-popup
+                      clickable
+                      @click="read(selected, false)"
                     >
                       <q-item-section>Unread Selected</q-item-section>
                     </q-item>
@@ -222,10 +222,10 @@
                       <q-item-section>Bookmark Next 5</q-item-section>
                     </q-item>
                     <q-item
-                      clickable
                       v-if="selectMode"
-                      @click="read(selected, true, 'isBookmarked')"
                       v-close-popup
+                      clickable
+                      @click="read(selected, true, 'isBookmarked')"
                     >
                       <q-item-section>Bookmark Selected</q-item-section>
                     </q-item>
@@ -277,10 +277,10 @@
                       <q-item-section>Unbookmark Last 5</q-item-section>
                     </q-item>
                     <q-item
-                      clickable
                       v-if="selectMode"
-                      @click="read(selected, false, 'isBookmarked')"
                       v-close-popup
+                      clickable
+                      @click="read(selected, false, 'isBookmarked')"
                     >
                       <q-item-section>Unbookmark Selected</q-item-section>
                     </q-item>
@@ -309,8 +309,9 @@
         class=""
       >
         <q-item
-          v-touch-hold.mouse="() => handleHold(item.id)"
           :id="item.id"
+          :key="item.index"
+          v-touch-hold.mouse="() => handleHold(item.id)"
           v-ripple
           clickable
           class="q-ma-sm rounded-borders"
@@ -327,7 +328,6 @@
               : `/manga/` + item.mangaId + `/chapter/` + item.index
           "
           @click="selectMode ? selectthis(item.id) : undefined"
-          :key="item.index"
         >
           <q-item-section v-if="item.bookmarked" side>
             <q-item-label
@@ -375,28 +375,28 @@
             "
             flat
           ></q-icon>
-          <q-btn @click.prevent round flat icon="more_vert" class="flex-right">
+          <q-btn round flat icon="more_vert" class="flex-right" @click.prevent>
             <q-menu>
               <q-list style="width: fit-content">
                 <q-item
                   v-if="!item.downloaded"
-                  clickable
                   v-close-popup
+                  clickable
                   @click="download(item.index)"
                 >
                   <q-item-section>Download</q-item-section>
                 </q-item>
                 <q-item
                   v-if="item.downloaded"
-                  clickable
                   v-close-popup
+                  clickable
                   @click="dele(item.index)"
                 >
                   <q-item-section>Delete</q-item-section>
                 </q-item>
                 <q-item
-                  clickable
                   v-close-popup
+                  clickable
                   @click="
                     mpatch(item.index, { bookmarked: `${!item.bookmarked}` })
                   "
@@ -406,23 +406,23 @@
                   }}</q-item-section>
                 </q-item>
                 <q-item
+                  v-close-popup
+                  clickable
                   @click="
                     mpatch(item.index, {
                       read: `${!item.read}`,
-                      lastPageRead: '1'
+                      lastPageRead: '1',
                     })
                   "
-                  clickable
-                  v-close-popup
                 >
                   <q-item-section>{{
                     !item.read ? `Mark as Read` : `Mark as Unread`
                   }}</q-item-section>
                 </q-item>
                 <q-item
-                  @click="mpatch(item.index, { markPrevRead: 'true' })"
-                  clickable
                   v-close-popup
+                  clickable
+                  @click="mpatch(item.index, { markPrevRead: 'true' })"
                 >
                   <q-item-section style="white-space: nowrap"
                     >Mark previous as Read</q-item-section
@@ -434,19 +434,19 @@
         </q-item>
       </q-intersection>
     </q-scroll-area>
-    <q-page-sticky position="bottom-right" :offset="fabPos" ref="sticky">
+    <q-page-sticky ref="sticky" position="bottom-right" :offset="fabPos">
       <router-link
-        style="text-decoration: none; color: inherit"
         :is="draggingFab ? 'span' : 'router-link'"
+        style="text-decoration: none; color: inherit"
         :to="res"
       >
         <q-btn
+          v-touch-pan.prevent.mouse="moveFab"
           fab
           class="Fabconsist"
           label="Resume"
           color="blue"
           icon="drag_indicator"
-          v-touch-pan.prevent.mouse="moveFab"
         >
           <q-tooltip> draggable </q-tooltip>
         </q-btn>
@@ -461,7 +461,7 @@ import {
   chapter,
   dlsock,
   download,
-  isdlsock
+  isdlsock,
 } from 'src/components/global/models';
 import filterr from './Filter.vue';
 import { chaptersFilter } from './filters';
@@ -470,14 +470,48 @@ import useDlSock from '../downloads/useDlSock';
 import { QPageSticky } from 'quasar';
 
 export default defineComponent({
-  name: 'mangaChapters',
-  created: async function () {
-    this.$bus.on('updateManga', () => {
-      this.getonline('true');
-    });
-    this.getonline();
-  },
+  name: 'MangaChapters',
   components: { filterr },
+  setup() {
+    const route = useRoute();
+    const filters = ref(chaptersFilter(parseInt(`${route.params['mangaID']}`)));
+    const chapters = ref(<chapter[]>[]);
+    const chaptersfilt = ref(<chapter[]>[]);
+    const Emitt = useDlSock();
+    const Emitter = ref(Emitt);
+
+    const downloads = ref(<download[]>[]);
+    const downloadsnum = ref(0);
+    const tmp = Emitt.eventsFromServer.value
+      ? JSON.parse(Emitt.eventsFromServer.value)
+      : [];
+    if (isdlsock(tmp)) {
+      const tmpp = tmp.queue.filter(
+        (ele) => ele.mangaId == parseInt(`${route.params['mangaID']}`)
+      );
+      downloadsnum.value = tmpp.length;
+      downloads.value = tmpp;
+    }
+    if (Emitter.value.isConnected) {
+      Emitt.sendMsg('STATUS');
+    }
+
+    const fabPos = ref(<[number, number]>[18, 18]);
+    const draggingFab = ref<boolean>(false);
+
+    return {
+      chapters,
+      chaptersfilt,
+      filters,
+      Emitter,
+      downloadsnum,
+      downloads,
+      selectMode: ref(false),
+      selected: ref(<number[]>[]),
+      fabPos,
+      draggingFab,
+    };
+  },
   computed: {
     doFilt(): chapter[] {
       let chapts: chapter[] = this.chapters;
@@ -532,7 +566,28 @@ export default defineComponent({
         const notreadchap = <chapter>notRead[notRead.length - 1];
         return `/manga/${notreadchap.mangaId}/chapter/${notreadchap.index}`;
       }
-    }
+    },
+  },
+  watch: {
+    'Emitter.eventsFromServer'(val) {
+      const tmp = <dlsock>JSON.parse(val);
+      if (isdlsock(tmp)) {
+        const tmpp = tmp.queue.filter(
+          (ele) => ele.mangaId == parseInt(`${this.$route.params['mangaID']}`)
+        );
+        if (this.downloadsnum != tmpp.length) {
+          this.getonline();
+        }
+        this.downloadsnum = tmpp.length;
+        this.downloads = tmpp;
+      }
+    },
+  },
+  created: async function () {
+    this.$bus.on('updateManga', () => {
+      this.getonline('true');
+    });
+    this.getonline();
   },
   methods: {
     moveFab(ev: {
@@ -638,66 +693,11 @@ export default defineComponent({
       this.$api
         .post(`/api/v1/manga/${this.$route.params['mangaID']}/chapter/batch`, {
           chapterIds: list,
-          change: { [rb]: tf }
+          change: { [rb]: tf },
         })
         .then(() => this.getonline());
-    }
+    },
   },
-  watch: {
-    'Emitter.eventsFromServer'(val) {
-      const tmp = <dlsock>JSON.parse(val);
-      if (isdlsock(tmp)) {
-        const tmpp = tmp.queue.filter(
-          (ele) => ele.mangaId == parseInt(`${this.$route.params['mangaID']}`)
-        );
-        if (this.downloadsnum != tmpp.length) {
-          this.getonline();
-        }
-        this.downloadsnum = tmpp.length;
-        this.downloads = tmpp;
-      }
-    }
-  },
-  setup() {
-    const route = useRoute();
-    const filters = ref(chaptersFilter(parseInt(`${route.params['mangaID']}`)));
-    const chapters = ref(<chapter[]>[]);
-    const chaptersfilt = ref(<chapter[]>[]);
-    const Emitt = useDlSock();
-    const Emitter = ref(Emitt);
-
-    const downloads = ref(<download[]>[]);
-    const downloadsnum = ref(0);
-    const tmp = Emitt.eventsFromServer.value
-      ? JSON.parse(Emitt.eventsFromServer.value)
-      : [];
-    if (isdlsock(tmp)) {
-      const tmpp = tmp.queue.filter(
-        (ele) => ele.mangaId == parseInt(`${route.params['mangaID']}`)
-      );
-      downloadsnum.value = tmpp.length;
-      downloads.value = tmpp;
-    }
-    if (Emitter.value.isConnected) {
-      Emitt.sendMsg('STATUS');
-    }
-
-    const fabPos = ref(<[number, number]>[18, 18]);
-    const draggingFab = ref<boolean>(false);
-
-    return {
-      chapters,
-      chaptersfilt,
-      filters,
-      Emitter,
-      downloadsnum,
-      downloads,
-      selectMode: ref(false),
-      selected: ref(<number[]>[]),
-      fabPos,
-      draggingFab
-    };
-  }
 });
 </script>
 

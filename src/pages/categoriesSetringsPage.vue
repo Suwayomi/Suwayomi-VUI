@@ -19,32 +19,32 @@
           <q-item-label>{{ cat.name }}</q-item-label>
         </q-item-section>
         <q-btn
-          @click="index ? moveto(cat.order, 1) : ``"
           round
           flat
           icon="keyboard_double_arrow_up"
+          @click="index ? moveto(cat.order, 1) : ``"
         />
         <q-btn
-          @click="index ? moveto(cat.order, cat.order - 1) : ``"
           round
           flat
           icon="keyboard_arrow_up"
+          @click="index ? moveto(cat.order, cat.order - 1) : ``"
         />
         <q-btn
-          @click="
-            index < catag.length - 1 ? moveto(cat.order, cat.order + 1) : ``
-          "
           round
           flat
           icon="keyboard_arrow_down"
+          @click="
+            index < catag.length - 1 ? moveto(cat.order, cat.order + 1) : ``
+          "
         />
         <q-btn
-          @click="
-            index < catag.length - 1 ? moveto(cat.order, catag.length) : ``
-          "
           round
           flat
           icon="keyboard_double_arrow_down"
+          @click="
+            index < catag.length - 1 ? moveto(cat.order, catag.length) : ``
+          "
         />
         <catEdit :cat="cat" />
         <q-btn round flat icon="delete" @click="delcat(cat.id)" />
@@ -66,26 +66,26 @@
         </q-card-section>
         <q-item>
           <q-input
+            v-model="edittxt"
             style="width: 100%"
             type="text"
             label="Category Name"
             outlined
-            v-model="edittxt"
           ></q-input>
         </q-item>
         <q-item>
           <q-toggle
+            v-model="defaul"
             label="Default category when adding new manga to library"
             color="blue"
-            v-model="defaul"
           />
         </q-item>
         <q-card-actions align="right">
           <q-btn
+            v-close-popup
             flat
             label="Save"
             color="primary"
-            v-close-popup
             @click="savetxt"
           />
         </q-card-actions>
@@ -102,10 +102,22 @@ import { AxiosResponse } from 'axios';
 export default defineComponent({
   name: 'CategoriesSettingsPage',
   components: { catEdit },
+  setup() {
+    return {
+      catag: ref(<cat[]>[]),
+      editdialog: ref(false),
+      newDialog: ref(false),
+      edittxt: ref(''),
+      defaul: ref(false),
+    };
+  },
+  mounted: function () {
+    this.getcats();
+  },
   methods: {
     myTweak(offset: number) {
       return {
-        height: offset ? `calc(100vh - ${offset}px)` : '100vh'
+        height: offset ? `calc(100vh - ${offset}px)` : '100vh',
       };
     },
     moveto(curr: number, to: number) {
@@ -121,7 +133,7 @@ export default defineComponent({
         });
         this.$api.patchForm('/api/v1/category/reorder', {
           from: curr.toString(),
-          to: to.toString()
+          to: to.toString(),
         });
       }
     },
@@ -142,7 +154,7 @@ export default defineComponent({
       this.$api
         .postForm('/api/v1/category/', {
           name: this.edittxt,
-          default: this.defaul.toString()
+          default: this.defaul.toString(),
         })
         .then(() => this.getcats());
     },
@@ -155,19 +167,7 @@ export default defineComponent({
     },
     delcat(id: number) {
       this.$api.delete(`/api/v1/category/${id}`).then(() => this.getcats());
-    }
+    },
   },
-  mounted: function () {
-    this.getcats();
-  },
-  setup() {
-    return {
-      catag: ref(<cat[]>[]),
-      editdialog: ref(false),
-      newDialog: ref(false),
-      edittxt: ref(''),
-      defaul: ref(false)
-    };
-  }
 });
 </script>

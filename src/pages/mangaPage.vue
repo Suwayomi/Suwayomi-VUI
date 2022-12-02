@@ -11,10 +11,10 @@
     :style-fn="myTweak"
   >
     <mangaInfo
-      @inlib="getonline"
       :manga="manga"
       :offset="offset"
       class="col-6"
+      @inlib="getonline"
     />
     <mangaChapters class="col-6" />
   </q-page>
@@ -28,14 +28,19 @@ import mangaChapters from 'src/components/manga/chapterList.vue';
 import { AxiosResponse } from 'axios';
 
 export default defineComponent({
-  name: 'mangaPage',
+  name: 'MangaPage',
   components: { mangaInfo, mangaChapters },
+  emits: ['set-title'],
+  setup() {
+    const manga = ref(<manga>{});
+    return { manga, offset: ref(<number>Number()) };
+  },
   created: async function () {
     this.$bus.on('updateManga', () => {
       this.getonline('true');
     });
     await this.getonline();
-    this.$emit('setTitle', this.manga?.title || 'manga');
+    this.$emit('set-title', this.manga?.title || 'manga');
     if (
       new Date(this.manga.lastFetchedAt * 1000) <
       new Date(new Date().setDate(new Date().getDate() - 1))
@@ -58,13 +63,9 @@ export default defineComponent({
     myTweak(offset: number) {
       this.offset = offset;
       return {
-        height: offset ? `calc(100vh - ${offset}px)` : '100vh'
+        height: offset ? `calc(100vh - ${offset}px)` : '100vh',
       };
-    }
+    },
   },
-  setup() {
-    const manga = ref(<manga>{});
-    return { manga, offset: ref(<number>Number()) };
-  }
 });
 </script>

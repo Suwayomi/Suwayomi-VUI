@@ -17,10 +17,10 @@
     </q-item>
     <!-- dark mode -->
     <q-item
-      clickable
       v-ripple
-      @click="darkmode = !darkmode"
+      clickable
       class="row justify-between"
+      @click="darkmode = !darkmode"
     >
       <q-item-section avatar>
         <q-icon name="brightness_6" />
@@ -28,14 +28,14 @@
       <q-item-section>
         <q-item-label>Dark mode</q-item-label>
       </q-item-section>
-      <q-toggle color="blue" v-model="darkmode" val="battery" />
+      <q-toggle v-model="darkmode" color="blue" val="battery" />
     </q-item>
     <!-- use cache -->
     <q-item
-      clickable
       v-ripple
-      @click="useCache = !useCache"
+      clickable
       class="row justify-between"
+      @click="useCache = !useCache"
     >
       <q-item-section avatar>
         <q-icon name="cached" />
@@ -43,10 +43,10 @@
       <q-item-section>
         <q-item-label>Use imanga cache</q-item-label>
       </q-item-section>
-      <q-toggle color="blue" v-model="useCache" val="battery" />
+      <q-toggle v-model="useCache" color="blue" val="battery" />
     </q-item>
     <!-- manga grid width -->
-    <q-item clickable v-ripple @click="Mitem = true">
+    <q-item v-ripple clickable @click="Mitem = true">
       <q-item-section avatar>
         <q-icon name="view_module" />
       </q-item-section>
@@ -64,21 +64,21 @@
             scource views
           </q-card-section>
           <q-input
+            v-model="MitemW"
             standout
             type="number"
-            v-model="MitemW"
             suffix="px"
           ></q-input>
-          <q-slider :step="50" snap v-model="MitemW" :min="100" :max="1000" />
+          <q-slider v-model="MitemW" :step="50" snap :min="100" :max="1000" />
 
           <q-card-actions align="right" class="q-pb-none">
             <q-btn flat label="Default" color="primary" @click="MitemW = 300" />
-            <q-btn flat label="Cancel" color="primary" v-close-popup />
+            <q-btn v-close-popup flat label="Cancel" color="primary" />
             <q-btn
+              v-close-popup
               flat
               label="Save"
               color="primary"
-              v-close-popup
               @click="setMitemW(MitemW)"
             />
           </q-card-actions>
@@ -86,7 +86,7 @@
       </q-dialog>
     </q-item>
     <!-- server address -->
-    <q-item clickable v-ripple @click="Saddr = true">
+    <q-item v-ripple clickable @click="Saddr = true">
       <q-item-section avatar>
         <q-icon name="dns" />
       </q-item-section>
@@ -99,7 +99,7 @@
           <q-card-section>
             <div class="text-h6">Enter Server Address</div>
           </q-card-section>
-          <q-input standout type="text" v-model="serverAddr"></q-input>
+          <q-input v-model="serverAddr" standout type="text"></q-input>
 
           <q-card-actions align="right">
             <q-btn
@@ -108,12 +108,12 @@
               color="primary"
               @click="serverAddr = 'http://localhost'"
             />
-            <q-btn flat label="Cancel" color="primary" v-close-popup />
+            <q-btn v-close-popup flat label="Cancel" color="primary" />
             <q-btn
+              v-close-popup
               flat
               label="Save"
               color="primary"
-              v-close-popup
               @click="setserverAddr(serverAddr)"
             />
           </q-card-actions>
@@ -121,7 +121,7 @@
       </q-dialog>
     </q-item>
     <!-- basic auth -->
-    <q-item clickable v-ripple @click="baut = true">
+    <q-item v-ripple clickable @click="baut = true">
       <q-item-section avatar>
         <q-icon :name="bpsw && busr ? 'o_lock_open' : 'lock'" />
       </q-item-section>
@@ -134,23 +134,23 @@
             <div class="text-h6">Enter Username and Password</div>
           </q-card-section>
           <q-input
+            v-model="busr"
             standout
             label="Username"
             type="text"
-            v-model="busr"
             name="username"
             class="q-my-sm"
           >
           </q-input>
           <q-input
+            v-model="bpsw"
             standout
             label="Password"
             :type="!isPwd ? 'password' : 'text'"
-            v-model="bpsw"
             class="q-my-sm"
             name="password"
           >
-            <template v-slot:append>
+            <template #append>
               <q-icon
                 :name="isPwd ? 'visibility_off' : 'visibility'"
                 class="cursor-pointer"
@@ -161,18 +161,18 @@
 
           <q-card-actions align="right">
             <q-btn
+              v-close-popup
               flat
               label="Clear Auth"
               color="primary"
-              v-close-popup
               @click="setserverAuth()"
             />
-            <q-btn flat label="Cancel" color="primary" v-close-popup />
+            <q-btn v-close-popup flat label="Cancel" color="primary" />
             <q-btn
+              v-close-popup
               flat
               label="Save"
               color="primary"
-              v-close-popup
               @click="setserverAuth(busr, bpsw)"
             />
           </q-card-actions>
@@ -180,7 +180,7 @@
       </q-dialog>
     </q-item>
     <!-- Reader Defaults -->
-    <q-item clickable v-ripple @click="SRead = true">
+    <q-item v-ripple clickable @click="SRead = true">
       <q-item-section avatar>
         <q-icon name="menu_book" />
       </q-item-section>
@@ -195,47 +195,47 @@
           </q-card-section>
           <q-card-section>
             <q-item
+              v-ripple
               class="row justify-between no-wrap items-center rounded-borders"
               clickable
-              v-ripple
               @click="SreadMargins = !SreadMargins"
             >
               <q-item-label>Page Margins</q-item-label>
-              <q-toggle color="blue" v-model="SreadMargins" />
+              <q-toggle v-model="SreadMargins" color="blue" />
             </q-item>
             <q-separator class="q-my-xs"></q-separator>
             <q-item
+              v-ripple
               class="row justify-between no-wrap items-center rounded-borders"
               clickable
-              v-ripple
               @click="SreadScale = !SreadScale"
             >
               <q-item-label>Page Scale</q-item-label>
-              <q-toggle color="blue" v-model="SreadScale" />
+              <q-toggle v-model="SreadScale" color="blue" />
             </q-item>
             <q-separator class="q-my-xs"></q-separator>
             <q-select
+              v-model="SReadModel"
               standout
               label="Reader Mode"
-              v-model="SReadModel"
               :options="SReadoptions"
             >
             </q-select>
             <q-separator class="q-my-xs"></q-separator>
             <q-select
+              v-model="SReadPath"
               standout
               label="Navigation layout"
-              v-model="SReadPath"
               :options="PathOptions"
             >
             </q-select>
           </q-card-section>
           <q-card-actions align="right">
             <q-btn
+              v-close-popup
               flat
               label="Save"
               color="primary"
-              v-close-popup
               @click="setReaderOptions"
             />
           </q-card-actions>
@@ -250,8 +250,8 @@
       default-closed
     >
       <q-item
-        clickable
         v-ripple
+        clickable
         class="q-pl-xl"
         :href="serverAddr + `/api/v1/backup/export/file`"
       >
@@ -262,7 +262,7 @@
           >
         </q-item-section>
       </q-item>
-      <q-item clickable v-ripple class="q-pl-xl">
+      <q-item v-ripple clickable class="q-pl-xl">
         <q-item-section>
           <q-uploader
             :url="serverAddr + `/api/v1/backup/import/file`"
@@ -273,8 +273,8 @@
             :headers="[
               {
                 name: 'Authorization',
-                value: 'Basic' + btoa(busr + ':' + bpsw)
-              }
+                value: 'Basic' + btoa(busr + ':' + bpsw),
+              },
             ]"
             auto-upload
             style="width: 100%"
@@ -293,58 +293,10 @@ import { storeGet } from 'src/boot/StoreStuff';
 import { paths } from 'src/components/global/models';
 
 export default defineComponent({
-  name: 'settingsPage',
-  methods: {
-    myTweak(offset: number) {
-      return {
-        height: offset ? `calc(100vh - ${offset}px)` : '100vh'
-      };
-    },
-    setMitemW(val: number) {
-      this.$q.localStorage.set('MitemW', val);
-    },
-    setserverAddr: function (val: string) {
-      this.$storeSet(
-        'baseUrl',
-        val.endsWith('/') ? val.slice(0, -1) : val,
-        location.origin
-      );
-      this.resetAxiosBase();
-    },
-    setserverAuth(username = '', password = '') {
-      if (username == '' || password == '') {
-        this.$q.localStorage.remove('auth');
-        this.busr = '';
-        this.bpsw = '';
-      } else {
-        this.$q.localStorage.set('auth', { username, password });
-      }
-      this.resetAxiosAuth();
-    },
-    btoa(val: string) {
-      return btoa(val);
-    },
-    setReaderOptions() {
-      this.$q.localStorage.set('vue_RM', this.SReadModel);
-      this.$q.localStorage.set('vue_Paths', this.SReadPath);
-      this.$q.localStorage.set('vue_WT', this.SreadMargins);
-      this.$q.localStorage.set('vue_Scale', this.SreadScale);
-    }
-  },
-  watch: {
-    '$q.dark.isActive': function () {
-      this.darkmode = this.$q.dark.isActive;
-    },
-    darkmode: function (val) {
-      this.$q.dark.set(val);
-      this.$storeSet('dark', val, true);
-    },
-    useCache: function (val) {
-      this.$storeSet('useCache', val, true);
-    }
-  },
+  name: 'SettingsPage',
+  emits: ['set-title'],
   setup(_props, { emit }) {
-    emit('setTitle', 'Settings');
+    emit('set-title', 'Settings');
     const $q = useQuasar();
     const darkmode = ref($q.dark.isActive);
     const MitemW = ref(storeGet('MitemW', 300) as number);
@@ -386,8 +338,57 @@ export default defineComponent({
       bpsw: ref(auth != null ? auth.password : ''),
       resetAxiosBase,
       resetAxiosAuth,
-      isPwd: ref(false)
+      isPwd: ref(false),
     };
-  }
+  },
+  watch: {
+    '$q.dark.isActive': function () {
+      this.darkmode = this.$q.dark.isActive;
+    },
+    darkmode: function (val) {
+      this.$q.dark.set(val);
+      this.$storeSet('dark', val, true);
+    },
+    useCache: function (val) {
+      this.$storeSet('useCache', val, true);
+    },
+  },
+  methods: {
+    myTweak(offset: number) {
+      return {
+        height: offset ? `calc(100vh - ${offset}px)` : '100vh',
+      };
+    },
+    setMitemW(val: number) {
+      this.$q.localStorage.set('MitemW', val);
+    },
+    setserverAddr: function (val: string) {
+      this.$storeSet(
+        'baseUrl',
+        val.endsWith('/') ? val.slice(0, -1) : val,
+        location.origin
+      );
+      this.resetAxiosBase();
+    },
+    setserverAuth(username = '', password = '') {
+      if (username == '' || password == '') {
+        this.$q.localStorage.remove('auth');
+        this.busr = '';
+        this.bpsw = '';
+      } else {
+        this.$q.localStorage.set('auth', { username, password });
+      }
+      this.resetAxiosAuth();
+    },
+    btoa(val: string) {
+      return btoa(val);
+    },
+    setReaderOptions() {
+      this.$q.localStorage.set('vue_RM', this.SReadModel);
+      this.$q.localStorage.set('vue_Paths', this.SReadPath);
+      this.$q.localStorage.set('vue_WT', this.SreadMargins);
+      this.$q.localStorage.set('vue_Scale', this.SreadScale);
+    },
+  },
 });
 </script>

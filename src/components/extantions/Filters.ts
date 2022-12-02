@@ -11,7 +11,7 @@ const langs = ref(<string[]>[
   ...(<string[]>storeGet('ExtLangFilt', [])),
   'all',
   'updates pending',
-  'installed'
+  'installed',
 ]);
 const currlangs = ref(<string[]>[]);
 
@@ -33,6 +33,6 @@ export default function useInBar() {
     setcurrlangs,
     currlangs,
     setlangs,
-    langs
+    langs,
   };
 }

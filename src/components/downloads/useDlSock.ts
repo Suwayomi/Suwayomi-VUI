@@ -46,6 +46,6 @@ export default function useDlSock() {
   return {
     eventsFromServer,
     isConnected,
-    sendMsg
+    sendMsg,
   };
 }

@@ -20,7 +20,7 @@
           {{ langCodeToName(source.lang) }}
         </div>
         <q-intersection style="height: 100px; width: 100%" class="flex-shrink">
-          <sourcecard @reload="reload" :source="source"></sourcecard>
+          <sourcecard :source="source" @reload="reload"></sourcecard>
         </q-intersection>
       </div>
     </q-list>
@@ -51,29 +51,15 @@ import { langCodeToName } from 'src/components/extantions/language';
 import { AxiosResponse } from 'axios';
 
 export default defineComponent({
-  name: 'sourcesPage',
+  name: 'SourcesPage',
   components: { sourcecard },
-  created: function () {
-    this.reload();
-  },
-  methods: {
-    myTweak(offset: number) {
-      return {
-        height: offset ? `calc(100vh - ${offset}px)` : '100vh'
-      };
-    },
-    reload() {
-      this.$api
-        .get('/api/v1/source/list')
-        .then(({ data }: AxiosResponse<source[]>) => {
-          this.list = data;
-          this.filters.setcurrlangs(this.extractLangs(data));
-        });
-    },
-    langCodeToName,
-    extractLangs(lis: source[]): string[] {
-      return Array.from(new Set(lis.map((ele) => ele.lang)));
-    }
+  emits: ['set-title'],
+  setup(_props, { emit }) {
+    emit('set-title', 'Sources');
+    const filters = Filters();
+    const langs = ref(filters.langs);
+    const list = ref(<source[]>[]);
+    return { list, langs, filters, is };
   },
   computed: {
     uselist(): source[] {
@@ -89,14 +75,29 @@ export default defineComponent({
         }
         return 0;
       });
-    }
+    },
   },
-  setup(_props, { emit }) {
-    emit('setTitle', 'Sources');
-    const filters = Filters();
-    const langs = ref(filters.langs);
-    const list = ref(<source[]>[]);
-    return { list, langs, filters, is };
-  }
+  created: function () {
+    this.reload();
+  },
+  methods: {
+    myTweak(offset: number) {
+      return {
+        height: offset ? `calc(100vh - ${offset}px)` : '100vh',
+      };
+    },
+    reload() {
+      this.$api
+        .get('/api/v1/source/list')
+        .then(({ data }: AxiosResponse<source[]>) => {
+          this.list = data;
+          this.filters.setcurrlangs(this.extractLangs(data));
+        });
+    },
+    langCodeToName,
+    extractLangs(lis: source[]): string[] {
+      return Array.from(new Set(lis.map((ele) => ele.lang)));
+    },
+  },
 });
 </script>

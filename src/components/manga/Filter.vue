@@ -44,9 +44,9 @@
       <div v-if="tab == 'filter'">
         <q-card-section class="q-px-md q-pt-md q-pb-xs">
           <q-checkbox
+            v-model="unread"
             style="width: 100%"
             toggle-indeterminate
-            v-model="unread"
             label="Unread"
             checked-icon="check_box"
             unchecked-icon="r_disabled_by_default"
@@ -58,9 +58,9 @@
         </q-card-section>
         <q-card-section class="q-px-md q-py-xs">
           <q-checkbox
+            v-model="downloaded"
             style="width: 100%"
             toggle-indeterminate
-            v-model="downloaded"
             label="Downloaded"
             checked-icon="check_box"
             unchecked-icon="r_disabled_by_default"
@@ -72,9 +72,9 @@
         </q-card-section>
         <q-card-section class="q-px-md q-pt-xs q-pb-md">
           <q-checkbox
+            v-model="bookmarked"
             style="width: 100%"
             toggle-indeterminate
-            v-model="bookmarked"
             label="Bookmarked"
             checked-icon="check_box"
             unchecked-icon="r_disabled_by_default"
@@ -89,25 +89,25 @@
       <div v-if="tab == 'sort'">
         <q-card-section class="q-px-md q-pt-md q-pb-xs">
           <q-checkbox
+            v-model="Source"
             style="width: 100%"
             checked-icon="arrow_upward"
             unchecked-icon="arrow_downward"
             indeterminate-icon="null"
             color="primary"
             keep-color
-            v-model="Source"
             label="By Source"
           />
         </q-card-section>
         <q-card-section class="q-px-md q-pt-xs q-pb-md">
           <q-checkbox
+            v-model="FetchDate"
             style="width: 100%"
             checked-icon="arrow_upward"
             unchecked-icon="arrow_downward"
             indeterminate-icon="null"
             color="primary"
             keep-color
-            v-model="FetchDate"
             label="By Fetch date"
           />
         </q-card-section>
@@ -131,7 +131,24 @@ import { chaptersFilter } from 'src/components/manga/filters';
 import { useRoute } from 'vue-router';
 
 export default defineComponent({
-  name: 'libraryTopBar',
+  name: 'LibraryTopBar',
+  setup() {
+    const route = useRoute();
+    const filt = chaptersFilter(parseInt(`${route.params['mangaID']}`));
+    const filters = ref(filt);
+
+    return {
+      dialo: ref(false),
+      tab: ref('filter'),
+      unread: ref(filt.Unread),
+      downloaded: ref(filt.Downloaded),
+      bookmarked: ref(filt.Bookmarked),
+      Source: ref(filt.Source),
+      FetchDate: ref(filt.FetchDate),
+      filt: filters,
+      disp: ref(filt.Display),
+    };
+  },
   //setFilter(value: bnn, mangaID: number, whatChange: keykeys) {
   watch: {
     unread() {
@@ -157,7 +174,7 @@ export default defineComponent({
     },
     disp() {
       this.filt.setDisplay(this.disp);
-    }
+    },
   },
   methods: {
     aredefaults() {
@@ -169,24 +186,7 @@ export default defineComponent({
         this.FetchDate == null &&
         this.disp == 'source'
       );
-    }
+    },
   },
-  setup() {
-    const route = useRoute();
-    const filt = chaptersFilter(parseInt(`${route.params['mangaID']}`));
-    const filters = ref(filt);
-
-    return {
-      dialo: ref(false),
-      tab: ref('filter'),
-      unread: ref(filt.Unread),
-      downloaded: ref(filt.Downloaded),
-      bookmarked: ref(filt.Bookmarked),
-      Source: ref(filt.Source),
-      FetchDate: ref(filt.FetchDate),
-      filt: filters,
-      disp: ref(filt.Display)
-    };
-  }
 });
 </script>

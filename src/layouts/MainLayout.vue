@@ -51,10 +51,10 @@
     </q-header>
 
     <q-footer
+      v-if="$q.screen.sm || $q.screen.xs"
       elevated
       class="text-primary flex no-wrap justify-evenly"
       :class="$q.dark.isActive ? `bg-dark` : `bg-light`"
-      v-if="$q.screen.sm || $q.screen.xs"
     >
       <q-item
         v-for="menu in essentialLinks"
@@ -84,9 +84,9 @@
 
     <q-page-container>
       <router-view
-        @setTitle="setTitle"
         :class="$q.dark.isActive ? `bg-dark-page` : `bg-light-page`"
         class="OFlow"
+        @set-title="setTitle"
       />
     </q-page-container>
   </q-layout>
@@ -104,51 +104,88 @@ const linksList = [
     title: 'Library',
     caption: '',
     icon: 'o_collections_bookmark',
-    link: '/library?tab=0'
+    link: '/library?tab=0',
   },
   {
     title: 'Updates',
     caption: '',
     icon: 'o_new_releases',
-    link: '/updates'
+    link: '/updates',
   },
   {
     title: 'Extensions',
     caption: '',
     icon: 'o_extension',
-    link: '/extensions'
+    link: '/extensions',
   },
   {
     title: 'Sources',
     caption: '',
     icon: 'o_explore',
-    link: '/sources'
+    link: '/sources',
   },
   {
     title: 'Downloads',
     caption: '',
     icon: 'o_download',
-    link: '/downloads'
+    link: '/downloads',
   },
   {
     title: 'Settings',
     caption: '',
     icon: 'settings',
-    link: '/settings'
-  }
+    link: '/settings',
+  },
 ];
 
 export default defineComponent({
   name: 'MainLayout',
 
   components: {
-    EssentialLink
+    EssentialLink,
+  },
+  setup() {
+    const $q = useQuasar();
+    const title = ref('Quasar App');
+    useMeta(() => {
+      return {
+        title: title.value,
+        titleTemplate: (title) => `${title} - Tachidesk Quasar`,
+      };
+    });
+    $q.dark.set(<boolean>storeGet('dark', true));
+    const leftDrawerOpen = ref(true);
+    return {
+      title,
+      essentialLinks: linksList,
+      tru: ref(true),
+      leftDrawerOpen,
+      toggledark() {
+        $q.dark.toggle();
+        storeSet('dark', $q.dark.isActive, true);
+      },
+      doSearch: ref(false),
+      Searchenter: ref(false),
+      FS: ref(false),
+    };
+  },
+  computed: {
+    scrollbarTheme(): string {
+      return this.$q.dark.isActive ? 'darkSB' : 'lightSB';
+    },
   },
   watch: {
     scrollbarTheme(neww, old) {
       document.body.classList.remove(old);
       document.body.classList.add(neww);
-    }
+    },
+  },
+  mounted() {
+    document.body.classList.add(this.scrollbarTheme);
+    window.addEventListener('full-screen', (e) => this.isFS(e as CustomEvent));
+  },
+  unmounted() {
+    document.body.classList.remove(this.scrollbarTheme);
   },
   methods: {
     setTitle(titl: string) {
@@ -172,45 +209,8 @@ export default defineComponent({
     isFS(event: CustomEvent) {
       console.log(event);
       this.FS = event.detail;
-    }
+    },
   },
-  computed: {
-    scrollbarTheme(): string {
-      return this.$q.dark.isActive ? 'darkSB' : 'lightSB';
-    }
-  },
-  mounted() {
-    document.body.classList.add(this.scrollbarTheme);
-    window.addEventListener('full-screen', (e) => this.isFS(e as CustomEvent));
-  },
-  unmounted() {
-    document.body.classList.remove(this.scrollbarTheme);
-  },
-  setup() {
-    const $q = useQuasar();
-    const title = ref('Quasar App');
-    useMeta(() => {
-      return {
-        title: title.value,
-        titleTemplate: (title) => `${title} - Tachidesk Quasar`
-      };
-    });
-    $q.dark.set(<boolean>storeGet('dark', true));
-    const leftDrawerOpen = ref(true);
-    return {
-      title,
-      essentialLinks: linksList,
-      tru: ref(true),
-      leftDrawerOpen,
-      toggledark() {
-        $q.dark.toggle();
-        storeSet('dark', $q.dark.isActive, true);
-      },
-      doSearch: ref(false),
-      Searchenter: ref(false),
-      FS: ref(false)
-    };
-  }
 });
 </script>
 

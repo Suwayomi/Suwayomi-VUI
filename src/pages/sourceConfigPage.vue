@@ -10,10 +10,10 @@
   <q-list separator :dark="$q.dark.isActive" :style-fn="myTweak">
     <whatis
       v-for="(pref, index) in preferences"
-      :preference="pref"
       :key="index"
+      :preference="pref"
       :position="index"
-      @getPrefs="getPrefs"
+      @get-prefs="getPrefs"
     ></whatis>
   </q-list>
 </template>
@@ -25,12 +25,19 @@ import whatis from 'src/components/sourceSearch/config/whatIs.vue';
 import { AxiosResponse } from 'axios';
 
 export default defineComponent({
-  name: 'settingsPage',
+  name: 'SettingsPage',
   components: { whatis },
+  setup() {
+    return { preferences: ref(<preferences[]>[]) };
+  },
+  watch: {},
+  created: function () {
+    this.getPrefs();
+  },
   methods: {
     myTweak(offset: number) {
       return {
-        height: offset ? `calc(100vh - ${offset}px)` : '100vh'
+        height: offset ? `calc(100vh - ${offset}px)` : '100vh',
       };
     },
     getPrefs() {
@@ -39,14 +46,7 @@ export default defineComponent({
         .then(
           ({ data }: AxiosResponse<preferences[]>) => (this.preferences = data)
         );
-    }
+    },
   },
-  watch: {},
-  created: function () {
-    this.getPrefs();
-  },
-  setup() {
-    return { preferences: ref(<preferences[]>[]) };
-  }
 });
 </script>
