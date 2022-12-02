@@ -1,0 +1,9 @@
+*
+!*.js
+!*.ts
+!*.vue
+!*.scss
+!*.html
+!*.md
+!*.json
+!*/

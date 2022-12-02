@@ -27,14 +27,14 @@
               <q-item-label>{{ langCodeToName(filt) }}</q-item-label>
             </q-item-section>
             <q-item-section avatar>
-              <q-toggle color="blue" v-model="curr" :val="filt" />
+              <q-toggle v-model="curr" color="blue" :val="filt" />
             </q-item-section>
           </q-item>
         </q-card-section>
       </q-card-section>
       <q-separator />
       <q-card-actions align="right">
-        <q-btn flat label="OK" color="primary" v-close-popup />
+        <q-btn v-close-popup flat label="OK" color="primary" />
       </q-card-actions>
     </q-card>
   </q-dialog>
@@ -49,16 +49,16 @@ import { langCodeToName } from './language';
 export default defineComponent({
   name: 'ExtTopBar',
   components: { SearchBar },
-  watch: {
-    curr() {
-      this.filters.setlangs(this.curr);
-    }
-  },
   setup() {
     const filters = ref(useInBar());
     const curr = ref(filters.value.langs);
     const dial = ref(false);
     return { filters, dial, curr, langCodeToName };
-  }
+  },
+  watch: {
+    curr() {
+      this.filters.setlangs(this.curr);
+    },
+  },
 });
 </script>

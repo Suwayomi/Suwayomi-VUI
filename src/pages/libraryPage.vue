@@ -27,7 +27,7 @@
           </q-item>
         </q-card-section>
         <q-card-actions align="right" class="text-primary">
-          <q-btn flat label="ok" v-close-popup to="/settings" />
+          <q-btn v-close-popup flat label="ok" to="/settings" />
         </q-card-actions>
       </q-card>
     </q-dialog>
@@ -43,8 +43,18 @@ import MangaGrid from 'src/components/library/MangaGrid.vue';
 import { AxiosResponse } from 'axios';
 
 export default defineComponent({
-  name: 'libraryPage',
+  name: 'LibraryPage',
   components: { TabPanel, MangaGrid },
+  emits: ['set-title'],
+  setup(_props, { emit }) {
+    emit('set-title', 'Library');
+    const tabs = ref<tab[]>([]);
+    const failedFetch = ref(false);
+    return {
+      tabs,
+      failedFetch,
+    };
+  },
   created: async function () {
     try {
       const jsn = (await this.$api.get('/api/v1/category')) as AxiosResponse<
@@ -53,7 +63,7 @@ export default defineComponent({
       this.tabs = jsn.data.map((cat) => {
         return {
           tabname: cat.name,
-          tabID: cat.id
+          tabID: cat.id,
         };
       });
     } catch (e) {
@@ -63,18 +73,9 @@ export default defineComponent({
   methods: {
     myTweak(offset: number) {
       return {
-        height: offset ? `calc(100vh - ${offset}px)` : '100vh'
+        height: offset ? `calc(100vh - ${offset}px)` : '100vh',
       };
-    }
+    },
   },
-  setup(_props, { emit }) {
-    emit('setTitle', 'Library');
-    const tabs = ref<tab[]>([]);
-    const failedFetch = ref(false);
-    return {
-      tabs,
-      failedFetch
-    };
-  }
 });
 </script>

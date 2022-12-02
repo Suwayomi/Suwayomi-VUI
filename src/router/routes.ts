@@ -9,7 +9,7 @@ import { RouteRecordRaw } from 'vue-router';
 const routes: RouteRecordRaw[] = [
   {
     path: '/',
-    redirect: '/library'
+    redirect: '/library',
   },
   // library
   {
@@ -20,18 +20,18 @@ const routes: RouteRecordRaw[] = [
         path: '',
         components: {
           default: () => import('src/pages/libraryPage.vue'),
-          inBar: () => import('src/components/library/TopBar.vue')
-        }
-      }
-    ]
+          inBar: () => import('src/components/library/TopBar.vue'),
+        },
+      },
+    ],
   },
   // updates
   {
     path: '/updates',
     component: () => import('layouts/MainLayout.vue'),
     children: [
-      { path: '', component: () => import('src/pages/updatesPage.vue') }
-    ]
+      { path: '', component: () => import('src/pages/updatesPage.vue') },
+    ],
   },
   // extensions
   {
@@ -42,10 +42,10 @@ const routes: RouteRecordRaw[] = [
         path: '',
         components: {
           default: () => import('src/pages/extensionsPage.vue'),
-          inBar: () => import('src/components/extantions/TopBar.vue')
-        }
-      }
-    ]
+          inBar: () => import('src/components/extantions/TopBar.vue'),
+        },
+      },
+    ],
   },
   // sources
   {
@@ -56,30 +56,30 @@ const routes: RouteRecordRaw[] = [
         path: '',
         components: {
           default: () => import('src/pages/sourcesPage.vue'),
-          inBar: () => import('src/components/sources/TopBar.vue')
-        }
+          inBar: () => import('src/components/sources/TopBar.vue'),
+        },
       },
       {
         path: ':sourceID/:poplate(popular|latest)/',
         components: {
           default: () => import('src/pages/SourceSearchPage.vue'),
-          inBar: () => import('src/components/sourceSearch/SourceTopBar.vue')
-        }
+          inBar: () => import('src/components/sourceSearch/SourceTopBar.vue'),
+        },
       },
       {
         path: ':sourceID/config/',
         components: {
-          default: () => import('src/pages/sourceConfigPage.vue')
-        }
+          default: () => import('src/pages/sourceConfigPage.vue'),
+        },
       },
       {
         path: 'Global/',
         components: {
           default: () => import('src/pages/SSearchAll.vue'),
-          inBar: () => import('src/components/global/SearchBar.vue')
-        }
-      }
-    ]
+          inBar: () => import('src/components/global/SearchBar.vue'),
+        },
+      },
+    ],
   },
   // downloads
   {
@@ -90,10 +90,10 @@ const routes: RouteRecordRaw[] = [
         path: '',
         components: {
           default: () => import('src/pages/downloadsPage.vue'),
-          inBar: () => import('src/components/downloads/TopBar.vue')
-        }
-      }
-    ]
+          inBar: () => import('src/components/downloads/TopBar.vue'),
+        },
+      },
+    ],
   },
   // settings
   {
@@ -103,9 +103,9 @@ const routes: RouteRecordRaw[] = [
       { path: '', component: () => import('src/pages/settingsPage.vue') },
       {
         path: 'categories',
-        component: () => import('src/pages/categoriesSetringsPage.vue')
-      }
-    ]
+        component: () => import('src/pages/categoriesSetringsPage.vue'),
+      },
+    ],
   },
   // manga
   {
@@ -116,10 +116,10 @@ const routes: RouteRecordRaw[] = [
         path: '',
         components: {
           default: () => import('src/pages/mangaPage.vue'),
-          inBar: () => import('src/components/manga/topbar.vue')
-        }
-      }
-    ]
+          inBar: () => import('src/components/manga/topbar.vue'),
+        },
+      },
+    ],
   },
   // chapter
   {
@@ -129,16 +129,16 @@ const routes: RouteRecordRaw[] = [
       {
         name: 'chapterpage',
         path: '',
-        component: () => import('src/pages/chapterPage.vue')
-      }
-    ]
+        component: () => import('src/pages/chapterPage.vue'),
+      },
+    ],
   },
   // Always leave this as last one,
   // but you can also remove it
   {
     path: '/:catchAll(.*)*',
-    component: () => import('pages/ErrorNotFound.vue')
-  }
+    component: () => import('pages/ErrorNotFound.vue'),
+  },
 ];
 
 export default routes;

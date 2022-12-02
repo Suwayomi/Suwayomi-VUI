@@ -7,16 +7,16 @@
 <template>
   <q-page :style-fn="myTweak" class="notOflow">
     <q-infinite-scroll
-      @load="onLoad"
-      :offset="$q.screen.height"
       ref="infiniteScrol"
+      :offset="$q.screen.height"
+      @load="onLoad"
     >
       <div v-for="(item, index) in updates" :key="index">
         <UpdateCard :item="item"></UpdateCard>
       </div>
-      <template v-slot:loading>
+      <template #loading>
         <div v-for="(_, index) in 6" :key="index">
-          <q-card clickable v-ripple class="q-pa-xs q-ma-sm">
+          <q-card v-ripple clickable class="q-pa-xs q-ma-sm">
             <q-item>
               <q-item-section avatar>
                 <q-skeleton
@@ -50,12 +50,17 @@ interface updatesreq {
 }
 
 export default defineComponent({
-  name: 'updatesPage',
+  name: 'UpdatesPage',
   components: { UpdateCard },
+  emits: ['set-title'],
+  setup(_props, { emit }) {
+    emit('set-title', 'Updates');
+    return { updates: ref(<{ manga: manga; chapter: chapter }[]>[]) };
+  },
   methods: {
     myTweak(offset: number) {
       return {
-        height: offset ? `calc(100vh - ${offset}px)` : '100vh'
+        height: offset ? `calc(100vh - ${offset}px)` : '100vh',
       };
     },
     async onLoad(index: number, done: () => void) {
@@ -66,12 +71,8 @@ export default defineComponent({
         (this.$refs['infiniteScrol'] as QInfiniteScroll).stop();
       this.updates.push(...update.page);
       done();
-    }
+    },
   },
-  setup(_props, { emit }) {
-    emit('setTitle', 'Updates');
-    return { updates: ref(<{ manga: manga; chapter: chapter }[]>[]) };
-  }
 });
 </script>
 

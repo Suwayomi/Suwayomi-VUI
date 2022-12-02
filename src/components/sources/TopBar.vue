@@ -19,6 +19,6 @@ export default defineComponent({
   components: { ETB },
   setup() {
     return {};
-  }
+  },
 });
 </script>

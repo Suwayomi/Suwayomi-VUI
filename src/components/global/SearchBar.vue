@@ -6,15 +6,15 @@
  * file, You can obtain one at https://mozilla.org/MPL/2.0/. */ -->
 <template>
   <q-input
+    v-model="text"
     dense
     standout
-    v-model="text"
     debounce="500"
     input-class="text-right"
     class="q-ml-xs col-shrink"
     @keyup.enter="searchEnt()"
   >
-    <template v-slot:append>
+    <template #append>
       <q-icon v-if="text === ''" name="search" />
       <q-icon
         v-else
@@ -35,6 +35,13 @@ import { useRoute } from 'vue-router';
 
 export default defineComponent({
   name: 'SearchBar',
+  setup() {
+    const Route = useRoute();
+    return {
+      text: ref(`${Route.query['q'] || ''}`),
+      Searchenter: ref(false),
+    };
+  },
   methods: {
     searchNoEnt() {
       if (!this.Searchenter) {
@@ -43,14 +50,7 @@ export default defineComponent({
     },
     searchEnt() {
       this.$router.push({ query: { ...this.$route.query, q: this.text } });
-    }
+    },
   },
-  setup() {
-    const Route = useRoute();
-    return {
-      text: ref(`${Route.query['q'] || ''}`),
-      Searchenter: ref(false)
-    };
-  }
 });
 </script>

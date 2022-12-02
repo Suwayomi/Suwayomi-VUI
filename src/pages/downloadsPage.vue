@@ -12,12 +12,12 @@
     </div>
     <q-virtual-scroll
       v-if="downlfilt.length"
-      :items="downlfilt"
       v-slot="{ item }"
+      :items="downlfilt"
       class="self-start"
       style="flex: auto; height: 100%"
     >
-      <q-item clickable v-ripple class="q-pa-lg">
+      <q-item v-ripple clickable class="q-pa-lg">
         <q-item-section avatar>
           <q-icon name="drag_handle" size="sm"></q-icon>
         </q-item-section>
@@ -41,12 +41,12 @@
         </q-item-section>
         <q-item-section avatar>
           <q-btn
-            @click.prevent
-            @click="delet(item)"
             round
             flat
             icon="delete"
             class="flex-right"
+            @click.prevent
+            @click="delet(item)"
           ></q-btn>
         </q-item-section>
       </q-item>
@@ -95,11 +95,11 @@
           </q-item>
         </q-card-section>
         <q-card-actions align="right" class="text-primary">
-          <q-btn flat label="Ok" v-close-popup />
+          <q-btn v-close-popup flat label="Ok" />
           <q-btn
+            v-close-popup
             flat
             label="Dont show again"
-            v-close-popup
             @click="dontshowagain"
           />
         </q-card-actions>
@@ -116,48 +116,9 @@ import { useQuasar } from 'quasar';
 import { storeGet } from 'src/boot/StoreStuff';
 
 export default defineComponent({
-  created() {
-    this.$bus.on('DLFilter', (e: string[]) => {
-      this.filtering = e;
-    });
-  },
-  methods: {
-    myTweak(offset: number) {
-      return {
-        height: offset ? `calc(100vh - ${offset}px)` : '100vh'
-      };
-    },
-    async delet(download: download) {
-      this.$api.delete(
-        `/api/v1/download/${download.mangaId}/chapter/${download.chapterIndex}`
-      );
-      this.$api.delete(
-        `/api/v1/manga/${download.mangaId}/chapter/${download.chapterIndex}`,
-        { method: 'DELETE' }
-      );
-    },
-    dontshowagain() {
-      this.$q.localStorage.set('dontshowagainWH', true);
-    }
-  },
-  watch: {
-    'Emitter.eventsFromServer'(val) {
-      const tmp = <dlsock>JSON.parse(val);
-      if (isdlsock(tmp)) {
-        this.downloads = <download[]>tmp.queue;
-      }
-    }
-  },
-  computed: {
-    downlfilt(): download[] {
-      if (this.filtering.length) {
-        return this.downloads.filter((e) => this.filtering.includes(e.state));
-      }
-      return this.downloads;
-    }
-  },
+  emits: ['set-title'],
   setup(_props, { emit }) {
-    emit('setTitle', 'Downloads');
+    emit('set-title', 'Downloads');
     const $q = useQuasar();
     const Emitt = useDlSock();
     const Emitter = ref(Emitt);
@@ -183,8 +144,48 @@ export default defineComponent({
       downloads,
       goodBase,
       Emitter,
-      filtering: ref(<string[]>[])
+      filtering: ref(<string[]>[]),
     };
-  }
+  },
+  computed: {
+    downlfilt(): download[] {
+      if (this.filtering.length) {
+        return this.downloads.filter((e) => this.filtering.includes(e.state));
+      }
+      return this.downloads;
+    },
+  },
+  watch: {
+    'Emitter.eventsFromServer'(val) {
+      const tmp = <dlsock>JSON.parse(val);
+      if (isdlsock(tmp)) {
+        this.downloads = <download[]>tmp.queue;
+      }
+    },
+  },
+  created() {
+    this.$bus.on('DLFilter', (e: string[]) => {
+      this.filtering = e;
+    });
+  },
+  methods: {
+    myTweak(offset: number) {
+      return {
+        height: offset ? `calc(100vh - ${offset}px)` : '100vh',
+      };
+    },
+    async delet(download: download) {
+      this.$api.delete(
+        `/api/v1/download/${download.mangaId}/chapter/${download.chapterIndex}`
+      );
+      this.$api.delete(
+        `/api/v1/manga/${download.mangaId}/chapter/${download.chapterIndex}`,
+        { method: 'DELETE' }
+      );
+    },
+    dontshowagain() {
+      this.$q.localStorage.set('dontshowagainWH', true);
+    },
+  },
 });
 </script>

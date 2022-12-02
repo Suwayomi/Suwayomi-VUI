@@ -15,7 +15,7 @@ export function authOptions(options: RequestInit | undefined = undefined) {
   if (auth != null) {
     update.headers = {
       ...update.headers,
-      Authorization: `Basic ${btoa(auth.username + ':' + auth.password)}`
+      Authorization: `Basic ${btoa(auth.username + ':' + auth.password)}`,
     };
   }
   return update;

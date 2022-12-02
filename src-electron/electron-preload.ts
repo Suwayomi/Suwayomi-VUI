@@ -48,7 +48,7 @@ contextBridge.exposeInMainWorld('myWindowAPI', {
 
   close() {
     BrowserWindow.getFocusedWindow()?.close();
-  }
+  },
 });
 
 const win = BrowserWindow.getFocusedWindow();

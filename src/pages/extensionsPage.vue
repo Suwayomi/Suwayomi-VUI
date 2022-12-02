@@ -17,9 +17,9 @@
         class="flex-shrink"
       >
         <extCard
-          @reload="reload"
           v-if="!exten.obsolete || exten.installed"
           :exten="exten"
+          @reload="reload"
         ></extCard>
       </q-intersection>
     </q-list>
@@ -45,7 +45,7 @@ import { defineComponent, ref } from 'vue';
 import {
   extention,
   groupedExtention,
-  isArrExtention
+  isArrExtention,
 } from 'src/components/global/models';
 import extCard from 'src/components/extantions/extCard.vue';
 import { langSortCmp } from 'src/components/extantions/language';
@@ -53,15 +53,46 @@ import Filters from 'src/components/extantions/Filters';
 import { AxiosResponse } from 'axios';
 
 export default defineComponent({
-  name: 'sourcesPage',
+  name: 'SourcesPage',
   components: { extCard },
+  emits: ['set-title'],
+  setup(_props, { emit }) {
+    emit('set-title', 'Extentions');
+    const filt = Filters();
+    const filters = filt;
+    const list = ref(<extention[]>[]);
+    const langs = ref(filt.langs);
+    return { list, allLangs: <string[]>[], filters, langs };
+  },
+  computed: {
+    langGroups(): [string, extention[]][] {
+      return this.groupExtensions(this.list);
+    },
+    filterList(): [string, extention[]][] {
+      let list = this.langGroups;
+      list = list.map((ele) => {
+        let tmp = ele[1];
+        if (this.$route.query['q']) {
+          tmp = tmp.filter((manga) =>
+            manga.name
+              .toLowerCase()
+              .includes(`${this.$route.query['q']}`.toLowerCase())
+          );
+        }
+        if (!this.langs.includes(ele[0])) tmp = [];
+        return [ele[0], tmp];
+      });
+
+      return list;
+    },
+  },
   created: function () {
     this.reload();
   },
   methods: {
     myTweak(offset: number) {
       return {
-        height: offset ? `calc(100vh - ${offset}px)` : '100vh'
+        height: offset ? `calc(100vh - ${offset}px)` : '100vh',
       };
     },
     reload() {
@@ -75,7 +106,7 @@ export default defineComponent({
       this.allLangs = []; // empty the array
       const sortedExtenions: groupedExtention = {
         ['installed']: [] as extention[],
-        'updates pending': [] as extention[]
+        'updates pending': [] as extention[],
       };
       extensions.forEach((extension) => {
         const lang = extension.lang;
@@ -104,18 +135,18 @@ export default defineComponent({
           'updates pending',
           isArrExtention(sortedExtenions['updates pending'])
             ? sortedExtenions['updates pending']
-            : []
+            : [],
         ],
         [
           'installed',
           isArrExtention(sortedExtenions['installed'])
             ? sortedExtenions['installed']
-            : []
+            : [],
         ],
         [
           'all',
-          isArrExtention(sortedExtenions['all']) ? sortedExtenions['all'] : []
-        ]
+          isArrExtention(sortedExtenions['all']) ? sortedExtenions['all'] : [],
+        ],
       ];
       this.filters.setcurrlangs(this.allLangs);
       const langExt: [string, extention[]][] = this.allLangs
@@ -126,37 +157,7 @@ export default defineComponent({
     },
     capitalizeFirstLetter(string: string) {
       return string.charAt(0).toUpperCase() + string.slice(1);
-    }
-  },
-  computed: {
-    langGroups(): [string, extention[]][] {
-      return this.groupExtensions(this.list);
     },
-    filterList(): [string, extention[]][] {
-      let list = this.langGroups;
-      list = list.map((ele) => {
-        let tmp = ele[1];
-        if (this.$route.query['q']) {
-          tmp = tmp.filter((manga) =>
-            manga.name
-              .toLowerCase()
-              .includes(`${this.$route.query['q']}`.toLowerCase())
-          );
-        }
-        if (!this.langs.includes(ele[0])) tmp = [];
-        return [ele[0], tmp];
-      });
-
-      return list;
-    }
   },
-  setup(_props, { emit }) {
-    emit('setTitle', 'Extentions');
-    const filt = Filters();
-    const filters = filt;
-    const list = ref(<extention[]>[]);
-    const langs = ref(filt.langs);
-    return { list, allLangs: <string[]>[], filters, langs };
-  }
 });
 </script>

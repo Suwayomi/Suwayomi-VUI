@@ -18,12 +18,17 @@ export default defineComponent({
   props: {
     sele: {
       type: Boolean as PropType<boolean>,
-      required: true
+      required: true,
     },
     cat: {
       type: Object as PropType<cat>,
-      required: true
-    }
+      required: true,
+    },
+  },
+  setup(props) {
+    return {
+      incat: ref(props.sele),
+    };
   },
   watch: {
     incat() {
@@ -36,12 +41,7 @@ export default defineComponent({
           `/api/v1/manga/${this.$route.params['mangaID']}/category/${this.cat.id}`
         );
       }
-    }
+    },
   },
-  setup(props) {
-    return {
-      incat: ref(props.sele)
-    };
-  }
 });
 </script>

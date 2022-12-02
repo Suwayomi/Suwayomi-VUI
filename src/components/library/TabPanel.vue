@@ -39,8 +39,8 @@ export default defineComponent({
   props: {
     tabs: {
       type: Array as PropType<tab[]>,
-      default: () => []
-    }
+      default: () => [],
+    },
   },
   setup() {
     const router = useRouter();
@@ -49,8 +49,8 @@ export default defineComponent({
       router.push({ query: { ...route.query, tab: 0 } });
     }
     return {
-      tab: ref(new Number(route.query['tab']).valueOf() || 0)
+      tab: ref(new Number(route.query['tab']).valueOf() || 0),
     };
-  }
+  },
 });
 </script>

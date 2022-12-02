@@ -5,7 +5,7 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at https://mozilla.org/MPL/2.0/. */ -->
 <template>
-  <q-card clickable v-ripple class="q-pa-xs q-ma-sm">
+  <q-card v-ripple clickable class="q-pa-xs q-ma-sm">
     <q-item :to="`/manga/` + item.manga.id">
       <q-item-section avatar>
         <q-img
@@ -30,12 +30,12 @@
       </q-item-section>
       <q-btn
         v-if="!item.chapter.downloaded"
-        @click.prevent="download(item)"
         round
         style="height: fit-content"
         flat
         icon="download"
         class="flex-right self-center"
+        @click.prevent="download(item)"
       >
       </q-btn>
     </q-item>
@@ -53,15 +53,13 @@ export default defineComponent({
   props: {
     item: {
       type: Object as PropType<{ manga: manga; chapter: chapter }>,
-      required: true
-    }
+      required: true,
+    },
   },
-  methods: {
-    async download(item: { manga: manga; chapter: chapter }) {
-      await this.$api.get(
-        `/api/v1/download/${item.manga.id}/chapter/${item.chapter.index}`
-      );
-    }
+  setup() {
+    const imgdata = ref('');
+    const useCache = ref(`${storeGet('useCache', true)}`);
+    return { useCache, imgdata };
   },
   mounted: function () {
     getImgBlob(
@@ -70,10 +68,12 @@ export default defineComponent({
       this.imgdata = value;
     });
   },
-  setup() {
-    const imgdata = ref('');
-    const useCache = ref(`${storeGet('useCache', true)}`);
-    return { useCache, imgdata };
-  }
+  methods: {
+    async download(item: { manga: manga; chapter: chapter }) {
+      await this.$api.get(
+        `/api/v1/download/${item.manga.id}/chapter/${item.chapter.index}`
+      );
+    },
+  },
 });
 </script>

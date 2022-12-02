@@ -10,64 +10,16 @@ on:
     branches: ["Release"]
 
 jobs:
-  build:
+  test:
     runs-on: ubuntu-latest
-
     strategy:
       matrix:
-        node-version: [19.x]
+        node-version: [16.x, 18.x, 19.x]
     steps:
       - uses: actions/checkout@v3
         with:
           fetch-depth: 0
       - name: Use Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v3
-        with:
-          node-version: ${{ matrix.node-version }}
-          cache: "npm"
-      - name: Generate Tag Name
-        id: GenTagName
-        run: |
-          genTag="r$(git rev-list HEAD --count)"
-          echo "$genTag"
-          echo "value=$genTag" >> $GITHUB_OUTPUT
-      - name: Login to GitHub Container Registry
-        if: github.event_name != 'pull_request'
-        uses: docker/login-action@v2
-        with:
-          registry: ghcr.io
-          username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
-      - id: string
-        if: github.event_name != 'pull_request'
-        uses: ASzc/change-string-case-action@v5
-        with:
-          string: ghcr.io/${{ github.repository_owner }}/${{ github.event.repository.name }}
-      - name: Build and push Docker image
-        if: github.event_name != 'pull_request'
-        uses: docker/build-push-action@v3
-        with:
-          context: .
-          push: true
-          tags: ${{ steps.string.outputs.lowercase }}:latest,${{ steps.string.outputs.lowercase }}:${{ steps.GenTagName.outputs.value }},
       - run: npm ci
-      - name: build for pages
-        if: github.event_name != 'pull_request'
-        run: PUBPATH=/Tachidesk-VUI/ npm run build
-      - name: Deploy Pages
-        if: github.event_name != 'pull_request'
-        uses: JamesIves/github-pages-deploy-action@v4
-        with:
-          folder: dist/pwa # The folder the action should deploy.
       - run: npm run build
-      - name: Generate zip
-        uses: montudor/action-zip@v1
-        if: github.event_name != 'pull_request'
-        with:
-          args: zip -qq -r release.zip dist/pwa
-      - name: Upload CI Release
-        if: github.event_name != 'pull_request'
-        uses: ncipollo/release-action@v1
-        with:
-          artifacts: "release.zip"
-          tag: ${{ steps.GenTagName.outputs.value }}

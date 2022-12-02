@@ -48,12 +48,15 @@ import { cat } from '../global/models';
 import { AxiosResponse } from 'axios';
 
 export default defineComponent({
-  name: 'mangaTopBar',
+  name: 'MangaTopBar',
   components: { topBcat },
-  methods: {
-    update() {
-      this.$bus.emit('updateManga');
-    }
+  setup() {
+    return {
+      dialo: ref(false),
+      options: ref(<cat[]>[]),
+      curr: ref(<cat[]>[]),
+      disp: ref([]),
+    };
   },
   mounted: function () {
     this.$api
@@ -67,13 +70,10 @@ export default defineComponent({
         this.curr = data;
       });
   },
-  setup() {
-    return {
-      dialo: ref(false),
-      options: ref(<cat[]>[]),
-      curr: ref(<cat[]>[]),
-      disp: ref([])
-    };
-  }
+  methods: {
+    update() {
+      this.$bus.emit('updateManga');
+    },
+  },
 });
 </script>

@@ -9,7 +9,7 @@
     <q-item-section>
       <q-item-label>{{ filter.filter.name }}</q-item-label>
     </q-item-section>
-    <q-checkbox color="blue" v-model="val" />
+    <q-checkbox v-model="val" color="blue" />
   </q-item>
   <q-item v-if="isfilterSelect(filter)">
     <q-select
@@ -19,7 +19,7 @@
         filter.filter.displayValues.map((ele, inde) => {
           return {
             label: ele,
-            value: inde
+            value: inde,
           };
         })
       "
@@ -30,9 +30,9 @@
   </q-item>
   <q-item v-if="isfilterTriState(filter)">
     <q-checkbox
+      v-model="val"
       style="width: 100%"
       toggle-indeterminate
-      v-model="val"
       :label="filter.filter.name"
       checked-icon="check_box"
       unchecked-icon="r_disabled_by_default"
@@ -55,16 +55,16 @@
   </q-item>
   <q-item v-if="isfilterText(filter) && typeof val == 'string'">
     <q-input
+      v-model="val"
       style="width: 100%"
       outlined
       :label="filter.filter.name"
-      v-model="val"
     ></q-input>
   </q-item>
   <q-expansion-item
+    v-if="isfilterSort(filter) && isSortState(val)"
     :label="filter.filter.name"
     style="width: 100%"
-    v-if="isfilterSort(filter) && isSortState(val)"
   >
     <q-item v-for="(sort, index) in filter.filter.values" :key="index">
       <q-item-section thumbnail class="q-px-md">
@@ -103,48 +103,23 @@ import {
   isfilterHeader,
   isfilterSeparator,
   isfilterText,
-  isSortState
+  isSortState,
 } from 'src/components/global/models';
 import { defineComponent, PropType, ref } from 'vue';
 
 export default defineComponent({
-  name: 'isGroup',
+  name: 'IsGroup',
   props: {
     filter: {
       type: Object as PropType<filters>,
-      required: true
+      required: true,
     },
     position: {
       type: Number as PropType<number | undefined>,
-      default: () => undefined
-    }
+      default: () => undefined,
+    },
   },
-  methods: {
-    doSort(index: number) {
-      if (isSortState(this.val)) {
-        if (index == this.val.index) {
-          this.val.ascending = !this.val.ascending;
-        } else {
-          this.val.index = index;
-          this.val.ascending = true;
-        }
-      }
-    }
-  },
-  watch: {
-    val() {
-      if (typeof this.val == 'object') {
-        this.$emit('stateChange', JSON.stringify(this.val), this.position);
-      } else if (
-        typeof this.val == 'string' ||
-        typeof this.val == 'number' ||
-        typeof this.val == 'boolean'
-      ) {
-        this.$emit('stateChange', this.val.toString(), this.position);
-      }
-    }
-  },
-  emits: ['stateChange'],
+  emits: ['state-change'],
   setup(props) {
     let val: unknown;
     if (isfilterCheckBox(props.filter)) {
@@ -174,8 +149,33 @@ export default defineComponent({
       isfilterHeader,
       isfilterSeparator,
       isfilterText,
-      isSortState
+      isSortState,
     };
-  }
+  },
+  watch: {
+    val() {
+      if (typeof this.val == 'object') {
+        this.$emit('state-change', JSON.stringify(this.val), this.position);
+      } else if (
+        typeof this.val == 'string' ||
+        typeof this.val == 'number' ||
+        typeof this.val == 'boolean'
+      ) {
+        this.$emit('state-change', this.val.toString(), this.position);
+      }
+    },
+  },
+  methods: {
+    doSort(index: number) {
+      if (isSortState(this.val)) {
+        if (index == this.val.index) {
+          this.val.ascending = !this.val.ascending;
+        } else {
+          this.val.index = index;
+          this.val.ascending = true;
+        }
+      }
+    },
+  },
 });
 </script>

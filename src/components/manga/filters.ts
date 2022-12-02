@@ -75,6 +75,6 @@ export function chaptersFilter(mangaID: number) {
     setBookmarked,
     setSource,
     setFetchDate,
-    setDisplay
+    setDisplay,
   };
 }
