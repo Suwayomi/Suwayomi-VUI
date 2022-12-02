@@ -32,7 +32,7 @@
         class="bg-transparent"
       >
       </q-inner-loading>
-    <q-cardd>
+    </q-card>
   </div>
 </template>
 
