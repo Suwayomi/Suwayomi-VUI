@@ -224,6 +224,7 @@ module.exports = configure(function (/* ctx */) {
       builder: {
         // https://www.electron.build/configuration/configuration
         appId: 'tachidesk-vui',
+        artifactName: 'Tachidesk-VUI.${ext}',
         linux: {
           icon: '512x512.png',
           category: 'Utility',
