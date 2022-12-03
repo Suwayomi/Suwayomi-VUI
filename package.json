@@ -12,7 +12,7 @@
     "format": "prettier --write \"**/*.{js,ts,vue,scss,html,md,json}\" --ignore-path .gitignore",
     "test": "echo \"No test specified\" && exit 0",
     "build": "quasar build -m pwa",
-    "buildElectron": "quasar build -m electron"
+    "buildElectron": "quasar build -m electron -P never"
   },
   "dependencies": {
     "@electron/remote": "^2.0.8",
