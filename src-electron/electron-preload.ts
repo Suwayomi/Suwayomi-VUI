@@ -52,6 +52,23 @@ contextBridge.exposeInMainWorld('myWindowAPI', {
 });
 
 const win = BrowserWindow.getFocusedWindow();
+win?.webContents.session.webRequest.onBeforeSendHeaders((details, callback) => {
+  callback({
+    requestHeaders: { Origin: details.url, ...details.requestHeaders },
+  });
+});
+
+win?.webContents.session.webRequest.onHeadersReceived((details, callback) => {
+  if (details.responseHeaders)
+    details.responseHeaders['access-control-allow-origin'] = ['*'];
+  callback({
+    responseHeaders: {
+      'Access-Control-Allow-Headers': ['*'],
+      ...details.responseHeaders,
+    },
+  });
+});
+
 win?.webContents.send('full-screen', win?.fullScreen || false);
 win?.addListener('enter-full-screen', () => {
   const event = new CustomEvent('full-screen', { detail: true });
