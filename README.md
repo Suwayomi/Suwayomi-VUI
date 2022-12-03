@@ -9,12 +9,17 @@ Robonau's Vue + Quasar tachidesk UI
 # How To Use:
 
 ## Easy mode
-https://robonau.github.io/Tachidesk-VUI/  
+
+https://robonau.github.io/Tachidesk-VUI/
 url subject to change as i need a Suwayomi admin help to set it up properly
+
 ## Elctron application
+
 check back later
+
 ## Web Server files
-the web.zip file in the release is for hosting the ui though a webserver  
+
+the web.zip file in the release is for hosting the ui though a webserver
 it should also be possable to replace the contens of the webUI folder in the tachidesk data directory, though this is not recomended
 
 ## Docker
@@ -64,4 +69,5 @@ quasar build -m pwa
 ```
 
 ## useful:
+
 [Quasar dev wiki](https://quasar.dev/)
