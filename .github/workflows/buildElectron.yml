@@ -42,5 +42,5 @@ jobs:
       - name: Upload CI Release
         uses: ncipollo/release-action@v1
         with:
-          artifacts: "Tachidesk-VUI.AppImage,Tachidesk-VUI.zip"
+          artifacts: "./dist/electron/Tachidesk-VUI.AppImage,./dist/electron/Tachidesk-VUI.zip"
           tag: ${{ steps.GenTagName.outputs.value }}
