@@ -16,7 +16,7 @@
 name: BuildElectron
 
 on:
-  push:
+  pull_request:
     branches: ["Release"]
 
 jobs:
