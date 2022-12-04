@@ -131,6 +131,7 @@ jobs:
             echo "artifacts=dist/electron/Packaged/Tachidesk-VUI-win-*.exe,dist/electron/Packaged/Tachidesk-VUI-win-*.msi" >> $GITHUB_OUTPUT
           else
             echo "artifacts=dist/electron/Packaged/Tachidesk-VUI-linux-*.*" >> $GITHUB_OUTPUT
+          fi
       - uses: actions/checkout@v3
         with:
           fetch-depth: 0
