@@ -240,10 +240,10 @@ module.exports = configure(function (/* ctx */) {
               target: 'rpm',
               arch: ['x64'],
             },
-            {
-              target: 'pacman',
-              arch: ['x64'],
-            },
+            // {
+            //   target: 'pacman',
+            //   arch: ['x64'],
+            // },
             {
               target: 'zip',
               arch: ['x64'],
