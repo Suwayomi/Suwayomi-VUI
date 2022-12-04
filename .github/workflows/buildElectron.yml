@@ -20,9 +20,32 @@ on:
     branches: ["Release"]
 
 jobs:
+  gentag:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Generate Tag Name
+        shell: bash
+        run: |
+          genTag="r$(git rev-list HEAD --count)"
+          echo "$genTag"
+          echo "$genTag" > GenTagName.txt
+      - name: Upload math result for job 1
+        uses: actions/upload-artifact@v3
+        with:
+          name: GenTagName
+          path: GenTagName.txt
   # buildLinux:
   #   runs-on: ubuntu-latest
   #   steps:
+  #     - name: Download math result for job 1
+  #       uses: actions/download-artifact@v3
+  #       with:
+  #         name: homework
+  #     - name: Generate Tag Name
+  #       id: GenTagName
+  #       run: |
+  #         genTag="cat GenTagName.txt"
+  #         echo "value=$genTag" >> $GITHUB_OUTPUT
   #     - uses: actions/checkout@v3
   #       with:
   #         fetch-depth: 0
@@ -31,12 +54,6 @@ jobs:
   #       with:
   #         node-version: 19.x
   #         cache: "npm"
-  #     - name: Generate Tag Name
-  #       id: GenTagName
-  #       run: |
-  #         genTag="r$(git rev-list HEAD --count)"
-  #         echo "$genTag"
-  #         echo "value=$genTag" >> $GITHUB_OUTPUT
   #     - run: npm ci
   #     - run: npm run buildElectron
   #     - name: Rename release files
@@ -50,7 +67,18 @@ jobs:
   #         tag: ${{ steps.GenTagName.outputs.value }}
   buildwindows:
     runs-on: windows-latest
+    needs: gentag
     steps:
+      - name: Download math result for job 1
+        uses: actions/download-artifact@v3
+        with:
+          name: homework
+      - name: Generate Tag Name
+        shell: bash
+        id: GenTagName
+        run: |
+          genTag="cat GenTagName.txt"
+          echo "value=$genTag" >> $GITHUB_OUTPUT
       - uses: actions/checkout@v3
         with:
           fetch-depth: 0
@@ -59,15 +87,10 @@ jobs:
         with:
           node-version: 19.x
           cache: "npm"
-      - name: Generate Tag Name
-        id: GenTagName
-        run: |
-          genTag="r$(git rev-list HEAD --count)"
-          echo "$genTag"
-          echo "value=$genTag" >> $GITHUB_OUTPUT
       - run: npm ci
       - run: npm run buildElectron
       - name: Rename release files
+        shell: bash
         run: |
           cd dist/electron/Packaged/
           for f in Tachidesk-VUI.*; do mv "${f}" "${f/Tachidesk-VUI./Tachidesk-VUI-Windows.}"; done;
