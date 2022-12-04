@@ -64,4 +64,5 @@ jobs:
         uses: ncipollo/release-action@v1
         with:
           artifacts: "web.zip"
+          allowUpdates: "true"
           tag: ${{ steps.GenTagName.outputs.value }}
