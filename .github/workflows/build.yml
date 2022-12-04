@@ -124,7 +124,7 @@ jobs:
     needs: GenTag
     steps:
       - name: if win
-        if: os-versions == 'windows-latest'
+        if: ${{matrix.os-versions == 'windows-latest'}}
         run: echo "value=dist/electron/Packaged/Tachidesk-VUI-win-*.exe,dist/electron/Packaged/Tachidesk-VUI-win-*.msi" >> $GITHUB_OUTPUT
       - name: if linux
         if: os-versions == 'ubuntu-latest'
