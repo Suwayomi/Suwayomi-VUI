@@ -68,7 +68,7 @@ jobs:
       - run: npm run build
 
       - name: Generate zip
-        run: zip -r  web.zip ./dist/pwa/*
+        run: zip -r  Tachidesk-VUI-Web.zip ./dist/pwa/*
       - name: Upload CI Release
         uses: ncipollo/release-action@v1
         with:
@@ -128,9 +128,9 @@ jobs:
         id: winlin
         run: |
           if [[ "${{ matrix.os-versions }}" == "windows-latest" ]]; then
-            echo "artifacts=dist/electron/Packaged/Tachidesk-VUI-win-*.exe,dist/electron/Packaged/Tachidesk-VUI-win-*.msi" >> $GITHUB_OUTPUT
+            echo "artifacts=dist/electron/Packaged/Tachidesk-VUI-electron-win-*.exe,dist/electron/Packaged/Tachidesk-VUI-electron-win-*.msi" >> $GITHUB_OUTPUT
           else
-            echo "artifacts=dist/electron/Packaged/Tachidesk-VUI-linux-*.*" >> $GITHUB_OUTPUT
+            echo "artifacts=dist/electron/Packaged/Tachidesk-VUI-electron-linux-*.*" >> $GITHUB_OUTPUT
           fi
       - uses: actions/checkout@v3
         with:

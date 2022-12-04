@@ -224,7 +224,7 @@ module.exports = configure(function (/* ctx */) {
       builder: {
         // https://www.electron.build/configuration/configuration
         appId: 'tachidesk-vui',
-        artifactName: '${productName}-${os}-${arch}.${ext}',
+        artifactName: '${productName}-electron-${os}-${arch}.${ext}',
         linux: {
           category: 'Utility',
           target: [
@@ -278,13 +278,15 @@ module.exports = configure(function (/* ctx */) {
           ],
         },
         msi: {
-          artifactName: '${productName}-${os}-${arch}-installer.${ext}',
+          artifactName:
+            '${productName}-electron-${os}-${arch}-installer.${ext}',
         },
         nsis: {
-          artifactName: '${productName}-${os}-${arch}-Installer.${ext}',
+          artifactName:
+            '${productName}-electron-${os}-${arch}-Installer.${ext}',
         },
         portable: {
-          artifactName: '${productName}-${os}-${arch}-portable.${ext}',
+          artifactName: '${productName}-electron-${os}-${arch}-portable.${ext}',
         },
       },
     },
