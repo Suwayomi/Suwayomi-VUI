@@ -72,7 +72,7 @@ jobs:
       - name: Upload CI Release
         uses: ncipollo/release-action@v1
         with:
-          artifacts: "web.zip"
+          artifacts: "Tachidesk-VUI-Web.zip"
           allowUpdates: "true"
           tag: ${{ needs.GenTag.outputs.value }}
   # buildElectronLinux:
