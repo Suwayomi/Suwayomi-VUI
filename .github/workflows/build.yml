@@ -146,5 +146,5 @@ jobs:
         uses: ncipollo/release-action@v1
         with:
           allowUpdates: "true"
-          artifacts: "dist/electron/Packaged/Tachidesk-VUI-*-win-*.exe,dist/electron/Packaged/Tachidesk-VUI-*-win-*.msi"
+          artifacts: "dist/electron/Packaged/Tachidesk-VUI-win-*.exe,dist/electron/Packaged/Tachidesk-VUI-win-*.msi"
           tag: ${{ steps.GenTagName.outputs.value }}
