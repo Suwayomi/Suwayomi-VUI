@@ -14,23 +14,34 @@ on:
     branches: ["Release"]
 
 jobs:
-  build:
+  GenTag:
+    outputs:
+      value: ${{steps.GenTagName.outputs.value}}
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
         with:
           fetch-depth: 0
-      - name: Use Node.js 19.x
-        uses: actions/setup-node@v3
-        with:
-          node-version: ${{ matrix.node-version }}
-          cache: "npm"
       - name: Generate Tag Name
         id: GenTagName
+        shell: bash
         run: |
           genTag="r$(git rev-list HEAD --count)"
           echo "$genTag"
           echo "value=$genTag" >> $GITHUB_OUTPUT
+  build:
+    needs: GenTag
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out Git repository
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+      - name: Use Node.js 19
+        uses: actions/setup-node@v3
+        with:
+          node-version: 19
+          cache: "npm"
       - name: Login to GitHub Container Registry
         uses: docker/login-action@v2
         with:
@@ -46,7 +57,7 @@ jobs:
         with:
           context: .
           push: true
-          tags: ${{ steps.string.outputs.lowercase }}:latest,${{ steps.string.outputs.lowercase }}:${{ steps.GenTagName.outputs.value }},
+          tags: ${{ steps.string.outputs.lowercase }}:latest,${{ steps.string.outputs.lowercase }}:${{ needs.GenTag.outputs.value }},
       - run: npm ci
       - name: build for pages
         run: PUBPATH=/Tachidesk-VUI/ npm run build
@@ -55,12 +66,85 @@ jobs:
         with:
           folder: dist/pwa # The folder the action should deploy.
       - run: npm run build
+
       - name: Generate zip
-        uses: montudor/action-zip@v1
-        with:
-          args: zip -qq -r web.zip dist/pwa
+        run: zip -r  Tachidesk-VUI-Web.zip ./dist/pwa/*
       - name: Upload CI Release
         uses: ncipollo/release-action@v1
         with:
-          artifacts: "web.zip"
-          tag: ${{ steps.GenTagName.outputs.value }}
+          artifacts: "Tachidesk-VUI-Web.zip"
+          allowUpdates: "true"
+          tag: ${{ needs.GenTag.outputs.value }}
+  # buildElectronLinux:
+  #   runs-on: ubuntu-latest
+  #   needs: GenTag
+  #   steps:
+  #     - name: Check out Git repository
+  #       uses: actions/checkout@v3
+  #       with:
+  #         fetch-depth: 0
+  #     - name: Use Node.js 19
+  #       uses: actions/setup-node@v3
+  #       with:
+  #         node-version: 19
+  #         cache: "npm"
+  #     - run: npm ci
+  #     - run: npm run buildElectron
+  #     - name: Upload CI Release
+  #       uses: ncipollo/release-action@v1
+  #       with:
+  #         allowUpdates: "true"
+  #         artifacts: "dist/electron/Packaged/Tachidesk-VUI-linux-*.*"
+  #         tag: ${{ needs.GenTag.outputs.value }}
+  # buildElectronwindows:
+  #   runs-on: windows-latest
+  #   needs: GenTag
+  #   steps:
+  #     - uses: actions/checkout@v3
+  #       with:
+  #         fetch-depth: 0
+  #     - name: Use Node.js 19
+  #       uses: actions/setup-node@v3
+  #       with:
+  #         node-version: 19
+  #         cache: "npm"
+  #     - run: npm ci
+  #     - run: npm run buildElectron
+  #     - name: Upload CI Release
+  #       uses: ncipollo/release-action@v1
+  #       with:
+  #         allowUpdates: "true"
+  #         artifacts: "dist/electron/Packaged/Tachidesk-VUI-win-*.exe,dist/electron/Packaged/Tachidesk-VUI-win-*.msi"
+  #         tag: ${{ needs.GenTag.outputs.value }}
+  buildElectron:
+    strategy:
+      matrix:
+        os-versions: [windows-latest, ubuntu-latest]
+    runs-on: ${{ matrix.os-versions }}
+    needs: GenTag
+    steps:
+      - name: if win/linux
+        shell: bash
+        id: winlin
+        run: |
+          if [[ "${{ matrix.os-versions }}" == "windows-latest" ]]; then
+            echo "artifacts=dist/electron/Packaged/Tachidesk-VUI-electron-win-*.exe,dist/electron/Packaged/Tachidesk-VUI-electron-win-*.msi" >> $GITHUB_OUTPUT
+          else
+            echo "artifacts=dist/electron/Packaged/Tachidesk-VUI-electron-linux-*.*" >> $GITHUB_OUTPUT
+          fi
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+      - name: Use Node.js 19
+        uses: actions/setup-node@v3
+        with:
+          node-version: 19
+          cache: "npm"
+      - run: npm ci
+      - run: npm run buildElectron
+      - name: Upload CI Release
+        uses: ncipollo/release-action@v1
+        with:
+          allowUpdates: "true"
+          artifacts: ${{ steps.winlin.outputs.artifacts }}
+          tag: ${{ needs.GenTag.outputs.value }}
