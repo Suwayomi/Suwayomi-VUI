@@ -9,7 +9,7 @@ FROM develop-stage as build-stage
 RUN npm install
 RUN npm run build
 # production stage
-FROM nginx:1.23.2-alpine as production-stage
+FROM nginxinc/nginx-unprivileged:1.23.2-alpine-slim as production-stage
 COPY --from=build-stage /app/dist/pwa /usr/share/nginx/html
-EXPOSE 80
+EXPOSE 8080
 CMD ["nginx", "-g", "daemon off;"]
