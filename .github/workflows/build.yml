@@ -10,13 +10,41 @@
 name: Build
 
 on:
-  push:
+  pull_request:
     branches: ["Release"]
 
 jobs:
-  build:
+  gentag:
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+      - name: Generate Tag Name
+        shell: bash
+        run: |
+          genTag="r$(git rev-list HEAD --count)"
+          echo "$genTag"
+          echo "$genTag" > GenTagName.txt
+      - name: Upload math result for job 1
+        uses: actions/upload-artifact@v3
+        with:
+          name: GenTagName
+          path: GenTagName.txt
+  build:
+    needs: gentag
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download gentag
+        uses: actions/download-artifact@v3
+        with:
+          name: GenTagName
+      - name: Generate Tag Name
+        shell: bash
+        id: GenTagName
+        run: |
+          genTag="r$(cat GenTagName.txt)"
+          echo "value=$genTag" >> $GITHUB_OUTPUT
       - name: Check out Git repository
         uses: actions/checkout@v3
         with:
@@ -26,12 +54,6 @@ jobs:
         with:
           node-version: 19
           cache: "npm"
-      - name: Generate Tag Name
-        id: GenTagName
-        run: |
-          genTag="r$(git rev-list HEAD --count)"
-          echo "$genTag"
-          echo "value=$genTag" >> $GITHUB_OUTPUT
       - name: Login to GitHub Container Registry
         uses: docker/login-action@v2
         with:
@@ -56,13 +78,73 @@ jobs:
         with:
           folder: dist/pwa # The folder the action should deploy.
       - run: npm run build
+
       - name: Generate zip
-        uses: montudor/action-zip@v1
-        with:
-          args: zip -qq -r web.zip dist/pwa
+        run: zip -r  web.zip ./dist/pwa/*
       - name: Upload CI Release
         uses: ncipollo/release-action@v1
         with:
           artifacts: "web.zip"
           allowUpdates: "true"
+          tag: ${{ steps.GenTagName.outputs.value }}
+  buildElectronLinux:
+    runs-on: ubuntu-latest
+    needs: gentag
+    steps:
+      - name: Download gentag
+        uses: actions/download-artifact@v3
+        with:
+          name: GenTagName
+      - name: Generate Tag Name
+        shell: bash
+        id: GenTagName
+        run: |
+          genTag="r$(cat GenTagName.txt)"
+          echo "value=$genTag" >> $GITHUB_OUTPUT
+      - name: Check out Git repository
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+      - name: Use Node.js 19
+        uses: actions/setup-node@v3
+        with:
+          node-version: 19
+          cache: "npm"
+      - run: npm ci
+      - run: npm run buildElectron
+      - name: Upload CI Release
+        uses: ncipollo/release-action@v1
+        with:
+          allowUpdates: "true"
+          artifacts: "dist/electron/Packaged/Tachidesk-VUI-linux-*.*"
+          tag: ${{ steps.GenTagName.outputs.value }}
+  buildElectronwindows:
+    runs-on: windows-latest
+    needs: gentag
+    steps:
+      - name: Download gentag
+        uses: actions/download-artifact@v3
+        with:
+          name: GenTagName
+      - name: Generate Tag Name
+        shell: bash
+        id: GenTagName
+        run: |
+          genTag="r$(cat GenTagName.txt)"
+          echo "value=$genTag" >> $GITHUB_OUTPUT
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+      - name: Use Node.js 19
+        uses: actions/setup-node@v3
+        with:
+          node-version: 19
+          cache: "npm"
+      - run: npm ci
+      - run: npm run buildElectron
+      - name: Upload CI Release
+        uses: ncipollo/release-action@v1
+        with:
+          allowUpdates: "true"
+          artifacts: "dist/electron/Packaged/Tachidesk-VUI-*-win-*.exe,dist/electron/Packaged/Tachidesk-VUI-*-win-*.msi"
           tag: ${{ steps.GenTagName.outputs.value }}
