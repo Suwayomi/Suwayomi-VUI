@@ -20,8 +20,36 @@ on:
     branches: ["Release"]
 
 jobs:
-  buildLinux:
-    runs-on: ubuntu-latest
+  # buildLinux:
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - uses: actions/checkout@v3
+  #       with:
+  #         fetch-depth: 0
+  #     - name: Use Node.js 19.x
+  #       uses: actions/setup-node@v3
+  #       with:
+  #         node-version: 19.x
+  #         cache: "npm"
+  #     - name: Generate Tag Name
+  #       id: GenTagName
+  #       run: |
+  #         genTag="r$(git rev-list HEAD --count)"
+  #         echo "$genTag"
+  #         echo "value=$genTag" >> $GITHUB_OUTPUT
+  #     - run: npm ci
+  #     - run: npm run buildElectron
+  #     - name: Rename release files
+  #       run: |
+  #         cd dist/electron/Packaged/
+  #         for f in Tachidesk-VUI.*; do mv "${f}" "${f/Tachidesk-VUI./Tachidesk-VUI-Linux.}"; done;
+  #     - name: Upload CI Release
+  #       uses: ncipollo/release-action@v1
+  #       with:
+  #         artifacts: "dist/electron/Packaged/Tachidesk-VUI-Linux.*"
+  #         tag: ${{ steps.GenTagName.outputs.value }}
+  buildwindows:
+    runs-on: windows-latest
     steps:
       - uses: actions/checkout@v3
         with:
@@ -39,8 +67,12 @@ jobs:
           echo "value=$genTag" >> $GITHUB_OUTPUT
       - run: npm ci
       - run: npm run buildElectron
+      - name: Rename release files
+        run: |
+          cd dist/electron/Packaged/
+          for f in Tachidesk-VUI.*; do mv "${f}" "${f/Tachidesk-VUI./Tachidesk-VUI-Windows.}"; done;
       - name: Upload CI Release
         uses: ncipollo/release-action@v1
         with:
-          artifacts: "dist/electron/Packaged/Tachidesk-VUI.*"
+          artifacts: "dist/electron/Packaged/Tachidesk-VUI-Windows.*"
           tag: ${{ steps.GenTagName.outputs.value }}
