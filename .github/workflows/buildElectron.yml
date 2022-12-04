@@ -1,0 +1,99 @@
+# Copyright (c) 2022 Contributors to the Suwayomi project
+#
+# This Source Code Form is subject to the terms of the Mozilla Public
+# License, v. 2.0. If a copy of the MPL was not distributed with this
+# file, You can obtain one at http://mozilla.org/MPL/2.0/.
+
+# Copyright (c) 2022 Contributors to the Suwayomi project
+#
+# This Source Code Form is subject to the terms of the Mozilla Public
+# License, v. 2.0. If a copy of the MPL was not distributed with this
+# file, You can obtain one at http://mozilla.org/MPL/2.0/.
+
+# This workflow will do a clean installation of node dependencies, cache/restore them, build the source code and run tests across different versions of node
+# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-nodejs
+
+name: BuildElectron
+
+on:
+  workflow_dispatch:
+
+jobs:
+  gentag:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+      - name: Generate Tag Name
+        shell: bash
+        run: |
+          genTag="r$(git rev-list HEAD --count)"
+          echo "$genTag"
+          echo "$genTag" > GenTagName.txt
+      - name: Upload math result for job 1
+        uses: actions/upload-artifact@v3
+        with:
+          name: GenTagName
+          path: GenTagName.txt
+  buildLinux:
+    runs-on: ubuntu-latest
+    needs: gentag
+    steps:
+      - name: Download math result for job 1
+        uses: actions/download-artifact@v3
+        with:
+          name: GenTagName
+      - name: Generate Tag Name
+        shell: bash
+        id: GenTagName
+        run: |
+          genTag="r$(cat GenTagName.txt)"
+          echo "value=$genTag" >> $GITHUB_OUTPUT
+      - name: Check out Git repository
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+      - name: Use Node.js 19
+        uses: actions/setup-node@v3
+        with:
+          node-version: 19
+          cache: "npm"
+      - run: npm ci
+      - run: npm run buildElectron
+      - name: Upload CI Release
+        uses: ncipollo/release-action@v1
+        with:
+          allowUpdates: "true"
+          artifacts: "dist/electron/Packaged/Tachidesk-VUI-linux-*.*"
+          tag: ${{ steps.GenTagName.outputs.value }}
+  buildwindows:
+    runs-on: windows-latest
+    needs: gentag
+    steps:
+      - name: Download math result for job 1
+        uses: actions/download-artifact@v3
+        with:
+          name: GenTagName
+      - name: Generate Tag Name
+        shell: bash
+        id: GenTagName
+        run: |
+          genTag="r$(cat GenTagName.txt)"
+          echo "value=$genTag" >> $GITHUB_OUTPUT
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+      - name: Use Node.js 19
+        uses: actions/setup-node@v3
+        with:
+          node-version: 19
+          cache: "npm"
+      - run: npm ci
+      - run: npm run buildElectron
+      - name: Upload CI Release
+        uses: ncipollo/release-action@v1
+        with:
+          allowUpdates: "true"
+          artifacts: "dist/electron/Packaged/Tachidesk-VUI-*-win-*.exe,dist/electron/Packaged/Tachidesk-VUI-*-win-*.msi"
+          tag: ${{ steps.GenTagName.outputs.value }}
