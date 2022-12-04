@@ -39,8 +39,9 @@ jobs:
           echo "value=$genTag" >> $GITHUB_OUTPUT
       - run: npm ci
       - run: npm run buildElectron
+      - run: echo ls
       - name: Upload CI Release
         uses: ncipollo/release-action@v1
         with:
-          artifacts: "dist/electron/Tachidesk-VUI.AppImage,dist/electron/Tachidesk-VUI.zip"
+          artifacts: "dist/electron/Tachidesk-VUI.*"
           tag: ${{ steps.GenTagName.outputs.value }}
