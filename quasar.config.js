@@ -224,43 +224,43 @@ module.exports = configure(function (/* ctx */) {
       builder: {
         // https://www.electron.build/configuration/configuration
         appId: 'tachidesk-vui',
+        artifactName: '${productName}-electron-${os}-${arch}.${ext}',
         linux: {
-          icon: '512x512.png',
           category: 'Utility',
-          // icon: 'public/icons/tachidesk-vui.png',
           target: [
             {
-              //   target: 'deb',
-              //   arch: [
-              //     'x64',
-              //   ],
-              // }, {
+              target: 'deb',
+              arch: ['x64'],
+            },
+            {
               target: 'AppImage',
               arch: ['x64'],
-              // }, {
-              //   target: 'rpm',
-              //   arch: [
-              //     'x64',
-              //   ]
-              // }, {
-              //   target: 'pacman',
-              //   arch: [
-              //     'x64',
-              //   ]
             },
-          ],
-        },
-        mac: {
-          target: [
+            {
+              target: 'rpm',
+              arch: ['x64'],
+            },
+            // {
+            //   target: 'pacman',
+            //   arch: ['x64'],
+            // },
             {
               target: 'zip',
-              arch: [
-                // 'x64',
-                'arm64',
-              ],
+              arch: ['x64'],
             },
           ],
         },
+        // mac: {
+        //   target: [
+        //     {
+        //       target: 'zip',
+        //       arch: [
+        //         // 'x64',
+        //         'arm64',
+        //       ],
+        //     },
+        //   ],
+        // },
         win: {
           target: [
             {
@@ -271,7 +271,22 @@ module.exports = configure(function (/* ctx */) {
               target: 'portable',
               arch: ['x64'],
             },
+            {
+              target: 'msi',
+              arch: ['x64'],
+            },
           ],
+        },
+        msi: {
+          artifactName:
+            '${productName}-electron-${os}-${arch}-installer.${ext}',
+        },
+        nsis: {
+          artifactName:
+            '${productName}-electron-${os}-${arch}-Installer.${ext}',
+        },
+        portable: {
+          artifactName: '${productName}-electron-${os}-${arch}-portable.${ext}',
         },
       },
     },
