@@ -10,8 +10,7 @@ Robonau's Vue + Quasar tachidesk UI
 
 ## Easy mode
 
-https://robonau.github.io/Tachidesk-VUI/
-url subject to change as i need a Suwayomi admin help to set it up properly
+https://tachidesk-vui.github.io/
 
 ## Elctron application
 
