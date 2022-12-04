@@ -271,15 +271,17 @@ module.exports = configure(function (/* ctx */) {
               target: 'portable',
               arch: ['x64'],
             },
-            {
-              target: 'msi',
-              arch: ['x64'],
-            },
+            // cant do msi with "electron-builder": "^22.10.3",
+            // that "@quasar/app-vite": "1.1.3", requires
+            // {
+            //   target: 'msi',
+            //   arch: ['x64'],
+            // },
           ],
         },
-        msi: {
-          artifactName: '${productName}-installer-${os}-${arch}.${ext}',
-        },
+        // msi: {
+        //   artifactName: '${productName}-installer-${os}-${arch}.${ext}',
+        // },
         nsis: {
           artifactName: '${productName}-Installer-${os}-${arch}.${ext}',
         },
