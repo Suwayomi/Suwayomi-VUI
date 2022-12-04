@@ -224,28 +224,26 @@ module.exports = configure(function (/* ctx */) {
       builder: {
         // https://www.electron.build/configuration/configuration
         appId: 'tachidesk-vui',
-        artifactName: 'Tachidesk-VUI.${ext}',
+        artifactName: '${productName}-${os}-${arch}.${ext}',
         linux: {
-          icon: '512x512.png',
           category: 'Utility',
-          // icon: 'public/icons/tachidesk-vui.png',
           target: [
-            // {
-            //   target: 'deb',
-            //   arch: ['x64'],
-            // },
+            {
+              target: 'deb',
+              arch: ['x64'],
+            },
             {
               target: 'AppImage',
               arch: ['x64'],
             },
-            // {
-            //   target: 'rpm',
-            //   arch: ['x64'],
-            // },
-            // {
-            //   target: 'pacman',
-            //   arch: ['x64'],
-            // },
+            {
+              target: 'rpm',
+              arch: ['x64'],
+            },
+            {
+              target: 'pacman',
+              arch: ['x64'],
+            },
             {
               target: 'zip',
               arch: ['x64'],
@@ -273,7 +271,20 @@ module.exports = configure(function (/* ctx */) {
               target: 'portable',
               arch: ['x64'],
             },
+            {
+              target: 'msi',
+              arch: ['x64'],
+            },
           ],
+        },
+        msi: {
+          artifactName: '${productName}-installer-${os}-${arch}.${ext}',
+        },
+        nsis: {
+          artifactName: '${productName}-Installer-${os}-${arch}.${ext}',
+        },
+        portable: {
+          artifactName: '${productName}-portable-${os}-${arch}.${ext}',
         },
       },
     },
