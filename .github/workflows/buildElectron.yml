@@ -39,7 +39,7 @@ jobs:
           echo "value=$genTag" >> $GITHUB_OUTPUT
       - run: npm ci
       - run: npm run buildElectron
-      - run: echo ls
+      - run: ls
       - name: Upload CI Release
         uses: ncipollo/release-action@v1
         with:
