@@ -59,13 +59,23 @@ jobs:
           push: true
           tags: ${{ steps.string.outputs.lowercase }}:latest,${{ steps.string.outputs.lowercase }}:${{ needs.GenTag.outputs.value }},
       - run: npm ci
-      - name: build for pages
-        run: PUBPATH=/Tachidesk-VUI/ npm run build
-      - name: Deploy Pages
-        uses: JamesIves/github-pages-deploy-action@v4
-        with:
-          folder: dist/pwa # The folder the action should deploy.
+      # - name: build for pages
+      #   run: PUBPATH=/Tachidesk-VUI/ npm run build
+      # - name: Deploy Pages
+      #   uses: JamesIves/github-pages-deploy-action@v4
+      #   with:
+      #     folder: dist/pwa # The folder the action should deploy.
       - run: npm run build
+      - name: Pushes to another repository
+        uses: cpina/github-action-push-to-another-repository@main
+        env:
+          API_TOKEN_GITHUB: ${{ secrets.DEPLOY_PAGES_TOKEN }}
+        with:
+          source-directory: "dist/pwa"
+          destination-github-username: "tachidesk-vui"
+          destination-repository-name: "tachidesk-vui.github.io"
+          user-email: n/a
+          target-branch: main
 
       - name: Generate zip
         run: zip -r  Tachidesk-VUI-Web.zip ./dist/pwa/*
@@ -75,47 +85,6 @@ jobs:
           artifacts: "Tachidesk-VUI-Web.zip"
           allowUpdates: "true"
           tag: ${{ needs.GenTag.outputs.value }}
-  # buildElectronLinux:
-  #   runs-on: ubuntu-latest
-  #   needs: GenTag
-  #   steps:
-  #     - name: Check out Git repository
-  #       uses: actions/checkout@v3
-  #       with:
-  #         fetch-depth: 0
-  #     - name: Use Node.js 19
-  #       uses: actions/setup-node@v3
-  #       with:
-  #         node-version: 19
-  #         cache: "npm"
-  #     - run: npm ci
-  #     - run: npm run buildElectron
-  #     - name: Upload CI Release
-  #       uses: ncipollo/release-action@v1
-  #       with:
-  #         allowUpdates: "true"
-  #         artifacts: "dist/electron/Packaged/Tachidesk-VUI-linux-*.*"
-  #         tag: ${{ needs.GenTag.outputs.value }}
-  # buildElectronwindows:
-  #   runs-on: windows-latest
-  #   needs: GenTag
-  #   steps:
-  #     - uses: actions/checkout@v3
-  #       with:
-  #         fetch-depth: 0
-  #     - name: Use Node.js 19
-  #       uses: actions/setup-node@v3
-  #       with:
-  #         node-version: 19
-  #         cache: "npm"
-  #     - run: npm ci
-  #     - run: npm run buildElectron
-  #     - name: Upload CI Release
-  #       uses: ncipollo/release-action@v1
-  #       with:
-  #         allowUpdates: "true"
-  #         artifacts: "dist/electron/Packaged/Tachidesk-VUI-win-*.exe,dist/electron/Packaged/Tachidesk-VUI-win-*.msi"
-  #         tag: ${{ needs.GenTag.outputs.value }}
   buildElectron:
     strategy:
       matrix:
