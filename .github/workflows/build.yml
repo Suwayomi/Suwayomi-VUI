@@ -123,12 +123,14 @@ jobs:
     runs-on: ${{ matrix.os-versions }}
     needs: GenTag
     steps:
-      - name: if win
-        if: ${{matrix.os-versions == 'windows-latest'}}
-        run: echo "value=dist/electron/Packaged/Tachidesk-VUI-win-*.exe,dist/electron/Packaged/Tachidesk-VUI-win-*.msi" >> $GITHUB_OUTPUT
-      - name: if linux
-        if: ${{matrix.os-versions == 'ubuntu-latest'}}
-        run: echo "value=dist/electron/Packaged/Tachidesk-VUI-linux-*.*" >> $GITHUB_OUTPUT
+      - name: if win/linux
+        shell: bash
+        id: winlin
+        run: |
+          if [[ "${{ matrix.os-versions }}" == "windows-latest" ]]; then
+            echo "artifacts=dist/electron/Packaged/Tachidesk-VUI-win-*.exe,dist/electron/Packaged/Tachidesk-VUI-win-*.msi" >> $GITHUB_OUTPUT
+          else
+            echo "artifacts=dist/electron/Packaged/Tachidesk-VUI-linux-*.*" >> $GITHUB_OUTPUT
       - uses: actions/checkout@v3
         with:
           fetch-depth: 0
@@ -143,5 +145,5 @@ jobs:
         uses: ncipollo/release-action@v1
         with:
           allowUpdates: "true"
-          artifacts: "dist/electron/Packaged/Tachidesk-VUI-win-*.exe,dist/electron/Packaged/Tachidesk-VUI-win-*.msi"
+          artifacts: ${{ steps.winlin.outputs.artifacts }}
           tag: ${{ needs.GenTag.outputs.value }}
