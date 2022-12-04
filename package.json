@@ -31,7 +31,7 @@
     "@vue/devtools": "^6.4.5",
     "autoprefixer": "^10.4.13",
     "electron": "^22.0.0",
-    "electron-builder": "^22.10.3",
+    "electron-builder": "^23.6.0",
     "electron-packager": "^15.2.0",
     "eslint": "^8.29.0",
     "eslint-config-prettier": "^8.5.0",
@@ -45,6 +45,11 @@
     "workbox-precaching": "^6.5.4",
     "workbox-routing": "^6.5.4",
     "workbox-strategies": "^6.5.4"
+  },
+  "overrides": {
+    "@quasar/app-vite": {
+      "electron-builder": "~23.6.0"
+    }
   },
   "engines": {
     "node": "^19 || ^18 || ^16 || ^14.19",
