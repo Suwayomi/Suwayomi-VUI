@@ -80,7 +80,7 @@ jobs:
         shell: bash
         id: GenTagName
         run: |
-          genTag="cat GenTagName.txt"
+          genTag="r$(cat GenTagName.txt)"
           echo "value=$genTag" >> $GITHUB_OUTPUT
       - uses: actions/checkout@v3
         with:
