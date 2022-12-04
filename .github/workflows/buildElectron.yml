@@ -75,7 +75,7 @@ jobs:
       - name: Download math result for job 1
         uses: actions/download-artifact@v3
         with:
-          name: homework
+          name: GenTagName
       - name: Generate Tag Name
         shell: bash
         id: GenTagName
