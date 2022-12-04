@@ -16,8 +16,7 @@
 name: BuildElectron
 
 on:
-  pull_request:
-    branches: ["Release"]
+  workflow_dispatch:
 
 jobs:
   gentag:

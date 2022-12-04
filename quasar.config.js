@@ -278,13 +278,13 @@ module.exports = configure(function (/* ctx */) {
           ],
         },
         msi: {
-          artifactName: '${productName}-installer-${os}-${arch}.${ext}',
+          artifactName: '${productName}-${os}-${arch}-installer.${ext}',
         },
         nsis: {
-          artifactName: '${productName}-Installer-${os}-${arch}.${ext}',
+          artifactName: '${productName}-${os}-${arch}-Installer.${ext}',
         },
         portable: {
-          artifactName: '${productName}-portable-${os}-${arch}.${ext}',
+          artifactName: '${productName}-${os}-${arch}-portable.${ext}',
         },
       },
     },
