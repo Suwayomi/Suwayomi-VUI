@@ -114,6 +114,7 @@ import { defineComponent, ref } from 'vue';
 import { download, dlsock, isdlsock } from 'src/components/global/models';
 import { useQuasar } from 'quasar';
 import { storeGet } from 'src/boot/StoreStuff';
+import getEnv from 'src/getenv';
 
 export default defineComponent({
   emits: ['set-title'],
@@ -122,7 +123,10 @@ export default defineComponent({
     const $q = useQuasar();
     const Emitt = useDlSock();
     const Emitter = ref(Emitt);
-    const base = storeGet('baseUrl', location.origin) as string;
+    const base = storeGet(
+      'baseUrl',
+      getEnv('TachideskURL') ? getEnv('TachideskURL') : location.origin
+    ) as string;
 
     const downloads = ref(<download[]>[]);
     const tmp = Emitt.eventsFromServer.value

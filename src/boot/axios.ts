@@ -8,9 +8,15 @@
 import { boot } from 'quasar/wrappers';
 import axios from 'axios';
 import { storeGet } from './StoreStuff';
+import getEnv from 'src/getenv';
+
+console.log(`hihi ${getEnv('TachideskURL')} hihi`);
 
 let api = axios.create({
-  baseURL: storeGet('baseUrl', location.origin) as string,
+  baseURL: storeGet(
+    'baseUrl',
+    getEnv('TachideskURL') ? getEnv('TachideskURL') : location.origin
+  ) as string,
 });
 
 export default boot(({ app }) => {
@@ -21,7 +27,10 @@ export default boot(({ app }) => {
 
 export function resetAxiosBase() {
   api = axios.create({
-    baseURL: storeGet('baseUrl', location.origin) as string,
+    baseURL: storeGet(
+      'baseUrl',
+      getEnv('TachideskURL') ? getEnv('TachideskURL') : location.origin
+    ) as string,
   });
 }
 
