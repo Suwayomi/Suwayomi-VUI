@@ -54,6 +54,12 @@ module.exports = configure(function (/* ctx */) {
         browser: ['es2019', 'edge88', 'firefox78', 'chrome87', 'safari13.1'],
         node: 'node16',
       },
+      env: {
+        SERVER: '',
+        NODE_ENV: '',
+        VUE_ROUTER_MODE: 'hash',
+        VUE_ROUTER_BASE: '/',
+      },
 
       vueRouterMode: 'hash', // available values: 'hash', 'history'
       // vueRouterBase,

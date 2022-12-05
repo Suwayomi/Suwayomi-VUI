@@ -6,10 +6,14 @@
  * file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 import { ref } from 'vue';
 import { storeGet } from 'src/boot/StoreStuff';
+import getEnv from 'src/getenv';
 
 const eventsFromServer = ref('');
 const isConnected = ref(false);
-const base = storeGet('baseUrl', location.origin) as string;
+const base = storeGet(
+  'baseUrl',
+  getEnv('TachideskURL') ? getEnv('TachideskURL') : location.origin
+) as string;
 const url = new URL(base);
 url.protocol = url.protocol == 'https:' ? 'wss:' : 'ws:';
 let socket: WebSocket;
