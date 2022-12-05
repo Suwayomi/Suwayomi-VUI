@@ -162,7 +162,7 @@ export default defineComponent({
       this.$api
         .get('/api/v1/category/')
         .then(({ data }: AxiosResponse<cat[]>) => {
-          this.catag = data;
+          this.catag = data.filter((ele) => ele.id != 0);
         });
     },
     delcat(id: number) {
