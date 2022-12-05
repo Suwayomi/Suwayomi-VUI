@@ -291,6 +291,7 @@ import { defineComponent, ref } from 'vue';
 import { resetAxiosBase, resetAxiosAuth } from 'src/boot/axios';
 import { storeGet } from 'src/boot/StoreStuff';
 import { paths } from 'src/components/global/models';
+import getEnv from 'src/getenv';
 
 export default defineComponent({
   name: 'SettingsPage',
@@ -301,7 +302,12 @@ export default defineComponent({
     const darkmode = ref($q.dark.isActive);
     const MitemW = ref(storeGet('MitemW', 300) as number);
     const useCache = ref(storeGet('useCache', true) as boolean);
-    const serverAddr = ref(storeGet('baseUrl', location.origin) as string);
+    const serverAddr = ref(
+      storeGet(
+        'baseUrl',
+        getEnv('TachideskURL') ? getEnv('TachideskURL') : location.origin
+      ) as string
+    );
     const auth = $q.localStorage.getItem('auth') as {
       username: string;
       password: string;
@@ -366,7 +372,7 @@ export default defineComponent({
       this.$storeSet(
         'baseUrl',
         val.endsWith('/') ? val.slice(0, -1) : val,
-        location.origin
+        getEnv('TachideskURL') ? getEnv('TachideskURL') : location.origin
       );
       this.resetAxiosBase();
     },

@@ -14,12 +14,12 @@ https://tachidesk-vui.github.io/
 
 ## Elctron application
 
-check back later
+Installable via the releases labeled with electron
 
 ## Web Server files
 
-the web.zip file in the release is for hosting the ui though a webserver
-it should also be possable to replace the contens of the webUI folder in the tachidesk data directory, though this is not recomended
+The Tachidesk-VUI-Web.zip file in the release is for hosting the ui though a webserver  
+It should also be possible to replace the contents of the webUI folder in the Tachidesk data directory, though this is not recommended
 
 ## Docker
 
