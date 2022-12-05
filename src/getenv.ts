@@ -5,5 +5,12 @@
 // file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
 export default function getEnv(name: string) {
-  return window.configs?.[name] || process.env[name];
+  if (window.configs?.[name] !== undefined) {
+    return window.configs?.[name];
+  }
+  try {
+    return process.env[name];
+  } catch {
+    return undefined;
+  }
 }

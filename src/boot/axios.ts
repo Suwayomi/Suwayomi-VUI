@@ -10,8 +10,6 @@ import axios from 'axios';
 import { storeGet } from './StoreStuff';
 import getEnv from 'src/getenv';
 
-console.log(`hihi ${getEnv('TachideskURL')} hihi`);
-
 let api = axios.create({
   baseURL: storeGet(
     'baseUrl',
