@@ -51,6 +51,7 @@ jobs:
         uses: docker/build-push-action@v3
         with:
           context: .
+          build-args: VERSION=${{ needs.GenTag.outputs.value }}
           push: true
           tags: ${{ steps.string.outputs.lowercase }}:latest,${{ steps.string.outputs.lowercase }}:${{ needs.GenTag.outputs.value }},
   build:
@@ -67,7 +68,7 @@ jobs:
           node-version: 19
           cache: "npm"
       - run: npm ci
-      - run: npm run build
+      - run: VERSION=${{ needs.GenTag.outputs.value }} npm run build
       - name: Pushes web files to the gh-pages repository
         uses: cpina/github-action-push-to-another-repository@main
         env:
@@ -111,7 +112,7 @@ jobs:
           node-version: 19
           cache: "npm"
       - run: npm ci
-      - run: npm run buildElectron
+      - run: VERSION=${{ needs.GenTag.outputs.value }} npm run buildElectron
       - name: Upload CI Release
         uses: ncipollo/release-action@v1
         with:
