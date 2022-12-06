@@ -282,6 +282,15 @@
         </q-item-section>
       </q-item>
     </q-expansion-item>
+    <q-item>
+      <q-item-section avatar>
+        <q-icon name="question_mark" />
+      </q-item-section>
+      <q-item-section>
+        <q-item-label>VUI Version</q-item-label>
+        <q-item-label caption>{{ verison }}</q-item-label>
+      </q-item-section>
+    </q-item>
   </q-list>
 </template>
 
@@ -346,6 +355,11 @@ export default defineComponent({
       resetAxiosAuth,
       isPwd: ref(false),
     };
+  },
+  computed: {
+    verison() {
+      return process.env.VERSION || 'test';
+    },
   },
   watch: {
     '$q.dark.isActive': function () {

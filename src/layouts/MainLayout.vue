@@ -89,6 +89,38 @@
         @set-title="setTitle"
       />
     </q-page-container>
+
+    <q-dialog v-model="newReleasepopup">
+      <q-card style="min-width: 350px">
+        <q-card-section class="">
+          <q-item>
+            <q-item-section>
+              <q-item-label class="text-h6">
+                A new version of VUI is avalable
+              </q-item-label>
+              <q-item-label caption class="text-info q-pt-lg">
+                <div>Download the newest release from the github</div>
+              </q-item-label>
+            </q-item-section>
+          </q-item>
+        </q-card-section>
+        <q-card-actions align="right" class="text-primary">
+          <q-btn
+            v-close-popup
+            :href="newReleaseData.html_url"
+            flat
+            label="Github"
+          />
+          <q-btn v-close-popup flat label="Ok" />
+          <q-btn
+            v-close-popup
+            flat
+            label="Dont show again"
+            @click="dontshowagain"
+          />
+        </q-card-actions>
+      </q-card>
+    </q-dialog>
   </q-layout>
 </template>
 
@@ -98,6 +130,7 @@ import EssentialLink from 'src/components/mainLayout/EssentialLink.vue';
 import { useQuasar } from 'quasar';
 import { useMeta } from 'quasar';
 import { storeGet, storeSet } from 'src/boot/StoreStuff';
+import { AxiosResponse } from 'axios';
 
 const linksList = [
   {
@@ -167,6 +200,8 @@ export default defineComponent({
       doSearch: ref(false),
       Searchenter: ref(false),
       FS: ref(false),
+      newReleaseData: ref(<{ tag_name: string; html_url: string }>{}),
+      newReleasepopup: ref(false),
     };
   },
   computed: {
@@ -183,11 +218,27 @@ export default defineComponent({
   mounted() {
     document.body.classList.add(this.scrollbarTheme);
     window.addEventListener('full-screen', (e) => this.isFS(e as CustomEvent));
+    if (!this.$q.localStorage.getItem('dontshowagainRL'))
+      this.$axios
+        .get(
+          'https://api.github.com/repos/Suwayomi/Tachidesk-VUI/releases/latest'
+        )
+        .then(
+          ({ data }: AxiosResponse<{ tag_name: string; html_url: string }>) => {
+            if (data.tag_name != process.env.VERSION) {
+              this.newReleaseData = data;
+              this.newReleasepopup = true;
+            }
+          }
+        );
   },
   unmounted() {
     document.body.classList.remove(this.scrollbarTheme);
   },
   methods: {
+    dontshowagain() {
+      this.$q.localStorage.set('dontshowagainRL', true);
+    },
     setTitle(titl: string) {
       this.title = titl;
     },
