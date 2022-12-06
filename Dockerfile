@@ -1,5 +1,6 @@
 # develop stage
 FROM node:19-alpine as develop-stage
+ARG VERSION='test'
 WORKDIR /app
 COPY package*.json ./
 RUN npm install -g @quasar/cli
@@ -7,7 +8,7 @@ COPY . .
 # build stage
 FROM develop-stage as build-stage
 RUN npm install
-RUN npm run build
+RUN VERSION=$VERSION npm run build
 # production stage
 FROM nginxinc/nginx-unprivileged:1.23.2-alpine-slim as production-stage
 USER root
