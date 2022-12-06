@@ -59,6 +59,7 @@ module.exports = configure(function (/* ctx */) {
         NODE_ENV: '',
         VUE_ROUTER_MODE: 'hash',
         VUE_ROUTER_BASE: '/',
+        VERSION: process.env.VERSION,
       },
 
       vueRouterMode: 'hash', // available values: 'hash', 'history'
