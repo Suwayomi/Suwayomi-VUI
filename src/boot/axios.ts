@@ -30,14 +30,15 @@ export function resetAxiosBase() {
       getEnv('TachideskURL') ? getEnv('TachideskURL') : location.origin
     ) as string,
   });
+  resetAxiosAuth();
 }
 
 export function resetAxiosAuth() {
   const auth = <{ username: string; password: string } | null>storeGet('auth');
   if (auth != null) {
-    api.defaults.headers.common['Authorization'] = `Basic ${btoa(
+    api.defaults.headers.common['Authorization'] = `Basic ${Buffer.from(
       auth.username + ':' + auth.password
-    )}`;
+    ).toString('base64')}`;
   } else {
     api.defaults.headers.common['Authorization'] = undefined;
   }
