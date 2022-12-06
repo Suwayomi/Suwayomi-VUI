@@ -124,6 +124,20 @@
         <q-card-section class="q-px-md q-pt-xs q-pb-md">
           <q-radio v-model="disp" val="false" label="list" />
         </q-card-section>
+        <q-item class="q-mx-lg q-pt-md q-pb-xs">
+          <q-item-section thumbnail class="q-pr-sm">
+            <q-icon name="o_badge" />
+          </q-item-section>
+          <q-item-section>
+            <q-item-label>BADGES</q-item-label>
+          </q-item-section>
+        </q-item>
+        <q-card-section class="q-px-md q-py-xs">
+          <q-toggle v-model="Ubadge" color="blue" label="Unread Badge" />
+        </q-card-section>
+        <q-card-section class="q-px-md q-pt-xs q-pb-md">
+          <q-toggle v-model="Dbadge" color="green" label="Downloaded Badge" />
+        </q-card-section>
       </div>
     </q-card>
   </q-dialog>
@@ -155,6 +169,8 @@ export default defineComponent({
     const alphabetical = ref(<boolean | null>filters.alphabetical.value);
     const ByID = ref(<boolean | null>filters.ByID.value);
     const disp = ref(<'null' | 'true' | 'false'>`${filters.Display.value}`);
+    const Ubadge = ref(<boolean>filters.Ubadge.value);
+    const Dbadge = ref(<boolean>filters.Dbadge.value);
     return {
       dialo: ref(false),
       tab: ref('filter'),
@@ -164,40 +180,48 @@ export default defineComponent({
       alphabetical,
       ByID,
       disp,
+      Ubadge,
+      Dbadge,
       filters,
     };
   },
   watch: {
-    unread() {
-      this.filters.setUnread(this.unread);
+    Ubadge(N: boolean) {
+      this.filters.setUbadge(N);
     },
-    downloaded() {
-      this.filters.setDownloaded(this.downloaded);
+    Dbadge(N: boolean) {
+      this.filters.setDbadge(N);
     },
-    leftToRead() {
-      this.filters.setLeftToRead(this.leftToRead);
-      if (this.leftToRead != null) {
+    unread(N) {
+      this.filters.setUnread(N);
+    },
+    downloaded(N) {
+      this.filters.setDownloaded(N);
+    },
+    leftToRead(N) {
+      this.filters.setLeftToRead(N);
+      if (N != null) {
         this.alphabetical = null;
         this.ByID = null;
       }
     },
-    alphabetical() {
-      this.filters.setAlphabetical(this.alphabetical);
-      if (this.alphabetical != null) {
+    alphabetical(N) {
+      this.filters.setAlphabetical(N);
+      if (N != null) {
         this.leftToRead = null;
         this.ByID = null;
       }
     },
-    ByID() {
-      this.filters.setByID(this.ByID);
-      if (this.ByID != null) {
+    ByID(N) {
+      this.filters.setByID(N);
+      if (N != null) {
         this.alphabetical = null;
         this.leftToRead = null;
       }
     },
-    disp() {
-      if (this.disp == 'null') this.filters.setDisplay(null);
-      else this.filters.setDisplay(this.disp == 'true');
+    disp(N) {
+      if (N == 'null') this.filters.setDisplay(null);
+      else this.filters.setDisplay(N == 'true');
     },
   },
   methods: {

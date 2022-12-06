@@ -12,7 +12,12 @@
       :style="widt"
       transition="fade"
     >
-      <MangaCard :display="Displ" :manga="manga"></MangaCard>
+      <MangaCard
+        :display="Displ"
+        :ubadge="filters.Ubadge"
+        :dbadge="filters.Dbadge"
+        :manga="manga"
+      ></MangaCard>
     </q-intersection>
   </div>
   <q-inner-loading
