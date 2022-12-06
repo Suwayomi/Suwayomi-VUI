@@ -35,8 +35,6 @@ jobs:
     steps:
       - name: Check out Git repository
         uses: actions/checkout@v3
-        with:
-          fetch-depth: 0
       - name: Login to GitHub Container Registry
         uses: docker/login-action@v2
         with:
@@ -60,8 +58,6 @@ jobs:
     steps:
       - name: Check out Git repository
         uses: actions/checkout@v3
-        with:
-          fetch-depth: 0
       - name: Use Node.js 19
         uses: actions/setup-node@v3
         with:
@@ -104,8 +100,6 @@ jobs:
             echo "artifacts=dist/electron/Packaged/Tachidesk-VUI-electron-linux-*.*" >> $GITHUB_OUTPUT
           fi
       - uses: actions/checkout@v3
-        with:
-          fetch-depth: 0
       - name: Use Node.js 19
         uses: actions/setup-node@v3
         with:
