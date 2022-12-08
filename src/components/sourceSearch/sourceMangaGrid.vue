@@ -71,7 +71,6 @@ import MangaCard from 'src/components/sourceSearch/mangaCard.vue';
 import { debounce, QInfiniteScroll } from 'quasar';
 import Display from 'src/components/library/Filters';
 import isItGroup from 'src/components/sourceSearch/Filters/isItGroup.vue';
-import { AxiosResponse } from 'axios';
 
 interface posState {
   position: number;
@@ -147,9 +146,9 @@ export default defineComponent({
       return 0;
     },
     async getlist(url: string) {
-      const sourcepage = this.$api.get(url, {
+      const sourcepage = this.$api.get<sourcepage>(url, {
         signal: this.controller.signal,
-      }) as Promise<AxiosResponse<sourcepage>>;
+      });
       try {
         return (await sourcepage).data;
       } catch (error) {
@@ -199,12 +198,12 @@ export default defineComponent({
     },
     getFilts(reset = false) {
       this.$api
-        .get(
+        .get<filters>(
           `/api/v1/source/${this.$route.params['sourceID']}/filters${
             reset ? '?reset=true' : ''
           }`
         )
-        .then(({ data }: AxiosResponse<filters>) => {
+        .then(({ data }) => {
           this.filters = data;
           this.resetScroll();
         });

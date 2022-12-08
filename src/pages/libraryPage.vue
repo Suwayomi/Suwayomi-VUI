@@ -40,7 +40,6 @@ import TabPanel from 'src/components/library/TabPanel.vue';
 import { defineComponent, ref } from 'vue';
 import { cat } from 'src/components/global/models';
 import MangaGrid from 'src/components/library/MangaGrid.vue';
-import { AxiosResponse } from 'axios';
 
 export default defineComponent({
   name: 'LibraryPage',
@@ -57,9 +56,7 @@ export default defineComponent({
   },
   created: async function () {
     try {
-      const jsn = (await this.$api.get('/api/v1/category')) as AxiosResponse<
-        cat[]
-      >;
+      const jsn = await this.$api.get<cat[]>('/api/v1/category');
       this.tabs = jsn.data.map((cat) => {
         return {
           tabname: cat.name,

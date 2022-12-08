@@ -6,7 +6,7 @@
  * file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 import { ref } from 'vue';
 import { LocalStorage } from 'quasar';
-import { storeSet } from 'src/boot/StoreStuff';
+import { storeGet, storeSet } from 'src/boot/StoreStuff';
 
 const unread = ref(<Boon>LocalStorage.getItem('lbUnread'));
 const downloaded = ref(<Boon>LocalStorage.getItem('lbDownloaded'));
@@ -19,6 +19,9 @@ const ByID = ref(
     ? true
     : LocalStorage.getItem('lbByid')
 );
+
+const Ubadge = ref(<boolean>storeGet('Ubadge', true));
+const Dbadge = ref(<boolean>storeGet('Dbadge', true));
 
 const Display = ref(<Boon>LocalStorage.getItem('lbDisplay'));
 
@@ -36,6 +39,15 @@ export default function useInBar() {
   const setDisplay = (data: Boon) => {
     storeSet('lbDisplay', data);
     Display.value = data;
+  };
+
+  const setUbadge = (data: boolean) => {
+    storeSet('Ubadge', data, true);
+    Ubadge.value = data;
+  };
+  const setDbadge = (data: boolean) => {
+    storeSet('Dbadge', data, true);
+    Dbadge.value = data;
   };
 
   const setLeftToRead = (data: Boon) => {
@@ -70,11 +82,15 @@ export default function useInBar() {
     setAlphabetical,
     setByID,
     setDisplay,
+    setUbadge,
+    setDbadge,
     unread,
     downloaded,
     leftToRead,
     alphabetical,
     ByID,
     Display,
+    Ubadge,
+    Dbadge,
   };
 }

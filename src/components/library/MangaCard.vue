@@ -33,7 +33,7 @@
           style="padding: 0"
         >
           <q-badge
-            v-if="manga.unreadCount"
+            v-if="manga.unreadCount && ubadge"
             color="blue"
             style="width: min-content; padding: 5px"
             :style="
@@ -45,7 +45,7 @@
             {{ manga.unreadCount }}
           </q-badge>
           <q-badge
-            v-if="manga.downloadCount"
+            v-if="manga.downloadCount && dbadge"
             color="green"
             style="width: min-content; padding: 5px"
             :style="
@@ -109,7 +109,7 @@
           :class="!($q.screen.sm || $q.screen.xs) ? `q-mr-lg` : `q-mr-xs`"
         >
           <q-badge
-            v-if="manga.unreadCount && display == `list`"
+            v-if="manga.unreadCount && display == `list` && ubadge"
             color="blue"
             style="width: min-content; padding: 5px"
             :style="
@@ -121,7 +121,7 @@
             {{ manga.unreadCount }}
           </q-badge>
           <q-badge
-            v-if="manga.downloadCount && display == `list`"
+            v-if="manga.downloadCount && display == `list` && dbadge"
             color="green"
             style="width: min-content; padding: 5px"
             :style="
@@ -154,6 +154,14 @@ export default defineComponent({
     display: {
       type: String as PropType<'compact' | 'comfort' | 'list'>,
       default: 'compact',
+    },
+    ubadge: {
+      type: Boolean as PropType<boolean>,
+      default: true,
+    },
+    dbadge: {
+      type: Boolean as PropType<boolean>,
+      default: true,
     },
   },
   setup() {

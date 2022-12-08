@@ -45,7 +45,6 @@
 import { defineComponent, ref } from 'vue';
 import topBcat from 'src/components/manga/TopBcat.vue';
 import { cat } from '../global/models';
-import { AxiosResponse } from 'axios';
 
 export default defineComponent({
   name: 'MangaTopBar',
@@ -59,14 +58,12 @@ export default defineComponent({
     };
   },
   mounted: function () {
+    this.$api.get<cat[]>('/api/v1/category/').then(({ data }) => {
+      this.options = data.slice(1);
+    });
     this.$api
-      .get('/api/v1/category/')
-      .then(({ data }: AxiosResponse<cat[]>) => {
-        this.options = data.slice(1);
-      });
-    this.$api
-      .get(`/api/v1/manga/${this.$route.params['mangaID']}/category/`)
-      .then(({ data }: AxiosResponse<cat[]>) => {
+      .get<cat[]>(`/api/v1/manga/${this.$route.params['mangaID']}/category/`)
+      .then(({ data }) => {
         this.curr = data;
       });
   },

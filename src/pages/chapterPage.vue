@@ -84,7 +84,6 @@ import displayPage from 'src/components/reader/displayPage.vue';
 import { chapterMeta } from 'src/components/reader/readerSettings';
 import { getImgBlob } from 'src/components/global/usefull';
 import { paths } from 'src/components/global/models';
-import { AxiosResponse } from 'axios';
 
 const pathss: paths = {
   L: {
@@ -325,10 +324,10 @@ export default defineComponent({
     onLoad(_index: number, done: () => void) {
       if (this.nextChapter === undefined) {
         this.$api
-          .get(
+          .get<chapter>(
             `/api/v1/manga/${this.$route.params['mangaID']}/chapter/${this.currchapter}`
           )
-          .then(({ data }: AxiosResponse<chapter>) => {
+          .then(({ data }) => {
             this.Pages[this.currchapter] = [];
             for (let i = 0; i < data.pageCount; i++) {
               this.Pages[this.currchapter]?.push(this.getImg(data.index, i));
@@ -336,7 +335,7 @@ export default defineComponent({
             this.onChapter(data, done);
           });
       } else {
-        this.nextChapter.then((data: chapter) => {
+        this.nextChapter.then((data) => {
           this.onChapter(data, done);
         });
       }
@@ -345,7 +344,7 @@ export default defineComponent({
       this.nextChapter = this.$api.get(
         `/api/v1/manga/${this.$route.params['mangaID']}/chapter/${this.currchapter}`
       );
-      this.nextChapter.then((data: chapter) => {
+      this.nextChapter.then((data) => {
         this.Pages[this.currchapter] = [];
         for (let i = 0; i < data.pageCount; i++) {
           this.Pages[this.currchapter]?.push(this.getImg(data.index, i));

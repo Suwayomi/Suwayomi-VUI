@@ -48,7 +48,6 @@ import Filters from 'src/components/extantions/Filters';
 import sourcecard from 'src/components/sources/sourceCard.vue';
 import { is } from 'quasar';
 import { langCodeToName } from 'src/components/extantions/language';
-import { AxiosResponse } from 'axios';
 
 export default defineComponent({
   name: 'SourcesPage',
@@ -87,12 +86,10 @@ export default defineComponent({
       };
     },
     reload() {
-      this.$api
-        .get('/api/v1/source/list')
-        .then(({ data }: AxiosResponse<source[]>) => {
-          this.list = data;
-          this.filters.setcurrlangs(this.extractLangs(data));
-        });
+      this.$api.get<source[]>('/api/v1/source/list').then(({ data }) => {
+        this.list = data;
+        this.filters.setcurrlangs(this.extractLangs(data));
+      });
     },
     langCodeToName,
     extractLangs(lis: source[]): string[] {

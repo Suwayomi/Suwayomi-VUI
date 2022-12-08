@@ -97,7 +97,6 @@
 import { cat } from 'src/components/global/models';
 import { defineComponent, ref } from 'vue';
 import catEdit from 'src/components/catSetings/edit.vue';
-import { AxiosResponse } from 'axios';
 
 export default defineComponent({
   name: 'CategoriesSettingsPage',
@@ -159,11 +158,9 @@ export default defineComponent({
         .then(() => this.getcats());
     },
     getcats() {
-      this.$api
-        .get('/api/v1/category/')
-        .then(({ data }: AxiosResponse<cat[]>) => {
-          this.catag = data.filter((ele) => ele.id != 0);
-        });
+      this.$api.get<cat[]>('/api/v1/category/').then(({ data }) => {
+        this.catag = data.filter((ele) => ele.id != 0);
+      });
     },
     delcat(id: number) {
       this.$api.delete(`/api/v1/category/${id}`).then(() => this.getcats());
