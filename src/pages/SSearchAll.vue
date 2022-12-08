@@ -39,7 +39,6 @@ import PQueue from 'p-queue';
 import mangaCard from 'src/components/sourceSearch/mangaCard.vue';
 import { debounce } from 'quasar';
 import Display from 'src/components/library/Filters';
-import { AxiosResponse } from 'axios';
 
 export default defineComponent({
   components: { mangaCard },
@@ -77,12 +76,10 @@ export default defineComponent({
   },
   created: function () {
     this.calcWidth = debounce(this.calcWidth, 500);
-    this.$api
-      .get('/api/v1/source/list')
-      .then(({ data: sources }: AxiosResponse<source[]>) => {
-        this.sources = sources;
-        this.doSearch();
-      });
+    this.$api.get<source[]>('/api/v1/source/list').then(({ data: sources }) => {
+      this.sources = sources;
+      this.doSearch();
+    });
     this.queue.on(
       'completed',
       (result: { source: source; mangas: manga[] } | undefined) => {
@@ -135,15 +132,13 @@ export default defineComponent({
           this.queue.add(
             async ({ signal }) => {
               if (signal) {
-                const request = <Promise<AxiosResponse<sourcepage>>>(
-                  this.$api.get(
-                    `/api/v1/source/${source.id}/search?searchTerm=${
-                      this.$route.query['q'] || ''
-                    }&pageNum=1`,
-                    {
-                      signal,
-                    }
-                  )
+                const request = this.$api.get<sourcepage>(
+                  `/api/v1/source/${source.id}/search?searchTerm=${
+                    this.$route.query['q'] || ''
+                  }&pageNum=1`,
+                  {
+                    signal,
+                  }
                 );
 
                 try {

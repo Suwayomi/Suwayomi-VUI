@@ -50,7 +50,6 @@ import {
 import extCard from 'src/components/extantions/extCard.vue';
 import { langSortCmp } from 'src/components/extantions/language';
 import Filters from 'src/components/extantions/Filters';
-import { AxiosResponse } from 'axios';
 
 export default defineComponent({
   name: 'SourcesPage',
@@ -96,11 +95,9 @@ export default defineComponent({
       };
     },
     reload() {
-      this.$api
-        .get('/api/v1/extension/list')
-        .then(({ data }: AxiosResponse<extention[]>) => {
-          this.list = data;
-        });
+      this.$api.get<extention[]>('/api/v1/extension/list').then(({ data }) => {
+        this.list = data;
+      });
     },
     groupExtensions(extensions: extention[]) {
       this.allLangs = []; // empty the array
