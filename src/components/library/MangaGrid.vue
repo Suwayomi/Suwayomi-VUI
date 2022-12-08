@@ -159,10 +159,11 @@ export default defineComponent({
     async reload(val: number | undefined) {
       if (val != undefined) {
         this.mangas = [];
-        this.mangas = <manga[]>(
-          (await this.$api.get(`/api/v1/category/${this.$route.query['tab']}`))
-            .data
-        );
+        this.mangas = (
+          await this.$api.get<manga[]>(
+            `/api/v1/category/${this.$route.query['tab']}`
+          )
+        ).data;
       }
     },
   },

@@ -135,7 +135,6 @@ import EssentialLink from 'src/components/mainLayout/EssentialLink.vue';
 import { useQuasar } from 'quasar';
 import { useMeta } from 'quasar';
 import { storeGet, storeSet } from 'src/boot/StoreStuff';
-import { AxiosResponse } from 'axios';
 
 const linksList = [
   {
@@ -225,17 +224,15 @@ export default defineComponent({
     window.addEventListener('full-screen', (e) => this.isFS(e as CustomEvent));
     if (!this.$q.localStorage.getItem('dontshowagainRL'))
       this.$axios
-        .get(
+        .get<{ tag_name: string; html_url: string }>(
           'https://api.github.com/repos/Suwayomi/Tachidesk-VUI/releases/latest'
         )
-        .then(
-          ({ data }: AxiosResponse<{ tag_name: string; html_url: string }>) => {
-            if (data.tag_name != process.env.VERSION) {
-              this.newReleaseData = data;
-              this.newReleasepopup = true;
-            }
+        .then(({ data }) => {
+          if (data.tag_name != process.env.VERSION) {
+            this.newReleaseData = data;
+            this.newReleasepopup = true;
           }
-        );
+        });
   },
   unmounted() {
     document.body.classList.remove(this.scrollbarTheme);

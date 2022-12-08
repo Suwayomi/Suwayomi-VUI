@@ -630,13 +630,11 @@ export default defineComponent({
     },
     async getonline(TF = 'false', retry = 2) {
       try {
-        this.chapters = <chapter[]>(
-          (
-            await this.$api.get(
-              `/api/v1/manga/${this.$route.params['mangaID']}/chapters?onlineFetch=${TF}`
-            )
-          ).data
-        );
+        this.chapters = (
+          await this.$api.get<chapter[]>(
+            `/api/v1/manga/${this.$route.params['mangaID']}/chapters?onlineFetch=${TF}`
+          )
+        ).data;
       } catch (e) {
         retry--;
         if (retry >= 0) {

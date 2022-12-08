@@ -18,7 +18,6 @@ import { defineComponent } from 'vue';
 import { source } from 'src/components/global/models';
 import sourceGrid from 'src/components/sourceSearch/sourceMangaGrid.vue';
 import { isConfig } from 'src/components/sourceSearch/isConfigurable';
-import { AxiosResponse } from 'axios';
 
 export default defineComponent({
   name: 'ScourceSearchPage',
@@ -33,9 +32,9 @@ export default defineComponent({
   },
   created: async function () {
     try {
-      const { data: jsn } = (await this.$api.get(
+      const { data: jsn } = await this.$api.get<source>(
         `/api/v1/source/${this.$route.params['sourceID']}`
-      )) as AxiosResponse<source>;
+      );
       this.$emit('set-title', jsn.displayName);
       this.isConfi.setConfigurable(jsn.isConfigurable);
     } catch (e) {

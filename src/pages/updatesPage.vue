@@ -42,7 +42,6 @@ import { QInfiniteScroll } from 'quasar';
 import { chapter, manga } from 'src/components/global/models';
 import { defineComponent, ref } from 'vue';
 import UpdateCard from 'src/components/updates/updatecard.vue';
-import { AxiosResponse } from 'axios';
 
 interface updatesreq {
   hasNextPage: boolean;
@@ -64,7 +63,7 @@ export default defineComponent({
       };
     },
     async onLoad(index: number, done: () => void) {
-      const { data: update }: AxiosResponse<updatesreq> = await this.$api.get(
+      const { data: update } = await this.$api.get<updatesreq>(
         `/api/v1/update/recentChapters/${index}`
       );
       if (!update.hasNextPage)
