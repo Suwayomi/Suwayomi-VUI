@@ -21,7 +21,7 @@
         <q-btn dense flat icon="crop_square" @click="toggleMaximize" />
         <q-btn dense flat icon="close" @click="closeApp" />
       </q-bar>
-      <q-toolbar>
+      <q-toolbar :class="$q.screen.sm || $q.screen.xs ? `q-px-none` : ``">
         <q-btn
           v-if="!($q.screen.xs || $q.screen.sm)"
           flat
@@ -33,8 +33,11 @@
         />
         <q-btn icon="arrow_back" flat round @click="$router.go(-1)" />
 
-        <q-toolbar-title class="col-grow q-pr-none">
-          {{ !$q.screen.xs ? title : `` }}
+        <q-toolbar-title
+          class="col-grow q-pr-none"
+          :class="$q.screen.sm || $q.screen.xs ? `q-px-none` : ``"
+        >
+          {{ !$q.screen.xs ? title : undefined }}
         </q-toolbar-title>
 
         <router-view name="inBar" />
@@ -53,17 +56,19 @@
     <q-footer
       v-if="$q.screen.sm || $q.screen.xs"
       elevated
-      class="text-primary flex no-wrap justify-evenly"
+      class="text-primary flex no-wrap"
       :class="$q.dark.isActive ? `bg-dark` : `bg-light`"
     >
       <q-item
         v-for="menu in essentialLinks"
         :key="menu.link"
         :to="menu.link"
-        class="text-grey-7"
+        class="text-grey-7 col-grow q-px-none"
         active-class="text-primary"
       >
-        <q-item-section> <q-icon :name="menu.icon" size="sm" /></q-item-section>
+        <q-item-section class="content-center">
+          <q-icon :name="menu.icon" :size="$q.screen.xs ? `sm` : `xl`"
+        /></q-item-section>
       </q-item>
     </q-footer>
 
@@ -130,7 +135,6 @@ import EssentialLink from 'src/components/mainLayout/EssentialLink.vue';
 import { useQuasar } from 'quasar';
 import { useMeta } from 'quasar';
 import { storeGet, storeSet } from 'src/boot/StoreStuff';
-import { AxiosResponse } from 'axios';
 
 const linksList = [
   {
@@ -220,17 +224,15 @@ export default defineComponent({
     window.addEventListener('full-screen', (e) => this.isFS(e as CustomEvent));
     if (!this.$q.localStorage.getItem('dontshowagainRL'))
       this.$axios
-        .get(
+        .get<{ tag_name: string; html_url: string }>(
           'https://api.github.com/repos/Suwayomi/Tachidesk-VUI/releases/latest'
         )
-        .then(
-          ({ data }: AxiosResponse<{ tag_name: string; html_url: string }>) => {
-            if (data.tag_name != process.env.VERSION) {
-              this.newReleaseData = data;
-              this.newReleasepopup = true;
-            }
+        .then(({ data }) => {
+          if (data.tag_name != process.env.VERSION) {
+            this.newReleaseData = data;
+            this.newReleasepopup = true;
           }
-        );
+        });
   },
   unmounted() {
     document.body.classList.remove(this.scrollbarTheme);

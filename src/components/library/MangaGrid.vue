@@ -12,7 +12,12 @@
       :style="widt"
       transition="fade"
     >
-      <MangaCard :display="Displ" :manga="manga"></MangaCard>
+      <MangaCard
+        :display="Displ"
+        :ubadge="filters.Ubadge"
+        :dbadge="filters.Dbadge"
+        :manga="manga"
+      ></MangaCard>
     </q-intersection>
   </div>
   <q-inner-loading
@@ -154,10 +159,11 @@ export default defineComponent({
     async reload(val: number | undefined) {
       if (val != undefined) {
         this.mangas = [];
-        this.mangas = <manga[]>(
-          (await this.$api.get(`/api/v1/category/${this.$route.query['tab']}`))
-            .data
-        );
+        this.mangas = (
+          await this.$api.get<manga[]>(
+            `/api/v1/category/${this.$route.query['tab']}`
+          )
+        ).data;
       }
     },
   },

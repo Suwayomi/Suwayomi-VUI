@@ -12,6 +12,9 @@ name: Build
 on:
   push:
     branches: ["Release"]
+defaults:
+  run:
+    shell: bash
 
 jobs:
   GenTag:
@@ -24,7 +27,6 @@ jobs:
           fetch-depth: 0
       - name: Generate Tag Name
         id: GenTagName
-        shell: bash
         run: |
           genTag="r$(git rev-list HEAD --count)"
           echo "$genTag"
@@ -35,14 +37,17 @@ jobs:
     steps:
       - name: Check out Git repository
         uses: actions/checkout@v3
-        with:
-          fetch-depth: 0
       - name: Login to GitHub Container Registry
         uses: docker/login-action@v2
         with:
           registry: ghcr.io
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
+      - name: Login to Docker Hub
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
       - id: string
         uses: ASzc/change-string-case-action@v5
         with:
@@ -53,15 +58,17 @@ jobs:
           context: .
           build-args: VERSION=${{ needs.GenTag.outputs.value }}
           push: true
-          tags: ${{ steps.string.outputs.lowercase }}:latest,${{ steps.string.outputs.lowercase }}:${{ needs.GenTag.outputs.value }},
+          tags: |
+            ghcr.io/${{ steps.string.outputs.lowercase }}:latest,
+            ghcr.io/${{ steps.string.outputs.lowercase }}:${{ needs.GenTag.outputs.value }},
+            ${{ steps.string.outputs.lowercase }}:latest,
+            ${{ steps.string.outputs.lowercase }}:${{ needs.GenTag.outputs.value }},
   build:
     needs: GenTag
     runs-on: ubuntu-latest
     steps:
       - name: Check out Git repository
         uses: actions/checkout@v3
-        with:
-          fetch-depth: 0
       - name: Use Node.js 19
         uses: actions/setup-node@v3
         with:
@@ -95,7 +102,6 @@ jobs:
     needs: GenTag
     steps:
       - name: if win/linux
-        shell: bash
         id: winlin
         run: |
           if [[ "${{ matrix.os-versions }}" == "windows-latest" ]]; then
@@ -104,8 +110,6 @@ jobs:
             echo "artifacts=dist/electron/Packaged/Tachidesk-VUI-electron-linux-*.*" >> $GITHUB_OUTPUT
           fi
       - uses: actions/checkout@v3
-        with:
-          fetch-depth: 0
       - name: Use Node.js 19
         uses: actions/setup-node@v3
         with:

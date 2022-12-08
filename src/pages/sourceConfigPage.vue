@@ -22,7 +22,6 @@
 import { preferences } from 'src/components/global/models';
 import { defineComponent, ref } from 'vue';
 import whatis from 'src/components/sourceSearch/config/whatIs.vue';
-import { AxiosResponse } from 'axios';
 
 export default defineComponent({
   name: 'SettingsPage',
@@ -42,10 +41,10 @@ export default defineComponent({
     },
     getPrefs() {
       this.$api
-        .get(`/api/v1/source/${this.$route.params['sourceID']}/preferences`)
-        .then(
-          ({ data }: AxiosResponse<preferences[]>) => (this.preferences = data)
-        );
+        .get<preferences[]>(
+          `/api/v1/source/${this.$route.params['sourceID']}/preferences`
+        )
+        .then(({ data }) => (this.preferences = data));
     },
   },
 });

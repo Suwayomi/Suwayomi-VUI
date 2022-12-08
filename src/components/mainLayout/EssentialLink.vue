@@ -7,7 +7,7 @@
 <template>
   <q-item :to="link" class="text-grey-7" active-class="text-primary">
     <q-item-section v-if="icon" avatar>
-      <q-icon :name="icon" size="lg" />
+      <q-icon :name="icon" size="xl" />
     </q-item-section>
 
     <q-item-section>
