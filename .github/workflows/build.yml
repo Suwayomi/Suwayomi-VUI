@@ -12,6 +12,9 @@ name: Build
 on:
   push:
     branches: ["Release"]
+defaults:
+  run:
+    shell: bash
 
 jobs:
   GenTag:
@@ -24,7 +27,6 @@ jobs:
           fetch-depth: 0
       - name: Generate Tag Name
         id: GenTagName
-        shell: bash
         run: |
           genTag="r$(git rev-list HEAD --count)"
           echo "$genTag"
@@ -100,7 +102,6 @@ jobs:
     needs: GenTag
     steps:
       - name: if win/linux
-        shell: bash
         id: winlin
         run: |
           if [[ "${{ matrix.os-versions }}" == "windows-latest" ]]; then
