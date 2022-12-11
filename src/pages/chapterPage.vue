@@ -340,10 +340,12 @@ export default defineComponent({
         });
       }
     },
-    getNextChap() {
-      this.nextChapter = this.$api.get(
-        `/api/v1/manga/${this.$route.params['mangaID']}/chapter/${this.currchapter}`
-      );
+    async getNextChap() {
+      this.nextChapter = this.$api
+        .get<chapter>(
+          `/api/v1/manga/${this.$route.params['mangaID']}/chapter/${this.currchapter}`
+        )
+        .then(({ data }) => data);
       this.nextChapter.then((data) => {
         this.Pages[this.currchapter] = [];
         for (let i = 0; i < data.pageCount; i++) {
