@@ -36,9 +36,9 @@ export function resetAxiosBase() {
 export function resetAxiosAuth() {
   const auth = <{ username: string; password: string } | null>storeGet('auth');
   if (auth != null) {
-    api.defaults.headers.common['Authorization'] = `Basic ${Buffer.from(
+    api.defaults.headers.common['Authorization'] = `Basic ${window.btoa(
       auth.username + ':' + auth.password
-    ).toString('base64')}`;
+    )}`;
   } else {
     api.defaults.headers.common['Authorization'] = undefined;
   }
