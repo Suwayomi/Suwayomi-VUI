@@ -10,19 +10,20 @@
       <div v-for="({ source, mangas }, index) in searchResults" :key="index">
         <div>
           <div class="text-h6 q-ma-md">{{ source.displayName }}</div>
-          <div style="white-space: nowrap; overflow-x: auto">
-            <div
-              v-for="manga in mangas"
-              :key="manga.id"
-              :style="widt"
-              style="display: inline-block"
-            >
-              <mangaCard :manga="manga" :display="Displ" />
+          <q-scroll-area style="height: 331.84px; width: 100%">
+            <div class="row no-wrap">
+              <mangaCard
+                v-for="manga in mangas"
+                :key="manga.id"
+                :style="widt"
+                :manga="manga"
+                :display="Displ"
+              />
+              <div v-if="!mangas.length" class="text-subtitle1 q-ma-md">
+                No Manga
+              </div>
             </div>
-            <div v-if="!mangas.length" class="text-subtitle1 q-ma-md">
-              No Manga
-            </div>
-          </div>
+          </q-scroll-area>
         </div>
       </div>
     </div>
@@ -36,6 +37,7 @@
 import { manga, source, sourcepage } from 'src/components/global/models';
 import { defineComponent, ref } from 'vue';
 import PQueue from 'p-queue';
+import Filters from 'src/components/extantions/Filters';
 import mangaCard from 'src/components/sourceSearch/mangaCard.vue';
 import { debounce } from 'quasar';
 import Display from 'src/components/library/Filters';
@@ -47,11 +49,14 @@ export default defineComponent({
     const controller = ref(new AbortController());
     const searchResults = ref(<{ source: source; mangas: manga[] }[]>[]);
     const sources = ref(<source[]>[]);
+    const filters = Filters();
+    const langs = ref(filters.langs);
     return {
       searchResults,
       queue,
       controller,
       sources,
+      langs,
       display: ref(Display()),
       devider: ref<number>(0),
     };
@@ -66,7 +71,7 @@ export default defineComponent({
       return 'compact';
     },
     widt(): string {
-      return `width: calc(100% / ${this.devider}); aspect-ratio: 225/350;transition: width 0.5s ease-out;height: fit-content;`;
+      return `width: calc(100vw / ${this.devider}); aspect-ratio: 225/350;transition: width 0.5s ease-out;height: fit-content;`;
     },
   },
   watch: {
@@ -77,7 +82,9 @@ export default defineComponent({
   created: function () {
     this.calcWidth = debounce(this.calcWidth, 500);
     this.$api.get<source[]>('/api/v1/source/list').then(({ data: sources }) => {
-      this.sources = sources;
+      this.sources = sources.filter((ele) => {
+        return this.langs.includes(ele.lang);
+      });
       this.doSearch();
     });
     this.queue.on(

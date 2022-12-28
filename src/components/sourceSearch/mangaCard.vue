@@ -76,7 +76,7 @@
             </q-inner-loading>
           </q-img>
           <div
-            v-if="Display != `compact`"
+            v-if="display != `compact`"
             :class="listdivClass"
             :title="manga.title"
             style="
@@ -88,7 +88,7 @@
               overflow: hidden;
               width: 100%;
             "
-            :style="Display == `list` ? `` : `height: 5.25rem;`"
+            :style="display == `list` ? `` : `height: 5.25rem;`"
           >
             {{ manga.title }}
           </div>
