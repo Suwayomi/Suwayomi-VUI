@@ -8,7 +8,7 @@
   <SearchBar></SearchBar>
   <q-btn flat class="q-ml-sm" round icon="filter_list" @click="dial = true" />
   <q-dialog v-model="dial">
-    <q-card style="width: 20%">
+    <q-card>
       <q-card-section>
         <div class="text-h6">Enabled Languages</div>
       </q-card-section>
