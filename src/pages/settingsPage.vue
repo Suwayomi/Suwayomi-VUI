@@ -249,12 +249,7 @@
       label="Backup"
       default-closed
     >
-      <q-item
-        v-ripple
-        clickable
-        class="q-pl-xl"
-        :href="serverAddr + `/api/v1/backup/export/file`"
-      >
+      <q-item v-ripple clickable class="q-pl-xl" @click="createbackup">
         <q-item-section>
           <q-item-label>Create Backup</q-item-label>
           <q-item-label caption
@@ -374,6 +369,28 @@ export default defineComponent({
     },
   },
   methods: {
+    createbackup() {
+      this.$api
+        .get(this.serverAddr + '/api/v1/backup/export/file', {
+          responseType: 'blob',
+        })
+        .then((resp) => {
+          let url = window.URL.createObjectURL(resp.data);
+          let a = document.createElement('a');
+          a.style.display = 'none';
+          a.href = url;
+          if (typeof resp.headers.get == 'function') {
+            const tmp2 = <string>resp.headers.get('content-disposition');
+            if (tmp2 != null) {
+              const tmp = tmp2.match(/filename="([^"]+)"/);
+              if (tmp != null && tmp[1]) a.download = tmp[1];
+            }
+          }
+          document.body.appendChild(a);
+          a.click();
+          window.URL.revokeObjectURL(url);
+        });
+    },
     myTweak(offset: number) {
       return {
         height: offset ? `calc(100vh - ${offset}px)` : '100vh',
