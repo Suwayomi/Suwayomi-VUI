@@ -179,7 +179,7 @@ const pathss: paths = {
 export default defineComponent({
   name: 'ChapterPage',
   components: { displayPage },
-  emits: ['set-title', 'open-menu'],
+  emits: ['set-title', 'open-menu', 'title-data'],
   setup() {
     const pageIntersectEleArr = ref(<HTMLElement[]>[]);
     const items = ref(<chapter[]>[]);
@@ -276,8 +276,8 @@ export default defineComponent({
     },
   },
   watch: {
-    vue_title() {
-      this.$emit('set-title', `${this.chapname} ${this.vue_title}`);
+    chapname() {
+      this.$emit('title-data', [this.chapname, this.vue_title]);
     },
   },
   created() {
