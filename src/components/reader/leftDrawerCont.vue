@@ -13,6 +13,7 @@
   >
     <q-item-label>Page Margins</q-item-label>
     <q-toggle v-model="SreadMargins" color="blue" />
+    <q-tooltip> add a gap in between adjacent pages </q-tooltip>
   </q-item>
   <q-item
     v-ripple
@@ -22,6 +23,9 @@
   >
     <q-item-label>Page Scale</q-item-label>
     <q-toggle v-model="SreadScale" color="blue" />
+    <q-tooltip>
+      scale up pages to width or height depending on the mode
+    </q-tooltip>
   </q-item>
   <q-item
     v-ripple
@@ -31,6 +35,9 @@
   >
     <q-item-label>Page Offset</q-item-label>
     <q-toggle v-model="sReadOffset" color="blue" />
+    <q-tooltip>
+      add a blank page to the start to offset double pages for RTL and LTR modes
+    </q-tooltip>
   </q-item>
   <q-select
     v-model="SReadModel"
@@ -46,12 +53,12 @@
     clickable
     @click="showPath = !showPath"
   >
-    <q-item-label>View Path</q-item-label>
+    <q-item-label>View navigation layout</q-item-label>
     <q-toggle v-model="showPath" color="blue" />
     <q-tooltip>
       <div>blue = next</div>
       <div>red = back</div>
-      <div>green = menu</div>
+      <div>green = open menu</div>
     </q-tooltip>
   </q-item>
 
@@ -62,6 +69,7 @@
     label="Navigation layout"
     :options="PathOptions"
   >
+    <q-tooltip> options are the same as the tachiyomi equivilants </q-tooltip>
   </q-select>
 </template>
 
