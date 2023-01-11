@@ -54,15 +54,28 @@
           flat
           round
           @click="leftDrawerOpen = !leftDrawerOpen"
-        />
-        <q-btn icon="arrow_back" flat round @click="$router.go(-1)" />
+        >
+          <q-tooltip> close menu </q-tooltip>
+        </q-btn>
+        <q-btn icon="arrow_back" flat round @click="$router.go(-1)">
+          <q-tooltip> back </q-tooltip>
+        </q-btn>
       </q-item>
+      <q-separator />
+      <q-item>
+        <div class="text-h5">{{ titleData[1] }}</div>
+      </q-item>
+      <q-separator />
+      <q-item>
+        <div class="text-h6 text-weight-regular">{{ titleData[0] }}</div>
+      </q-item>
+      <q-separator />
       <leftDrawerVue></leftDrawerVue>
     </q-drawer>
     <q-page-container>
       <router-view
         :class="$q.dark.isActive ? `bg-dark-page` : `bg-light-page`"
-        @set-title="setTitle"
+        @title-data="settitleData"
         @open-menu="leftDrawerOpen = !leftDrawerOpen"
       />
       <q-page-sticky
@@ -103,6 +116,7 @@ export default defineComponent({
       };
     });
     return {
+      titleData: ref(<[string, string]>['', '']),
       leftDrawerOpen: ref(false),
       title,
       FS: ref(false),
@@ -139,12 +153,13 @@ export default defineComponent({
     this.$q.dark.set(<boolean>this.$storeGet('dark', this.$q.dark.isActive));
   },
   methods: {
+    settitleData(titldat: [string, string]) {
+      this.titleData = titldat;
+      this.title = `${titldat[0]} ${titldat[1]}`;
+    },
     toggledark() {
       this.$q.dark.toggle();
       this.$storeSet('dark', this.$q.dark.isActive, true);
-    },
-    setTitle(titl: string) {
-      this.title = titl;
     },
     minimize() {
       if (this.$q.platform.is.electron) {
