@@ -10,8 +10,8 @@
       <div v-for="({ source, mangas }, index) in searchResults" :key="index">
         <div>
           <div class="text-h6 q-ma-md">{{ source.displayName }}</div>
-          <q-scroll-area style="height: 331.84px; width: 100%">
-            <div class="row no-wrap">
+          <div style="overflow-x: auto">
+            <div class="row no-wrap" style="width: max-content">
               <mangaCard
                 v-for="manga in mangas"
                 :key="manga.id"
@@ -23,7 +23,7 @@
                 No Manga
               </div>
             </div>
-          </q-scroll-area>
+          </div>
         </div>
       </div>
     </div>
