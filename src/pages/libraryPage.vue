@@ -63,6 +63,9 @@ export default defineComponent({
           tabID: cat.id,
         };
       });
+      this.$router.replace({
+        query: { ...this.$route.query, tab: this.tabs[0]?.tabID || 0 },
+      });
     } catch (e) {
       this.failedFetch = true;
     }

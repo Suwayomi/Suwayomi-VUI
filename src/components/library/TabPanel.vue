@@ -46,7 +46,7 @@ export default defineComponent({
     const router = useRouter();
     const route = useRoute();
     if (route.query['tab'] === undefined) {
-      router.push({ query: { ...route.query, tab: 0 } });
+      router.replace({ query: { ...route.query, tab: 0 } });
     }
     return {
       tab: ref(new Number(route.query['tab']).valueOf() || 0),
