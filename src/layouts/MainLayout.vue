@@ -13,7 +13,7 @@
         :class="FS ? `hidden` : ``"
       >
         <q-icon name="img:favicon.ico" class="q-electron-drag--exception" />
-        <div>{{ `${title} - Tachidesk Quasar` }}</div>
+        <div>{{ `${title} - Tachidesk-VUI` }}</div>
 
         <q-space />
 
@@ -116,7 +116,9 @@
             flat
             label="Github"
           />
-          <q-btn v-close-popup flat label="Ok" />
+          <q-btn v-close-popup flat label="Ok" @click="updateServiceworker"
+            ><q-tooltip>will re-register Serviceworker</q-tooltip></q-btn
+          >
           <q-btn
             v-close-popup
             flat
@@ -187,7 +189,7 @@ export default defineComponent({
     useMeta(() => {
       return {
         title: title.value,
-        titleTemplate: (title) => `${title} - Tachidesk Quasar`,
+        titleTemplate: (title) => `${title} - Tachidesk-VUI`,
       };
     });
     $q.dark.set(<boolean>storeGet('dark', true));
@@ -222,7 +224,10 @@ export default defineComponent({
   mounted() {
     document.body.classList.add(this.scrollbarTheme);
     window.addEventListener('full-screen', (e) => this.isFS(e as CustomEvent));
-    if (!this.$q.localStorage.getItem('dontshowagainRL'))
+    if (
+      !this.$q.localStorage.getItem('dontshowagainRL') ||
+      process.env.VERSION == undefined
+    )
       this.$axios
         .get<{ tag_name: string; html_url: string }>(
           'https://api.github.com/repos/Suwayomi/Tachidesk-VUI/releases/latest'
@@ -238,6 +243,17 @@ export default defineComponent({
     document.body.classList.remove(this.scrollbarTheme);
   },
   methods: {
+    updateServiceworker() {
+      if ('serviceWorker' in navigator) {
+        navigator.serviceWorker
+          .getRegistrations()
+          .then(function (registrations) {
+            for (let registration of registrations) {
+              registration.update();
+            }
+          });
+      }
+    },
     dontshowagain() {
       this.$q.localStorage.set('dontshowagainRL', true);
     },
