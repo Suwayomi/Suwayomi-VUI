@@ -31,7 +31,7 @@ services:
   tachideskvui:
     image: ghcr.io/suwayomi/tachidesk-vui:latest
     ports:
-      - '9013:80'
+      - '9013:8080'
     restart: unless-stopped
 ```
 
