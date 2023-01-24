@@ -59,7 +59,7 @@ export default defineComponent({
   },
   mounted: function () {
     this.$api.get<cat[]>('/api/v1/category/').then(({ data }) => {
-      this.options = data.slice(1);
+      this.options = data.filter((data) => data.id != 0);
     });
     this.$api
       .get<cat[]>(`/api/v1/manga/${this.$route.params['mangaID']}/category/`)
