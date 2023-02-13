@@ -289,12 +289,7 @@ export default defineComponent({
   methods: {
     async getImg(chapterID: number, pageNum: number): Promise<string> {
       return getImgBlob(
-        `/api/v1/manga/${
-          this.$route.params['mangaID']
-        }/chapter/${chapterID}/page/${pageNum}?useCache=${this.$storeGet(
-          'useCache',
-          true
-        )}`
+        `/api/v1/manga/${this.$route.params['mangaID']}/chapter/${chapterID}/page/${pageNum}`
       );
     },
     myTweak(offset: number) {

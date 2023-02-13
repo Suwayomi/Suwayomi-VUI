@@ -111,7 +111,6 @@
 import { defineComponent, PropType, ref } from 'vue';
 import { manga } from 'src/components/global/models';
 import { getImgBlob } from 'src/components/global/usefull';
-import { storeGet } from 'src/boot/StoreStuff';
 
 export default defineComponent({
   name: 'MangaCard',
@@ -126,9 +125,8 @@ export default defineComponent({
     },
   },
   setup() {
-    const useCache = ref(`${storeGet('useCache', true)}`);
     const imgdata = ref('');
-    return { useCache, imgdata };
+    return { imgdata };
   },
   computed: {
     listdivClass(): string {
@@ -138,11 +136,9 @@ export default defineComponent({
     },
   },
   mounted: function () {
-    getImgBlob(this.manga.thumbnailUrl + '?useCache=' + this.useCache).then(
-      (value) => {
-        this.imgdata = value;
-      }
-    );
+    getImgBlob(this.manga.thumbnailUrl).then((value) => {
+      this.imgdata = value;
+    });
   },
 });
 </script>

@@ -43,7 +43,6 @@
 </template>
 
 <script lang="ts">
-import { storeGet } from 'src/boot/StoreStuff';
 import { defineComponent, PropType, ref } from 'vue';
 import { chapter, manga } from '../global/models';
 import { getImgBlob } from '../global/usefull';
@@ -58,13 +57,10 @@ export default defineComponent({
   },
   setup() {
     const imgdata = ref('');
-    const useCache = ref(`${storeGet('useCache', true)}`);
-    return { useCache, imgdata };
+    return { imgdata };
   },
   mounted: function () {
-    getImgBlob(
-      this.item.manga.thumbnailUrl + '?useCache=' + this.useCache
-    ).then((value) => {
+    getImgBlob(this.item.manga.thumbnailUrl).then((value) => {
       this.imgdata = value;
     });
   },

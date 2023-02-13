@@ -67,7 +67,6 @@ import { defineComponent, PropType, ref } from 'vue';
 import { source } from '../global/models';
 import { langCodeToName } from 'src/components/extantions/language';
 import { getImgBlob } from '../global/usefull';
-import { storeGet } from 'src/boot/StoreStuff';
 
 export default defineComponent({
   name: 'SourceCard',
@@ -79,9 +78,8 @@ export default defineComponent({
   },
   emits: ['reload'],
   setup() {
-    const useCache = ref(`${storeGet('useCache', true)}`);
     const imgdata = ref('');
-    return { useCache, imgdata };
+    return { imgdata };
   },
   watch: {
     'source.iconUrl'() {
@@ -98,11 +96,9 @@ export default defineComponent({
     },
     langCodeToName,
     getSetImg() {
-      getImgBlob(this.source.iconUrl + '?useCache=' + this.useCache).then(
-        (value) => {
-          this.imgdata = value;
-        }
-      );
+      getImgBlob(this.source.iconUrl).then((value) => {
+        this.imgdata = value;
+      });
     },
   },
 });
