@@ -90,6 +90,7 @@ jobs:
         working-directory: ./dist/pwa/
         run: zip -r  Tachidesk-VUI-Web.zip ./*
       - name: Upload CI Release
+        working-directory: ./dist/pwa/
         uses: ncipollo/release-action@v1
         with:
           artifacts: "Tachidesk-VUI-Web.zip"
