@@ -13,7 +13,7 @@
         :class="FS ? `hidden` : ``"
       >
         <q-icon name="img:favicon.ico" class="q-electron-drag--exception" />
-        <div>{{ `${title} - Tachidesk Quasar` }}</div>
+        <div>{{ `${title} - Tachidesk-VUI` }}</div>
 
         <q-space />
 
@@ -112,7 +112,7 @@ export default defineComponent({
     useMeta(() => {
       return {
         title: title.value,
-        titleTemplate: (title) => `${title} - Reading - Tachidesk Quasar `,
+        titleTemplate: (title) => `${title} - Reading - Tachidesk-VUI `,
       };
     });
     return {

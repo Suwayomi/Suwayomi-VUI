@@ -30,21 +30,6 @@
       </q-item-section>
       <q-toggle v-model="darkmode" color="blue" val="battery" />
     </q-item>
-    <!-- use cache -->
-    <q-item
-      v-ripple
-      clickable
-      class="row justify-between"
-      @click="useCache = !useCache"
-    >
-      <q-item-section avatar>
-        <q-icon name="cached" />
-      </q-item-section>
-      <q-item-section>
-        <q-item-label>Use imanga cache</q-item-label>
-      </q-item-section>
-      <q-toggle v-model="useCache" color="blue" val="battery" />
-    </q-item>
     <!-- manga grid width -->
     <q-item v-ripple clickable @click="Mitem = true">
       <q-item-section avatar>
@@ -305,7 +290,6 @@ export default defineComponent({
     const $q = useQuasar();
     const darkmode = ref($q.dark.isActive);
     const MitemW = ref(storeGet('MitemW', 300) as number);
-    const useCache = ref(storeGet('useCache', true) as boolean);
     const serverAddr = ref(
       storeGet(
         'baseUrl',
@@ -333,7 +317,6 @@ export default defineComponent({
       darkmode,
       Mitem: ref(false),
       MitemW,
-      useCache,
       Saddr: ref(false),
       SRead: ref(false),
       SReadModel,
@@ -363,9 +346,6 @@ export default defineComponent({
     darkmode: function (val) {
       this.$q.dark.set(val);
       this.$storeSet('dark', val, true);
-    },
-    useCache: function (val) {
-      this.$storeSet('useCache', val, true);
     },
   },
   methods: {
