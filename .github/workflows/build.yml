@@ -87,7 +87,8 @@ jobs:
           user-email: n/a
           target-branch: main
       - name: Generate zip
-        run: zip -r  Tachidesk-VUI-Web.zip ./dist/pwa/*
+        working-directory: ./dist/pwa/
+        run: zip -r  Tachidesk-VUI-Web.zip ./*
       - name: Upload CI Release
         uses: ncipollo/release-action@v1
         with:

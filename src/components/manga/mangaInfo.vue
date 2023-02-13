@@ -89,7 +89,6 @@
 import { defineComponent, PropType, ref } from 'vue';
 import { manga } from 'src/components/global/models';
 import { getImgBlob } from '../global/usefull';
-import { storeGet } from 'src/boot/StoreStuff';
 
 export default defineComponent({
   name: 'MangaInfo',
@@ -105,9 +104,7 @@ export default defineComponent({
   },
   emits: ['inlib'],
   setup(props) {
-    const useCache = storeGet('useCache', true);
     return {
-      useCache,
       inLib: ref(props.manga?.inLibrary || false),
       imgdata: ref(),
     };
@@ -142,11 +139,11 @@ export default defineComponent({
       this.$emit('inlib');
     },
     getImg() {
-      getImgBlob(this.manga?.thumbnailUrl + '?useCache=' + this.useCache).then(
-        (value) => {
+      if (this.manga?.thumbnailUrl) {
+        getImgBlob(this.manga?.thumbnailUrl).then((value) => {
           this.imgdata = value;
-        }
-      );
+        });
+      }
     },
   },
 });

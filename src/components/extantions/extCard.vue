@@ -48,7 +48,6 @@
 import { defineComponent, PropType, ref } from 'vue';
 import { extention } from '../global/models';
 import { getImgBlob } from '../global/usefull';
-import { storeGet } from 'src/boot/StoreStuff';
 
 export default defineComponent({
   name: 'ExtCard',
@@ -60,9 +59,8 @@ export default defineComponent({
   },
   emits: ['reload'],
   setup() {
-    const useCache = ref(`${storeGet('useCache', true)}`);
     const imgdata = ref('');
-    return { useCache, imgdata };
+    return { imgdata };
   },
   computed: {
     UpUnIn(): string {
@@ -72,11 +70,9 @@ export default defineComponent({
     },
   },
   mounted: function () {
-    getImgBlob(this.exten.iconUrl + '?useCache=' + this.useCache).then(
-      (value) => {
-        this.imgdata = value;
-      }
-    );
+    getImgBlob(this.exten.iconUrl).then((value) => {
+      this.imgdata = value;
+    });
   },
   methods: {
     capitalizeFirstLetter(string: string): string {
