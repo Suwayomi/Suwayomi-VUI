@@ -278,7 +278,7 @@
 import { useQuasar } from 'quasar';
 import { defineComponent, ref } from 'vue';
 import { resetAxiosBase, resetAxiosAuth } from 'src/boot/axios';
-import { storeGet } from 'src/boot/StoreStuff';
+import { storeGet, storeSet } from 'src/boot/StoreStuff';
 import { paths } from 'src/components/global/models';
 import getEnv from 'src/getenv';
 
@@ -377,7 +377,7 @@ export default defineComponent({
       };
     },
     setMitemW(val: number) {
-      this.$q.localStorage.set('MitemW', val);
+      storeSet('MitemW', val, 300);
     },
     setserverAddr: function (val: string) {
       this.$storeSet(
