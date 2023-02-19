@@ -41,6 +41,7 @@ import Filters from 'src/components/extantions/Filters';
 import mangaCard from 'src/components/sourceSearch/mangaCard.vue';
 import { debounce } from 'quasar';
 import Display from 'src/components/library/Filters';
+import { storeGet } from 'src/boot/StoreStuff';
 
 export default defineComponent({
   components: { mangaCard },
@@ -123,7 +124,7 @@ export default defineComponent({
     },
     calcWidth() {
       const grid = <Element>this.$refs['infiniteScrol'];
-      const ideal = <number>this.$q.localStorage.getItem('MitemW');
+      const ideal = <number>storeGet('MitemW', 300);
       if (grid.clientWidth == undefined) return;
       this.devider = Math.round(grid.clientWidth / ideal);
     },
