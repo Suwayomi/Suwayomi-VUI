@@ -50,6 +50,7 @@ export interface manga {
   status: string;
   inLibrary: boolean;
   inLibraryAt: number;
+  lastReadAt: number;
   lastFetchedAt: number;
   source: source | null;
   meta: myMeta;
