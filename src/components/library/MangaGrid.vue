@@ -98,6 +98,14 @@ export default defineComponent({
           return a.title <= b.title ? -1 : 1;
         });
       }
+      if (this.filters.lastRead != null) {
+        mangas = mangas.sort((a, b) => {
+          if (this.filters.lastRead) {
+            return a.lastReadAt <= b.lastReadAt ? -1 : 1;
+          }
+          return a.lastReadAt >= b.lastReadAt ? -1 : 1;
+        });
+      }
       if (this.filters.ByID != null) {
         mangas = mangas.sort((a, b) => {
           if (this.filters.ByID) {

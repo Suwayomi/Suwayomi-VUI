@@ -92,6 +92,18 @@
             label="Alphabetical"
           />
         </q-card-section>
+        <q-card-section class="q-px-md q-pt-xs q-pb-xs">
+          <q-checkbox
+            v-model="lastRead"
+            style="width: 100%"
+            checked-icon="arrow_upward"
+            unchecked-icon="arrow_downward"
+            indeterminate-icon="null"
+            color="primary"
+            keep-color
+            label="Last Read Date"
+          />
+        </q-card-section>
         <q-card-section class="q-px-md q-pt-xs q-pb-md">
           <q-checkbox
             v-model="ByID"
@@ -167,6 +179,7 @@ export default defineComponent({
     const downloaded = ref(<boolean | null>filters.downloaded.value);
     const leftToRead = ref(<boolean | null>filters.leftToRead.value);
     const alphabetical = ref(<boolean | null>filters.alphabetical.value);
+    const lastRead = ref(<boolean | null>filters.lastRead.value);
     const ByID = ref(<boolean | null>filters.ByID.value);
     const disp = ref(<'null' | 'true' | 'false'>`${filters.Display.value}`);
     const Ubadge = ref(<boolean>filters.Ubadge.value);
@@ -178,6 +191,7 @@ export default defineComponent({
       downloaded,
       leftToRead,
       alphabetical,
+      lastRead,
       ByID,
       disp,
       Ubadge,
@@ -203,6 +217,7 @@ export default defineComponent({
       if (N != null) {
         this.alphabetical = null;
         this.ByID = null;
+        this.lastRead = null;
       }
     },
     alphabetical(N) {
@@ -210,6 +225,15 @@ export default defineComponent({
       if (N != null) {
         this.leftToRead = null;
         this.ByID = null;
+        this.lastRead = null;
+      }
+    },
+    lastRead(N) {
+      this.filters.setLastRead(N);
+      if (N != null) {
+        this.leftToRead = null;
+        this.ByID = null;
+        this.alphabetical = null;
       }
     },
     ByID(N) {
@@ -217,6 +241,7 @@ export default defineComponent({
       if (N != null) {
         this.alphabetical = null;
         this.leftToRead = null;
+        this.lastRead = null;
       }
     },
     disp(N) {

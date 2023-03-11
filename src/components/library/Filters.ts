@@ -13,6 +13,7 @@ const downloaded = ref(<Boon>LocalStorage.getItem('lbDownloaded'));
 
 const leftToRead = ref(<Boon>LocalStorage.getItem('lbLeftToRead'));
 const alphabetical = ref(<Boon>LocalStorage.getItem('lbAlphabetical'));
+const lastRead = ref(<Boon>LocalStorage.getItem('lbLastRead'));
 const tmp = LocalStorage.getItem('lbByid');
 const ByID = ref(
   <Boon>leftToRead.value === null && alphabetical.value === null && tmp === null
@@ -54,6 +55,7 @@ export default function useInBar() {
     if (data != null) {
       storeSet('lbLeftToRead', data);
       storeSet('lbAlphabetical', null);
+      storeSet('lbLastRead', null);
       storeSet('lbByid', null);
     }
     leftToRead.value = data;
@@ -62,14 +64,25 @@ export default function useInBar() {
     if (data != null) {
       storeSet('lbLeftToRead', null);
       storeSet('lbAlphabetical', data);
+      storeSet('lbLastRead', null);
       storeSet('lbByid', null);
     }
     alphabetical.value = data;
+  };
+  const setLastRead = (data: Boon | null) => {
+    if (data != null) {
+      storeSet('lbLeftToRead', null);
+      storeSet('lbAlphabetical', null);
+      storeSet('lbLastRead', data);
+      storeSet('lbByid', null);
+    }
+    lastRead.value = data;
   };
   const setByID = (data: Boon | null) => {
     if (data != null) {
       storeSet('lbLeftToRead', null);
       storeSet('lbAlphabetical', null);
+      storeSet('lbLastRead', null);
       storeSet('lbByid', data);
     }
     ByID.value = data;
@@ -80,6 +93,7 @@ export default function useInBar() {
     setDownloaded,
     setLeftToRead,
     setAlphabetical,
+    setLastRead,
     setByID,
     setDisplay,
     setUbadge,
@@ -88,6 +102,7 @@ export default function useInBar() {
     downloaded,
     leftToRead,
     alphabetical,
+    lastRead,
     ByID,
     Display,
     Ubadge,
