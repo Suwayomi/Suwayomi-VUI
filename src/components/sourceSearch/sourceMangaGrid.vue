@@ -71,6 +71,7 @@ import MangaCard from 'src/components/sourceSearch/mangaCard.vue';
 import { debounce, QInfiniteScroll } from 'quasar';
 import Display from 'src/components/library/Filters';
 import isItGroup from 'src/components/sourceSearch/Filters/isItGroup.vue';
+import { storeGet } from 'src/boot/StoreStuff';
 
 interface posState {
   position: number;
@@ -132,7 +133,7 @@ export default defineComponent({
   methods: {
     calcWidth() {
       const grid = <QInfiniteScroll>this.$refs['infiniteScrol'];
-      const ideal = <number>this.$q.localStorage.getItem('MitemW');
+      const ideal = <number>storeGet('MitemW', 300);
       if (grid.$el.clientWidth == undefined) return;
       this.devider = Math.round(grid.$el.clientWidth / ideal);
     },
