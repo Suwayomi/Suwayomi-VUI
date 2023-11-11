@@ -19,6 +19,7 @@
 	import { paths, type PathLayout, type Paths, type Tpath } from './paths';
 	import { Layout, MangaMeta, Mode } from '$lib/simpleStores';
 	import { onMount } from 'svelte';
+	import { AppBarData } from '$lib/MountTitleAction';
 
 	export let data: PageData;
 	const mangaMeta = MangaMeta(data.MangaID);
@@ -26,8 +27,9 @@
 	let currentChapterID = data.ChapterID;
 
 	const toastStore = getToastStore();
-	const manga = getManga({ variables: { id: data.MangaID } });
 	const drawerStore = getDrawerStore();
+	const manga = getManga({ variables: { id: data.MangaID } });
+	$: $manga.data.manga, AppBarData($manga.data.manga?.title || 'Manga');
 
 	let chapterLoading = true;
 	let path: Paths;
