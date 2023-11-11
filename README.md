@@ -10,8 +10,9 @@ Robonau's Svelte + skeleton tachidesk UI
 
 ## Web Server files
 
-The Tachidesk-VUI-Web.zip file in the release is for hosting the ui though a webserver  
-It should also be possible to replace the contents of the webUI folder in the Tachidesk data directory, though this is not recommended
+The Tachidesk-VUI-Web.zip file in the release is for hosting the ui though `server.webUIFlavor = "Custom"` config and replacing the contents of the webUI folder in the Tachidesk data directory
+
+The files could also be used in a stand alone webserver though you would have to redirect `/api` trafic to tachidesk server
 
 ## Docker
 
