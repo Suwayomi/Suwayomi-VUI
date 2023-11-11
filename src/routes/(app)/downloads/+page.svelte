@@ -8,12 +8,11 @@
 		type DownloadChangedSubscription
 	} from '$lib/generated';
 	import { AppBarData } from '$lib/MountTitleAction';
-	import type { FetchResult, Observable } from '@apollo/client';
 	import { ProgressBar } from '@skeletonlabs/skeleton';
 	import DownloadsActions from './DownloadsActions.svelte';
 	import { filter } from './downloadsStores';
 
-	let downloads: Observable<FetchResult<DownloadChangedSubscription>> = downloadChanged({
+	let downloads = downloadChanged({
 		fetchPolicy: 'network-only'
 	});
 	AppBarData('Downloads', { component: DownloadsActions, props: { downloads } });

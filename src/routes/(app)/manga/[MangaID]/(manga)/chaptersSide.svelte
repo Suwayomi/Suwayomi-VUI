@@ -7,19 +7,20 @@
 	import TooltipIconButton from '$lib/components/TooltipIconButton.svelte';
 	import {
 		deleteDownloadedChapters,
+		// downloadsOnChapters,
 		enqueueChapterDownloads,
 		updateChapters,
 		type GetMangaQuery
 	} from '$lib/generated';
 	import { longpress } from '$lib/press';
 	import { screens } from '$lib/screens';
+	import { ChapterSort, ChapterTitle, MangaMeta } from '$lib/simpleStores';
 	import { HelpDoSelect, HelpSelectall, HelpUpdateChapters, dlreabook } from '$lib/util';
 	import type { ApolloQueryResult } from '@apollo/client';
 	import { getModalStore, popup } from '@skeletonlabs/skeleton';
 	import { fade } from 'svelte/transition';
 	import ChaptersFilterModal from './ChaptersFilterModal.svelte';
 	import { selected, selectmode, type chaptertype } from './mangaStores';
-	import { MangaMeta, ChapterSort, ChapterTitle } from '$lib/simpleStores';
 
 	export let manga: ApolloQueryResult<GetMangaQuery> | undefined;
 	export let MangaID: number;
@@ -27,6 +28,14 @@
 	const modalStore = getModalStore();
 	const toastStore = getToastStore();
 	const mangaMeta = MangaMeta(MangaID);
+	// WIP add Downloads subscription to see chapter download status
+	// const downloads = downloadsOnChapters({
+	// 	fetchPolicy: 'network-only'
+	// });
+
+	// $: if ($downloads?.data?.downloadChanged) {
+	// 	console.log($downloads.data.downloadChanged);
+	// }
 
 	$: chaptersInfo = manga?.data.manga?.chapters.nodes as
 		| GetMangaQuery['manga']['chapters']['nodes']
