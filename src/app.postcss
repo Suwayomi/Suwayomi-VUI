@@ -34,18 +34,9 @@
 	font-display: swap;
 }
 
-@supports selector(:has(*)) {
-	html:has(#appShell),
-	body:has(#appShell) {
-		@apply h-full overflow-hidden;
-	}
-}
-
-@supports not selector(:has(*)) {
-	html,
-	body {
-		@apply h-full /*overflow-hidden*/;
-	}
+html,
+body {
+	@apply h-full overflow-hidden;
 }
 
 .space-y-4 > .tab-panel[role='tabpanel']:has(.yoy) {
