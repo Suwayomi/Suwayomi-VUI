@@ -20,6 +20,14 @@
 				{$about.data.about.buildType}
 			</div>
 		</div>
+		{#if window.version}
+			<div class="pl-4 py-2">
+				<div class="text-xl">client version</div>
+				<div class="opacity-80">
+					VUI-{window.version}
+				</div>
+			</div>
+		{/if}
 		<div class="pl-4 py-2">
 			<div class="text-xl">Server version</div>
 			<div class="opacity-80">
