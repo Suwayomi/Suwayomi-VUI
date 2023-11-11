@@ -124,7 +124,7 @@ function GlobalMeta() {
 
 	Meta.subscribe((e) => {
 		store.update((n) => {
-			const Ncopy = structuredClone(n) as { [key: string]: unknown };
+			const Ncopy = structuredClone(trueDefaults) as { [key: string]: unknown };
 			(Object.keys(n) as (keyof globalMeta)[]).forEach((ee) => {
 				const tmp = e.data.metas?.nodes.find((k) => k.key.replace('VUI3_', '') === ee);
 				if (!tmp) return;
@@ -194,11 +194,11 @@ function MangaMetaUpdator(cache: ApolloCache<unknown>, key: string, value: strin
 
 export function MangaMeta(id: number) {
 	const MMeta = getManga({ variables: { id } });
-	const store = writable(mangaMetaDefaults);
+	const store = writable(get(Meta).mangaMetaDefaults);
 
 	MMeta.subscribe((e) => {
 		store.update((n) => {
-			const Ncopy = structuredClone(n) as { [key: string]: unknown };
+			const Ncopy = structuredClone(get(Meta).mangaMetaDefaults) as { [key: string]: unknown };
 			(Object.keys(n) as (keyof mangaMeta)[]).forEach((ee) => {
 				const tmp = e.data.manga?.meta.find((k) => k.key.replace('VUI3_', '') === ee);
 				if (!tmp) return;
@@ -221,6 +221,8 @@ export function MangaMeta(id: number) {
 						//set if not the truedefault value
 						await setMangaMeta({
 							variables: { key, value, id }
+							//update after to keep in sync
+							// update: (a) => MangaMetaUpdator(a, key, value, id)
 						});
 					} else if (tmp !== undefined) {
 						//delete if not already undefined
