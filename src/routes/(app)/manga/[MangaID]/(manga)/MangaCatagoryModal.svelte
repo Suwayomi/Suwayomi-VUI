@@ -78,10 +78,12 @@
 				nodes.forEach((newnode) => {
 					if (oldNodes.find((oldnode) => oldnode.id === newnode.id)) return;
 					try {
-						const { category } = cache.readQuery({
-							query: CategoryDoc,
-							variables: { id: newnode.id }
-						}) as CategoryQuery;
+						const { category } = structuredClone(
+							cache.readQuery({
+								query: CategoryDoc,
+								variables: { id: newnode.id }
+							})
+						) as CategoryQuery;
 
 						category.mangas.nodes.push(currentmanga);
 
@@ -95,10 +97,12 @@
 				// add to 0 if now in default
 				if (nodes.length === 0 && oldNodes.length > 0) {
 					try {
-						const { category } = cache.readQuery({
-							query: CategoryDoc,
-							variables: { id: 0 }
-						}) as CategoryQuery;
+						const { category } = structuredClone(
+							cache.readQuery({
+								query: CategoryDoc,
+								variables: { id: 0 }
+							})
+						) as CategoryQuery;
 
 						category.mangas.nodes.push(currentmanga);
 
@@ -115,10 +119,12 @@
 			oldNodes.forEach((oldnode) => {
 				if (nodes.find((newnode) => oldnode.id === newnode.id)) return;
 				try {
-					const { category } = cache.readQuery({
-						query: CategoryDoc,
-						variables: { id: oldnode.id }
-					}) as CategoryQuery;
+					const { category } = structuredClone(
+						cache.readQuery({
+							query: CategoryDoc,
+							variables: { id: oldnode.id }
+						})
+					) as CategoryQuery;
 
 					category.mangas.nodes = category.mangas.nodes.filter((e) => e.id !== manga.id);
 
@@ -133,10 +139,12 @@
 			if (oldNodes.length === 0 && nodes.length > 0) {
 				//remove from default
 				try {
-					const { category } = cache.readQuery({
-						query: CategoryDoc,
-						variables: { id: 0 }
-					}) as CategoryQuery;
+					const { category } = structuredClone(
+						cache.readQuery({
+							query: CategoryDoc,
+							variables: { id: 0 }
+						})
+					) as CategoryQuery;
 
 					category.mangas.nodes = category.mangas.nodes.filter((e) => e.id !== manga.id);
 
