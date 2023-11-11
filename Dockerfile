@@ -6,6 +6,8 @@ COPY . .
 FROM develop-stage as build-stage
 RUN bun install
 RUN bun run build
+ARG version="DevBuild"
+RUN sed -i "s@BUILD_VERSION_PLACEHOLDER@${version}@" ./build/index.html
 # production stage
 FROM nginxinc/nginx-unprivileged:1.23.2-alpine-slim as production-stage
 USER root
