@@ -9,7 +9,6 @@
 	function draw() {
 		if ($drawerStore.open) drawerStore.close();
 		else {
-			console.log('yo1');
 			drawerStore.open({
 				id: 'ChapterMenu',
 				width: 'w-[280px] md:w-[480px]',

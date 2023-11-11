@@ -128,7 +128,6 @@
 		} else if (pointInPoly([e.x, e.y], polyToPOLLY(path.back))) {
 			scroll80();
 		} else if (path.menu && pointInPoly([e.x, e.y], polyToPOLLY(path.menu))) {
-			console.log('yo3');
 			drawerStore.open({
 				id: 'ChapterMenu',
 				width: 'w-[280px] md:w-[480px]',
