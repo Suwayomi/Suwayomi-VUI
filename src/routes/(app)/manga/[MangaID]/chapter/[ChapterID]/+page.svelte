@@ -30,7 +30,6 @@
 	const manga = getManga({ variables: { id: data.MangaID } });
 	let pageElement = undefined as HTMLDivElement | undefined;
 	const drawerStore = getDrawerStore();
-	$: $manga.data.manga, AppBarData($manga.data.manga?.title || 'Manga');
 
 	let chapterLoading = true;
 	let path: Paths;
@@ -275,6 +274,8 @@
 			}
 		).selector
 	) as HTMLElement | undefined;
+
+	$: $manga.data.manga, AppBarData(`${$manga.data.manga?.title} ${$chapterTitle}` || 'Manga');
 	type tmp = (typeof path)[keyof typeof path];
 	type ttmp = keyof typeof path;
 
