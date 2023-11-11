@@ -27,7 +27,6 @@
 
 	const toastStore = getToastStore();
 	const manga = getManga({ variables: { id: data.MangaID } });
-	let pageElement = document.querySelector('#page');
 	const drawerStore = getDrawerStore();
 
 	let chapterLoading = true;
@@ -98,7 +97,6 @@
 	}
 
 	async function handelKeypres(keyEvent: KeyboardEvent) {
-		console.log(keyEvent);
 		if (keyEvent.code === 'Escape') {
 			keyEvent.preventDefault();
 			keyEvent.stopPropagation();
@@ -125,9 +123,6 @@
 	}
 
 	function handleClick(e: MouseEvent) {
-		if (!pageElement) {
-			pageElement = document.querySelector('#page');
-		}
 		if (pointInPoly([e.x, e.y], polyToPOLLY(path.forward))) {
 			doscroll();
 		} else if (pointInPoly([e.x, e.y], polyToPOLLY(path.back))) {
@@ -181,9 +176,10 @@
 	}
 
 	function scroll80(ud = false) {
-		pageElement?.scrollTo({
-			top:
-				pageElement.scrollTop + (ud ? pageElement.clientHeight : -pageElement.clientHeight) * 0.8,
+		const vp = window.visualViewport;
+		if (!vp) return;
+		window.scrollTo({
+			top: vp.pageTop + (ud ? vp.height : -vp.height) * 0.8,
 			behavior: $mangaMeta.SmoothScroll ? 'smooth' : 'instant'
 		});
 	}
@@ -193,8 +189,10 @@
 			scroll80(true);
 			return;
 		}
-		pageElement?.scrollTo({
-			top: pageElement.scrollTop + lowestIntersetc.getBoundingClientRect().y + 1,
+		const vp = window.visualViewport;
+		if (!vp) return;
+		window.scrollTo({
+			top: vp.pageTop + lowestIntersetc.getBoundingClientRect().y + 1,
 			behavior: $mangaMeta.SmoothScroll ? 'smooth' : 'instant'
 		});
 	}
@@ -346,7 +344,6 @@
 									chapter.chapterID
 								);
 							}}
-							root={document.querySelector('#page') ?? undefined}
 							bottom={0}
 							top={$mangaMeta.Margins ? 16 : 0}
 						/>
@@ -384,7 +381,6 @@
 						LoadNextchapter(currentChapterID);
 					}
 				}}
-				root={document.querySelector('#page') ?? undefined}
 			/>
 		{/if}
 		<div class="p-2">
