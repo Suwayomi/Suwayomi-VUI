@@ -5,7 +5,7 @@
 	let inputElement: HTMLInputElement;
 	// eslint-disable-next-line no-undef
 	let timeoutCancel: NodeJS.Timeout | undefined = undefined;
-	const query = queryParam('q', ssp.string());
+	const query = queryParam('q', ssp.string(), { pushHistory: false });
 	$: searchElementHidden = $query === null || $query === '';
 	$: value = $query || '';
 

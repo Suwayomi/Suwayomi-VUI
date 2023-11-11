@@ -22,7 +22,7 @@
 	import { Meta } from '$lib/simpleStores';
 
 	let toastStore = getToastStore();
-	const query = queryParam('q', ssp.string());
+	const query = queryParam('q', ssp.string(), { pushHistory: false });
 	type Textension = ExtensionsQuery['extensions']['nodes'][0];
 
 	let extensions: Readable<

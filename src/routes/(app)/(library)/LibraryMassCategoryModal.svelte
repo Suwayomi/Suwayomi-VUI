@@ -15,7 +15,7 @@
 	import { selected } from './LibraryStores';
 	import { queryParam, ssp } from 'sveltekit-search-params';
 
-	const tab = queryParam('tab', ssp.number());
+	const tab = queryParam('tab', ssp.number(), { pushHistory: false });
 	const modalStore = getModalStore();
 	const toastStore = getToastStore();
 
