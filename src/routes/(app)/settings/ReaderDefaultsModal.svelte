@@ -46,7 +46,7 @@
 					</select>
 				</label>
 				<label class="pl-3 mb-2">
-					<span>Navidation Layout</span>
+					<span>Navigation Layout</span>
 					<select bind:value={$Meta.mangaMetaDefaults.NavLayout} class="select">
 						{#each enumKeys(Layout) as value}
 							<option {value}>{value}</option>

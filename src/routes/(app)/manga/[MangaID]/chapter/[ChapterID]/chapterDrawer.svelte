@@ -51,7 +51,7 @@
 				View Navigation Layout
 			</Slide>
 			<label class="pl-3">
-				<span>Navidation Layout</span>
+				<span>Navigation Layout</span>
 				<select bind:value={$mangaMeta.NavLayout} class="select">
 					{#each enumKeys(Layout) as value}
 						<option {value}>{value}</option>
