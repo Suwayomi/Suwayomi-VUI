@@ -10,6 +10,7 @@
 	import ReaderDefaultsModal from './ReaderDefaultsModal.svelte';
 	import BackupModal from './BackupModal.svelte';
 	import { enumKeys } from '$lib/util';
+	import MangaSettingsModal from './MangaSettingsModal.svelte';
 	const modalStore = getModalStore();
 	AppBarData('Settings');
 </script>
@@ -53,6 +54,17 @@
 >
 	<IconWrapper class="h-full w-auto p-2" name="mdi:bookmark-box-multiple" />
 	<div class="w-full">Library Settings</div>
+</button>
+<button
+	on:click={() =>
+		modalStore.trigger({
+			type: 'component',
+			component: { ref: MangaSettingsModal }
+		})}
+	class=" text-left flex items-center w-full h-16 hover:variant-glass-surface cursor-pointer"
+>
+	<IconWrapper class="h-full w-auto p-2" name="streamline:insert-top-left" />
+	<div class="w-full">Manga Settings</div>
 </button>
 <label class="text-left flex items-center w-full h-16 hover:variant-glass-surface cursor-pointer">
 	<IconWrapper class="h-full w-auto p-2" name="mdi:television-guide" />
