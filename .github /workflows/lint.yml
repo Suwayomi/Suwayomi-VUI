@@ -1,7 +1,6 @@
 name: Lint
 
 on:
-  workflow_dispatch:
   push:
     branches: ["main", "Release"]
   pull_request:
