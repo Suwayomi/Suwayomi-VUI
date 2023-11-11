@@ -93,7 +93,7 @@
 {#if !manga || manga.loading}
 	<div
 		class="w-full md:w-1/2
-			md:overflow-y-auto max-h-full md:absolute md:right-0 md:bottom-0 md:top-0"
+			md:overflow-y-auto overflow-x-hidden max-h-full md:absolute md:right-0 md:bottom-0 md:top-0"
 	>
 		<div class="card variant-glass p-2 flex items-center space-x-1">
 			<div class="placeholder animate-pulse w-full" />
