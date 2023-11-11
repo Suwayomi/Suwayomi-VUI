@@ -10,7 +10,7 @@
 name: Build
 on:
   push:
-    branches: ["main", "Release"]
+    branches: ['main', 'Release']
 defaults:
   run:
     shell: bash
@@ -80,6 +80,6 @@ jobs:
       - name: Upload CI Release
         uses: ncipollo/release-action@v1
         with:
-          artifacts: "./buildTachidesk-VUI-Web.zip"
-          allowUpdates: "true"
+          artifacts: './buildTachidesk-VUI-Web.zip'
+          allowUpdates: 'true'
           tag: ${{ needs.GenTag.outputs.value }}
