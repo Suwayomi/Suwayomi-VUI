@@ -2,7 +2,7 @@
 	import IconButton from '$lib/components/IconButton.svelte';
 	import Slide from '$lib/components/Slide.svelte';
 	import { enumKeys } from '$lib/util';
-	import { getDrawerStore, TabGroup } from '@skeletonlabs/skeleton';
+	import { getDrawerStore } from '@skeletonlabs/skeleton';
 	import { ViewNav, chapterTitle, mangaTitle } from './chapterStores';
 	import { Layout, MangaMeta, Mode } from '$lib/simpleStores';
 	const drawerStore = getDrawerStore();
