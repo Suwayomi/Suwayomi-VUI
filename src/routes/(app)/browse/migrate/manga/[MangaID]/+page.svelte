@@ -9,7 +9,7 @@
 
 	const modalStore = getModalStore();
 
-	const query = queryParam('q', ssp.string());
+	const query = queryParam('q', ssp.string(), { pushHistory: false });
 
 	const manga = getManga({ variables: { id: data.MangaID } });
 
