@@ -30,25 +30,30 @@
 	): void {
 		if (!data) return;
 		try {
-			const {
-				extensions: { nodes }
-			} = cache.readQuery({
-				query: ExtensionsDoc,
-				variables: { isNsfw: $Meta.nsfw ? null : false }
-			}) as ExtensionsQuery;
+			const { extensions } = structuredClone(
+				structuredClone(
+					cache.readQuery({
+						query: ExtensionsDoc,
+						variables: { isNsfw: $Meta.nsfw ? null : false }
+					})
+				)
+			) as ExtensionsQuery;
 
-			nodes[nodes.findIndex((e) => e.pkgName === pkgName)] = data.updateExtension.extension;
+			extensions.nodes[extensions.nodes.findIndex((e) => e.pkgName === pkgName)] =
+				data.updateExtension.extension;
 			cache.writeQuery({
 				query: ExtensionsDoc,
-				data: { extensions: { nodes } },
+				data: { extensions },
 				variables: { isNsfw: $Meta.nsfw ? null : false }
 			});
 		} catch {}
 		try {
-			const { sources } = cache.readQuery({
-				query: SourcesDoc,
-				variables: { isNsfw: $Meta.nsfw ? null : false }
-			}) as SourcesQuery;
+			const { sources } = structuredClone(
+				cache.readQuery({
+					query: SourcesDoc,
+					variables: { isNsfw: $Meta.nsfw ? null : false }
+				})
+			) as SourcesQuery;
 			if (data.updateExtension.extension.isInstalled) {
 				const souceToPush: SourcesQuery['sources']['nodes'] = [];
 				data.updateExtension.extension.source.nodes.forEach((source) => {

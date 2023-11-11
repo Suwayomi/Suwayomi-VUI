@@ -104,17 +104,19 @@ const trueDefaults = {
 type globalMeta = typeof trueDefaults;
 
 function GlobalMetaUpdator(cache: ApolloCache<unknown>, key: string, value: string) {
-	const { metas } = cache.readQuery({
-		query: MetasDoc
-	}) as MetasQuery;
-	metas.nodes = metas.nodes.filter((e) => e.key !== key);
-	metas.nodes.push({
+	const { metas: tmp } = structuredClone(
+		cache.readQuery({
+			query: MetasDoc
+		})
+	) as MetasQuery;
+	tmp.nodes = tmp.nodes.filter((e) => e.key !== key);
+	tmp.nodes.push({
 		key,
 		value
 	});
 	cache.writeQuery({
 		query: MetasDoc,
-		data: { metas }
+		data: { metas: tmp }
 	});
 }
 
@@ -134,8 +136,8 @@ function GlobalMeta() {
 		});
 	});
 
-	async function set(value: globalMeta) {
-		(Object.entries(value) as [keyof globalMeta, unknown][]).forEach(async (entry) => {
+	async function set(val: globalMeta) {
+		(Object.entries(val) as [keyof globalMeta, unknown][]).forEach(async (entry) => {
 			const value = JSON.stringify(entry[1]);
 			const key = `VUI3_${entry[0]}`;
 			const tmp = get(Meta).data.metas?.nodes.find((e) => e.key === key)?.value;
@@ -176,10 +178,12 @@ function GlobalMeta() {
 export const Meta = GlobalMeta();
 
 function MangaMetaUpdator(cache: ApolloCache<unknown>, key: string, value: string, id: number) {
-	const { manga } = cache.readQuery({
-		query: GetMangaDoc,
-		variables: { id }
-	}) as GetMangaQuery;
+	const { manga } = structuredClone(
+		cache.readQuery({
+			query: GetMangaDoc,
+			variables: { id }
+		})
+	) as GetMangaQuery;
 	manga.meta = manga.meta.filter((e) => e.key !== key);
 	manga.meta.push({
 		key,

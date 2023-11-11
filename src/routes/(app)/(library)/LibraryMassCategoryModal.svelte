@@ -40,10 +40,12 @@
 		// try set each mangas own categories
 		mangaids.forEach((e) => {
 			try {
-				const { manga } = cache.readQuery({
-					query: GetMangaDoc,
-					variables: { id: e }
-				}) as GetMangaQuery;
+				const { manga } = structuredClone(
+					cache.readQuery({
+						query: GetMangaDoc,
+						variables: { id: e }
+					})
+				) as GetMangaQuery;
 				manga.categories.nodes = selectedCategories.map((ee) => {
 					return {
 						__typename: 'CategoryType',
@@ -63,18 +65,22 @@
 			selected = [0];
 		}
 
-		const { category: currentCategory } = cache.readQuery({
-			query: CategoryDoc,
-			variables: { id: $tab ?? 0 }
-		}) as CategoryQuery;
+		const { category: currentCategory } = structuredClone(
+			cache.readQuery({
+				query: CategoryDoc,
+				variables: { id: $tab ?? 0 }
+			})
+		) as CategoryQuery;
 		const mangas = currentCategory.mangas.nodes.filter((e) => mangaids.includes(e.id));
 
 		$categories.data.categories.nodes.forEach((oldCategoryID) => {
 			try {
-				const { category: oldCategory } = cache.readQuery({
-					query: CategoryDoc,
-					variables: { id: oldCategoryID.id }
-				}) as CategoryQuery;
+				const { category: oldCategory } = structuredClone(
+					cache.readQuery({
+						query: CategoryDoc,
+						variables: { id: oldCategoryID.id }
+					})
+				) as CategoryQuery;
 				if (selected.includes(oldCategoryID.id)) {
 					const mangatoadd: CategoryQuery['category']['mangas']['nodes'] = [];
 					mangas.forEach((manga) => {
