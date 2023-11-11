@@ -2,9 +2,13 @@ name: Lint
 
 on:
   push:
-    branches: ["main", "Release"]
+    branches:
+      - "main"
+      - "Release"
   pull_request:
-    branches: ["main", "Release"]
+    branches:
+      - "main"
+      - "Release"
 jobs:
   run-linters:
     name: Run linters
