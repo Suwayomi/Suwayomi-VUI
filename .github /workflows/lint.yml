@@ -1,9 +1,9 @@
-name: Lint2
+name: Lint
 
 on:
-  workflow_dispatch
-  # pull_request:
-  #   branches: ['vui3']
+  workflow_dispatch:
+  pull_request:
+    branches: ["Main"]
 
 jobs:
   run-linters:
