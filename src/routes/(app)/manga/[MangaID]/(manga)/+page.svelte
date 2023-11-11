@@ -11,7 +11,7 @@
 	} from '$lib/generated';
 	import { ErrorhelpUntyped } from '$lib/util';
 	import type { ApolloCache, FetchResult } from '@apollo/client';
-	import type { PageData } from '../$types';
+	import type { PageData } from './$types';
 	import InfoSide from './InfoSide.svelte';
 	import MangaActions from './MangaActions.svelte';
 	import ChaptersSide from './chaptersSide.svelte';
