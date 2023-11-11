@@ -18,7 +18,7 @@
 	$filtersSause = data.sourceID;
 
 	const sause = data.sause;
-	const query = queryParam('q', ssp.string());
+	const query = queryParam('q', ssp.string(), { pushHistory: false });
 
 	let queryfilter = {
 		query: $query === '' ? undefined : $query ?? undefined,

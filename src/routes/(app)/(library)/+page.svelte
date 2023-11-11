@@ -32,8 +32,8 @@
 
 	let lastselected: MangaType | undefined;
 
-	const query = queryParam('q', ssp.string());
-	const tab = queryParam('tab', ssp.number());
+	const query = queryParam('q', ssp.string(), { pushHistory: false });
+	const tab = queryParam('tab', ssp.number(), { pushHistory: false });
 	$: mangas = category({
 		variables: { id: $tab ?? 0 },
 		fetchPolicy: 'cache-first',

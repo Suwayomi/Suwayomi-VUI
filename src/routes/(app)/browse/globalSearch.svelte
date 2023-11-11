@@ -20,7 +20,7 @@
 	export let OpenModal: ((id: number) => void) | undefined = undefined;
 
 	const queue = new PQueue({ concurrency: 4 });
-	const query = queryParam('q', ssp.string());
+	const query = queryParam('q', ssp.string(), { pushHistory: false });
 
 	let rawSources = sources({ variables: { isNsfw: $Meta.nsfw ? null : false } });
 

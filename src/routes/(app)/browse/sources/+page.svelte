@@ -15,7 +15,7 @@
 	type Tsource = SourcesQuery['sources']['nodes'][0];
 
 	const sources = getsources({ variables: { isNsfw: $Meta.nsfw ? null : false } });
-	const query = queryParam('q', ssp.string());
+	const query = queryParam('q', ssp.string(), { pushHistory: false });
 
 	$: filteredSources = $sources.data?.sources?.nodes.filter((ele) => {
 		if (!$Sourcelangfilt.has(ele.lang)) return false;
