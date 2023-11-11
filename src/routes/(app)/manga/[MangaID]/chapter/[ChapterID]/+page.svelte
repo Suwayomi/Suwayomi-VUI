@@ -18,7 +18,7 @@
 	import { ViewNav, chapterTitle, mangaTitle } from './chapterStores';
 	import { paths, type PathLayout, type Paths, type Tpath } from './paths';
 	import { Layout, MangaMeta, Mode } from '$lib/simpleStores';
-	import { onDestroy, onMount } from 'svelte';
+	import { onMount } from 'svelte';
 
 	export let data: PageData;
 	const mangaMeta = MangaMeta(data.MangaID);
