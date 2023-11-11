@@ -21,10 +21,14 @@ The files could also be used in a stand alone webserver though you would have to
 ```yaml
 version: '3.7'
 services:
-  tachideskvui:
-    image: ghcr.io/suwayomi/tachidesk-vui:latest
+  vui3:
+    image: ghcr.io/suwayomi/tachidesk-vui
     ports:
       - '9013:8080'
+    environment:
+      - tachidesk=http://tachidesk:4567/
+      # will proxy the tachidesk server to the UI
+      # if you plan on proxying it externally then this is unnecessary
     restart: unless-stopped
 ```
 
