@@ -13,7 +13,7 @@
 				id: 'ChapterMenu',
 				width: 'w-[280px] md:w-[480px]',
 				meta: {
-					id: data.ChapterID
+					id: data.MangaID
 				}
 			});
 		}

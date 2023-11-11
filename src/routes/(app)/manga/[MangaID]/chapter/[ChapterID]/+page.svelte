@@ -20,7 +20,7 @@
 	import { Layout, MangaMeta, Mode } from '$lib/simpleStores';
 
 	export let data: PageData;
-	const mangaMeta = MangaMeta(data.ChapterID);
+	const mangaMeta = MangaMeta(data.MangaID);
 
 	let currentChapterID = data.ChapterID;
 
@@ -107,7 +107,10 @@
 		} else if (path.menu && pointInPoly([e.x, e.y], polyToPOLLY(path.menu))) {
 			drawerStore.open({
 				id: 'ChapterMenu',
-				width: 'w-[280px] md:w-[480px]'
+				width: 'w-[280px] md:w-[480px]',
+				meta: {
+					id: data.MangaID
+				}
 			});
 		}
 	}
@@ -283,11 +286,17 @@
 				{/if}
 				{#each chapter.pages as page, pageindex (page)}
 					<div
-						class=" w-auto h-auto
+						class="w-auto h-auto
 							{$mangaMeta.Margins && $mangaMeta.ReaderMode === Mode.Vertical && 'mb-4'}
 							{$mangaMeta.Margins && $mangaMeta.ReaderMode === Mode.single && 'mb-4'}
 							{$mangaMeta.Margins && $mangaMeta.ReaderMode === Mode.RTL && 'even:mr-2 odd:ml-2 mb-4'}
-							{$mangaMeta.Margins && $mangaMeta.ReaderMode === Mode.LTR && 'even:ml-2 odd:mr-2 mb-4'}"
+							{$mangaMeta.Margins && $mangaMeta.ReaderMode === Mode.LTR && 'even:ml-2 odd:mr-2 mb-4'}
+							{$mangaMeta.Scale && $mangaMeta.ReaderMode !== Mode.Vertical
+							? 'max-h-screen h-full'
+							: 'h-auto'} {$mangaMeta.Scale && $mangaMeta.ReaderMode === Mode.Vertical
+							? 'w-full'
+							: 'w-auto'}
+								{$mangaMeta.Scale && $mangaMeta.ReaderMode === Mode.single ? 'max-w-full' : ''}"
 					>
 						<IntersectionObserver
 							on:intersect={(e) => {
@@ -304,7 +313,15 @@
 							bottom={0}
 							top={$mangaMeta.Margins ? 16 : 0}
 						/>
-						<div id="c{index}p{pageindex}">
+						<div
+							id="c{index}p{pageindex}"
+							class="{$mangaMeta.Scale && $mangaMeta.ReaderMode !== Mode.Vertical
+								? 'max-h-screen h-full'
+								: 'h-auto'} {$mangaMeta.Scale && $mangaMeta.ReaderMode === Mode.Vertical
+								? 'w-full'
+								: 'w-auto'}
+								{$mangaMeta.Scale && $mangaMeta.ReaderMode === Mode.single ? 'max-w-full' : ''}"
+						>
 							<Image
 								src={page}
 								height={$mangaMeta.Scale && $mangaMeta.ReaderMode !== Mode.Vertical
