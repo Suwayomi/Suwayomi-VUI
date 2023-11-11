@@ -1,0 +1,35 @@
+subscription downloadChanged {
+	downloadChanged {
+		queue {
+			chapter {
+				name
+				id
+			}
+			manga {
+				title
+				thumbnailUrl
+				id
+			}
+			progress
+			state
+			tries
+		}
+		state
+	}
+}
+
+subscription downloadsOnChapters {
+	downloadChanged {
+		queue {
+			progress
+			state
+			chapter {
+				id
+			}
+			manga {
+				id
+			}
+		}
+		state
+	}
+}
