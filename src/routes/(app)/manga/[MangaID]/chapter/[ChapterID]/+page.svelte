@@ -18,6 +18,7 @@
 	import { ViewNav, chapterTitle, mangaTitle } from './chapterStores';
 	import { paths, type PathLayout, type Paths, type Tpath } from './paths';
 	import { Layout, MangaMeta, Mode } from '$lib/simpleStores';
+	import { onDestroy, onMount } from 'svelte';
 
 	export let data: PageData;
 	const mangaMeta = MangaMeta(data.MangaID);
@@ -96,6 +97,33 @@
 		}
 	}
 
+	async function handelKeypres(keyEvent: KeyboardEvent) {
+		console.log(keyEvent);
+		if (keyEvent.code === 'Escape') {
+			keyEvent.preventDefault();
+			keyEvent.stopPropagation();
+			if ($drawerStore.open) {
+				drawerStore.close();
+				return;
+			}
+			drawerStore.open({
+				id: 'ChapterMenu',
+				width: 'w-[280px] md:w-[480px]',
+				meta: {
+					id: data.MangaID
+				}
+			});
+			return;
+		}
+		if (keyEvent.code === 'Space') {
+			keyEvent.preventDefault();
+			keyEvent.stopPropagation();
+			if (keyEvent.shiftKey) scroll80();
+			else doscroll();
+			return;
+		}
+	}
+
 	function handleClick(e: MouseEvent) {
 		if (!pageElement) {
 			pageElement = document.querySelector('#page');
@@ -105,6 +133,7 @@
 		} else if (pointInPoly([e.x, e.y], polyToPOLLY(path.back))) {
 			scroll80();
 		} else if (path.menu && pointInPoly([e.x, e.y], polyToPOLLY(path.menu))) {
+			console.log('yo3');
 			drawerStore.open({
 				id: 'ChapterMenu',
 				width: 'w-[280px] md:w-[480px]',
@@ -232,6 +261,7 @@
 	) as HTMLElement | undefined;
 	type tmp = (typeof path)[keyof typeof path];
 	type ttmp = keyof typeof path;
+
 	$: currpath = Object.fromEntries(
 		(Object.entries(path) as [ttmp, tmp][]).map((dat): [ttmp, string] => {
 			if (path === undefined) {
@@ -255,6 +285,13 @@
 			] as [ttmp, string];
 		})
 	);
+
+	onMount(() => {
+		window.addEventListener('keydown', handelKeypres, true);
+		return () => {
+			window.removeEventListener('keydown', handelKeypres, true);
+		};
+	});
 </script>
 
 <button on:click={handleClick} class="w-full">
