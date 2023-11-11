@@ -3,9 +3,9 @@ name: Lint
 on:
   workflow_dispatch:
   push:
-    branches: ["main"]
+    branches: ["main", "Release"]
   pull_request:
-    branches: ["main"]
+    branches: ["main", "Release"]
 
 jobs:
   run-linters:
