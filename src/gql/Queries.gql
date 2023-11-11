@@ -1,0 +1,440 @@
+query categories($notEqualTo: Int = null) {
+	categories(filter: { id: { notEqualTo: $notEqualTo } }) {
+		nodes {
+			id
+			default
+			order
+			name
+			mangas {
+				totalCount
+			}
+		}
+	}
+}
+
+query category($id: Int!) {
+	category(id: $id) {
+		mangas {
+			nodes {
+				id
+				title
+				inLibrary
+				thumbnailUrl
+				unreadCount
+				downloadCount
+				lastReadChapter {
+					lastReadAt
+				}
+				chapters {
+					totalCount
+				}
+			}
+		}
+	}
+}
+
+query getManga($id: Int!) {
+	manga(id: $id) {
+		artist
+		author
+		description
+		genre
+		id
+		inLibrary
+		lastFetchedAt
+		realUrl
+		status
+		title
+		thumbnailUrl
+		unreadCount
+		downloadCount
+		lastReadChapter {
+			lastReadAt
+		}
+		chapters {
+			totalCount
+			nodes {
+				isBookmarked
+				isDownloaded
+				isRead
+				id
+				chapterNumber
+				fetchedAt
+				lastPageRead
+				name
+				sourceOrder
+				uploadDate
+				pageCount
+				scanlator
+			}
+		}
+		meta {
+			value
+			key
+		}
+		source {
+			displayName
+		}
+		categories {
+			nodes {
+				id
+			}
+		}
+	}
+}
+
+query getSingleChapter($id: Int!) {
+	chapter(id: $id) {
+		isBookmarked
+		isDownloaded
+		isRead
+		id
+		chapterNumber
+		fetchedAt
+		lastPageRead
+		name
+		sourceOrder
+		uploadDate
+		pageCount
+		scanlator
+	}
+}
+
+query extensions($isNsfw: Boolean = null) {
+	extensions(condition: { isNsfw: $isNsfw }) {
+		nodes {
+			name
+			versionName
+			pkgName
+			lang
+			iconUrl
+			isNsfw
+			isInstalled
+			isObsolete
+			hasUpdate
+		}
+	}
+}
+
+query sources($isNsfw: Boolean = null) {
+	sources(condition: { isNsfw: $isNsfw }) {
+		nodes {
+			displayName
+			id
+			lang
+			isNsfw
+			iconUrl
+			extension {
+				pkgName
+			}
+		}
+	}
+}
+
+query sourcesMigration {
+	sources {
+		nodes {
+			id
+			displayName
+			iconUrl
+			lang
+		}
+	}
+	mangas(condition: { inLibrary: true }) {
+		totalCount
+		nodes {
+			sourceId
+		}
+	}
+}
+
+query sourceMigrationManga($sourceId: LongString!) {
+	mangas(condition: { inLibrary: true, sourceId: $sourceId }) {
+		nodes {
+			id
+			title
+			thumbnailUrl
+		}
+	}
+}
+
+query sourceMigrationsource($sourceId: LongString!) {
+	source(id: $sourceId) {
+		displayName
+	}
+}
+
+query MangaTitleMigration($id: Int!) {
+	manga(id: $id) {
+		title
+	}
+}
+
+query InfoForMigration($id: Int!) {
+	manga(id: $id) {
+		chapters {
+			nodes {
+				id
+				isRead
+				isBookmarked
+				chapterNumber
+			}
+		}
+		categories {
+			nodes {
+				id
+			}
+		}
+	}
+}
+
+query metas {
+	metas {
+		nodes {
+			value
+			key
+		}
+	}
+}
+
+query updates($offset: Int = 0) {
+	chapters(
+		orderBy: FETCHED_AT
+		offset: $offset
+		first: 100
+		orderByType: DESC
+		filter: { inLibrary: { equalTo: true } }
+	) {
+		nodes {
+			id
+			name
+			fetchedAt
+			isBookmarked
+			isDownloaded
+			isRead
+			manga {
+				id
+				title
+				thumbnailUrl
+			}
+		}
+		pageInfo {
+			hasNextPage
+		}
+	}
+}
+
+query chapters($id: Int!) {
+	manga(id: $id) {
+		id
+		title
+		meta {
+			value
+			key
+		}
+		chapters {
+			nodes {
+				id
+				name
+				pageCount
+				lastPageRead
+				sourceOrder
+			}
+		}
+	}
+}
+
+query source($id: LongString!) {
+	source(id: $id) {
+		displayName
+		id
+		lang
+		name
+		supportsLatest
+		isConfigurable
+		preferences {
+			... on CheckBoxPreference {
+				CheckBoxCheckBoxCurrentValue: currentValue
+				summary
+				CheckBoxDefault: default
+				key
+				CheckBoxTitle: title
+			}
+			... on EditTextPreference {
+				EditTextCurrentValue: currentValue
+				EditTextDefault: default
+				EditTextTitle: title
+				text
+				summary
+				key
+				dialogTitle
+				dialogMessage
+			}
+			... on SwitchPreference {
+				SwitchCurrentValue: currentValue
+				summary
+				key
+				SwitchDefault: default
+				SwitchTitle: title
+			}
+			... on MultiSelectListPreference {
+				dialogMessage
+				dialogTitle
+				MultiSelectListTitle: title
+				summary
+				key
+				entryValues
+				entries
+				MultiSelectListDefault: default
+				MultiSelectListCurrentValue: currentValue
+			}
+			... on ListPreference {
+				ListCurrentValue: currentValue
+				ListDefault: default
+				ListTitle: title
+				summary
+				key
+				entryValues
+				entries
+			}
+		}
+		filters {
+			... on TriStateFilter {
+				__typename
+				name
+				TriStateDefault: default
+			}
+			... on CheckBoxFilter {
+				__typename
+				CheckBoxDefault: default
+				name
+			}
+			... on TextFilter {
+				__typename
+				name
+				TextDefault: default
+			}
+			... on SortFilter {
+				__typename
+				values
+				name
+				SortDefault: default {
+					ascending
+					index
+				}
+			}
+			... on SeparatorFilter {
+				__typename
+				name
+			}
+			... on SelectFilter {
+				__typename
+				values
+				name
+				SelectDefault: default
+			}
+			... on HeaderFilter {
+				__typename
+				name
+			}
+			... on GroupFilter {
+				__typename
+				name
+				filters {
+					... on TriStateFilter {
+						__typename
+						name
+						TriStateDefault: default
+					}
+					... on CheckBoxFilter {
+						__typename
+						CheckBoxDefault: default
+						name
+					}
+					... on TextFilter {
+						__typename
+						name
+						TextDefault: default
+					}
+					... on SortFilter {
+						__typename
+						values
+						name
+						SortDefault: default {
+							ascending
+							index
+						}
+					}
+					... on SeparatorFilter {
+						__typename
+						name
+					}
+					... on SelectFilter {
+						__typename
+						values
+						name
+						SelectDefault: default
+					}
+					... on HeaderFilter {
+						__typename
+						name
+					}
+				}
+			}
+		}
+	}
+}
+
+query validateBackup($backup: Upload!) {
+	validateBackup(input: { backup: $backup }) {
+		missingSources {
+			id
+			name
+		}
+	}
+}
+
+query ConditionalChaptersOfGivenManga(
+	$in: [Int!]!
+	$isBookmarked: Boolean = null
+	$isDownloaded: Boolean = null
+	$isRead: Boolean = null
+) {
+	chapters(
+		filter: { mangaId: { in: $in } }
+		condition: { isDownloaded: $isDownloaded, isRead: $isRead, isBookmarked: $isBookmarked }
+	) {
+		nodes {
+			id
+		}
+	}
+}
+
+query about {
+	about {
+		buildTime
+		buildType
+		discord
+		github
+		name
+		revision
+		version
+	}
+}
+
+query validateBackup($backup: Upload!) {
+	validateBackup(input: { backup: $backup }) {
+		missingSources {
+			id
+			name
+		}
+	}
+}
+
+query restoreStatus($id: String!) {
+	restoreStatus(id: $id) {
+		mangaProgress
+		state
+		totalManga
+	}
+}

@@ -1,18 +1,16 @@
 # develop stage
-FROM node:19-alpine as develop-stage
-ARG VERSION='test'
+FROM oven/bun:1.0.10-alpine as develop-stage
 WORKDIR /app
-COPY package*.json ./
-RUN npm install -g @quasar/cli
 COPY . .
 # build stage
 FROM develop-stage as build-stage
-RUN npm install
-RUN VERSION=$VERSION npm run build
+RUN bun install
+RUN bun run build
 # production stage
 FROM nginxinc/nginx-unprivileged:1.23.2-alpine-slim as production-stage
 USER root
-COPY --from=build-stage /app/dist/pwa /usr/share/nginx/html
+COPY --from=build-stage /app/build /usr/share/nginx/html
+COPY ./default.conf /etc/nginx/conf.d/default.conf
 COPY ./set-env-variable.sh /docker-entrypoint.d
 RUN chmod +x /docker-entrypoint.d/set-env-variable.sh
 RUN dos2unix /docker-entrypoint.d/set-env-variable.sh

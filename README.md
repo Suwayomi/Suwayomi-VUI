@@ -1,21 +1,11 @@
 # Tachidesk-VUI
 
-Robonau's Vue + Quasar tachidesk UI
+Robonau's Svelte + skeleton tachidesk UI
 
 | Discord                                                                                                                                                    | Github                                                                                                                                                                                                                                                                                                                                                                                                                                    | Docker                                                                                                                                                      |
 | ---------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | [![Discord](https://img.shields.io/discord/801021177333940224.svg?label=discord&labelColor=7289da&color=2c2f33&style=flat)](https://discord.gg/DDZdqZWaHA) | ![](https://img.shields.io/github/stars/Suwayomi/Tachidesk-VUI.svg) ![](https://img.shields.io/github/forks/Suwayomi/Tachidesk-VUI.svg) ![](https://img.shields.io/github/tag/Suwayomi/Tachidesk-VUI.svg) ![](https://img.shields.io/github/release/Suwayomi/Tachidesk-VUI.svg) ![](https://img.shields.io/github/issues/Suwayomi/Tachidesk-VUI.svg) ![](https://github.com/Suwayomi/Tachidesk-VUI/actions/workflows/build.yml/badge.svg) | ![](https://ghcr-badge.deta.dev/suwayomi/tachidesk-vui/latest_tag?filter=latest) ![](https://ghcr-badge.deta.dev/suwayomi/tachidesk-vui/size?filter=latest) |
-
 # How To Use:
-
-## Easy mode
-
-https://tachidesk-vui.github.io/
-
-## Elctron application
-
-Installable via the releases labeled with electron
-
 ## Web Server files
 
 The Tachidesk-VUI-Web.zip file in the release is for hosting the ui though a webserver  
@@ -35,38 +25,22 @@ services:
     restart: unless-stopped
 ```
 
-# DEVs:
+## Developing
 
-## Install the dependencies
+install dependencies with `bun install`
 
+start a development server:
+```bash
+bun run dev
+
+# or start the server and open the app in a new browser tab
+bun run dev -- --open
 ```
-npm install
-```
 
-### Start the app in development mode (hot-code reloading, error reporting, etc.)
+## Building
+
+To create a production version of your app:
 
 ```bash
-quasar dev -m pwa
+bun run build
 ```
-
-### Lint the files
-
-```bash
-npm run lint
-```
-
-### Format the files
-
-```bash
-npm run format
-```
-
-### Build the app for production
-
-```bash
-quasar build -m pwa
-```
-
-## useful:
-
-[Quasar dev wiki](https://quasar.dev/)

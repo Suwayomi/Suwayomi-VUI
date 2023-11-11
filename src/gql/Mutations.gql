@@ -1,0 +1,475 @@
+mutation fetchExtensions {
+	fetchExtensions(input: {}) {
+		extensions {
+			name
+			versionName
+			pkgName
+			lang
+			iconUrl
+			isNsfw
+			isInstalled
+			isObsolete
+			hasUpdate
+		}
+	}
+}
+
+mutation updateChapters(
+	$ids: [Int!]!
+	$isBookmarked: Boolean
+	$isRead: Boolean
+	$lastPageRead: Int
+) {
+	updateChapters(
+		input: {
+			ids: $ids
+			patch: { isRead: $isRead, isBookmarked: $isBookmarked, lastPageRead: $lastPageRead }
+		}
+	) {
+		chapters {
+			isBookmarked
+			isDownloaded
+			isRead
+			id
+		}
+	}
+}
+
+mutation updateChapter($isRead: Boolean = null, $lastPageRead: Int!, $id: Int!) {
+	updateChapter(input: { id: $id, patch: { isRead: $isRead, lastPageRead: $lastPageRead } }) {
+		chapter {
+			id
+			isRead
+			lastPageRead
+		}
+	}
+}
+
+mutation updateMangas($ids: [Int!]!, $inLibrary: Boolean!) {
+	updateMangas(input: { patch: { inLibrary: $inLibrary }, ids: $ids }) {
+		mangas {
+			inLibrary
+			id
+			categories {
+				nodes {
+					id
+				}
+			}
+		}
+	}
+}
+
+mutation setGlobalMeta($key: String!, $value: String!) {
+	setGlobalMeta(input: { meta: { key: $key, value: $value } }) {
+		meta {
+			value
+			key
+		}
+	}
+}
+
+mutation deleteGlobalMeta($key: String!) {
+	deleteGlobalMeta(input: { key: $key }) {
+		clientMutationId
+	}
+}
+
+mutation setMangaMeta($value: String!, $id: Int!, $key: String!) {
+	setMangaMeta(input: { meta: { key: $key, mangaId: $id, value: $value } }) {
+		meta {
+			manga {
+				meta {
+					key
+					mangaId
+					value
+				}
+				id
+			}
+		}
+	}
+}
+
+mutation deleteMangaMeta($id: Int!, $key: String!) {
+	deleteMangaMeta(input: { key: $key, mangaId: $id }) {
+		manga {
+			id
+			meta {
+				key
+				value
+			}
+		}
+	}
+}
+
+mutation fetchMangaInfo($id: Int!) {
+	fetchManga(input: { id: $id }) {
+		manga {
+			artist
+			author
+			description
+			genre
+			id
+			inLibrary
+			lastFetchedAt
+			realUrl
+			status
+			title
+			thumbnailUrl
+			unreadCount
+			downloadCount
+			meta {
+				value
+				key
+			}
+			source {
+				displayName
+			}
+		}
+	}
+}
+
+mutation fetchMangaChapters($id: Int!) {
+	fetchChapters(input: { mangaId: $id }) {
+		chapters {
+			isBookmarked
+			isDownloaded
+			isRead
+			id
+			chapterNumber
+			fetchedAt
+			lastPageRead
+			name
+			sourceOrder
+			uploadDate
+			pageCount
+			scanlator
+		}
+	}
+}
+
+mutation updateExtension(
+	$pkgName: String!
+	$install: Boolean = null
+	$uninstall: Boolean = null
+	$update: Boolean = null
+) {
+	updateExtension(
+		input: { id: $pkgName, patch: { install: $install, uninstall: $uninstall, update: $update } }
+	) {
+		extension {
+			name
+			versionName
+			pkgName
+			lang
+			iconUrl
+			isNsfw
+			isInstalled
+			isObsolete
+			hasUpdate
+			source {
+				nodes {
+					displayName
+					id
+					lang
+					isNsfw
+					iconUrl
+					extension {
+						pkgName
+					}
+				}
+			}
+		}
+	}
+}
+
+mutation fetchSourceManga(
+	$page: Int!
+	$source: LongString!
+	$type: FetchSourceMangaType!
+	$query: String
+	$filters: [FilterChangeInput!]
+) {
+	fetchSourceManga(
+		input: { page: $page, source: $source, type: $type, query: $query, filters: $filters }
+	) {
+		hasNextPage
+		mangas {
+			id
+			title
+			inLibrary
+			thumbnailUrl
+		}
+	}
+}
+
+mutation updateSourcePreference(
+	$position: Int!
+	$source: LongString!
+	$multiSelectState: [String!] = null
+	$listState: String = null
+	$editTextState: String = null
+	$switchState: Boolean = null
+	$checkBoxState: Boolean = null
+) {
+	updateSourcePreference(
+		input: {
+			change: {
+				position: $position
+				multiSelectState: $multiSelectState
+				listState: $listState
+				editTextState: $editTextState
+				checkBoxState: $checkBoxState
+				switchState: $switchState
+			}
+			source: $source
+		}
+	) {
+		clientMutationId
+		source {
+			id
+			preferences {
+				... on CheckBoxPreference {
+					CheckBoxCheckBoxCurrentValue: currentValue
+					summary
+					CheckBoxDefault: default
+					key
+					CheckBoxTitle: title
+				}
+				... on EditTextPreference {
+					EditTextCurrentValue: currentValue
+					EditTextDefault: default
+					EditTextTitle: title
+					text
+					summary
+					key
+					dialogTitle
+					dialogMessage
+				}
+				... on SwitchPreference {
+					SwitchCurrentValue: currentValue
+					summary
+					key
+					SwitchDefault: default
+					SwitchTitle: title
+				}
+				... on MultiSelectListPreference {
+					dialogMessage
+					dialogTitle
+					MultiSelectListTitle: title
+					summary
+					key
+					entryValues
+					entries
+					MultiSelectListDefault: default
+					MultiSelectListCurrentValue: currentValue
+				}
+				... on ListPreference {
+					ListCurrentValue: currentValue
+					ListDefault: default
+					ListTitle: title
+					summary
+					key
+					entryValues
+					entries
+				}
+			}
+		}
+	}
+}
+
+mutation updateCategoryOrder($id: Int!, $position: Int!) {
+	updateCategoryOrder(input: { id: $id, position: $position }) {
+		categories {
+			id
+			default
+			order
+			name
+		}
+	}
+}
+
+mutation createCategory($name: String!, $default: Boolean!) {
+	createCategory(input: { name: $name, default: $default }) {
+		category {
+			id
+			name
+			default
+			order
+		}
+	}
+}
+
+mutation deleteCategory($categoryId: Int!) {
+	deleteCategory(input: { categoryId: $categoryId }) {
+		clientMutationId
+	}
+}
+
+mutation updateCategory($id: Int!, $name: String = null, $default: Boolean = null) {
+	updateCategory(input: { id: $id, patch: { default: $default, name: $name } }) {
+		category {
+			id
+			default
+			name
+			order
+		}
+	}
+}
+
+mutation updateMangasCategories($addTo: [Int!] = null, $clear: Boolean = null, $id: [Int!]!) {
+	updateMangasCategories(
+		input: { ids: $id, patch: { addToCategories: $addTo, clearCategories: $clear } }
+	) {
+		mangas {
+			id
+			categories {
+				nodes {
+					id
+				}
+			}
+		}
+	}
+}
+
+mutation updateMangaCategories($addTo: [Int!] = null, $clear: Boolean = null, $id: Int!) {
+	updateMangaCategories(
+		input: { id: $id, patch: { addToCategories: $addTo, clearCategories: $clear } }
+	) {
+		manga {
+			id
+			categories {
+				nodes {
+					id
+				}
+			}
+		}
+	}
+}
+
+mutation fetchChapterPages($chapterId: Int!) {
+	fetchChapterPages(input: { chapterId: $chapterId }) {
+		pages
+	}
+}
+
+mutation ChaptersMigration(
+	$ids: [Int!]!
+	$lastPageRead: Int = null
+	$isRead: Boolean = null
+	$isBookmarked: Boolean = null
+) {
+	updateChapters(
+		input: {
+			ids: $ids
+			patch: { isBookmarked: $isBookmarked, isRead: $isRead, lastPageRead: $lastPageRead }
+		}
+	) {
+		clientMutationId
+	}
+}
+
+mutation fetchChaptersMigration($id: Int!) {
+	fetchChapters(input: { mangaId: $id }) {
+		chapters {
+			id
+			chapterNumber
+		}
+	}
+}
+
+mutation createBackup {
+	createBackup {
+		url
+	}
+}
+
+mutation restoreBackup($backup: Upload!) {
+	restoreBackup(input: { backup: $backup }) {
+		status {
+			mangaProgress
+			state
+			totalManga
+		}
+		id
+	}
+}
+
+mutation clearDownloader {
+	clearDownloader(input: { clientMutationId: "" }) {
+		downloadStatus {
+			state
+		}
+	}
+}
+
+mutation dequeueChapterDownloads($ids: [Int!]!) {
+	dequeueChapterDownloads(input: { ids: $ids }) {
+		clientMutationId
+	}
+}
+
+mutation enqueueChapterDownloads($ids: [Int!]!) {
+	enqueueChapterDownloads(input: { ids: $ids }) {
+		clientMutationId
+	}
+}
+
+mutation reorderChapterDownload($chapterId: Int!, $to: Int!) {
+	reorderChapterDownload(input: { chapterId: $chapterId, to: $to }) {
+		clientMutationId
+	}
+}
+
+mutation startDownloader {
+	startDownloader(input: { clientMutationId: "" }) {
+		downloadStatus {
+			state
+		}
+	}
+}
+
+mutation stopDownloader {
+	stopDownloader(input: { clientMutationId: "" }) {
+		downloadStatus {
+			state
+		}
+	}
+}
+
+mutation deleteDownloadedChapter($id: Int!) {
+	deleteDownloadedChapter(input: { id: $id }) {
+		chapters {
+			isBookmarked
+			isDownloaded
+			isRead
+			id
+			chapterNumber
+			fetchedAt
+			lastPageRead
+			name
+			sourceOrder
+			uploadDate
+			pageCount
+			scanlator
+		}
+	}
+}
+
+mutation deleteDownloadedChapters($ids: [Int!]!) {
+	deleteDownloadedChapters(input: { ids: $ids }) {
+		chapters {
+			isBookmarked
+			isDownloaded
+			isRead
+			id
+			chapterNumber
+			fetchedAt
+			lastPageRead
+			name
+			sourceOrder
+			uploadDate
+			pageCount
+			scanlator
+		}
+	}
+}

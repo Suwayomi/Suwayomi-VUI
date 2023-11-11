@@ -1,0 +1,97 @@
+# Copyright (c) 2022 Contributors to the Suwayomi project
+#
+# This Source Code Form is subject to the terms of the Mozilla Public
+# License, v. 2.0. If a copy of the MPL was not distributed with this
+# file, You can obtain one at http://mozilla.org/MPL/2.0/.
+
+# This workflow will do a clean installation of node dependencies, cache/restore them, build the source code and run tests across different versions of node
+# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-nodejs
+
+name: Build
+
+on:
+  workflow_dispatch:
+  push:
+    branches: ["main", "Release"]
+
+defaults:
+  run:
+    shell: bash
+
+jobs:
+  GenTag:
+    outputs:
+      value: ${{steps.GenTagName.outputs.value}}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+      - name: Generate Tag Name
+        id: GenTagName
+        run: |
+          genTag="r$(git rev-list HEAD --count)"
+          echo "$genTag"
+          echo "value=$genTag" >> $GITHUB_OUTPUT
+  buildDocker:
+    needs: GenTag
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out Git repository
+        uses: actions/checkout@v3
+
+      - name: Login to GitHub Container Registry
+        uses: docker/login-action@v2
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Login to Docker Hub
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - id: string
+        uses: ASzc/change-string-case-action@v5
+        with:
+          string: ${{ github.repository_owner }}/${{ github.event.repository.name }}
+
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v3
+        with:
+          context: .
+          build-args: VERSION=${{ needs.GenTag.outputs.value }}
+          push: true
+          tags: |
+            ghcr.io/${{ steps.string.outputs.lowercase }}:latest,
+            ghcr.io/${{ steps.string.outputs.lowercase }}:${{ needs.GenTag.outputs.value }},
+            ${{ steps.string.outputs.lowercase }}:latest,
+            ${{ steps.string.outputs.lowercase }}:${{ needs.GenTag.outputs.value }},
+  build:
+    needs: GenTag
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out Git repository
+        uses: actions/checkout@v3
+
+      - name: Use bun 1.0.10
+        uses: oven-sh/setup-bun@v1
+        with:
+          bun-version: latest
+
+      - name: Install bun dependencies
+        run: bun i
+
+      - run: bun run build
+
+      - name: Generate zip
+        working-directory: ./build
+        run: zip -r  Tachidesk-VUI-Web.zip ./*
+      - name: Upload CI Release
+        uses: ncipollo/release-action@v1
+        with:
+          artifacts: "./buildTachidesk-VUI-Web.zip"
+          allowUpdates: "true"
+          tag: ${{ needs.GenTag.outputs.value }}
