@@ -10,7 +10,9 @@
 name: Build
 on:
   push:
-    branches: ["main", "Release"]
+    branches:
+      - "main"
+      - "Release"
 defaults:
   run:
     shell: bash
