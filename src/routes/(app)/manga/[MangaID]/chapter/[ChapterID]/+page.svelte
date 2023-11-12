@@ -22,9 +22,14 @@
 	import { AppBarData } from '$lib/MountTitleAction';
 
 	export let data: PageData;
-	const mangaMeta = MangaMeta(data.MangaID);
+	let mangaMeta = MangaMeta(data.MangaID);
 
-	let currentChapterID = data.ChapterID;
+	let topchapter: number;
+	onMount(() => {
+		topchapter = data.ChapterID;
+	});
+
+	$: currentChapterID = data.ChapterID;
 
 	const toastStore = getToastStore();
 	const manga = getManga({ variables: { id: data.MangaID } });
@@ -79,6 +84,13 @@
 		return $manga.data.manga?.chapters.nodes[tmp + 1] ?? undefined;
 	}
 
+	function getChapterBeforeID(
+		currentID: number
+	): GetMangaQuery['manga']['chapters']['nodes'][0] | undefined {
+		const tmp = $manga.data.manga?.chapters.nodes.findIndex((e) => e.id === currentID);
+		return $manga.data.manga?.chapters.nodes[tmp - 1] ?? undefined;
+	}
+
 	$: if ($mangaMeta.ReaderMode === Mode.RTL) {
 		path = layoutToPath(paths.rtl, $mangaMeta.NavLayout);
 	} else {
@@ -102,7 +114,6 @@
 		if (!pageElement) {
 			pageElement = document.querySelector('#page') as HTMLDivElement;
 		}
-		console.log(keyEvent.code);
 		if (keyEvent.code === 'Escape') {
 			keyEvent.preventDefault();
 			keyEvent.stopPropagation();
@@ -122,8 +133,10 @@
 		if (keyEvent.code === 'Space') {
 			keyEvent.preventDefault();
 			keyEvent.stopPropagation();
-			if (keyEvent.shiftKey) scroll80();
-			else doscroll();
+			if (keyEvent.shiftKey) {
+				gobackChapter();
+				scroll80();
+			} else doscroll();
 			return;
 		}
 		if (keyEvent.code === 'ArrowDown' || keyEvent.code === 'ArrowRight') {
@@ -133,11 +146,49 @@
 			return;
 		}
 		if (keyEvent.code === 'ArrowUp' || keyEvent.code === 'ArrowLeft') {
+			gobackChapter();
 			keyEvent.preventDefault();
 			keyEvent.stopPropagation();
 			scroll80();
 			return;
 		}
+	}
+
+	let gobackChapterLoading = false;
+
+	async function gobackChapter() {
+		if (gobackChapterLoading) return;
+		gobackChapterLoading = true;
+		if (!pageElement) {
+			pageElement = document.querySelector('#page') as HTMLDivElement;
+		}
+		if (pageElement.scrollTop === 0) {
+			const tmp = getChapterBeforeID(topchapter);
+			if (tmp) {
+				const tttmp = fetchChapterPages({ variables: { chapterId: tmp.id } });
+				const obj: (typeof all)[0] = {
+					chapterID: tmp.id,
+					pages: []
+				};
+				await Errorhelp(`failed to load chapter ${obj.chapterID}`, tttmp, toastStore, (e) => {
+					if (!e.data) return;
+					obj.pages = e.data.fetchChapterPages.pages;
+					all = [obj, ...all];
+				});
+				const topimg = document.querySelector(`#c1p0`);
+				if (topimg)
+					pageElement?.scrollTo({
+						top: pageElement.scrollTop + topimg.getBoundingClientRect().y + 1,
+						behavior: 'instant'
+					});
+				topchapter = tmp.id;
+			} else {
+				toastStore.trigger({
+					message: "You can't go back, you are already at the first chapter"
+				});
+			}
+		}
+		gobackChapterLoading = false;
 	}
 
 	function handleClick(e: MouseEvent) {
@@ -214,10 +265,7 @@
 		});
 	}
 
-	let lastupdate = {
-		chapter: -1,
-		page: -1
-	};
+	let lastupdate = 0;
 
 	function PageIntersect(
 		e: CustomEvent<boolean>,
@@ -236,7 +284,7 @@
 					pageIndex
 				}
 			];
-			if (lastupdate.chapter !== id || lastupdate.page !== pageIndex) {
+			if (lastupdate !== pageIndex) {
 				updateChapter({
 					variables: {
 						id,
@@ -244,8 +292,7 @@
 						isRead: pageIndex >= maxPages * 0.8 ? true : null
 					}
 				});
-				lastupdate.chapter = id;
-				lastupdate.page = pageIndex;
+				lastupdate = pageIndex;
 			}
 		} else {
 			visablepages = visablepages.filter((e) => e.selector !== selector);
@@ -255,10 +302,13 @@
 	$: $mangaTitle = $manga.data.manga?.title ?? '';
 	$: $chapterTitle =
 		$manga.data.manga?.chapters.nodes.find((e) => e.id === currentChapterID)?.name ?? '';
-	$: goto($page.url.pathname.replace(/[^/]*$/, currentChapterID.toString()), {
-		replaceState: true,
-		noScroll: true
-	});
+	$: currentChapterID, got();
+	function got() {
+		goto($page.url.pathname.replace(/[^/]*$/, currentChapterID.toString()), {
+			replaceState: true,
+			noScroll: true
+		});
+	}
 	$: lowestIntersetc = document.querySelector(
 		visablepages.reduce(
 			(a, c) => {
