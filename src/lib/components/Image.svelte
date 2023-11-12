@@ -79,7 +79,6 @@
 	{/if}
 	{#if State !== state.error}
 		<img
-			loading="lazy"
 			bind:this={img}
 			on:load={load}
 			on:error={error}
@@ -87,7 +86,6 @@
 			{title}
 			{src}
 			{alt}
-			style={State === state.loading ? 'width:100%' : ''}
 		/>
 	{/if}
 </div>
