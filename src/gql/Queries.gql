@@ -35,49 +35,11 @@ query category($id: Int!) {
 
 query getManga($id: Int!) {
 	manga(id: $id) {
-		artist
-		author
-		description
-		genre
-		id
-		inLibrary
-		lastFetchedAt
-		realUrl
-		status
-		title
-		thumbnailUrl
-		unreadCount
-		downloadCount
-		lastReadChapter {
-			lastReadAt
-		}
+		...MangaTypeFragment
 		chapters {
 			totalCount
 			nodes {
-				isBookmarked
-				isDownloaded
-				isRead
-				id
-				chapterNumber
-				fetchedAt
-				lastPageRead
-				name
-				sourceOrder
-				uploadDate
-				pageCount
-				scanlator
-			}
-		}
-		meta {
-			value
-			key
-		}
-		source {
-			displayName
-		}
-		categories {
-			nodes {
-				id
+				...ChapterTypeFragment
 			}
 		}
 	}
@@ -85,33 +47,14 @@ query getManga($id: Int!) {
 
 query getSingleChapter($id: Int!) {
 	chapter(id: $id) {
-		isBookmarked
-		isDownloaded
-		isRead
-		id
-		chapterNumber
-		fetchedAt
-		lastPageRead
-		name
-		sourceOrder
-		uploadDate
-		pageCount
-		scanlator
+		...ChapterTypeFragment
 	}
 }
 
 query extensions($isNsfw: Boolean = null) {
 	extensions(condition: { isNsfw: $isNsfw }) {
 		nodes {
-			name
-			versionName
-			pkgName
-			lang
-			iconUrl
-			isNsfw
-			isInstalled
-			isObsolete
-			hasUpdate
+			...ExtensionTypeFragment
 		}
 	}
 }
@@ -119,11 +62,8 @@ query extensions($isNsfw: Boolean = null) {
 query sources($isNsfw: Boolean = null) {
 	sources(condition: { isNsfw: $isNsfw }) {
 		nodes {
-			displayName
-			id
-			lang
+			...SourceTypeFragment
 			isNsfw
-			iconUrl
 			extension {
 				pkgName
 			}
@@ -134,10 +74,7 @@ query sources($isNsfw: Boolean = null) {
 query sourcesMigration {
 	sources {
 		nodes {
-			id
-			displayName
-			iconUrl
-			lang
+			...SourceTypeFragment
 		}
 	}
 	mangas(condition: { inLibrary: true }) {
@@ -253,132 +190,15 @@ query source($id: LongString!) {
 		supportsLatest
 		isConfigurable
 		preferences {
-			... on CheckBoxPreference {
-				CheckBoxCheckBoxCurrentValue: currentValue
-				summary
-				CheckBoxDefault: default
-				key
-				CheckBoxTitle: title
-			}
-			... on EditTextPreference {
-				EditTextCurrentValue: currentValue
-				EditTextDefault: default
-				EditTextTitle: title
-				text
-				summary
-				key
-				dialogTitle
-				dialogMessage
-			}
-			... on SwitchPreference {
-				SwitchCurrentValue: currentValue
-				summary
-				key
-				SwitchDefault: default
-				SwitchTitle: title
-			}
-			... on MultiSelectListPreference {
-				dialogMessage
-				dialogTitle
-				MultiSelectListTitle: title
-				summary
-				key
-				entryValues
-				entries
-				MultiSelectListDefault: default
-				MultiSelectListCurrentValue: currentValue
-			}
-			... on ListPreference {
-				ListCurrentValue: currentValue
-				ListDefault: default
-				ListTitle: title
-				summary
-				key
-				entryValues
-				entries
-			}
+			...PreferenceFragment
 		}
 		filters {
-			... on TriStateFilter {
-				__typename
-				name
-				TriStateDefault: default
-			}
-			... on CheckBoxFilter {
-				__typename
-				CheckBoxDefault: default
-				name
-			}
-			... on TextFilter {
-				__typename
-				name
-				TextDefault: default
-			}
-			... on SortFilter {
-				__typename
-				values
-				name
-				SortDefault: default {
-					ascending
-					index
-				}
-			}
-			... on SeparatorFilter {
-				__typename
-				name
-			}
-			... on SelectFilter {
-				__typename
-				values
-				name
-				SelectDefault: default
-			}
-			... on HeaderFilter {
-				__typename
-				name
-			}
+			...FilterFragment
 			... on GroupFilter {
 				__typename
 				name
 				filters {
-					... on TriStateFilter {
-						__typename
-						name
-						TriStateDefault: default
-					}
-					... on CheckBoxFilter {
-						__typename
-						CheckBoxDefault: default
-						name
-					}
-					... on TextFilter {
-						__typename
-						name
-						TextDefault: default
-					}
-					... on SortFilter {
-						__typename
-						values
-						name
-						SortDefault: default {
-							ascending
-							index
-						}
-					}
-					... on SeparatorFilter {
-						__typename
-						name
-					}
-					... on SelectFilter {
-						__typename
-						values
-						name
-						SelectDefault: default
-					}
-					... on HeaderFilter {
-						__typename
-						name
-					}
+					...FilterFragment
 				}
 			}
 		}
