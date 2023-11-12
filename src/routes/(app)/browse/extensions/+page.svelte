@@ -109,8 +109,27 @@
 </script>
 
 <Nav let:scrollingElement>
-	{#if $extensions == undefined || $extensions.loading}
-		Loading...
+	{#if $extensions === undefined || $extensions.loading}
+		<div class="px-4">
+			{#each new Array(5) as _}
+				<div class="h-8 md:h-10 m-2 placeholder animate-pulse max-w-xs" />
+				{#each new Array(5) as _}
+					<div class="h-28 m-1">
+						<div class="card variant-ghost flex w-full h-full items-center">
+							<div class="p-1 h-full w-auto">
+								<div class="placeholder animate-pulse h-full w-auto rounded-lg aspect-square" />
+							</div>
+							<div class="w-full h-full max-w-xs flex flex-col justify-center">
+								<div class="placeholder animate-pulse my-2 max-w-[10rem]" />
+								<div class="my-2">
+									<div class="placeholder animate-pulse" />
+								</div>
+							</div>
+						</div>
+					</div>
+				{/each}
+			{/each}
+		</div>
 	{:else if $extensions.error}
 		{JSON.stringify($extensions.error)}
 	{:else if groupExtensions}

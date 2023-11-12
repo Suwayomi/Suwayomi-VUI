@@ -97,7 +97,26 @@
 </script>
 
 {#if $categories.loading}
-	Loading...
+	{#each new Array(5) as _}
+		<div
+			class="text-left flex items-center w-full h-16 hover:variant-glass-surface cursor-pointer p-2"
+		>
+			<div class="placeholder animate-pulse h-full aspect-square w-auto" />
+			<div class=" w-full">
+				<div class="placeholder animate-pulse max-w-xs mx-2" />
+			</div>
+			<div class="sm:mr-8 h-full flex">
+				{#each new Array(4) as _}
+					<div class="placeholder animate-pulse h-full aspect-square w-auto" />
+				{/each}
+			</div>
+			<div class="placeholder animate-pulse h-full aspect-square w-auto" />
+			<div class="placeholder animate-pulse h-full aspect-square w-auto" />
+		</div>
+		<div class="fixed bottom-2 right-2">
+			<div class="placeholder animate-pulse h-16 w-16 rounded-full" />
+		</div>
+	{/each}
 {:else if $categories.error}
 	{JSON.stringify($categories.error)}
 {:else if $categories.data.categories.nodes}
@@ -106,7 +125,7 @@
 		.sort((a, b) => (a.order > b.order ? 1 : -1)) as cat}
 		<button
 			on:click={(e) => edit(e, cat)}
-			class=" text-left flex items-center w-full h-16 hover:variant-glass-surface cursor-pointer p-2"
+			class="text-left flex items-center w-full h-16 hover:variant-glass-surface cursor-pointer p-2"
 		>
 			<IconWrapper class="h-full w-auto" name="mdi:theme" />
 			<div class="w-full px-2">{cat.name}</div>

@@ -7,7 +7,20 @@
 </script>
 
 {#if $about.loading}
-	loading...
+	{#if window.version}
+		<div class="pl-4 py-2">
+			<div class="text-xl">client version</div>
+			<div class="opacity-80">
+				VUI-{window.version}
+			</div>
+		</div>
+	{/if}
+	{#each new Array(5) as _}
+		<div class="pl-4 py-2">
+			<div class="placeholder animate-pulse w-full max-w-xs mb-1 h-7" />
+			<div class="placeholder animate-pulse w-full max-w-sm h-6" />
+		</div>
+	{/each}
 {:else if $about.error}
 	{JSON.stringify($about.error)}
 {:else if $about.data}

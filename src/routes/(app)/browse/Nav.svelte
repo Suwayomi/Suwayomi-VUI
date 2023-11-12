@@ -13,8 +13,8 @@
 					href="sources"
 					class="btn
     {$page.url.pathname.includes('/browse/sources')
-						? 'variant-filled-primary'
-						: 'variant-ghost-primary'}"
+						? 'variant-filled-secondary'
+						: 'variant-ghost-secondary'}"
 				>
 					Sources
 				</a>
@@ -22,8 +22,8 @@
 					href="extensions"
 					class="btn
     {$page.url.pathname.includes('/browse/extensions')
-						? 'variant-filled-primary'
-						: 'variant-ghost-primary'}"
+						? 'variant-filled-secondary'
+						: 'variant-ghost-secondary'}"
 				>
 					Extentions
 				</a>
@@ -31,8 +31,8 @@
 					href="migrate"
 					class="btn
     {$page.url.pathname.includes('/browse/migrate')
-						? 'variant-filled-primary'
-						: 'variant-ghost-primary'}"
+						? 'variant-filled-secondary'
+						: 'variant-ghost-secondary'}"
 				>
 					Migrate
 				</a>
@@ -40,8 +40,8 @@
 					href="globalsearch"
 					class="btn
     {$page.url.pathname.includes('/browse/globalsearch')
-						? 'variant-filled-primary'
-						: 'variant-ghost-primary'}"
+						? 'variant-filled-secondary'
+						: 'variant-ghost-secondary'}"
 				>
 					Global Search
 				</a>

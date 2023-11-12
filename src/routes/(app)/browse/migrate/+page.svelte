@@ -46,7 +46,21 @@
 
 <Nav let:scrollingElement>
 	{#if $Migration.loading}
-		Loading...
+		{#each new Array(8) as _}
+			<div class="h-24 m-1">
+				<div class="card variant-ghost flex w-full h-full items-center">
+					<div class="p-1 h-full w-auto">
+						<div class="placeholder animate-pulse h-full w-auto rounded-lg aspect-square" />
+					</div>
+					<div class="w-full h-full flex flex-col justify-center">
+						<div class="placeholder animate-pulse my-2 max-w-[10rem]" />
+					</div>
+					<div class="p-1 flex h-full items-center">
+						<div class="badge variant-filled-primary h-6 w-6" />
+					</div>
+				</div>
+			</div>
+		{/each}
 	{:else if $Migration.error}
 		{JSON.stringify($Migration.error)}
 	{:else if $Migration.errors}
@@ -63,7 +77,9 @@
 				>
 					{#if intersecting}
 						<a href="migrate/source/{source.id}">
-							<div class="flex h-full items-center hover:variant-glass">
+							<div
+								class="card m-1 flex h-full items-center variant-glass hover:variant-glass-primary"
+							>
 								<div class="p-1 h-full">
 									<Image src={source.iconUrl} aspect="aspect-square" width="h-auto" />
 								</div>
