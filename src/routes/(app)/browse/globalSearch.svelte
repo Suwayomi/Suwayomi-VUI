@@ -115,8 +115,16 @@
 </script>
 
 <MediaQuery2 let:gridnumber>
+	{#if $query === null || $query === ''}
+		<div class="flex justify-center p-8">Try searching for a manga in the top right</div>
+	{/if}
 	{#if $rawSources.loading}
-		Loading...
+		{#each new Array(5) as _}
+			<div class="placeholder animate-pulse h-12 max-w-xs m-4" />
+			{#each new Array(5) as _}
+				<div class="placeholder animate-pulse max-w-sm h-10 m-4 ml-8" />
+			{/each}
+		{/each}
 	{:else if $rawSources.error}
 		{JSON.stringify($rawSources.error)}
 	{:else if $rawSources.errors}
@@ -127,45 +135,40 @@
 		<div class="flex justify-center p-8">
 			Sources filtered to nothing, try changing filters in the top right
 		</div>
-	{:else}
-		{#if $query === null || $query === ''}
-			<div class="flex justify-center p-8">Try searching for a manga in the top right</div>
-		{/if}
-		{#if groupSources}
-			{#each groupSources.filter((e) => e[1]?.length) as group}
-				<div class="text-5xl m-4">
-					{group[0]}
-				</div>
-				{#each group[1] as source}
-					<div class="text-4xl ml-8 my-4">{source.displayName}</div>
-					{#if source.Loading}
-						<div class="overflow-x-auto">
-							<div class="flex flex-nowrap" style="width:calc({10 / gridnumber} * 100%)">
-								{#each new Array(10) as _}
-									<div class="w-full h-full flex flex-col flex-nowrap m-1">
-										<div class="aspect-cover w-auto h-full">
-											<div
-												class="placeholder animate-pulse w-full h-full
+	{:else if groupSources}
+		{#each groupSources.filter((e) => e[1]?.length) as group}
+			<div class="text-5xl m-4">
+				{group[0]}
+			</div>
+			{#each group[1] as source}
+				<div class="text-4xl ml-8 my-4">{source.displayName}</div>
+				{#if source.Loading}
+					<div class="overflow-x-auto">
+						<div class="flex flex-nowrap" style="width:calc({10 / gridnumber} * 100%)">
+							{#each new Array(10) as _}
+								<div class="w-full h-full flex flex-col flex-nowrap m-1">
+									<div class="aspect-cover w-auto h-full">
+										<div
+											class="placeholder animate-pulse w-full h-full
                         {$Meta.Display === display.Compact && 'rounded-lg'}
                         {$Meta.Display === display.Comfortable && 'rounded-none rounded-t-lg'}"
-											/>
-										</div>
-										{#if $Meta.Display === display.Comfortable}
-											<div
-												class="placeholder animate-pulse px-2 h-12 text-center rounded-none rounded-b-lg"
-											/>
-										{/if}
+										/>
 									</div>
-								{/each}
-							</div>
+									{#if $Meta.Display === display.Comfortable}
+										<div
+											class="placeholder animate-pulse px-2 h-12 text-center rounded-none rounded-b-lg"
+										/>
+									{/if}
+								</div>
+							{/each}
 						</div>
-					{:else if source.error}
-						<div>{JSON.stringify(source.error)}</div>
-					{:else if source.mangas}
-						<HorisontalmangaElement mangas={source.mangas} {gridnumber} {OpenModal} />
-					{/if}
-				{/each}
+					</div>
+				{:else if source.error}
+					<div>{JSON.stringify(source.error)}</div>
+				{:else if source.mangas}
+					<HorisontalmangaElement mangas={source.mangas} {gridnumber} {OpenModal} />
+				{/if}
 			{/each}
-		{/if}
+		{/each}
 	{/if}
 </MediaQuery2>
