@@ -70,9 +70,7 @@
 	function updateselected() {
 		$selected?.forEach((e) => {
 			const tmp = sortedChapters?.find((ee) => ee.id === e.id);
-			if (tmp) {
-				$selected[tmp.id] = tmp;
-			}
+			if (!tmp) delete $selected[e.id];
 		});
 	}
 
