@@ -70,26 +70,7 @@
 		});
 	}
 
-	$: sortedMangas = filteredMangas?.sort((a, b) => {
-		let tru = true;
-		switch ($Meta.Sort) {
-			case sort.ID:
-				tru = a.id > b.id;
-				break;
-			case sort.Unread:
-				tru = a.unreadCount > b.unreadCount;
-				break;
-			case sort.Alphabetical:
-				tru = a.title > b.title;
-				break;
-			case sort['Last Read']:
-				tru = a.lastReadChapter?.lastReadAt > b.lastReadChapter?.lastReadAt;
-				break;
-		}
-
-		if ($Meta.Asc) tru = !tru;
-		return tru ? -1 : 1;
-	});
+	$: console.log($Meta);
 
 	$: filteredMangas = $mangas.data.category?.mangas.nodes.filter((ele) => {
 		if (!ele.inLibrary) return false;
@@ -112,6 +93,27 @@
 			return false;
 
 		return true;
+	});
+
+	$: sortedMangas = filteredMangas?.sort((a, b) => {
+		let tru = true;
+		switch ($Meta.Sort) {
+			case sort.ID:
+				tru = a.id > b.id;
+				break;
+			case sort.Unread:
+				tru = a.unreadCount > b.unreadCount;
+				break;
+			case sort.Alphabetical:
+				tru = a.title > b.title;
+				break;
+			case sort['Last Read']:
+				tru = a.lastReadChapter?.lastReadAt > b.lastReadChapter?.lastReadAt;
+				break;
+		}
+
+		if ($Meta.Asc) tru = !tru;
+		return tru ? -1 : 1;
 	});
 
 	function selectall() {
