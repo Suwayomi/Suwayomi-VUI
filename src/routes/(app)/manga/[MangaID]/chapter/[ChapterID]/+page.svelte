@@ -27,9 +27,9 @@
 	let currentChapterID = data.ChapterID;
 
 	const toastStore = getToastStore();
-	const drawerStore = getDrawerStore();
 	const manga = getManga({ variables: { id: data.MangaID } });
-	$: $manga.data.manga, AppBarData($manga.data.manga?.title || 'Manga');
+	let pageElement = undefined as HTMLDivElement | undefined;
+	const drawerStore = getDrawerStore();
 
 	let chapterLoading = true;
 	let path: Paths;
@@ -99,6 +99,10 @@
 	}
 
 	async function handelKeypres(keyEvent: KeyboardEvent) {
+		if (!pageElement) {
+			pageElement = document.querySelector('#page') as HTMLDivElement;
+		}
+		console.log(keyEvent.code);
 		if (keyEvent.code === 'Escape') {
 			keyEvent.preventDefault();
 			keyEvent.stopPropagation();
@@ -122,9 +126,24 @@
 			else doscroll();
 			return;
 		}
+		if (keyEvent.code === 'ArrowDown' || keyEvent.code === 'ArrowRight') {
+			keyEvent.preventDefault();
+			keyEvent.stopPropagation();
+			doscroll();
+			return;
+		}
+		if (keyEvent.code === 'ArrowUp' || keyEvent.code === 'ArrowLeft') {
+			keyEvent.preventDefault();
+			keyEvent.stopPropagation();
+			scroll80();
+			return;
+		}
 	}
 
 	function handleClick(e: MouseEvent) {
+		if (!pageElement) {
+			pageElement = document.querySelector('#page') as HTMLDivElement;
+		}
 		if (pointInPoly([e.x, e.y], polyToPOLLY(path.forward))) {
 			doscroll();
 		} else if (pointInPoly([e.x, e.y], polyToPOLLY(path.back))) {
@@ -177,10 +196,9 @@
 	}
 
 	function scroll80(ud = false) {
-		const vp = window.visualViewport;
-		if (!vp) return;
-		window.scrollTo({
-			top: vp.pageTop + (ud ? vp.height : -vp.height) * 0.8,
+		pageElement?.scrollTo({
+			top:
+				pageElement.scrollTop + (ud ? pageElement.clientHeight : -pageElement.clientHeight) * 0.8,
 			behavior: $mangaMeta.SmoothScroll ? 'smooth' : 'instant'
 		});
 	}
@@ -190,10 +208,8 @@
 			scroll80(true);
 			return;
 		}
-		const vp = window.visualViewport;
-		if (!vp) return;
-		window.scrollTo({
-			top: vp.pageTop + lowestIntersetc.getBoundingClientRect().y + 1,
+		pageElement?.scrollTo({
+			top: pageElement.scrollTop + lowestIntersetc.getBoundingClientRect().y + 1,
 			behavior: $mangaMeta.SmoothScroll ? 'smooth' : 'instant'
 		});
 	}
@@ -258,6 +274,8 @@
 			}
 		).selector
 	) as HTMLElement | undefined;
+
+	$: $manga.data.manga, AppBarData(`${$manga.data.manga?.title} ${$chapterTitle}` || 'Manga');
 	type tmp = (typeof path)[keyof typeof path];
 	type ttmp = keyof typeof path;
 
@@ -291,9 +309,13 @@
 			window.removeEventListener('keydown', handelKeypres, true);
 		};
 	});
+	let buttonElement: HTMLButtonElement;
+	$: if (!$drawerStore.open) {
+		buttonElement?.focus();
+	}
 </script>
 
-<button on:click={handleClick} class="w-full">
+<button tabindex="0" bind:this={buttonElement} on:click={handleClick} class="w-full">
 	{#if $ViewNav}
 		<div class="pointer-events-none">
 			<div class="fixed bg-blue-500/50 z-10" style={currpath.forward} />
@@ -345,6 +367,7 @@
 									chapter.chapterID
 								);
 							}}
+							root={document.querySelector('#page') ?? undefined}
 							bottom={0}
 							top={$mangaMeta.Margins ? 16 : 0}
 						/>
@@ -382,6 +405,7 @@
 						LoadNextchapter(currentChapterID);
 					}
 				}}
+				root={document.querySelector('#page') ?? undefined}
 			/>
 		{/if}
 		<div class="p-2">
