@@ -22,9 +22,14 @@
 	import { AppBarData } from '$lib/MountTitleAction';
 
 	export let data: PageData;
-	const mangaMeta = MangaMeta(data.MangaID);
+	let mangaMeta = MangaMeta(data.MangaID);
 
-	let currentChapterID = data.ChapterID;
+	let topchapter: number;
+	onMount(() => {
+		topchapter = data.ChapterID;
+	});
+
+	$: currentChapterID = data.ChapterID;
 
 	const toastStore = getToastStore();
 	const manga = getManga({ variables: { id: data.MangaID } });
@@ -79,6 +84,13 @@
 		return $manga.data.manga?.chapters.nodes[tmp + 1] ?? undefined;
 	}
 
+	function getChapterBeforeID(
+		currentID: number
+	): GetMangaQuery['manga']['chapters']['nodes'][0] | undefined {
+		const tmp = $manga.data.manga?.chapters.nodes.findIndex((e) => e.id === currentID);
+		return $manga.data.manga?.chapters.nodes[tmp - 1] ?? undefined;
+	}
+
 	$: if ($mangaMeta.ReaderMode === Mode.RTL) {
 		path = layoutToPath(paths.rtl, $mangaMeta.NavLayout);
 	} else {
@@ -122,8 +134,10 @@
 		if (keyEvent.code === 'Space') {
 			keyEvent.preventDefault();
 			keyEvent.stopPropagation();
-			if (keyEvent.shiftKey) scroll80();
-			else doscroll();
+			if (keyEvent.shiftKey) {
+				gobackChapter();
+				scroll80();
+			} else doscroll();
 			return;
 		}
 		if (keyEvent.code === 'ArrowDown' || keyEvent.code === 'ArrowRight') {
@@ -133,10 +147,37 @@
 			return;
 		}
 		if (keyEvent.code === 'ArrowUp' || keyEvent.code === 'ArrowLeft') {
+			gobackChapter();
 			keyEvent.preventDefault();
 			keyEvent.stopPropagation();
 			scroll80();
 			return;
+		}
+	}
+
+	function gobackChapter() {
+		if (!pageElement) {
+			pageElement = document.querySelector('#page') as HTMLDivElement;
+		}
+		if (pageElement.scrollTop === 0) {
+			const tmp = getChapterBeforeID(topchapter);
+			if (tmp) {
+				const ttmp = $page.url.pathname.replace(/[^/]*$/, tmp.id.toString());
+				all = [];
+				topchapter = tmp.id;
+				goto(ttmp, {
+					replaceState: true
+				});
+				setTimeout(() => {
+					if (!pageElement) {
+						pageElement = document.querySelector('#page') as HTMLDivElement;
+					}
+				}, 500);
+			} else {
+				toastStore.trigger({
+					message: "You can't go back, you are already at the first chapter"
+				});
+			}
 		}
 	}
 
@@ -214,10 +255,7 @@
 		});
 	}
 
-	let lastupdate = {
-		chapter: -1,
-		page: -1
-	};
+	let lastupdate = 0;
 
 	function PageIntersect(
 		e: CustomEvent<boolean>,
@@ -236,7 +274,8 @@
 					pageIndex
 				}
 			];
-			if (lastupdate.chapter !== id || lastupdate.page !== pageIndex) {
+			if (lastupdate !== pageIndex) {
+				console.log(lastupdate, pageIndex);
 				updateChapter({
 					variables: {
 						id,
@@ -244,8 +283,7 @@
 						isRead: pageIndex >= maxPages * 0.8 ? true : null
 					}
 				});
-				lastupdate.chapter = id;
-				lastupdate.page = pageIndex;
+				lastupdate = pageIndex;
 			}
 		} else {
 			visablepages = visablepages.filter((e) => e.selector !== selector);
@@ -255,10 +293,13 @@
 	$: $mangaTitle = $manga.data.manga?.title ?? '';
 	$: $chapterTitle =
 		$manga.data.manga?.chapters.nodes.find((e) => e.id === currentChapterID)?.name ?? '';
-	$: goto($page.url.pathname.replace(/[^/]*$/, currentChapterID.toString()), {
-		replaceState: true,
-		noScroll: true
-	});
+	$: currentChapterID, got();
+	function got() {
+		goto($page.url.pathname.replace(/[^/]*$/, currentChapterID.toString()), {
+			replaceState: true,
+			noScroll: true
+		});
+	}
 	$: lowestIntersetc = document.querySelector(
 		visablepages.reduce(
 			(a, c) => {
