@@ -114,7 +114,6 @@
 		if (!pageElement) {
 			pageElement = document.querySelector('#page') as HTMLDivElement;
 		}
-		console.log(keyEvent.code);
 		if (keyEvent.code === 'Escape') {
 			keyEvent.preventDefault();
 			keyEvent.stopPropagation();
@@ -155,30 +154,41 @@
 		}
 	}
 
-	function gobackChapter() {
+	let gobackChapterLoading = false;
+
+	async function gobackChapter() {
+		if (gobackChapterLoading) return;
+		gobackChapterLoading = true;
 		if (!pageElement) {
 			pageElement = document.querySelector('#page') as HTMLDivElement;
 		}
 		if (pageElement.scrollTop === 0) {
 			const tmp = getChapterBeforeID(topchapter);
 			if (tmp) {
-				const ttmp = $page.url.pathname.replace(/[^/]*$/, tmp.id.toString());
-				all = [];
-				topchapter = tmp.id;
-				goto(ttmp, {
-					replaceState: true
+				const tttmp = fetchChapterPages({ variables: { chapterId: tmp.id } });
+				const obj: (typeof all)[0] = {
+					chapterID: tmp.id,
+					pages: []
+				};
+				await Errorhelp(`failed to load chapter ${obj.chapterID}`, tttmp, toastStore, (e) => {
+					if (!e.data) return;
+					obj.pages = e.data.fetchChapterPages.pages;
+					all = [obj, ...all];
 				});
-				setTimeout(() => {
-					if (!pageElement) {
-						pageElement = document.querySelector('#page') as HTMLDivElement;
-					}
-				}, 500);
+				const topimg = document.querySelector(`#c1p0`);
+				if (topimg)
+					pageElement?.scrollTo({
+						top: pageElement.scrollTop + topimg.getBoundingClientRect().y + 1,
+						behavior: 'instant'
+					});
+				topchapter = tmp.id;
 			} else {
 				toastStore.trigger({
 					message: "You can't go back, you are already at the first chapter"
 				});
 			}
 		}
+		gobackChapterLoading = false;
 	}
 
 	function handleClick(e: MouseEvent) {
@@ -275,7 +285,6 @@
 				}
 			];
 			if (lastupdate !== pageIndex) {
-				console.log(lastupdate, pageIndex);
 				updateChapter({
 					variables: {
 						id,
