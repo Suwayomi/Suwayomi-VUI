@@ -49,12 +49,33 @@
 	}
 </script>
 
-{#if $sources.error}
-	{JSON.stringify($sources.error)}
-{:else if $sources.loading}
-	Loading...
-{:else if groupSources}
-	<Nav let:scrollingElement>
+<Nav let:scrollingElement>
+	{#if $sources.error}
+		{JSON.stringify($sources.error)}
+	{:else if $sources.loading}
+		{#each new Array(5) as _}
+			<div class=" py-4 px-8">
+				<div class="h-12 placeholder animate-pulse" />
+			</div>
+			<div
+				class="grid xs:grid-cols-2 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-8 xl:grid-cols-10 2xl:grid-cols-12 gap-2 mx-2"
+			>
+				{#each new Array(5) as _}
+					<div class="aspect-cover card relative">
+						<div class=" w-full h-full p-4">
+							<div class="w-full h-auto aspect-square rounded-lg placeholder animate-pulse" />
+						</div>
+						<div class="absolute bottom-0 left-0 right-0 variant-glass-surface rounded-b-olg">
+							<div class="px-2 h-12 text-center">
+								<div class="placeholder animate-pulse my-1" />
+								<div class="placeholder animate-pulse" />
+							</div>
+						</div>
+					</div>
+				{/each}
+			</div>
+		{/each}
+	{:else if groupSources}
 		{#each groupSources.filter((ele) => ele[1].length) as [Lang, sous]}
 			<div class="text-5xl py-4 px-8">
 				{ISOLanguages.find((ele) => ele.code.toLowerCase() === Lang.toLowerCase())?.nativeName ??
@@ -97,5 +118,5 @@
 				top right.
 			</p>
 		</div>
-	</Nav>
-{/if}
+	{/if}
+</Nav>

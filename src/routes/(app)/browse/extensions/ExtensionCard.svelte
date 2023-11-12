@@ -130,7 +130,7 @@
 	class="h-28 m-1"
 >
 	{#if intersecting}
-		<div class="card variant-ghost-primary flex w-full h-full items-center">
+		<div class="card variant-ghost flex w-full h-full items-center">
 			<div class="p-1 h-full flex-shrink-0">
 				<Image height="h-full" width="w-auto" aspect="aspect-square" src={ext.iconUrl} />
 			</div>
