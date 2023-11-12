@@ -10,7 +10,11 @@
 		// downloadsOnChapters,
 		enqueueChapterDownloads,
 		updateChapters,
-		type GetMangaQuery
+		type GetMangaQuery,
+		downloadsOnChapters,
+		type DownloadsOnChaptersSubscription,
+		AsyncgetSingleChapter,
+		GetMangaDoc
 	} from '$lib/generated';
 	import { longpress } from '$lib/press';
 	import { screens } from '$lib/screens';
@@ -21,6 +25,8 @@
 	import { fade } from 'svelte/transition';
 	import ChaptersFilterModal from './ChaptersFilterModal.svelte';
 	import { selected, selectmode, type chaptertype } from './mangaStores';
+	import DownloadProgressRadial from './DownloadProgressRadial.svelte';
+	import { cache } from '$lib/apollo';
 
 	export let manga: ApolloQueryResult<GetMangaQuery> | undefined;
 	export let MangaID: number;
@@ -28,14 +34,48 @@
 	const modalStore = getModalStore();
 	const toastStore = getToastStore();
 	const mangaMeta = MangaMeta(MangaID);
-	// WIP add Downloads subscription to see chapter download status
-	// const downloads = downloadsOnChapters({
-	// 	fetchPolicy: 'network-only'
-	// });
+	const downloads = downloadsOnChapters({
+		fetchPolicy: 'network-only'
+	});
 
-	// $: if ($downloads?.data?.downloadChanged) {
-	// 	console.log($downloads.data.downloadChanged);
-	// }
+	let lastDownloads: DownloadsOnChaptersSubscription | undefined = undefined;
+
+	$: if ($downloads?.data?.downloadChanged) {
+		checkinNeedRefresh();
+		lastDownloads = $downloads?.data;
+	}
+
+	function checkinNeedRefresh() {
+		lastDownloads?.downloadChanged.queue
+			.filter((e) => manga?.data.manga.chapters.nodes.find((ee) => ee.id === e.chapter.id))
+			.forEach((element) => {
+				const tmp = $downloads?.data?.downloadChanged.queue.find(
+					(e) => e.chapter.id === element.chapter.id
+				);
+				if (!tmp) {
+					const ttmp = AsyncgetSingleChapter({
+						variables: { id: element.chapter.id },
+						fetchPolicy: 'network-only'
+					});
+					ttmp.then((e) => {
+						const { manga: mga } = structuredClone(
+							cache.readQuery({
+								query: GetMangaDoc,
+								variables: { id: MangaID }
+							})
+						) as GetMangaQuery;
+
+						mga.chapters.nodes = mga.chapters.nodes.filter((ee) => ee.id !== e.data.chapter.id);
+						mga.chapters.nodes.push(e.data.chapter);
+						cache.writeQuery({
+							query: GetMangaDoc,
+							variables: { id: MangaID },
+							data: { manga: mga }
+						});
+					});
+				}
+			});
+	}
 
 	$: chaptersInfo = manga?.data.manga?.chapters.nodes as
 		| GetMangaQuery['manga']['chapters']['nodes']
@@ -72,6 +112,8 @@
 			const tmp = sortedChapters?.find((ee) => ee.id === e.id);
 			if (tmp) {
 				$selected[tmp.id] = tmp;
+			} else {
+				delete $selected[e.id];
 			}
 		});
 	}
@@ -288,6 +330,13 @@
 									).toLocaleDateString()}{chapter.isDownloaded ? ' • Downloaded' : ''}
 								</div>
 							</div>
+
+							<DownloadProgressRadial
+								download={$downloads?.data?.downloadChanged?.queue.find(
+									(e) => e.chapter.id === chapter.id
+								)}
+							/>
+
 							{#if $selectmode}
 								<button class="hover:variant-ghost rounded-full h-full p-2">
 									<IconWrapper

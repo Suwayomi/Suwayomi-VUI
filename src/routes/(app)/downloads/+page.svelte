@@ -31,7 +31,28 @@
 </script>
 
 {#if !$downloads}
-	Loading...
+	{#each new Array(15) as _}
+		<div class="h-28">
+			<div class="hover:variant-glass-surface px-4 h-full flex flex-nowrap items-center">
+				<div class="py-1 h-full aspect-cover mr-2">
+					<div class="placeholder animate-pulse aspect-cover h-full w-auto rounded-lg" />
+				</div>
+				<div class="w-full py-4">
+					<div class="placeholder animate-pulse max-w-xs mb-1" />
+					<div class="placeholder animate-pulse max-w-sm mb-1" />
+					<div class="flex max-w-3xl items-center">
+						<div class="placeholder animate-pulse w-10 mr-2" />
+						<div class="placeholder animate-pulse h-2 w-full" />
+					</div>
+				</div>
+				<div class="h-full py-4">
+					<div class="w-auto h-full aspect-square p-4">
+						<div class="placeholder animate-pulse h-full w-full" />
+					</div>
+				</div>
+			</div>
+		</div>
+	{/each}
 {:else if $downloads.errors}
 	{JSON.stringify($downloads.errors)}
 {:else if filteredQueue}

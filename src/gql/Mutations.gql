@@ -1,15 +1,7 @@
 mutation fetchExtensions {
 	fetchExtensions(input: {}) {
 		extensions {
-			name
-			versionName
-			pkgName
-			lang
-			iconUrl
-			isNsfw
-			isInstalled
-			isObsolete
-			hasUpdate
+			...ExtensionTypeFragment
 		}
 	}
 }
@@ -104,26 +96,7 @@ mutation deleteMangaMeta($id: Int!, $key: String!) {
 mutation fetchMangaInfo($id: Int!) {
 	fetchManga(input: { id: $id }) {
 		manga {
-			artist
-			author
-			description
-			genre
-			id
-			inLibrary
-			lastFetchedAt
-			realUrl
-			status
-			title
-			thumbnailUrl
-			unreadCount
-			downloadCount
-			meta {
-				value
-				key
-			}
-			source {
-				displayName
-			}
+			...MangaTypeFragment
 		}
 	}
 }
@@ -131,18 +104,7 @@ mutation fetchMangaInfo($id: Int!) {
 mutation fetchMangaChapters($id: Int!) {
 	fetchChapters(input: { mangaId: $id }) {
 		chapters {
-			isBookmarked
-			isDownloaded
-			isRead
-			id
-			chapterNumber
-			fetchedAt
-			lastPageRead
-			name
-			sourceOrder
-			uploadDate
-			pageCount
-			scanlator
+			...ChapterTypeFragment
 		}
 	}
 }
@@ -157,22 +119,11 @@ mutation updateExtension(
 		input: { id: $pkgName, patch: { install: $install, uninstall: $uninstall, update: $update } }
 	) {
 		extension {
-			name
-			versionName
-			pkgName
-			lang
-			iconUrl
-			isNsfw
-			isInstalled
-			isObsolete
-			hasUpdate
+			...ExtensionTypeFragment
 			source {
 				nodes {
-					displayName
-					id
-					lang
+					...SourceTypeFragment
 					isNsfw
-					iconUrl
 					extension {
 						pkgName
 					}
@@ -228,50 +179,7 @@ mutation updateSourcePreference(
 		source {
 			id
 			preferences {
-				... on CheckBoxPreference {
-					CheckBoxCheckBoxCurrentValue: currentValue
-					summary
-					CheckBoxDefault: default
-					key
-					CheckBoxTitle: title
-				}
-				... on EditTextPreference {
-					EditTextCurrentValue: currentValue
-					EditTextDefault: default
-					EditTextTitle: title
-					text
-					summary
-					key
-					dialogTitle
-					dialogMessage
-				}
-				... on SwitchPreference {
-					SwitchCurrentValue: currentValue
-					summary
-					key
-					SwitchDefault: default
-					SwitchTitle: title
-				}
-				... on MultiSelectListPreference {
-					dialogMessage
-					dialogTitle
-					MultiSelectListTitle: title
-					summary
-					key
-					entryValues
-					entries
-					MultiSelectListDefault: default
-					MultiSelectListCurrentValue: currentValue
-				}
-				... on ListPreference {
-					ListCurrentValue: currentValue
-					ListDefault: default
-					ListTitle: title
-					summary
-					key
-					entryValues
-					entries
-				}
+				...PreferenceFragment
 			}
 		}
 	}
@@ -439,18 +347,7 @@ mutation stopDownloader {
 mutation deleteDownloadedChapter($id: Int!) {
 	deleteDownloadedChapter(input: { id: $id }) {
 		chapters {
-			isBookmarked
-			isDownloaded
-			isRead
-			id
-			chapterNumber
-			fetchedAt
-			lastPageRead
-			name
-			sourceOrder
-			uploadDate
-			pageCount
-			scanlator
+			...ChapterTypeFragment
 		}
 	}
 }
@@ -458,18 +355,7 @@ mutation deleteDownloadedChapter($id: Int!) {
 mutation deleteDownloadedChapters($ids: [Int!]!) {
 	deleteDownloadedChapters(input: { ids: $ids }) {
 		chapters {
-			isBookmarked
-			isDownloaded
-			isRead
-			id
-			chapterNumber
-			fetchedAt
-			lastPageRead
-			name
-			sourceOrder
-			uploadDate
-			pageCount
-			scanlator
+			...ChapterTypeFragment
 		}
 	}
 }

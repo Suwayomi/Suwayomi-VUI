@@ -18,7 +18,20 @@
 </script>
 
 {#if $Manga.loading}
-	Loading...
+	<div class="yoy grid m-2 gap-2 {gridValues}">
+		{#each new Array(30) as _}
+			<div class="aspect-cover w-full">
+				<div
+					class="placeholder animate-pulse h-full
+						{$Meta.Display === display.Compact && 'rounded-lg'}
+						{$Meta.Display === display.Comfortable && 'rounded-none rounded-t-lg'}"
+				/>
+				{#if $Meta.Display === display.Comfortable}
+					<div class="placeholder animate-pulse px-2 h-12 text-center rounded-none rounded-b-lg" />
+				{/if}
+			</div>
+		{/each}
+	</div>
 {:else if $Manga.error}
 	{JSON.stringify($Manga.error)}
 {:else if $Manga.errors}
