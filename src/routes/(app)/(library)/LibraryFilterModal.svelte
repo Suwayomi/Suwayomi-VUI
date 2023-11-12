@@ -11,6 +11,7 @@
 	} from '@skeletonlabs/skeleton';
 	import { Meta, display, sort } from '$lib/simpleStores';
 	import { enumKeys } from '$lib/util';
+	import Slide from '$lib/components/Slide.svelte';
 	const modalStore = getModalStore();
 	let tabSet = localStorageStore('libraryModalTabs', 0);
 </script>
@@ -107,6 +108,14 @@
 							{/each}
 						</RadioGroup>
 					{:else if $tabSet === 2}
+						<Slide
+							bind:checked={$Meta.downloadsBadge}
+							class="outline-0 p-1 pl-2 hover:variant-glass-surface w-full">Downloads Badge</Slide
+						>
+						<Slide
+							bind:checked={$Meta.unreadbadge}
+							class="outline-0 p-1 pl-2 hover:variant-glass-surface w-full">Unread Badge</Slide
+						>
 						<RadioGroup
 							rounded="rounded-container-token"
 							background="bg-transparent"

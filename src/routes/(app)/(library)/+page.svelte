@@ -206,17 +206,21 @@
 										{$Meta.Display === display.Comfortable && 'rounded-none rounded-t-lg'}"
 										>
 											<div class="absolute top-2 left-2 flex">
-												{#if manga.downloadCount}
+												{#if manga.downloadCount && $Meta.downloadsBadge}
 													<div
-														class="{manga.unreadCount ? 'rounded-l' : 'rounded'}
+														class="{manga.unreadCount && $Meta.unreadbadge
+															? 'rounded-l'
+															: 'rounded'}
 													variant-filled-primary m-0 py-0.5 px-1"
 													>
 														{manga.downloadCount}
 													</div>
 												{/if}
-												{#if manga.unreadCount}
+												{#if manga.unreadCount && $Meta.unreadbadge}
 													<div
-														class="{manga.downloadCount ? 'rounded-r' : 'rounded'}
+														class="{manga.downloadCount && $Meta.downloadsBadge
+															? 'rounded-r'
+															: 'rounded'}
 													variant-filled-secondary m-0 py-0.5 px-1"
 													>
 														{manga.unreadCount}
