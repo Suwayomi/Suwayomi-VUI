@@ -128,7 +128,7 @@ function GlobalMeta() {
 
 	Meta.subscribe((e) => {
 		store.update((n) => {
-			const Ncopy = structuredClone(trueDefaults) as { [key: string]: unknown };
+			const Ncopy = structuredClone(get(store)) as { [key: string]: unknown };
 			(Object.keys(n) as (keyof globalMeta)[]).forEach((ee) => {
 				const tmp = e.data.metas?.nodes.find((k) => k.key.replace('VUI3_', '') === ee);
 				if (!tmp) return;
@@ -139,6 +139,7 @@ function GlobalMeta() {
 	});
 
 	async function set(val: globalMeta) {
+		console.log(val);
 		(Object.entries(val) as [keyof globalMeta, unknown][]).forEach(async (entry) => {
 			const value = JSON.stringify(entry[1]);
 			const key = `VUI3_${entry[0]}`;
@@ -204,7 +205,7 @@ export function MangaMeta(id: number) {
 
 	MMeta.subscribe((e) => {
 		store.update((n) => {
-			const Ncopy = structuredClone(get(Meta).mangaMetaDefaults) as { [key: string]: unknown };
+			const Ncopy = structuredClone(get(store)) as { [key: string]: unknown };
 			(Object.keys(n) as (keyof mangaMeta)[]).forEach((ee) => {
 				const tmp = e.data.manga?.meta.find((k) => k.key.replace('VUI3_', '') === ee);
 				if (!tmp) return;
