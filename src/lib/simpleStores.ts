@@ -98,7 +98,9 @@ const trueDefaults = {
 	Asc: true,
 	Unread: 0 as TriState,
 	Downloaded: 0 as TriState,
-	mangaMetaDefaults
+	mangaMetaDefaults,
+	downloadsBadge: true,
+	unreadbadge: true
 };
 
 type globalMeta = typeof trueDefaults;
