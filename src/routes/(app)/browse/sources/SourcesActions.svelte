@@ -1,12 +1,72 @@
 <script lang="ts">
 	import LangFilterbutton from '$lib/components/LangFilterbutton.svelte';
 	import Search from '$lib/components/Search.svelte';
-
 	import { Sourcelangfilt as langfilt } from './SourcesStores';
+	import TooltipIconButton from '$lib/components/TooltipIconButton.svelte';
+	import { goto } from '$app/navigation';
+
 	export let langs: Set<string>;
+
+	let inputElement: HTMLInputElement;
+	// eslint-disable-next-line no-undef
+	let timeoutCancel: NodeJS.Timeout | undefined = undefined;
+	$: searchElementHidden = true;
+	$: value = '';
+
+	function handelSearch() {
+		searchElementHidden = !searchElementHidden;
+		if (!searchElementHidden) {
+			setTimeout(() => {
+				inputElement.focus();
+			}, 500);
+			return;
+		}
+		clearTimeout(timeoutCancel);
+		value = '';
+	}
+
+	function handelChange() {
+		timeoutCancel = setTimeout(() => {
+			goto(`/browse/globalsearch?q=${value}`);
+		}, 100);
+	}
+
+	function handelEscapeInput(
+		e: KeyboardEvent & {
+			currentTarget: EventTarget & HTMLInputElement;
+		}
+	) {
+		if (e.key == 'Escape') {
+			inputElement.blur();
+			handelSearch();
+		}
+	}
 </script>
 
 <div class="h-full flex">
 	<Search />
+	<div
+		class="overflow-hidden
+			max-w-[16rem]
+			transition-all duration-500 ease-in-out
+			{searchElementHidden ? 'max-w-[0rem] sm:max-w-[0rem] opacity-0' : ''}"
+	>
+		<input
+			bind:this={inputElement}
+			class="input h-full"
+			title="Input (text)"
+			type="text"
+			placeholder="input text"
+			bind:value
+			on:change={handelChange}
+			on:keydown={handelEscapeInput}
+		/>
+	</div>
+	<TooltipIconButton
+		on:click={handelSearch}
+		name="mdi:{searchElementHidden ? 'earth' : 'close'}"
+		tip="Global Search"
+		tipclass="z-50"
+	/>
 	<LangFilterbutton {langfilt} {langs} />
 </div>
