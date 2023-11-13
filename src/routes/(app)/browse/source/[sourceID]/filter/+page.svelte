@@ -20,6 +20,11 @@
 	const sause = data.sause;
 	const query = queryParam('q', ssp.string(), { pushHistory: false });
 
+	$: $query, doSearch();
+	function doSearch() {
+		queryfilter.query = $query ?? '';
+	}
+
 	let queryfilter = {
 		query: $query === '' ? undefined : $query ?? undefined,
 		filters: $filters.length ? $filters : undefined

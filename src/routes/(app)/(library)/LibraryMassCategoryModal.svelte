@@ -1,14 +1,18 @@
 <script lang="ts">
 	import { getToastStore } from '$lib/components/Toast/stores';
 	import TriStateSlide from '$lib/components/TriStateSlide.svelte';
-	import type { CategoriesQuery, CategoryQuery, GetMangaQuery } from '$lib/generated';
+	import {
+		categories as getCategories,
+		type CategoriesQuery,
+		type CategoryQuery,
+		type GetMangaQuery
+	} from '$lib/generated';
 	import {
 		CategoryDoc,
 		GetMangaDoc,
 		updateMangasCategories,
 		type UpdateMangasCategoriesMutation
 	} from '$lib/generated';
-	import { categories } from '$lib/simpleStores';
 	import { Errorhelp } from '$lib/util';
 	import type { ApolloCache, FetchResult } from '@apollo/client';
 	import { getModalStore } from '@skeletonlabs/skeleton';
@@ -20,6 +24,8 @@
 	const toastStore = getToastStore();
 
 	let selectedCategories: number[] = [];
+
+	const categories = getCategories({});
 
 	function handelclicked(category: CategoriesQuery['categories']['nodes'][0], e: boolean) {
 		if (e) {

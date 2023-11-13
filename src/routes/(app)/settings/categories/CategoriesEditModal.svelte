@@ -13,7 +13,6 @@
 
 	export let id: number;
 
-	// $: cat = $modalStore[0]?.meta as CategoriesQuery['categories']['nodes'][0] | undefined;
 	$: catinput = writable(name);
 	$: Defaul = writable(defaultt);
 

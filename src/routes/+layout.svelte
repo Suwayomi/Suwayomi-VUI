@@ -9,10 +9,13 @@
 		Drawer,
 		Modal,
 		getDrawerStore,
+		getModalStore,
 		initializeStores,
 		storePopup
 	} from '@skeletonlabs/skeleton';
 	import ChapterDrawer from './(app)/manga/[MangaID]/chapter/[ChapterID]/chapterDrawer.svelte';
+	import { onMount } from 'svelte';
+	import QuickSearchModal from '$lib/components/QuickSearchModal.svelte';
 
 	storePopup.set({ computePosition, autoUpdate, flip, shift, offset, arrow });
 	initializeStores();
@@ -26,14 +29,28 @@
 			document.documentElement.classList.remove('dark');
 		}
 	}
-
-	$: title = $titleStore;
 	const drawerStore = getDrawerStore();
+	const modalStore = getModalStore();
+
+	function openQuickSearch(e: KeyboardEvent) {
+		if (e.code === 'KeyP' && e.ctrlKey) {
+			e.preventDefault();
+			modalStore.trigger({
+				type: 'component',
+				component: { ref: QuickSearchModal },
+				position: 'items-start'
+			});
+		}
+	}
+
+	onMount(() => {
+		window.addEventListener('keydown', openQuickSearch);
+	});
 </script>
 
 <svelte:head>
 	<title>
-		{title}
+		{$titleStore}
 	</title>
 </svelte:head>
 <Drawer>

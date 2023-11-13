@@ -1,9 +1,9 @@
 <script lang="ts">
-	import { category, type CategoryQuery } from '$lib/generated';
+	import { category, type CategoryQuery, categories as getCategories } from '$lib/generated';
 	import IntersectionObserver from '$lib/components/IntersectionObserver.svelte';
 	import MangaCard from '$lib/components/MangaCard.svelte';
 	import { longpress } from '$lib/press';
-	import { categories, display, Meta, sort } from '$lib/simpleStores';
+	import { display, Meta, sort } from '$lib/simpleStores';
 	import { Tab, TabGroup } from '@skeletonlabs/skeleton';
 	import { queryParam, ssp } from 'sveltekit-search-params';
 	import LibraryActions from './libraryActions.svelte';
@@ -13,6 +13,8 @@
 	import { goto } from '$app/navigation';
 	import { gridValues, HelpDoSelect, HelpSelectall } from '$lib/util';
 	import IconWrapper from '$lib/components/IconWrapper.svelte';
+
+	const categories = getCategories({});
 
 	AppBarData('Library', {
 		component: LibraryActions,

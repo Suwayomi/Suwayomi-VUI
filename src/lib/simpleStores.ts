@@ -2,7 +2,6 @@ import { get, writable, type Writable } from 'svelte/store';
 import { localStorageStore } from '@skeletonlabs/skeleton';
 import type { ComponentType } from 'svelte';
 import {
-	categories as getCategories,
 	metas,
 	MetasDoc,
 	setGlobalMeta,
@@ -30,8 +29,6 @@ type Themes = (typeof presetConst)[number]['name'];
 
 export const title: Writable<string> = writable('loading...');
 export const action: Writable<ComponentWritable<null>> = writable(null);
-
-export const categories = getCategories({});
 
 export enum ChapterTitle {
 	'Source Title' = 'Source Title',
