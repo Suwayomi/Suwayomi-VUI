@@ -33,6 +33,7 @@
 		secondLineBoldText?: string;
 		url?: string;
 	}[] = [];
+	let inputElement: boolean;
 
 	const help: typeof items = [
 		{
@@ -94,99 +95,95 @@
 		}
 	>;
 
-	$: $category, $categories, $sources, value, doSearch();
-
-	function doSearch() {
-		if (value.startsWith('@')) {
-			doSource();
-		}
-		if (value.startsWith('#')) {
-			doCategory();
-		}
-	}
+	$: $category, $categories, value, doCategory();
+	$: $sources, value, doSource();
 
 	function doCategory() {
-		const parsed = value.slice(1).split(/[/:]/);
-		const categorySearch: string | undefined = parsed[0];
-		const mangaSearch: string | undefined = parsed[1];
-		const chapterNameSearch: string | undefined = parsed[2];
-		const includeCategory = $categories.data?.categories.nodes.filter((e) =>
-			e.name.toLowerCase().includes(categorySearch.toLowerCase())
-		);
-		let includeMangas: CategoryQuery['category']['mangas']['nodes'] | undefined = undefined;
-		let includeChapters: GetMangaQuery['manga']['chapters']['nodes'] | undefined = undefined;
-		if (mangaSearch && includeCategory[0]) {
-			catId = includeCategory[0].id;
-			includeMangas = $category?.data?.category?.mangas.nodes.filter((e) =>
-				e.title.toLowerCase().includes(mangaSearch.toLowerCase())
+		if (value.startsWith('#')) {
+			const parsed = value.slice(1).split(/[/:]/);
+			const categorySearch: string | undefined = parsed[0];
+			const mangaSearch: string | undefined = parsed[1];
+			const chapterNameSearch: string | undefined = parsed[2];
+			const includeCategory = $categories.data?.categories.nodes.filter((e) =>
+				e.name.toLowerCase().includes(categorySearch.toLowerCase())
 			);
-			if (chapterNameSearch && includeMangas[0]) {
-				mangaId = includeMangas[0].id;
-				includeChapters = $manga?.data?.manga?.chapters.nodes.filter((e) =>
-					e.name.toLowerCase().includes(chapterNameSearch.toLowerCase())
+			let includeMangas: CategoryQuery['category']['mangas']['nodes'] | undefined = undefined;
+			let includeChapters: GetMangaQuery['manga']['chapters']['nodes'] | undefined = undefined;
+			if (mangaSearch && includeCategory[0]) {
+				catId = includeCategory[0].id;
+				includeMangas = $category?.data?.category?.mangas.nodes.filter((e) =>
+					e.title.toLowerCase().includes(mangaSearch.toLowerCase())
 				);
+				if (chapterNameSearch && includeMangas[0]) {
+					mangaId = includeMangas[0].id;
+					includeChapters = $manga?.data?.manga?.chapters.nodes.filter((e) =>
+						e.name.toLowerCase().includes(chapterNameSearch.toLowerCase())
+					);
+				}
 			}
-		}
 
-		if (includeChapters && includeMangas) {
-			const Manga = includeMangas[0];
-			items = includeChapters.map((e) => {
-				return {
-					img: Manga.thumbnailUrl ?? '',
-					url: `/manga/${Manga.id}/chapter/${e.id}`,
-					firstLine: Manga.title + '/',
-					secondLineBoldText: e.name
-				};
-			});
-			return;
-		}
-		console.log(includeMangas, includeCategory);
-		if (includeMangas && includeCategory) {
-			const cat = includeCategory[0];
-			items = includeMangas.map((Manga) => {
-				return {
-					img: Manga.thumbnailUrl ?? '',
-					url: `/manga/${Manga.id}`,
-					firstLine: cat.name + '/',
-					secondLineBoldText: Manga.title + '/'
-				};
-			});
-			return;
-		}
-		if (includeCategory) {
-			items = includeCategory.map((cat) => {
-				return {
-					icon: 'mdi:theme',
-					url: `/?tab=${cat.id}`,
-					firstLineBoldText: cat.name
-				};
-			});
-			return;
+			if (includeChapters && includeMangas) {
+				const Manga = includeMangas[0];
+				items = includeChapters.map((e) => {
+					return {
+						img: Manga.thumbnailUrl ?? '',
+						url: `/manga/${Manga.id}/chapter/${e.id}`,
+						firstLine: Manga.title + '/',
+						secondLineBoldText: e.name
+					};
+				});
+				return;
+			}
+			console.log(includeMangas, includeCategory);
+			if (includeMangas && includeCategory) {
+				const cat = includeCategory[0];
+				items = includeMangas.map((Manga) => {
+					return {
+						img: Manga.thumbnailUrl ?? '',
+						url: `/manga/${Manga.id}`,
+						firstLine: cat.name + '/',
+						secondLineBoldText: Manga.title + '/'
+					};
+				});
+				return;
+			}
+			if (includeCategory) {
+				items = includeCategory.map((cat) => {
+					return {
+						icon: 'mdi:theme',
+						url: `/?tab=${cat.id}`,
+						firstLineBoldText: cat.name
+					};
+				});
+				return;
+			}
 		}
 	}
 
 	function doSource() {
-		if (!sources) sources = getSources({});
-		const parsed = value.slice(1).split('/');
-		const sourceSearch: string | undefined = parsed[0];
-		const mangaSearch: string | undefined = parsed[1];
-		const includeSource = $sources.data?.sources?.nodes.filter((e) =>
-			e.displayName.toLowerCase().includes(sourceSearch.toLowerCase())
-		);
-		if (includeSource) {
-			items = includeSource.map((e) => {
-				return {
-					img: e.iconUrl,
-					url: mangaSearch
-						? `/browse/source/${e.id}/filter?q=${mangaSearch}`
-						: `/browse/source/${e.id}/popular`,
-					firstLineBoldText: mangaSearch ? mangaSearch : e.displayName,
-					firstLine: mangaSearch ? e.displayName + ' /' : undefined,
-					secondLine:
-						ISOLanguages.find((ele) => ele.code.toLowerCase() === e.lang.toLowerCase())
-							?.nativeName ?? e.lang
-				};
-			});
+		if (value.startsWith('@')) {
+			if (!sources) sources = getSources({});
+			const parsed = value.slice(1).split('/');
+			const sourceSearch: string | undefined = parsed[0];
+			const mangaSearch: string | undefined = parsed[1];
+			const includeSource = $sources.data?.sources?.nodes.filter((e) =>
+				e.displayName.toLowerCase().includes(sourceSearch.toLowerCase())
+			);
+			if (includeSource) {
+				items = includeSource.map((e) => {
+					return {
+						img: e.iconUrl,
+						url: mangaSearch
+							? `/browse/source/${e.id}/filter?q=${mangaSearch}`
+							: `/browse/source/${e.id}/popular`,
+						firstLineBoldText: mangaSearch ? mangaSearch : e.displayName,
+						firstLine: mangaSearch ? e.displayName + ' /' : undefined,
+						secondLine:
+							ISOLanguages.find((ele) => ele.code.toLowerCase() === e.lang.toLowerCase())
+								?.nativeName ?? e.lang
+					};
+				});
+			}
 		}
 	}
 
@@ -197,22 +194,66 @@
 		}
 	}
 
+	function handelArrows(event: KeyboardEvent) {
+		if (event.key === 'ArrowDown') {
+			const tabElements = [...document.querySelectorAll('.tabindex')] as (
+				| HTMLInputElement
+				| HTMLAnchorElement
+			)[];
+			const index = tabElements.findIndex((e) => e === document.activeElement);
+			let nextIndex: number;
+			if (index === tabElements.length - 1) nextIndex = 0;
+			else nextIndex = index + 1;
+			const next = tabElements[nextIndex];
+			next.focus();
+			return;
+		}
+		if (event.key === 'ArrowUp') {
+			const tabElements = [...document.querySelectorAll('.tabindex')] as (
+				| HTMLInputElement
+				| HTMLAnchorElement
+			)[];
+			const index = tabElements.findIndex((e) => e === document.activeElement);
+			let previousIndex: number;
+			if (index === 0) previousIndex = tabElements.length - 1;
+			else previousIndex = index - 1;
+			const previous = tabElements[previousIndex];
+			previous.focus();
+			return;
+		}
+	}
+
 	$: if (catId !== undefined) category = getCategory({ variables: { id: catId } });
 	$: if (mangaId) manga = getManga({ variables: { id: mangaId } });
-	$: console.log(items);
+
+	$: if ($modalStore[0]) {
+		window.addEventListener('keydown', handelArrows);
+	} else {
+		window.removeEventListener('keydown', handelArrows);
+	}
 </script>
 
 {#if $modalStore[0]}
 	<div class="w-modal">
-		<input bind:value on:keydown={handelKey} class="input rounded-2xl" type="text" />
+		<input
+			on:focus={() => (inputElement = true)}
+			on:blur={() => (inputElement = false)}
+			bind:value
+			on:keydown={handelKey}
+			class="tabindex input rounded-2xl"
+			type="text"
+		/>
 		<div class="card mt-1 rounded-2xl max-h-96 overflow-y-auto">
-			{#each items as item}
+			{#each items as item, index}
 				<a
+					tabindex={index !== 0 ? 0 : -1}
 					on:click={() => {
 						if (item.url) parent.onClose();
 					}}
 					href={item.url}
-					class="flex flex-nowrap hover:variant-glass p-2 first:rounded-t-2xl last:rounded-b-2xl"
+					class="{index !== 0 && 'tabindex'} flex flex-nowrap hover:variant-glass p-2 outline-0
+					first:rounded-t-2xl last:rounded-b-2xl
+					focus:variant-glass-primary {inputElement && 'first:variant-glass-primary'}"
 				>
 					<div class="pr-4">
 						{#if item.img}
