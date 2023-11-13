@@ -106,7 +106,7 @@
 	}
 
 	function doCategory() {
-		const parsed = value.slice(1).split(/[\/:]/);
+		const parsed = value.slice(1).split(/[/:]/);
 		const categorySearch: string | undefined = parsed[0];
 		const mangaSearch: string | undefined = parsed[1];
 		const chapterNameSearch: string | undefined = parsed[2];
