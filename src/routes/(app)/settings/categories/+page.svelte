@@ -4,14 +4,13 @@
 	import IconButton from '$lib/components/IconButton.svelte';
 	import IconWrapper from '$lib/components/IconWrapper.svelte';
 	import { deleteCategory, type CategoriesQuery, updateCategoryOrder } from '$lib/generated';
-	import { categories as ogcat } from '$lib/simpleStores';
 	import { categories as Getcategories } from '$lib/generated';
 	import { getModalStore } from '@skeletonlabs/skeleton';
 	import { getToastStore } from '$lib/components/Toast/stores';
 	const modalStore = getModalStore();
 	const toastStore = getToastStore();
 
-	let categories = ogcat;
+	let categories = Getcategories({});
 
 	type catT = CategoriesQuery['categories']['nodes'][0];
 
@@ -90,7 +89,7 @@
 
 	function resetCategorys() {
 		categories = Getcategories({
-			fetchPolicy: 'cache-and-network',
+			fetchPolicy: 'network-only',
 			nextFetchPolicy: 'cache-first'
 		});
 	}

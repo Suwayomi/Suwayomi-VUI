@@ -3,14 +3,14 @@
 	import TriStateSlide from '$lib/components/TriStateSlide.svelte';
 	import {
 		CategoryDoc,
-		type CategoryQuery,
+		GetMangaDoc,
+		categories as getGetCategories,
 		updateMangaCategories,
 		type CategoriesQuery,
-		type UpdateMangaCategoriesMutation,
+		type CategoryQuery,
 		type GetMangaQuery,
-		GetMangaDoc
+		type UpdateMangaCategoriesMutation
 	} from '$lib/generated';
-	import { categories as getcategories } from '$lib/simpleStores';
 	import { Errorhelp } from '$lib/util';
 	import type { ApolloCache, FetchResult } from '@apollo/client';
 	import { getModalStore } from '@skeletonlabs/skeleton';
@@ -20,7 +20,9 @@
 	const modalStore = getModalStore();
 	const toastStore = getToastStore();
 
-	$: categories = $getcategories.data.categories?.nodes
+	const getCategories = getGetCategories({});
+
+	$: categories = $getCategories.data.categories?.nodes
 		?.filter((e) => e.id !== 0)
 		.sort((a, b) => (a.order > b.order ? 1 : -1));
 

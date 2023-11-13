@@ -2106,24 +2106,6 @@ type PreferenceFragment_SwitchPreference_Fragment = { __typename?: 'SwitchPrefer
 
 export type PreferenceFragmentFragment = PreferenceFragment_CheckBoxPreference_Fragment | PreferenceFragment_EditTextPreference_Fragment | PreferenceFragment_ListPreference_Fragment | PreferenceFragment_MultiSelectListPreference_Fragment | PreferenceFragment_SwitchPreference_Fragment;
 
-type FilterFragment_CheckBoxFilter_Fragment = { __typename: 'CheckBoxFilter', name: string, CheckBoxDefault: boolean };
-
-type FilterFragment_GroupFilter_Fragment = { __typename?: 'GroupFilter' };
-
-type FilterFragment_HeaderFilter_Fragment = { __typename: 'HeaderFilter', name: string };
-
-type FilterFragment_SelectFilter_Fragment = { __typename: 'SelectFilter', values: Array<string>, name: string, SelectDefault: number };
-
-type FilterFragment_SeparatorFilter_Fragment = { __typename: 'SeparatorFilter', name: string };
-
-type FilterFragment_SortFilter_Fragment = { __typename: 'SortFilter', values: Array<string>, name: string, SortDefault?: { __typename?: 'SortSelection', ascending: boolean, index: number } | null };
-
-type FilterFragment_TextFilter_Fragment = { __typename: 'TextFilter', name: string, TextDefault: string };
-
-type FilterFragment_TriStateFilter_Fragment = { __typename: 'TriStateFilter', name: string, TriStateDefault: TriState };
-
-export type FilterFragmentFragment = FilterFragment_CheckBoxFilter_Fragment | FilterFragment_GroupFilter_Fragment | FilterFragment_HeaderFilter_Fragment | FilterFragment_SelectFilter_Fragment | FilterFragment_SeparatorFilter_Fragment | FilterFragment_SortFilter_Fragment | FilterFragment_TextFilter_Fragment | FilterFragment_TriStateFilter_Fragment;
-
 export type ExtensionTypeFragmentFragment = { __typename?: 'ExtensionType', name: string, versionName: string, pkgName: string, lang: string, iconUrl: string, isNsfw: boolean, isInstalled: boolean, isObsolete: boolean, hasUpdate: boolean };
 
 export type FetchExtensionsMutationVariables = Exact<{ [key: string]: never; }>;
@@ -2616,48 +2598,6 @@ export const PreferenceFragmentFragmentDoc = gql`
     key
     entryValues
     entries
-  }
-}
-    `;
-export const FilterFragmentFragmentDoc = gql`
-    fragment FilterFragment on Filter {
-  ... on TriStateFilter {
-    __typename
-    name
-    TriStateDefault: default
-  }
-  ... on CheckBoxFilter {
-    __typename
-    CheckBoxDefault: default
-    name
-  }
-  ... on TextFilter {
-    __typename
-    name
-    TextDefault: default
-  }
-  ... on SortFilter {
-    __typename
-    values
-    name
-    SortDefault: default {
-      ascending
-      index
-    }
-  }
-  ... on SeparatorFilter {
-    __typename
-    name
-  }
-  ... on SelectFilter {
-    __typename
-    values
-    name
-    SelectDefault: default
-  }
-  ... on HeaderFilter {
-    __typename
-    name
   }
 }
     `;
@@ -3234,22 +3174,138 @@ export const SourceDoc = gql`
     supportsLatest
     isConfigurable
     preferences {
-      ...PreferenceFragment
+      ... on CheckBoxPreference {
+        CheckBoxCheckBoxCurrentValue: currentValue
+        summary
+        CheckBoxDefault: default
+        key
+        CheckBoxTitle: title
+      }
+      ... on EditTextPreference {
+        EditTextCurrentValue: currentValue
+        EditTextDefault: default
+        EditTextTitle: title
+        text
+        summary
+        key
+        dialogTitle
+        dialogMessage
+      }
+      ... on SwitchPreference {
+        SwitchCurrentValue: currentValue
+        summary
+        key
+        SwitchDefault: default
+        SwitchTitle: title
+      }
+      ... on MultiSelectListPreference {
+        dialogMessage
+        dialogTitle
+        MultiSelectListTitle: title
+        summary
+        key
+        entryValues
+        entries
+        MultiSelectListDefault: default
+        MultiSelectListCurrentValue: currentValue
+      }
+      ... on ListPreference {
+        ListCurrentValue: currentValue
+        ListDefault: default
+        ListTitle: title
+        summary
+        key
+        entryValues
+        entries
+      }
     }
     filters {
-      ...FilterFragment
+      ... on TriStateFilter {
+        __typename
+        name
+        TriStateDefault: default
+      }
+      ... on CheckBoxFilter {
+        __typename
+        CheckBoxDefault: default
+        name
+      }
+      ... on TextFilter {
+        __typename
+        name
+        TextDefault: default
+      }
+      ... on SortFilter {
+        __typename
+        values
+        name
+        SortDefault: default {
+          ascending
+          index
+        }
+      }
+      ... on SeparatorFilter {
+        __typename
+        name
+      }
+      ... on SelectFilter {
+        __typename
+        values
+        name
+        SelectDefault: default
+      }
+      ... on HeaderFilter {
+        __typename
+        name
+      }
       ... on GroupFilter {
         __typename
         name
         filters {
-          ...FilterFragment
+          ... on TriStateFilter {
+            __typename
+            name
+            TriStateDefault: default
+          }
+          ... on CheckBoxFilter {
+            __typename
+            CheckBoxDefault: default
+            name
+          }
+          ... on TextFilter {
+            __typename
+            name
+            TextDefault: default
+          }
+          ... on SortFilter {
+            __typename
+            values
+            name
+            SortDefault: default {
+              ascending
+              index
+            }
+          }
+          ... on SeparatorFilter {
+            __typename
+            name
+          }
+          ... on SelectFilter {
+            __typename
+            values
+            name
+            SelectDefault: default
+          }
+          ... on HeaderFilter {
+            __typename
+            name
+          }
         }
       }
     }
   }
 }
-    ${PreferenceFragmentFragmentDoc}
-${FilterFragmentFragmentDoc}`;
+    `;
 export const ValidateBackupDoc = gql`
     query validateBackup($backup: Upload!) {
   validateBackup(input: {backup: $backup}) {
