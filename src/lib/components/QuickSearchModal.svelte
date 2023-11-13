@@ -94,9 +94,6 @@
 		}
 	>;
 
-	$: if (catId) category = getCategory({ variables: { id: catId } });
-	$: if (mangaId) manga = getManga({ variables: { id: mangaId } });
-
 	$: $category, $categories, $sources, value, doSearch();
 
 	function doSearch() {
@@ -107,8 +104,9 @@
 			doCategory();
 		}
 	}
+
 	function doCategory() {
-		const parsed = value.slice(1).split(/\/:/);
+		const parsed = value.slice(1).split(/[\/:]/);
 		const categorySearch: string | undefined = parsed[0];
 		const mangaSearch: string | undefined = parsed[1];
 		const chapterNameSearch: string | undefined = parsed[2];
@@ -119,12 +117,12 @@
 		let includeChapters: GetMangaQuery['manga']['chapters']['nodes'] | undefined = undefined;
 		if (mangaSearch && includeCategory[0]) {
 			catId = includeCategory[0].id;
-			includeMangas = $category.data?.category?.mangas.nodes.filter((e) =>
+			includeMangas = $category?.data?.category?.mangas.nodes.filter((e) =>
 				e.title.toLowerCase().includes(mangaSearch.toLowerCase())
 			);
 			if (chapterNameSearch && includeMangas[0]) {
 				mangaId = includeMangas[0].id;
-				includeChapters = $manga.data?.manga?.chapters.nodes.filter((e) =>
+				includeChapters = $manga?.data?.manga?.chapters.nodes.filter((e) =>
 					e.name.toLowerCase().includes(chapterNameSearch.toLowerCase())
 				);
 			}
@@ -142,6 +140,7 @@
 			});
 			return;
 		}
+		console.log(includeMangas, includeCategory);
 		if (includeMangas && includeCategory) {
 			const cat = includeCategory[0];
 			items = includeMangas.map((Manga) => {
@@ -197,6 +196,10 @@
 			parent.onClose();
 		}
 	}
+
+	$: if (catId !== undefined) category = getCategory({ variables: { id: catId } });
+	$: if (mangaId) manga = getManga({ variables: { id: mangaId } });
+	$: console.log(items);
 </script>
 
 {#if $modalStore[0]}
@@ -230,13 +233,13 @@
 					</div>
 					<div class="flex flex-col justify-center">
 						{#if item.firstLine || item.firstLineBoldText}
-							<div>
+							<div class="line-clamp-1">
 								<span class="text-sm">{item.firstLine ?? ''}</span>
 								<span class="font-bold">{item.firstLineBoldText ?? ''}</span>
 							</div>
 						{/if}
 						{#if item.secondLine || item.secondLineBoldText}
-							<div>
+							<div class="line-clamp-1">
 								<span class="text-md opacity-70">{item.secondLine ?? ''}</span>
 								<span class="font-bold">{item.secondLineBoldText ?? ''}</span>
 							</div>
