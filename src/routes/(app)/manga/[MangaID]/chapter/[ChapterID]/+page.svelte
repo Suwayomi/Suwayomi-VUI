@@ -66,7 +66,7 @@
 		chapterLoading = false;
 	}
 
-	function LoadNextchapter(currentID: number) {
+	function LoadNextChapter(currentID: number) {
 		const next = getChapterAfterID(currentID);
 		if (next) currentChapterID = next.id;
 	}
@@ -452,7 +452,14 @@
 			<IntersectionObserver
 				on:intersect={(e) => {
 					if (e.detail) {
-						LoadNextchapter(currentChapterID);
+						updateChapter({
+							variables: {
+								id: chapter.chapterID,
+								lastPageRead: chapter.pages.length,
+								isRead: true
+							}
+						});
+						LoadNextChapter(currentChapterID);
 					}
 				}}
 				root={document.querySelector('#page') ?? undefined}
