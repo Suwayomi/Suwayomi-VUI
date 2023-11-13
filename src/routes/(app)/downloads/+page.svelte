@@ -109,6 +109,6 @@
 			{/if}
 		</IntersectionObserver>
 	{:else}
-		there are no downlaods happening
+		there are no downloads happening
 	{/each}
 {/if}
