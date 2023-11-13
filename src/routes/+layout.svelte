@@ -35,11 +35,13 @@
 	function openQuickSearch(e: KeyboardEvent) {
 		if (e.code === 'KeyP' && e.ctrlKey) {
 			e.preventDefault();
-			modalStore.trigger({
-				type: 'component',
-				component: { ref: QuickSearchModal },
-				position: 'items-start'
-			});
+			if (!$modalStore.find((e) => e.meta?.id === 'QuickSearchModal'))
+				modalStore.trigger({
+					type: 'component',
+					component: { ref: QuickSearchModal },
+					position: 'items-start',
+					meta: { id: 'QuickSearchModal' }
+				});
 		}
 	}
 
