@@ -21,6 +21,7 @@
 	import type { SvelteComponent } from 'svelte';
 	import { Sourcelangfilt } from './(app)/browse/sources/SourcesStores';
 	import { queryParam, ssp } from 'sveltekit-search-params';
+	import { page } from '$app/stores';
 	export let parent: SvelteComponent;
 
 	const modalStore = getModalStore();
@@ -200,7 +201,14 @@
 			if (items[0].url) {
 				goto(items[0].url);
 			} else if (!['#', '@'].includes(value[0])) {
-				query.set(value);
+				if (/(\/browse\/source\/\d*\/)popular|latest/.test($page.url.pathname)) {
+					goto(
+						$page.url.pathname.replace(
+							/(\/browse\/source\/\d*\/)popular|latest/,
+							`$1filter?q=${value}`
+						)
+					);
+				} else query.set(value);
 			}
 			parent.onClose();
 		}
