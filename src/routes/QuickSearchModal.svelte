@@ -1,7 +1,7 @@
 <script lang="ts">
-	import Image from './Image.svelte';
+	import Image from '../lib/components/Image.svelte';
 	import { getModalStore } from '@skeletonlabs/skeleton';
-	import IconWrapper from './IconWrapper.svelte';
+	import IconWrapper from '../lib/components/IconWrapper.svelte';
 	import {
 		sources as getSources,
 		type Exact,
@@ -16,7 +16,7 @@
 	} from '$lib/generated';
 	import type { Readable } from 'svelte/motion';
 	import type { ApolloQueryResult, ObservableQuery } from '@apollo/client';
-	import { ISOLanguages } from '../../routes/(app)/browse/languages';
+	import { ISOLanguages } from './(app)/browse/languages';
 	import { goto } from '$app/navigation';
 	import type { SvelteComponent } from 'svelte';
 	export let parent: SvelteComponent;
@@ -243,7 +243,7 @@
 			class="tabindex input rounded-2xl"
 			type="text"
 		/>
-		<div class="card mt-1 rounded-2xl max-h-96 overflow-y-auto">
+		<div tabindex="-1" class="card mt-1 rounded-2xl max-h-96 overflow-y-auto">
 			{#each items as item, index}
 				<a
 					tabindex={index !== 0 ? 0 : -1}
