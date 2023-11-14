@@ -68,7 +68,8 @@ const mangaMetaDefaults = {
 	Offset: false,
 	SmoothScroll: true,
 	ReaderMode: Mode.Vertical,
-	NavLayout: Layout.L
+	NavLayout: Layout.L,
+	preLoadNextChapter: true
 };
 type mangaMeta = typeof mangaMetaDefaults;
 

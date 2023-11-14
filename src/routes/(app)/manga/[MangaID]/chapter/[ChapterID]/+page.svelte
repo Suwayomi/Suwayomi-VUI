@@ -38,7 +38,7 @@
 
 	let chapterLoading = true;
 	let path: Paths;
-	let visablepages: {
+	let visiblePages: {
 		selector: string;
 		chapterIndex: number;
 		pageIndex: number;
@@ -48,7 +48,21 @@
 		pages: FetchChapterPagesMutation['fetchChapterPages']['pages'];
 	}[] = [];
 
-	$: pages = fetchChapterPages({ variables: { chapterId: currentChapterID } });
+	let pages: Promise<FetchResult<FetchChapterPagesMutation>>;
+	$: currentChapterID, loadNew();
+	function loadNew() {
+		if (preload) pages = preload;
+		else pages = fetchChapterPages({ variables: { chapterId: currentChapterID } });
+	}
+
+	let preload: Promise<FetchResult<FetchChapterPagesMutation>> | undefined = undefined;
+	let preloadingid: number | undefined = undefined;
+	$: nextid = getChapterAfterID(currentChapterID, $manga)?.id;
+	$: if (nextid !== undefined && $mangaMeta.preLoadNextChapter && nextid !== preloadingid) {
+		preloadingid = nextid;
+		preload = fetchChapterPages({ variables: { chapterId: nextid } });
+	}
+	$: console.log(nextid);
 
 	$: updatepages(pages);
 	async function updatepages(pages: Promise<FetchResult<FetchChapterPagesMutation>>) {
@@ -78,7 +92,8 @@
 	}
 
 	function getChapterAfterID(
-		currentID: number
+		currentID: number,
+		_: unknown = undefined
 	): GetMangaQuery['manga']['chapters']['nodes'][0] | undefined {
 		const tmp = $manga.data.manga?.chapters.nodes.findIndex((e) => e.id === currentID);
 		return $manga.data.manga?.chapters.nodes[tmp + 1] ?? undefined;
@@ -110,7 +125,7 @@
 		}
 	}
 
-	async function handelKeypres(keyEvent: KeyboardEvent) {
+	async function handelKeypress(keyEvent: KeyboardEvent) {
 		if (!pageElement) {
 			pageElement = document.querySelector('#page') as HTMLDivElement;
 		}
@@ -276,8 +291,8 @@
 		id: number
 	) {
 		if (e.detail) {
-			visablepages = [
-				...visablepages,
+			visiblePages = [
+				...visiblePages,
 				{
 					selector,
 					chapterIndex,
@@ -295,7 +310,7 @@
 				lastupdate = pageIndex;
 			}
 		} else {
-			visablepages = visablepages.filter((e) => e.selector !== selector);
+			visiblePages = visiblePages.filter((e) => e.selector !== selector);
 		}
 	}
 
@@ -303,14 +318,16 @@
 	$: $chapterTitle =
 		$manga.data.manga?.chapters.nodes.find((e) => e.id === currentChapterID)?.name ?? '';
 	$: currentChapterID, got();
+
 	function got() {
 		goto($page.url.pathname.replace(/[^/]*$/, currentChapterID.toString()), {
 			replaceState: true,
 			noScroll: true
 		});
 	}
+
 	$: lowestIntersetc = document.querySelector(
-		visablepages.reduce(
+		visiblePages.reduce(
 			(a, c) => {
 				if (c.chapterIndex >= a.chapterIndex && c.pageIndex > a.pageIndex) {
 					return c;
@@ -354,12 +371,14 @@
 	);
 
 	onMount(() => {
-		window.addEventListener('keydown', handelKeypres, true);
+		window.addEventListener('keydown', handelKeypress, true);
 		return () => {
-			window.removeEventListener('keydown', handelKeypres, true);
+			window.removeEventListener('keydown', handelKeypress, true);
 		};
 	});
+
 	let buttonElement: HTMLButtonElement;
+
 	$: if (!$drawerStore.open) {
 		buttonElement?.focus();
 	}
