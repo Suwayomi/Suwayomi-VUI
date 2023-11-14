@@ -15,7 +15,7 @@
 	} from '@skeletonlabs/skeleton';
 	import ChapterDrawer from './(app)/manga/[MangaID]/chapter/[ChapterID]/chapterDrawer.svelte';
 	import { onMount } from 'svelte';
-	import QuickSearchModal from '$lib/components/QuickSearchModal.svelte';
+	import QuickSearchModal from './QuickSearchModal.svelte';
 
 	storePopup.set({ computePosition, autoUpdate, flip, shift, offset, arrow });
 	initializeStores();
