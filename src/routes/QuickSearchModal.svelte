@@ -19,6 +19,7 @@
 	import { ISOLanguages } from './(app)/browse/languages';
 	import { goto } from '$app/navigation';
 	import type { SvelteComponent } from 'svelte';
+	import { Sourcelangfilt } from './(app)/browse/sources/SourcesStores';
 	export let parent: SvelteComponent;
 
 	const modalStore = getModalStore();
@@ -166,9 +167,9 @@
 			const parsed = value.slice(1).split('/');
 			const sourceSearch: string | undefined = parsed[0];
 			const mangaSearch: string | undefined = parsed[1];
-			const includeSource = $sources.data?.sources?.nodes.filter((e) =>
-				e.displayName.toLowerCase().includes(sourceSearch.toLowerCase())
-			);
+			const includeSource = $sources.data?.sources?.nodes
+				.filter((e) => e.displayName.toLowerCase().includes(sourceSearch.toLowerCase()))
+				.filter((e) => $Sourcelangfilt.has(e.lang));
 			if (includeSource) {
 				items = includeSource.map((e) => {
 					return {
