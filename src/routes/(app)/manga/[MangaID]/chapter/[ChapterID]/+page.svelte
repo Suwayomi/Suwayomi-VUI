@@ -62,8 +62,6 @@
 		preloadingid = nextid;
 		preload = fetchChapterPages({ variables: { chapterId: nextid } });
 	}
-	$: console.log(nextid);
-
 	$: updatepages(pages);
 	async function updatepages(pages: Promise<FetchResult<FetchChapterPagesMutation>>) {
 		chapterLoading = true;

@@ -72,8 +72,6 @@
 		});
 	}
 
-	$: console.log($Meta);
-
 	$: filteredMangas = $mangas.data.category?.mangas.nodes.filter((ele) => {
 		if (!ele.inLibrary) return false;
 		if ($Meta.ignoreFiltersWhenSearching) {
