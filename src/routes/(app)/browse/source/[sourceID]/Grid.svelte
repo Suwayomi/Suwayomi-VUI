@@ -29,13 +29,19 @@
 
 	let page = 1;
 	let isLoading = true;
-	let all: undefined | FetchSourceMangaMutation['fetchSourceManga'];
+	let all: FetchSourceMangaMutation['fetchSourceManga'] = {
+		hasNextPage: true,
+		mangas: []
+	};
 	let mainerror: Error | undefined;
 
 	$: query, filters, clearAll();
 
 	function clearAll() {
-		all = undefined;
+		all = {
+			hasNextPage: true,
+			mangas: []
+		};
 		page = 1;
 	}
 
@@ -55,24 +61,16 @@
 		isLoading = true;
 		try {
 			const result = await Asysource;
-			if (result.errors) {
-				result.errors.forEach((e) => {
-					errortoast(toastStore, 'failed to load page', e.message);
-				});
-				isLoading = false;
-				return;
-			}
 			if (!result.data) throw new Error('Missing data');
-			if (!all) {
-				all = result.data.fetchSourceManga;
-				isLoading = false;
-				return;
-			}
 			all.hasNextPage = result.data.fetchSourceManga.hasNextPage;
 			all.mangas.push(...result.data.fetchSourceManga.mangas);
 			all = all;
 		} catch (error) {
 			if (error instanceof Error) {
+				console.error(error);
+				if (error.message.includes('Already on the Last Page!')) {
+					all.hasNextPage = false;
+				}
 				mainerror = error;
 				errortoast(toastStore, 'failed to load page', error.message);
 			}

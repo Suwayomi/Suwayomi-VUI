@@ -33,7 +33,7 @@
 	const modalStore = getModalStore();
 
 	function openQuickSearch(e: KeyboardEvent) {
-		if (e.code === 'KeyP' && e.ctrlKey) {
+		if ((e.code === 'Slash' || e.code === 'KeyP') && e.ctrlKey) {
 			e.preventDefault();
 			if (!$modalStore.find((e) => e.meta?.id === 'QuickSearchModal'))
 				modalStore.trigger({
