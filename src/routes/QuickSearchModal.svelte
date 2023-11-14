@@ -143,7 +143,6 @@
 				});
 				return;
 			}
-			console.log(includeMangas, includeCategory);
 			if (includeMangas && includeCategory) {
 				const cat = includeCategory[0];
 				items = includeMangas.map((Manga) => {

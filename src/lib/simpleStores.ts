@@ -68,7 +68,8 @@ const mangaMetaDefaults = {
 	Offset: false,
 	SmoothScroll: true,
 	ReaderMode: Mode.Vertical,
-	NavLayout: Layout.L
+	NavLayout: Layout.L,
+	preLoadNextChapter: true
 };
 type mangaMeta = typeof mangaMetaDefaults;
 
@@ -136,7 +137,6 @@ function GlobalMeta() {
 	});
 
 	async function set(val: globalMeta) {
-		console.log(val);
 		(Object.entries(val) as [keyof globalMeta, unknown][]).forEach(async (entry) => {
 			const value = JSON.stringify(entry[1]);
 			const key = `VUI3_${entry[0]}`;

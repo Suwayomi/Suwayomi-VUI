@@ -53,6 +53,12 @@
 						{/each}
 					</select>
 				</label>
+				<Slide
+					class="outline-0 p-1 hover:variant-glass-surface"
+					bind:checked={$Meta.mangaMetaDefaults.preLoadNextChapter}
+				>
+					preload Next Chapter
+				</Slide>
 			</div>
 		</div>
 		<div class="p-4" />
