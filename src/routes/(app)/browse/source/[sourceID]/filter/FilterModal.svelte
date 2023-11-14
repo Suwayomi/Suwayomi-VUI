@@ -12,6 +12,7 @@
 	import type { FilterChangeInput } from '$lib/generated.js';
 	import { filters as filtersStore } from './stores';
 	import type { SvelteComponent } from 'svelte';
+	import { queryParam, ssp } from 'sveltekit-search-params';
 	export let parent: SvelteComponent;
 
 	const modalStore = getModalStore();
@@ -19,7 +20,9 @@
 	export let submit: (filterss: FilterChangeInput[], queryy: string) => void;
 	const sause = data.sause;
 
-	let query = '';
+	const queryy = queryParam('q', ssp.string(), { pushHistory: false });
+
+	let query = $queryy ?? '';
 	let filters: FilterChangeInput[] = $filtersStore;
 
 	function Search() {

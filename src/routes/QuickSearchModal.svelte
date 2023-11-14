@@ -20,9 +20,12 @@
 	import { goto } from '$app/navigation';
 	import type { SvelteComponent } from 'svelte';
 	import { Sourcelangfilt } from './(app)/browse/sources/SourcesStores';
+	import { queryParam, ssp } from 'sveltekit-search-params';
 	export let parent: SvelteComponent;
 
 	const modalStore = getModalStore();
+	const query = queryParam('q', ssp.string(), { pushHistory: false });
+
 	let value = '';
 	let items: {
 		img?: string;
@@ -56,6 +59,10 @@
 		{
 			str: '#C/M:CN',
 			firstLine: "Go to Chapter 'CN' from Manga 'M' in Category 'C'"
+		},
+		{
+			str: 'X',
+			firstLine: 'will search, depends on context of the page'
 		}
 	];
 
@@ -189,8 +196,12 @@
 	}
 
 	function handelKey(event: KeyboardEvent) {
-		if (event.key === 'Enter' && items[0].url) {
-			goto(items[0].url);
+		if (event.key === 'Enter') {
+			if (items[0].url) {
+				goto(items[0].url);
+			} else if (!['#', '@'].includes(value[0])) {
+				query.set(value);
+			}
 			parent.onClose();
 		}
 	}
