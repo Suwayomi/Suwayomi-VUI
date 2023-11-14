@@ -124,6 +124,7 @@
 	}
 
 	async function handelKeypress(keyEvent: KeyboardEvent) {
+		console.log(keyEvent);
 		if (!pageElement) {
 			pageElement = document.querySelector('#page') as HTMLDivElement;
 		}
@@ -164,6 +165,14 @@
 			keyEvent.stopPropagation();
 			scroll80();
 			return;
+		}
+		if (keyEvent.code === 'PageDown') {
+			keyEvent.preventDefault();
+			pgUD(true);
+		}
+		if (keyEvent.code === 'PageUp') {
+			keyEvent.preventDefault();
+			pgUD(false);
 		}
 	}
 
@@ -274,6 +283,13 @@
 		}
 		pageElement?.scrollTo({
 			top: pageElement.scrollTop + lowestIntersetc.getBoundingClientRect().y + 1,
+			behavior: $mangaMeta.SmoothScroll ? 'smooth' : 'instant'
+		});
+	}
+
+	function pgUD(ud = false) {
+		pageElement?.scrollTo({
+			top: pageElement.scrollTop + (ud ? pageElement.clientHeight : -pageElement.clientHeight),
 			behavior: $mangaMeta.SmoothScroll ? 'smooth' : 'instant'
 		});
 	}
