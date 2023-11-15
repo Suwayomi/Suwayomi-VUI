@@ -2094,19 +2094,9 @@ export type MangaTypeFragmentFragment = { __typename?: 'MangaType', artist?: str
 
 export type SourceTypeFragmentFragment = { __typename?: 'SourceType', id: any, displayName: string, iconUrl: string, lang: string };
 
-type PreferenceFragment_CheckBoxPreference_Fragment = { __typename?: 'CheckBoxPreference', summary?: string | null, key: string, CheckBoxCheckBoxCurrentValue?: boolean | null, CheckBoxDefault: boolean, CheckBoxTitle: string };
-
-type PreferenceFragment_EditTextPreference_Fragment = { __typename?: 'EditTextPreference', text?: string | null, summary?: string | null, key: string, dialogTitle?: string | null, dialogMessage?: string | null, EditTextCurrentValue?: string | null, EditTextDefault?: string | null, EditTextTitle?: string | null };
-
-type PreferenceFragment_ListPreference_Fragment = { __typename?: 'ListPreference', summary?: string | null, key: string, entryValues: Array<string>, entries: Array<string>, ListCurrentValue?: string | null, ListDefault?: string | null, ListTitle?: string | null };
-
-type PreferenceFragment_MultiSelectListPreference_Fragment = { __typename?: 'MultiSelectListPreference', dialogMessage?: string | null, dialogTitle?: string | null, summary?: string | null, key: string, entryValues: Array<string>, entries: Array<string>, MultiSelectListTitle?: string | null, MultiSelectListDefault?: Array<string> | null, MultiSelectListCurrentValue?: Array<string> | null };
-
-type PreferenceFragment_SwitchPreference_Fragment = { __typename?: 'SwitchPreference', summary?: string | null, key: string, SwitchCurrentValue?: boolean | null, SwitchDefault: boolean, SwitchTitle: string };
-
-export type PreferenceFragmentFragment = PreferenceFragment_CheckBoxPreference_Fragment | PreferenceFragment_EditTextPreference_Fragment | PreferenceFragment_ListPreference_Fragment | PreferenceFragment_MultiSelectListPreference_Fragment | PreferenceFragment_SwitchPreference_Fragment;
-
 export type ExtensionTypeFragmentFragment = { __typename?: 'ExtensionType', name: string, versionName: string, pkgName: string, lang: string, iconUrl: string, isNsfw: boolean, isInstalled: boolean, isObsolete: boolean, hasUpdate: boolean };
+
+export type CategoryTypeFragmentFragment = { __typename?: 'CategoryType', id: number, default: boolean, order: number, name: string, mangas: { __typename?: 'MangaNodeList', totalCount: number } };
 
 export type FetchExtensionsMutationVariables = Exact<{ [key: string]: never; }>;
 
@@ -2226,7 +2216,7 @@ export type UpdateCategoryOrderMutationVariables = Exact<{
 }>;
 
 
-export type UpdateCategoryOrderMutation = { __typename?: 'Mutation', updateCategoryOrder: { __typename?: 'UpdateCategoryOrderPayload', categories: Array<{ __typename?: 'CategoryType', id: number, default: boolean, order: number, name: string }> } };
+export type UpdateCategoryOrderMutation = { __typename?: 'Mutation', updateCategoryOrder: { __typename?: 'UpdateCategoryOrderPayload', categories: Array<{ __typename?: 'CategoryType', id: number, default: boolean, order: number, name: string, mangas: { __typename?: 'MangaNodeList', totalCount: number } }> } };
 
 export type CreateCategoryMutationVariables = Exact<{
   name: Scalars['String']['input'];
@@ -2234,14 +2224,14 @@ export type CreateCategoryMutationVariables = Exact<{
 }>;
 
 
-export type CreateCategoryMutation = { __typename?: 'Mutation', createCategory: { __typename?: 'CreateCategoryPayload', category: { __typename?: 'CategoryType', id: number, name: string, default: boolean, order: number } } };
+export type CreateCategoryMutation = { __typename?: 'Mutation', createCategory: { __typename?: 'CreateCategoryPayload', category: { __typename?: 'CategoryType', id: number, default: boolean, order: number, name: string, mangas: { __typename?: 'MangaNodeList', totalCount: number } } } };
 
 export type DeleteCategoryMutationVariables = Exact<{
   categoryId: Scalars['Int']['input'];
 }>;
 
 
-export type DeleteCategoryMutation = { __typename?: 'Mutation', deleteCategory: { __typename?: 'DeleteCategoryPayload', clientMutationId?: string | null } };
+export type DeleteCategoryMutation = { __typename?: 'Mutation', deleteCategory: { __typename?: 'DeleteCategoryPayload', category?: { __typename?: 'CategoryType', id: number, default: boolean, order: number, name: string, mangas: { __typename?: 'MangaNodeList', totalCount: number } } | null } };
 
 export type UpdateCategoryMutationVariables = Exact<{
   id: Scalars['Int']['input'];
@@ -2250,7 +2240,7 @@ export type UpdateCategoryMutationVariables = Exact<{
 }>;
 
 
-export type UpdateCategoryMutation = { __typename?: 'Mutation', updateCategory: { __typename?: 'UpdateCategoryPayload', category: { __typename?: 'CategoryType', id: number, default: boolean, name: string, order: number } } };
+export type UpdateCategoryMutation = { __typename?: 'Mutation', updateCategory: { __typename?: 'UpdateCategoryPayload', category: { __typename?: 'CategoryType', id: number, default: boolean, order: number, name: string, mangas: { __typename?: 'MangaNodeList', totalCount: number } } } };
 
 export type UpdateMangasCategoriesMutationVariables = Exact<{
   addTo?: InputMaybe<Array<Scalars['Int']['input']> | Scalars['Int']['input']>;
@@ -2553,54 +2543,6 @@ export const SourceTypeFragmentFragmentDoc = gql`
   lang
 }
     `;
-export const PreferenceFragmentFragmentDoc = gql`
-    fragment PreferenceFragment on Preference {
-  ... on CheckBoxPreference {
-    CheckBoxCheckBoxCurrentValue: currentValue
-    summary
-    CheckBoxDefault: default
-    key
-    CheckBoxTitle: title
-  }
-  ... on EditTextPreference {
-    EditTextCurrentValue: currentValue
-    EditTextDefault: default
-    EditTextTitle: title
-    text
-    summary
-    key
-    dialogTitle
-    dialogMessage
-  }
-  ... on SwitchPreference {
-    SwitchCurrentValue: currentValue
-    summary
-    key
-    SwitchDefault: default
-    SwitchTitle: title
-  }
-  ... on MultiSelectListPreference {
-    dialogMessage
-    dialogTitle
-    MultiSelectListTitle: title
-    summary
-    key
-    entryValues
-    entries
-    MultiSelectListDefault: default
-    MultiSelectListCurrentValue: currentValue
-  }
-  ... on ListPreference {
-    ListCurrentValue: currentValue
-    ListDefault: default
-    ListTitle: title
-    summary
-    key
-    entryValues
-    entries
-  }
-}
-    `;
 export const ExtensionTypeFragmentFragmentDoc = gql`
     fragment ExtensionTypeFragment on ExtensionType {
   name
@@ -2612,6 +2554,17 @@ export const ExtensionTypeFragmentFragmentDoc = gql`
   isInstalled
   isObsolete
   hasUpdate
+}
+    `;
+export const CategoryTypeFragmentFragmentDoc = gql`
+    fragment CategoryTypeFragment on CategoryType {
+  id
+  default
+  order
+  name
+  mangas {
+    totalCount
+  }
 }
     `;
 export const FetchExtensionsDoc = gql`
@@ -2774,55 +2727,91 @@ export const UpdateSourcePreferenceDoc = gql`
     source {
       id
       preferences {
-        ...PreferenceFragment
+        ... on CheckBoxPreference {
+          CheckBoxCheckBoxCurrentValue: currentValue
+          summary
+          CheckBoxDefault: default
+          key
+          CheckBoxTitle: title
+        }
+        ... on EditTextPreference {
+          EditTextCurrentValue: currentValue
+          EditTextDefault: default
+          EditTextTitle: title
+          text
+          summary
+          key
+          dialogTitle
+          dialogMessage
+        }
+        ... on SwitchPreference {
+          SwitchCurrentValue: currentValue
+          summary
+          key
+          SwitchDefault: default
+          SwitchTitle: title
+        }
+        ... on MultiSelectListPreference {
+          dialogMessage
+          dialogTitle
+          MultiSelectListTitle: title
+          summary
+          key
+          entryValues
+          entries
+          MultiSelectListDefault: default
+          MultiSelectListCurrentValue: currentValue
+        }
+        ... on ListPreference {
+          ListCurrentValue: currentValue
+          ListDefault: default
+          ListTitle: title
+          summary
+          key
+          entryValues
+          entries
+        }
       }
     }
   }
 }
-    ${PreferenceFragmentFragmentDoc}`;
+    `;
 export const UpdateCategoryOrderDoc = gql`
     mutation updateCategoryOrder($id: Int!, $position: Int!) {
   updateCategoryOrder(input: {id: $id, position: $position}) {
     categories {
-      id
-      default
-      order
-      name
+      ...CategoryTypeFragment
     }
   }
 }
-    `;
+    ${CategoryTypeFragmentFragmentDoc}`;
 export const CreateCategoryDoc = gql`
     mutation createCategory($name: String!, $default: Boolean!) {
   createCategory(input: {name: $name, default: $default}) {
     category {
-      id
-      name
-      default
-      order
+      ...CategoryTypeFragment
     }
   }
 }
-    `;
+    ${CategoryTypeFragmentFragmentDoc}`;
 export const DeleteCategoryDoc = gql`
     mutation deleteCategory($categoryId: Int!) {
   deleteCategory(input: {categoryId: $categoryId}) {
-    clientMutationId
+    category {
+      ...CategoryTypeFragment
+    }
   }
 }
-    `;
+    ${CategoryTypeFragmentFragmentDoc}`;
 export const UpdateCategoryDoc = gql`
     mutation updateCategory($id: Int!, $name: String = null, $default: Boolean = null) {
   updateCategory(input: {id: $id, patch: {default: $default, name: $name}}) {
     category {
-      id
-      default
-      name
-      order
+      ...CategoryTypeFragment
     }
   }
 }
-    `;
+    ${CategoryTypeFragmentFragmentDoc}`;
 export const UpdateMangasCategoriesDoc = gql`
     mutation updateMangasCategories($addTo: [Int!] = null, $clear: Boolean = null, $id: [Int!]!) {
   updateMangasCategories(
@@ -2970,17 +2959,11 @@ export const CategoriesDoc = gql`
     query categories($notEqualTo: Int = null) {
   categories(filter: {id: {notEqualTo: $notEqualTo}}) {
     nodes {
-      id
-      default
-      order
-      name
-      mangas {
-        totalCount
-      }
+      ...CategoryTypeFragment
     }
   }
 }
-    `;
+    ${CategoryTypeFragmentFragmentDoc}`;
 export const CategoryDoc = gql`
     query category($id: Int!) {
   category(id: $id) {

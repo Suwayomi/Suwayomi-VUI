@@ -179,7 +179,50 @@ mutation updateSourcePreference(
 		source {
 			id
 			preferences {
-				...PreferenceFragment
+				... on CheckBoxPreference {
+					CheckBoxCheckBoxCurrentValue: currentValue
+					summary
+					CheckBoxDefault: default
+					key
+					CheckBoxTitle: title
+				}
+				... on EditTextPreference {
+					EditTextCurrentValue: currentValue
+					EditTextDefault: default
+					EditTextTitle: title
+					text
+					summary
+					key
+					dialogTitle
+					dialogMessage
+				}
+				... on SwitchPreference {
+					SwitchCurrentValue: currentValue
+					summary
+					key
+					SwitchDefault: default
+					SwitchTitle: title
+				}
+				... on MultiSelectListPreference {
+					dialogMessage
+					dialogTitle
+					MultiSelectListTitle: title
+					summary
+					key
+					entryValues
+					entries
+					MultiSelectListDefault: default
+					MultiSelectListCurrentValue: currentValue
+				}
+				... on ListPreference {
+					ListCurrentValue: currentValue
+					ListDefault: default
+					ListTitle: title
+					summary
+					key
+					entryValues
+					entries
+				}
 			}
 		}
 	}
@@ -188,10 +231,7 @@ mutation updateSourcePreference(
 mutation updateCategoryOrder($id: Int!, $position: Int!) {
 	updateCategoryOrder(input: { id: $id, position: $position }) {
 		categories {
-			id
-			default
-			order
-			name
+			...CategoryTypeFragment
 		}
 	}
 }
@@ -199,27 +239,23 @@ mutation updateCategoryOrder($id: Int!, $position: Int!) {
 mutation createCategory($name: String!, $default: Boolean!) {
 	createCategory(input: { name: $name, default: $default }) {
 		category {
-			id
-			name
-			default
-			order
+			...CategoryTypeFragment
 		}
 	}
 }
 
 mutation deleteCategory($categoryId: Int!) {
 	deleteCategory(input: { categoryId: $categoryId }) {
-		clientMutationId
+		category {
+			...CategoryTypeFragment
+		}
 	}
 }
 
 mutation updateCategory($id: Int!, $name: String = null, $default: Boolean = null) {
 	updateCategory(input: { id: $id, patch: { default: $default, name: $name } }) {
 		category {
-			id
-			default
-			name
-			order
+			...CategoryTypeFragment
 		}
 	}
 }

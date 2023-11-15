@@ -1,20 +1,47 @@
 <script lang="ts">
+	import Slide from '$lib/components/Slide.svelte';
+	import {
+		CategoriesDoc,
+		type CategoriesQuery,
+		createCategory,
+		type CreateCategoryMutation
+	} from '$lib/generated';
+	import type { ApolloCache, FetchResult } from '@apollo/client';
 	import { getModalStore } from '@skeletonlabs/skeleton';
 	import type { SvelteComponent } from 'svelte';
-	import { createCategory } from '$lib/generated';
 	import { writable } from 'svelte/store';
-	import Slide from '$lib/components/Slide.svelte';
-	const modalStore = getModalStore();
-	export let parent: SvelteComponent;
 
-	export let resetCategorys: () => void;
+	const modalStore = getModalStore();
+
+	export let parent: SvelteComponent;
 
 	$: catinput = writable('');
 	$: Defaul = writable(false);
 
+	function createCategoryUpdater(
+		cache: ApolloCache<unknown>,
+		{ data }: Omit<FetchResult<CreateCategoryMutation>, 'context'>
+	) {
+		if (!data) return;
+		const { categories } = structuredClone(
+			cache.readQuery({
+				query: CategoriesDoc
+			})
+		) as CategoriesQuery;
+
+		categories.nodes.push(data.createCategory.category);
+
+		cache.writeQuery({
+			query: CategoriesDoc,
+			data: { categories }
+		});
+	}
+
 	async function submitChange(): Promise<void> {
-		await createCategory({ variables: { name: $catinput, default: $Defaul } });
-		resetCategorys();
+		createCategory({
+			variables: { name: $catinput, default: $Defaul },
+			update: createCategoryUpdater
+		});
 		parent.onClose();
 	}
 </script>
