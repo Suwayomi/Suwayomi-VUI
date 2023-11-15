@@ -23,7 +23,10 @@
 
 	export let data: PageData;
 	let mangaMeta = MangaMeta(data.MangaID);
-	$: if (navigator.userAgentData?.mobile && $mangaMeta.mobileFullScreenOnChapterPage) {
+	$: if (
+		/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) &&
+		$mangaMeta.mobileFullScreenOnChapterPage
+	) {
 		document.documentElement.requestFullscreen();
 	}
 
