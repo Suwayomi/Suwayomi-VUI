@@ -1,13 +1,7 @@
 query categories($notEqualTo: Int = null) {
 	categories(filter: { id: { notEqualTo: $notEqualTo } }) {
 		nodes {
-			id
-			default
-			order
-			name
-			mangas {
-				totalCount
-			}
+			...CategoryTypeFragment
 		}
 	}
 }

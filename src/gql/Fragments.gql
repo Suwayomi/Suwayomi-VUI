@@ -62,3 +62,13 @@ fragment ExtensionTypeFragment on ExtensionType {
 	isObsolete
 	hasUpdate
 }
+
+fragment CategoryTypeFragment on CategoryType {
+	id
+	default
+	order
+	name
+	mangas {
+		totalCount
+	}
+}
