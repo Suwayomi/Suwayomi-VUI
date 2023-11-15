@@ -23,6 +23,9 @@
 
 	export let data: PageData;
 	let mangaMeta = MangaMeta(data.MangaID);
+	$: if (navigator.userAgentData?.mobile && $mangaMeta.mobileFullScreenOnChapterPage) {
+		document.documentElement.requestFullscreen();
+	}
 
 	let topchapter: number;
 	onMount(() => {

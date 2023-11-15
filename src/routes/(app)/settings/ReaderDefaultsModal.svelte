@@ -59,6 +59,12 @@
 				>
 					preload Next Chapter
 				</Slide>
+				<Slide
+					class="outline-0 p-1 hover:variant-glass-surface"
+					bind:checked={$Meta.mangaMetaDefaults.mobileFullScreenOnChapterPage}
+				>
+					mobile Full Screen On Chapter Page
+				</Slide>
 			</div>
 		</div>
 		<div class="p-4" />

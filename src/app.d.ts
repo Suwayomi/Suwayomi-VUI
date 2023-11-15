@@ -11,3 +11,9 @@ declare namespace App {
 declare interface Window {
 	version: string | undefined;
 }
+
+declare interface Navigator {
+	userAgentData?: {
+		mobile?: boolean;
+	};
+}
