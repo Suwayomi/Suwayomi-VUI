@@ -311,6 +311,7 @@
 		id: number
 	) {
 		if (e.detail) {
+			pageIndicator = `${pageIndex + 1}/${maxPages}`;
 			visiblePages = [
 				...visiblePages,
 				{
@@ -406,6 +407,8 @@
 	$: if (!$drawerStore.open) {
 		buttonElement?.focus();
 	}
+
+	let pageIndicator: string = '1/0';
 </script>
 
 <button tabindex="0" bind:this={buttonElement} on:click={handleClick} class="w-full">
@@ -527,4 +530,11 @@
 			</div>
 		</div>
 	{/each}
+	{#if $mangaMeta.doPageIndicator}
+		<div
+			class="fixed bottom-2 left-1/2 -translate-x-1/2 rounded p-2 bg-surface-500/60 text-black dark:text-white"
+		>
+			{pageIndicator}
+		</div>
+	{/if}
 </button>

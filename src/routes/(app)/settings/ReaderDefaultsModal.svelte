@@ -65,6 +65,12 @@
 				>
 					mobile Full Screen On Chapter Page
 				</Slide>
+				<Slide
+					class="outline-0 p-1 hover:variant-glass-surface"
+					bind:checked={$Meta.mangaMetaDefaults.doPageIndicator}
+				>
+					Chapter Page Indicator
+				</Slide>
 			</div>
 		</div>
 		<div class="p-4" />

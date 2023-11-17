@@ -70,7 +70,8 @@ const mangaMetaDefaults = {
 	ReaderMode: Mode.Vertical,
 	NavLayout: Layout.L,
 	preLoadNextChapter: true,
-	mobileFullScreenOnChapterPage: true
+	mobileFullScreenOnChapterPage: true,
+	doPageIndicator: false
 };
 type mangaMeta = typeof mangaMetaDefaults;
 
