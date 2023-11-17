@@ -23,12 +23,25 @@
 
 	export let data: PageData;
 	let mangaMeta = MangaMeta(data.MangaID);
-	$: if (
-		/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) &&
-		$mangaMeta.mobileFullScreenOnChapterPage
-	) {
-		document.documentElement.requestFullscreen();
-	}
+
+	onMount(() => {
+		if (
+			/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) &&
+			$mangaMeta.mobileFullScreenOnChapterPage
+		) {
+			document.documentElement.requestFullscreen();
+		}
+		return () => {
+			if (
+				/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
+					navigator.userAgent
+				) &&
+				$mangaMeta.mobileFullScreenOnChapterPage
+			) {
+				document.exitFullscreen();
+			}
+		};
+	});
 
 	let topchapter: number;
 	onMount(() => {
