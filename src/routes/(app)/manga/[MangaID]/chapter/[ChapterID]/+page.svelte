@@ -300,7 +300,7 @@
 		});
 	}
 
-	let lastupdate = 0;
+	let updatedChaps: string[] = [];
 
 	function PageIntersect(
 		e: CustomEvent<boolean>,
@@ -319,7 +319,8 @@
 					pageIndex
 				}
 			];
-			if (lastupdate !== pageIndex) {
+			if (!updatedChaps.includes(selector)) {
+				console.log(e.detail, selector);
 				updateChapter({
 					variables: {
 						id,
@@ -327,7 +328,10 @@
 						isRead: pageIndex >= maxPages * 0.8 ? true : null
 					}
 				});
-				lastupdate = pageIndex;
+				updatedChaps.push(selector);
+				setTimeout(() => {
+					updatedChaps = updatedChaps.filter((e) => e !== selector);
+				}, 5000);
 			}
 		} else {
 			visiblePages = visiblePages.filter((e) => e.selector !== selector);
