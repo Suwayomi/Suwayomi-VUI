@@ -5,8 +5,27 @@
 	import { getDrawerStore } from '@skeletonlabs/skeleton';
 	import { ViewNav, chapterTitle, mangaTitle } from './chapterStores';
 	import { Layout, MangaMeta, Mode } from '$lib/simpleStores';
+	import { onMount } from 'svelte';
 	const drawerStore = getDrawerStore();
 	const mangaMeta = MangaMeta($drawerStore.meta.id);
+	onMount(() => {
+		if (
+			/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) &&
+			$mangaMeta.mobileFullScreenOnChapterPage
+		) {
+			document.exitFullscreen();
+		}
+		return () => {
+			if (
+				/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
+					navigator.userAgent
+				) &&
+				$mangaMeta.mobileFullScreenOnChapterPage
+			) {
+				document.documentElement.requestFullscreen();
+			}
+		};
+	});
 </script>
 
 {#if mangaMeta}
