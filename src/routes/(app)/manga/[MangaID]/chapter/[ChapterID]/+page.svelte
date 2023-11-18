@@ -167,30 +167,45 @@
 			keyEvent.stopPropagation();
 			if (keyEvent.shiftKey) {
 				gobackChapter();
-				scroll80();
+				scrollBy(-0.8);
 			} else doscroll();
 			return;
 		}
-		if (keyEvent.code === 'ArrowDown' || keyEvent.code === 'ArrowRight') {
+		if (keyEvent.code === 'ArrowRight') {
 			keyEvent.preventDefault();
 			keyEvent.stopPropagation();
 			doscroll();
 			return;
 		}
-		if (keyEvent.code === 'ArrowUp' || keyEvent.code === 'ArrowLeft') {
+		if (keyEvent.code === 'ArrowLeft') {
 			gobackChapter();
 			keyEvent.preventDefault();
 			keyEvent.stopPropagation();
-			scroll80();
+			scrollBy(-0.8);
 			return;
 		}
+
+		if (keyEvent.code === 'ArrowDown') {
+			keyEvent.preventDefault();
+			keyEvent.stopPropagation();
+			scrollBy(0.4);
+			return;
+		}
+		if (keyEvent.code === 'ArrowUp') {
+			gobackChapter();
+			keyEvent.preventDefault();
+			keyEvent.stopPropagation();
+			scrollBy(-0.4);
+			return;
+		}
+
 		if (keyEvent.code === 'PageDown') {
 			keyEvent.preventDefault();
-			pgUD(true);
+			scrollBy(1);
 		}
 		if (keyEvent.code === 'PageUp') {
 			keyEvent.preventDefault();
-			pgUD(false);
+			scrollBy(-1);
 		}
 	}
 
@@ -238,7 +253,7 @@
 		if (pointInPoly([e.x, e.y], polyToPOLLY(path.forward))) {
 			doscroll();
 		} else if (pointInPoly([e.x, e.y], polyToPOLLY(path.back))) {
-			scroll80();
+			scrollBy(-0.8);
 		} else if (path.menu && pointInPoly([e.x, e.y], polyToPOLLY(path.menu))) {
 			drawerStore.open({
 				id: 'ChapterMenu',
@@ -286,28 +301,17 @@
 		});
 	}
 
-	function scroll80(ud = false) {
-		pageElement?.scrollTo({
-			top:
-				pageElement.scrollTop + (ud ? pageElement.clientHeight : -pageElement.clientHeight) * 0.8,
-			behavior: $mangaMeta.SmoothScroll ? 'smooth' : 'instant'
-		});
-	}
-
 	function doscroll() {
-		if (!lowestIntersetc) {
-			scroll80(true);
+		if (!lowestIntersetc || !pageElement) {
+			scrollBy(0.8);
 			return;
 		}
-		pageElement?.scrollTo({
-			top: pageElement.scrollTop + lowestIntersetc.getBoundingClientRect().y + 1,
-			behavior: $mangaMeta.SmoothScroll ? 'smooth' : 'instant'
-		});
+		scrollBy(0, lowestIntersetc.getBoundingClientRect().y + 1);
 	}
 
-	function pgUD(ud = false) {
+	function scrollBy(decimal: number, addition = 0) {
 		pageElement?.scrollTo({
-			top: pageElement.scrollTop + (ud ? pageElement.clientHeight : -pageElement.clientHeight),
+			top: addition + (pageElement.scrollTop + pageElement.clientHeight * decimal),
 			behavior: $mangaMeta.SmoothScroll ? 'smooth' : 'instant'
 		});
 	}
