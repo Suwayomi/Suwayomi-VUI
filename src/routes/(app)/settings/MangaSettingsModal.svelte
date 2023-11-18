@@ -8,7 +8,7 @@
 
 {#if $modalStore[0]}
 	<div class="card p-0 w-modal shadow-xl space-y-4 rounded-lg max-h-screen">
-		<h1 class="h3 pt-4 pl-4">Reader Defaults</h1>
+		<h1 class="h3 pt-4 pl-4">Manga Settings Defaults</h1>
 		<div class="pl-4 border-y border-surface-700">
 			<div class="max-h-96 overflow-y-auto grid grid-cols-1 gap-1 pr-4">
 				<h2 class="h4 border-b border-surface-700 mb-1">Filters</h2>
