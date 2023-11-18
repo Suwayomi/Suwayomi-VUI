@@ -143,7 +143,6 @@
 	}
 
 	async function handelKeypress(keyEvent: KeyboardEvent) {
-		console.log(keyEvent);
 		if (!pageElement) {
 			pageElement = document.querySelector('#page') as HTMLDivElement;
 		}
@@ -334,7 +333,6 @@
 				}
 			];
 			if (!updatedChaps.includes(selector)) {
-				console.log(e.detail, selector);
 				updateChapter({
 					variables: {
 						id,
