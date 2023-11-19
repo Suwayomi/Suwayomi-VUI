@@ -552,4 +552,14 @@
 			{pageIndicator}
 		</div>
 	{/if}
+
+	{#if preload}
+		{#await preload then preloa}
+			{#if preloa.data}
+				{#each preloa.data.fetchChapterPages.pages as value}
+					<img src={value} alt="img" class="h-0 w-0" />
+				{/each}
+			{/if}
+		{/await}
+	{/if}
 </button>
