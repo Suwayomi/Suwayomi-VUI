@@ -71,7 +71,8 @@ const mangaMetaDefaults = {
 	NavLayout: Layout.L,
 	preLoadNextChapter: true,
 	mobileFullScreenOnChapterPage: true,
-	doPageIndicator: false
+	doPageIndicator: false,
+	mangaUpdatesSeriesID: null as null | number
 };
 type mangaMeta = typeof mangaMetaDefaults;
 
@@ -100,12 +101,18 @@ const trueDefaults = {
 	Downloaded: 0 as TriState,
 	mangaMetaDefaults,
 	downloadsBadge: true,
-	unreadbadge: true
+	unreadBadge: true,
+	mangaUpdatesTracking: {
+		enabled: false,
+		username: '',
+		password: '',
+		Authorization: ''
+	}
 };
 
 type globalMeta = typeof trueDefaults;
 
-function GlobalMetaUpdator(cache: ApolloCache<unknown>, key: string, value: string) {
+function GlobalMetaUpdater(cache: ApolloCache<unknown>, key: string, value: string) {
 	const { metas: tmp } = structuredClone(
 		cache.readQuery({
 			query: MetasDoc
@@ -125,7 +132,12 @@ function GlobalMetaUpdator(cache: ApolloCache<unknown>, key: string, value: stri
 function GlobalMeta() {
 	const Meta = metas({});
 	const store = localStorageStore('GlobalMeta', trueDefaults);
-
+	if (get(store).mangaUpdatesTracking === undefined) {
+		store.update((n) => {
+			n.mangaUpdatesTracking = trueDefaults.mangaUpdatesTracking;
+			return n;
+		});
+	}
 	Meta.subscribe((e) => {
 		store.update((n) => {
 			const Ncopy = structuredClone(get(store)) as { [key: string]: unknown };
@@ -146,20 +158,20 @@ function GlobalMeta() {
 			if (value !== tmp)
 				try {
 					//update before waiting
-					GlobalMetaUpdator(cache, key, value);
+					GlobalMetaUpdater(cache, key, value);
 					if (value !== JSON.stringify(trueDefaults[entry[0]])) {
 						//set if not the truedefault value
 						await setGlobalMeta({
 							variables: { key, value },
 							//update after to keep in sync
-							update: (a) => GlobalMetaUpdator(a, key, value)
+							update: (a) => GlobalMetaUpdater(a, key, value)
 						});
 					} else if (tmp !== undefined) {
 						//delete if not already undefined
 						await deleteGlobalMeta({
 							variables: { key: key },
 							//update after to keep in sync
-							update: (a) => GlobalMetaUpdator(a, key, value)
+							update: (a) => GlobalMetaUpdater(a, key, value)
 						});
 					}
 				} catch {}
@@ -179,7 +191,7 @@ function GlobalMeta() {
 
 export const Meta = GlobalMeta();
 
-function MangaMetaUpdator(cache: ApolloCache<unknown>, key: string, value: string, id: number) {
+function MangaMetaUpdater(cache: ApolloCache<unknown>, key: string, value: string, id: number) {
 	const { manga } = structuredClone(
 		cache.readQuery({
 			query: GetMangaDoc,
@@ -202,6 +214,13 @@ export function MangaMeta(id: number) {
 	const MMeta = getManga({ variables: { id } });
 	const store = writable(get(Meta).mangaMetaDefaults);
 
+	if (get(store).mangaUpdatesSeriesID === undefined) {
+		store.update((n) => {
+			n.mangaUpdatesSeriesID = mangaMetaDefaults.mangaUpdatesSeriesID;
+			return n;
+		});
+	}
+
 	MMeta.subscribe((e) => {
 		store.update((n) => {
 			const Ncopy = structuredClone(get(store)) as { [key: string]: unknown };
@@ -222,20 +241,20 @@ export function MangaMeta(id: number) {
 			if (value !== tmp)
 				try {
 					//update before waiting
-					MangaMetaUpdator(cache, key, value, id);
+					MangaMetaUpdater(cache, key, value, id);
 					if (entry[1] !== get(Meta).mangaMetaDefaults[entry[0]]) {
 						//set if not the truedefault value
 						await setMangaMeta({
 							variables: { key, value, id }
 							//update after to keep in sync
-							// update: (a) => MangaMetaUpdator(a, key, value, id)
+							// update: (a) => MangaMetaUpdater(a, key, value, id)
 						});
 					} else if (tmp !== undefined) {
 						//delete if not already undefined
 						await deleteMangaMeta({
 							variables: { key, id }
 							//update after to keep in sync
-							// update: (a) => MangaMetaUpdator(a, key, value, id)
+							// update: (a) => MangaMetaUpdater(a, key, value, id)
 						});
 					}
 				} catch {}

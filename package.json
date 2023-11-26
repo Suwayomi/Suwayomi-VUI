@@ -48,12 +48,14 @@
 		"@sveltejs/adapter-static": "^2.0.3",
 		"@types/apollo-upload-client": "^17.0.2",
 		"@types/dom-view-transitions": "^1.0.3",
+		"@types/sanitize-html": "^2.9.5",
 		"apollo-upload-client": "^17.0.0",
 		"devalue": "^4.3.2",
 		"graphql": "^16.8.1",
 		"graphql-codegen-svelte-apollo": "^1.1.0",
 		"graphql-ws": "^5.14.2",
 		"p-queue": "^7.4.1",
+		"sanitize-html": "^2.11.0",
 		"sveltekit-search-params": "^1.0.15"
 	}
 }

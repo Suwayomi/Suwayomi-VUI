@@ -7,9 +7,14 @@
 	import type { ApolloQueryResult } from '@apollo/client';
 	import type { Readable } from 'svelte/store';
 	import InfoSubTitles from './InfoSubTitles.svelte';
+	import TrackingModal from './TrackingModal.svelte';
+	import { getModalStore } from '@skeletonlabs/skeleton';
+	import type { MangaMeta } from '$lib/simpleStores';
+	const modalStore = getModalStore();
 
 	export let manga: Readable<ApolloQueryResult<GetMangaQuery>>;
 	export let MangaID: number;
+	export let mangaMeta: ReturnType<typeof MangaMeta>;
 
 	async function libtoggle() {
 		await updateMangas({
@@ -114,7 +119,7 @@
 			</div>
 		</div>
 		<MediaQuery query="(min-width: {screens.sm})" let:matches>
-			<div class="flex justify-around select-none">
+			<div class="grid gap-1 grid-cols-2">
 				<button on:click={libtoggle} class="btn variant-soft h-12 flex items-center px-2 sm:px-5">
 					<IconWrapper
 						name="mdi:heart"
@@ -126,17 +131,6 @@
 						</span>
 					{/if}
 				</button>
-				{#if $manga.data.manga.inLibrary}
-					<a
-						href="../browse/migrate/manga/{$manga.data.manga.id}"
-						class="btn variant-soft h-12 flex items-center px-2 sm:px-5"
-					>
-						<IconWrapper name="mdi:bird" class="w-auto h-full aspect-square" />
-						{#if matches}
-							<span class="uppercase text-sm sm:text-base">Migrate</span>
-						{/if}
-					</a>
-				{/if}
 				<a
 					href={$manga.data.manga.realUrl}
 					target="_blank"
@@ -147,6 +141,33 @@
 						<span class="uppercase text-sm sm:text-base">Open site</span>
 					{/if}
 				</a>
+				{#if $manga.data.manga.inLibrary}
+					<a
+						href="../browse/migrate/manga/{$manga.data.manga.id}"
+						class="btn variant-soft h-12 flex items-center px-2 sm:px-5"
+					>
+						<IconWrapper name="mdi:bird" class="w-auto h-full aspect-square" />
+						{#if matches}
+							<span class="uppercase text-sm sm:text-base">Migrate</span>
+						{/if}
+					</a>
+					{#if window.tracking === 'docker'}
+						<button
+							on:click={() => {
+								modalStore.trigger({
+									type: 'component',
+									component: { ref: TrackingModal, props: { manga, mangaMeta } }
+								});
+							}}
+							class="btn variant-soft h-12 flex items-center px-2 sm:px-5"
+						>
+							<IconWrapper name="mdi:target" class="w-auto h-full aspect-square" />
+							{#if matches}
+								<span class="uppercase text-sm sm:text-base"> Tracking</span>
+							{/if}
+						</button>
+					{/if}
+				{/if}
 			</div>
 		</MediaQuery>
 		<section class="w-full">

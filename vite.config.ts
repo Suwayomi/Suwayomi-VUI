@@ -10,6 +10,10 @@ export default defineConfig({
 				target: process.env.VITE_URL,
 				changeOrigin: true,
 				ws: true
+			},
+			'/v1': {
+				target: 'https://api.mangaupdates.com',
+				changeOrigin: true
 			}
 		}
 	}

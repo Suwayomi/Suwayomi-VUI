@@ -1,39 +1,40 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
+	import { cache } from '$lib/apollo';
 	import IconWrapper from '$lib/components/IconWrapper.svelte';
 	import IntersectionObserver from '$lib/components/IntersectionObserver.svelte';
 	import MediaQuery from '$lib/components/MediaQuery.svelte';
 	import { getToastStore } from '$lib/components/Toast/stores';
 	import TooltipIconButton from '$lib/components/TooltipIconButton.svelte';
 	import {
+		AsyncgetSingleChapter,
+		GetMangaDoc,
 		deleteDownloadedChapters,
+		downloadsOnChapters,
 		// downloadsOnChapters,
 		enqueueChapterDownloads,
 		updateChapters,
-		type GetMangaQuery,
-		downloadsOnChapters,
 		type DownloadsOnChaptersSubscription,
-		AsyncgetSingleChapter,
-		GetMangaDoc
+		type GetMangaQuery
 	} from '$lib/generated';
 	import { longpress } from '$lib/press';
 	import { screens } from '$lib/screens';
-	import { ChapterSort, ChapterTitle, MangaMeta } from '$lib/simpleStores';
+	import { ChapterSort, ChapterTitle, MangaMeta, Meta } from '$lib/simpleStores';
+	import { MangaUpdates } from '$lib/tracking/mangaUpdates';
 	import { HelpDoSelect, HelpSelectall, HelpUpdateChapters, dlreabook } from '$lib/util';
 	import type { ApolloQueryResult } from '@apollo/client';
 	import { getModalStore, popup } from '@skeletonlabs/skeleton';
 	import { fade } from 'svelte/transition';
 	import ChaptersFilterModal from './ChaptersFilterModal.svelte';
-	import { selected, selectmode, type chaptertype } from './mangaStores';
 	import DownloadProgressRadial from './DownloadProgressRadial.svelte';
-	import { cache } from '$lib/apollo';
+	import { selected, selectmode, type chaptertype } from './mangaStores';
 
 	export let manga: ApolloQueryResult<GetMangaQuery> | undefined;
 	export let MangaID: number;
+	export let mangaMeta: ReturnType<typeof MangaMeta>;
 
 	const modalStore = getModalStore();
 	const toastStore = getToastStore();
-	const mangaMeta = MangaMeta(MangaID);
 	const downloads = downloadsOnChapters({
 		fetchPolicy: 'network-only'
 	});
@@ -120,11 +121,65 @@
 
 	let chapterSideElement: HTMLDivElement | undefined;
 
-	function handelPrevRead(chapter: chaptertype) {
+	async function updateTracker() {
+		if (window.tracking !== 'docker') return;
+		if (!manga) return;
+		if (!$Meta.mangaUpdatesTracking.enabled) return;
+		if ($mangaMeta.mangaUpdatesSeriesID === null) return;
+		const mangaUpdates = await MangaUpdates;
+		await mangaUpdates.updateMangaListStatus(
+			$mangaMeta.mangaUpdatesSeriesID,
+			HighestChapterNumber(manga)
+		);
+	}
+
+	async function handelPrevRead(chapter: chaptertype) {
+		if (!manga) return;
 		if (!sortedChapters) return;
 		const ind = sortedChapters?.findIndex((e) => e.id === chapter.id);
-		const ids = sortedChapters.slice(ind, sortedChapters.length).map((e) => e.id);
-		updateChapters({ variables: { isRead: true, ids: ids } });
+		const chapters = sortedChapters.slice(ind, sortedChapters.length);
+		const ids = chapters.map((e) => e.id);
+
+		if (
+			Math.floor(
+				chapters.reduce((a, c) => {
+					return c.chapterNumber > a ? c.chapterNumber : a;
+				}, 0)
+			) <= HighestChapterNumber(manga)
+		) {
+			updateChapters({ variables: { isRead: true, ids: ids } });
+			return;
+		}
+		await updateChapters({ variables: { isRead: true, ids: ids } });
+		updateTracker();
+	}
+
+	function HighestChapterNumber(manga: ApolloQueryResult<GetMangaQuery>) {
+		return Math.floor(
+			manga.data.manga.chapters.nodes.reduce((a, c) => {
+				return c.isRead && c.chapterNumber > a ? c.chapterNumber : a;
+			}, 0)
+		);
+	}
+
+	async function handelRead(chapter: chaptertype) {
+		if (!manga) return;
+		if (Math.floor(chapter.chapterNumber) <= HighestChapterNumber(manga)) {
+			updateChapters({ variables: { isRead: true, ids: chapter.id } });
+			return;
+		}
+		await updateChapters({ variables: { isRead: true, ids: chapter.id } });
+		updateTracker();
+	}
+
+	async function handelUnRead(chapter: chaptertype) {
+		if (!manga) return '';
+		if (Math.floor(chapter.chapterNumber) !== HighestChapterNumber(manga)) {
+			updateChapters({ variables: { isRead: false, ids: chapter.id } });
+			return;
+		}
+		await updateChapters({ variables: { isRead: false, ids: chapter.id } });
+		updateTracker();
 	}
 
 	function LongHandler() {
@@ -400,16 +455,14 @@
 								{/if}
 								{#if chapter.isRead}
 									<button
-										on:click={() =>
-											updateChapters({ variables: { isRead: false, ids: chapter.id } })}
+										on:click={() => handelUnRead(chapter)}
 										class="variant-glass hover:variant-soft p-2 cursor-pointer select-none w-full"
 									>
 										mark as unread
 									</button>
 								{:else}
 									<button
-										on:click={() =>
-											updateChapters({ variables: { isRead: true, ids: chapter.id } })}
+										on:click={() => handelRead(chapter)}
 										class="variant-glass hover:variant-soft p-2 cursor-pointer select-none w-full"
 									>
 										mark as read
