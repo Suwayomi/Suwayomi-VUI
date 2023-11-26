@@ -13,6 +13,7 @@ RUN bun run build
 FROM nginxinc/nginx-unprivileged:1.23.2-alpine-slim as production-stage
 USER root
 COPY --from=build-stage /app/build /usr/share/nginx/html
+# COPY ./build /usr/share/nginx/html
 COPY ./default.conf /etc/nginx/conf.d/default.conf
 COPY ./set-env-variable.sh /docker-entrypoint.d
 RUN chmod +x /docker-entrypoint.d/set-env-variable.sh
