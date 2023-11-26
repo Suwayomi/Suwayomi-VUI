@@ -210,7 +210,7 @@
 											<div class="absolute top-2 left-2 flex">
 												{#if manga.downloadCount && $Meta.downloadsBadge}
 													<div
-														class="{manga.unreadCount && $Meta.unreadbadge
+														class="{manga.unreadCount && $Meta.unreadBadge
 															? 'rounded-l'
 															: 'rounded'}
 													variant-filled-primary m-0 py-0.5 px-1"
@@ -218,7 +218,7 @@
 														{manga.downloadCount}
 													</div>
 												{/if}
-												{#if manga.unreadCount && $Meta.unreadbadge}
+												{#if manga.unreadCount && $Meta.unreadBadge}
 													<div
 														class="{manga.downloadCount && $Meta.downloadsBadge
 															? 'rounded-r'

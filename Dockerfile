@@ -2,12 +2,13 @@
 FROM oven/bun:1.0.10-alpine as develop-stage
 WORKDIR /app
 COPY . .
+ARG version="DevBuild"
+RUN sed -i "s@BUILD_VERSION_PLACEHOLDER@${version}@" ./src/app.html
+RUN sed -i "s@TRACKING_PLACEHOLDER@Docker@" ./src/app.html
 # build stage
 FROM develop-stage as build-stage
 RUN bun install
 RUN bun run build
-ARG version="DevBuild"
-RUN sed -i "s@BUILD_VERSION_PLACEHOLDER@${version}@" ./build/index.html
 # production stage
 FROM nginxinc/nginx-unprivileged:1.23.2-alpine-slim as production-stage
 USER root

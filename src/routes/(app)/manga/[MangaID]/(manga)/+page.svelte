@@ -15,8 +15,11 @@
 	import InfoSide from './InfoSide.svelte';
 	import MangaActions from './MangaActions.svelte';
 	import ChaptersSide from './chaptersSide.svelte';
+	import { MangaMeta } from '$lib/simpleStores';
 
 	export let data: PageData;
+
+	const mangaMeta = MangaMeta(data.MangaID);
 
 	const toastStore = getToastStore();
 	const manga = getManga({
@@ -103,6 +106,6 @@
 </script>
 
 <div class="block md:flex md:relative md:h-full">
-	<InfoSide {manga} MangaID={data.MangaID} />
-	<ChaptersSide manga={$manga} MangaID={data.MangaID} />
+	<InfoSide {manga} MangaID={data.MangaID} {mangaMeta} />
+	<ChaptersSide manga={$manga} MangaID={data.MangaID} {mangaMeta} />
 </div>

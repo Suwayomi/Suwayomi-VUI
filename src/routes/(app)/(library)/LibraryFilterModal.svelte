@@ -113,7 +113,7 @@
 							class="outline-0 p-1 pl-2 hover:variant-glass-surface w-full">Downloads Badge</Slide
 						>
 						<Slide
-							bind:checked={$Meta.unreadbadge}
+							bind:checked={$Meta.unreadBadge}
 							class="outline-0 p-1 pl-2 hover:variant-glass-surface w-full">Unread Badge</Slide
 						>
 						<RadioGroup
