@@ -9,7 +9,8 @@ declare namespace App {
 }
 
 declare interface Window {
-	version: string | undefined;
+	version: string;
+	tracking: 'docker' | 'TRACKING_PLACEHOLDER';
 }
 
 declare interface Navigator {
