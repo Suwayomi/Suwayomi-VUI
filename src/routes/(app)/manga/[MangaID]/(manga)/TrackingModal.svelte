@@ -77,13 +77,15 @@
 		}
 	}
 
-	let currentTracking: undefined | GetMangaResponse = undefined;
-	$: $mangaMeta.mangaUpdatesSeriesID, getCurrentManga();
+	let currentTracking: undefined | Promise<GetMangaResponse> = undefined;
+	$: getCurrentManga($mangaMeta.mangaUpdatesSeriesID);
 
-	async function getCurrentManga() {
-		if ($mangaMeta.mangaUpdatesSeriesID) {
-			currentTracking = await (await MangaUpdates).getManga($mangaMeta.mangaUpdatesSeriesID);
-		} else {
+	async function getCurrentManga(id: number | null) {
+		if (id && currentTracking === undefined) {
+			currentTracking = (await MangaUpdates).getManga(id);
+			return;
+		}
+		if (!id) {
 			currentTracking = undefined;
 		}
 	}
@@ -127,11 +129,13 @@
 										</div>
 										<div class="w-auto space-y-2">
 											<h2 class="h5 md:h4 lg:h3 xl:h2 line-clamp-1">
-												<!-- eslint-disable-next-line svelte/no-at-html-tags -->
-												<span>{@html sanitizeHtml(value.record.title)}</span>
+												<span title={sanitizeHtml(value.record.title)}>
+													<!-- eslint-disable-next-line svelte/no-at-html-tags -->
+													{@html sanitizeHtml(value.record.title)}
+												</span>
 											</h2>
 											<h3 class="text-sm xl:text-base flex items-center space-x-2">
-												<span class=" line-clamp-3">
+												<span class=" line-clamp-3" title={sanitizeHtml(value.record.description)}>
 													<!-- eslint-disable-next-line svelte/no-at-html-tags -->
 													{@html sanitizeHtml(value.record.description)}
 												</span>
@@ -161,33 +165,37 @@
 				{/if}
 			</div>
 		</div>
-		{#if currentTracking}
-			<a href={currentTracking.url} target="_blank" class="block hover:variant-ghost-surface">
-				<h2 class="pl-4 pt-4">Currently tracking:</h2>
-				<div class="flex pl-4 pb-1 w-full text-left">
-					<div class="max-w-1/3 pr-1 flex-shrink-0">
-						<Image
-							src={currentTracking.image.url.thumb}
-							alt={sanitizeHtml(currentTracking.title)}
-							width="w-auto"
-							height="h-auto"
-							class="rounded-lg"
-						/>
-					</div>
-					<div class="w-auto space-y-2">
-						<h2 class="h5 md:h4 lg:h3 xl:h2 line-clamp-1">
-							<!-- eslint-disable-next-line svelte/no-at-html-tags -->
-							<span>{@html sanitizeHtml(currentTracking.title)}</span>
-						</h2>
-						<h3 class="text-sm xl:text-base flex items-center space-x-2">
-							<span class=" line-clamp-3">
+		{#if currentTracking && $Meta.mangaUpdatesTracking?.enabled}
+			{#await currentTracking}
+				<h2 class="p-4">Loading...</h2>
+			{:then track}
+				<a href={track.url} target="_blank" class="block hover:variant-ghost-surface">
+					<h2 class="pl-4 pt-4">Currently tracking:</h2>
+					<div class="flex pl-4 pb-1 w-full text-left">
+						<div class="max-w-1/3 pr-1 flex-shrink-0">
+							<Image
+								src={track.image.url.thumb}
+								alt={sanitizeHtml(track.title)}
+								width="w-auto"
+								height="h-auto"
+								class="rounded-lg"
+							/>
+						</div>
+						<div class="w-auto space-y-2">
+							<h2 class="h5 md:h4 lg:h3 xl:h2 line-clamp-1">
 								<!-- eslint-disable-next-line svelte/no-at-html-tags -->
-								{@html sanitizeHtml(currentTracking.description)}
-							</span>
-						</h3>
+								<span title={sanitizeHtml(track.title)}>{@html sanitizeHtml(track.title)}</span>
+							</h2>
+							<h3 class="text-sm xl:text-base flex items-center space-x-2">
+								<span class=" line-clamp-3" title={sanitizeHtml(track.description)}>
+									<!-- eslint-disable-next-line svelte/no-at-html-tags -->
+									{@html sanitizeHtml(track.description)}
+								</span>
+							</h3>
+						</div>
 					</div>
-				</div>
-			</a>
+				</a>
+			{/await}
 		{:else}
 			<h2 class="p-4">Currently not tracking</h2>
 		{/if}
