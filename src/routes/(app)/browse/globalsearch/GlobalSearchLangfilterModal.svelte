@@ -3,7 +3,7 @@
 	import type { SourcesQuery } from '$lib/generated';
 	import { Tab, TabGroup, getModalStore, localStorageStore } from '@skeletonlabs/skeleton';
 	import type { Writable } from 'svelte/store';
-	import { ISOLanguages } from '../languages';
+	import { FindLangName } from '../languages';
 	import { SpecificSourceFilter } from '../BrowseStores';
 	const modalStore = getModalStore();
 	export let langs: Set<string>;
@@ -48,8 +48,7 @@
 								}}
 								checked={$langfilt.has(lang)}
 							>
-								{ISOLanguages.find((ele) => ele.code.toLowerCase() === lang.toLowerCase())
-									?.nativeName ?? lang}
+								{FindLangName(lang)}
 							</Slide>
 						{/each}
 					</div>

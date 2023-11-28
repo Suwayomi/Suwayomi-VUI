@@ -194,3 +194,20 @@ export type PartialBy<T, K extends keyof T> = Omit<T, K> & Partial<Pick<T, K>>;
 export function enumKeys<E>(e: E & object): (keyof E)[] {
 	return Object.keys(e) as (keyof E)[];
 }
+
+export function groupBy<T extends { [key: string]: unknown }>(
+	list: T[],
+	keyGetter: (item: T) => T[keyof T]
+): [string, T[]][] {
+	const map = new Map();
+	list.forEach((item) => {
+		const key = keyGetter(item);
+		const collection = map.get(key);
+		if (!collection) {
+			map.set(key, [item]);
+		} else {
+			collection.push(item);
+		}
+	});
+	return Array.from(map);
+}
