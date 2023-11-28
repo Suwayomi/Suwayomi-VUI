@@ -117,5 +117,8 @@
 	},
 	"[svelte]": {
 		"editor.defaultFormatter": "esbenp.prettier-vscode"
-	}
+	},
+	"licenser.license": "MPLv2",
+	"licenser.projectName": "Suwayomi project",
+	"licenser.author": "Contributors to the Suwayomi project"
 }

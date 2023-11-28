@@ -1,3 +1,11 @@
+<!--
+ Copyright (c) 2023 Contributors to the Suwayomi project
+ 
+ This Source Code Form is subject to the terms of the Mozilla Public
+ License, v. 2.0. If a copy of the MPL was not distributed with this
+ file, You can obtain one at http://mozilla.org/MPL/2.0/.
+-->
+
 <script lang="ts">
 	import CategoriesNewModal from './CategoriesNewModal.svelte';
 	import CategoriesEditModal from './CategoriesEditModal.svelte';
@@ -139,7 +147,7 @@
 {:else if $cats.data.categories.nodes}
 	{#each $cats.data.categories.nodes
 		.filter((e) => e.id !== 0)
-		.sort((a, b) => (a.order > b.order ? 1 : -1)) as cat}
+		.toSorted((a, b) => (a.order > b.order ? 1 : -1)) as cat}
 		<button
 			on:click={(e) => edit(e, cat)}
 			class="text-left flex items-center w-full h-16 hover:variant-glass-surface cursor-pointer p-2"

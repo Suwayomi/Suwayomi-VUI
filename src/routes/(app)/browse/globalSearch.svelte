@@ -1,3 +1,11 @@
+<!--
+ Copyright (c) 2023 Contributors to the Suwayomi project
+ 
+ This Source Code Form is subject to the terms of the Mozilla Public
+ License, v. 2.0. If a copy of the MPL was not distributed with this
+ file, You can obtain one at http://mozilla.org/MPL/2.0/.
+-->
+
 <script lang="ts">
 	import GlobalSearchActions from './globalsearch/GlobalSearchActions.svelte';
 	import {
@@ -15,6 +23,7 @@
 	import HorisontalmangaElement from './HorisontalmangaElement.svelte';
 	import { AppBarData } from '$lib/MountTitleAction';
 	import { Meta, display } from '$lib/simpleStores';
+	import { groupBy } from '$lib/util';
 
 	export let title: string = 'Loading...';
 	export let OpenModal: ((id: number) => void) | undefined = undefined;
@@ -93,20 +102,11 @@
 		error?: unknown;
 	}
 
-	$: groupSources = doGroupSources(langs, alterableRaw);
+	$: groupSources = doGroupSources(alterableRaw);
 
-	function doGroupSources(
-		langs: Set<string>,
-		filteredSources: SourcesQuery['sources']['nodes'] | undefined
-	) {
-		if (!(!filteredSources || filteredSources.length || langs.size)) return [];
-		if (!langs) return [];
-		return Array.from(langs).map((lang) => {
-			return [lang, filteredSources?.filter((elem) => elem.lang === lang)] as [
-				string,
-				sourceWithManga[]
-			];
-		});
+	function doGroupSources(filteredSources: SourcesQuery['sources']['nodes'] | undefined) {
+		if (!filteredSources) return [];
+		return groupBy(filteredSources, (item) => item.lang) as [string, sourceWithManga[]][];
 	}
 
 	onDestroy(() => {
@@ -136,11 +136,11 @@
 			Sources filtered to nothing, try changing filters in the top right
 		</div>
 	{:else if groupSources}
-		{#each groupSources.filter((e) => e[1]?.length) as group}
+		{#each groupSources as [Lang, sous]}
 			<div class="text-5xl m-4">
-				{group[0]}
+				{Lang}
 			</div>
-			{#each group[1] as source}
+			{#each sous as source}
 				<div class="text-4xl ml-8 my-4">{source.displayName}</div>
 				{#if source.Loading}
 					<div class="overflow-x-auto">

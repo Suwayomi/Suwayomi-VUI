@@ -1,3 +1,11 @@
+<!--
+ Copyright (c) 2023 Contributors to the Suwayomi project
+ 
+ This Source Code Form is subject to the terms of the Mozilla Public
+ License, v. 2.0. If a copy of the MPL was not distributed with this
+ file, You can obtain one at http://mozilla.org/MPL/2.0/.
+-->
+
 <script lang="ts">
 	import { category, type CategoryQuery, categories as getCategories } from '$lib/generated';
 	import IntersectionObserver from '$lib/components/IntersectionObserver.svelte';
@@ -48,7 +56,7 @@
 		});
 	}
 
-	$: orderedCategories = [...($categories.data?.categories?.nodes ?? [])].sort((a, b) => {
+	$: orderedCategories = [...($categories.data?.categories?.nodes ?? [])].toSorted((a, b) => {
 		return a.order > b.order ? 1 : -1;
 	});
 
@@ -95,7 +103,7 @@
 		return true;
 	});
 
-	$: sortedMangas = filteredMangas?.sort((a, b) => {
+	$: sortedMangas = filteredMangas?.toSorted((a, b) => {
 		let tru = true;
 		switch ($Meta.Sort) {
 			case sort.ID:

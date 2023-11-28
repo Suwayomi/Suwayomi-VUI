@@ -1,3 +1,11 @@
+<!--
+ Copyright (c) 2023 Contributors to the Suwayomi project
+ 
+ This Source Code Form is subject to the terms of the Mozilla Public
+ License, v. 2.0. If a copy of the MPL was not distributed with this
+ file, You can obtain one at http://mozilla.org/MPL/2.0/.
+-->
+
 <script lang="ts">
 	import { getToastStore } from '$lib/components/Toast/stores';
 	import TriStateSlide from '$lib/components/TriStateSlide.svelte';
@@ -24,7 +32,7 @@
 
 	$: categories = $getCategories.data.categories?.nodes
 		?.filter((e) => e.id !== 0)
-		.sort((a, b) => (a.order > b.order ? 1 : -1));
+		.toSorted((a, b) => (a.order > b.order ? 1 : -1));
 
 	let MangaCategories = manga.categories.nodes?.map((e) => e.id) ?? [];
 
@@ -167,7 +175,7 @@
 
 	async function handelSubmit() {
 		modalStore.close();
-		if (selectedCategories.sort().join(',') !== MangaCategories.sort().join(',')) {
+		if (selectedCategories.toSorted().join(',') !== MangaCategories.toSorted().join(',')) {
 			Errorhelp(
 				'Failed to change mangas categories',
 				updateMangaCategories({

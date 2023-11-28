@@ -1,3 +1,11 @@
+<!--
+ Copyright (c) 2023 Contributors to the Suwayomi project
+ 
+ This Source Code Form is subject to the terms of the Mozilla Public
+ License, v. 2.0. If a copy of the MPL was not distributed with this
+ file, You can obtain one at http://mozilla.org/MPL/2.0/.
+-->
+
 <script lang="ts">
 	import Image from '../lib/components/Image.svelte';
 	import { getModalStore } from '@skeletonlabs/skeleton';
@@ -16,7 +24,7 @@
 	} from '$lib/generated';
 	import type { Readable } from 'svelte/motion';
 	import type { ApolloQueryResult, ObservableQuery } from '@apollo/client';
-	import { ISOLanguages } from './(app)/browse/languages';
+	import { FindLangName } from './(app)/browse/languages';
 	import { goto } from '$app/navigation';
 	import type { SvelteComponent } from 'svelte';
 	import { Sourcelangfilt } from './(app)/browse/sources/SourcesStores';
@@ -186,9 +194,7 @@
 							: `/browse/source/${e.id}/popular`,
 						firstLineBoldText: mangaSearch ? mangaSearch : e.displayName,
 						firstLine: mangaSearch ? e.displayName + ' /' : undefined,
-						secondLine:
-							ISOLanguages.find((ele) => ele.code.toLowerCase() === e.lang.toLowerCase())
-								?.nativeName ?? e.lang
+						secondLine: FindLangName(e.lang)
 					};
 				});
 			}

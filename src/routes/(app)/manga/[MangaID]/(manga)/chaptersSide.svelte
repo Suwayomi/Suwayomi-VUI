@@ -1,3 +1,11 @@
+<!--
+ Copyright (c) 2023 Contributors to the Suwayomi project
+ 
+ This Source Code Form is subject to the terms of the Mozilla Public
+ License, v. 2.0. If a copy of the MPL was not distributed with this
+ file, You can obtain one at http://mozilla.org/MPL/2.0/.
+-->
+
 <script lang="ts">
 	import { goto } from '$app/navigation';
 	import { cache } from '$lib/apollo';
@@ -94,7 +102,7 @@
 		return true;
 	});
 
-	$: sortedChapters = filteredChapters?.sort((a, b) => {
+	$: sortedChapters = filteredChapters?.toSorted((a, b) => {
 		let tmp = true;
 		if ($mangaMeta.ChapterSort === ChapterSort.Source) {
 			tmp = a.sourceOrder > b.sourceOrder;
@@ -486,7 +494,7 @@
 		<a
 			href="{manga.data.manga.id}/chapter/{sortedChapters
 				.filter((e) => !e.isRead)
-				.sort((a, b) => (a.sourceOrder > b.sourceOrder ? 1 : -1))[0].id}"
+				.toSorted((a, b) => (a.sourceOrder > b.sourceOrder ? 1 : -1))[0].id}"
 			class="btn variant-filled-primary hover:variant-glass-primary fixed bottom-2 right-16"
 		>
 			resume

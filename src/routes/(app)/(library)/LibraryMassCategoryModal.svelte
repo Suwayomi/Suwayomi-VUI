@@ -1,3 +1,11 @@
+<!--
+ Copyright (c) 2023 Contributors to the Suwayomi project
+ 
+ This Source Code Form is subject to the terms of the Mozilla Public
+ License, v. 2.0. If a copy of the MPL was not distributed with this
+ file, You can obtain one at http://mozilla.org/MPL/2.0/.
+-->
+
 <script lang="ts">
 	import { getToastStore } from '$lib/components/Toast/stores';
 	import TriStateSlide from '$lib/components/TriStateSlide.svelte';
@@ -143,7 +151,7 @@
 			<div class="border-b border-t border-surface-700 p-4">
 				{#each $categories.data.categories.nodes
 					.filter((e) => e.id !== 0)
-					.sort((a, b) => (a.order > b.order ? 1 : -1)) as category}
+					.toSorted((a, b) => (a.order > b.order ? 1 : -1)) as category}
 					<div>
 						<TriStateSlide
 							tristat={false}

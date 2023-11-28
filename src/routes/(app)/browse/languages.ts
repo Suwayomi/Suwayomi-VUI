@@ -1,5 +1,11 @@
+// Copyright (c) 2023 Contributors to the Suwayomi project
+//
+// This Source Code Form is subject to the terms of the Mozilla Public
+// License, v. 2.0. If a copy of the MPL was not distributed with this
+// file, You can obtain one at http://mozilla.org/MPL/2.0/.
+
 // full list: https://github.com/meikidd/iso-639-1/blob/master/src/data.js
-export const ISOLanguages = [
+const ISOLanguages = [
 	{ code: 'all', name: 'All', nativeName: 'All' },
 	{ code: 'installed', name: 'Installed', nativeName: 'Installed' },
 	{ code: 'updates pending', name: 'Updates pending', nativeName: 'Updates pending' },
@@ -195,3 +201,16 @@ export const ISOLanguages = [
 	{ code: 'yo', name: 'Yoruba', nativeName: 'Yorùbá' },
 	{ code: 'za', name: 'Zhuang', nativeName: 'Saɯ cueŋƅ' }
 ];
+
+/**
+ * The function `FindLangName` takes a language code as input and returns the corresponding native name
+ * of the language if found, otherwise it returns the input language code itself.
+ * @param {string} LangCode - The `LangCode` parameter is a string that represents the language code
+ * @returns the native name of a language based on its language code or the original language code.
+ */
+export function FindLangName(LangCode: string): string {
+	return (
+		ISOLanguages.find((ele) => ele.code.toLowerCase() === LangCode.toLowerCase())?.nativeName ??
+		LangCode
+	);
+}

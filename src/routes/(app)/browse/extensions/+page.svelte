@@ -1,3 +1,11 @@
+<!--
+ Copyright (c) 2023 Contributors to the Suwayomi project
+ 
+ This Source Code Form is subject to the terms of the Mozilla Public
+ License, v. 2.0. If a copy of the MPL was not distributed with this
+ file, You can obtain one at http://mozilla.org/MPL/2.0/.
+-->
+
 <script lang="ts">
 	import { AppBarData } from '$lib/MountTitleAction';
 	import { getToastStore } from '$lib/components/Toast/stores';
@@ -10,12 +18,12 @@
 		type FetchExtensionsMutation,
 		type InputMaybe
 	} from '$lib/generated';
-	import { Errorhelp, Partition } from '$lib/util';
+	import { Errorhelp, Partition, groupBy } from '$lib/util';
 	import type { ApolloQueryResult, ObservableQuery } from '@apollo/client';
 	import type { Readable } from 'svelte/motion';
 	import { queryParam, ssp } from 'sveltekit-search-params';
 	import Nav from '../Nav.svelte';
-	import { ISOLanguages } from '../languages';
+	import { FindLangName } from '../languages';
 	import ExtentionsActions from './ExtensionsActions.svelte';
 	import { langfilt, lastFetched } from './ExtensionsStores';
 	import ExtensionCard from './ExtensionCard.svelte';
@@ -86,7 +94,7 @@
 			return ele.name.toLowerCase().includes($query.toLocaleLowerCase());
 		}
 		return true;
-	});
+	}) as Textension[] | undefined;
 
 	$: groupExtensions = doGroupSources(filteredExtensions, langs);
 	function doGroupSources(filteredSrces: Textension[] | undefined, langs: Set<string>) {
@@ -98,13 +106,7 @@
 			['Installed', isInstalled]
 		] as [string, Textension[]][];
 		if (!(isntInstalled?.length || langs.size)) return always;
-		return [
-			...always,
-			...[...langs].map(
-				(lang) =>
-					[lang, isntInstalled?.filter((elem) => elem.lang === lang)] as [string, Textension[]]
-			)
-		];
+		return [...always, ...groupBy(isntInstalled, (item) => item.lang)];
 	}
 </script>
 
@@ -134,16 +136,13 @@
 		{JSON.stringify($extensions.error)}
 	{:else if groupExtensions}
 		<div class="px-4">
-			{#each groupExtensions as Langset}
-				{#if Langset[1].length}
-					<h2 class="h2 p-2">
-						{ISOLanguages.find((ele) => ele.code.toLowerCase() === Langset[0].toLowerCase())
-							?.nativeName ?? Langset[0]}
-					</h2>
-					{#each Langset[1] as ext (ext.pkgName)}
-						<ExtensionCard {ext} {scrollingElement} />
-					{/each}
-				{/if}
+			{#each groupExtensions as [lang, sause]}
+				<h2 class="h2 p-2">
+					{FindLangName(lang)}
+				</h2>
+				{#each sause as ext (ext.pkgName)}
+					<ExtensionCard {ext} {scrollingElement} />
+				{/each}
 			{/each}
 		</div>
 	{/if}

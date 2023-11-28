@@ -1,7 +1,15 @@
+<!--
+ Copyright (c) 2023 Contributors to the Suwayomi project
+ 
+ This Source Code Form is subject to the terms of the Mozilla Public
+ License, v. 2.0. If a copy of the MPL was not distributed with this
+ file, You can obtain one at http://mozilla.org/MPL/2.0/.
+-->
+
 <script lang="ts">
 	import type { Writable } from 'svelte/store';
 	import { getModalStore } from '@skeletonlabs/skeleton';
-	import { ISOLanguages } from '../../routes/(app)/browse/languages';
+	import { FindLangName } from '../../routes/(app)/browse/languages';
 	import Slide from '$lib/components/Slide.svelte';
 	const modalStore = getModalStore();
 	export let langs: Set<string>;
@@ -27,8 +35,7 @@
 						}}
 						checked={$langfilt.has(lang)}
 					>
-						{ISOLanguages.find((ele) => ele.code.toLowerCase() === lang.toLowerCase())
-							?.nativeName ?? lang}
+						{FindLangName(lang)}
 					</Slide>
 				{/each}
 			</div>
