@@ -20,5 +20,5 @@ services:
       - VITE_URL=http://tachidesk:4567
     volumes:
       - '.:/app'
-    command: /bin/sh -c "npm i && npm run dev -- --host"
+    command: /bin/sh -c "bun i && bun run dev --host"
     restart: unless-stopped
