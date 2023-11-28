@@ -4,11 +4,12 @@
 	import { sources as getsources, type SourcesQuery } from '$lib/generated';
 	import { AppBarData } from '$lib/MountTitleAction';
 	import { queryParam, ssp } from 'sveltekit-search-params';
-	import { ISOLanguages } from '../languages';
+	import { FindLangName } from '../languages';
 	import Nav from '../Nav.svelte';
 	import SourcesActions from './SourcesActions.svelte';
 	import { Sourcelangfilt } from './SourcesStores';
 	import { Meta } from '$lib/simpleStores';
+	import { groupBy } from '$lib/util';
 
 	AppBarData('Sources');
 
@@ -23,9 +24,10 @@
 			return ele.displayName.toLowerCase().includes($query.toLocaleLowerCase());
 		}
 		return true;
-	});
+	}) as Tsource[] | undefined;
 
 	$: langs = getLangs($sources.data);
+
 	function getLangs(srces: SourcesQuery) {
 		if (srces?.sources?.nodes !== undefined) {
 			return $sources.data.sources.nodes.reduce((a, c) => {
@@ -40,12 +42,11 @@
 
 	$: langs, AppBarData('Sources', { component: SourcesActions, props: { langs } });
 
-	$: groupSources = doGroupSources(filteredSources, langs);
-	function doGroupSources(filteredSrces: Tsource[], langs: Set<string>) {
-		if (!(filteredSrces?.length || langs.size)) return [];
-		return [...langs].map((lang) => {
-			return [lang, filteredSrces?.filter((elem) => elem.lang === lang)] as [string, Tsource[]];
-		});
+	$: groupSources = doGroupSources(filteredSources);
+
+	function doGroupSources(filteredSrces: Tsource[] | undefined) {
+		if (!filteredSrces) return;
+		return groupBy(filteredSrces, ({ lang }) => lang);
 	}
 </script>
 
@@ -76,10 +77,9 @@
 			</div>
 		{/each}
 	{:else if groupSources}
-		{#each groupSources.filter((ele) => ele[1].length) as [Lang, sous]}
+		{#each groupSources as [lang, sous]}
 			<div class="text-5xl py-4 px-8">
-				{ISOLanguages.find((ele) => ele.code.toLowerCase() === Lang.toLowerCase())?.nativeName ??
-					Lang}
+				{FindLangName(lang)}
 			</div>
 			<div
 				class="grid xs:grid-cols-2 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-8 xl:grid-cols-10 2xl:grid-cols-12 gap-2 mx-2"
