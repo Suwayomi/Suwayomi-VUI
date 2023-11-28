@@ -13,6 +13,7 @@
 		type GetMangaQuery,
 		type UpdateMangaCategoriesMutation
 	} from '$lib/generated';
+	import { MangaMeta } from '$lib/simpleStores';
 	import type { ApolloCache, FetchResult } from '@apollo/client';
 	import { ProgressRadial, getModalStore } from '@skeletonlabs/skeleton';
 	import type { SvelteComponent } from 'svelte';
@@ -24,9 +25,11 @@
 
 	let doChapters = true;
 	let doCategories = true;
+	let doTracking = true;
 
 	let MigrateLoading = false;
 	let CopyLoading = false;
+	const mangaMeta = MangaMeta(id);
 
 	async function MigrateManga() {
 		MigrateLoading = true;
@@ -54,6 +57,9 @@
 		}
 		if (doCategories) {
 			await CopyMangaCategories();
+		}
+		if (doTracking) {
+			await CopyMangaTracking();
 		}
 		parent.onClose();
 	}
@@ -232,6 +238,12 @@
 			update: (a, b) => updateMangaCategoriesUpdate(a, b, dat)
 		});
 	}
+
+	async function CopyMangaTracking() {
+		$mangaMeta.mangaUpdatesSeriesID =
+			JSON.parse(manga.meta.find((e) => e.key === 'VUI3_mangaUpdatesSeriesID')?.value ?? 'null') ??
+			null;
+	}
 </script>
 
 {#if $modalStore[0]}
@@ -244,6 +256,9 @@
 				</Slide>
 				<Slide class="outline-0 p-1 pl-2 hover:variant-glass-surface" bind:checked={doCategories}>
 					Categories
+				</Slide>
+				<Slide class="outline-0 p-1 pl-2 hover:variant-glass-surface" bind:checked={doTracking}>
+					Tracking
 				</Slide>
 			</div>
 		</div>
@@ -268,7 +283,7 @@
 					class="btn variant-filled-surface hover:variant-glass-surface"
 				>
 					{#if MigrateLoading}
-						MigratIng<ProgressRadial class="ml-1 h-4 aspect-square w-auto" />
+						Migrating<ProgressRadial class="ml-1 h-4 aspect-square w-auto" />
 					{:else}
 						Migrate
 					{/if}
