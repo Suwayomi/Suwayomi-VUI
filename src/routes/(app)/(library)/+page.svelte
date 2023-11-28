@@ -48,7 +48,7 @@
 		});
 	}
 
-	$: orderedCategories = [...($categories.data?.categories?.nodes ?? [])].sort((a, b) => {
+	$: orderedCategories = [...($categories.data?.categories?.nodes ?? [])].toSorted((a, b) => {
 		return a.order > b.order ? 1 : -1;
 	});
 
@@ -95,7 +95,7 @@
 		return true;
 	});
 
-	$: sortedMangas = filteredMangas?.sort((a, b) => {
+	$: sortedMangas = filteredMangas?.toSorted((a, b) => {
 		let tru = true;
 		switch ($Meta.Sort) {
 			case sort.ID:

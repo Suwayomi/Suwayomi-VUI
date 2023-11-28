@@ -94,7 +94,7 @@
 		return true;
 	});
 
-	$: sortedChapters = filteredChapters?.sort((a, b) => {
+	$: sortedChapters = filteredChapters?.toSorted((a, b) => {
 		let tmp = true;
 		if ($mangaMeta.ChapterSort === ChapterSort.Source) {
 			tmp = a.sourceOrder > b.sourceOrder;
@@ -486,7 +486,7 @@
 		<a
 			href="{manga.data.manga.id}/chapter/{sortedChapters
 				.filter((e) => !e.isRead)
-				.sort((a, b) => (a.sourceOrder > b.sourceOrder ? 1 : -1))[0].id}"
+				.toSorted((a, b) => (a.sourceOrder > b.sourceOrder ? 1 : -1))[0].id}"
 			class="btn variant-filled-primary hover:variant-glass-primary fixed bottom-2 right-16"
 		>
 			resume
