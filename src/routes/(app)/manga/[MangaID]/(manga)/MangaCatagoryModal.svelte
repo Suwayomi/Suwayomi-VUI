@@ -24,7 +24,7 @@
 
 	$: categories = $getCategories.data.categories?.nodes
 		?.filter((e) => e.id !== 0)
-		.sort((a, b) => (a.order > b.order ? 1 : -1));
+		.toSorted((a, b) => (a.order > b.order ? 1 : -1));
 
 	let MangaCategories = manga.categories.nodes?.map((e) => e.id) ?? [];
 
@@ -167,7 +167,7 @@
 
 	async function handelSubmit() {
 		modalStore.close();
-		if (selectedCategories.sort().join(',') !== MangaCategories.sort().join(',')) {
+		if (selectedCategories.toSorted().join(',') !== MangaCategories.toSorted().join(',')) {
 			Errorhelp(
 				'Failed to change mangas categories',
 				updateMangaCategories({

@@ -143,7 +143,7 @@
 			<div class="border-b border-t border-surface-700 p-4">
 				{#each $categories.data.categories.nodes
 					.filter((e) => e.id !== 0)
-					.sort((a, b) => (a.order > b.order ? 1 : -1)) as category}
+					.toSorted((a, b) => (a.order > b.order ? 1 : -1)) as category}
 					<div>
 						<TriStateSlide
 							tristat={false}
