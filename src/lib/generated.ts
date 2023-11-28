@@ -27,8 +27,8 @@ export type Scalars = {
   Upload: { input: any; output: any; }
 };
 
-export type AboutPayload = {
-  __typename?: 'AboutPayload';
+export type AboutServerPayload = {
+  __typename?: 'AboutServerPayload';
   buildTime: Scalars['LongString']['output'];
   buildType: Scalars['String']['output'];
   discord: Scalars['String']['output'];
@@ -1303,7 +1303,8 @@ export type Preference = CheckBoxPreference | EditTextPreference | ListPreferenc
 
 export type Query = {
   __typename?: 'Query';
-  about: AboutPayload;
+  aboutServer: AboutServerPayload;
+  aboutWebUI: WebUiUpdateInfo;
   categories: CategoryNodeList;
   category: CategoryType;
   chapter: ChapterType;
@@ -2468,7 +2469,7 @@ export type ConditionalChaptersOfGivenMangaQuery = { __typename?: 'Query', chapt
 export type AboutQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type AboutQuery = { __typename?: 'Query', about: { __typename?: 'AboutPayload', buildTime: any, buildType: string, discord: string, github: string, name: string, revision: string, version: string } };
+export type AboutQuery = { __typename?: 'Query', aboutServer: { __typename?: 'AboutServerPayload', buildTime: any, buildType: string, discord: string, github: string, name: string, revision: string, version: string } };
 
 export type RestoreStatusQueryVariables = Exact<{
   id: Scalars['String']['input'];
@@ -3313,7 +3314,7 @@ export const ConditionalChaptersOfGivenMangaDoc = gql`
     `;
 export const AboutDoc = gql`
     query about {
-  about {
+  aboutServer {
     buildTime
     buildType
     discord

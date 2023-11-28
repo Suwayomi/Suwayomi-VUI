@@ -1,7 +1,7 @@
 schema {
-	query: Query
-	mutation: Mutation
-	subscription: Subscription
+  query: Query
+  mutation: Mutation
+  subscription: Subscription
 }
 "A location in a connection that can be used for resuming pagination."
 scalar Cursor
@@ -9,1491 +9,1408 @@ scalar Cursor
 scalar LongString
 "A file part in a multipart request"
 scalar Upload
-type AboutPayload {
-	buildTime: LongString!
-	buildType: String!
-	discord: String!
-	github: String!
-	name: String!
-	revision: String!
-	version: String!
+type AboutServerPayload {
+  buildTime: LongString!
+  buildType: String!
+  discord: String!
+  github: String!
+  name: String!
+  revision: String!
+  version: String!
 }
 type BackupRestoreStatus {
-	mangaProgress: Int!
-	state: BackupRestoreState!
-	totalManga: Int!
+  mangaProgress: Int!
+  state: BackupRestoreState!
+  totalManga: Int!
 }
 type CategoryEdge implements Edge {
-	cursor: Cursor!
-	node: CategoryType!
+  cursor: Cursor!
+  node: CategoryType!
 }
 type CategoryMetaType implements MetaType {
-	categoryId: Int!
-	key: String!
-	value: String!
-	category: CategoryType!
+  categoryId: Int!
+  key: String!
+  value: String!
+  category: CategoryType!
 }
 type CategoryNodeList implements NodeList {
-	edges: [CategoryEdge!]!
-	nodes: [CategoryType!]!
-	pageInfo: PageInfo!
-	totalCount: Int!
+  edges: [CategoryEdge!]!
+  nodes: [CategoryType!]!
+  pageInfo: PageInfo!
+  totalCount: Int!
 }
 type CategoryType {
-	default: Boolean!
-	id: Int!
-	includeInUpdate: IncludeInUpdate!
-	name: String!
-	order: Int!
-	mangas: MangaNodeList!
-	meta: [CategoryMetaType!]!
+  default: Boolean!
+  id: Int!
+  includeInUpdate: IncludeInUpdate!
+  name: String!
+  order: Int!
+  mangas: MangaNodeList!
+  meta: [CategoryMetaType!]!
 }
 type ChapterEdge implements Edge {
-	cursor: Cursor!
-	node: ChapterType!
+  cursor: Cursor!
+  node: ChapterType!
 }
 type ChapterMetaType implements MetaType {
-	chapterId: Int!
-	key: String!
-	value: String!
-	chapter: ChapterType!
+  chapterId: Int!
+  key: String!
+  value: String!
+  chapter: ChapterType!
 }
 type ChapterNodeList implements NodeList {
-	edges: [ChapterEdge!]!
-	nodes: [ChapterType!]!
-	pageInfo: PageInfo!
-	totalCount: Int!
+  edges: [ChapterEdge!]!
+  nodes: [ChapterType!]!
+  pageInfo: PageInfo!
+  totalCount: Int!
 }
 type ChapterType {
-	chapterNumber: Float!
-	fetchedAt: LongString!
-	id: Int!
-	isBookmarked: Boolean!
-	isDownloaded: Boolean!
-	isRead: Boolean!
-	lastPageRead: Int!
-	lastReadAt: LongString!
-	mangaId: Int!
-	name: String!
-	pageCount: Int!
-	realUrl: String
-	scanlator: String
-	sourceOrder: Int!
-	uploadDate: LongString!
-	url: String!
-	manga: MangaType!
-	meta: [ChapterMetaType!]!
+  chapterNumber: Float!
+  fetchedAt: LongString!
+  id: Int!
+  isBookmarked: Boolean!
+  isDownloaded: Boolean!
+  isRead: Boolean!
+  lastPageRead: Int!
+  lastReadAt: LongString!
+  mangaId: Int!
+  name: String!
+  pageCount: Int!
+  realUrl: String
+  scanlator: String
+  sourceOrder: Int!
+  uploadDate: LongString!
+  url: String!
+  manga: MangaType!
+  meta: [ChapterMetaType!]!
 }
 type CheckBoxFilter {
-	default: Boolean!
-	name: String!
+  default: Boolean!
+  name: String!
 }
 type CheckBoxPreference {
-	currentValue: Boolean
-	default: Boolean!
-	key: String!
-	summary: String
-	title: String!
-	visible: Boolean!
+  currentValue: Boolean
+  default: Boolean!
+  key: String!
+  summary: String
+  title: String!
+  visible: Boolean!
 }
 type CheckForServerUpdatesPayload {
-	channel: String!
-	tag: String!
-	url: String!
+  channel: String!
+  tag: String!
+  url: String!
 }
 type ClearDownloaderPayload {
-	clientMutationId: String
-	downloadStatus: DownloadStatus!
+  clientMutationId: String
+  downloadStatus: DownloadStatus!
 }
 type CreateBackupPayload {
-	clientMutationId: String
-	url: String!
+  clientMutationId: String
+  url: String!
 }
 type CreateCategoryPayload {
-	category: CategoryType!
-	clientMutationId: String
+  category: CategoryType!
+  clientMutationId: String
 }
 type DeleteCategoryMetaPayload {
-	category: CategoryType!
-	clientMutationId: String
-	meta: CategoryMetaType
+  category: CategoryType!
+  clientMutationId: String
+  meta: CategoryMetaType
 }
 type DeleteCategoryPayload {
-	category: CategoryType
-	clientMutationId: String
-	mangas: [MangaType!]!
+  category: CategoryType
+  clientMutationId: String
+  mangas: [MangaType!]!
 }
 type DeleteChapterMetaPayload {
-	chapter: ChapterType!
-	clientMutationId: String
-	meta: ChapterMetaType
+  chapter: ChapterType!
+  clientMutationId: String
+  meta: ChapterMetaType
 }
 type DeleteDownloadedChapterPayload {
-	chapters: ChapterType!
-	clientMutationId: String
+  chapters: ChapterType!
+  clientMutationId: String
 }
 type DeleteDownloadedChaptersPayload {
-	chapters: [ChapterType!]!
-	clientMutationId: String
+  chapters: [ChapterType!]!
+  clientMutationId: String
 }
 type DeleteGlobalMetaPayload {
-	clientMutationId: String
-	meta: GlobalMetaType
+  clientMutationId: String
+  meta: GlobalMetaType
 }
 type DeleteMangaMetaPayload {
-	clientMutationId: String
-	manga: MangaType!
-	meta: MangaMetaType
+  clientMutationId: String
+  manga: MangaType!
+  meta: MangaMetaType
 }
 type DequeueChapterDownloadPayload {
-	clientMutationId: String
-	downloadStatus: DownloadStatus!
+  clientMutationId: String
+  downloadStatus: DownloadStatus!
 }
 type DequeueChapterDownloadsPayload {
-	clientMutationId: String
-	downloadStatus: DownloadStatus!
+  clientMutationId: String
+  downloadStatus: DownloadStatus!
 }
 type DownloadAheadPayload {
-	clientMutationId: String
+  clientMutationId: String
 }
 type DownloadEdge implements Edge {
-	cursor: Cursor!
-	node: DownloadType!
+  cursor: Cursor!
+  node: DownloadType!
 }
 type DownloadNodeList implements NodeList {
-	edges: [DownloadEdge!]!
-	nodes: [DownloadType!]!
-	pageInfo: PageInfo!
-	totalCount: Int!
+  edges: [DownloadEdge!]!
+  nodes: [DownloadType!]!
+  pageInfo: PageInfo!
+  totalCount: Int!
 }
 type DownloadStatus {
-	queue: [DownloadType!]!
-	state: DownloaderState!
+  queue: [DownloadType!]!
+  state: DownloaderState!
 }
 type DownloadType {
-	progress: Float!
-	state: DownloadState!
-	tries: Int!
-	chapter: ChapterType!
-	manga: MangaType!
+  progress: Float!
+  state: DownloadState!
+  tries: Int!
+  chapter: ChapterType!
+  manga: MangaType!
 }
 type EditTextPreference {
-	currentValue: String
-	default: String
-	dialogMessage: String
-	dialogTitle: String
-	key: String!
-	summary: String
-	text: String
-	title: String
-	visible: Boolean!
+  currentValue: String
+  default: String
+  dialogMessage: String
+  dialogTitle: String
+  key: String!
+  summary: String
+  text: String
+  title: String
+  visible: Boolean!
 }
 type EnqueueChapterDownloadPayload {
-	clientMutationId: String
-	downloadStatus: DownloadStatus!
+  clientMutationId: String
+  downloadStatus: DownloadStatus!
 }
 type EnqueueChapterDownloadsPayload {
-	clientMutationId: String
-	downloadStatus: DownloadStatus!
+  clientMutationId: String
+  downloadStatus: DownloadStatus!
 }
 type ExtensionEdge implements Edge {
-	cursor: Cursor!
-	node: ExtensionType!
+  cursor: Cursor!
+  node: ExtensionType!
 }
 type ExtensionNodeList implements NodeList {
-	edges: [ExtensionEdge!]!
-	nodes: [ExtensionType!]!
-	pageInfo: PageInfo!
-	totalCount: Int!
+  edges: [ExtensionEdge!]!
+  nodes: [ExtensionType!]!
+  pageInfo: PageInfo!
+  totalCount: Int!
 }
 type ExtensionType {
-	apkName: String!
-	hasUpdate: Boolean!
-	iconUrl: String!
-	isInstalled: Boolean!
-	isNsfw: Boolean!
-	isObsolete: Boolean!
-	lang: String!
-	name: String!
-	pkgName: String!
-	versionCode: Int!
-	versionName: String!
-	source: SourceNodeList!
+  apkName: String!
+  hasUpdate: Boolean!
+  iconUrl: String!
+  isInstalled: Boolean!
+  isNsfw: Boolean!
+  isObsolete: Boolean!
+  lang: String!
+  name: String!
+  pkgName: String!
+  versionCode: Int!
+  versionName: String!
+  source: SourceNodeList!
 }
 type FetchChapterPagesPayload {
-	chapter: ChapterType!
-	clientMutationId: String
-	pages: [String!]!
+  chapter: ChapterType!
+  clientMutationId: String
+  pages: [String!]!
 }
 type FetchChaptersPayload {
-	chapters: [ChapterType!]!
-	clientMutationId: String
+  chapters: [ChapterType!]!
+  clientMutationId: String
 }
 type FetchExtensionsPayload {
-	clientMutationId: String
-	extensions: [ExtensionType!]!
+  clientMutationId: String
+  extensions: [ExtensionType!]!
 }
 type FetchMangaPayload {
-	clientMutationId: String
-	manga: MangaType!
+  clientMutationId: String
+  manga: MangaType!
 }
 type FetchSourceMangaPayload {
-	clientMutationId: String
-	hasNextPage: Boolean!
-	mangas: [MangaType!]!
+  clientMutationId: String
+  hasNextPage: Boolean!
+  mangas: [MangaType!]!
 }
 type GlobalMetaNodeList implements NodeList {
-	edges: [MetaEdge!]!
-	nodes: [GlobalMetaType!]!
-	pageInfo: PageInfo!
-	totalCount: Int!
+  edges: [MetaEdge!]!
+  nodes: [GlobalMetaType!]!
+  pageInfo: PageInfo!
+  totalCount: Int!
 }
 type GlobalMetaType implements MetaType {
-	key: String!
-	value: String!
+  key: String!
+  value: String!
 }
 type GroupFilter {
-	filters: [Filter!]!
-	name: String!
+  filters: [Filter!]!
+  name: String!
 }
 type HeaderFilter {
-	name: String!
+  name: String!
 }
 type InstallExternalExtensionPayload {
-	clientMutationId: String
-	extension: ExtensionType!
+  clientMutationId: String
+  extension: ExtensionType!
 }
 type LastUpdateTimestampPayload {
-	timestamp: LongString!
+  timestamp: LongString!
 }
 type ListPreference {
-	currentValue: String
-	default: String
-	entries: [String!]!
-	entryValues: [String!]!
-	key: String!
-	summary: String
-	title: String
-	visible: Boolean!
+  currentValue: String
+  default: String
+  entries: [String!]!
+  entryValues: [String!]!
+  key: String!
+  summary: String
+  title: String
+  visible: Boolean!
 }
 type MangaEdge implements Edge {
-	cursor: Cursor!
-	node: MangaType!
+  cursor: Cursor!
+  node: MangaType!
 }
 type MangaMetaType implements MetaType {
-	key: String!
-	mangaId: Int!
-	value: String!
-	manga: MangaType!
+  key: String!
+  mangaId: Int!
+  value: String!
+  manga: MangaType!
 }
 type MangaNodeList implements NodeList {
-	edges: [MangaEdge!]!
-	nodes: [MangaType!]!
-	pageInfo: PageInfo!
-	totalCount: Int!
+  edges: [MangaEdge!]!
+  nodes: [MangaType!]!
+  pageInfo: PageInfo!
+  totalCount: Int!
 }
 type MangaType {
-	artist: String
-	author: String
-	chaptersLastFetchedAt: LongString
-	description: String
-	genre: [String!]!
-	id: Int!
-	inLibrary: Boolean!
-	inLibraryAt: LongString!
-	initialized: Boolean!
-	lastFetchedAt: LongString
-	realUrl: String
-	sourceId: LongString!
-	status: MangaStatus!
-	thumbnailUrl: String
-	title: String!
-	url: String!
-	age: LongString
-	categories: CategoryNodeList!
-	chapters: ChapterNodeList!
-	chaptersAge: LongString
-	downloadCount: Int!
-	lastReadChapter: ChapterType
-	meta: [MangaMetaType!]!
-	source: SourceType
-	unreadCount: Int!
+  artist: String
+  author: String
+  chaptersLastFetchedAt: LongString
+  description: String
+  genre: [String!]!
+  id: Int!
+  inLibrary: Boolean!
+  inLibraryAt: LongString!
+  initialized: Boolean!
+  lastFetchedAt: LongString
+  realUrl: String
+  sourceId: LongString!
+  status: MangaStatus!
+  thumbnailUrl: String
+  title: String!
+  url: String!
+  age: LongString
+  categories: CategoryNodeList!
+  chapters: ChapterNodeList!
+  chaptersAge: LongString
+  downloadCount: Int!
+  lastReadChapter: ChapterType
+  meta: [MangaMetaType!]!
+  source: SourceType
+  unreadCount: Int!
 }
 type MetaEdge implements Edge {
-	cursor: Cursor!
-	node: GlobalMetaType!
+  cursor: Cursor!
+  node: GlobalMetaType!
 }
 type MultiSelectListPreference {
-	currentValue: [String!]
-	default: [String!]
-	dialogMessage: String
-	dialogTitle: String
-	entries: [String!]!
-	entryValues: [String!]!
-	key: String!
-	summary: String
-	title: String
-	visible: Boolean!
+  currentValue: [String!]
+  default: [String!]
+  dialogMessage: String
+  dialogTitle: String
+  entries: [String!]!
+  entryValues: [String!]!
+  key: String!
+  summary: String
+  title: String
+  visible: Boolean!
 }
 type Mutation {
-	createBackup(input: CreateBackupInput): CreateBackupPayload!
-	restoreBackup(input: RestoreBackupInput!): RestoreBackupPayload!
-	createCategory(input: CreateCategoryInput!): CreateCategoryPayload!
-	deleteCategory(input: DeleteCategoryInput!): DeleteCategoryPayload!
-	deleteCategoryMeta(input: DeleteCategoryMetaInput!): DeleteCategoryMetaPayload!
-	setCategoryMeta(input: SetCategoryMetaInput!): SetCategoryMetaPayload!
-	updateCategories(input: UpdateCategoriesInput!): UpdateCategoriesPayload!
-	updateCategory(input: UpdateCategoryInput!): UpdateCategoryPayload!
-	updateCategoryOrder(input: UpdateCategoryOrderInput!): UpdateCategoryOrderPayload!
-	updateMangaCategories(input: UpdateMangaCategoriesInput!): UpdateMangaCategoriesPayload!
-	updateMangasCategories(input: UpdateMangasCategoriesInput!): UpdateMangasCategoriesPayload!
-	deleteChapterMeta(input: DeleteChapterMetaInput!): DeleteChapterMetaPayload!
-	fetchChapterPages(input: FetchChapterPagesInput!): FetchChapterPagesPayload!
-	fetchChapters(input: FetchChaptersInput!): FetchChaptersPayload!
-	setChapterMeta(input: SetChapterMetaInput!): SetChapterMetaPayload!
-	updateChapter(input: UpdateChapterInput!): UpdateChapterPayload!
-	updateChapters(input: UpdateChaptersInput!): UpdateChaptersPayload!
-	clearDownloader(input: ClearDownloaderInput!): ClearDownloaderPayload!
-	deleteDownloadedChapter(input: DeleteDownloadedChapterInput!): DeleteDownloadedChapterPayload!
-	deleteDownloadedChapters(input: DeleteDownloadedChaptersInput!): DeleteDownloadedChaptersPayload!
-	dequeueChapterDownload(input: DequeueChapterDownloadInput!): DequeueChapterDownloadPayload!
-	dequeueChapterDownloads(input: DequeueChapterDownloadsInput!): DequeueChapterDownloadsPayload!
-	downloadAhead(input: DownloadAheadInput!): DownloadAheadPayload!
-	enqueueChapterDownload(input: EnqueueChapterDownloadInput!): EnqueueChapterDownloadPayload!
-	enqueueChapterDownloads(input: EnqueueChapterDownloadsInput!): EnqueueChapterDownloadsPayload!
-	reorderChapterDownload(input: ReorderChapterDownloadInput!): ReorderChapterDownloadPayload!
-	startDownloader(input: StartDownloaderInput!): StartDownloaderPayload!
-	stopDownloader(input: StopDownloaderInput!): StopDownloaderPayload!
-	fetchExtensions(input: FetchExtensionsInput!): FetchExtensionsPayload!
-	installExternalExtension(input: InstallExternalExtensionInput!): InstallExternalExtensionPayload!
-	updateExtension(input: UpdateExtensionInput!): UpdateExtensionPayload!
-	updateExtensions(input: UpdateExtensionsInput!): UpdateExtensionsPayload!
-	updateWebUI(input: WebUIUpdateInput!): WebUIUpdatePayload!
-	deleteMangaMeta(input: DeleteMangaMetaInput!): DeleteMangaMetaPayload!
-	fetchManga(input: FetchMangaInput!): FetchMangaPayload!
-	setMangaMeta(input: SetMangaMetaInput!): SetMangaMetaPayload!
-	updateManga(input: UpdateMangaInput!): UpdateMangaPayload!
-	updateMangas(input: UpdateMangasInput!): UpdateMangasPayload!
-	deleteGlobalMeta(input: DeleteGlobalMetaInput!): DeleteGlobalMetaPayload!
-	setGlobalMeta(input: SetGlobalMetaInput!): SetGlobalMetaPayload!
-	resetSettings(input: ResetSettingsInput!): ResetSettingsPayload!
-	setSettings(input: SetSettingsInput!): SetSettingsPayload!
-	fetchSourceManga(input: FetchSourceMangaInput!): FetchSourceMangaPayload!
-	updateSourcePreference(input: UpdateSourcePreferenceInput!): UpdateSourcePreferencePayload!
-	updateCategoryManga(input: UpdateCategoryMangaInput!): UpdateCategoryMangaPayload!
-	updateLibraryManga(input: UpdateLibraryMangaInput!): UpdateLibraryMangaPayload!
-	updateStop(input: UpdateStopInput!): UpdateStopPayload!
+  createBackup(input: CreateBackupInput): CreateBackupPayload!
+  restoreBackup(input: RestoreBackupInput!): RestoreBackupPayload!
+  createCategory(input: CreateCategoryInput!): CreateCategoryPayload!
+  deleteCategory(input: DeleteCategoryInput!): DeleteCategoryPayload!
+  deleteCategoryMeta(input: DeleteCategoryMetaInput!): DeleteCategoryMetaPayload!
+  setCategoryMeta(input: SetCategoryMetaInput!): SetCategoryMetaPayload!
+  updateCategories(input: UpdateCategoriesInput!): UpdateCategoriesPayload!
+  updateCategory(input: UpdateCategoryInput!): UpdateCategoryPayload!
+  updateCategoryOrder(input: UpdateCategoryOrderInput!): UpdateCategoryOrderPayload!
+  updateMangaCategories(input: UpdateMangaCategoriesInput!): UpdateMangaCategoriesPayload!
+  updateMangasCategories(input: UpdateMangasCategoriesInput!): UpdateMangasCategoriesPayload!
+  deleteChapterMeta(input: DeleteChapterMetaInput!): DeleteChapterMetaPayload!
+  fetchChapterPages(input: FetchChapterPagesInput!): FetchChapterPagesPayload!
+  fetchChapters(input: FetchChaptersInput!): FetchChaptersPayload!
+  setChapterMeta(input: SetChapterMetaInput!): SetChapterMetaPayload!
+  updateChapter(input: UpdateChapterInput!): UpdateChapterPayload!
+  updateChapters(input: UpdateChaptersInput!): UpdateChaptersPayload!
+  clearDownloader(input: ClearDownloaderInput!): ClearDownloaderPayload!
+  deleteDownloadedChapter(input: DeleteDownloadedChapterInput!): DeleteDownloadedChapterPayload!
+  deleteDownloadedChapters(input: DeleteDownloadedChaptersInput!): DeleteDownloadedChaptersPayload!
+  dequeueChapterDownload(input: DequeueChapterDownloadInput!): DequeueChapterDownloadPayload!
+  dequeueChapterDownloads(input: DequeueChapterDownloadsInput!): DequeueChapterDownloadsPayload!
+  downloadAhead(input: DownloadAheadInput!): DownloadAheadPayload!
+  enqueueChapterDownload(input: EnqueueChapterDownloadInput!): EnqueueChapterDownloadPayload!
+  enqueueChapterDownloads(input: EnqueueChapterDownloadsInput!): EnqueueChapterDownloadsPayload!
+  reorderChapterDownload(input: ReorderChapterDownloadInput!): ReorderChapterDownloadPayload!
+  startDownloader(input: StartDownloaderInput!): StartDownloaderPayload!
+  stopDownloader(input: StopDownloaderInput!): StopDownloaderPayload!
+  fetchExtensions(input: FetchExtensionsInput!): FetchExtensionsPayload!
+  installExternalExtension(input: InstallExternalExtensionInput!): InstallExternalExtensionPayload!
+  updateExtension(input: UpdateExtensionInput!): UpdateExtensionPayload!
+  updateExtensions(input: UpdateExtensionsInput!): UpdateExtensionsPayload!
+  updateWebUI(input: WebUIUpdateInput!): WebUIUpdatePayload!
+  deleteMangaMeta(input: DeleteMangaMetaInput!): DeleteMangaMetaPayload!
+  fetchManga(input: FetchMangaInput!): FetchMangaPayload!
+  setMangaMeta(input: SetMangaMetaInput!): SetMangaMetaPayload!
+  updateManga(input: UpdateMangaInput!): UpdateMangaPayload!
+  updateMangas(input: UpdateMangasInput!): UpdateMangasPayload!
+  deleteGlobalMeta(input: DeleteGlobalMetaInput!): DeleteGlobalMetaPayload!
+  setGlobalMeta(input: SetGlobalMetaInput!): SetGlobalMetaPayload!
+  resetSettings(input: ResetSettingsInput!): ResetSettingsPayload!
+  setSettings(input: SetSettingsInput!): SetSettingsPayload!
+  fetchSourceManga(input: FetchSourceMangaInput!): FetchSourceMangaPayload!
+  updateSourcePreference(input: UpdateSourcePreferenceInput!): UpdateSourcePreferencePayload!
+  updateCategoryManga(input: UpdateCategoryMangaInput!): UpdateCategoryMangaPayload!
+  updateLibraryManga(input: UpdateLibraryMangaInput!): UpdateLibraryMangaPayload!
+  updateStop(input: UpdateStopInput!): UpdateStopPayload!
 }
 type PageInfo {
-	"When paginating forwards, the cursor to continue."
-	endCursor: Cursor
-	"When paginating forwards, are there more items?"
-	hasNextPage: Boolean!
-	"When paginating backwards, are there more items?"
-	hasPreviousPage: Boolean!
-	"When paginating backwards, the cursor to continue."
-	startCursor: Cursor
+  "When paginating forwards, the cursor to continue."
+  endCursor: Cursor
+  "When paginating forwards, are there more items?"
+  hasNextPage: Boolean!
+  "When paginating backwards, are there more items?"
+  hasPreviousPage: Boolean!
+  "When paginating backwards, the cursor to continue."
+  startCursor: Cursor
 }
 type PartialSettingsType implements Settings {
-	autoDownloadAheadLimit: Int
-	autoDownloadNewChapters: Boolean
-	backupInterval: Int
-	backupPath: String
-	backupTTL: Int
-	backupTime: String
-	basicAuthEnabled: Boolean
-	basicAuthPassword: String
-	basicAuthUsername: String
-	debugLogsEnabled: Boolean
-	downloadAsCbz: Boolean
-	downloadsPath: String
-	electronPath: String
-	excludeCompleted: Boolean
-	excludeEntryWithUnreadChapters: Boolean
-	excludeNotStarted: Boolean
-	excludeUnreadChapters: Boolean
-	globalUpdateInterval: Float
-	gqlDebugLogsEnabled: Boolean
-	initialOpenInBrowserEnabled: Boolean
-	ip: String
-	localSourcePath: String
-	maxSourcesInParallel: Int
-	port: Int
-	socksProxyEnabled: Boolean
-	socksProxyHost: String
-	socksProxyPort: String
-	systemTrayEnabled: Boolean
-	updateMangas: Boolean
-	webUIChannel: WebUIChannel
-	webUIFlavor: WebUIFlavor
-	webUIInterface: WebUIInterface
-	webUIUpdateCheckInterval: Float
+  autoDownloadAheadLimit: Int
+  autoDownloadNewChapters: Boolean
+  backupInterval: Int
+  backupPath: String
+  backupTTL: Int
+  backupTime: String
+  basicAuthEnabled: Boolean
+  basicAuthPassword: String
+  basicAuthUsername: String
+  debugLogsEnabled: Boolean
+  downloadAsCbz: Boolean
+  downloadsPath: String
+  electronPath: String
+  excludeCompleted: Boolean
+  excludeEntryWithUnreadChapters: Boolean
+  excludeNotStarted: Boolean
+  excludeUnreadChapters: Boolean
+  globalUpdateInterval: Float
+  gqlDebugLogsEnabled: Boolean
+  initialOpenInBrowserEnabled: Boolean
+  ip: String
+  localSourcePath: String
+  maxSourcesInParallel: Int
+  port: Int
+  socksProxyEnabled: Boolean
+  socksProxyHost: String
+  socksProxyPort: String
+  systemTrayEnabled: Boolean
+  updateMangas: Boolean
+  webUIChannel: WebUIChannel
+  webUIFlavor: WebUIFlavor
+  webUIInterface: WebUIInterface
+  webUIUpdateCheckInterval: Float
 }
 type Query {
-	restoreStatus(id: String!): BackupRestoreStatus
-	validateBackup(input: ValidateBackupInput!): ValidateBackupResult!
-	categories(
-		condition: CategoryConditionInput
-		filter: CategoryFilterInput
-		orderBy: CategoryOrderBy
-		orderByType: SortOrder
-		before: Cursor
-		after: Cursor
-		first: Int
-		last: Int
-		offset: Int
-	): CategoryNodeList!
-	category(id: Int!): CategoryType!
-	chapter(id: Int!): ChapterType!
-	chapters(
-		condition: ChapterConditionInput
-		filter: ChapterFilterInput
-		orderBy: ChapterOrderBy
-		orderByType: SortOrder
-		before: Cursor
-		after: Cursor
-		first: Int
-		last: Int
-		offset: Int
-	): ChapterNodeList!
-	downloadStatus: DownloadStatus!
-	extension(pkgName: String!): ExtensionType!
-	extensions(
-		condition: ExtensionConditionInput
-		filter: ExtensionFilterInput
-		orderBy: ExtensionOrderBy
-		orderByType: SortOrder
-		before: Cursor
-		after: Cursor
-		first: Int
-		last: Int
-		offset: Int
-	): ExtensionNodeList!
-	about: AboutPayload!
-	checkForServerUpdates: [CheckForServerUpdatesPayload!]!
-	checkForWebUIUpdate: WebUIUpdateInfo!
-	getWebUIUpdateStatus: WebUIUpdateStatus!
-	manga(id: Int!): MangaType!
-	mangas(
-		condition: MangaConditionInput
-		filter: MangaFilterInput
-		orderBy: MangaOrderBy
-		orderByType: SortOrder
-		before: Cursor
-		after: Cursor
-		first: Int
-		last: Int
-		offset: Int
-	): MangaNodeList!
-	meta(key: String!): GlobalMetaType!
-	metas(
-		condition: MetaConditionInput
-		filter: MetaFilterInput
-		orderBy: MetaOrderBy
-		orderByType: SortOrder
-		before: Cursor
-		after: Cursor
-		first: Int
-		last: Int
-		offset: Int
-	): GlobalMetaNodeList!
-	settings: SettingsType!
-	source(id: LongString!): SourceType!
-	sources(
-		condition: SourceConditionInput
-		filter: SourceFilterInput
-		orderBy: SourceOrderBy
-		orderByType: SortOrder
-		before: Cursor
-		after: Cursor
-		first: Int
-		last: Int
-		offset: Int
-	): SourceNodeList!
-	lastUpdateTimestamp: LastUpdateTimestampPayload!
-	updateStatus: UpdateStatus!
+  restoreStatus(id: String!): BackupRestoreStatus
+  validateBackup(input: ValidateBackupInput!): ValidateBackupResult!
+  categories(condition: CategoryConditionInput, filter: CategoryFilterInput, orderBy: CategoryOrderBy, orderByType: SortOrder, before: Cursor, after: Cursor, first: Int, last: Int, offset: Int): CategoryNodeList!
+  category(id: Int!): CategoryType!
+  chapter(id: Int!): ChapterType!
+  chapters(condition: ChapterConditionInput, filter: ChapterFilterInput, orderBy: ChapterOrderBy, orderByType: SortOrder, before: Cursor, after: Cursor, first: Int, last: Int, offset: Int): ChapterNodeList!
+  downloadStatus: DownloadStatus!
+  extension(pkgName: String!): ExtensionType!
+  extensions(condition: ExtensionConditionInput, filter: ExtensionFilterInput, orderBy: ExtensionOrderBy, orderByType: SortOrder, before: Cursor, after: Cursor, first: Int, last: Int, offset: Int): ExtensionNodeList!
+  aboutServer: AboutServerPayload!
+  aboutWebUI: WebUIUpdateInfo!
+  checkForServerUpdates: [CheckForServerUpdatesPayload!]!
+  checkForWebUIUpdate: WebUIUpdateInfo!
+  getWebUIUpdateStatus: WebUIUpdateStatus!
+  manga(id: Int!): MangaType!
+  mangas(condition: MangaConditionInput, filter: MangaFilterInput, orderBy: MangaOrderBy, orderByType: SortOrder, before: Cursor, after: Cursor, first: Int, last: Int, offset: Int): MangaNodeList!
+  meta(key: String!): GlobalMetaType!
+  metas(condition: MetaConditionInput, filter: MetaFilterInput, orderBy: MetaOrderBy, orderByType: SortOrder, before: Cursor, after: Cursor, first: Int, last: Int, offset: Int): GlobalMetaNodeList!
+  settings: SettingsType!
+  source(id: LongString!): SourceType!
+  sources(condition: SourceConditionInput, filter: SourceFilterInput, orderBy: SourceOrderBy, orderByType: SortOrder, before: Cursor, after: Cursor, first: Int, last: Int, offset: Int): SourceNodeList!
+  lastUpdateTimestamp: LastUpdateTimestampPayload!
+  updateStatus: UpdateStatus!
 }
 type ReorderChapterDownloadPayload {
-	clientMutationId: String
-	downloadStatus: DownloadStatus!
+  clientMutationId: String
+  downloadStatus: DownloadStatus!
 }
 type ResetSettingsPayload {
-	clientMutationId: String
-	settings: SettingsType!
+  clientMutationId: String
+  settings: SettingsType!
 }
 type RestoreBackupPayload {
-	clientMutationId: String
-	id: String!
-	status: BackupRestoreStatus
+  clientMutationId: String
+  id: String!
+  status: BackupRestoreStatus
 }
 type SelectFilter {
-	default: Int!
-	name: String!
-	values: [String!]!
+  default: Int!
+  name: String!
+  values: [String!]!
 }
 type SeparatorFilter {
-	name: String!
+  name: String!
 }
 type SetCategoryMetaPayload {
-	clientMutationId: String
-	meta: CategoryMetaType!
+  clientMutationId: String
+  meta: CategoryMetaType!
 }
 type SetChapterMetaPayload {
-	clientMutationId: String
-	meta: ChapterMetaType!
+  clientMutationId: String
+  meta: ChapterMetaType!
 }
 type SetGlobalMetaPayload {
-	clientMutationId: String
-	meta: GlobalMetaType!
+  clientMutationId: String
+  meta: GlobalMetaType!
 }
 type SetMangaMetaPayload {
-	clientMutationId: String
-	meta: MangaMetaType!
+  clientMutationId: String
+  meta: MangaMetaType!
 }
 type SetSettingsPayload {
-	clientMutationId: String
-	settings: SettingsType!
+  clientMutationId: String
+  settings: SettingsType!
 }
 type SettingsType implements Settings {
-	autoDownloadAheadLimit: Int!
-	autoDownloadNewChapters: Boolean!
-	backupInterval: Int!
-	backupPath: String!
-	backupTTL: Int!
-	backupTime: String!
-	basicAuthEnabled: Boolean!
-	basicAuthPassword: String!
-	basicAuthUsername: String!
-	debugLogsEnabled: Boolean!
-	downloadAsCbz: Boolean!
-	downloadsPath: String!
-	electronPath: String!
-	excludeCompleted: Boolean!
-	excludeEntryWithUnreadChapters: Boolean!
-	excludeNotStarted: Boolean!
-	excludeUnreadChapters: Boolean!
-	globalUpdateInterval: Float!
-	gqlDebugLogsEnabled: Boolean!
-	initialOpenInBrowserEnabled: Boolean!
-	ip: String!
-	localSourcePath: String!
-	maxSourcesInParallel: Int!
-	port: Int!
-	socksProxyEnabled: Boolean!
-	socksProxyHost: String!
-	socksProxyPort: String!
-	systemTrayEnabled: Boolean!
-	updateMangas: Boolean!
-	webUIChannel: WebUIChannel!
-	webUIFlavor: WebUIFlavor!
-	webUIInterface: WebUIInterface!
-	webUIUpdateCheckInterval: Float!
+  autoDownloadAheadLimit: Int!
+  autoDownloadNewChapters: Boolean!
+  backupInterval: Int!
+  backupPath: String!
+  backupTTL: Int!
+  backupTime: String!
+  basicAuthEnabled: Boolean!
+  basicAuthPassword: String!
+  basicAuthUsername: String!
+  debugLogsEnabled: Boolean!
+  downloadAsCbz: Boolean!
+  downloadsPath: String!
+  electronPath: String!
+  excludeCompleted: Boolean!
+  excludeEntryWithUnreadChapters: Boolean!
+  excludeNotStarted: Boolean!
+  excludeUnreadChapters: Boolean!
+  globalUpdateInterval: Float!
+  gqlDebugLogsEnabled: Boolean!
+  initialOpenInBrowserEnabled: Boolean!
+  ip: String!
+  localSourcePath: String!
+  maxSourcesInParallel: Int!
+  port: Int!
+  socksProxyEnabled: Boolean!
+  socksProxyHost: String!
+  socksProxyPort: String!
+  systemTrayEnabled: Boolean!
+  updateMangas: Boolean!
+  webUIChannel: WebUIChannel!
+  webUIFlavor: WebUIFlavor!
+  webUIInterface: WebUIInterface!
+  webUIUpdateCheckInterval: Float!
 }
 type SortFilter {
-	default: SortSelection
-	name: String!
-	values: [String!]!
+  default: SortSelection
+  name: String!
+  values: [String!]!
 }
 type SortSelection {
-	ascending: Boolean!
-	index: Int!
+  ascending: Boolean!
+  index: Int!
 }
 type SourceEdge implements Edge {
-	cursor: Cursor!
-	node: SourceType!
+  cursor: Cursor!
+  node: SourceType!
 }
 type SourceNodeList implements NodeList {
-	edges: [SourceEdge!]!
-	nodes: [SourceType!]!
-	pageInfo: PageInfo!
-	totalCount: Int!
+  edges: [SourceEdge!]!
+  nodes: [SourceType!]!
+  pageInfo: PageInfo!
+  totalCount: Int!
 }
 type SourceType {
-	displayName: String!
-	iconUrl: String!
-	id: LongString!
-	isConfigurable: Boolean!
-	isNsfw: Boolean!
-	lang: String!
-	name: String!
-	supportsLatest: Boolean!
-	extension: ExtensionType!
-	filters: [Filter!]!
-	manga: MangaNodeList!
-	preferences: [Preference!]!
+  displayName: String!
+  iconUrl: String!
+  id: LongString!
+  isConfigurable: Boolean!
+  isNsfw: Boolean!
+  lang: String!
+  name: String!
+  supportsLatest: Boolean!
+  extension: ExtensionType!
+  filters: [Filter!]!
+  manga: MangaNodeList!
+  preferences: [Preference!]!
 }
 type StartDownloaderPayload {
-	clientMutationId: String
-	downloadStatus: DownloadStatus!
+  clientMutationId: String
+  downloadStatus: DownloadStatus!
 }
 type StopDownloaderPayload {
-	clientMutationId: String
-	downloadStatus: DownloadStatus!
+  clientMutationId: String
+  downloadStatus: DownloadStatus!
 }
 type Subscription {
-	downloadChanged: DownloadStatus!
-	webUIUpdateStatusChange: WebUIUpdateStatus!
-	updateStatusChanged: UpdateStatus!
+  downloadChanged: DownloadStatus!
+  webUIUpdateStatusChange: WebUIUpdateStatus!
+  updateStatusChanged: UpdateStatus!
 }
 type SwitchPreference {
-	currentValue: Boolean
-	default: Boolean!
-	key: String!
-	summary: String
-	title: String!
-	visible: Boolean!
+  currentValue: Boolean
+  default: Boolean!
+  key: String!
+  summary: String
+  title: String!
+  visible: Boolean!
 }
 type TextFilter {
-	default: String!
-	name: String!
+  default: String!
+  name: String!
 }
 type TriStateFilter {
-	default: TriState!
-	name: String!
+  default: TriState!
+  name: String!
 }
 type UpdateCategoriesPayload {
-	categories: [CategoryType!]!
-	clientMutationId: String
+  categories: [CategoryType!]!
+  clientMutationId: String
 }
 type UpdateCategoryMangaPayload {
-	clientMutationId: String
-	updateStatus: UpdateStatus!
+  clientMutationId: String
+  updateStatus: UpdateStatus!
 }
 type UpdateCategoryOrderPayload {
-	categories: [CategoryType!]!
-	clientMutationId: String
+  categories: [CategoryType!]!
+  clientMutationId: String
 }
 type UpdateCategoryPayload {
-	category: CategoryType!
-	clientMutationId: String
+  category: CategoryType!
+  clientMutationId: String
 }
 type UpdateChapterPayload {
-	chapter: ChapterType!
-	clientMutationId: String
+  chapter: ChapterType!
+  clientMutationId: String
 }
 type UpdateChaptersPayload {
-	chapters: [ChapterType!]!
-	clientMutationId: String
+  chapters: [ChapterType!]!
+  clientMutationId: String
 }
 type UpdateExtensionPayload {
-	clientMutationId: String
-	extension: ExtensionType!
+  clientMutationId: String
+  extension: ExtensionType!
 }
 type UpdateExtensionsPayload {
-	clientMutationId: String
-	extensions: [ExtensionType!]!
+  clientMutationId: String
+  extensions: [ExtensionType!]!
 }
 type UpdateLibraryMangaPayload {
-	clientMutationId: String
-	updateStatus: UpdateStatus!
+  clientMutationId: String
+  updateStatus: UpdateStatus!
 }
 type UpdateMangaCategoriesPayload {
-	clientMutationId: String
-	manga: MangaType!
+  clientMutationId: String
+  manga: MangaType!
 }
 type UpdateMangaPayload {
-	clientMutationId: String
-	manga: MangaType!
+  clientMutationId: String
+  manga: MangaType!
 }
 type UpdateMangasCategoriesPayload {
-	clientMutationId: String
-	mangas: [MangaType!]!
+  clientMutationId: String
+  mangas: [MangaType!]!
 }
 type UpdateMangasPayload {
-	clientMutationId: String
-	mangas: [MangaType!]!
+  clientMutationId: String
+  mangas: [MangaType!]!
 }
 type UpdateSourcePreferencePayload {
-	clientMutationId: String
-	preferences: [Preference!]!
-	source: SourceType!
+  clientMutationId: String
+  preferences: [Preference!]!
+  source: SourceType!
 }
 type UpdateStatus {
-	completeJobs: UpdateStatusType!
-	failedJobs: UpdateStatusType!
-	isRunning: Boolean!
-	pendingJobs: UpdateStatusType!
-	runningJobs: UpdateStatusType!
-	skippedCategories: UpdateStatusCategoryType!
-	skippedJobs: UpdateStatusType!
-	updatingCategories: UpdateStatusCategoryType!
+  completeJobs: UpdateStatusType!
+  failedJobs: UpdateStatusType!
+  isRunning: Boolean!
+  pendingJobs: UpdateStatusType!
+  runningJobs: UpdateStatusType!
+  skippedCategories: UpdateStatusCategoryType!
+  skippedJobs: UpdateStatusType!
+  updatingCategories: UpdateStatusCategoryType!
 }
 type UpdateStatusCategoryType {
-	categories: CategoryNodeList!
+  categories: CategoryNodeList!
 }
 type UpdateStatusType {
-	mangas: MangaNodeList!
+  mangas: MangaNodeList!
 }
 type UpdateStopPayload {
-	clientMutationId: String
+  clientMutationId: String
 }
 type ValidateBackupResult {
-	missingSources: [ValidateBackupSource!]!
+  missingSources: [ValidateBackupSource!]!
 }
 type ValidateBackupSource {
-	id: LongString!
-	name: String!
+  id: LongString!
+  name: String!
 }
 type WebUIUpdateInfo {
-	channel: String!
-	tag: String!
-	updateAvailable: Boolean!
+  channel: String!
+  tag: String!
+  updateAvailable: Boolean!
 }
 type WebUIUpdatePayload {
-	clientMutationId: String
-	updateStatus: WebUIUpdateStatus!
+  clientMutationId: String
+  updateStatus: WebUIUpdateStatus!
 }
 type WebUIUpdateStatus {
-	info: WebUIUpdateInfo!
-	progress: Int!
-	state: UpdateState!
+  info: WebUIUpdateInfo!
+  progress: Int!
+  state: UpdateState!
 }
 interface Edge {
-	"A cursor for use in pagination."
-	cursor: Cursor!
-	"The [T] at the end of the edge."
-	node: Node!
+  "A cursor for use in pagination."
+  cursor: Cursor!
+  "The [T] at the end of the edge."
+  node: Node!
 }
 interface MetaType {
-	key: String!
-	value: String!
+  key: String!
+  value: String!
 }
 interface NodeList {
-	"A list of edges which contains the [T] and cursor to aid in pagination."
-	edges: [Edge!]!
-	"A list of [T] objects."
-	nodes: [Node!]!
-	"Information to aid in pagination."
-	pageInfo: PageInfo!
-	"The count of all nodes you could get from the connection."
-	totalCount: Int!
+  "A list of edges which contains the [T] and cursor to aid in pagination."
+  edges: [Edge!]!
+  "A list of [T] objects."
+  nodes: [Node!]!
+  "Information to aid in pagination."
+  pageInfo: PageInfo!
+  "The count of all nodes you could get from the connection."
+  totalCount: Int!
 }
 interface Settings {
-	autoDownloadAheadLimit: Int
-	autoDownloadNewChapters: Boolean
-	backupInterval: Int
-	backupPath: String
-	backupTTL: Int
-	backupTime: String
-	basicAuthEnabled: Boolean
-	basicAuthPassword: String
-	basicAuthUsername: String
-	debugLogsEnabled: Boolean
-	downloadAsCbz: Boolean
-	downloadsPath: String
-	electronPath: String
-	excludeCompleted: Boolean
-	excludeEntryWithUnreadChapters: Boolean
-	excludeNotStarted: Boolean
-	excludeUnreadChapters: Boolean
-	globalUpdateInterval: Float
-	gqlDebugLogsEnabled: Boolean
-	initialOpenInBrowserEnabled: Boolean
-	ip: String
-	localSourcePath: String
-	maxSourcesInParallel: Int
-	port: Int
-	socksProxyEnabled: Boolean
-	socksProxyHost: String
-	socksProxyPort: String
-	systemTrayEnabled: Boolean
-	updateMangas: Boolean
-	webUIChannel: WebUIChannel
-	webUIFlavor: WebUIFlavor
-	webUIInterface: WebUIInterface
-	webUIUpdateCheckInterval: Float
+  autoDownloadAheadLimit: Int
+  autoDownloadNewChapters: Boolean
+  backupInterval: Int
+  backupPath: String
+  backupTTL: Int
+  backupTime: String
+  basicAuthEnabled: Boolean
+  basicAuthPassword: String
+  basicAuthUsername: String
+  debugLogsEnabled: Boolean
+  downloadAsCbz: Boolean
+  downloadsPath: String
+  electronPath: String
+  excludeCompleted: Boolean
+  excludeEntryWithUnreadChapters: Boolean
+  excludeNotStarted: Boolean
+  excludeUnreadChapters: Boolean
+  globalUpdateInterval: Float
+  gqlDebugLogsEnabled: Boolean
+  initialOpenInBrowserEnabled: Boolean
+  ip: String
+  localSourcePath: String
+  maxSourcesInParallel: Int
+  port: Int
+  socksProxyEnabled: Boolean
+  socksProxyHost: String
+  socksProxyPort: String
+  systemTrayEnabled: Boolean
+  updateMangas: Boolean
+  webUIChannel: WebUIChannel
+  webUIFlavor: WebUIFlavor
+  webUIInterface: WebUIInterface
+  webUIUpdateCheckInterval: Float
 }
-union Filter =
-	  CheckBoxFilter
-	| GroupFilter
-	| HeaderFilter
-	| SelectFilter
-	| SeparatorFilter
-	| SortFilter
-	| TextFilter
-	| TriStateFilter
-union Node =
-	  CategoryMetaType
-	| CategoryType
-	| ChapterMetaType
-	| ChapterType
-	| DownloadType
-	| ExtensionType
-	| GlobalMetaType
-	| MangaMetaType
-	| MangaType
-	| PartialSettingsType
-	| SettingsType
-	| SourceType
-union Preference =
-	  CheckBoxPreference
-	| EditTextPreference
-	| ListPreference
-	| MultiSelectListPreference
-	| SwitchPreference
+union Filter = CheckBoxFilter | GroupFilter | HeaderFilter | SelectFilter | SeparatorFilter | SortFilter | TextFilter | TriStateFilter
+union Node = CategoryMetaType | CategoryType | ChapterMetaType | ChapterType | DownloadType | ExtensionType | GlobalMetaType | MangaMetaType | MangaType | PartialSettingsType | SettingsType | SourceType
+union Preference = CheckBoxPreference | EditTextPreference | ListPreference | MultiSelectListPreference | SwitchPreference
 enum BackupRestoreState {
-	IDLE
-	SUCCESS
-	FAILURE
-	RESTORING_CATEGORIES
-	RESTORING_MANGA
+  IDLE
+  SUCCESS
+  FAILURE
+  RESTORING_CATEGORIES
+  RESTORING_MANGA
 }
 enum CategoryOrderBy {
-	ID
-	NAME
-	ORDER
+  ID
+  NAME
+  ORDER
 }
 enum ChapterOrderBy {
-	ID
-	SOURCE_ORDER
-	NAME
-	UPLOAD_DATE
-	CHAPTER_NUMBER
-	LAST_READ_AT
-	FETCHED_AT
+  ID
+  SOURCE_ORDER
+  NAME
+  UPLOAD_DATE
+  CHAPTER_NUMBER
+  LAST_READ_AT
+  FETCHED_AT
 }
 enum DownloadState {
-	QUEUED
-	DOWNLOADING
-	FINISHED
-	ERROR
+  QUEUED
+  DOWNLOADING
+  FINISHED
+  ERROR
 }
 enum DownloaderState {
-	STARTED
-	STOPPED
+  STARTED
+  STOPPED
 }
 enum ExtensionOrderBy {
-	PKG_NAME
-	NAME
-	APK_NAME
+  PKG_NAME
+  NAME
+  APK_NAME
 }
 enum FetchSourceMangaType {
-	SEARCH
-	POPULAR
-	LATEST
+  SEARCH
+  POPULAR
+  LATEST
 }
 enum IncludeInUpdate {
-	EXCLUDE
-	INCLUDE
-	UNSET
+  EXCLUDE
+  INCLUDE
+  UNSET
 }
 enum MangaOrderBy {
-	ID
-	TITLE
-	IN_LIBRARY_AT
-	LAST_FETCHED_AT
+  ID
+  TITLE
+  IN_LIBRARY_AT
+  LAST_FETCHED_AT
 }
 enum MangaStatus {
-	UNKNOWN
-	ONGOING
-	COMPLETED
-	LICENSED
-	PUBLISHING_FINISHED
-	CANCELLED
-	ON_HIATUS
+  UNKNOWN
+  ONGOING
+  COMPLETED
+  LICENSED
+  PUBLISHING_FINISHED
+  CANCELLED
+  ON_HIATUS
 }
 enum MetaOrderBy {
-	KEY
-	VALUE
+  KEY
+  VALUE
 }
 enum SortOrder {
-	ASC
-	DESC
-	ASC_NULLS_FIRST
-	DESC_NULLS_FIRST
-	ASC_NULLS_LAST
-	DESC_NULLS_LAST
+  ASC
+  DESC
+  ASC_NULLS_FIRST
+  DESC_NULLS_FIRST
+  ASC_NULLS_LAST
+  DESC_NULLS_LAST
 }
 enum SourceOrderBy {
-	ID
-	NAME
-	LANG
+  ID
+  NAME
+  LANG
 }
 enum TriState {
-	IGNORE
-	INCLUDE
-	EXCLUDE
+  IGNORE
+  INCLUDE
+  EXCLUDE
 }
 enum UpdateState {
-	STOPPED
-	DOWNLOADING
-	FINISHED
-	ERROR
+  STOPPED
+  DOWNLOADING
+  FINISHED
+  ERROR
 }
 enum WebUIChannel {
-	BUNDLED
-	STABLE
-	PREVIEW
+  BUNDLED
+  STABLE
+  PREVIEW
 }
 enum WebUIFlavor {
-	WEBUI
-	CUSTOM
+  WEBUI
+  CUSTOM
 }
 enum WebUIInterface {
-	BROWSER
-	ELECTRON
+  BROWSER
+  ELECTRON
 }
 input BooleanFilterInput {
-	distinctFrom: Boolean
-	equalTo: Boolean
-	greaterThan: Boolean
-	greaterThanOrEqualTo: Boolean
-	in: [Boolean!]
-	isNull: Boolean
-	lessThan: Boolean
-	lessThanOrEqualTo: Boolean
-	notDistinctFrom: Boolean
-	notEqualTo: Boolean
-	notIn: [Boolean!]
+  distinctFrom: Boolean
+  equalTo: Boolean
+  greaterThan: Boolean
+  greaterThanOrEqualTo: Boolean
+  in: [Boolean!]
+  isNull: Boolean
+  lessThan: Boolean
+  lessThanOrEqualTo: Boolean
+  notDistinctFrom: Boolean
+  notEqualTo: Boolean
+  notIn: [Boolean!]
 }
 input CategoryConditionInput {
-	default: Boolean
-	id: Int
-	name: String
-	order: Int
+  default: Boolean
+  id: Int
+  name: String
+  order: Int
 }
 input CategoryFilterInput {
-	and: [CategoryFilterInput!]
-	default: BooleanFilterInput
-	id: IntFilterInput
-	name: StringFilterInput
-	not: CategoryFilterInput
-	or: [CategoryFilterInput!]
-	order: IntFilterInput
+  and: [CategoryFilterInput!]
+  default: BooleanFilterInput
+  id: IntFilterInput
+  name: StringFilterInput
+  not: CategoryFilterInput
+  or: [CategoryFilterInput!]
+  order: IntFilterInput
 }
 input CategoryMetaTypeInput {
-	categoryId: Int!
-	key: String!
-	value: String!
+  categoryId: Int!
+  key: String!
+  value: String!
 }
 input ChapterConditionInput {
-	chapterNumber: Float
-	fetchedAt: LongString
-	id: Int
-	isBookmarked: Boolean
-	isDownloaded: Boolean
-	isRead: Boolean
-	lastPageRead: Int
-	lastReadAt: LongString
-	mangaId: Int
-	name: String
-	pageCount: Int
-	realUrl: String
-	scanlator: String
-	sourceOrder: Int
-	uploadDate: LongString
-	url: String
+  chapterNumber: Float
+  fetchedAt: LongString
+  id: Int
+  isBookmarked: Boolean
+  isDownloaded: Boolean
+  isRead: Boolean
+  lastPageRead: Int
+  lastReadAt: LongString
+  mangaId: Int
+  name: String
+  pageCount: Int
+  realUrl: String
+  scanlator: String
+  sourceOrder: Int
+  uploadDate: LongString
+  url: String
 }
 input ChapterFilterInput {
-	and: [ChapterFilterInput!]
-	chapterNumber: FloatFilterInput
-	fetchedAt: LongFilterInput
-	id: IntFilterInput
-	inLibrary: BooleanFilterInput
-	isBookmarked: BooleanFilterInput
-	isDownloaded: BooleanFilterInput
-	isRead: BooleanFilterInput
-	lastPageRead: IntFilterInput
-	lastReadAt: LongFilterInput
-	mangaId: IntFilterInput
-	name: StringFilterInput
-	not: ChapterFilterInput
-	or: [ChapterFilterInput!]
-	pageCount: IntFilterInput
-	realUrl: StringFilterInput
-	scanlator: StringFilterInput
-	sourceOrder: IntFilterInput
-	uploadDate: LongFilterInput
-	url: StringFilterInput
+  and: [ChapterFilterInput!]
+  chapterNumber: FloatFilterInput
+  fetchedAt: LongFilterInput
+  id: IntFilterInput
+  inLibrary: BooleanFilterInput
+  isBookmarked: BooleanFilterInput
+  isDownloaded: BooleanFilterInput
+  isRead: BooleanFilterInput
+  lastPageRead: IntFilterInput
+  lastReadAt: LongFilterInput
+  mangaId: IntFilterInput
+  name: StringFilterInput
+  not: ChapterFilterInput
+  or: [ChapterFilterInput!]
+  pageCount: IntFilterInput
+  realUrl: StringFilterInput
+  scanlator: StringFilterInput
+  sourceOrder: IntFilterInput
+  uploadDate: LongFilterInput
+  url: StringFilterInput
 }
 input ChapterMetaTypeInput {
-	chapterId: Int!
-	key: String!
-	value: String!
+  chapterId: Int!
+  key: String!
+  value: String!
 }
 input ClearDownloaderInput {
-	clientMutationId: String
+  clientMutationId: String
 }
 input CreateBackupInput {
-	clientMutationId: String
-	includeCategories: Boolean
-	includeChapters: Boolean
+  clientMutationId: String
+  includeCategories: Boolean
+  includeChapters: Boolean
 }
 input CreateCategoryInput {
-	clientMutationId: String
-	default: Boolean
-	includeInUpdate: IncludeInUpdate
-	name: String!
-	order: Int
+  clientMutationId: String
+  default: Boolean
+  includeInUpdate: IncludeInUpdate
+  name: String!
+  order: Int
 }
 input DeleteCategoryInput {
-	categoryId: Int!
-	clientMutationId: String
+  categoryId: Int!
+  clientMutationId: String
 }
 input DeleteCategoryMetaInput {
-	categoryId: Int!
-	clientMutationId: String
-	key: String!
+  categoryId: Int!
+  clientMutationId: String
+  key: String!
 }
 input DeleteChapterMetaInput {
-	chapterId: Int!
-	clientMutationId: String
-	key: String!
+  chapterId: Int!
+  clientMutationId: String
+  key: String!
 }
 input DeleteDownloadedChapterInput {
-	clientMutationId: String
-	id: Int!
+  clientMutationId: String
+  id: Int!
 }
 input DeleteDownloadedChaptersInput {
-	clientMutationId: String
-	ids: [Int!]!
+  clientMutationId: String
+  ids: [Int!]!
 }
 input DeleteGlobalMetaInput {
-	clientMutationId: String
-	key: String!
+  clientMutationId: String
+  key: String!
 }
 input DeleteMangaMetaInput {
-	clientMutationId: String
-	key: String!
-	mangaId: Int!
+  clientMutationId: String
+  key: String!
+  mangaId: Int!
 }
 input DequeueChapterDownloadInput {
-	clientMutationId: String
-	id: Int!
+  clientMutationId: String
+  id: Int!
 }
 input DequeueChapterDownloadsInput {
-	clientMutationId: String
-	ids: [Int!]!
+  clientMutationId: String
+  ids: [Int!]!
 }
 input DownloadAheadInput {
-	clientMutationId: String
-	latestReadChapterIds: [Int!]
-	mangaIds: [Int!]!
+  clientMutationId: String
+  latestReadChapterIds: [Int!]
+  mangaIds: [Int!]!
 }
 input EnqueueChapterDownloadInput {
-	clientMutationId: String
-	id: Int!
+  clientMutationId: String
+  id: Int!
 }
 input EnqueueChapterDownloadsInput {
-	clientMutationId: String
-	ids: [Int!]!
+  clientMutationId: String
+  ids: [Int!]!
 }
 input ExtensionConditionInput {
-	apkName: String
-	hasUpdate: Boolean
-	iconUrl: String
-	isInstalled: Boolean
-	isNsfw: Boolean
-	isObsolete: Boolean
-	lang: String
-	name: String
-	pkgName: String
-	versionCode: Int
-	versionName: String
+  apkName: String
+  hasUpdate: Boolean
+  iconUrl: String
+  isInstalled: Boolean
+  isNsfw: Boolean
+  isObsolete: Boolean
+  lang: String
+  name: String
+  pkgName: String
+  versionCode: Int
+  versionName: String
 }
 input ExtensionFilterInput {
-	and: [ExtensionFilterInput!]
-	apkName: StringFilterInput
-	hasUpdate: BooleanFilterInput
-	iconUrl: StringFilterInput
-	isInstalled: BooleanFilterInput
-	isNsfw: BooleanFilterInput
-	isObsolete: BooleanFilterInput
-	lang: StringFilterInput
-	name: StringFilterInput
-	not: ExtensionFilterInput
-	or: [ExtensionFilterInput!]
-	pkgName: StringFilterInput
-	versionCode: IntFilterInput
-	versionName: StringFilterInput
+  and: [ExtensionFilterInput!]
+  apkName: StringFilterInput
+  hasUpdate: BooleanFilterInput
+  iconUrl: StringFilterInput
+  isInstalled: BooleanFilterInput
+  isNsfw: BooleanFilterInput
+  isObsolete: BooleanFilterInput
+  lang: StringFilterInput
+  name: StringFilterInput
+  not: ExtensionFilterInput
+  or: [ExtensionFilterInput!]
+  pkgName: StringFilterInput
+  versionCode: IntFilterInput
+  versionName: StringFilterInput
 }
 input FetchChapterPagesInput {
-	chapterId: Int!
-	clientMutationId: String
+  chapterId: Int!
+  clientMutationId: String
 }
 input FetchChaptersInput {
-	clientMutationId: String
-	mangaId: Int!
+  clientMutationId: String
+  mangaId: Int!
 }
 input FetchExtensionsInput {
-	clientMutationId: String
+  clientMutationId: String
 }
 input FetchMangaInput {
-	clientMutationId: String
-	id: Int!
+  clientMutationId: String
+  id: Int!
 }
 input FetchSourceMangaInput {
-	clientMutationId: String
-	filters: [FilterChangeInput!]
-	page: Int!
-	query: String
-	source: LongString!
-	type: FetchSourceMangaType!
+  clientMutationId: String
+  filters: [FilterChangeInput!]
+  page: Int!
+  query: String
+  source: LongString!
+  type: FetchSourceMangaType!
 }
 input FilterChangeInput {
-	checkBoxState: Boolean
-	groupChange: FilterChangeInput
-	position: Int!
-	selectState: Int
-	sortState: SortSelectionInput
-	textState: String
-	triState: TriState
+  checkBoxState: Boolean
+  groupChange: FilterChangeInput
+  position: Int!
+  selectState: Int
+  sortState: SortSelectionInput
+  textState: String
+  triState: TriState
 }
 input FloatFilterInput {
-	distinctFrom: Float
-	equalTo: Float
-	greaterThan: Float
-	greaterThanOrEqualTo: Float
-	in: [Float!]
-	isNull: Boolean
-	lessThan: Float
-	lessThanOrEqualTo: Float
-	notDistinctFrom: Float
-	notEqualTo: Float
-	notIn: [Float!]
+  distinctFrom: Float
+  equalTo: Float
+  greaterThan: Float
+  greaterThanOrEqualTo: Float
+  in: [Float!]
+  isNull: Boolean
+  lessThan: Float
+  lessThanOrEqualTo: Float
+  notDistinctFrom: Float
+  notEqualTo: Float
+  notIn: [Float!]
 }
 input GlobalMetaTypeInput {
-	key: String!
-	value: String!
+  key: String!
+  value: String!
 }
 input InstallExternalExtensionInput {
-	clientMutationId: String
-	extensionFile: Upload!
+  clientMutationId: String
+  extensionFile: Upload!
 }
 input IntFilterInput {
-	distinctFrom: Int
-	equalTo: Int
-	greaterThan: Int
-	greaterThanOrEqualTo: Int
-	in: [Int!]
-	isNull: Boolean
-	lessThan: Int
-	lessThanOrEqualTo: Int
-	notDistinctFrom: Int
-	notEqualTo: Int
-	notIn: [Int!]
+  distinctFrom: Int
+  equalTo: Int
+  greaterThan: Int
+  greaterThanOrEqualTo: Int
+  in: [Int!]
+  isNull: Boolean
+  lessThan: Int
+  lessThanOrEqualTo: Int
+  notDistinctFrom: Int
+  notEqualTo: Int
+  notIn: [Int!]
 }
 input LongFilterInput {
-	distinctFrom: LongString
-	equalTo: LongString
-	greaterThan: LongString
-	greaterThanOrEqualTo: LongString
-	in: [LongString!]
-	isNull: Boolean
-	lessThan: LongString
-	lessThanOrEqualTo: LongString
-	notDistinctFrom: LongString
-	notEqualTo: LongString
-	notIn: [LongString!]
+  distinctFrom: LongString
+  equalTo: LongString
+  greaterThan: LongString
+  greaterThanOrEqualTo: LongString
+  in: [LongString!]
+  isNull: Boolean
+  lessThan: LongString
+  lessThanOrEqualTo: LongString
+  notDistinctFrom: LongString
+  notEqualTo: LongString
+  notIn: [LongString!]
 }
 input MangaConditionInput {
-	artist: String
-	author: String
-	categoryIds: [Int!]
-	chaptersLastFetchedAt: LongString
-	description: String
-	genre: [String!]
-	id: Int
-	inLibrary: Boolean
-	inLibraryAt: LongString
-	initialized: Boolean
-	lastFetchedAt: LongString
-	realUrl: String
-	sourceId: LongString
-	status: MangaStatus
-	thumbnailUrl: String
-	title: String
-	url: String
+  artist: String
+  author: String
+  categoryIds: [Int!]
+  chaptersLastFetchedAt: LongString
+  description: String
+  genre: [String!]
+  id: Int
+  inLibrary: Boolean
+  inLibraryAt: LongString
+  initialized: Boolean
+  lastFetchedAt: LongString
+  realUrl: String
+  sourceId: LongString
+  status: MangaStatus
+  thumbnailUrl: String
+  title: String
+  url: String
 }
 input MangaFilterInput {
-	and: [MangaFilterInput!]
-	artist: StringFilterInput
-	author: StringFilterInput
-	categoryId: IntFilterInput
-	chaptersLastFetchedAt: LongFilterInput
-	description: StringFilterInput
-	genre: StringFilterInput
-	id: IntFilterInput
-	inLibrary: BooleanFilterInput
-	inLibraryAt: LongFilterInput
-	initialized: BooleanFilterInput
-	lastFetchedAt: LongFilterInput
-	not: MangaFilterInput
-	or: [MangaFilterInput!]
-	realUrl: StringFilterInput
-	sourceId: LongFilterInput
-	status: MangaStatusFilterInput
-	thumbnailUrl: StringFilterInput
-	title: StringFilterInput
-	url: StringFilterInput
+  and: [MangaFilterInput!]
+  artist: StringFilterInput
+  author: StringFilterInput
+  categoryId: IntFilterInput
+  chaptersLastFetchedAt: LongFilterInput
+  description: StringFilterInput
+  genre: StringFilterInput
+  id: IntFilterInput
+  inLibrary: BooleanFilterInput
+  inLibraryAt: LongFilterInput
+  initialized: BooleanFilterInput
+  lastFetchedAt: LongFilterInput
+  not: MangaFilterInput
+  or: [MangaFilterInput!]
+  realUrl: StringFilterInput
+  sourceId: LongFilterInput
+  status: MangaStatusFilterInput
+  thumbnailUrl: StringFilterInput
+  title: StringFilterInput
+  url: StringFilterInput
 }
 input MangaMetaTypeInput {
-	key: String!
-	mangaId: Int!
-	value: String!
+  key: String!
+  mangaId: Int!
+  value: String!
 }
 input MangaStatusFilterInput {
-	distinctFrom: MangaStatus
-	equalTo: MangaStatus
-	greaterThan: MangaStatus
-	greaterThanOrEqualTo: MangaStatus
-	in: [MangaStatus!]
-	isNull: Boolean
-	lessThan: MangaStatus
-	lessThanOrEqualTo: MangaStatus
-	notDistinctFrom: MangaStatus
-	notEqualTo: MangaStatus
-	notIn: [MangaStatus!]
+  distinctFrom: MangaStatus
+  equalTo: MangaStatus
+  greaterThan: MangaStatus
+  greaterThanOrEqualTo: MangaStatus
+  in: [MangaStatus!]
+  isNull: Boolean
+  lessThan: MangaStatus
+  lessThanOrEqualTo: MangaStatus
+  notDistinctFrom: MangaStatus
+  notEqualTo: MangaStatus
+  notIn: [MangaStatus!]
 }
 input MetaConditionInput {
-	key: String
-	value: String
+  key: String
+  value: String
 }
 input MetaFilterInput {
-	and: [MetaFilterInput!]
-	key: StringFilterInput
-	not: MetaFilterInput
-	or: [MetaFilterInput!]
-	value: StringFilterInput
+  and: [MetaFilterInput!]
+  key: StringFilterInput
+  not: MetaFilterInput
+  or: [MetaFilterInput!]
+  value: StringFilterInput
 }
 input PartialSettingsTypeInput {
-	autoDownloadAheadLimit: Int
-	autoDownloadNewChapters: Boolean
-	backupInterval: Int
-	backupPath: String
-	backupTTL: Int
-	backupTime: String
-	basicAuthEnabled: Boolean
-	basicAuthPassword: String
-	basicAuthUsername: String
-	debugLogsEnabled: Boolean
-	downloadAsCbz: Boolean
-	downloadsPath: String
-	electronPath: String
-	excludeCompleted: Boolean
-	excludeEntryWithUnreadChapters: Boolean
-	excludeNotStarted: Boolean
-	excludeUnreadChapters: Boolean
-	globalUpdateInterval: Float
-	gqlDebugLogsEnabled: Boolean
-	initialOpenInBrowserEnabled: Boolean
-	ip: String
-	localSourcePath: String
-	maxSourcesInParallel: Int
-	port: Int
-	socksProxyEnabled: Boolean
-	socksProxyHost: String
-	socksProxyPort: String
-	systemTrayEnabled: Boolean
-	updateMangas: Boolean
-	webUIChannel: WebUIChannel
-	webUIFlavor: WebUIFlavor
-	webUIInterface: WebUIInterface
-	webUIUpdateCheckInterval: Float
+  autoDownloadAheadLimit: Int
+  autoDownloadNewChapters: Boolean
+  backupInterval: Int
+  backupPath: String
+  backupTTL: Int
+  backupTime: String
+  basicAuthEnabled: Boolean
+  basicAuthPassword: String
+  basicAuthUsername: String
+  debugLogsEnabled: Boolean
+  downloadAsCbz: Boolean
+  downloadsPath: String
+  electronPath: String
+  excludeCompleted: Boolean
+  excludeEntryWithUnreadChapters: Boolean
+  excludeNotStarted: Boolean
+  excludeUnreadChapters: Boolean
+  globalUpdateInterval: Float
+  gqlDebugLogsEnabled: Boolean
+  initialOpenInBrowserEnabled: Boolean
+  ip: String
+  localSourcePath: String
+  maxSourcesInParallel: Int
+  port: Int
+  socksProxyEnabled: Boolean
+  socksProxyHost: String
+  socksProxyPort: String
+  systemTrayEnabled: Boolean
+  updateMangas: Boolean
+  webUIChannel: WebUIChannel
+  webUIFlavor: WebUIFlavor
+  webUIInterface: WebUIInterface
+  webUIUpdateCheckInterval: Float
 }
 input ReorderChapterDownloadInput {
-	chapterId: Int!
-	clientMutationId: String
-	to: Int!
+  chapterId: Int!
+  clientMutationId: String
+  to: Int!
 }
 input ResetSettingsInput {
-	clientMutationId: String
+  clientMutationId: String
 }
 input RestoreBackupInput {
-	backup: Upload!
-	clientMutationId: String
+  backup: Upload!
+  clientMutationId: String
 }
 input SetCategoryMetaInput {
-	clientMutationId: String
-	meta: CategoryMetaTypeInput!
+  clientMutationId: String
+  meta: CategoryMetaTypeInput!
 }
 input SetChapterMetaInput {
-	clientMutationId: String
-	meta: ChapterMetaTypeInput!
+  clientMutationId: String
+  meta: ChapterMetaTypeInput!
 }
 input SetGlobalMetaInput {
-	clientMutationId: String
-	meta: GlobalMetaTypeInput!
+  clientMutationId: String
+  meta: GlobalMetaTypeInput!
 }
 input SetMangaMetaInput {
-	clientMutationId: String
-	meta: MangaMetaTypeInput!
+  clientMutationId: String
+  meta: MangaMetaTypeInput!
 }
 input SetSettingsInput {
-	clientMutationId: String
-	settings: PartialSettingsTypeInput!
+  clientMutationId: String
+  settings: PartialSettingsTypeInput!
 }
 input SortSelectionInput {
-	ascending: Boolean!
-	index: Int!
+  ascending: Boolean!
+  index: Int!
 }
 input SourceConditionInput {
-	id: LongString
-	isNsfw: Boolean
-	lang: String
-	name: String
+  id: LongString
+  isNsfw: Boolean
+  lang: String
+  name: String
 }
 input SourceFilterInput {
-	and: [SourceFilterInput!]
-	id: LongFilterInput
-	isNsfw: BooleanFilterInput
-	lang: StringFilterInput
-	name: StringFilterInput
-	not: SourceFilterInput
-	or: [SourceFilterInput!]
+  and: [SourceFilterInput!]
+  id: LongFilterInput
+  isNsfw: BooleanFilterInput
+  lang: StringFilterInput
+  name: StringFilterInput
+  not: SourceFilterInput
+  or: [SourceFilterInput!]
 }
 input SourcePreferenceChangeInput {
-	checkBoxState: Boolean
-	editTextState: String
-	listState: String
-	multiSelectState: [String!]
-	position: Int!
-	switchState: Boolean
+  checkBoxState: Boolean
+  editTextState: String
+  listState: String
+  multiSelectState: [String!]
+  position: Int!
+  switchState: Boolean
 }
 input StartDownloaderInput {
-	clientMutationId: String
+  clientMutationId: String
 }
 input StopDownloaderInput {
-	clientMutationId: String
+  clientMutationId: String
 }
 input StringFilterInput {
-	distinctFrom: String
-	distinctFromInsensitive: String
-	endsWith: String
-	endsWithInsensitive: String
-	equalTo: String
-	greaterThan: String
-	greaterThanInsensitive: String
-	greaterThanOrEqualTo: String
-	greaterThanOrEqualToInsensitive: String
-	in: [String!]
-	inInsensitive: [String!]
-	includes: String
-	includesInsensitive: String
-	isNull: Boolean
-	lessThan: String
-	lessThanInsensitive: String
-	lessThanOrEqualTo: String
-	lessThanOrEqualToInsensitive: String
-	like: String
-	likeInsensitive: String
-	notDistinctFrom: String
-	notDistinctFromInsensitive: String
-	notEndsWith: String
-	notEndsWithInsensitive: String
-	notEqualTo: String
-	notIn: [String!]
-	notInInsensitive: [String!]
-	notIncludes: String
-	notIncludesInsensitive: String
-	notLike: String
-	notLikeInsensitive: String
-	notStartsWith: String
-	notStartsWithInsensitive: String
-	startsWith: String
-	startsWithInsensitive: String
+  distinctFrom: String
+  distinctFromInsensitive: String
+  endsWith: String
+  endsWithInsensitive: String
+  equalTo: String
+  greaterThan: String
+  greaterThanInsensitive: String
+  greaterThanOrEqualTo: String
+  greaterThanOrEqualToInsensitive: String
+  in: [String!]
+  inInsensitive: [String!]
+  includes: String
+  includesInsensitive: String
+  isNull: Boolean
+  lessThan: String
+  lessThanInsensitive: String
+  lessThanOrEqualTo: String
+  lessThanOrEqualToInsensitive: String
+  like: String
+  likeInsensitive: String
+  notDistinctFrom: String
+  notDistinctFromInsensitive: String
+  notEndsWith: String
+  notEndsWithInsensitive: String
+  notEqualTo: String
+  notIn: [String!]
+  notInInsensitive: [String!]
+  notIncludes: String
+  notIncludesInsensitive: String
+  notLike: String
+  notLikeInsensitive: String
+  notStartsWith: String
+  notStartsWithInsensitive: String
+  startsWith: String
+  startsWithInsensitive: String
 }
 input UpdateCategoriesInput {
-	clientMutationId: String
-	ids: [Int!]!
-	patch: UpdateCategoryPatchInput!
+  clientMutationId: String
+  ids: [Int!]!
+  patch: UpdateCategoryPatchInput!
 }
 input UpdateCategoryInput {
-	clientMutationId: String
-	id: Int!
-	patch: UpdateCategoryPatchInput!
+  clientMutationId: String
+  id: Int!
+  patch: UpdateCategoryPatchInput!
 }
 input UpdateCategoryMangaInput {
-	categories: [Int!]!
-	clientMutationId: String
+  categories: [Int!]!
+  clientMutationId: String
 }
 input UpdateCategoryOrderInput {
-	clientMutationId: String
-	id: Int!
-	position: Int!
+  clientMutationId: String
+  id: Int!
+  position: Int!
 }
 input UpdateCategoryPatchInput {
-	default: Boolean
-	includeInUpdate: IncludeInUpdate
-	name: String
+  default: Boolean
+  includeInUpdate: IncludeInUpdate
+  name: String
 }
 input UpdateChapterInput {
-	clientMutationId: String
-	id: Int!
-	patch: UpdateChapterPatchInput!
+  clientMutationId: String
+  id: Int!
+  patch: UpdateChapterPatchInput!
 }
 input UpdateChapterPatchInput {
-	isBookmarked: Boolean
-	isRead: Boolean
-	lastPageRead: Int
+  isBookmarked: Boolean
+  isRead: Boolean
+  lastPageRead: Int
 }
 input UpdateChaptersInput {
-	clientMutationId: String
-	ids: [Int!]!
-	patch: UpdateChapterPatchInput!
+  clientMutationId: String
+  ids: [Int!]!
+  patch: UpdateChapterPatchInput!
 }
 input UpdateExtensionInput {
-	clientMutationId: String
-	id: String!
-	patch: UpdateExtensionPatchInput!
+  clientMutationId: String
+  id: String!
+  patch: UpdateExtensionPatchInput!
 }
 input UpdateExtensionPatchInput {
-	install: Boolean
-	uninstall: Boolean
-	update: Boolean
+  install: Boolean
+  uninstall: Boolean
+  update: Boolean
 }
 input UpdateExtensionsInput {
-	clientMutationId: String
-	ids: [String!]!
-	patch: UpdateExtensionPatchInput!
+  clientMutationId: String
+  ids: [String!]!
+  patch: UpdateExtensionPatchInput!
 }
 input UpdateLibraryMangaInput {
-	clientMutationId: String
+  clientMutationId: String
 }
 input UpdateMangaCategoriesInput {
-	clientMutationId: String
-	id: Int!
-	patch: UpdateMangaCategoriesPatchInput!
+  clientMutationId: String
+  id: Int!
+  patch: UpdateMangaCategoriesPatchInput!
 }
 input UpdateMangaCategoriesPatchInput {
-	addToCategories: [Int!]
-	clearCategories: Boolean
-	removeFromCategories: [Int!]
+  addToCategories: [Int!]
+  clearCategories: Boolean
+  removeFromCategories: [Int!]
 }
 input UpdateMangaInput {
-	clientMutationId: String
-	id: Int!
-	patch: UpdateMangaPatchInput!
+  clientMutationId: String
+  id: Int!
+  patch: UpdateMangaPatchInput!
 }
 input UpdateMangaPatchInput {
-	inLibrary: Boolean
+  inLibrary: Boolean
 }
 input UpdateMangasCategoriesInput {
-	clientMutationId: String
-	ids: [Int!]!
-	patch: UpdateMangaCategoriesPatchInput!
+  clientMutationId: String
+  ids: [Int!]!
+  patch: UpdateMangaCategoriesPatchInput!
 }
 input UpdateMangasInput {
-	clientMutationId: String
-	ids: [Int!]!
-	patch: UpdateMangaPatchInput!
+  clientMutationId: String
+  ids: [Int!]!
+  patch: UpdateMangaPatchInput!
 }
 input UpdateSourcePreferenceInput {
-	change: SourcePreferenceChangeInput!
-	clientMutationId: String
-	source: LongString!
+  change: SourcePreferenceChangeInput!
+  clientMutationId: String
+  source: LongString!
 }
 input UpdateStopInput {
-	clientMutationId: String
+  clientMutationId: String
 }
 input ValidateBackupInput {
-	backup: Upload!
+  backup: Upload!
 }
 input WebUIUpdateInput {
-	clientMutationId: String
+  clientMutationId: String
 }
 "Exposes a URL that specifies the behaviour of this scalar."
 directive @specifiedBy(
-	"The URL that specifies the behaviour of this scalar."
-	url: String!
-) on SCALAR
+    "The URL that specifies the behaviour of this scalar."
+    url: String!
+  ) on SCALAR
+
