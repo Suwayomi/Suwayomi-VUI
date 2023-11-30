@@ -17,7 +17,7 @@
 		type FetchMangaChaptersMutation,
 		type FetchMangaInfoMutation
 	} from '$lib/generated';
-	import { ErrorhelpUntyped } from '$lib/util';
+	import { ErrorHelpUntyped } from '$lib/util';
 	import type { ApolloCache, FetchResult } from '@apollo/client';
 	import type { PageData } from './$types';
 	import InfoSide from './InfoSide.svelte';
@@ -86,7 +86,7 @@
 	}
 
 	async function fetchchapters() {
-		await ErrorhelpUntyped(
+		await ErrorHelpUntyped(
 			'Failed to refresh manga',
 			toastStore,
 			fetchMangaInfo({ variables: { id: data.MangaID }, update: fetchInfoUpdater }),

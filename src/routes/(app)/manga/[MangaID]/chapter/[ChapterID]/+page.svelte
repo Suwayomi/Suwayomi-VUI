@@ -21,7 +21,7 @@
 		type GetMangaQuery
 	} from '$lib/generated';
 	import { Layout, MangaMeta, Meta, Mode } from '$lib/simpleStores';
-	import { Errorhelp } from '$lib/util';
+	import { ErrorHelp } from '$lib/util';
 	import type { FetchResult } from '@apollo/client';
 	import { getDrawerStore } from '@skeletonlabs/skeleton';
 	import { onMount } from 'svelte';
@@ -97,7 +97,7 @@
 			chapterID: currentChapterID,
 			pages: []
 		};
-		await Errorhelp(`failed to load chapter ${obj.chapterID}`, pages, toastStore, (e) => {
+		await ErrorHelp(`failed to load chapter ${obj.chapterID}`, pages, toastStore, (e) => {
 			if (!e.data) return;
 			obj.pages = e.data.fetchChapterPages.pages;
 			all.push(obj);
@@ -234,7 +234,7 @@
 					chapterID: tmp.id,
 					pages: []
 				};
-				await Errorhelp(`failed to load chapter ${obj.chapterID}`, tttmp, toastStore, (e) => {
+				await ErrorHelp(`failed to load chapter ${obj.chapterID}`, tttmp, toastStore, (e) => {
 					if (!e.data) return;
 					obj.pages = e.data.fetchChapterPages.pages;
 					all = [obj, ...all];

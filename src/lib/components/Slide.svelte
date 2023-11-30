@@ -16,7 +16,7 @@
 	// Event Dispatcher
 	type SlideToggleEvent = {
 		keyup: SvelteEvent<KeyboardEvent, HTMLDivElement>;
-		changee: boolean;
+		changeE: boolean;
 	};
 	const dispatch = createEventDispatcher<SlideToggleEvent>();
 
@@ -42,7 +42,7 @@
 	/** Provide classes to set border radius styles. */
 	export let rounded: CssClasses = 'rounded-full';
 	/** Provide classes for the label div */
-	export let labelclass: CssClasses = 'ml-3';
+	export let labelClass: CssClasses = 'ml-3';
 
 	// Props (a11y)
 	/** Provide a semantic label. */
@@ -116,11 +116,11 @@
 		switch (checked) {
 			case true:
 				checked = false;
-				dispatch('changee', checked);
+				dispatch('changeE', checked);
 				break;
 			case false:
 				checked = true;
-				dispatch('changee', checked);
+				dispatch('changeE', checked);
 				break;
 		}
 	}
@@ -129,7 +129,6 @@
 <div
 	id={label}
 	class="slide-toggle {classesBase} "
-	data-testid="slide-toggle"
 	on:keydown={onKeyDown}
 	role="switch"
 	aria-label={label}
@@ -155,7 +154,7 @@
 			disabled={$$props.disabled}
 		/>
 		<!-- Label -->
-		{#if $$slots.default}<div class="slide-toggle-text flex-1 {labelclass}"><slot /></div>{/if}
+		{#if $$slots.default}<div class="slide-toggle-text flex-1 {labelClass}"><slot /></div>{/if}
 		<!-- Slider Track/Thumb -->
 		<div class="slide-toggle-track {classesTrack}" class:cursor-not-allowed={$$props.disabled}>
 			<div

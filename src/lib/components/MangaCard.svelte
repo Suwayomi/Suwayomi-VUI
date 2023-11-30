@@ -14,13 +14,14 @@
 
 	export let thumbnailUrl = '';
 	export let title = '';
-	export let titla: string | undefined = undefined;
+	export let titleA: string | undefined = undefined;
 	export let fit: CssClasses = 'object-cover';
 	export let rounded: CssClasses = 'rounded-lg';
 	export let aspect: CssClasses = '';
+	export let draggable = true;
 </script>
 
 <div class="relative h-full w-full {$$props.class}" in:fade>
-	<Image {fit} {aspect} src={thumbnailUrl} alt={title} title={titla} {rounded} />
+	<Image {draggable} {fit} {aspect} src={thumbnailUrl} alt={title} title={titleA} {rounded} />
 	<slot />
 </div>

@@ -31,10 +31,10 @@
 </script>
 
 <Slide
-	on:changee={handelcheck}
+	on:changeE={handelcheck}
 	{checked}
 	class="w-full hover:variant-glass-surface py-1 px-3 my-1"
-	labelclass="w-full ml-1"
+	labelClass="w-full ml-1"
 >
 	<div class="flex flex-col">
 		<div>

@@ -13,11 +13,11 @@
 	import { popup } from '@skeletonlabs/skeleton';
 	import { getToastStore } from '$lib/components/Toast/stores';
 	import { HelpUpdateChapters, dlreabook } from '$lib/util';
-	import { selected, selectmode } from './UpdatesStores';
+	import { selected, selectMode } from './UpdatesStores';
 	import Icon from '$lib/components/IconWrapper.svelte';
 	import IconWrapper from '$lib/components/IconWrapper.svelte';
 	const toastStore = getToastStore();
-	export let selectall: () => void;
+	export let selectAll: () => void;
 	export let updateSelectedValues: (prop: dlreabook, is: boolean | undefined) => void;
 </script>
 
@@ -27,7 +27,7 @@
 		let:matches
 	>
 		{#if matches}
-			{#if $selectmode}
+			{#if $selectMode}
 				<TooltipIconButton
 					class="text-surface-700 dark:text-surface-300"
 					on:click={async () => {
@@ -57,11 +57,11 @@
 			{/if}
 			<TooltipIconButton
 				class="text-surface-700 dark:text-surface-300"
-				on:click={selectall}
+				on:click={selectAll}
 				name="mdi:select-all"
 				tip="Select all/none"
 			/>
-		{:else if $selectmode}
+		{:else if $selectMode}
 			<button
 				use:popup={{
 					event: 'click',
@@ -105,7 +105,7 @@
 					</button>
 					<button
 						class="text-2xl hover:variant-glass-surface w-full rounded-b-lg p-4 flex items-center justify-start"
-						on:click={selectall}
+						on:click={selectAll}
 					>
 						<IconWrapper name="mdi:select-all" class="mr-2" />Select all
 					</button>
@@ -116,9 +116,9 @@
 	<TooltipIconButton
 		class="text-surface-700 dark:text-surface-300"
 		on:click={() => {
-			$selectmode = !$selectmode;
+			$selectMode = !$selectMode;
 		}}
-		name="mdi:{$selectmode ? 'select-multiple' : 'flip-to-front'}"
+		name="mdi:{$selectMode ? 'select-multiple' : 'flip-to-front'}"
 		tip="Select Mode"
 	/>
 </div>

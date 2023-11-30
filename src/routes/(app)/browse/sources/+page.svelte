@@ -15,7 +15,7 @@
 	import { FindLangName } from '../languages';
 	import Nav from '../Nav.svelte';
 	import SourcesActions from './SourcesActions.svelte';
-	import { Sourcelangfilt } from './SourcesStores';
+	import { SourceLangFilter } from './SourcesStores';
 	import { Meta } from '$lib/simpleStores';
 	import { groupBy } from '$lib/util';
 
@@ -27,7 +27,7 @@
 	const query = queryParam('q', ssp.string(), { pushHistory: false });
 
 	$: filteredSources = $sources.data?.sources?.nodes.filter((ele) => {
-		if (!$Sourcelangfilt.has(ele.lang)) return false;
+		if (!$SourceLangFilter.has(ele.lang)) return false;
 		if ($query !== '' && $query !== null) {
 			return ele.displayName.toLowerCase().includes($query.toLocaleLowerCase());
 		}
@@ -36,8 +36,8 @@
 
 	$: langs = getLangs($sources.data);
 
-	function getLangs(srces: SourcesQuery) {
-		if (srces?.sources?.nodes !== undefined) {
+	function getLangs(exts: SourcesQuery) {
+		if (exts?.sources?.nodes !== undefined) {
 			return $sources.data.sources.nodes.reduce((a, c) => {
 				if (!a.has(c.lang)) {
 					return a.add(c.lang);
@@ -52,9 +52,9 @@
 
 	$: groupSources = doGroupSources(filteredSources);
 
-	function doGroupSources(filteredSrces: Tsource[] | undefined) {
-		if (!filteredSrces) return;
-		return groupBy(filteredSrces, ({ lang }) => lang);
+	function doGroupSources(filteredExts: Tsource[] | undefined) {
+		if (!filteredExts) return;
+		return groupBy(filteredExts, ({ lang }) => lang);
 	}
 </script>
 

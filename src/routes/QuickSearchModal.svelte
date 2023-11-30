@@ -27,7 +27,7 @@
 	import { FindLangName } from './(app)/browse/languages';
 	import { goto } from '$app/navigation';
 	import type { SvelteComponent } from 'svelte';
-	import { Sourcelangfilt } from './(app)/browse/sources/SourcesStores';
+	import { SourceLangFilter } from './(app)/browse/sources/SourcesStores';
 	import { queryParam, ssp } from 'sveltekit-search-params';
 	import { page } from '$app/stores';
 	export let parent: SvelteComponent;
@@ -184,7 +184,7 @@
 			const mangaSearch: string | undefined = parsed[1];
 			const includeSource = $sources.data?.sources?.nodes
 				.filter((e) => e.displayName.toLowerCase().includes(sourceSearch.toLowerCase()))
-				.filter((e) => $Sourcelangfilt.has(e.lang));
+				.filter((e) => $SourceLangFilter.has(e.lang));
 			if (includeSource) {
 				items = includeSource.map((e) => {
 					return {

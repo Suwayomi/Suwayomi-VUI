@@ -64,7 +64,7 @@
 					<input class="input" type="text" bind:value={$catinput} />
 				</label>
 				<Slide
-					labelclass="ml-2"
+					labelClass="ml-2"
 					bind:checked={$Defaul}
 					class="w-full focus:outline-0 p-1 hover:variant-glass-surface"
 				>

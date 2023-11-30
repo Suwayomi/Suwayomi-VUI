@@ -17,7 +17,7 @@
 	// Event Dispatcher
 	type SlideToggleEvent = {
 		keyup: SvelteEvent<KeyboardEvent, HTMLDivElement>;
-		changee: boolean;
+		changeE: boolean;
 	};
 	const dispatch = createEventDispatcher<SlideToggleEvent>();
 
@@ -30,7 +30,7 @@
 	/** The checked state of the input element. */
 	export let checked: boolean | null = null;
 
-	export let tristat = true;
+	export let triState = true;
 
 	// Props (styles)
 	export let size: 'sm' | 'md' | 'lg' = 'md';
@@ -45,7 +45,7 @@
 	/** Provide classes to set border radius styles. */
 	export let rounded: CssClasses = 'rounded-full';
 	/** Provide classes for the label div */
-	export let labelclass: CssClasses = 'ml-3';
+	export let labelClass: CssClasses = 'ml-3';
 
 	// Props (a11y)
 	/** Provide a semantic label. */
@@ -123,7 +123,7 @@
 
 	export let state: TriState = checked === null ? 0 : checked ? 1 : 2;
 	export function handelClick() {
-		if (tristat) {
+		if (triState) {
 			switch (state) {
 				case 0:
 					state = 1;
@@ -140,12 +140,12 @@
 				case 1:
 					state = 2;
 					checked = false;
-					dispatch('changee', checked);
+					dispatch('changeE', checked);
 					break;
 				case 2:
 					state = 1;
 					checked = true;
-					dispatch('changee', checked);
+					dispatch('changeE', checked);
 					break;
 			}
 		}
@@ -155,7 +155,6 @@
 <div
 	id={label}
 	class="slide-toggle {classesBase} "
-	data-testid="slide-toggle"
 	on:keydown={onKeyDown}
 	role="switch"
 	aria-label={label}
@@ -181,7 +180,7 @@
 			disabled={$$props.disabled}
 		/>
 		<!-- Label -->
-		{#if $$slots.default}<div class="slide-toggle-text flex-1 {labelclass}"><slot /></div>{/if}
+		{#if $$slots.default}<div class="slide-toggle-text flex-1 {labelClass}"><slot /></div>{/if}
 		<!-- Slider Track/Thumb -->
 		<div class="slide-toggle-track {classesTrack}" class:cursor-not-allowed={$$props.disabled}>
 			<div
