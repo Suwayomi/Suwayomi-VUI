@@ -10,7 +10,7 @@
 	import { AppBarData } from '$lib/MountTitleAction';
 	import IntersectionObserver from '$lib/components/IntersectionObserver.svelte';
 	import MangaCard from '$lib/components/MangaCard.svelte';
-	import { sourceMigrationManga, sourceMigrationsource } from '$lib/generated';
+	import { sourceMigrationManga, sourceMigrationSource } from '$lib/generated';
 	import { Meta, display } from '$lib/simpleStores';
 	import { gridValues } from '$lib/util';
 	import type { PageData } from './$types';
@@ -20,7 +20,7 @@
 	AppBarData(data.SourceID);
 
 	const Manga = sourceMigrationManga({ variables: { sourceId: data.SourceID } });
-	const source = sourceMigrationsource({ variables: { sourceId: data.SourceID } });
+	const source = sourceMigrationSource({ variables: { sourceId: data.SourceID } });
 
 	$: if ($source.data.source?.displayName) AppBarData($source.data.source.displayName);
 </script>

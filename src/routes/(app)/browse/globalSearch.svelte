@@ -42,8 +42,8 @@
 	});
 
 	$: langs = getLangs($rawSources.data);
-	function getLangs(srces: SourcesQuery) {
-		if (srces?.sources?.nodes !== undefined) {
+	function getLangs(exts: SourcesQuery) {
+		if (exts?.sources?.nodes !== undefined) {
 			return $rawSources.data.sources.nodes.reduce((a, c) => {
 				if (!a.has(c.lang)) {
 					return a.add(c.lang);

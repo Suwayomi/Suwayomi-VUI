@@ -12,19 +12,19 @@
 	import { updates, type UpdatesQuery } from '$lib/generated';
 	import { writable, type Writable } from 'svelte/store';
 	import MangaCard from '$lib/components/MangaCard.svelte';
-	import { longpress } from '$lib/press';
-	import { selectmode, selected } from './UpdatesStores';
+	import { longPress } from '$lib/press';
+	import { selectMode, selected } from './UpdatesStores';
 	import IntersectionObserver from '$lib/components/IntersectionObserver.svelte';
 	import IconWrapper from '$lib/components/IconWrapper.svelte';
 	import { goto } from '$app/navigation';
 	import type { UpdateNode } from './UpdatesStores';
-	import { dlreabook, gridValues, HelpDoSelect, HelpSelectall } from '$lib/util';
+	import { dlreabook, gridValues, HelpDoSelect, HelpSelectAll } from '$lib/util';
 	import { display, Meta } from '$lib/simpleStores';
 
 	AppBarData('Updates', {
 		component: UpdatesActions,
 		props: {
-			selectall,
+			selectAll,
 			updateSelectedValues
 		}
 	});
@@ -44,12 +44,12 @@
 	}
 
 	function LongHandler(): void {
-		$selectmode = true;
+		$selectMode = true;
 	}
-	let lastselected: UpdateNode | undefined;
+	let lastSelected: UpdateNode | undefined;
 
-	function selectall() {
-		HelpSelectall(selectmode, selected, $all?.nodes);
+	function selectAll() {
+		HelpSelectAll(selectMode, selected, $all?.nodes);
 	}
 
 	function updateSelectedValues(prop: dlreabook, is: boolean | undefined) {
@@ -106,14 +106,14 @@
 			>
 				{#if intersecting}
 					<a
-						use:longpress
-						on:longpress={() => $selectmode || LongHandler()}
+						use:longPress
+						on:longPress={() => $selectMode || LongHandler()}
 						href="manga/{updat.manga.id}"
 						on:click|stopPropagation={(e) => {
 							if (e.ctrlKey) return;
-							if ($selectmode) {
+							if ($selectMode) {
 								e.preventDefault();
-								lastselected = HelpDoSelect(updat, e, lastselected, $all?.nodes, selected);
+								lastSelected = HelpDoSelect(updat, e, lastSelected, $all?.nodes, selected);
 							} else {
 								e.preventDefault();
 								goto(`/manga/${updat.manga.id}`);
@@ -125,14 +125,14 @@
 						<MangaCard
 							thumbnailUrl={updat.manga.thumbnailUrl ?? ''}
 							title={updat.manga.title}
-							class={$selectmode && 'opacity-80'}
-							titla="{updat.isDownloaded ? 'Downloaded' : ''}
+							class={$selectMode && 'opacity-80'}
+							titleA="{updat.isDownloaded ? 'Downloaded' : ''}
 {updat.isRead ? 'Read' : ''}
 {updat.isBookmarked ? 'Bookmarked' : ''}"
 							rounded="{$Meta.Display === display.Compact && 'rounded-lg'}
 							{$Meta.Display === display.Comfortable && 'rounded-none rounded-t-lg'}"
 						>
-							{#if $selectmode}
+							{#if $selectMode}
 								<div class="cursor-pointer absolute top-0 right-0 left-0 bottom-0 bg-base-100/75">
 									<IconWrapper
 										name={$selected[updat.id] === undefined

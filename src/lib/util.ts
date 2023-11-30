@@ -14,7 +14,7 @@ export type TriState = 0 | 1 | 2;
 export function HelpDoSelect<T extends { id: number }>(
 	update: T,
 	e: MouseEvent & { currentTarget: EventTarget & HTMLAnchorElement },
-	lastselected: T | undefined,
+	lastSelected: T | undefined,
 	all: T[] | undefined,
 	selected: Writable<T[]>
 ) {
@@ -22,13 +22,13 @@ export function HelpDoSelect<T extends { id: number }>(
 	if (e && e.shiftKey) {
 		const chaps = all;
 		const thisone = chaps?.findIndex((ele) => ele.id === update.id);
-		const lastone = chaps?.findIndex((ele) => ele.id === lastselected?.id);
+		const lastone = chaps?.findIndex((ele) => ele.id === lastSelected?.id);
 		if (thisone !== undefined && lastone !== undefined && chaps !== undefined) {
 			const biger = lastone > thisone;
 			ids = chaps.slice(biger ? thisone : lastone, (biger ? lastone : thisone) + 1);
 		}
 	}
-	lastselected = update;
+	lastSelected = update;
 	if (get(selected)[update.id] === undefined) {
 		ids.forEach((ele) =>
 			selected.update((e) => {
@@ -44,15 +44,15 @@ export function HelpDoSelect<T extends { id: number }>(
 			});
 		});
 	}
-	return lastselected;
+	return lastSelected;
 }
 
-export function HelpSelectall<T extends { id: number }>(
-	selectmode: Writable<boolean>,
+export function HelpSelectAll<T extends { id: number }>(
+	selectMode: Writable<boolean>,
 	selected: Writable<T[]>,
 	sortedMangas: T[] | undefined
 ) {
-	selectmode.set(true);
+	selectMode.set(true);
 	if (get(selected).filter((e) => e).length === sortedMangas?.length) {
 		selected.set([]);
 	} else {
@@ -83,7 +83,7 @@ export async function HelpUpdateChapters<
 		switch (param) {
 			case dlreabook.bookmark:
 				is = !get(selected).filter((e) => e)[0].isBookmarked;
-				Errorhelp(
+				ErrorHelp(
 					'failed to update Bookmark status',
 					updateChapters({
 						variables: {
@@ -97,13 +97,13 @@ export async function HelpUpdateChapters<
 			case dlreabook.download:
 				is = get(selected).filter((e) => e)[0].isDownloaded;
 				if (is) {
-					Errorhelp(
+					ErrorHelp(
 						'failed to delete Downloaded chapters',
 						deleteDownloadedChapters({ variables: { ids } }),
 						toastStore
 					);
 				} else {
-					Errorhelp(
+					ErrorHelp(
 						'failed to enqueue chapters Downloads',
 						enqueueChapterDownloads({ variables: { ids } }),
 						toastStore
@@ -112,7 +112,7 @@ export async function HelpUpdateChapters<
 				return !is;
 			default:
 				is = !get(selected).filter((e) => e)[0].isRead;
-				Errorhelp(
+				ErrorHelp(
 					'failed to update Read status',
 					updateChapters({
 						variables: {
@@ -126,7 +126,7 @@ export async function HelpUpdateChapters<
 		}
 }
 
-export async function Errorhelp<T>(
+export async function ErrorHelp<T>(
 	failmsg: string,
 	func: Promise<FetchResult<T>>,
 	toastStore: ToastStore,
@@ -148,7 +148,7 @@ export async function Errorhelp<T>(
 	}
 }
 
-export async function ErrorhelpUntyped(
+export async function ErrorHelpUntyped(
 	failmsg: string,
 	toastStore: ToastStore,
 	...func: Promise<FetchResult<unknown>>[]

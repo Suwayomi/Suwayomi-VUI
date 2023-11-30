@@ -98,7 +98,7 @@ query sourceMigrationManga($sourceId: LongString!) {
 	}
 }
 
-query sourceMigrationsource($sourceId: LongString!) {
+query sourceMigrationSource($sourceId: LongString!) {
 	source(id: $sourceId) {
 		displayName
 	}

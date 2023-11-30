@@ -10,16 +10,16 @@
 	import { category, type CategoryQuery, categories as getCategories } from '$lib/generated';
 	import IntersectionObserver from '$lib/components/IntersectionObserver.svelte';
 	import MangaCard from '$lib/components/MangaCard.svelte';
-	import { longpress } from '$lib/press';
+	import { longPress } from '$lib/press';
 	import { display, Meta, sort } from '$lib/simpleStores';
 	import { Tab, TabGroup } from '@skeletonlabs/skeleton';
 	import { queryParam, ssp } from 'sveltekit-search-params';
 	import LibraryActions from './libraryActions.svelte';
-	import { selected, selectmode } from './LibraryStores';
+	import { selected, selectMode } from './LibraryStores';
 	import { onMount } from 'svelte';
 	import { AppBarData } from '$lib/MountTitleAction';
 	import { goto } from '$app/navigation';
-	import { gridValues, HelpDoSelect, HelpSelectall } from '$lib/util';
+	import { gridValues, HelpDoSelect, HelpSelectAll } from '$lib/util';
 	import IconWrapper from '$lib/components/IconWrapper.svelte';
 
 	const categories = getCategories({});
@@ -27,20 +27,20 @@
 	AppBarData('Library', {
 		component: LibraryActions,
 		props: {
-			selectall
+			selectAll
 		}
 	});
 
 	onMount(() => {
-		$selectmode = false;
+		$selectMode = false;
 		return () => {
-			$selectmode = false;
+			$selectMode = false;
 		};
 	});
 
 	type MangaType = NonNullable<CategoryQuery['category']>['mangas']['nodes'][0];
 
-	let lastselected: MangaType | undefined;
+	let lastSelected: MangaType | undefined;
 
 	const query = queryParam('q', ssp.string(), { pushHistory: false });
 	const tab = queryParam('tab', ssp.number(), { pushHistory: false });
@@ -61,14 +61,14 @@
 	});
 
 	function LongHandler() {
-		$selectmode = true;
+		$selectMode = true;
 	}
 
-	$: if ($selectmode === false) {
+	$: if ($selectMode === false) {
 		$selected = [];
 	}
 
-	$: if ($selectmode && Object.keys($selected).length > 0) {
+	$: if ($selectMode && Object.keys($selected).length > 0) {
 		Object.keys($selected).forEach((ele) => {
 			if (filteredMangas !== undefined) {
 				const tmp = filteredMangas.findIndex((elem) => elem.id.toString() === ele);
@@ -124,8 +124,8 @@
 		return tru ? -1 : 1;
 	});
 
-	function selectall() {
-		HelpSelectall(selectmode, selected, sortedMangas);
+	function selectAll() {
+		HelpSelectAll(selectMode, selected, sortedMangas);
 	}
 </script>
 
@@ -192,14 +192,15 @@
 							<div class="aspect-cover">
 								{#if intersecting}
 									<a
-										use:longpress
-										on:longpress={() => $selectmode || LongHandler()}
+										draggable={false}
+										use:longPress
+										on:longPress={() => $selectMode || LongHandler()}
 										href="manga/{manga.id}"
 										on:click|stopPropagation={(e) => {
 											if (e.ctrlKey) return;
-											if ($selectmode) {
+											if ($selectMode) {
 												e.preventDefault();
-												lastselected = HelpDoSelect(manga, e, lastselected, sortedMangas, selected);
+												lastSelected = HelpDoSelect(manga, e, lastSelected, sortedMangas, selected);
 											} else {
 												e.preventDefault();
 												goto(`manga/${manga.id}`);
@@ -209,9 +210,10 @@
 										tabindex="-1"
 									>
 										<MangaCard
+											draggable={false}
 											thumbnailUrl={manga.thumbnailUrl ?? ''}
 											title={manga.title}
-											class={$selectmode && 'opacity-80'}
+											class="select-none {$selectMode && 'opacity-80'}"
 											rounded="{$Meta.Display === display.Compact && 'rounded-lg'}
 										{$Meta.Display === display.Comfortable && 'rounded-none rounded-t-lg'}"
 										>
@@ -237,7 +239,7 @@
 													</div>
 												{/if}
 											</div>
-											{#if $selectmode}
+											{#if $selectMode}
 												<div
 													class="cursor-pointer absolute top-0 right-0 left-0 bottom-0 bg-base-100/75"
 												>

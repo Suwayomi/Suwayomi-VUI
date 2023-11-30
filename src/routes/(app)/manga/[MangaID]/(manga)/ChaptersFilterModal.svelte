@@ -81,7 +81,7 @@
 							bind:state={$mangaMeta.ChapterUnread}
 							label={'Unread'}
 							class="w-full focus:outline-0 p-1 pl-2 hover:variant-glass-surface"
-							labelclass="w-full"
+							labelClass="w-full"
 						>
 							<span>Unread</span>
 						</TriStateSlide>
@@ -89,7 +89,7 @@
 							bind:state={$mangaMeta.ChapterDownloaded}
 							label={'Downloaded'}
 							class="w-full focus:outline-0 p-1 pl-2 hover:variant-glass-surface"
-							labelclass="w-full"
+							labelClass="w-full"
 						>
 							<span>Downloaded</span>
 						</TriStateSlide>
@@ -97,17 +97,17 @@
 							bind:state={$mangaMeta.ChapterBookmarked}
 							label={'Downloaded'}
 							class="w-full focus:outline-0 p-1 pl-2 hover:variant-glass-surface"
-							labelclass="w-full"
+							labelClass="w-full"
 						>
 							<span>Bookmarked</span>
 						</TriStateSlide>
 					{:else if $tabSet === 1}
 						<TriStateSlide
-							tristat={false}
+							triState={false}
 							bind:checked={$mangaMeta.ChapterAsc}
 							label={'Ascending'}
 							class="w-full focus:outline-0 p-1 pl-2 hover:variant-glass-surface"
-							labelclass="w-full"
+							labelClass="w-full"
 						>
 							<span>Ascending</span>
 						</TriStateSlide>

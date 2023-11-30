@@ -12,7 +12,7 @@ import type { ToastSettings, Toast } from './types.js';
 
 const toastDefaults: ToastSettings = {
 	message: 'Missing Toast Message',
-	autohide: true,
+	autoHide: true,
 	timeout: 5000
 };
 
@@ -84,7 +84,7 @@ function toastService() {
 
 	// If toast should auto-hide, wait X time, then close by ID
 	function handleAutoHide(toast: Toast) {
-		if (toast.autohide === true) {
+		if (toast.autoHide === true) {
 			return setTimeout(() => {
 				close(toast.id);
 			}, toast.timeout);
@@ -100,8 +100,8 @@ function toastService() {
 			update((tStore) => {
 				// Trigger Callback
 				if (toast && toast.callback) toast.callback({ id, status: 'queued' });
-				// activate autohide when dismiss button is hidden.
-				if (toast.hideDismiss) toast.autohide = true;
+				// activate autoHide when dismiss button is hidden.
+				if (toast.hideDismiss) toast.autoHide = true;
 				// Merge with defaults
 				const tMerged: Toast = { ...toastDefaults, ...toast, id };
 				// Handle auto-hide, if needed

@@ -7,9 +7,9 @@
 -->
 
 <script lang="ts">
-	import LangFilterbutton from '$lib/components/LangFilterbutton.svelte';
+	import LangFilterButton from '$lib/components/LangFilterButton.svelte';
 	import Search from '$lib/components/Search.svelte';
-	import { Sourcelangfilt as langfilt } from './SourcesStores';
+	import { SourceLangFilter as langFilter } from './SourcesStores';
 	import TooltipIconButton from '$lib/components/TooltipIconButton.svelte';
 	import { goto } from '$app/navigation';
 
@@ -76,5 +76,5 @@
 		tip="Global Search"
 		tipclass="z-50"
 	/>
-	<LangFilterbutton {langfilt} {langs} />
+	<LangFilterButton {langFilter} {langs} />
 </div>

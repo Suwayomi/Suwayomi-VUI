@@ -59,19 +59,20 @@
 	export let aspect: CssClasses = '';
 	export let rounded: CssClasses = 'rounded-lg';
 	export let LoadingHeight: CssClasses = '';
-	export let Loadingwidth: CssClasses = '';
+	export let LoadingWidth: CssClasses = '';
+	export let draggable = true;
 </script>
 
 <div
 	class="relative {aspect} 
-		{State === state.loading && Loadingwidth.length ? Loadingwidth : width}
+		{State === state.loading && LoadingWidth.length ? LoadingWidth : width}
 		{State === state.loading && LoadingHeight.length ? LoadingHeight : height}
 		{$$props.class}"
 >
 	{#if State === state.error}
 		<div
 			class="card flex justify-center items-center {rounded} {aspect}
-			{Loadingwidth.length ? Loadingwidth : width}
+			{LoadingWidth.length ? LoadingWidth : width}
 			{LoadingHeight.length ? LoadingHeight : height}
 			{$$props.class}"
 		>
@@ -80,7 +81,7 @@
 	{:else if State === state.loading}
 		<div
 			class="placeholder absolute top-0 bottom-0 left-0 right-0 animate-pulse {rounded} {aspect} 
-			{Loadingwidth.length ? Loadingwidth : width}
+			{LoadingWidth.length ? LoadingWidth : width}
 			{LoadingHeight.length ? LoadingHeight : height}
 			 {$$props.class}"
 		/>
@@ -94,6 +95,7 @@
 			{title}
 			{src}
 			{alt}
+			{draggable}
 		/>
 	{/if}
 </div>

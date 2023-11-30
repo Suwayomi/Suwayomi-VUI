@@ -13,7 +13,7 @@
 	import Slide from '$lib/components/Slide.svelte';
 	const modalStore = getModalStore();
 	export let langs: Set<string>;
-	export let langfilt: Writable<Set<string>>;
+	export let langFilter: Writable<Set<string>>;
 </script>
 
 {#if $modalStore[0]}
@@ -24,16 +24,16 @@
 				{#each langs as lang}
 					<Slide
 						class="outline-0 p-1 pl-2 hover:variant-glass-surface"
-						on:changee={(e) => {
+						on:changeE={(e) => {
 							if (e.detail) {
-								$langfilt.add(lang);
-								$langfilt = $langfilt;
+								$langFilter.add(lang);
+								$langFilter = $langFilter;
 								return;
 							}
-							$langfilt.delete(lang);
-							$langfilt = $langfilt;
+							$langFilter.delete(lang);
+							$langFilter = $langFilter;
 						}}
-						checked={$langfilt.has(lang)}
+						checked={$langFilter.has(lang)}
 					>
 						{FindLangName(lang)}
 					</Slide>

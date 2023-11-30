@@ -16,7 +16,7 @@ export interface ToastSettings {
 	/** Provide CSS classes to set the background color. */
 	background?: string;
 	/** Enables auto-hide after the timeout duration. */
-	autohide?: boolean;
+	autoHide?: boolean;
 	/** Set the auto-hide timeout duration. */
 	timeout?: number;
 	/** Generate a custom action button UI. */
@@ -40,6 +40,6 @@ export interface ToastSettings {
 export interface Toast extends ToastSettings {
 	/** A UUID will be auto-assigned on `.trigger()`. */
 	id: string;
-	/** The id of the `setTimeout` if `autohide` is enabled  */
+	/** The id of the `setTimeout` if `autoHide` is enabled  */
 	timeoutId?: ReturnType<typeof setTimeout>;
 }

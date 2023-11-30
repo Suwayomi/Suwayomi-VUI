@@ -29,11 +29,11 @@
 
 	function FigureOutSources(data: SourcesMigrationQuery) {
 		if (!data.sources || !data.mangas) return undefined;
-		const tmpsources: sourceWithMangaCount[] = structuredClone(data.sources.nodes);
+		const tmpSources: sourceWithMangaCount[] = structuredClone(data.sources.nodes);
 		data.mangas.nodes.forEach((manga) => {
-			const tmp = tmpsources.find((source) => source.id === manga.sourceId);
+			const tmp = tmpSources.find((source) => source.id === manga.sourceId);
 			if (!tmp) {
-				tmpsources.push({
+				tmpSources.push({
 					id: manga.sourceId,
 					displayName: manga.sourceId,
 					iconUrl: '',
@@ -48,7 +48,7 @@
 			if (tmp.mangas) tmp.mangas.TotalCount += 1;
 			else tmp.mangas = { TotalCount: 1 };
 		});
-		return tmpsources.filter((e) => e.mangas?.TotalCount);
+		return tmpSources.filter((e) => e.mangas?.TotalCount);
 	}
 </script>
 

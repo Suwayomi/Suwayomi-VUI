@@ -30,7 +30,7 @@
 		value = '';
 	}
 
-	function handelchange() {
+	function handelChange() {
 		timeoutCancel = setTimeout(() => {
 			$query = value;
 		}, 100);
@@ -60,7 +60,7 @@
 		type="text"
 		placeholder="input text"
 		bind:value
-		on:change={handelchange}
+		on:change={handelChange}
 		on:keydown={handelEscapeInput}
 	/>
 </div>

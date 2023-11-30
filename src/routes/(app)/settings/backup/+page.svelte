@@ -14,7 +14,7 @@
 		restoreStatus,
 		type RestoreStatusQuery
 	} from '$lib/generated';
-	import { Errorhelp } from '$lib/util';
+	import { ErrorHelp } from '$lib/util';
 	import { FileDropzone, ProgressBar, getModalStore } from '@skeletonlabs/skeleton';
 	import { getToastStore } from '$lib/components/Toast/stores';
 	import type { Readable } from 'svelte/motion';
@@ -26,7 +26,7 @@
 	async function MakeBacup() {
 		if (MakingBackup) return;
 		MakingBackup = true;
-		await Errorhelp('failed to create backup', createBackup({}), toastStore, (e) => {
+		await ErrorHelp('failed to create backup', createBackup({}), toastStore, (e) => {
 			if (e?.data) window.location.href = e.data.createBackup.url;
 		});
 		MakingBackup = false;
@@ -34,7 +34,7 @@
 	AppBarData('Backup');
 	let files: FileList;
 	async function validateRestore() {
-		await Errorhelp(
+		await ErrorHelp(
 			'failed to validate backup file',
 			AsyncvalidateBackup({ variables: { backup: files[0] } }),
 			toastStore,
@@ -85,7 +85,7 @@ ${e.data?.validateBackup.missingSources.map((ele) => ele.name).join(',')}
 	}
 
 	function restore() {
-		Errorhelp(
+		ErrorHelp(
 			'failed to start restoring backup',
 			restoreBackup({ variables: { backup: files[0] } }),
 			toastStore,

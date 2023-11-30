@@ -18,20 +18,20 @@
 		type FetchExtensionsMutation,
 		type InputMaybe
 	} from '$lib/generated';
-	import { Errorhelp, Partition, groupBy } from '$lib/util';
+	import { ErrorHelp, Partition, groupBy } from '$lib/util';
 	import type { ApolloQueryResult, ObservableQuery } from '@apollo/client';
 	import type { Readable } from 'svelte/motion';
 	import { queryParam, ssp } from 'sveltekit-search-params';
 	import Nav from '../Nav.svelte';
 	import { FindLangName } from '../languages';
-	import ExtentionsActions from './ExtensionsActions.svelte';
-	import { langfilt, lastFetched } from './ExtensionsStores';
+	import ExtensionsActions from './ExtensionsActions.svelte';
+	import { langFilter, lastFetched } from './ExtensionsStores';
 	import ExtensionCard from './ExtensionCard.svelte';
 	import { Meta } from '$lib/simpleStores';
 
 	let toastStore = getToastStore();
 	const query = queryParam('q', ssp.string(), { pushHistory: false });
-	type Textension = ExtensionsQuery['extensions']['nodes'][0];
+	type TExtension = ExtensionsQuery['extensions']['nodes'][0];
 
 	let extensions: Readable<
 		ApolloQueryResult<ExtensionsQuery> & {
@@ -44,11 +44,11 @@
 		}
 	>;
 
-	checkIfFetchNewExtentions();
-	async function checkIfFetchNewExtentions() {
+	checkIfFetchNewExtensions();
+	async function checkIfFetchNewExtensions() {
 		if ($lastFetched.valueOf() + 8.64e7 < Date.now().valueOf()) {
-			await Errorhelp(
-				'failed to fetch new extentions',
+			await ErrorHelp(
+				'failed to fetch new extensions',
 				fetchExtensions({
 					update: (
 						cache,
@@ -75,9 +75,9 @@
 	}
 
 	$: langs = getLangs($extensions?.data);
-	$: AppBarData('Extentions', { component: ExtentionsActions, props: { langs } });
-	function getLangs(srces: ExtensionsQuery) {
-		if (srces?.extensions?.nodes) {
+	$: AppBarData('Extensions', { component: ExtensionsActions, props: { langs } });
+	function getLangs(exts: ExtensionsQuery) {
+		if (exts?.extensions?.nodes) {
 			return $extensions.data.extensions.nodes.reduce((a, c) => {
 				if (!a.has(c.lang)) {
 					return a.add(c.lang);
@@ -89,24 +89,24 @@
 	}
 
 	$: filteredExtensions = $extensions?.data?.extensions?.nodes.filter((ele) => {
-		if (!$langfilt.has(ele.lang)) return false;
+		if (!$langFilter.has(ele.lang)) return false;
 		if ($query !== '' && $query !== null) {
 			return ele.name.toLowerCase().includes($query.toLocaleLowerCase());
 		}
 		return true;
-	}) as Textension[] | undefined;
+	}) as TExtension[] | undefined;
 
 	$: groupExtensions = doGroupSources(filteredExtensions, langs);
-	function doGroupSources(filteredSrces: Textension[] | undefined, langs: Set<string>) {
-		if (!filteredSrces) return undefined;
-		const [hasUpdate, DoesntHaveUpdate] = Partition(filteredSrces, (e) => e.hasUpdate);
-		const [isInstalled, isntInstalled] = Partition(DoesntHaveUpdate, (e) => e.isInstalled);
+	function doGroupSources(filteredExts: TExtension[] | undefined, langs: Set<string>) {
+		if (!filteredExts) return undefined;
+		const [hasUpdate, noHaveUpdate] = Partition(filteredExts, (e) => e.hasUpdate);
+		const [isInstalled, noInstalled] = Partition(noHaveUpdate, (e) => e.isInstalled);
 		const always = [
 			['Update Pending', hasUpdate],
 			['Installed', isInstalled]
-		] as [string, Textension[]][];
-		if (!(isntInstalled?.length || langs.size)) return always;
-		return [...always, ...groupBy(isntInstalled, (item) => item.lang)];
+		] as [string, TExtension[]][];
+		if (!(noInstalled?.length || langs.size)) return always;
+		return [...always, ...groupBy(noInstalled, (item) => item.lang)];
 	}
 </script>
 

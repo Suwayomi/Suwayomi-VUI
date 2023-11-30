@@ -19,7 +19,7 @@
 		type GetMangaQuery,
 		type UpdateMangaCategoriesMutation
 	} from '$lib/generated';
-	import { Errorhelp } from '$lib/util';
+	import { ErrorHelp } from '$lib/util';
 	import type { ApolloCache, FetchResult } from '@apollo/client';
 	import { getModalStore } from '@skeletonlabs/skeleton';
 
@@ -38,7 +38,7 @@
 
 	let selectedCategories: number[] = [...MangaCategories];
 
-	function handelclicked(category: CategoriesQuery['categories']['nodes'][0], e: boolean) {
+	function handelClicked(category: CategoriesQuery['categories']['nodes'][0], e: boolean) {
 		if (e) {
 			selectedCategories.push(category.id);
 			return;
@@ -74,7 +74,7 @@
 			const oldNodes = manga.categories.nodes;
 			if (!oldNodes) return;
 			try {
-				const currentmanga: CategoryQuery['category']['mangas']['nodes'][0] = {
+				const currentManga: CategoryQuery['category']['mangas']['nodes'][0] = {
 					id: manga.id,
 					title: manga.title,
 					inLibrary: manga.inLibrary,
@@ -85,21 +85,21 @@
 					chapters: manga.chapters
 				};
 				// add to categories that now have it
-				nodes.forEach((newnode) => {
-					if (oldNodes.find((oldnode) => oldnode.id === newnode.id)) return;
+				nodes.forEach((newNode) => {
+					if (oldNodes.find((oldNode) => oldNode.id === newNode.id)) return;
 					try {
 						const { category } = structuredClone(
 							cache.readQuery({
 								query: CategoryDoc,
-								variables: { id: newnode.id }
+								variables: { id: newNode.id }
 							})
 						) as CategoryQuery;
 
-						category.mangas.nodes.push(currentmanga);
+						category.mangas.nodes.push(currentManga);
 
 						cache.writeQuery({
 							query: CategoryDoc,
-							variables: { id: newnode.id },
+							variables: { id: newNode.id },
 							data: { category }
 						});
 					} catch {}
@@ -114,7 +114,7 @@
 							})
 						) as CategoryQuery;
 
-						category.mangas.nodes.push(currentmanga);
+						category.mangas.nodes.push(currentManga);
 
 						cache.writeQuery({
 							query: CategoryDoc,
@@ -126,13 +126,13 @@
 			} catch {}
 
 			//remove from categories that no longer have it
-			oldNodes.forEach((oldnode) => {
-				if (nodes.find((newnode) => oldnode.id === newnode.id)) return;
+			oldNodes.forEach((oldNode) => {
+				if (nodes.find((newNode) => oldNode.id === newNode.id)) return;
 				try {
 					const { category } = structuredClone(
 						cache.readQuery({
 							query: CategoryDoc,
-							variables: { id: oldnode.id }
+							variables: { id: oldNode.id }
 						})
 					) as CategoryQuery;
 
@@ -140,7 +140,7 @@
 
 					cache.writeQuery({
 						query: CategoryDoc,
-						variables: { id: oldnode.id },
+						variables: { id: oldNode.id },
 						data: { category }
 					});
 				} catch {}
@@ -176,7 +176,7 @@
 	async function handelSubmit() {
 		modalStore.close();
 		if (selectedCategories.toSorted().join(',') !== MangaCategories.toSorted().join(',')) {
-			Errorhelp(
+			ErrorHelp(
 				'Failed to change mangas categories',
 				updateMangaCategories({
 					variables: {
@@ -199,13 +199,13 @@
 			<div class="max-h-96 overflow-y-auto grid grid-cols-1 gap-1">
 				{#each categories as Category}
 					<TriStateSlide
-						tristat={false}
+						triState={false}
 						checked={MangaCategories.includes(Category.id)}
-						on:changee={(e) => {
-							handelclicked(Category, e.detail);
+						on:changeE={(e) => {
+							handelClicked(Category, e.detail);
 						}}
 						class="outline-0 p-1 pl-2 hover:variant-glass-surface"
-						labelclass="w-full"
+						labelClass="w-full"
 					>
 						{Category.name}
 					</TriStateSlide>

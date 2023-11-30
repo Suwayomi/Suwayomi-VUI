@@ -132,7 +132,7 @@
 			const oldNodes = dat.manga.categories.nodes;
 			if (!oldNodes) return;
 			try {
-				const currentmanga: CategoryQuery['category']['mangas']['nodes'][0] = {
+				const currentManga: CategoryQuery['category']['mangas']['nodes'][0] = {
 					id: id,
 					title: dat.manga.title,
 					inLibrary: dat.manga.inLibrary ?? true,
@@ -146,20 +146,20 @@
 				};
 				// add to categories that now have it
 
-				nodes.forEach((newnode) => {
-					if (oldNodes.find((oldnode) => oldnode.id === newnode.id)) return;
+				nodes.forEach((newNode) => {
+					if (oldNodes.find((oldNode) => oldNode.id === newNode.id)) return;
 					try {
 						const { category } = structuredClone(
 							cache.readQuery({
 								query: CategoryDoc,
-								variables: { id: newnode.id }
+								variables: { id: newNode.id }
 							})
 						) as CategoryQuery;
-						category.mangas.nodes.push(currentmanga);
+						category.mangas.nodes.push(currentManga);
 
 						cache.writeQuery({
 							query: CategoryDoc,
-							variables: { id: newnode.id },
+							variables: { id: newNode.id },
 							data: { category }
 						});
 					} catch {}
@@ -174,7 +174,7 @@
 							})
 						) as CategoryQuery;
 
-						category.mangas.nodes.push(currentmanga);
+						category.mangas.nodes.push(currentManga);
 
 						cache.writeQuery({
 							query: CategoryDoc,
@@ -186,13 +186,13 @@
 			} catch {}
 
 			//remove from categories that no longer have it
-			oldNodes.forEach((oldnode) => {
-				if (nodes.find((newnode) => oldnode.id === newnode.id)) return;
+			oldNodes.forEach((oldNode) => {
+				if (nodes.find((newNode) => oldNode.id === newNode.id)) return;
 				try {
 					const { category } = structuredClone(
 						cache.readQuery({
 							query: CategoryDoc,
-							variables: { id: oldnode.id }
+							variables: { id: oldNode.id }
 						})
 					) as CategoryQuery;
 
@@ -200,7 +200,7 @@
 
 					cache.writeQuery({
 						query: CategoryDoc,
-						variables: { id: oldnode.id },
+						variables: { id: oldNode.id },
 						data: { category }
 					});
 				} catch {}

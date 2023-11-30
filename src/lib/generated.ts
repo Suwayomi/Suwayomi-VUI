@@ -2402,12 +2402,12 @@ export type SourceMigrationMangaQueryVariables = Exact<{
 
 export type SourceMigrationMangaQuery = { __typename?: 'Query', mangas: { __typename?: 'MangaNodeList', nodes: Array<{ __typename?: 'MangaType', id: number, title: string, thumbnailUrl?: string | null }> } };
 
-export type SourceMigrationsourceQueryVariables = Exact<{
+export type SourceMigrationSourceQueryVariables = Exact<{
   sourceId: Scalars['LongString']['input'];
 }>;
 
 
-export type SourceMigrationsourceQuery = { __typename?: 'Query', source: { __typename?: 'SourceType', displayName: string } };
+export type SourceMigrationSourceQuery = { __typename?: 'Query', source: { __typename?: 'SourceType', displayName: string } };
 
 export type MangaTitleMigrationQueryVariables = Exact<{
   id: Scalars['Int']['input'];
@@ -3056,8 +3056,8 @@ export const SourceMigrationMangaDoc = gql`
   }
 }
     `;
-export const SourceMigrationsourceDoc = gql`
-    query sourceMigrationsource($sourceId: LongString!) {
+export const SourceMigrationSourceDoc = gql`
+    query sourceMigrationSource($sourceId: LongString!) {
   source(id: $sourceId) {
     displayName
   }
@@ -4108,28 +4108,28 @@ export const sourceMigrationManga = (
                 return client.query<SourceMigrationMangaQuery>({query: SourceMigrationMangaDoc, ...options})
               }
             
-export const sourceMigrationsource = (
+export const sourceMigrationSource = (
             options: Omit<
-              WatchQueryOptions<SourceMigrationsourceQueryVariables>, 
+              WatchQueryOptions<SourceMigrationSourceQueryVariables>, 
               "query"
             >
           ): Readable<
-            ApolloQueryResult<SourceMigrationsourceQuery> & {
+            ApolloQueryResult<SourceMigrationSourceQuery> & {
               query: ObservableQuery<
-                SourceMigrationsourceQuery,
-                SourceMigrationsourceQueryVariables
+                SourceMigrationSourceQuery,
+                SourceMigrationSourceQueryVariables
               >;
             }
           > => {
             const q = client.watchQuery({
-              query: SourceMigrationsourceDoc,
+              query: SourceMigrationSourceDoc,
               ...options,
             });
             var result = readable<
-              ApolloQueryResult<SourceMigrationsourceQuery> & {
+              ApolloQueryResult<SourceMigrationSourceQuery> & {
                 query: ObservableQuery<
-                  SourceMigrationsourceQuery,
-                  SourceMigrationsourceQueryVariables
+                  SourceMigrationSourceQuery,
+                  SourceMigrationSourceQueryVariables
                 >;
               }
             >(
@@ -4143,13 +4143,13 @@ export const sourceMigrationsource = (
             return result;
           }
         
-              export const AsyncsourceMigrationsource = (
+              export const AsyncsourceMigrationSource = (
                 options: Omit<
-                  QueryOptions<SourceMigrationsourceQueryVariables>,
+                  QueryOptions<SourceMigrationSourceQueryVariables>,
                   "query"
                 >
               ) => {
-                return client.query<SourceMigrationsourceQuery>({query: SourceMigrationsourceDoc, ...options})
+                return client.query<SourceMigrationSourceQuery>({query: SourceMigrationSourceDoc, ...options})
               }
             
 export const MangaTitleMigration = (
