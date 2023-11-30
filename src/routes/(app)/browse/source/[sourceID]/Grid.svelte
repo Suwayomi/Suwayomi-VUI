@@ -20,7 +20,6 @@
 	import { errortoast, gridValues } from '$lib/util';
 	import IntersectionObserver from '$lib/components/IntersectionObserver.svelte';
 	import MangaCard from '$lib/components/MangaCard.svelte';
-	import { selectmode, selected } from '../../../(library)/LibraryStores';
 	import IconWrapper from '$lib/components/IconWrapper.svelte';
 	import PreferencesModal from './PreferencesModal.svelte';
 	import { getModalStore } from '@skeletonlabs/skeleton';
@@ -140,22 +139,15 @@
 								rounded="{$Meta.Display === display.Compact && 'rounded-lg'}
 										{$Meta.Display === display.Comfortable && 'rounded-none rounded-t-lg'}"
 							>
-								{#if $selectmode}
-									<div class="cursor-pointer absolute top-0 right-0 left-0 bottom-0 bg-base-100/75">
-										<IconWrapper
-											name={$selected[manga.id] === undefined
-												? 'fluent:checkbox-unchecked-24-filled'
-												: 'fluent:checkbox-checked-24-filled'}
-											class="text-4xl absolute top-2 right-2"
-										/>
-									</div>
-								{/if}
 								{#if $Meta.Display === display.Compact}
 									<div class="absolute bottom-0 left-0 right-0 variant-glass rounded-b-olg">
 										<div class="line-clamp-2 px-2 h-12 text-center" title={manga.title}>
 											{manga.title}
 										</div>
 									</div>
+								{/if}
+								{#if manga.inLibrary}
+									<div class="absolute top-1 right-1 badge variant-filled-primary">In Library</div>
 								{/if}
 							</MangaCard>
 							{#if $Meta.Display === display.Comfortable}
