@@ -15,7 +15,7 @@
 	import { getToastStore } from '$lib/components/Toast/stores';
 	import TooltipIconButton from '$lib/components/TooltipIconButton.svelte';
 	import {
-		AsyncgetSingleChapter,
+		AsyncgetSingleChapter as AsyncGetSingleChapter,
 		GetMangaDoc,
 		deleteDownloadedChapters,
 		downloadsOnChapters,
@@ -62,7 +62,7 @@
 					(e) => e.chapter.id === element.chapter.id
 				);
 				if (!tmp) {
-					const ttmp = AsyncgetSingleChapter({
+					const ttmp = AsyncGetSingleChapter({
 						variables: { id: element.chapter.id },
 						fetchPolicy: 'network-only'
 					});
