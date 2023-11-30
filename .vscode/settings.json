@@ -121,6 +121,6 @@
 	"licenser.license": "MPLv2",
 	"licenser.projectName": "Suwayomi project",
 	"licenser.author": "Contributors to the Suwayomi project",
-	"cSpell.words": ["Asyncget", "iconify", "localsourcelang", "tipclass"],
+	"cSpell.words": ["iconify", "localsourcelang", "tipclass"],
 	"cSpell.ignoreRegExpList": ["\\s*import (.+\n?)+ from '.*';"]
 }

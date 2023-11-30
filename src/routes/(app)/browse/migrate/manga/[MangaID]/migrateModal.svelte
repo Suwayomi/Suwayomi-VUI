@@ -10,7 +10,7 @@
 	import { goto } from '$app/navigation';
 	import Slide from '$lib/components/Slide.svelte';
 	import {
-		AsyncgetManga,
+		AsyncgetManga as AsyncGetManga,
 		CategoryDoc,
 		GetMangaDoc,
 		fetchChaptersMigration,
@@ -236,7 +236,7 @@
 
 	async function CopyMangaCategories() {
 		const categories = manga.categories.nodes.map((ele) => ele.id);
-		const { data: dat } = await AsyncgetManga({ variables: { id } });
+		const { data: dat } = await AsyncGetManga({ variables: { id } });
 		await updateMangaCategories({
 			variables: {
 				id: id,
