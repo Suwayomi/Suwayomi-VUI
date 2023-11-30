@@ -7,42 +7,31 @@
 import type { ActionReturn } from 'svelte/action';
 
 interface Attributes {
-	'on:longpress': (e: CustomEvent<boolean>) => void;
+	'on:longPress': (e: CustomEvent<boolean>) => void;
 }
 
-export function longpress(node: HTMLElement, threshold = 500): ActionReturn<number, Attributes> {
-	const handle_mousedown = (ee: MouseEvent | TouchEvent) => {
-		let previousTouch: null | Touch = null;
-		if (window.TouchEvent && ee instanceof TouchEvent) {
-			previousTouch = ee.touches[0];
-		}
+export function longPress(node: HTMLElement, threshold = 500): ActionReturn<number, Attributes> {
+	const handle_mousedown = () => {
 		const move = (e: MouseEvent | TouchEvent) => {
-			let [movementX, movementY] = [0, 0];
 			if (window.TouchEvent && e instanceof TouchEvent) {
-				const touch = e.touches[0];
-				if (previousTouch) {
-					movementX = touch.pageX - previousTouch.pageX;
-					movementY = touch.pageY - previousTouch.pageY;
-				}
-				previousTouch = touch;
+				cancel();
 			} else if (e instanceof MouseEvent) {
-				movementX = e.movementX;
-				movementY = e.movementY;
+				const diff = Math.abs(e.movementX) + Math.abs(e.movementY);
+				if (diff > 2) cancel();
 			}
-			const diff = Math.abs(movementX) + Math.abs(movementY);
-			if (diff > 20) cancel();
 		};
 
 		const timeout = setTimeout(() => {
-			node.dispatchEvent(new CustomEvent('longpress'));
-			removeListners(node, move, cancel);
+			node.dispatchEvent(new CustomEvent('longPress'));
+			removeListeners(node, move, cancel);
 		}, threshold);
 
 		const cancel = () => {
 			clearTimeout(timeout);
-			removeListners(node, move, cancel);
+			removeListeners(node, move, cancel);
 		};
-		addListners(node, move, cancel);
+
+		addListeners(node, move, cancel);
 	};
 
 	if (window.TouchEvent) {
@@ -59,7 +48,7 @@ export function longpress(node: HTMLElement, threshold = 500): ActionReturn<numb
 	};
 }
 
-function addListners(
+function addListeners(
 	node: HTMLElement,
 	move: (e: MouseEvent | TouchEvent) => void,
 	cancel: () => void
@@ -73,7 +62,7 @@ function addListners(
 	}
 }
 
-function removeListners(
+function removeListeners(
 	node: HTMLElement,
 	move: (e: MouseEvent | TouchEvent) => void,
 	cancel: () => void

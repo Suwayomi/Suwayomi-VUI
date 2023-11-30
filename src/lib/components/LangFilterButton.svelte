@@ -13,7 +13,7 @@
 	import { getModalStore } from '@skeletonlabs/skeleton';
 
 	export let langs: Set<string>;
-	export let langfilt: Writable<Set<string>>;
+	export let langFilter: Writable<Set<string>>;
 	const modalStore = getModalStore();
 </script>
 
@@ -21,7 +21,7 @@
 	on:click={() => {
 		modalStore.trigger({
 			type: 'component',
-			component: { ref: LangFilterModal, props: { langs, langfilt } }
+			component: { ref: LangFilterModal, props: { langs, langFilter } }
 		});
 	}}
 	tipclass="z-20"

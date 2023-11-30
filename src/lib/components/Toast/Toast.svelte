@@ -148,7 +148,7 @@
 
 {#if $toastStore.length}
 	<!-- Wrapper -->
-	<div class="snackbar-wrapper {classesWrapper}" data-testid="snackbar-wrapper">
+	<div class="snackbar-wrapper {classesWrapper}">
 		<!-- List -->
 		<div class="snackbar {classesSnackbar}">
 			{#each filteredToasts as t, i (t)}
@@ -170,10 +170,7 @@
 					aria-live="polite"
 				>
 					<!-- Toast -->
-					<div
-						class="toast {classesToast} {t.background ?? background} {t.classes ?? ''}"
-						data-testid="toast"
-					>
+					<div class="toast {classesToast} {t.background ?? background} {t.classes ?? ''}">
 						<!-- eslint-disable-next-line svelte/no-at-html-tags -->
 						<div class="text-base">{@html t.message}</div>
 						{#if t.action || !t.hideDismiss}

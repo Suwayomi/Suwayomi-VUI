@@ -79,7 +79,7 @@
 							bind:state={$Meta.Unread}
 							label={'Unread'}
 							class="w-full focus:outline-0 p-1 pl-2 hover:variant-glass-surface"
-							labelclass="w-full"
+							labelClass="w-full"
 						>
 							<span>Unread</span>
 						</TriStateSlide>
@@ -87,17 +87,17 @@
 							bind:state={$Meta.Downloaded}
 							label={'Downloaded'}
 							class="w-full focus:outline-0 p-1 pl-2 hover:variant-glass-surface"
-							labelclass="w-full"
+							labelClass="w-full"
 						>
 							<span>Downloaded</span>
 						</TriStateSlide>
 					{:else if $tabSet === 1}
 						<TriStateSlide
-							tristat={false}
+							triState={false}
 							bind:checked={$Meta.Asc}
 							label={'Ascending'}
 							class="w-full focus:outline-0 p-1 pl-2 hover:variant-glass-surface"
-							labelclass="w-full"
+							labelClass="w-full"
 						>
 							<span>Ascending</span>
 						</TriStateSlide>

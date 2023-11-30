@@ -33,7 +33,7 @@
 						? 'variant-filled-secondary'
 						: 'variant-ghost-secondary'}"
 				>
-					Extentions
+					Extensions
 				</a>
 				<a
 					href="migrate"

@@ -46,7 +46,7 @@
 		<Slide
 			bind:checked
 			class="w-full hover:variant-glass-surface p-1 pl-1 my-1"
-			labelclass="w-full ml-1"
+			labelClass="w-full ml-1"
 		>
 			Ascending
 		</Slide>

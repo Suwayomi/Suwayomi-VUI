@@ -18,7 +18,7 @@
 		type UpdateExtensionMutation
 	} from '$lib/generated';
 	import type { ApolloCache, FetchResult } from '@apollo/client';
-	import { Errorhelp } from '$lib/util';
+	import { ErrorHelp } from '$lib/util';
 	import { getToastStore } from '$lib/components/Toast/stores';
 	import { ProgressRadial } from '@skeletonlabs/skeleton';
 	import { Meta } from '$lib/simpleStores';
@@ -29,7 +29,7 @@
 	let toastStore = getToastStore();
 	let loadingUpdate = false;
 	let loadingInstall = false;
-	let loadingunInstall = false;
+	let loadingUnInstall = false;
 
 	function UpdaterForUpdateExtension(
 		cache: ApolloCache<unknown>,
@@ -63,11 +63,11 @@
 				})
 			) as SourcesQuery;
 			if (data.updateExtension.extension.isInstalled) {
-				const souceToPush: SourcesQuery['sources']['nodes'] = [];
+				const sourceToPush: SourcesQuery['sources']['nodes'] = [];
 				data.updateExtension.extension.source.nodes.forEach((source) => {
-					if (!sources.nodes.find((e) => e.id === source.id)) souceToPush.push(source);
+					if (!sources.nodes.find((e) => e.id === source.id)) sourceToPush.push(source);
 				});
-				sources.nodes.push(...souceToPush);
+				sources.nodes.push(...sourceToPush);
 				cache.writeQuery({
 					query: SourcesDoc,
 					variables: { isNsfw: $Meta.nsfw ? null : false },
@@ -85,9 +85,9 @@
 	}
 
 	async function unInstall(pkgName: string) {
-		loadingunInstall = true;
-		await Errorhelp(
-			'failed to Uninstall extention',
+		loadingUnInstall = true;
+		await ErrorHelp(
+			'failed to Uninstall extension',
 			updateExtension({
 				variables: { pkgName, uninstall: true },
 				update: (cache, data) => {
@@ -96,13 +96,13 @@
 			}),
 			toastStore
 		);
-		loadingunInstall = false;
+		loadingUnInstall = false;
 	}
 
 	async function Install(pkgName: string) {
 		loadingInstall = true;
-		await Errorhelp(
-			'Failed to Install extention',
+		await ErrorHelp(
+			'Failed to Install extension',
 			updateExtension({
 				variables: { pkgName, install: true },
 				update: (cache, data) => {
@@ -116,8 +116,8 @@
 
 	async function Update(pkgName: string) {
 		loadingUpdate = true;
-		await Errorhelp(
-			'Failed to Update extention',
+		await ErrorHelp(
+			'Failed to Update extension',
 			updateExtension({
 				variables: { pkgName, update: true },
 				update: (cache, data) => {
@@ -154,7 +154,7 @@
 			<div class="flex flex-wrap flex-1 justify-end">
 				{#if ext.isObsolete}
 					<button on:click={() => unInstall(ext.pkgName)} class="btn variant-ghost-error m-1">
-						{#if loadingunInstall}
+						{#if loadingUnInstall}
 							Uninstalling<ProgressRadial class="ml-1 h-4 aspect-square w-auto" />
 						{:else}
 							Obsolete
@@ -172,7 +172,7 @@
 					{/if}
 					{#if ext.isInstalled}
 						<button on:click={() => unInstall(ext.pkgName)} class="btn variant-ghost-surface m-1">
-							{#if loadingunInstall}
+							{#if loadingUnInstall}
 								Uninstalling<ProgressRadial class="ml-1 h-4 aspect-square w-auto" />
 							{:else}
 								Uninstall

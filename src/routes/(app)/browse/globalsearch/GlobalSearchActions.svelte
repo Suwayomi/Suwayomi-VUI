@@ -11,8 +11,8 @@
 	import TooltipIconButton from '$lib/components/TooltipIconButton.svelte';
 	import type { SourcesQuery } from '$lib/generated';
 	import { getModalStore } from '@skeletonlabs/skeleton';
-	import { langfilt } from '../BrowseStores';
-	import GlobalSearchLangfilterModal from './GlobalSearchLangfilterModal.svelte';
+	import { langFilter } from '../BrowseStores';
+	import GlobalSearchLangFilterModal from './GlobalSearchLangFilterModal.svelte';
 	import { page } from '$app/stores';
 	import Tooltip from '$lib/components/Tooltip.svelte';
 	import IconWrapper from '$lib/components/IconWrapper.svelte';
@@ -40,8 +40,8 @@
 			modalStore.trigger({
 				type: 'component',
 				component: {
-					ref: GlobalSearchLangfilterModal,
-					props: { langs, langfilt, rawSources }
+					ref: GlobalSearchLangFilterModal,
+					props: { langs, langFilter, rawSources }
 				}
 			});
 		}}

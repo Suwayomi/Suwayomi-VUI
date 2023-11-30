@@ -15,12 +15,12 @@
 	import { SpecificSourceFilter } from '../BrowseStores';
 	const modalStore = getModalStore();
 	export let langs: Set<string>;
-	export let langfilt: Writable<Set<string>>;
+	export let langFilter: Writable<Set<string>>;
 	export let rawSources: SourcesQuery['sources'] | undefined;
 	const tabSet: Writable<number> = localStorageStore('browseTabSet', 0);
 
-	$: LangfilteredSources = rawSources?.nodes.filter((source) => {
-		if (!$langfilt.has(source.lang)) return false;
+	$: LangFilteredSources = rawSources?.nodes.filter((source) => {
+		if (!$langFilter.has(source.lang)) return false;
 		return true;
 	});
 </script>
@@ -45,27 +45,27 @@
 						{#each langs as lang}
 							<Slide
 								class="outline-0 p-1 pl-2 hover:variant-glass-surface"
-								on:changee={(e) => {
+								on:changeE={(e) => {
 									if (e.detail) {
-										$langfilt.add(lang);
-										$langfilt = $langfilt;
+										$langFilter.add(lang);
+										$langFilter = $langFilter;
 										return;
 									}
-									$langfilt.delete(lang);
-									$langfilt = $langfilt;
+									$langFilter.delete(lang);
+									$langFilter = $langFilter;
 								}}
-								checked={$langfilt.has(lang)}
+								checked={$langFilter.has(lang)}
 							>
 								{FindLangName(lang)}
 							</Slide>
 						{/each}
 					</div>
-				{:else if $tabSet === 1 && LangfilteredSources}
+				{:else if $tabSet === 1 && LangFilteredSources}
 					<div class="max-h-96 overflow-y-auto grid grid-cols-1 gap-1 pr-4">
-						{#each LangfilteredSources as lang}
+						{#each LangFilteredSources as lang}
 							<Slide
 								class="outline-0 p-1 pl-2 hover:variant-glass-surface"
-								on:changee={(e) => {
+								on:changeE={(e) => {
 									if (e.detail) {
 										$SpecificSourceFilter.add(lang.id);
 										$SpecificSourceFilter = $SpecificSourceFilter;

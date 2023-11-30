@@ -15,7 +15,7 @@
 	import { getToastStore } from '$lib/components/Toast/stores';
 	import TooltipIconButton from '$lib/components/TooltipIconButton.svelte';
 	import {
-		AsyncgetSingleChapter,
+		AsyncgetSingleChapter as AsyncGetSingleChapter,
 		GetMangaDoc,
 		deleteDownloadedChapters,
 		downloadsOnChapters,
@@ -25,17 +25,17 @@
 		type DownloadsOnChaptersSubscription,
 		type GetMangaQuery
 	} from '$lib/generated';
-	import { longpress } from '$lib/press';
+	import { longPress } from '$lib/press';
 	import { screens } from '$lib/screens';
 	import { ChapterSort, ChapterTitle, MangaMeta, Meta } from '$lib/simpleStores';
 	import { MangaUpdates } from '$lib/tracking/mangaUpdates';
-	import { HelpDoSelect, HelpSelectall, HelpUpdateChapters, dlreabook } from '$lib/util';
+	import { HelpDoSelect, HelpSelectAll, HelpUpdateChapters, dlreabook } from '$lib/util';
 	import type { ApolloQueryResult } from '@apollo/client';
 	import { getModalStore, popup } from '@skeletonlabs/skeleton';
 	import { fade } from 'svelte/transition';
 	import ChaptersFilterModal from './ChaptersFilterModal.svelte';
 	import DownloadProgressRadial from './DownloadProgressRadial.svelte';
-	import { selected, selectmode, type chaptertype } from './mangaStores';
+	import { selected, selectMode, type chaptertype } from './mangaStores';
 
 	export let manga: ApolloQueryResult<GetMangaQuery> | undefined;
 	export let MangaID: number;
@@ -62,7 +62,7 @@
 					(e) => e.chapter.id === element.chapter.id
 				);
 				if (!tmp) {
-					const ttmp = AsyncgetSingleChapter({
+					const ttmp = AsyncGetSingleChapter({
 						variables: { id: element.chapter.id },
 						fetchPolicy: 'network-only'
 					});
@@ -191,12 +191,12 @@
 	}
 
 	function LongHandler() {
-		$selectmode = true;
+		$selectMode = true;
 	}
 
-	let lastselected: chaptertype | undefined;
+	let lastSelected: chaptertype | undefined;
 
-	function handelfilter() {
+	function handelFilter() {
 		modalStore.trigger({
 			type: 'component',
 			component: { ref: ChaptersFilterModal, props: { MangaID } }
@@ -243,7 +243,7 @@
 					let:matches
 				>
 					{#if matches}
-						{#if $selectmode}
+						{#if $selectMode}
 							<TooltipIconButton
 								class="text-surface-700 dark:text-surface-300"
 								on:click={() => {
@@ -271,11 +271,11 @@
 						{/if}
 						<TooltipIconButton
 							class="text-surface-700 dark:text-surface-300"
-							on:click={() => HelpSelectall(selectmode, selected, sortedChapters)}
+							on:click={() => HelpSelectAll(selectMode, selected, sortedChapters)}
 							name="mdi:select-all"
 							tip="Select all/none"
 						/>
-					{:else if $selectmode}
+					{:else if $selectMode}
 						<button
 							use:popup={{
 								event: 'click',
@@ -316,7 +316,7 @@
 							</button>
 							<button
 								class="text-2xl hover:variant-glass-surface w-full rounded-b-lg p-4 flex items-center justify-start"
-								on:click={() => HelpSelectall(selectmode, selected, sortedChapters)}
+								on:click={() => HelpSelectAll(selectMode, selected, sortedChapters)}
 							>
 								<IconWrapper name="mdi:select-all" class="mr-2" />Select all
 							</button>
@@ -326,14 +326,14 @@
 				<TooltipIconButton
 					class="text-surface-700 dark:text-surface-300"
 					on:click={() => {
-						$selectmode = !$selectmode;
+						$selectMode = !$selectMode;
 					}}
-					name="mdi:{$selectmode ? 'select-multiple' : 'flip-to-front'}"
+					name="mdi:{$selectMode ? 'select-multiple' : 'flip-to-front'}"
 					tip="Select Mode"
 				/>
 				<TooltipIconButton
 					class="text-surface-700 dark:text-surface-300"
-					on:click={handelfilter}
+					on:click={handelFilter}
 					name="mdi:filter"
 					tip="Filter/Sort"
 				/>
@@ -352,14 +352,14 @@
 						<a
 							in:fade
 							class="card variant-glass p-2 flex items-center space-x-1 h-full relative"
-							use:longpress
-							on:longpress={() => $selectmode || LongHandler()}
+							use:longPress
+							on:longPress={() => $selectMode || LongHandler()}
 							href="{manga.data.manga.id}/chapter/{chapter.id}"
 							on:click|stopPropagation={(e) => {
 								if (e.ctrlKey) return;
-								if ($selectmode) {
+								if ($selectMode) {
 									e.preventDefault();
-									lastselected = HelpDoSelect(chapter, e, lastselected, sortedChapters, selected);
+									lastSelected = HelpDoSelect(chapter, e, lastSelected, sortedChapters, selected);
 								} else {
 									e.preventDefault();
 									goto(`${manga?.data.manga.id}/chapter/${chapter.id}`);
@@ -400,7 +400,7 @@
 								)}
 							/>
 
-							{#if $selectmode}
+							{#if $selectMode}
 								<button class="hover:variant-ghost rounded-full h-full p-2">
 									<IconWrapper
 										class="aspect-square w-full h-full text-surface-700 dark:text-surface-300"

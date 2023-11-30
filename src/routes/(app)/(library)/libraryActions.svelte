@@ -21,15 +21,15 @@
 	import MediaQuery from '$lib/components/MediaQuery.svelte';
 	import { screens } from '$lib/screens';
 	import IconWrapper from '$lib/components/IconWrapper.svelte';
-	import { selected, selectmode } from './LibraryStores';
-	import { Errorhelp } from '$lib/util';
+	import { selected, selectMode } from './LibraryStores';
+	import { ErrorHelp } from '$lib/util';
 
-	export let selectall: () => void;
+	export let selectAll: () => void;
 
 	const toastStore = getToastStore();
 	const modalStore = getModalStore();
 
-	function handelfilter() {
+	function handelFilter() {
 		modalStore.trigger({
 			type: 'component',
 			component: { ref: LibraryFilterModal }
@@ -42,7 +42,7 @@
 			ids,
 			inLibrary: false
 		};
-		Errorhelp(
+		ErrorHelp(
 			'Failed to delete mangas from library',
 			updateMangas({
 				variables
@@ -81,12 +81,12 @@
 		closeQuery: ''
 	};
 
-	async function handelownload(): Promise<void> {
-		const selectedids = $selected.filter((ele) => ele).map((ele) => ele.id);
+	async function handelDownload(): Promise<void> {
+		const selectedIds = $selected.filter((ele) => ele).map((ele) => ele.id);
 
-		Errorhelp(
+		ErrorHelp(
 			'failed to get selected mangas non-downloaded chapters',
-			AsyncConditionalChaptersOfGivenManga({ variables: { in: selectedids, isDownloaded: false } }),
+			AsyncConditionalChaptersOfGivenManga({ variables: { in: selectedIds, isDownloaded: false } }),
 			toastStore,
 			(result) => {
 				if (!result?.data) return;
@@ -103,7 +103,7 @@
 	}
 
 	function downloadAllChapters(ids: number[]) {
-		Errorhelp(
+		ErrorHelp(
 			'failed to enqueue chapters Downloads',
 			enqueueChapterDownloads({ variables: { ids } }),
 			toastStore
@@ -114,9 +114,9 @@
 <div class="h-full flex max-w-full">
 	<MediaQuery query="(min-width: {screens.sm})" let:matches>
 		{#if matches}
-			{#if $selectmode}
+			{#if $selectMode}
 				<TooltipIconButton
-					on:click={handelownload}
+					on:click={handelDownload}
 					tip="Download unread chapters"
 					name="mdi:download"
 				/>
@@ -124,18 +124,18 @@
 				<TooltipIconButton on:click={handelDelete} tip="Remove Selected" name="mdi:bin" />
 			{/if}
 
-			<TooltipIconButton on:click={selectall} name="mdi:select-all" tip="Select all/none" />
-		{:else if $selectmode}
+			<TooltipIconButton on:click={selectAll} name="mdi:select-all" tip="Select all/none" />
+		{:else if $selectMode}
 			<div class="card p-0" data-popup="popupClick">
 				<div class="h-12 xs:h-14 flex">
 					<TooltipIconButton
-						on:click={handelownload}
+						on:click={handelDownload}
 						tip="Download unread chapters"
 						name="mdi:download"
 					/>
 					<TooltipIconButton on:click={handelCategory} tip="Change Categories" name="mdi:shape" />
 					<TooltipIconButton on:click={handelDelete} tip="Remove Selected" name="mdi:bin" />
-					<TooltipIconButton on:click={selectall} name="mdi:select-all" tip="Select all/none" />
+					<TooltipIconButton on:click={selectAll} name="mdi:select-all" tip="Select all/none" />
 				</div>
 				<div class="arrow bg-surface-100-800-token" />
 			</div>
@@ -151,11 +151,11 @@
 
 	<TooltipIconButton
 		on:click={() => {
-			$selectmode = !$selectmode;
+			$selectMode = !$selectMode;
 		}}
-		name="mdi:{$selectmode ? 'select-multiple' : 'flip-to-front'}"
+		name="mdi:{$selectMode ? 'select-multiple' : 'flip-to-front'}"
 		tip="Select Mode"
 	/>
 	<Search />
-	<TooltipIconButton on:click={handelfilter} name="mdi:filter" tip="Filter/Sort" />
+	<TooltipIconButton on:click={handelFilter} name="mdi:filter" tip="Filter/Sort" />
 </div>
