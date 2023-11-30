@@ -38,6 +38,12 @@ export type AboutServerPayload = {
   version: Scalars['String']['output'];
 };
 
+export type AboutWebUi = {
+  __typename?: 'AboutWebUI';
+  channel: Scalars['String']['output'];
+  tag: Scalars['String']['output'];
+};
+
 export enum BackupRestoreState {
   Failure = 'FAILURE',
   Idle = 'IDLE',
@@ -252,6 +258,21 @@ export type CheckForServerUpdatesPayload = {
   channel: Scalars['String']['output'];
   tag: Scalars['String']['output'];
   url: Scalars['String']['output'];
+};
+
+export type ClearCachedImagesInput = {
+  cachedPages?: InputMaybe<Scalars['Boolean']['input']>;
+  cachedThumbnails?: InputMaybe<Scalars['Boolean']['input']>;
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
+  downloadedThumbnails?: InputMaybe<Scalars['Boolean']['input']>;
+};
+
+export type ClearCachedImagesPayload = {
+  __typename?: 'ClearCachedImagesPayload';
+  cachedPages?: Maybe<Scalars['Boolean']['output']>;
+  cachedThumbnails?: Maybe<Scalars['Boolean']['output']>;
+  clientMutationId?: Maybe<Scalars['String']['output']>;
+  downloadedThumbnails?: Maybe<Scalars['Boolean']['output']>;
 };
 
 export type ClearDownloaderInput = {
@@ -917,6 +938,7 @@ export type MultiSelectListPreference = {
 
 export type Mutation = {
   __typename?: 'Mutation';
+  clearCachedImages: ClearCachedImagesPayload;
   clearDownloader: ClearDownloaderPayload;
   createBackup: CreateBackupPayload;
   createCategory: CreateCategoryPayload;
@@ -964,6 +986,11 @@ export type Mutation = {
   updateSourcePreference: UpdateSourcePreferencePayload;
   updateStop: UpdateStopPayload;
   updateWebUI: WebUiUpdatePayload;
+};
+
+
+export type MutationClearCachedImagesArgs = {
+  input: ClearCachedImagesInput;
 };
 
 
@@ -1304,13 +1331,13 @@ export type Preference = CheckBoxPreference | EditTextPreference | ListPreferenc
 export type Query = {
   __typename?: 'Query';
   aboutServer: AboutServerPayload;
-  aboutWebUI: WebUiUpdateInfo;
+  aboutWebUI: AboutWebUi;
   categories: CategoryNodeList;
   category: CategoryType;
   chapter: ChapterType;
   chapters: ChapterNodeList;
   checkForServerUpdates: Array<CheckForServerUpdatesPayload>;
-  checkForWebUIUpdate: WebUiUpdateInfo;
+  checkForWebUIUpdate: WebUiUpdateCheck;
   downloadStatus: DownloadStatus;
   extension: ExtensionType;
   extensions: ExtensionNodeList;
@@ -2064,6 +2091,13 @@ export enum WebUiInterface {
   Browser = 'BROWSER',
   Electron = 'ELECTRON'
 }
+
+export type WebUiUpdateCheck = {
+  __typename?: 'WebUIUpdateCheck';
+  channel: Scalars['String']['output'];
+  tag: Scalars['String']['output'];
+  updateAvailable: Scalars['Boolean']['output'];
+};
 
 export type WebUiUpdateInfo = {
   __typename?: 'WebUIUpdateInfo';
