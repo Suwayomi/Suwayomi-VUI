@@ -14,9 +14,10 @@ const httpLink = createUploadLink({ uri: '/api/graphql' }) as unknown as ApolloL
 
 let splitLink: ApolloLink = httpLink;
 
-const url = window.location.origin
-	? window.location.origin.replace(/^http/, 'ws') + '/api/graphql'
-	: 'http://tachidesk:4567';
+let url = 'http://tachidesk:4567';
+if (typeof window !== 'undefined') {
+	url = window.location.origin.replace(/^http/, 'ws') + '/api/graphql';
+}
 
 try {
 	const wsLink = new GraphQLWsLink(
