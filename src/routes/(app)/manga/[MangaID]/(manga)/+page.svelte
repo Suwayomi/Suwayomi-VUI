@@ -42,7 +42,7 @@
 	) {
 		if (!data) return;
 
-		const magna = structuredClone($manga.data.manga);
+		const magna = { ...$manga.data.manga };
 
 		magna.chapters.totalCount = data.fetchChapters.chapters.length;
 		magna.chapters.nodes = data.fetchChapters.chapters;
@@ -60,7 +60,7 @@
 	) {
 		if (!data) return;
 
-		const magna = structuredClone($manga.data.manga);
+		const magna = { ...$manga.data.manga };
 
 		magna.artist = data.fetchManga.manga.artist;
 		magna.author = data.fetchManga.manga.author;

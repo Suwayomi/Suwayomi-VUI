@@ -205,12 +205,12 @@ const ISOLanguages = [
 /**
  * The function `FindLangName` takes a language code as input and returns the corresponding native name
  * of the language if found, otherwise it returns the input language code itself.
- * @param {string} LangCode - The `LangCode` parameter is a string that represents the language code
+ * @param {string} langCode - The `LangCode` parameter is a string that represents the language code
  * @returns the native name of a language based on its language code or the original language code.
  */
-export function FindLangName(LangCode: string): string {
-	return (
-		ISOLanguages.find((ele) => ele.code.toLowerCase() === LangCode.toLowerCase())?.nativeName ??
-		LangCode
+export function FindLangName(langCode: string): string {
+	const foundLanguage = ISOLanguages.find(
+		(ele) => ele.code.toLowerCase() === langCode.toLowerCase()
 	);
+	return foundLanguage?.nativeName ?? langCode;
 }

@@ -31,102 +31,109 @@
 	let loadingInstall = false;
 	let loadingUnInstall = false;
 
-	function UpdaterForUpdateExtension(
+	function UpdateExtensionUpdater(
 		cache: ApolloCache<unknown>,
 		{ data }: Omit<FetchResult<UpdateExtensionMutation>, 'context'>,
 		pkgName: string
 	): void {
 		if (!data) return;
 		try {
-			const { extensions } = structuredClone(
-				structuredClone(
-					cache.readQuery({
-						query: ExtensionsDoc,
-						variables: { isNsfw: $Meta.nsfw ? null : false }
-					})
-				)
-			) as ExtensionsQuery;
+			const extensionsData = cache.readQuery<ExtensionsQuery>({
+				query: ExtensionsDoc,
+				variables: { isNsfw: $Meta.nsfw ? null : false }
+			});
+			if (!extensionsData) throw new Error('failed to read extensions');
+			const { extensions } = extensionsData;
 
-			extensions.nodes[extensions.nodes.findIndex((e) => e.pkgName === pkgName)] =
+			extensions.nodes[extensions.nodes.findIndex((extension) => extension.pkgName === pkgName)] =
 				data.updateExtension.extension;
+
 			cache.writeQuery({
 				query: ExtensionsDoc,
 				data: { extensions },
 				variables: { isNsfw: $Meta.nsfw ? null : false }
 			});
 		} catch {}
-		try {
-			const { sources } = structuredClone(
-				cache.readQuery({
-					query: SourcesDoc,
-					variables: { isNsfw: $Meta.nsfw ? null : false }
-				})
-			) as SourcesQuery;
-			if (data.updateExtension.extension.isInstalled) {
-				const sourceToPush: SourcesQuery['sources']['nodes'] = [];
-				data.updateExtension.extension.source.nodes.forEach((source) => {
-					if (!sources.nodes.find((e) => e.id === source.id)) sourceToPush.push(source);
-				});
-				sources.nodes.push(...sourceToPush);
-				cache.writeQuery({
-					query: SourcesDoc,
-					variables: { isNsfw: $Meta.nsfw ? null : false },
-					data: { sources }
-				});
-			} else {
-				sources.nodes = sources.nodes.filter((e) => e.extension.pkgName !== pkgName);
-				cache.writeQuery({
-					query: SourcesDoc,
-					variables: { isNsfw: $Meta.nsfw ? null : false },
-					data: { sources }
-				});
-			}
-		} catch {}
+		const sourcesData = cache.readQuery<SourcesQuery>({
+			query: SourcesDoc,
+			variables: { isNsfw: $Meta.nsfw ? null : false }
+		});
+		if (!sourcesData) return;
+		const { sources } = sourcesData;
+
+		if (data.updateExtension.extension.isInstalled) {
+			const sourcesToPush: SourcesQuery['sources']['nodes'] = [];
+			data.updateExtension.extension.source.nodes.forEach((source) => {
+				if (!sources.nodes.find((existingSource) => existingSource.id === source.id)) {
+					sourcesToPush.push(source);
+				}
+			});
+			sources.nodes.push(...sourcesToPush);
+		} else {
+			sources.nodes = sources.nodes.filter(
+				(existingSource) => existingSource.extension.pkgName !== pkgName
+			);
+		}
+
+		cache.writeQuery({
+			query: SourcesDoc,
+			variables: { isNsfw: $Meta.nsfw ? null : false },
+			data: { sources }
+		});
 	}
 
 	async function unInstall(pkgName: string) {
 		loadingUnInstall = true;
-		await ErrorHelp(
-			'failed to Uninstall extension',
-			updateExtension({
-				variables: { pkgName, uninstall: true },
-				update: (cache, data) => {
-					UpdaterForUpdateExtension(cache, data, pkgName);
-				}
-			}),
-			toastStore
-		);
-		loadingUnInstall = false;
+		try {
+			await ErrorHelp(
+				'failed to Uninstall extension',
+				updateExtension({
+					variables: { pkgName, uninstall: true },
+					update: (cache, data) => {
+						UpdateExtensionUpdater(cache, data, pkgName);
+					}
+				}),
+				toastStore
+			);
+		} finally {
+			loadingUnInstall = false;
+		}
 	}
 
 	async function Install(pkgName: string) {
 		loadingInstall = true;
-		await ErrorHelp(
-			'Failed to Install extension',
-			updateExtension({
-				variables: { pkgName, install: true },
-				update: (cache, data) => {
-					UpdaterForUpdateExtension(cache, data, pkgName);
-				}
-			}),
-			toastStore
-		);
-		loadingInstall = false;
+		try {
+			await ErrorHelp(
+				'Failed to Install extension',
+				updateExtension({
+					variables: { pkgName, install: true },
+					update: (cache, data) => {
+						UpdateExtensionUpdater(cache, data, pkgName);
+					}
+				}),
+				toastStore
+			);
+		} finally {
+			loadingInstall = false;
+		}
 	}
 
 	async function Update(pkgName: string) {
 		loadingUpdate = true;
-		await ErrorHelp(
-			'Failed to Update extension',
-			updateExtension({
-				variables: { pkgName, update: true },
-				update: (cache, data) => {
-					UpdaterForUpdateExtension(cache, data, pkgName);
-				}
-			}),
-			toastStore
-		);
-		loadingUpdate = false;
+		try {
+			await ErrorHelp(
+				'Failed to Update extension',
+				updateExtension({
+					variables: { pkgName, update: true },
+					update: (cache, data) => {
+						UpdateExtensionUpdater(cache, data, pkgName);
+					}
+				}),
+				toastStore
+			);
+		} finally {
+			loadingUpdate = false;
+		}
 	}
 </script>
 

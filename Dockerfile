@@ -1,19 +1,19 @@
-# develop stage
-FROM oven/bun:1.0.10-alpine as develop-stage
-WORKDIR /app
-COPY . .
-ARG version="DevBuild"
-RUN sed -i "s@BUILD_VERSION_PLACEHOLDER@${version}@" ./src/app.html
-RUN sed -i "s@TRACKING_PLACEHOLDER@Docker@" ./src/app.html
-# build stage
-FROM develop-stage as build-stage
-RUN bun install
-RUN bun run build
+# # develop stage
+# FROM oven/bun:1.0.10-alpine as develop-stage
+# WORKDIR /app
+# COPY . .
+# ARG version="DevBuild"
+# RUN sed -i "s@BUILD_VERSION_PLACEHOLDER@${version}@" ./src/app.html
+# RUN sed -i "s@TRACKING_PLACEHOLDER@Docker@" ./src/app.html
+# # build stage
+# FROM develop-stage as build-stage
+# RUN bun install
+# RUN bun run build
 # production stage
 FROM nginxinc/nginx-unprivileged:1.23.2-alpine-slim as production-stage
 USER root
-COPY --from=build-stage /app/build /usr/share/nginx/html
-# COPY ./build /usr/share/nginx/html
+# COPY --from=build-stage /app/build /usr/share/nginx/html
+COPY ./build /usr/share/nginx/html
 COPY ./default.conf /etc/nginx/conf.d/default.conf
 COPY ./set-env-variable.sh /docker-entrypoint.d
 RUN chmod +x /docker-entrypoint.d/set-env-variable.sh

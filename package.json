@@ -39,6 +39,7 @@
 	},
 	"type": "module",
 	"dependencies": {
+		"@apollo/client": "^3.8.8",
 		"@floating-ui/dom": "1.5.3",
 		"@graphql-codegen/cli": "^5.0.0",
 		"@graphql-codegen/typescript": "^4.0.1",

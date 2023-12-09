@@ -10,14 +10,18 @@ import { GraphQLWsLink } from '@apollo/client/link/subscriptions';
 import { createClient } from 'graphql-ws';
 import { getMainDefinition } from '@apollo/client/utilities';
 
-const httpLink = createUploadLink({ uri: '/api/graphql' });
+const httpLink = createUploadLink({ uri: '/api/graphql' }) as unknown as ApolloLink;
 
 let splitLink: ApolloLink = httpLink;
+
+const url = window.location.origin
+	? window.location.origin.replace(/^http/, 'ws') + '/api/graphql'
+	: 'http://tachidesk:4567';
 
 try {
 	const wsLink = new GraphQLWsLink(
 		createClient({
-			url: window.location.origin.replace(/^http/, 'ws') + '/api/graphql'
+			url
 		})
 	);
 	splitLink = split(

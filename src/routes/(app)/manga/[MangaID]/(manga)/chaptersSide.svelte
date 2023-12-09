@@ -58,21 +58,23 @@
 		lastDownloads?.downloadChanged.queue
 			.filter((e) => manga?.data.manga.chapters.nodes.find((ee) => ee.id === e.chapter.id))
 			.forEach((element) => {
-				const tmp = $downloads?.data?.downloadChanged.queue.find(
+				const existingDownload = $downloads?.data?.downloadChanged.queue.find(
 					(e) => e.chapter.id === element.chapter.id
 				);
-				if (!tmp) {
-					const ttmp = AsyncGetSingleChapter({
+				if (!existingDownload) {
+					const fetchChapter = AsyncGetSingleChapter({
 						variables: { id: element.chapter.id },
 						fetchPolicy: 'network-only'
 					});
-					ttmp.then((e) => {
-						const { manga: mga } = structuredClone(
-							cache.readQuery({
+					fetchChapter.then((e) => {
+						const mangaData = {
+							...cache.readQuery<GetMangaQuery>({
 								query: GetMangaDoc,
 								variables: { id: MangaID }
 							})
-						) as GetMangaQuery;
+						};
+						if (!mangaData || !mangaData.manga) return;
+						const mga = mangaData.manga;
 
 						mga.chapters.nodes = mga.chapters.nodes.filter((ee) => ee.id !== e.data.chapter.id);
 						mga.chapters.nodes.push(e.data.chapter);

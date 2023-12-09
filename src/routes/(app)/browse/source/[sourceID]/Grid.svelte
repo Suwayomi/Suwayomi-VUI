@@ -52,7 +52,7 @@
 		page = 1;
 	}
 
-	$: Asysource = fetchSourceManga({
+	$: source = fetchSourceManga({
 		variables: {
 			page: page,
 			source: data.sourceID,
@@ -62,12 +62,12 @@
 		}
 	});
 
-	$: parseall(Asysource);
+	$: parseall(source);
 
-	async function parseall(Asysource: Promise<FetchResult<FetchSourceMangaMutation>>) {
+	async function parseall(source: Promise<FetchResult<FetchSourceMangaMutation>>) {
 		isLoading = true;
 		try {
-			const result = await Asysource;
+			const result = await source;
 			if (!result.data) throw new Error('Missing data');
 			all.hasNextPage = result.data.fetchSourceManga.hasNextPage;
 			all.mangas.push(...result.data.fetchSourceManga.mangas);
@@ -80,10 +80,12 @@
 				}
 				mainerror = error;
 				errortoast(toastStore, 'failed to load page', error.message);
+				return;
 			}
 			errortoast(toastStore, 'failed to load page', JSON.stringify(error));
+		} finally {
+			isLoading = false;
 		}
-		isLoading = false;
 	}
 </script>
 

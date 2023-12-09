@@ -34,18 +34,18 @@
 		return true;
 	}) as Tsource[] | undefined;
 
-	$: langs = getLangs($sources.data);
+	$: langs = getLanguages($sources.data);
 
-	function getLangs(exts: SourcesQuery) {
-		if (exts?.sources?.nodes !== undefined) {
-			return $sources.data.sources.nodes.reduce((a, c) => {
-				if (!a.has(c.lang)) {
-					return a.add(c.lang);
+	function getLanguages(extensions: SourcesQuery) {
+		if (extensions?.sources?.nodes !== undefined) {
+			return $sources.data.sources.nodes.reduce((accumulator, current) => {
+				if (!accumulator.has(current.lang)) {
+					return accumulator.add(current.lang);
 				}
-				return a;
-			}, new Set() as Set<string>);
+				return accumulator;
+			}, new Set<string>());
 		}
-		return new Set() as Set<string>;
+		return new Set<string>();
 	}
 
 	$: langs, AppBarData('Sources', { component: SourcesActions, props: { langs } });

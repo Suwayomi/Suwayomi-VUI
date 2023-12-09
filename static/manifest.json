@@ -1,0 +1,32 @@
+{
+	"name": "vui3",
+	"short_name": "vui3",
+	"start_url": "/",
+	"display": "standalone",
+	"background_color": "#1f2937",
+	"theme_color": "#1f2937",
+	"description": "Robonau's Svelte + skeleton Tachidesk UI",
+	"icons": [
+		{
+			"src": "pwa-64x64.png",
+			"type": "image/png",
+			"sizes": "64x64"
+		},
+		{
+			"src": "pwa-192x192.png",
+			"type": "image/png",
+			"sizes": "192x192"
+		},
+		{
+			"src": "pwa-512x512.png",
+			"type": "image/png",
+			"sizes": "512x512"
+		},
+		{
+			"src": "maskable-icon-512x512.png",
+			"type": "image/png",
+			"sizes": "512x512",
+			"purpose": "maskable"
+		}
+	]
+}

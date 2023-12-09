@@ -22,6 +22,17 @@
 	import TrackingModal from './TrackingModal.svelte';
 	const modalStore = getModalStore();
 	AppBarData('Settings');
+
+	async function clearCache() {
+		navigator.serviceWorker.ready.then((registration) => {
+			if (!registration.active) {
+				return;
+			}
+			registration.active.postMessage({
+				type: 'clearCache'
+			});
+		});
+	}
 </script>
 
 <a
@@ -131,3 +142,10 @@
 	<IconWrapper class="h-full w-auto p-2" name="mdi:information" />
 	<div class="w-full">About</div>
 </a>
+<button
+	on:click={clearCache}
+	class=" text-left flex items-center w-full h-16 hover:variant-glass-surface cursor-pointer"
+>
+	<IconWrapper class="h-full w-auto p-2" name="mdi:delete" />
+	<div class="w-full">Clear Cache</div>
+</button>
