@@ -22,8 +22,8 @@ import {
 import type { presetConst } from './presets';
 import type { ApolloCache } from '@apollo/client';
 import { cache } from './apollo';
-import type { TriState } from './util';
-
+import { getObjectEntries, getObjectKeys, type TriState } from './util';
+import type { ApolloQueryResult } from '@apollo/client';
 export type ComponentWritable<T> =
 	| {
 			component: ComponentType;
@@ -119,73 +119,88 @@ const trueDefaults = {
 type globalMeta = typeof trueDefaults;
 
 function GlobalMetaUpdater(cache: ApolloCache<unknown>, key: string, value: string) {
-	const { metas: tmp } = structuredClone(
-		cache.readQuery({
+	const metasData = structuredClone(
+		cache.readQuery<MetasQuery>({
 			query: MetasDoc
 		})
-	) as MetasQuery;
-	tmp.nodes = tmp.nodes.filter((e) => e.key !== key);
-	tmp.nodes.push({
+	);
+	if (!metasData) return;
+	const filteredNodes = metasData.metas.nodes.filter((e) => e.key !== key);
+	const updatedNode = {
 		key,
 		value
-	});
+	};
+
+	const updatedMetas = {
+		...metas,
+		nodes: [...filteredNodes, updatedNode]
+	};
+
 	cache.writeQuery({
 		query: MetasDoc,
-		data: { metas: tmp }
+		data: { metas: updatedMetas }
 	});
 }
 
 function GlobalMeta() {
 	const Meta = metas({});
 	const store = localStorageStore('GlobalMeta', trueDefaults);
+
 	if (get(store).mangaUpdatesTracking === undefined) {
-		store.update((n) => {
-			n.mangaUpdatesTracking = trueDefaults.mangaUpdatesTracking;
-			return n;
+		store.update((newStore) => {
+			newStore.mangaUpdatesTracking = trueDefaults.mangaUpdatesTracking;
+			return newStore;
 		});
 	}
-	Meta.subscribe((e) => {
-		store.update((n) => {
-			const Ncopy = structuredClone(get(store)) as { [key: string]: unknown };
-			(Object.keys(n) as (keyof globalMeta)[]).forEach((ee) => {
-				const tmp = e.data.metas?.nodes.find((k) => k.key.replace('VUI3_', '') === ee);
-				if (!tmp) return;
-				Ncopy[ee] = JSON.parse(tmp.value);
-			});
-			return Ncopy as globalMeta;
+
+	Meta.subscribe((queryResult) => {
+		store.update((value) => {
+			return extractGlobalMeta(value, queryResult);
 		});
 	});
 
+	function extractGlobalMeta(
+		value: typeof trueDefaults,
+		queryResult: ApolloQueryResult<MetasQuery>
+	): globalMeta {
+		const globalMetaCopy = { ...get(store) } as globalMeta;
+		const metas = queryResult.data.metas?.nodes || [];
+		getObjectKeys(value).forEach(<T extends keyof globalMeta>(key: T) => {
+			const foundMeta = metas.find((node) => node.key.replace('VUI3_', '') === key);
+			if (foundMeta) {
+				globalMetaCopy[key] = JSON.parse(foundMeta.value) as globalMeta[T];
+			}
+		});
+		return globalMetaCopy;
+	}
+
 	async function set(val: globalMeta) {
-		(Object.entries(val) as [keyof globalMeta, unknown][]).forEach(async (entry) => {
-			const value = JSON.stringify(entry[1]);
-			const key = `VUI3_${entry[0]}`;
-			const tmp = get(Meta).data.metas?.nodes.find((e) => e.key === key)?.value;
-			if (value !== tmp)
+		for (const [key, value] of getObjectEntries(val)) {
+			const stringValue = JSON.stringify(value);
+			const metaKey = `VUI3_${key}`;
+			const existingValue = get(Meta).data.metas?.nodes.find((e) => e.key === metaKey)?.value;
+
+			if (stringValue !== existingValue) {
 				try {
-					//update before waiting
-					GlobalMetaUpdater(cache, key, value);
-					if (value !== JSON.stringify(trueDefaults[entry[0]])) {
-						//set if not the truedefault value
-						await setGlobalMeta({
-							variables: { key, value },
-							//update after to keep in sync
-							update: (a) => GlobalMetaUpdater(a, key, value)
-						});
-					} else if (tmp !== undefined) {
-						//delete if not already undefined
-						await deleteGlobalMeta({
-							variables: { key: key },
-							//update after to keep in sync
-							update: (a) => GlobalMetaUpdater(a, key, value)
-						});
+					GlobalMetaUpdater(cache, metaKey, stringValue);
+
+					const variables = { key: metaKey, value: stringValue };
+					const update = (a: ApolloCache<unknown>) => GlobalMetaUpdater(a, metaKey, stringValue);
+
+					if (stringValue !== JSON.stringify(trueDefaults[key])) {
+						await setGlobalMeta({ variables, update });
+					} else if (existingValue !== undefined) {
+						await deleteGlobalMeta({ variables, update });
 					}
 				} catch {}
-		});
+			}
+		}
 	}
 
 	async function update(func: (value: globalMeta) => globalMeta) {
-		set(func(get(store)));
+		const currentStore = get(store);
+		const updatedStore = func(currentStore);
+		set(updatedStore);
 	}
 
 	return {
@@ -198,20 +213,26 @@ function GlobalMeta() {
 export const Meta = GlobalMeta();
 
 function MangaMetaUpdater(cache: ApolloCache<unknown>, key: string, value: string, id: number) {
-	const { manga } = structuredClone(
-		cache.readQuery({
-			query: GetMangaDoc,
+	const query = GetMangaDoc;
+	const { manga } = {
+		...cache.readQuery<GetMangaQuery>({
+			query,
 			variables: { id }
 		})
-	) as GetMangaQuery;
-	manga.meta = manga.meta.filter((e) => e.key !== key);
-	manga.meta.push({
+	};
+	if (!manga) return;
+
+	const updatedMeta = manga.meta.filter((e) => e.key !== key);
+	updatedMeta.push({
 		key,
 		value
 	});
+
+	const updatedManga = { ...manga, meta: updatedMeta };
+
 	cache.writeQuery({
-		query: GetMangaDoc,
-		data: { manga },
+		query,
+		data: { manga: updatedManga },
 		variables: { id }
 	});
 }
@@ -227,48 +248,52 @@ export function MangaMeta(id: number) {
 		});
 	}
 
-	MMeta.subscribe((e) => {
-		store.update((n) => {
-			const Ncopy = structuredClone(get(store)) as { [key: string]: unknown };
-			(Object.keys(n) as (keyof mangaMeta)[]).forEach((ee) => {
-				const tmp = e.data.manga?.meta.find((k) => k.key.replace('VUI3_', '') === ee);
-				if (!tmp) return;
-				Ncopy[ee] = JSON.parse(tmp.value);
-			});
-			return Ncopy as mangaMeta;
+	MMeta.subscribe((queryResult) => {
+		store.update((value) => {
+			return extractMangaMeta(value, queryResult);
 		});
 	});
 
+	function extractMangaMeta(
+		newMeta: mangaMeta,
+		queryResult: ApolloQueryResult<GetMangaQuery>
+	): mangaMeta {
+		const clonedStore = { ...get(store) } as mangaMeta;
+		const metas = queryResult.data.manga?.meta || [];
+		getObjectKeys(newMeta).forEach(<T extends keyof mangaMeta>(key: T) => {
+			const matchedMeta = metas.find((meta) => meta.key.replace('VUI3_', '') === key);
+			if (!matchedMeta) return;
+			clonedStore[key] = JSON.parse(matchedMeta.value) as mangaMeta[T];
+		});
+		return clonedStore;
+	}
+
 	async function set(value: mangaMeta) {
-		(Object.entries(value) as [keyof mangaMeta, unknown][]).forEach(async (entry) => {
-			const value = JSON.stringify(entry[1]);
-			const key = `VUI3_${entry[0]}`;
-			const tmp = get(MMeta).data.manga?.meta.find((e) => e.key === key)?.value;
-			if (value !== tmp)
+		for (const [key, val] of getObjectEntries(value)) {
+			const jsonValue = JSON.stringify(val);
+			const cacheKey = `VUI3_${key}`;
+			const cachedValue = get(MMeta).data.manga?.meta.find((e) => e.key === cacheKey)?.value;
+
+			if (jsonValue !== cachedValue) {
 				try {
-					//update before waiting
-					MangaMetaUpdater(cache, key, value, id);
-					if (entry[1] !== get(Meta).mangaMetaDefaults[entry[0]]) {
-						//set if not the truedefault value
-						await setMangaMeta({
-							variables: { key, value, id }
-							//update after to keep in sync
-							// update: (a) => MangaMetaUpdater(a, key, value, id)
-						});
-					} else if (tmp !== undefined) {
-						//delete if not already undefined
-						await deleteMangaMeta({
-							variables: { key, id }
-							//update after to keep in sync
-							// update: (a) => MangaMetaUpdater(a, key, value, id)
-						});
+					MangaMetaUpdater(cache, cacheKey, jsonValue, id);
+
+					const variables = { key: cacheKey, value: jsonValue, id };
+
+					if (val !== get(Meta).mangaMetaDefaults[key]) {
+						await setMangaMeta({ variables });
+					} else if (cachedValue !== undefined) {
+						await deleteMangaMeta({ variables });
 					}
 				} catch {}
-		});
+			}
+		}
 	}
 
 	async function update(func: (value: mangaMeta) => mangaMeta) {
-		set(func(get(store)));
+		const value = get(store);
+		const updatedValue = func(value);
+		set(updatedValue);
 	}
 
 	return {

@@ -404,3 +404,11 @@ mutation deleteDownloadedChapters($ids: [Int!]!) {
 		}
 	}
 }
+
+mutation clearCachedImages {
+	clearCachedImages(
+		input: { cachedPages: true, cachedThumbnails: true, downloadedThumbnails: true }
+	) {
+		clientMutationId
+	}
+}

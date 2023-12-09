@@ -149,12 +149,14 @@
 				nodes.forEach((newNode) => {
 					if (oldNodes.find((oldNode) => oldNode.id === newNode.id)) return;
 					try {
-						const { category } = structuredClone(
-							cache.readQuery({
+						const categoryData = structuredClone(
+							cache.readQuery<CategoryQuery>({
 								query: CategoryDoc,
 								variables: { id: newNode.id }
 							})
-						) as CategoryQuery;
+						);
+						if (!categoryData) return;
+						const category = categoryData.category;
 						category.mangas.nodes.push(currentManga);
 
 						cache.writeQuery({
@@ -167,12 +169,15 @@
 				// add to 0 if now in default
 				if (nodes.length === 0 && oldNodes.length > 0) {
 					try {
-						const { category } = structuredClone(
-							cache.readQuery({
+						const categoryData = structuredClone(
+							cache.readQuery<CategoryQuery>({
 								query: CategoryDoc,
 								variables: { id: 0 }
 							})
-						) as CategoryQuery;
+						);
+
+						if (!categoryData) return;
+						const category = categoryData.category;
 
 						category.mangas.nodes.push(currentManga);
 
@@ -189,12 +194,15 @@
 			oldNodes.forEach((oldNode) => {
 				if (nodes.find((newNode) => oldNode.id === newNode.id)) return;
 				try {
-					const { category } = structuredClone(
-						cache.readQuery({
+					const categoryData = structuredClone(
+						cache.readQuery<CategoryQuery>({
 							query: CategoryDoc,
 							variables: { id: oldNode.id }
 						})
-					) as CategoryQuery;
+					);
+
+					if (!categoryData) return;
+					const category = categoryData.category;
 
 					category.mangas.nodes = category.mangas.nodes.filter((e) => e.id !== dat.manga.id);
 
@@ -210,12 +218,15 @@
 			if (oldNodes.length === 0 && nodes.length > 0) {
 				//remove from default
 				try {
-					const { category } = structuredClone(
-						cache.readQuery({
+					const categoryData = structuredClone(
+						cache.readQuery<CategoryQuery>({
 							query: CategoryDoc,
 							variables: { id: 0 }
 						})
-					) as CategoryQuery;
+					);
+
+					if (!categoryData) return;
+					const category = categoryData.category;
 
 					category.mangas.nodes = category.mangas.nodes.filter((e) => e.id !== dat.manga.id);
 

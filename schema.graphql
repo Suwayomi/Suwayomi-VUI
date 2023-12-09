@@ -18,6 +18,10 @@ type AboutServerPayload {
   revision: String!
   version: String!
 }
+type AboutWebUI {
+  channel: String!
+  tag: String!
+}
 type BackupRestoreStatus {
   mangaProgress: Int!
   state: BackupRestoreState!
@@ -100,6 +104,12 @@ type CheckForServerUpdatesPayload {
   channel: String!
   tag: String!
   url: String!
+}
+type ClearCachedImagesPayload {
+  cachedPages: Boolean
+  cachedThumbnails: Boolean
+  clientMutationId: String
+  downloadedThumbnails: Boolean
 }
 type ClearDownloaderPayload {
   clientMutationId: String
@@ -368,6 +378,7 @@ type Mutation {
   installExternalExtension(input: InstallExternalExtensionInput!): InstallExternalExtensionPayload!
   updateExtension(input: UpdateExtensionInput!): UpdateExtensionPayload!
   updateExtensions(input: UpdateExtensionsInput!): UpdateExtensionsPayload!
+  clearCachedImages(input: ClearCachedImagesInput!): ClearCachedImagesPayload!
   updateWebUI(input: WebUIUpdateInput!): WebUIUpdatePayload!
   deleteMangaMeta(input: DeleteMangaMetaInput!): DeleteMangaMetaPayload!
   fetchManga(input: FetchMangaInput!): FetchMangaPayload!
@@ -440,9 +451,9 @@ type Query {
   extension(pkgName: String!): ExtensionType!
   extensions(condition: ExtensionConditionInput, filter: ExtensionFilterInput, orderBy: ExtensionOrderBy, orderByType: SortOrder, before: Cursor, after: Cursor, first: Int, last: Int, offset: Int): ExtensionNodeList!
   aboutServer: AboutServerPayload!
-  aboutWebUI: WebUIUpdateInfo!
+  aboutWebUI: AboutWebUI!
   checkForServerUpdates: [CheckForServerUpdatesPayload!]!
-  checkForWebUIUpdate: WebUIUpdateInfo!
+  checkForWebUIUpdate: WebUIUpdateCheck!
   getWebUIUpdateStatus: WebUIUpdateStatus!
   manga(id: Int!): MangaType!
   mangas(condition: MangaConditionInput, filter: MangaFilterInput, orderBy: MangaOrderBy, orderByType: SortOrder, before: Cursor, after: Cursor, first: Int, last: Int, offset: Int): MangaNodeList!
@@ -674,6 +685,11 @@ type ValidateBackupResult {
 type ValidateBackupSource {
   id: LongString!
   name: String!
+}
+type WebUIUpdateCheck {
+  channel: String!
+  tag: String!
+  updateAvailable: Boolean!
 }
 type WebUIUpdateInfo {
   channel: String!
@@ -926,6 +942,12 @@ input ChapterMetaTypeInput {
   chapterId: Int!
   key: String!
   value: String!
+}
+input ClearCachedImagesInput {
+  cachedPages: Boolean
+  cachedThumbnails: Boolean
+  clientMutationId: String
+  downloadedThumbnails: Boolean
 }
 input ClearDownloaderInput {
   clientMutationId: String

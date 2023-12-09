@@ -41,17 +41,18 @@
 		}
 	});
 
-	$: langs = getLangs($rawSources.data);
-	function getLangs(exts: SourcesQuery) {
-		if (exts?.sources?.nodes !== undefined) {
-			return $rawSources.data.sources.nodes.reduce((a, c) => {
-				if (!a.has(c.lang)) {
-					return a.add(c.lang);
+	$: langs = getLanguages($rawSources.data);
+
+	function getLanguages(extensions: SourcesQuery) {
+		if (extensions?.sources?.nodes !== undefined) {
+			return $rawSources.data.sources.nodes.reduce((accumulator, currentNode) => {
+				if (!accumulator.has(currentNode.lang)) {
+					return accumulator.add(currentNode.lang);
 				}
-				return a;
-			}, new Set() as Set<string>);
+				return accumulator;
+			}, new Set<string>());
 		}
-		return new Set() as Set<string>;
+		return new Set<string>();
 	}
 
 	let alterableRaw: sourceWithManga[] | undefined = undefined;
@@ -64,7 +65,7 @@
 	$: filteredSources, $query, onQueryChange();
 	function onQueryChange() {
 		const Query = $query;
-		alterableRaw = structuredClone(filteredSources);
+		alterableRaw = [...(filteredSources ?? [])];
 		queue.clear();
 		if (Query) {
 			filteredSources?.forEach(async (souc) => {
@@ -74,10 +75,10 @@
 					if (id === -1) return;
 					alterableRaw[id].Loading = true;
 					try {
-						let tmp = await getMangasFromSource(souc.id, Query);
+						let response = await getMangasFromSource(souc.id, Query);
 						if (Query === $query) {
 							alterableRaw[id].Loading = false;
-							alterableRaw[id].mangas = tmp.data?.fetchSourceManga.mangas;
+							alterableRaw[id].mangas = response.data?.fetchSourceManga.mangas;
 						}
 					} catch (error) {
 						console.error(error);

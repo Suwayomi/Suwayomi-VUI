@@ -18,8 +18,8 @@
 	let FINISHED = !$filter.has('FINISHED');
 	let ERROR = !$filter.has('ERROR');
 
-	function handel(params: boolean, set: Filter) {
-		if (!params) {
+	function handel(isActive: boolean, set: Filter) {
+		if (!isActive) {
 			$filter.add(set);
 			$filter = $filter;
 			return;

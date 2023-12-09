@@ -252,18 +252,11 @@ async function mangaUpdates() {
 	}
 
 	async function login() {
-		const Met = get(Meta);
-		const username = Met.mangaUpdatesTracking.username;
-		const password = Met.mangaUpdatesTracking.password;
+		const { username, password } = get(Meta).mangaUpdatesTracking;
 		const response = await fetch('/v1/account/login', {
 			method: 'PUT',
-			body: JSON.stringify({
-				username,
-				password
-			}),
-			headers: {
-				'Content-Type': 'application/json'
-			}
+			body: JSON.stringify({ username, password }),
+			headers: { 'Content-Type': 'application/json' }
 		});
 		const data: Response<LoginSuccessContext> = await response.json();
 		if (data.status === 'exception') {
@@ -298,47 +291,55 @@ async function mangaUpdates() {
 	}
 
 	async function search(search: string) {
-		const response = await fetch('/v1/series/search', {
+		const options = {
 			method: 'POST',
-			body: JSON.stringify({
-				search
-			}),
+			body: JSON.stringify({ search }),
 			headers: {
 				'Content-Type': 'application/json',
 				Authorization
 			}
-		});
+		};
+
+		const response = await fetch('/v1/series/search', options);
 		const data: resp | SearchResult = await response.json();
+
 		if ('status' in data && data.status === 'exception') {
 			throw new Error(data.reason);
 		}
+
 		return data;
 	}
 
 	async function mangaStatus(mangaID: number, retry = 1) {
 		if (!Authorization) {
-			throw new Error('No Auth provided');
+			throw new Error('No authentication provided');
 		}
+
 		const response = await fetch(`/v1/lists/series/${mangaID}`, {
 			method: 'GET',
 			headers: {
 				Authorization
 			}
 		});
+
 		if (response.status === 404) {
-			throw new Error('Not In List');
+			throw new Error('Manga Not In List');
 		}
+
 		if (response.status === 401) {
 			if (retry) {
 				await login();
 				return mangaStatus(mangaID, retry - 1);
 			}
-			throw new Error('Auth failed');
+			throw new Error('Authentication failed');
 		}
+
 		const data: resp | MangaStatusResponse = await response.json();
+
 		if ('status' in data && data.status === 'exception') {
 			throw new Error(data.reason);
 		}
+
 		return data;
 	}
 
@@ -365,6 +366,7 @@ async function mangaUpdates() {
 				}
 			])
 		});
+
 		if (response.status === 401) {
 			if (retry) {
 				await login();

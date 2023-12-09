@@ -28,6 +28,7 @@
 	import { langFilter, lastFetched } from './ExtensionsStores';
 	import ExtensionCard from './ExtensionCard.svelte';
 	import { Meta } from '$lib/simpleStores';
+	import type { ApolloCache, FetchResult } from '@apollo/client';
 
 	let toastStore = getToastStore();
 	const query = queryParam('q', ssp.string(), { pushHistory: false });
@@ -45,28 +46,13 @@
 	>;
 
 	checkIfFetchNewExtensions();
+
 	async function checkIfFetchNewExtensions() {
 		if ($lastFetched.valueOf() + 8.64e7 < Date.now().valueOf()) {
 			await ErrorHelp(
 				'failed to fetch new extensions',
 				fetchExtensions({
-					update: (
-						cache,
-						{
-							data: {
-								fetchExtensions: { extensions }
-							}
-						}
-					) => {
-						let nodes = extensions as FetchExtensionsMutation['fetchExtensions']['extensions'];
-						if (!$Meta.nsfw) nodes = nodes.filter((e) => !e.isNsfw);
-						cache.writeQuery({
-							query: ExtensionsDoc,
-							data: { extensions: { nodes } },
-							variables: { isNsfw: $Meta.nsfw ? null : false }
-						});
-						$lastFetched = new Date();
-					}
+					update: fetchExtensionsUpdater
 				}),
 				toastStore
 			);
@@ -74,18 +60,34 @@
 		extensions = getExtensions({ variables: { isNsfw: $Meta.nsfw ? null : false } });
 	}
 
+	function fetchExtensionsUpdater(
+		cache: ApolloCache<unknown>,
+		{ data }: FetchResult<FetchExtensionsMutation>
+	) {
+		if (!data) return;
+		let filteredExtensions = data.fetchExtensions.extensions;
+		if (!$Meta.nsfw) filteredExtensions = filteredExtensions.filter((e) => !e.isNsfw);
+		cache.writeQuery({
+			query: ExtensionsDoc,
+			data: { extensions: { nodes: filteredExtensions } },
+			variables: { isNsfw: $Meta.nsfw ? null : false }
+		});
+		$lastFetched = new Date();
+	}
+
 	$: langs = getLangs($extensions?.data);
 	$: AppBarData('Extensions', { component: ExtensionsActions, props: { langs } });
-	function getLangs(exts: ExtensionsQuery) {
-		if (exts?.extensions?.nodes) {
-			return $extensions.data.extensions.nodes.reduce((a, c) => {
-				if (!a.has(c.lang)) {
-					return a.add(c.lang);
+
+	function getLangs(extensionsQuery: ExtensionsQuery | undefined) {
+		if (extensionsQuery?.extensions?.nodes) {
+			return extensionsQuery.extensions.nodes.reduce((accumulatedSet, currentExtension) => {
+				if (!accumulatedSet.has(currentExtension.lang)) {
+					accumulatedSet.add(currentExtension.lang);
 				}
-				return a;
-			}, new Set() as Set<string>);
+				return accumulatedSet;
+			}, new Set<string>());
 		}
-		return new Set() as Set<string>;
+		return new Set<string>();
 	}
 
 	$: filteredExtensions = $extensions?.data?.extensions?.nodes.filter((ele) => {
@@ -96,17 +98,31 @@
 		return true;
 	}) as TExtension[] | undefined;
 
-	$: groupExtensions = doGroupSources(filteredExtensions, langs);
-	function doGroupSources(filteredExts: TExtension[] | undefined, langs: Set<string>) {
-		if (!filteredExts) return undefined;
-		const [hasUpdate, noHaveUpdate] = Partition(filteredExts, (e) => e.hasUpdate);
-		const [isInstalled, noInstalled] = Partition(noHaveUpdate, (e) => e.isInstalled);
+	$: groupExtensions = groupSources(filteredExtensions, langs);
+
+	function groupSources(
+		filteredExtensions: TExtension[] | undefined,
+		languages: Set<string>
+	): [string, TExtension[]][] | undefined {
+		if (!filteredExtensions) return undefined;
+
+		const [extensionsWithUpdate, extensionsWithoutUpdate] = Partition(
+			filteredExtensions,
+			(extension) => extension.hasUpdate
+		);
+		const [installedExtensions, notInstalledExtensions] = Partition(
+			extensionsWithoutUpdate,
+			(extension) => extension.isInstalled
+		);
+
 		const always = [
-			['Update Pending', hasUpdate],
-			['Installed', isInstalled]
+			['Update Pending', extensionsWithUpdate],
+			['Installed', installedExtensions]
 		] as [string, TExtension[]][];
-		if (!(noInstalled?.length || langs.size)) return always;
-		return [...always, ...groupBy(noInstalled, (item) => item.lang)];
+
+		if (!(notInstalledExtensions?.length || languages.size)) return always;
+
+		return [...always, ...groupBy(notInstalledExtensions, (extension) => extension.lang)];
 	}
 </script>
 
