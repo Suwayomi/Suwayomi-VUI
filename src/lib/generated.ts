@@ -2382,6 +2382,11 @@ export type DeleteDownloadedChaptersMutationVariables = Exact<{
 
 export type DeleteDownloadedChaptersMutation = { __typename?: 'Mutation', deleteDownloadedChapters: { __typename?: 'DeleteDownloadedChaptersPayload', chapters: Array<{ __typename?: 'ChapterType', isBookmarked: boolean, isDownloaded: boolean, isRead: boolean, id: number, chapterNumber: number, fetchedAt: any, lastPageRead: number, name: string, sourceOrder: number, uploadDate: any, pageCount: number, scanlator?: string | null }> } };
 
+export type ClearCachedImagesMutationVariables = Exact<{ [key: string]: never; }>;
+
+
+export type ClearCachedImagesMutation = { __typename?: 'Mutation', clearCachedImages: { __typename?: 'ClearCachedImagesPayload', clientMutationId?: string | null } };
+
 export type CategoriesQueryVariables = Exact<{
   notEqualTo?: InputMaybe<Scalars['Int']['input']>;
 }>;
@@ -2990,6 +2995,15 @@ export const DeleteDownloadedChaptersDoc = gql`
   }
 }
     ${ChapterTypeFragmentFragmentDoc}`;
+export const ClearCachedImagesDoc = gql`
+    mutation clearCachedImages {
+  clearCachedImages(
+    input: {cachedPages: true, cachedThumbnails: true, downloadedThumbnails: true}
+  ) {
+    clientMutationId
+  }
+}
+    `;
 export const CategoriesDoc = gql`
     query categories($notEqualTo: Int = null) {
   categories(filter: {id: {notEqualTo: $notEqualTo}}) {
@@ -3786,6 +3800,18 @@ export const deleteDownloadedChapters = (
           ) => {
             const m = client.mutate<DeleteDownloadedChaptersMutation, DeleteDownloadedChaptersMutationVariables>({
               mutation: DeleteDownloadedChaptersDoc,
+              ...options,
+            });
+            return m;
+          }
+export const clearCachedImages = (
+            options: Omit<
+              MutationOptions<any, ClearCachedImagesMutationVariables>, 
+              "mutation"
+            >
+          ) => {
+            const m = client.mutate<ClearCachedImagesMutation, ClearCachedImagesMutationVariables>({
+              mutation: ClearCachedImagesDoc,
               ...options,
             });
             return m;

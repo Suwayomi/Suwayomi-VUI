@@ -20,10 +20,12 @@
 	import { enumKeys } from '$lib/util';
 	import MangaSettingsModal from './MangaSettingsModal.svelte';
 	import TrackingModal from './TrackingModal.svelte';
+	import { clearCachedImages } from '$lib/generated';
 	const modalStore = getModalStore();
 	AppBarData('Settings');
 
 	async function clearCache() {
+		clearCachedImages({});
 		navigator.serviceWorker.ready.then((registration) => {
 			if (!registration.active) {
 				return;
