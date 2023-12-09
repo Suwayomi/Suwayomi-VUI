@@ -36,8 +36,8 @@
 		});
 	}
 
-	async function RemoveSelectedFromLibrary() {
-		const ids = $selected.filter((ele) => ele).map((ele) => ele.id);
+	async function removeSelectedFromLibrary() {
+		const ids = $selected.filter((item) => item).map((item) => item.id);
 		const variables = {
 			ids,
 			inLibrary: false
@@ -52,16 +52,20 @@
 	}
 
 	function handelDelete() {
+		const selectedCount = $selected.filter((ele) => ele).length;
+		const message = `You are about to remove ${selectedCount} manga from your library!`;
+		const action = {
+			label: 'Delete',
+			response: removeSelectedFromLibrary
+		};
+		const actionClass = 'btn variant-filled-error';
+		const background = 'variant-filled-warning';
+
 		toastStore.trigger({
-			message: `You are about to remove ${
-				$selected.filter((ele) => ele).length
-			} manga from your library!`,
-			action: {
-				label: 'Delete',
-				response: RemoveSelectedFromLibrary
-			},
-			actionClass: 'btn variant-filled-error',
-			background: 'variant-filled-warning'
+			message,
+			action,
+			actionClass,
+			background
 		});
 	}
 

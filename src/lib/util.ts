@@ -127,29 +127,29 @@ export async function HelpUpdateChapters<
 }
 
 export async function ErrorHelp<T>(
-	failmsg: string,
+	failMessage: string,
 	func: Promise<FetchResult<T>>,
 	toastStore: ToastStore,
 	callback: (result: FetchResult<T>) => void = () => {}
 ) {
 	try {
-		const responce = await func;
-		if (responce.errors) {
-			responce.errors.forEach((e) => console.error(e));
-			errortoast(toastStore, failmsg, JSON.stringify(responce.errors));
+		const response = await func;
+		if (response.errors) {
+			response.errors.forEach((e) => console.error(e));
+			errortoast(toastStore, failMessage, JSON.stringify(response.errors));
 			return;
 		}
-		callback(responce);
+		callback(response);
 	} catch (error) {
 		console.error(error);
 		if (error instanceof Error) {
-			errortoast(toastStore, failmsg, error.message);
+			errortoast(toastStore, failMessage, error.message);
 		}
 	}
 }
 
 export async function ErrorHelpUntyped(
-	failmsg: string,
+	failMessage: string,
 	toastStore: ToastStore,
 	...func: Promise<FetchResult<unknown>>[]
 ) {
@@ -157,13 +157,13 @@ export async function ErrorHelpUntyped(
 		const results = await Promise.all(func);
 		results.forEach((e) => {
 			if (e.errors) {
-				errortoast(toastStore, failmsg, JSON.stringify(e.errors));
+				errortoast(toastStore, failMessage, JSON.stringify(e.errors));
 			}
 		});
 	} catch (error) {
 		if (error instanceof Error) {
 			console.error(error);
-			errortoast(toastStore, failmsg, JSON.stringify(error));
+			errortoast(toastStore, failMessage, JSON.stringify(error));
 		}
 	}
 }
@@ -171,42 +171,47 @@ export async function ErrorHelpUntyped(
 export const gridValues =
 	'xs:grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-7 2xl:grid-cols-8 3xl:grid-cols-10';
 
-export function errortoast(toastStore: ToastStore, failmsg: string, errorMessage: string) {
+export function errortoast(toastStore: ToastStore, failMessage: string, errorMessage: string) {
 	toastStore.trigger({
 		hoverable: true,
 		message: `
-      <h3>${failmsg}</h3>
+      <h3>${failMessage}</h3>
       <p>${errorMessage}</p>
       `,
 		background: 'bg-error-500'
 	});
 }
 
-export function Partition<T>(arr: T[], comparator: (e: T) => boolean) {
-	return arr.reduce(
-		(a, c) => {
-			if (comparator(c)) a[0].push(c);
-			else a[1].push(c);
-			return a;
-		},
-		[[], []] as [T[], T[]]
-	);
+export function Partition<T>(arr: T[], comparator: (e: T) => boolean): [T[], T[]] {
+	const trueArr: T[] = [];
+	const falseArr: T[] = [];
+
+	for (const item of arr) {
+		if (comparator(item)) {
+			trueArr.push(item);
+		} else {
+			falseArr.push(item);
+		}
+	}
+
+	return [trueArr, falseArr];
 }
 
 export type Rename<T, K extends keyof T, N extends string> = Pick<T, Exclude<keyof T, K>> & {
 	[P in N]: T[K];
 };
+
 export type PartialBy<T, K extends keyof T> = Omit<T, K> & Partial<Pick<T, K>>;
-export function enumKeys<E>(e: E & object): (keyof E)[] {
+export function enumKeys<E extends object>(e: E): (keyof E)[] {
 	return Object.keys(e) as (keyof E)[];
 }
 
-export function groupBy<T extends { [key: string]: unknown }>(
+export function groupBy<T extends object, K extends T[keyof T]>(
 	list: T[],
-	keyGetter: (item: T) => T[keyof T]
-): [string, T[]][] {
-	const map = new Map();
-	list.forEach((item) => {
+	keyGetter: (item: T) => K
+): [K, T[]][] {
+	const map = new Map<K, T[]>();
+	for (const item of list) {
 		const key = keyGetter(item);
 		const collection = map.get(key);
 		if (!collection) {
@@ -214,6 +219,15 @@ export function groupBy<T extends { [key: string]: unknown }>(
 		} else {
 			collection.push(item);
 		}
-	});
+	}
+
 	return Array.from(map);
+}
+
+export function getObjectKeys<T extends object>(obj: T): (keyof T)[] {
+	return Object.keys(obj) as (keyof T)[];
+}
+
+export function getObjectEntries<T extends object>(obj: T): [keyof T, T[keyof T]][] {
+	return Object.entries(obj) as [keyof T, T[keyof T]][];
 }

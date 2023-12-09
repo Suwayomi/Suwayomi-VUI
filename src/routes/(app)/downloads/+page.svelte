@@ -23,6 +23,8 @@
 	let downloads = downloadChanged({
 		fetchPolicy: 'network-only'
 	});
+
+	$: console.log($downloads);
 	AppBarData('Downloads', { component: DownloadsActions, props: { downloads } });
 
 	type DLS = DownloadChangedSubscription['downloadChanged']['queue'][0];
