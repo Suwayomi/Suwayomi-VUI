@@ -136,7 +136,8 @@ self.addEventListener('fetch', (event) => {
 				!url.pathname.includes('svelte') &&
 				!url.pathname.includes('/src/') &&
 				!url.pathname.includes('.json') &&
-				!url.pathname.endsWith('.png')
+				!url.pathname.endsWith('.png') &&
+				!url.pathname.includes('/v1/')
 			) {
 				const cache = await openCache;
 				const cachedResponce = await cache.match('/');
