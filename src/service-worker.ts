@@ -131,8 +131,7 @@ function respondGET(event: FetchEvent) {
 		}
 
 		// the main html page, cache first
-		const referer = event.request.headers.get('Referer');
-		if (referer === url.href) {
+		if (event.request.referrer === url.href) {
 			const cachedResponse = await cache.match('/');
 			putToCache = async (clone: Response, cache: Cache) => {
 				await cache.put('/', clone);
