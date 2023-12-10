@@ -20,21 +20,9 @@
 	import { enumKeys } from '$lib/util';
 	import MangaSettingsModal from './MangaSettingsModal.svelte';
 	import TrackingModal from './TrackingModal.svelte';
-	import { clearCachedImages } from '$lib/generated';
+	import CacheSettingsModal from './CacheSettingsModal.svelte';
 	const modalStore = getModalStore();
 	AppBarData('Settings');
-
-	async function clearCache() {
-		clearCachedImages({});
-		navigator.serviceWorker.ready.then((registration) => {
-			if (!registration.active) {
-				return;
-			}
-			registration.active.postMessage({
-				type: 'clearCache'
-			});
-		});
-	}
 </script>
 
 <a
@@ -145,9 +133,13 @@
 	<div class="w-full">About</div>
 </a>
 <button
-	on:click={clearCache}
+	on:click={() =>
+		modalStore.trigger({
+			type: 'component',
+			component: { ref: CacheSettingsModal }
+		})}
 	class=" text-left flex items-center w-full h-16 hover:variant-glass-surface cursor-pointer"
 >
-	<IconWrapper class="h-full w-auto p-2" name="mdi:delete" />
-	<div class="w-full">Clear Cache</div>
+	<IconWrapper class="h-full w-auto p-2" name="mdi:files" />
+	<div class="w-full">Cache</div>
 </button>
