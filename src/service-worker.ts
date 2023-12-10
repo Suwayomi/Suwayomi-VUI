@@ -27,157 +27,146 @@ self.addEventListener('activate', (event) => {
 	event.waitUntil(deleteOldCaches());
 });
 
-self.addEventListener('fetch', (event) => {
-	const openCache = caches.open(CACHE);
+self.addEventListener('fetch', (event: FetchEvent) => {
 	const url = new URL(event.request.url);
 	if (url.protocol !== 'https:' && url.protocol !== 'http:') return;
 
 	if (event.request.method === 'POST' && event.request.url.includes('/api/graphql')) {
-		respondGQL();
+		respondGQL(event);
 		return;
 	}
 
 	if (event.request.method === 'GET') {
-		respondGET();
+		respondGET(event);
 		return;
 	}
-
-	function respondGQL() {
-		function respondGQL2() {
-			async function responce() {
-				const resp = await networkResponse;
-				if (resp.status === 401) {
-					const client = await self.clients.get(event.clientId);
-					if (client) {
-						client.postMessage({ type: 'auth401' });
-					}
-				}
-
-				//general Responce, network first
-				try {
-					return await networkResponse;
-				} catch (error) {
-					const cache = await openCache;
-					const queryId = await generateQueryId;
-					const cachedResult = queryId && (await cache.match(queryId));
-					if (cachedResult) {
-						return cachedResult;
-					}
-				}
-				return Response.json(
-					{
-						errors: [
-							{
-								message:
-									"You are offline (or the server is) and this data hasn't been cached, please try again.",
-								path: ['cache']
-							}
-						]
-					},
-					{ status: 200 }
-				);
-			}
-			async function cacheResponse() {
-				try {
-					if (url.protocol !== 'https:' && url.protocol !== 'http:') return;
-					const responce = await networkResponse;
-					const clone = responce.clone();
-					const queryId = await generateQueryId;
-					if (queryId) {
-						const cache = await openCache;
-						await cache.put(queryId, clone);
-					}
-				} catch {}
-			}
-
-			event.respondWith(responce());
-			event.waitUntil(cacheResponse());
-		}
-
-		const generateQueryId = event.request
-			.clone()
-			.json()
-			.then(async ({ query, operationName, variables }) => {
-				// skip mutation caching...
-				if (query.startsWith('mutation') || query.startsWith('subscription')) {
-					return null;
-				}
-
-				// Mocks a request since `caches` only works with requests.
-				return `https://GQL?Q=${JSON.stringify({ operationName, variables }).toString()}`;
-			});
-		const networkResponse = fetch(event.request);
-		respondGQL2();
-	}
-
-	function respondGET() {
-		const networkResponse = fetch(event.request);
-
-		let putToCache = async (clone: Response, cache: Cache) => {
-			await cache.put(event.request, clone);
-		};
-
-		// given event return appropriate Response
-		async function responce() {
-			// static assets/thumbnails, cache first
-			if (ASSETS.includes(url.pathname) || url.pathname.endsWith('thumbnail')) {
-				const cache = await openCache;
-				const cachedResponce = await cache.match(event.request);
-				if (cachedResponce) {
-					return cachedResponce;
-				}
-			}
-
-			// the main html page, cache first
-			if (
-				(url.protocol === 'https:' || url.protocol === 'http:') &&
-				!url.pathname.startsWith('/api') &&
-				!url.pathname.includes('vite') &&
-				!url.pathname.includes('svelte') &&
-				!url.pathname.includes('/src/') &&
-				!url.pathname.includes('.json') &&
-				!url.pathname.endsWith('.png') &&
-				!url.pathname.includes('/v1/')
-			) {
-				const cache = await openCache;
-				const cachedResponce = await cache.match('/');
-				putToCache = async (clone: Response, cache: Cache) => {
-					await cache.put('/', clone);
-				};
-				if (cachedResponce) {
-					return cachedResponce;
-				}
-			}
-
-			//general Responce, network first
-			try {
-				return await networkResponse;
-			} catch (error) {
-				const cache = await openCache;
-				const cachedResponce = await cache.match(url.pathname);
-				if (cachedResponce) {
-					return cachedResponce;
-				}
-			}
-			return new Response('not Found', { status: 404 });
-		}
-
-		//Caches the network response.
-		async function cacheResponse() {
-			try {
-				const responce = await networkResponse;
-				const clone = responce.clone();
-				const cache = await openCache;
-				await putToCache(clone, cache);
-			} catch {}
-		}
-
-		event.respondWith(responce());
-		event.waitUntil(cacheResponse());
-	}
-
 	return;
 });
+
+function respondGQL(event: FetchEvent) {
+	const generateQueryId = event.request
+		.clone()
+		.json()
+		.then(async ({ query, operationName, variables }) => {
+			// skip mutation caching...
+			if (query.startsWith('mutation') || query.startsWith('subscription')) {
+				return null;
+			}
+
+			// Mocks a request since `caches` only works with requests.
+			return `https://GQL?Q=${JSON.stringify({ operationName, variables }).toString()}`;
+		});
+	const url = new URL(event.request.url);
+	const openCache = caches.open(CACHE);
+	const networkResponse = fetch(event.request);
+
+	async function response() {
+		const resp = await networkResponse;
+		if (resp.status === 401) {
+			const client = await self.clients.get(event.clientId);
+			if (client) {
+				client.postMessage({ type: 'auth401' });
+			}
+		}
+
+		//general Response, network first
+		try {
+			return await networkResponse;
+		} catch (error) {
+			const cache = await openCache;
+			const queryId = await generateQueryId;
+			const cachedResult = queryId && (await cache.match(queryId));
+			if (cachedResult) {
+				return cachedResult;
+			}
+		}
+		return Response.json(
+			{
+				errors: [
+					{
+						message:
+							"You are offline (or the server is) and this data hasn't been cached, please try again.",
+						path: ['cache']
+					}
+				]
+			},
+			{ status: 200 }
+		);
+	}
+	async function cacheResponse() {
+		try {
+			if (url.protocol !== 'https:' && url.protocol !== 'http:') return;
+			const response = (await networkResponse).clone();
+			const queryId = await generateQueryId;
+			if (queryId) {
+				const cache = await openCache;
+				await cache.put(queryId, response);
+			}
+		} catch {}
+	}
+
+	event.respondWith(response());
+	event.waitUntil(cacheResponse());
+}
+
+function respondGET(event: FetchEvent) {
+	const url = new URL(event.request.url);
+	const openCache = caches.open(CACHE);
+	const networkResponse = fetch(event.request);
+
+	let putToCache = async (clone: Response, cache: Cache) => {
+		await cache.put(event.request, clone);
+	};
+
+	// given event return appropriate Response
+	async function response() {
+		const cache = await openCache;
+
+		// static assets/thumbnails, cache first
+		if (ASSETS.includes(url.pathname) || url.pathname.endsWith('thumbnail')) {
+			const cachedResponse = await cache.match(event.request);
+			if (cachedResponse) {
+				return cachedResponse;
+			}
+		}
+
+		// the main html page, cache first
+		const referer = event.request.headers.get('Referer');
+		if (referer === url.href) {
+			const cachedResponse = await cache.match('/');
+			putToCache = async (clone: Response, cache: Cache) => {
+				await cache.put('/', clone);
+			};
+			if (cachedResponse) {
+				return cachedResponse;
+			}
+		}
+
+		//general Response, network first
+		try {
+			return await networkResponse;
+		} catch (error) {
+			const cachedResponse = await cache.match(url.pathname);
+			if (cachedResponse) {
+				return cachedResponse;
+			}
+		}
+		return new Response('not Found', { status: 404 });
+	}
+
+	//Caches the network response.
+	async function cacheResponse() {
+		try {
+			const response = await networkResponse;
+			const clone = response.clone();
+			const cache = await openCache;
+			await putToCache(clone, cache);
+		} catch {}
+	}
+
+	event.respondWith(response());
+	event.waitUntil(cacheResponse());
+}
 
 self.addEventListener('message', (event) => {
 	if (event.data && event.data.type === 'SKIP_WAITING') {
@@ -195,5 +184,10 @@ async function deleteOldCaches() {
 }
 
 async function clearCache() {
-	await caches.delete(CACHE);
+	const cache = await caches.open(CACHE);
+	const keys = await cache.keys();
+	keys.forEach(async (key) => {
+		await cache.delete(key);
+	});
+	await cache.addAll(ASSETS);
 }
