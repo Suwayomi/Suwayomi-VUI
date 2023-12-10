@@ -20,7 +20,6 @@
 	import { enumKeys } from '$lib/util';
 	import MangaSettingsModal from './MangaSettingsModal.svelte';
 	import TrackingModal from './TrackingModal.svelte';
-	import { clearCachedImages } from '$lib/generated';
 	import CacheSettingsModal from './CacheSettingsModal.svelte';
 	const modalStore = getModalStore();
 	AppBarData('Settings');
