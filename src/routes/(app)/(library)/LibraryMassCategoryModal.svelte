@@ -54,61 +54,63 @@
 
 		mangaIds.forEach((id) => {
 			try {
-				const { manga } = {
-					...cache.readQuery<GetMangaQuery>({
+				const mangaData = structuredClone(
+					cache.readQuery<GetMangaQuery>({
 						query: GetMangaDoc,
 						variables: { id }
 					})
-				};
-				if (!manga) return;
-				manga.categories.nodes = selectedCategories.map((categoryId) => ({
+				);
+				if (!mangaData) return;
+				mangaData.manga.categories.nodes = selectedCategories.map((categoryId) => ({
 					__typename: 'CategoryType',
 					id: categoryId
 				}));
 				cache.writeQuery({
 					query: GetMangaDoc,
 					variables: { id },
-					data: { manga }
+					data: mangaData
 				});
 			} catch (error) {}
 		});
 
 		const currentCategoryId = $tab ?? 0;
-		const { category: currentCategory } = {
-			...cache.readQuery<CategoryQuery>({
+		const currentCategoryData = structuredClone(
+			cache.readQuery<CategoryQuery>({
 				query: CategoryDoc,
 				variables: { id: currentCategoryId }
 			})
-		};
-		if (!currentCategory) return;
-		const mangas = currentCategory.mangas.nodes.filter((manga) => mangaIds.includes(manga.id));
+		);
+		if (!currentCategoryData) return;
+		const mangas = currentCategoryData.category.mangas.nodes.filter((manga) =>
+			mangaIds.includes(manga.id)
+		);
 
 		$categories.data.categories.nodes.forEach(({ id }) => {
 			try {
-				const { category: oldCategoryData } = {
-					...cache.readQuery<CategoryQuery>({
+				const oldCategoryData = structuredClone(
+					cache.readQuery<CategoryQuery>({
 						query: CategoryDoc,
 						variables: { id }
 					})
-				};
+				);
 				if (!oldCategoryData) return;
 				if (defaultCategory.includes(id)) {
 					const mangasToAdd: CategoryQuery['category']['mangas']['nodes'] = [];
 					mangas.forEach((manga) => {
-						if (!oldCategoryData.mangas.nodes.find((m) => m.id === manga.id)) {
+						if (!oldCategoryData.category.mangas.nodes.find((m) => m.id === manga.id)) {
 							mangasToAdd.push(manga);
 						}
 					});
-					oldCategoryData.mangas.nodes.push(...mangasToAdd);
+					oldCategoryData.category.mangas.nodes.push(...mangasToAdd);
 				} else {
-					oldCategoryData.mangas.nodes = oldCategoryData.mangas.nodes.filter(
+					oldCategoryData.category.mangas.nodes = oldCategoryData.category.mangas.nodes.filter(
 						(m) => !mangaIds.includes(m.id)
 					);
 				}
 				cache.writeQuery({
 					query: CategoryDoc,
 					variables: { id },
-					data: { category: oldCategoryData }
+					data: oldCategoryData
 				});
 			} catch {}
 		});

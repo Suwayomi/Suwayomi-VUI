@@ -67,12 +67,12 @@
 						fetchPolicy: 'network-only'
 					});
 					fetchChapter.then((e) => {
-						const mangaData = {
-							...cache.readQuery<GetMangaQuery>({
+						const mangaData = structuredClone(
+							cache.readQuery<GetMangaQuery>({
 								query: GetMangaDoc,
 								variables: { id: MangaID }
 							})
-						};
+						);
 						if (!mangaData || !mangaData.manga) return;
 						const mga = mangaData.manga;
 
