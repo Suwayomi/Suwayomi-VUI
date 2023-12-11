@@ -31,17 +31,17 @@
 		{ data }: Omit<FetchResult<CreateCategoryMutation>, 'context'>
 	) {
 		if (!data) return;
-		const { categories } = structuredClone(
-			cache.readQuery({
+		const categoriesData = structuredClone(
+			cache.readQuery<CategoriesQuery>({
 				query: CategoriesDoc
 			})
-		) as CategoriesQuery;
-
-		categories.nodes.push(data.createCategory.category);
+		);
+		if (!categoriesData) return;
+		categoriesData.categories.nodes.push(data.createCategory.category);
 
 		cache.writeQuery({
 			query: CategoriesDoc,
-			data: { categories }
+			data: categoriesData
 		});
 	}
 

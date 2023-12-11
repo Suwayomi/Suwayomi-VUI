@@ -42,15 +42,16 @@
 	) {
 		if (!data) return;
 
-		const magna = { ...$manga.data.manga };
-
-		magna.chapters.totalCount = data.fetchChapters.chapters.length;
-		magna.chapters.nodes = data.fetchChapters.chapters;
+		const magna2 = {
+			...$manga.data.manga,
+			totalCount: data.fetchChapters.chapters.length,
+			nodes: data.fetchChapters.chapters
+		};
 
 		cache.writeQuery({
 			query: GetMangaDoc,
-			variables: { id: magna.id },
-			data: { manga: magna }
+			variables: { id: magna2.id },
+			data: { manga: magna2 }
 		});
 	}
 
@@ -60,23 +61,24 @@
 	) {
 		if (!data) return;
 
-		const magna = { ...$manga.data.manga };
-
-		magna.artist = data.fetchManga.manga.artist;
-		magna.author = data.fetchManga.manga.author;
-		magna.description = data.fetchManga.manga.description;
-		magna.downloadCount = data.fetchManga.manga.downloadCount;
-		magna.genre = data.fetchManga.manga.genre;
-		magna.id = data.fetchManga.manga.id;
-		magna.inLibrary = data.fetchManga.manga.inLibrary;
-		magna.lastFetchedAt = data.fetchManga.manga.lastFetchedAt;
-		magna.meta = data.fetchManga.manga.meta;
-		magna.realUrl = data.fetchManga.manga.realUrl;
-		magna.source = data.fetchManga.manga.source;
-		magna.status = data.fetchManga.manga.status;
-		magna.thumbnailUrl = data.fetchManga.manga.thumbnailUrl;
-		magna.title = data.fetchManga.manga.title;
-		magna.unreadCount = data.fetchManga.manga.unreadCount;
+		const magna = {
+			...$manga.data.manga,
+			artist: data.fetchManga.manga.artist,
+			author: data.fetchManga.manga.author,
+			description: data.fetchManga.manga.description,
+			downloadCount: data.fetchManga.manga.downloadCount,
+			genre: data.fetchManga.manga.genre,
+			id: data.fetchManga.manga.id,
+			inLibrary: data.fetchManga.manga.inLibrary,
+			lastFetchedAt: data.fetchManga.manga.lastFetchedAt,
+			meta: data.fetchManga.manga.meta,
+			realUrl: data.fetchManga.manga.realUrl,
+			source: data.fetchManga.manga.source,
+			status: data.fetchManga.manga.status,
+			thumbnailUrl: data.fetchManga.manga.thumbnailUrl,
+			title: data.fetchManga.manga.title,
+			unreadCount: data.fetchManga.manga.unreadCount
+		};
 
 		cache.writeQuery({
 			query: GetMangaDoc,

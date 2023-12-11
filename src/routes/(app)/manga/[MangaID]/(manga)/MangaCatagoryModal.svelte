@@ -88,38 +88,38 @@
 				nodes.forEach((newNode) => {
 					if (oldNodes.find((oldNode) => oldNode.id === newNode.id)) return;
 					try {
-						const { category } = structuredClone(
-							cache.readQuery({
+						const categoryData = structuredClone(
+							cache.readQuery<CategoryQuery>({
 								query: CategoryDoc,
 								variables: { id: newNode.id }
 							})
-						) as CategoryQuery;
-
-						category.mangas.nodes.push(currentManga);
+						);
+						if (!categoryData) return;
+						categoryData.category.mangas.nodes.push(currentManga);
 
 						cache.writeQuery({
 							query: CategoryDoc,
 							variables: { id: newNode.id },
-							data: { category }
+							data: categoryData
 						});
 					} catch {}
 				});
 				// add to 0 if now in default
 				if (nodes.length === 0 && oldNodes.length > 0) {
 					try {
-						const { category } = structuredClone(
-							cache.readQuery({
+						const categoryData = structuredClone(
+							cache.readQuery<CategoryQuery>({
 								query: CategoryDoc,
 								variables: { id: 0 }
 							})
-						) as CategoryQuery;
-
-						category.mangas.nodes.push(currentManga);
+						);
+						if (!categoryData) return;
+						categoryData.category.mangas.nodes.push(currentManga);
 
 						cache.writeQuery({
 							query: CategoryDoc,
 							variables: { id: 0 },
-							data: { category }
+							data: categoryData
 						});
 					} catch {}
 				}
@@ -129,19 +129,21 @@
 			oldNodes.forEach((oldNode) => {
 				if (nodes.find((newNode) => oldNode.id === newNode.id)) return;
 				try {
-					const { category } = structuredClone(
-						cache.readQuery({
+					const categoryData = structuredClone(
+						cache.readQuery<CategoryQuery>({
 							query: CategoryDoc,
 							variables: { id: oldNode.id }
 						})
-					) as CategoryQuery;
-
-					category.mangas.nodes = category.mangas.nodes.filter((e) => e.id !== manga.id);
+					);
+					if (!categoryData) return;
+					categoryData.category.mangas.nodes = categoryData.category.mangas.nodes.filter(
+						(e) => e.id !== manga.id
+					);
 
 					cache.writeQuery({
 						query: CategoryDoc,
 						variables: { id: oldNode.id },
-						data: { category }
+						data: categoryData
 					});
 				} catch {}
 			});
@@ -149,19 +151,21 @@
 			if (oldNodes.length === 0 && nodes.length > 0) {
 				//remove from default
 				try {
-					const { category } = structuredClone(
-						cache.readQuery({
+					const categoryData = structuredClone(
+						cache.readQuery<CategoryQuery>({
 							query: CategoryDoc,
 							variables: { id: 0 }
 						})
-					) as CategoryQuery;
-
-					category.mangas.nodes = category.mangas.nodes.filter((e) => e.id !== manga.id);
+					);
+					if (!categoryData) return;
+					categoryData.category.mangas.nodes = categoryData.category.mangas.nodes.filter(
+						(e) => e.id !== manga.id
+					);
 
 					cache.writeQuery({
 						query: CategoryDoc,
 						variables: { id: 0 },
-						data: { category }
+						data: categoryData
 					});
 				} catch {}
 			}
