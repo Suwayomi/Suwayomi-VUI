@@ -50,8 +50,6 @@
 			}
 		};
 
-		console.log(magna2.chapters, $manga.data.manga.chapters.nodes);
-
 		cache.writeQuery({
 			query: GetMangaDoc,
 			variables: { id: magna2.id },
