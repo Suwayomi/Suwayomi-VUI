@@ -44,9 +44,13 @@
 
 		const magna2 = {
 			...$manga.data.manga,
-			totalCount: data.fetchChapters.chapters.length,
-			nodes: data.fetchChapters.chapters
+			chapters: {
+				nodes: data.fetchChapters.chapters,
+				totalCount: data.fetchChapters.chapters.length
+			}
 		};
+
+		console.log(magna2.chapters, $manga.data.manga.chapters.nodes);
 
 		cache.writeQuery({
 			query: GetMangaDoc,
