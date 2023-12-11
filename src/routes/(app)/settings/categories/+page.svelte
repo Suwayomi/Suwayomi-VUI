@@ -53,17 +53,19 @@
 		{ data }: Omit<FetchResult<DeleteCategoryMutation>, 'context'>
 	) {
 		if (!data) return;
-		const { categories } = structuredClone(
-			cache.readQuery({
+		const categoriesData = structuredClone(
+			cache.readQuery<CategoriesQuery>({
 				query: CategoriesDoc
 			})
-		) as CategoriesQuery;
-
-		categories.nodes = categories.nodes.filter((e) => e.id !== data.deleteCategory.category?.id);
+		);
+		if (!categoriesData) return;
+		categoriesData.categories.nodes = categoriesData.categories.nodes.filter(
+			(e) => e.id !== data.deleteCategory.category?.id
+		);
 
 		cache.writeQuery({
 			query: CategoriesDoc,
-			data: { categories }
+			data: categoriesData
 		});
 	}
 

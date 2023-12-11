@@ -65,7 +65,7 @@
 	$: filteredSources, $query, onQueryChange();
 	function onQueryChange() {
 		const Query = $query;
-		alterableRaw = [...(filteredSources ?? [])];
+		alterableRaw = structuredClone(filteredSources);
 		queue.clear();
 		if (Query) {
 			filteredSources?.forEach(async (souc) => {
