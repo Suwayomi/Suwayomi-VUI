@@ -10,7 +10,7 @@ import type { PageLoad } from './$types';
 export const load: PageLoad = ({ params }) => {
 	const MangaID = parseInt(params.MangaID);
 	if (isNaN(MangaID)) {
-		throw error(400, 'MangaID should be a number');
+		error(400, 'MangaID should be a number');
 	}
 	return {
 		MangaID
