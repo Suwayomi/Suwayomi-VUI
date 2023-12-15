@@ -77,7 +77,7 @@
 		});
 	}
 
-	async function fetchchapters() {
+	async function fetchChapters() {
 		await ErrorHelpUntyped(
 			'Failed to refresh manga',
 			toastStore,
@@ -90,7 +90,7 @@
 	}
 
 	$: if ($manga.data.manga?.lastFetchedAt === '0') {
-		fetchchapters();
+		fetchChapters();
 	}
 
 	$: $manga.data.manga,
@@ -98,7 +98,7 @@
 			component: MangaActions,
 			props: {
 				manga: $manga.data.manga,
-				fetchchapters
+				fetchChapters
 			}
 		});
 </script>
