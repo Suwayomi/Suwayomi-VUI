@@ -65,22 +65,10 @@
 
 		const magna = {
 			...$manga.data.manga,
-			artist: data.fetchManga.manga.artist,
-			author: data.fetchManga.manga.author,
-			description: data.fetchManga.manga.description,
-			downloadCount: data.fetchManga.manga.downloadCount,
-			genre: data.fetchManga.manga.genre,
-			id: data.fetchManga.manga.id,
-			inLibrary: data.fetchManga.manga.inLibrary,
-			lastFetchedAt: data.fetchManga.manga.lastFetchedAt,
-			meta: data.fetchManga.manga.meta,
-			realUrl: data.fetchManga.manga.realUrl,
-			source: data.fetchManga.manga.source,
-			status: data.fetchManga.manga.status,
-			thumbnailUrl: data.fetchManga.manga.thumbnailUrl,
-			title: data.fetchManga.manga.title,
-			unreadCount: data.fetchManga.manga.unreadCount
+			...data.fetchManga.manga
 		};
+
+		console.log(magna, $manga.data.manga, data.fetchManga.manga);
 
 		cache.writeQuery({
 			query: GetMangaDoc,
@@ -101,11 +89,9 @@
 		);
 	}
 
-	manga.subscribe((e) => {
-		if (e.data.manga?.lastFetchedAt === '0') {
-			fetchchapters();
-		}
-	});
+	$: if ($manga.data.manga?.lastFetchedAt === '0') {
+		fetchchapters();
+	}
 
 	$: $manga.data.manga,
 		AppBarData($manga.data.manga?.title || 'Manga', {
