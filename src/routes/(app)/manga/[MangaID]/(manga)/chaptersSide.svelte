@@ -233,6 +233,14 @@
 	>
 		Error loading chapters: {JSON.stringify(manga.error)}
 	</div>
+{:else if manga.errors}
+	<div
+		bind:this={chapterSideElement}
+		id="chapterSideElement"
+		class="w-full md:w-1/2 md:overflow-y-auto max-h-full md:absolute md:right-0 md:bottom-0 md:top-0"
+	>
+		Errors loading chapters: {JSON.stringify(manga.errors)}
+	</div>
 {:else if sortedChapters}
 	<div
 		bind:this={chapterSideElement}

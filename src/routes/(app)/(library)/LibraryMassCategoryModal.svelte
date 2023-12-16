@@ -137,6 +137,8 @@
 			loading...
 		{:else if $categories.error}
 			Error loading categories: {JSON.stringify($categories.error)}
+		{:else if $categories.errors}
+			Errors loading categories: {JSON.stringify($categories.errors)}
 		{:else}
 			<h2 class="text-xl pl-4">Set categories</h2>
 			<div class="border-b border-t border-surface-700 p-4">

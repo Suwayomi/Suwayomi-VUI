@@ -36,7 +36,12 @@ export const cache = new InMemoryCache();
 const client = new ApolloClient({
 	cache,
 	assumeImmutableResults: true,
-	link: splitLink
+	link: splitLink,
+	defaultOptions: {
+		watchQuery: {
+			errorPolicy: 'all'
+		}
+	}
 });
 
 export default client;

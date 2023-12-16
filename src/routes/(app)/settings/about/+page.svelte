@@ -31,6 +31,8 @@
 	{/each}
 {:else if $about.error}
 	{JSON.stringify($about.error)}
+{:else if $about.errors}
+	{JSON.stringify($about.errors)}
 {:else if $about.data}
 	<div class="pt-2">
 		<div class="pl-4 py-2">
