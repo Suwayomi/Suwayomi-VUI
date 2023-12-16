@@ -10,16 +10,10 @@ import { GraphQLWsLink } from '@apollo/client/link/subscriptions';
 import { createClient } from 'graphql-ws';
 import { getMainDefinition } from '@apollo/client/utilities';
 
-const httpLink = createUploadLink({ uri: '/api/graphql' }) as unknown as ApolloLink;
-
-let splitLink: ApolloLink = httpLink;
-
-let url = 'http://tachidesk:4567';
-if (typeof window !== 'undefined') {
-	url = window.location.origin.replace(/^http/, 'ws') + '/api/graphql';
-}
+let splitLink: ApolloLink = createUploadLink({ uri: '/api/graphql' }) as unknown as ApolloLink;
 
 try {
+	const url = window.location.origin.replace(/^http/, 'ws') + '/api/graphql';
 	const wsLink = new GraphQLWsLink(
 		createClient({
 			url
@@ -31,7 +25,7 @@ try {
 			return definition.kind === 'OperationDefinition' && definition.operation === 'subscription';
 		},
 		wsLink,
-		httpLink
+		splitLink
 	);
 } catch (error) {
 	console.error(error);
@@ -44,4 +38,5 @@ const client = new ApolloClient({
 	assumeImmutableResults: true,
 	link: splitLink
 });
+
 export default client;
