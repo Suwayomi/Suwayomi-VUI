@@ -9,7 +9,7 @@
 <script lang="ts">
 	import MainAppRail from '$lib/components/MainAppRail.svelte';
 	import Toast from '$lib/components/Toast/Toast.svelte';
-	import { Meta, title as titleStore } from '$lib/simpleStores';
+	import { Meta, title as titleStore, toastStore } from '$lib/simpleStores';
 	import '../app.postcss';
 	// Floating UI for Popups
 	import { arrow, autoUpdate, computePosition, flip, offset, shift } from '@floating-ui/dom';
@@ -24,6 +24,7 @@
 	import ChapterDrawer from './(app)/manga/[MangaID]/chapter/[ChapterID]/chapterDrawer.svelte';
 	import { onMount } from 'svelte';
 	import QuickSearchModal from './QuickSearchModal.svelte';
+	import { getToastStore } from '$lib/components/Toast/stores';
 
 	storePopup.set({ computePosition, autoUpdate, flip, shift, offset, arrow });
 	initializeStores();
@@ -83,6 +84,9 @@
 			}
 		});
 	}
+
+	const toastStor = getToastStore();
+	$toastStore = toastStor;
 </script>
 
 <svelte:head>

@@ -8,7 +8,6 @@
 
 <script lang="ts">
 	import { AppBarData } from '$lib/MountTitleAction';
-	import { getToastStore } from '$lib/components/Toast/stores';
 	import {
 		GetMangaDoc,
 		fetchMangaChapters,
@@ -29,7 +28,6 @@
 
 	const mangaMeta = MangaMeta(data.MangaID);
 
-	const toastStore = getToastStore();
 	const manga = getManga({
 		variables: { id: data.MangaID },
 		fetchPolicy: 'cache-first',
@@ -80,7 +78,6 @@
 	async function fetchChapters() {
 		await ErrorHelpUntyped(
 			'Failed to refresh manga',
-			toastStore,
 			fetchMangaInfo({ variables: { id: data.MangaID }, update: fetchInfoUpdater }),
 			fetchMangaChapters({
 				variables: { id: data.MangaID },

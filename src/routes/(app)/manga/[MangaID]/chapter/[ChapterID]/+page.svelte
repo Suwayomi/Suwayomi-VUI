@@ -97,7 +97,7 @@
 			chapterID: currentChapterID,
 			pages: []
 		};
-		await ErrorHelp(`failed to load chapter ${obj.chapterID}`, pages, toastStore, (e) => {
+		await ErrorHelp(`failed to load chapter ${obj.chapterID}`, pages, (e) => {
 			if (!e.data) return;
 			obj.pages = e.data.fetchChapterPages.pages;
 			all.push(obj);
@@ -234,7 +234,7 @@
 					chapterID: tmp.id,
 					pages: []
 				};
-				await ErrorHelp(`failed to load chapter ${obj.chapterID}`, tttmp, toastStore, (e) => {
+				await ErrorHelp(`failed to load chapter ${obj.chapterID}`, tttmp, (e) => {
 					if (!e.data) return;
 					obj.pages = e.data.fetchChapterPages.pages;
 					all = [obj, ...all];
