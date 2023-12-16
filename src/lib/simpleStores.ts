@@ -168,7 +168,7 @@ function GlobalMeta() {
 		queryResult: ApolloQueryResult<MetasQuery>
 	): globalMeta {
 		const globalMetaCopy = { ...get(store) } as globalMeta;
-		const metas = queryResult.data.metas?.nodes || [];
+		const metas = queryResult.data?.metas?.nodes || [];
 		getObjectKeys(value).forEach(<T extends keyof globalMeta>(key: T) => {
 			const foundMeta = metas.find((node) => node.key.replace('VUI3_', '') === key);
 			if (foundMeta) {

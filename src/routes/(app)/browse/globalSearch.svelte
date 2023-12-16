@@ -36,7 +36,7 @@
 	$: AppBarData(title, {
 		component: GlobalSearchActions,
 		props: {
-			rawSources: $rawSources.data.sources,
+			rawSources: $rawSources.data?.sources,
 			langs
 		}
 	});
@@ -45,7 +45,7 @@
 
 	function getLanguages(extensions: SourcesQuery) {
 		if (extensions?.sources?.nodes !== undefined) {
-			return $rawSources.data.sources.nodes.reduce((accumulator, currentNode) => {
+			return $rawSources.data?.sources.nodes.reduce((accumulator, currentNode) => {
 				if (!accumulator.has(currentNode.lang)) {
 					return accumulator.add(currentNode.lang);
 				}
@@ -57,7 +57,7 @@
 
 	let alterableRaw: sourceWithManga[] | undefined = undefined;
 
-	$: filteredSources = $rawSources.data.sources?.nodes?.filter((source) => {
+	$: filteredSources = $rawSources.data?.sources?.nodes?.filter((source) => {
 		if (!$SpecificSourceFilter.has(source.id)) return false;
 		return true;
 	}) as SourcesQuery['sources']['nodes'] | undefined;

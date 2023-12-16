@@ -27,8 +27,8 @@
 		broken?: boolean;
 	}
 
-	function FigureOutSources(data: SourcesMigrationQuery) {
-		if (!data.sources || !data.mangas) return undefined;
+	function FigureOutSources(data: SourcesMigrationQuery | undefined) {
+		if (!data?.sources || !data.mangas) return undefined;
 		const tmpSources: sourceWithMangaCount[] = structuredClone(data.sources.nodes);
 		data.mangas.nodes.forEach((manga) => {
 			const tmp = tmpSources.find((source) => source.id === manga.sourceId);

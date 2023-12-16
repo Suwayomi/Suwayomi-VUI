@@ -80,7 +80,7 @@
 		});
 	}
 
-	$: filteredMangas = $mangas.data.category?.mangas.nodes.filter((ele) => {
+	$: filteredMangas = $mangas.data?.category?.mangas.nodes.filter((ele) => {
 		if (!ele.inLibrary) return false;
 		if ($Meta.ignoreFiltersWhenSearching) {
 			if (
@@ -151,6 +151,8 @@
 	</div>
 {:else if $categories.error}
 	Error loading categories: {JSON.stringify($categories.error)}
+{:else if $categories.errors}
+	Errors loading categories: {JSON.stringify($categories.errors)}
 {:else}
 	<TabGroup>
 		{#if orderedCategories}
@@ -178,9 +180,9 @@
 						</div>
 					{/each}
 				</div>
-			{:else if $mangas.error}
-				Error loading Mangas of category: {JSON.stringify($mangas.error)}
-			{:else}
+			{:else if $mangas.errors}
+				Error loading Mangas of category: {JSON.stringify($mangas.errors)}
+			{:else if sortedMangas}
 				<div class="yoy grid {gridValues} gap-2 m-2">
 					{#each sortedMangas as manga (manga.id)}
 						<IntersectionObserver

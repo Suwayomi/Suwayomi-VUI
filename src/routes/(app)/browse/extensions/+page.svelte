@@ -145,6 +145,8 @@
 				{/each}
 			{/each}
 		</div>
+	{:else if $extensions.errors}
+		{JSON.stringify($extensions.errors)}
 	{:else if $extensions.error}
 		{JSON.stringify($extensions.error)}
 	{:else if groupExtensions}
