@@ -26,7 +26,7 @@
 	async function MakeBacup() {
 		if (MakingBackup) return;
 		MakingBackup = true;
-		await ErrorHelp('failed to create backup', createBackup({}), toastStore, (e) => {
+		await ErrorHelp('failed to create backup', createBackup({}), (e) => {
 			if (e?.data) window.location.href = e.data.createBackup.url;
 		});
 		MakingBackup = false;
@@ -37,7 +37,6 @@
 		await ErrorHelp(
 			'failed to validate backup file',
 			AsyncvalidateBackup({ variables: { backup: files[0] } }),
-			toastStore,
 			(e) => {
 				if (e.data?.validateBackup.missingSources.length) {
 					toastStore.trigger({
@@ -88,7 +87,6 @@ ${e.data?.validateBackup.missingSources.map((ele) => ele.name).join(',')}
 		ErrorHelp(
 			'failed to start restoring backup',
 			restoreBackup({ variables: { backup: files[0] } }),
-			toastStore,
 			(e) => {
 				if (e.data?.restoreBackup.id)
 					restoreStat = restoreStatus({

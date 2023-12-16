@@ -24,6 +24,10 @@ import type { ApolloCache } from '@apollo/client';
 import { cache } from './apollo';
 import { getObjectEntries, getObjectKeys, type TriState } from './util';
 import type { ApolloQueryResult } from '@apollo/client';
+import type { ToastStore } from './components/Toast/types';
+
+export const toastStore = writable<ToastStore | null>();
+
 export type ComponentWritable<T> =
 	| {
 			component: ComponentType;

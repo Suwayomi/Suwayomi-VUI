@@ -7,7 +7,6 @@
 -->
 
 <script lang="ts">
-	import { getToastStore } from '$lib/components/Toast/stores';
 	import TriStateSlide from '$lib/components/TriStateSlide.svelte';
 	import {
 		categories as getCategories,
@@ -29,7 +28,6 @@
 
 	const tab = queryParam('tab', ssp.number(), { pushHistory: false });
 	const modalStore = getModalStore();
-	const toastStore = getToastStore();
 
 	let selectedCategories: number[] = [];
 
@@ -128,8 +126,7 @@
 					clear: true
 				},
 				update: (a, b) => updateMangasCategoriesUpdater(a, b, selectedCategories)
-			}),
-			toastStore
+			})
 		);
 	}
 </script>

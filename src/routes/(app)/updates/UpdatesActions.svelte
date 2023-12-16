@@ -11,12 +11,10 @@
 	import TooltipIconButton from '$lib/components/TooltipIconButton.svelte';
 	import { screens } from '$lib/screens';
 	import { popup } from '@skeletonlabs/skeleton';
-	import { getToastStore } from '$lib/components/Toast/stores';
 	import { HelpUpdateChapters, dlreabook } from '$lib/util';
 	import { selected, selectMode } from './UpdatesStores';
 	import Icon from '$lib/components/IconWrapper.svelte';
 	import IconWrapper from '$lib/components/IconWrapper.svelte';
-	const toastStore = getToastStore();
 	export let selectAll: () => void;
 	export let updateSelectedValues: (prop: dlreabook, is: boolean | undefined) => void;
 </script>
@@ -31,7 +29,7 @@
 				<TooltipIconButton
 					class="text-surface-700 dark:text-surface-300"
 					on:click={async () => {
-						await HelpUpdateChapters(dlreabook.download, selected, toastStore);
+						await HelpUpdateChapters(dlreabook.download, selected);
 					}}
 					tip="download/delete Selected"
 					name="mdi:download"
@@ -39,7 +37,7 @@
 				<TooltipIconButton
 					class="text-surface-700 dark:text-surface-300"
 					on:click={async () => {
-						const is = await HelpUpdateChapters(dlreabook.read, selected, toastStore);
+						const is = await HelpUpdateChapters(dlreabook.read, selected);
 						updateSelectedValues(dlreabook.read, is);
 					}}
 					tip="Read/Un-Read Selected"
@@ -48,7 +46,7 @@
 				<TooltipIconButton
 					class="text-surface-700 dark:text-surface-300"
 					on:click={async () => {
-						const is = await HelpUpdateChapters(dlreabook.bookmark, selected, toastStore);
+						const is = await HelpUpdateChapters(dlreabook.bookmark, selected);
 						updateSelectedValues(dlreabook.bookmark, is);
 					}}
 					tip="bookmark/Un-bookmark Selected"
@@ -80,7 +78,7 @@
 					<button
 						class="text-2xl hover:variant-glass-surface w-full rounded-t-lg p-4 flex items-center justify-start"
 						on:click={async () => {
-							await HelpUpdateChapters(dlreabook.download, selected, toastStore);
+							await HelpUpdateChapters(dlreabook.download, selected);
 						}}
 					>
 						<IconWrapper name="mdi:download" class="mr-2" />download / delete
@@ -88,7 +86,7 @@
 					<button
 						class="text-2xl hover:variant-glass-surface w-full p-4 flex items-center justify-start"
 						on:click={async () => {
-							const is = await HelpUpdateChapters(dlreabook.read, selected, toastStore);
+							const is = await HelpUpdateChapters(dlreabook.read, selected);
 							updateSelectedValues(dlreabook.read, is);
 						}}
 					>
@@ -97,7 +95,7 @@
 					<button
 						class="text-2xl hover:variant-glass-surface w-full p-4 flex items-center justify-start"
 						on:click={async () => {
-							const is = await HelpUpdateChapters(dlreabook.bookmark, selected, toastStore);
+							const is = await HelpUpdateChapters(dlreabook.bookmark, selected);
 							updateSelectedValues(dlreabook.bookmark, is);
 						}}
 					>

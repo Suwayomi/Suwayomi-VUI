@@ -19,14 +19,12 @@
 	} from '$lib/generated';
 	import type { ApolloCache, FetchResult } from '@apollo/client';
 	import { ErrorHelp } from '$lib/util';
-	import { getToastStore } from '$lib/components/Toast/stores';
 	import { ProgressRadial } from '@skeletonlabs/skeleton';
 	import { Meta } from '$lib/simpleStores';
 
 	export let scrollingElement: HTMLDivElement;
 	export let ext: ExtensionsQuery['extensions']['nodes'][0];
 
-	let toastStore = getToastStore();
 	let loadingUpdate = false;
 	let loadingInstall = false;
 	let loadingUnInstall = false;
@@ -92,8 +90,7 @@
 					update: (cache, data) => {
 						UpdateExtensionUpdater(cache, data, pkgName);
 					}
-				}),
-				toastStore
+				})
 			);
 		} finally {
 			loadingUnInstall = false;
@@ -110,8 +107,7 @@
 					update: (cache, data) => {
 						UpdateExtensionUpdater(cache, data, pkgName);
 					}
-				}),
-				toastStore
+				})
 			);
 		} finally {
 			loadingInstall = false;
@@ -128,8 +124,7 @@
 					update: (cache, data) => {
 						UpdateExtensionUpdater(cache, data, pkgName);
 					}
-				}),
-				toastStore
+				})
 			);
 		} finally {
 			loadingUpdate = false;

@@ -7,7 +7,6 @@
 -->
 
 <script lang="ts">
-	import { getToastStore } from '$lib/components/Toast/stores';
 	import TriStateSlide from '$lib/components/TriStateSlide.svelte';
 	import {
 		CategoryDoc,
@@ -26,8 +25,6 @@
 	export let manga: GetMangaQuery['manga'];
 
 	const modalStore = getModalStore();
-	const toastStore = getToastStore();
-
 	const getCategories = getGetCategories({});
 
 	$: categories = $getCategories.data.categories?.nodes
@@ -189,8 +186,7 @@
 						clear: true
 					},
 					update: updateMangaCategoriesUpdate
-				}),
-				toastStore
+				})
 			);
 		}
 	}
