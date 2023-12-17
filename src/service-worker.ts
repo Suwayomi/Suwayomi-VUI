@@ -27,7 +27,7 @@ self.addEventListener('activate', (event) => {
 	event.waitUntil(deleteOldCaches());
 });
 
-self.addEventListener('fetch', (event: FetchEvent) => {
+self.addEventListener('fetch', (event) => {
 	const url = new URL(event.request.url);
 	if (url.protocol !== 'https:' && url.protocol !== 'http:') return;
 
@@ -41,6 +41,15 @@ self.addEventListener('fetch', (event: FetchEvent) => {
 		return;
 	}
 	return;
+});
+
+self.addEventListener('message', (event) => {
+	if (event.data && event.data.type === 'SKIP_WAITING') {
+		self.skipWaiting();
+	}
+	if (event.data && event.data.type === 'clearCache') {
+		event.waitUntil(clearCache());
+	}
 });
 
 function respondGQL(event: FetchEvent) {
@@ -125,7 +134,7 @@ function respondGET(event: FetchEvent) {
 		const cache = await openCache;
 
 		// static assets/thumbnails, cache first
-		if (ASSETS.includes(url.pathname) || url.pathname.endsWith('thumbnail')) {
+		if (ASSETS.includes(url.pathname) || url.pathname.endsWith('thumbnail') || url.pathname.startsWith('/api/v1/extension/icon/')) {
 			const cachedResponse = await cache.match(event.request);
 			if (cachedResponse) {
 				return cachedResponse;
@@ -168,15 +177,6 @@ function respondGET(event: FetchEvent) {
 	event.respondWith(response());
 	event.waitUntil(cacheResponse());
 }
-
-self.addEventListener('message', (event) => {
-	if (event.data && event.data.type === 'SKIP_WAITING') {
-		self.skipWaiting();
-	}
-	if (event.data && event.data.type === 'clearCache') {
-		event.waitUntil(clearCache());
-	}
-});
 
 async function deleteOldCaches() {
 	for (const key of await caches.keys()) {
