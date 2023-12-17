@@ -59,7 +59,9 @@
 </script>
 
 <Nav let:scrollingElement>
-	{#if $sources.error}
+	{#if $sources.errors}
+		{JSON.stringify($sources.errors)}
+	{:else if $sources.error}
 		{JSON.stringify($sources.error)}
 	{:else if $sources.loading}
 		{#each new Array(5) as _}

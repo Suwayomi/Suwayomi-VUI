@@ -146,6 +146,8 @@
 	{/each}
 {:else if $cats.error}
 	{JSON.stringify($cats.error)}
+{:else if $cats.errors}
+	{JSON.stringify($cats.errors)}
 {:else if $cats.data.categories.nodes}
 	{#each $cats.data.categories.nodes
 		.filter((e) => e.id !== 0)

@@ -24,6 +24,10 @@ import type { ApolloCache } from '@apollo/client';
 import { cache } from './apollo';
 import { getObjectEntries, getObjectKeys, type TriState } from './util';
 import type { ApolloQueryResult } from '@apollo/client';
+import type { ToastStore } from './components/Toast/types';
+
+export const toastStore = writable<ToastStore | null>();
+
 export type ComponentWritable<T> =
 	| {
 			component: ComponentType;
@@ -164,7 +168,7 @@ function GlobalMeta() {
 		queryResult: ApolloQueryResult<MetasQuery>
 	): globalMeta {
 		const globalMetaCopy = { ...get(store) } as globalMeta;
-		const metas = queryResult.data.metas?.nodes || [];
+		const metas = queryResult.data?.metas?.nodes || [];
 		getObjectKeys(value).forEach(<T extends keyof globalMeta>(key: T) => {
 			const foundMeta = metas.find((node) => node.key.replace('VUI3_', '') === key);
 			if (foundMeta) {

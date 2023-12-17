@@ -8,7 +8,6 @@
 
 <script lang="ts">
 	import { AppBarData } from '$lib/MountTitleAction';
-	import { getToastStore } from '$lib/components/Toast/stores';
 	import {
 		ExtensionsDoc,
 		fetchExtensions,
@@ -30,7 +29,6 @@
 	import { Meta } from '$lib/simpleStores';
 	import type { ApolloCache, FetchResult } from '@apollo/client';
 
-	let toastStore = getToastStore();
 	const query = queryParam('q', ssp.string(), { pushHistory: false });
 	type TExtension = ExtensionsQuery['extensions']['nodes'][0];
 
@@ -53,8 +51,7 @@
 				'failed to fetch new extensions',
 				fetchExtensions({
 					update: fetchExtensionsUpdater
-				}),
-				toastStore
+				})
 			);
 		}
 		extensions = getExtensions({ variables: { isNsfw: $Meta.nsfw ? null : false } });
@@ -148,6 +145,8 @@
 				{/each}
 			{/each}
 		</div>
+	{:else if $extensions.errors}
+		{JSON.stringify($extensions.errors)}
 	{:else if $extensions.error}
 		{JSON.stringify($extensions.error)}
 	{:else if groupExtensions}

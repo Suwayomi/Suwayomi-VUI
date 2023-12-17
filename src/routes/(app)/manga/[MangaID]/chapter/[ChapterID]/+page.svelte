@@ -97,7 +97,7 @@
 			chapterID: currentChapterID,
 			pages: []
 		};
-		await ErrorHelp(`failed to load chapter ${obj.chapterID}`, pages, toastStore, (e) => {
+		await ErrorHelp(`failed to load chapter ${obj.chapterID}`, pages, (e) => {
 			if (!e.data) return;
 			obj.pages = e.data.fetchChapterPages.pages;
 			all.push(obj);
@@ -121,15 +121,19 @@
 		currentID: number,
 		_: unknown = undefined
 	): GetMangaQuery['manga']['chapters']['nodes'][0] | undefined {
-		const tmp = $manga.data.manga?.chapters.nodes.findIndex((e) => e.id === currentID);
-		return $manga.data.manga?.chapters.nodes[tmp + 1] ?? undefined;
+		const currentChapter = getChapterOfID(currentID);
+		return $manga.data.manga?.chapters.nodes.find((e) =>
+			currentChapter ? e.sourceOrder === currentChapter.sourceOrder + 1 : false
+		);
 	}
 
 	function getChapterBeforeID(
 		currentID: number
 	): GetMangaQuery['manga']['chapters']['nodes'][0] | undefined {
-		const tmp = $manga.data.manga?.chapters.nodes.findIndex((e) => e.id === currentID);
-		return $manga.data.manga?.chapters.nodes[tmp - 1] ?? undefined;
+		const currentChapter = getChapterOfID(currentID);
+		return $manga.data.manga?.chapters.nodes.find((e) =>
+			currentChapter ? e.sourceOrder === currentChapter.sourceOrder - 1 : false
+		);
 	}
 
 	$: if ($mangaMeta.ReaderMode === Mode.RTL) {
@@ -234,7 +238,7 @@
 					chapterID: tmp.id,
 					pages: []
 				};
-				await ErrorHelp(`failed to load chapter ${obj.chapterID}`, tttmp, toastStore, (e) => {
+				await ErrorHelp(`failed to load chapter ${obj.chapterID}`, tttmp, (e) => {
 					if (!e.data) return;
 					obj.pages = e.data.fetchChapterPages.pages;
 					all = [obj, ...all];

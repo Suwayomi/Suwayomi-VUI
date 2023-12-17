@@ -46,8 +46,7 @@
 			'Failed to delete mangas from library',
 			updateMangas({
 				variables
-			}),
-			toastStore
+			})
 		);
 	}
 
@@ -91,7 +90,6 @@
 		ErrorHelp(
 			'failed to get selected mangas non-downloaded chapters',
 			AsyncConditionalChaptersOfGivenManga({ variables: { in: selectedIds, isDownloaded: false } }),
-			toastStore,
 			(result) => {
 				if (!result?.data) return;
 				const tmp = result.data;
@@ -109,8 +107,7 @@
 	function downloadAllChapters(ids: number[]) {
 		ErrorHelp(
 			'failed to enqueue chapters Downloads',
-			enqueueChapterDownloads({ variables: { ids } }),
-			toastStore
+			enqueueChapterDownloads({ variables: { ids } })
 		);
 	}
 </script>

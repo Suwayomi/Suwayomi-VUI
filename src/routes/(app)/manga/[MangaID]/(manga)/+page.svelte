@@ -8,7 +8,6 @@
 
 <script lang="ts">
 	import { AppBarData } from '$lib/MountTitleAction';
-	import { getToastStore } from '$lib/components/Toast/stores';
 	import {
 		GetMangaDoc,
 		fetchMangaChapters,
@@ -29,7 +28,6 @@
 
 	const mangaMeta = MangaMeta(data.MangaID);
 
-	const toastStore = getToastStore();
 	const manga = getManga({
 		variables: { id: data.MangaID },
 		fetchPolicy: 'cache-first',
@@ -50,8 +48,6 @@
 			}
 		};
 
-		console.log(magna2.chapters, $manga.data.manga.chapters.nodes);
-
 		cache.writeQuery({
 			query: GetMangaDoc,
 			variables: { id: magna2.id },
@@ -67,22 +63,10 @@
 
 		const magna = {
 			...$manga.data.manga,
-			artist: data.fetchManga.manga.artist,
-			author: data.fetchManga.manga.author,
-			description: data.fetchManga.manga.description,
-			downloadCount: data.fetchManga.manga.downloadCount,
-			genre: data.fetchManga.manga.genre,
-			id: data.fetchManga.manga.id,
-			inLibrary: data.fetchManga.manga.inLibrary,
-			lastFetchedAt: data.fetchManga.manga.lastFetchedAt,
-			meta: data.fetchManga.manga.meta,
-			realUrl: data.fetchManga.manga.realUrl,
-			source: data.fetchManga.manga.source,
-			status: data.fetchManga.manga.status,
-			thumbnailUrl: data.fetchManga.manga.thumbnailUrl,
-			title: data.fetchManga.manga.title,
-			unreadCount: data.fetchManga.manga.unreadCount
+			...data.fetchManga.manga
 		};
+
+		console.log(magna, $manga.data.manga, data.fetchManga.manga);
 
 		cache.writeQuery({
 			query: GetMangaDoc,
@@ -91,10 +75,9 @@
 		});
 	}
 
-	async function fetchchapters() {
+	async function fetchChapters() {
 		await ErrorHelpUntyped(
 			'Failed to refresh manga',
-			toastStore,
 			fetchMangaInfo({ variables: { id: data.MangaID }, update: fetchInfoUpdater }),
 			fetchMangaChapters({
 				variables: { id: data.MangaID },
@@ -103,18 +86,16 @@
 		);
 	}
 
-	manga.subscribe((e) => {
-		if (e.data.manga?.lastFetchedAt === '0') {
-			fetchchapters();
-		}
-	});
+	$: if ($manga.data.manga?.lastFetchedAt === '0') {
+		fetchChapters();
+	}
 
 	$: $manga.data.manga,
 		AppBarData($manga.data.manga?.title || 'Manga', {
 			component: MangaActions,
 			props: {
 				manga: $manga.data.manga,
-				fetchchapters
+				fetchChapters
 			}
 		});
 </script>

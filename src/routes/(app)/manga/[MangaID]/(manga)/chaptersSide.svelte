@@ -12,7 +12,6 @@
 	import IconWrapper from '$lib/components/IconWrapper.svelte';
 	import IntersectionObserver from '$lib/components/IntersectionObserver.svelte';
 	import MediaQuery from '$lib/components/MediaQuery.svelte';
-	import { getToastStore } from '$lib/components/Toast/stores';
 	import TooltipIconButton from '$lib/components/TooltipIconButton.svelte';
 	import {
 		AsyncgetSingleChapter as AsyncGetSingleChapter,
@@ -42,7 +41,6 @@
 	export let mangaMeta: ReturnType<typeof MangaMeta>;
 
 	const modalStore = getModalStore();
-	const toastStore = getToastStore();
 	const downloads = downloadsOnChapters({
 		fetchPolicy: 'network-only'
 	});
@@ -228,7 +226,21 @@
 		{/each}
 	</div>
 {:else if manga.error}
-	Error loading chapters: {JSON.stringify(manga.error)}
+	<div
+		bind:this={chapterSideElement}
+		id="chapterSideElement"
+		class="w-full md:w-1/2 md:overflow-y-auto max-h-full md:absolute md:right-0 md:bottom-0 md:top-0"
+	>
+		Error loading chapters: {JSON.stringify(manga.error)}
+	</div>
+{:else if manga.errors}
+	<div
+		bind:this={chapterSideElement}
+		id="chapterSideElement"
+		class="w-full md:w-1/2 md:overflow-y-auto max-h-full md:absolute md:right-0 md:bottom-0 md:top-0"
+	>
+		Errors loading chapters: {JSON.stringify(manga.errors)}
+	</div>
 {:else if sortedChapters}
 	<div
 		bind:this={chapterSideElement}
@@ -249,7 +261,7 @@
 							<TooltipIconButton
 								class="text-surface-700 dark:text-surface-300"
 								on:click={() => {
-									HelpUpdateChapters(dlreabook.download, selected, toastStore);
+									HelpUpdateChapters(dlreabook.download, selected);
 								}}
 								tip="download/delete Selected"
 								name="mdi:download"
@@ -257,7 +269,7 @@
 							<TooltipIconButton
 								class="text-surface-700 dark:text-surface-300"
 								on:click={() => {
-									HelpUpdateChapters(dlreabook.read, selected, toastStore);
+									HelpUpdateChapters(dlreabook.read, selected);
 								}}
 								tip="Read/unRead Selected"
 								name="mdi:book-open-page-variant-outline"
@@ -265,7 +277,7 @@
 							<TooltipIconButton
 								class="text-surface-700 dark:text-surface-300"
 								on:click={() => {
-									HelpUpdateChapters(dlreabook.bookmark, selected, toastStore);
+									HelpUpdateChapters(dlreabook.bookmark, selected);
 								}}
 								tip="bookmark/unbookmark Selected"
 								name="mdi:bookmark"
@@ -295,7 +307,7 @@
 							<button
 								class="text-2xl hover:variant-glass-surface w-full rounded-t-lg p-4 flex items-center justify-start"
 								on:click={() => {
-									HelpUpdateChapters(dlreabook.download, selected, toastStore);
+									HelpUpdateChapters(dlreabook.download, selected);
 								}}
 							>
 								<IconWrapper name="mdi:download" class="mr-2" />download / delete
@@ -303,7 +315,7 @@
 							<button
 								class="text-2xl hover:variant-glass-surface w-full p-4 flex items-center justify-start"
 								on:click={() => {
-									HelpUpdateChapters(dlreabook.read, selected, toastStore);
+									HelpUpdateChapters(dlreabook.read, selected);
 								}}
 							>
 								<IconWrapper name="mdi:book-open-page-variant-outline" class="mr-2" />Un/Read
@@ -311,7 +323,7 @@
 							<button
 								class="text-2xl hover:variant-glass-surface w-full p-4 flex items-center justify-start"
 								on:click={() => {
-									HelpUpdateChapters(dlreabook.bookmark, selected, toastStore);
+									HelpUpdateChapters(dlreabook.bookmark, selected);
 								}}
 							>
 								<IconWrapper name="mdi:bookmark" class="mr-2" />Un/bookmark

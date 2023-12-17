@@ -4,10 +4,11 @@
 // License, v. 2.0. If a copy of the MPL was not distributed with this
 // file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
-import type { ToastStore } from '@skeletonlabs/skeleton';
 import { get, type Writable } from 'svelte/store';
 import { deleteDownloadedChapters, enqueueChapterDownloads, updateChapters } from './generated';
 import type { FetchResult } from '@apollo/client/link/core';
+
+import { toastStore } from './simpleStores';
 
 export type TriState = 0 | 1 | 2;
 
@@ -72,9 +73,17 @@ export enum dlreabook {
 	bookmark = 'bookmark'
 }
 
+function getToastStore() {
+	const toast = get(toastStore);
+	if (!toast) {
+		throw new Error('failed to get toastStore');
+	}
+	return toast;
+}
+
 export async function HelpUpdateChapters<
 	T extends { id: number; isBookmarked: boolean; isDownloaded: boolean; isRead: boolean }
->(param: dlreabook, selected: Writable<T[]>, toastStore: ToastStore) {
+>(param: dlreabook, selected: Writable<T[]>) {
 	const ids = get(selected)
 		.filter((e) => e)
 		.map((e) => e.id);
@@ -90,8 +99,7 @@ export async function HelpUpdateChapters<
 							isBookmarked: is,
 							ids
 						}
-					}),
-					toastStore
+					})
 				);
 				return is;
 			case dlreabook.download:
@@ -99,14 +107,12 @@ export async function HelpUpdateChapters<
 				if (is) {
 					ErrorHelp(
 						'failed to delete Downloaded chapters',
-						deleteDownloadedChapters({ variables: { ids } }),
-						toastStore
+						deleteDownloadedChapters({ variables: { ids } })
 					);
 				} else {
 					ErrorHelp(
 						'failed to enqueue chapters Downloads',
-						enqueueChapterDownloads({ variables: { ids } }),
-						toastStore
+						enqueueChapterDownloads({ variables: { ids } })
 					);
 				}
 				return !is;
@@ -119,8 +125,7 @@ export async function HelpUpdateChapters<
 							isRead: !get(selected).filter((e) => e)[0].isRead,
 							ids
 						}
-					}),
-					toastStore
+					})
 				);
 				return is;
 		}
@@ -129,41 +134,39 @@ export async function HelpUpdateChapters<
 export async function ErrorHelp<T>(
 	failMessage: string,
 	func: Promise<FetchResult<T>>,
-	toastStore: ToastStore,
 	callback: (result: FetchResult<T>) => void = () => {}
 ) {
 	try {
 		const response = await func;
 		if (response.errors) {
 			response.errors.forEach((e) => console.error(e));
-			errortoast(toastStore, failMessage, JSON.stringify(response.errors));
+			errortoast(failMessage, JSON.stringify(response.errors));
 			return;
 		}
 		callback(response);
 	} catch (error) {
 		console.error(error);
 		if (error instanceof Error) {
-			errortoast(toastStore, failMessage, error.message);
+			errortoast(failMessage, error.message);
 		}
 	}
 }
 
 export async function ErrorHelpUntyped(
 	failMessage: string,
-	toastStore: ToastStore,
 	...func: Promise<FetchResult<unknown>>[]
 ) {
 	try {
 		const results = await Promise.all(func);
 		results.forEach((e) => {
 			if (e.errors) {
-				errortoast(toastStore, failMessage, JSON.stringify(e.errors));
+				errortoast(failMessage, JSON.stringify(e.errors));
 			}
 		});
 	} catch (error) {
 		if (error instanceof Error) {
 			console.error(error);
-			errortoast(toastStore, failMessage, JSON.stringify(error));
+			errortoast(failMessage, JSON.stringify(error));
 		}
 	}
 }
@@ -171,8 +174,8 @@ export async function ErrorHelpUntyped(
 export const gridValues =
 	'xs:grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-7 2xl:grid-cols-8 3xl:grid-cols-10';
 
-export function errortoast(toastStore: ToastStore, failMessage: string, errorMessage: string) {
-	toastStore.trigger({
+export function errortoast(failMessage: string, errorMessage: string) {
+	getToastStore().trigger({
 		hoverable: true,
 		message: `
       <h3>${failMessage}</h3>

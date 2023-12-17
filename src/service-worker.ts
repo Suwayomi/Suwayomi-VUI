@@ -61,13 +61,15 @@ function respondGQL(event: FetchEvent) {
 	const networkResponse = fetch(event.request);
 
 	async function response() {
-		const resp = await networkResponse;
-		if (resp.status === 401) {
-			const client = await self.clients.get(event.clientId);
-			if (client) {
-				client.postMessage({ type: 'auth401' });
+		try {
+			const resp = await networkResponse;
+			if (resp.status === 401) {
+				const client = await self.clients.get(event.clientId);
+				if (client) {
+					client.postMessage({ type: 'auth401' });
+				}
 			}
-		}
+		} catch {}
 
 		//general Response, network first
 		try {

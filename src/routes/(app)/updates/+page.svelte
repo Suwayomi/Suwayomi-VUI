@@ -34,7 +34,7 @@
 	$: update = updates({ variables: { offset: $page } });
 	$: $update, updateall();
 	function updateall() {
-		if (!$update.data.chapters) return;
+		if (!$update.data?.chapters) return;
 		if (!$all) {
 			$all = $update.data.chapters;
 			return;
@@ -92,6 +92,8 @@
 			</div>
 		{/each}
 	</div>
+{:else if !$all && $update.errors}
+	{JSON.stringify($update.errors)}
 {:else if !$all && $update.error}
 	{JSON.stringify($update.error)}
 {:else if $all?.nodes}

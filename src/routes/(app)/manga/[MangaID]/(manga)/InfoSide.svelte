@@ -98,7 +98,17 @@
 		</div>
 	</div>
 {:else if $manga.error}
-	Error loading manga Info: {JSON.stringify($manga.error)}
+	<div
+		class="w-full md:w-1/2 space-y-8 p-4 md:overflow-y-auto max-h-full md:absolute md:left-0 md:bottom-0 md:top-0"
+	>
+		Error loading manga Info: {JSON.stringify($manga.error)}
+	</div>
+{:else if $manga.errors}
+	<div
+		class="w-full md:w-1/2 space-y-8 p-4 md:overflow-y-auto max-h-full md:absolute md:left-0 md:bottom-0 md:top-0"
+	>
+		Errors loading manga Info: {JSON.stringify($manga.errors)}
+	</div>
 {:else if $manga.data.manga}
 	<div
 		class="w-full md:w-1/2 space-y-8 p-4 md:overflow-y-auto max-h-full md:absolute md:left-0 md:bottom-0 md:top-0"
