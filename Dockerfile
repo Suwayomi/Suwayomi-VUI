@@ -4,7 +4,7 @@ WORKDIR /app
 COPY . .
 ARG version="DevBuild"
 RUN sed -i "s@BUILD_VERSION_PLACEHOLDER@${version}@" ./src/app.html
-RUN sed -i "s@TRACKING_PLACEHOLDER@Docker@" ./src/app.html
+RUN sed -i "s@TRACKING_PLACEHOLDER@docker@" ./src/app.html
 # build stage
 FROM develop-stage as build-stage
 RUN bun install
