@@ -1,5 +1,5 @@
 # develop stage
-FROM oven/bun:1.0.10-debian as develop-stage
+FROM oven/bun:1.0.18-alpine as develop-stage
 WORKDIR /app
 COPY . .
 ARG version="DevBuild"
