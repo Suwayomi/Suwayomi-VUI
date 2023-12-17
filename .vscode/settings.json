@@ -119,7 +119,7 @@
 		"editor.defaultFormatter": "esbenp.prettier-vscode"
 	},
 	"licenser.license": "MPLv2",
-	"licenser.projectName": "Suwayomi project",
+	"licenser.projectName": "tachidesk-VUI",
 	"licenser.author": "Contributors to the Suwayomi project",
 	"cSpell.words": ["iconify", "localsourcelang", "tipclass"],
 	"cSpell.ignoreRegExpList": ["\\s*import (.+\n?)+ from '.*';"]
