@@ -5,9 +5,23 @@
 // file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
 import { afterUpdate, onDestroy } from 'svelte';
-import { action as actionStore, title as titleStore, type ComponentWritable } from './simpleStores';
+import type { ComponentType, ComponentProps } from 'svelte';
+import { readonly, writable, type Writable } from 'svelte/store';
 
-export function AppBarData(title: string, action?: ComponentWritable<null>) {
+type actionStoreT<T extends ComponentType = ComponentType> = {
+	component: T;
+	props?: ComponentProps<InstanceType<T>>;
+};
+
+// i dont really like that i cant type this nicely, AppBarData is typed good though
+const actionStore: Writable<actionStoreT | null> = writable(null);
+
+const titleStore: Writable<string> = writable('loading...');
+
+export const action = readonly(actionStore);
+export const title = readonly(titleStore);
+
+export function AppBarData<T extends ComponentType>(title: string, action: actionStoreT<T>) {
 	afterUpdate(() => {
 		if (action) actionStore.set(action);
 		titleStore.set(title);

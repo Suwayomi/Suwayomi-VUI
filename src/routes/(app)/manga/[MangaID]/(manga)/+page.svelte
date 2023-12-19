@@ -65,9 +65,6 @@
 			...$manga.data.manga,
 			...data.fetchManga.manga
 		};
-
-		console.log(magna, $manga.data.manga, data.fetchManga.manga);
-
 		cache.writeQuery({
 			query: GetMangaDoc,
 			variables: { id: magna.id },
