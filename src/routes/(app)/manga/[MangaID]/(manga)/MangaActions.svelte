@@ -13,7 +13,7 @@
 	import { getModalStore } from '@skeletonlabs/skeleton';
 
 	export let manga: GetMangaQuery['manga'];
-	export let fetchchapters: () => Promise<void>;
+	export let fetchChapters: () => Promise<void>;
 
 	const modalStore = getModalStore();
 
@@ -21,7 +21,7 @@
 
 	async function refreshManga() {
 		loading = true;
-		await fetchchapters();
+		await fetchChapters();
 		loading = false;
 	}
 </script>

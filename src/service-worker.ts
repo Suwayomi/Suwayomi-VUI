@@ -134,7 +134,11 @@ function respondGET(event: FetchEvent) {
 		const cache = await openCache;
 
 		// static assets/thumbnails, cache first
-		if (ASSETS.includes(url.pathname) || url.pathname.endsWith('thumbnail') || url.pathname.startsWith('/api/v1/extension/icon/')) {
+		if (
+			ASSETS.includes(url.pathname) ||
+			url.pathname.endsWith('thumbnail') ||
+			url.pathname.startsWith('/api/v1/extension/icon/')
+		) {
 			const cachedResponse = await cache.match(event.request);
 			if (cachedResponse) {
 				return cachedResponse;
