@@ -4,9 +4,8 @@
 // License, v. 2.0. If a copy of the MPL was not distributed with this
 // file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
-import { get, writable, type Writable } from 'svelte/store';
+import { get, writable } from 'svelte/store';
 import { localStorageStore } from '@skeletonlabs/skeleton';
-import type { ComponentType } from 'svelte';
 import {
 	metas,
 	MetasDoc,
@@ -28,17 +27,7 @@ import type { ToastStore } from './components/Toast/types';
 
 export const toastStore = writable<ToastStore | null>();
 
-export type ComponentWritable<T> =
-	| {
-			component: ComponentType;
-			props?: Record<string, unknown>;
-	  }
-	| T;
-
 type Themes = (typeof presetConst)[number]['name'];
-
-export const title: Writable<string> = writable('loading...');
-export const action: Writable<ComponentWritable<null>> = writable(null);
 
 export enum ChapterTitle {
 	'Source Title' = 'Source Title',
