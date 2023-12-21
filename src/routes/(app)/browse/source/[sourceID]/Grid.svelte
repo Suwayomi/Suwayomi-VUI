@@ -79,10 +79,10 @@
 					all.hasNextPage = false;
 				}
 				mainerror = error;
-				errortoast(toastStore, 'failed to load page', error.message);
+				errortoast('failed to load page', error.message);
 				return;
 			}
-			errortoast(toastStore, 'failed to load page', JSON.stringify(error));
+			errortoast('failed to load page', JSON.stringify(error));
 		} finally {
 			isLoading = false;
 		}
