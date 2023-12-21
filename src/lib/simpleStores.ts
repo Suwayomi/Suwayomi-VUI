@@ -25,7 +25,7 @@ import { getObjectEntries, getObjectKeys, type TriState } from './util';
 import type { ApolloQueryResult } from '@apollo/client';
 import type { ToastStore } from './components/Toast/types';
 
-export const toastStore = writable<ToastStore | null>();
+export const toastStore = writable<ToastStore | null>(null);
 
 type Themes = (typeof presetConst)[number]['name'];
 
