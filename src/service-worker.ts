@@ -12,6 +12,7 @@ declare let self: ServiceWorkerGlobalScope;
 import { build, files, version } from '$service-worker';
 
 const CACHE = `cache-${version}`;
+const ImageCache = `cache-image`;
 const ASSETS = [...files, ...build];
 
 self.addEventListener('install', (event) => {
@@ -48,7 +49,15 @@ self.addEventListener('message', (event) => {
 		self.skipWaiting();
 	}
 	if (event.data && event.data.type === 'clearCache') {
-		event.waitUntil(clearCache());
+		event.waitUntil(
+			(async () => {
+				await clearCache();
+				await clearCache(ImageCache);
+			})()
+		);
+	}
+	if (event.data && event.data.type === 'clearCachedImages') {
+		event.waitUntil(clearCache(ImageCache));
 	}
 });
 
@@ -123,6 +132,7 @@ function respondGQL(event: FetchEvent) {
 function respondGET(event: FetchEvent) {
 	const url = new URL(event.request.url);
 	const openCache = caches.open(CACHE);
+	const openImageCache = caches.open(ImageCache);
 	const networkResponse = fetch(event.request);
 
 	let putToCache = async (clone: Response, cache: Cache) => {
@@ -131,15 +141,19 @@ function respondGET(event: FetchEvent) {
 
 	// given event return appropriate Response
 	async function response() {
-		const cache = await openCache;
-
-		// static assets/thumbnails, cache first
-		if (
-			ASSETS.includes(url.pathname) ||
-			url.pathname.endsWith('thumbnail') ||
-			url.pathname.startsWith('/api/v1/extension/icon/')
-		) {
+		// static assets, cache first
+		if (ASSETS.includes(url.pathname)) {
+			const cache = await openCache;
 			const cachedResponse = await cache.match(event.request);
+			if (cachedResponse) {
+				return cachedResponse;
+			}
+		}
+
+		// thumbnails, cache first
+		if (url.pathname.endsWith('thumbnail') || url.pathname.startsWith('/api/v1/extension/icon/')) {
+			const imageCache = await openImageCache;
+			const cachedResponse = await imageCache.match(event.request);
 			if (cachedResponse) {
 				return cachedResponse;
 			}
@@ -147,6 +161,7 @@ function respondGET(event: FetchEvent) {
 
 		// the main html page, cache first
 		if (event.request.referrer === url.href) {
+			const cache = await openCache;
 			const cachedResponse = await cache.match('/');
 			putToCache = async (clone: Response, cache: Cache) => {
 				await cache.put('/', clone);
@@ -160,6 +175,7 @@ function respondGET(event: FetchEvent) {
 		try {
 			return await networkResponse;
 		} catch (error) {
+			const cache = await openCache;
 			const cachedResponse = await cache.match(url.pathname);
 			if (cachedResponse) {
 				return cachedResponse;
@@ -173,8 +189,14 @@ function respondGET(event: FetchEvent) {
 		try {
 			const response = await networkResponse;
 			const clone = response.clone();
-			const cache = await openCache;
-			await putToCache(clone, cache);
+			let cache: Promise<Cache> = openCache;
+			if (
+				url.pathname.endsWith('thumbnail') ||
+				url.pathname.startsWith('/api/v1/extension/icon/')
+			) {
+				cache = openImageCache;
+			}
+			await putToCache(clone, await cache);
 		} catch {}
 	}
 
@@ -184,15 +206,17 @@ function respondGET(event: FetchEvent) {
 
 async function deleteOldCaches() {
 	for (const key of await caches.keys()) {
-		if (key !== CACHE) await caches.delete(key);
+		if (key !== CACHE && key !== ImageCache) await caches.delete(key);
 	}
 }
 
-async function clearCache() {
-	const cache = await caches.open(CACHE);
+async function clearCache(cacheName: string = CACHE) {
+	const cache = await caches.open(cacheName);
 	const keys = await cache.keys();
 	keys.forEach(async (key) => {
 		await cache.delete(key);
 	});
-	await cache.addAll(ASSETS);
+	if (cacheName === CACHE) {
+		await cache.addAll(ASSETS);
+	}
 }
