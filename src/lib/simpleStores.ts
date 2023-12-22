@@ -207,25 +207,25 @@ export const Meta = GlobalMeta();
 
 function MangaMetaUpdater(cache: ApolloCache<unknown>, key: string, value: string, id: number) {
 	const query = GetMangaDoc;
-	const { manga } = {
-		...cache.readQuery<GetMangaQuery>({
+	const mangaData = structuredClone(
+		cache.readQuery<GetMangaQuery>({
 			query,
 			variables: { id }
 		})
-	};
-	if (!manga) return;
+	);
+	if (!mangaData) return;
 
-	const updatedMeta = manga.meta.filter((e) => e.key !== key);
+	const updatedMeta = mangaData.manga.meta.filter((e) => e.key !== key);
 	updatedMeta.push({
 		key,
 		value
 	});
 
-	const updatedManga = { ...manga, meta: updatedMeta };
+	mangaData.manga.meta = updatedMeta;
 
 	cache.writeQuery({
 		query,
-		data: { manga: updatedManga },
+		data: mangaData,
 		variables: { id }
 	});
 }
