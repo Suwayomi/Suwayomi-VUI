@@ -7,7 +7,6 @@
 -->
 
 <script lang="ts">
-	import { getToastStore } from '$lib/components/Toast/stores';
 	import {
 		FetchSourceMangaType,
 		fetchSourceManga,
@@ -31,7 +30,6 @@
 	export let filters: InputMaybe<FilterChangeInput | FilterChangeInput[]> | undefined = undefined;
 
 	let sause = data.sause;
-	const toastStore = getToastStore();
 	const modalStore = getModalStore();
 
 	let page = 1;
