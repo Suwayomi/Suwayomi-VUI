@@ -7,7 +7,6 @@
 -->
 
 <script lang="ts">
-	import { getToastStore } from '$lib/components/Toast/stores';
 	import {
 		FetchSourceMangaType,
 		fetchSourceManga,
@@ -31,7 +30,6 @@
 	export let filters: InputMaybe<FilterChangeInput | FilterChangeInput[]> | undefined = undefined;
 
 	let sause = data.sause;
-	const toastStore = getToastStore();
 	const modalStore = getModalStore();
 
 	let page = 1;
@@ -79,10 +77,10 @@
 					all.hasNextPage = false;
 				}
 				mainerror = error;
-				errortoast(toastStore, 'failed to load page', error.message);
+				errortoast('failed to load page', error.message);
 				return;
 			}
-			errortoast(toastStore, 'failed to load page', JSON.stringify(error));
+			errortoast('failed to load page', JSON.stringify(error));
 		} finally {
 			isLoading = false;
 		}

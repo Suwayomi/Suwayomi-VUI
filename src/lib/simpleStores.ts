@@ -4,9 +4,8 @@
 // License, v. 2.0. If a copy of the MPL was not distributed with this
 // file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
-import { get, writable, type Writable } from 'svelte/store';
+import { get, writable } from 'svelte/store';
 import { localStorageStore } from '@skeletonlabs/skeleton';
-import type { ComponentType } from 'svelte';
 import {
 	metas,
 	MetasDoc,
@@ -26,19 +25,9 @@ import { getObjectEntries, getObjectKeys, type TriState } from './util';
 import type { ApolloQueryResult } from '@apollo/client';
 import type { ToastStore } from './components/Toast/types';
 
-export const toastStore = writable<ToastStore | null>();
-
-export type ComponentWritable<T> =
-	| {
-			component: ComponentType;
-			props?: Record<string, unknown>;
-	  }
-	| T;
+export const toastStore = writable<ToastStore | null>(null);
 
 type Themes = (typeof presetConst)[number]['name'];
-
-export const title: Writable<string> = writable('loading...');
-export const action: Writable<ComponentWritable<null>> = writable(null);
 
 export enum ChapterTitle {
 	'Source Title' = 'Source Title',
@@ -218,25 +207,25 @@ export const Meta = GlobalMeta();
 
 function MangaMetaUpdater(cache: ApolloCache<unknown>, key: string, value: string, id: number) {
 	const query = GetMangaDoc;
-	const { manga } = {
-		...cache.readQuery<GetMangaQuery>({
+	const mangaData = structuredClone(
+		cache.readQuery<GetMangaQuery>({
 			query,
 			variables: { id }
 		})
-	};
-	if (!manga) return;
+	);
+	if (!mangaData) return;
 
-	const updatedMeta = manga.meta.filter((e) => e.key !== key);
+	const updatedMeta = mangaData.manga.meta.filter((e) => e.key !== key);
 	updatedMeta.push({
 		key,
 		value
 	});
 
-	const updatedManga = { ...manga, meta: updatedMeta };
+	mangaData.manga.meta = updatedMeta;
 
 	cache.writeQuery({
 		query,
-		data: { manga: updatedManga },
+		data: mangaData,
 		variables: { id }
 	});
 }

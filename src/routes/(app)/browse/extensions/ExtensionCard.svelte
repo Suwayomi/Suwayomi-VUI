@@ -36,10 +36,12 @@
 	): void {
 		if (!data) return;
 		try {
-			const extensionsData = cache.readQuery<ExtensionsQuery>({
-				query: ExtensionsDoc,
-				variables: { isNsfw: $Meta.nsfw ? null : false }
-			});
+			const extensionsData = structuredClone(
+				cache.readQuery<ExtensionsQuery>({
+					query: ExtensionsDoc,
+					variables: { isNsfw: $Meta.nsfw ? null : false }
+				})
+			);
 			if (!extensionsData) throw new Error('failed to read extensions');
 			const { extensions } = extensionsData;
 
@@ -52,10 +54,12 @@
 				variables: { isNsfw: $Meta.nsfw ? null : false }
 			});
 		} catch {}
-		const sourcesData = cache.readQuery<SourcesQuery>({
-			query: SourcesDoc,
-			variables: { isNsfw: $Meta.nsfw ? null : false }
-		});
+		const sourcesData = structuredClone(
+			cache.readQuery<SourcesQuery>({
+				query: SourcesDoc,
+				variables: { isNsfw: $Meta.nsfw ? null : false }
+			})
+		);
 		if (!sourcesData) return;
 		const { sources } = sourcesData;
 
