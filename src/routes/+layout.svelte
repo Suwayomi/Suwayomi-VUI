@@ -9,7 +9,8 @@
 <script lang="ts">
 	import MainAppRail from '$lib/components/MainAppRail.svelte';
 	import Toast from '$lib/components/Toast/Toast.svelte';
-	import { Meta, title as titleStore, toastStore } from '$lib/simpleStores';
+	import { Meta, toastStore } from '$lib/simpleStores';
+	import { title as titleStore } from '$lib/MountTitleAction';
 	import '../app.postcss';
 	// Floating UI for Popups
 	import { arrow, autoUpdate, computePosition, flip, offset, shift } from '@floating-ui/dom';
@@ -85,8 +86,7 @@
 		});
 	}
 
-	const toastStor = getToastStore();
-	$toastStore = toastStor;
+	$toastStore = getToastStore();
 </script>
 
 <svelte:head>
