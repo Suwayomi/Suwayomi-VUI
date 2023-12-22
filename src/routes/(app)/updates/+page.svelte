@@ -36,7 +36,7 @@
 	function updateall() {
 		if (!$update.data?.chapters) return;
 		if (!$all) {
-			$all = $update.data.chapters;
+			$all = structuredClone($update.data.chapters);
 			return;
 		}
 		$all.nodes.push(...$update.data.chapters.nodes);
