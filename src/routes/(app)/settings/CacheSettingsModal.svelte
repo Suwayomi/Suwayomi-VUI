@@ -21,6 +21,17 @@
 			});
 		});
 	}
+
+	async function clearCachedImgs() {
+		navigator.serviceWorker.ready.then((registration) => {
+			if (!registration.active) {
+				return;
+			}
+			registration.active.postMessage({
+				type: 'clearCachedImages'
+			});
+		});
+	}
 </script>
 
 {#if $modalStore[0]}
@@ -37,7 +48,23 @@
 						<div>
 							<div class="text-xl">Clear Local Cache</div>
 							<div class="opacity-80">
-								<span class="flex-none">Clears the local on device cache</span>
+								<span class="flex-none">
+									Clears the local on device cache (all data including images)
+								</span>
+							</div>
+						</div>
+					</button>
+					<button
+						class="flex h-[76px] text-left w-full hover:variant-glass-surface py-2"
+						on:click={clearCachedImgs}
+					>
+						<IconWrapper class="h-full w-auto p-2" name="mdi:file-image-remove-outline" />
+						<div>
+							<div class="text-xl">Clear Local Image Cache</div>
+							<div class="opacity-80">
+								<span class="flex-none">
+									Clears the local on device image cache (just images not any other data)
+								</span>
 							</div>
 						</div>
 					</button>
