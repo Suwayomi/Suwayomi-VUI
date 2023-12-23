@@ -10,7 +10,7 @@
 	import UpdatesActions from './UpdatesActions.svelte';
 	import { AppBarData } from '$lib/MountTitleAction';
 	import { updates, type UpdatesQuery } from '$lib/generated';
-	import { writable, type Writable } from 'svelte/store';
+	import { writable } from 'svelte/store';
 	import MangaCard from '$lib/components/MangaCard.svelte';
 	import { longPress } from '$lib/press';
 	import { selectMode, selected } from './UpdatesStores';
@@ -30,7 +30,7 @@
 	});
 
 	let page = writable(0);
-	let all: Writable<UpdatesQuery['chapters'] | null> = writable(null);
+	let all = writable<UpdatesQuery['chapters'] | null>(null);
 	$: update = updates({ variables: { offset: $page } });
 	$: $update, updateall();
 	function updateall() {

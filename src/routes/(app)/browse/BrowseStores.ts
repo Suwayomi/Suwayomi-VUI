@@ -6,9 +6,8 @@
 
 import { localStorageStore } from '@skeletonlabs/skeleton';
 import * as devalue from 'devalue';
-import type { Writable } from 'svelte/store';
 
-export const langFilter: Writable<Set<string>> = localStorageStore(
+export const langFilter = localStorageStore<Set<string>>(
 	'Global/MigrateLangfilt',
 	new Set(['all']),
 	{
@@ -16,7 +15,7 @@ export const langFilter: Writable<Set<string>> = localStorageStore(
 	}
 );
 
-export const SpecificSourceFilter: Writable<Set<string>> = localStorageStore(
+export const SpecificSourceFilter = localStorageStore<Set<string>>(
 	'Global/MigrateSpecificSourceFilter',
 	new Set([]),
 	{

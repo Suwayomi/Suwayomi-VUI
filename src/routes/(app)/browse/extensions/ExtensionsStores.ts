@@ -6,13 +6,12 @@
 
 import { localStorageStore } from '@skeletonlabs/skeleton';
 import * as devalue from 'devalue';
-import type { Writable } from 'svelte/store';
 
-export const lastFetched: Writable<Date> = localStorageStore('lastFetchedExtensions', new Date(0), {
+export const lastFetched = localStorageStore<Date>('lastFetchedExtensions', new Date(0), {
 	serializer: devalue
 });
 
-export const langFilter: Writable<Set<string>> = localStorageStore(
+export const langFilter = localStorageStore<Set<string>>(
 	'ExtensionsLangFilter',
 	new Set(['all', 'en']),
 	{

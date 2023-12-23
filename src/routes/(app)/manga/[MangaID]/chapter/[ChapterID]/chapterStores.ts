@@ -5,8 +5,8 @@
 // file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
 // import { localStorageStore } from "@skeletonlabs/skeleton";
-import { writable, type Writable } from 'svelte/store';
+import { writable } from 'svelte/store';
 
 export const mangaTitle = writable('');
 export const chapterTitle = writable('');
-export const ViewNav: Writable<boolean> = writable(false);
+export const ViewNav = writable<boolean>(false);

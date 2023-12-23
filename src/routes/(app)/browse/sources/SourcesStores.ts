@@ -5,10 +5,9 @@
 // file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
 import { localStorageStore } from '@skeletonlabs/skeleton';
-import type { Writable } from 'svelte/store';
 import * as devalue from 'devalue';
 
-export const SourceLangFilter: Writable<Set<string>> = localStorageStore(
+export const SourceLangFilter = localStorageStore<Set<string>>(
 	'SourceLangFilter',
 	new Set(['all', 'localsourcelang']),
 	{
