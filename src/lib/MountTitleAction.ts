@@ -6,7 +6,7 @@
 
 import { onDestroy } from 'svelte';
 import type { ComponentType, ComponentProps } from 'svelte';
-import { readonly, writable, type Writable } from 'svelte/store';
+import { readonly, writable } from 'svelte/store';
 
 type actionStoreT<T extends ComponentType = ComponentType> = {
 	component: T;
@@ -14,9 +14,9 @@ type actionStoreT<T extends ComponentType = ComponentType> = {
 };
 
 // i dont really like that i cant type this nicely, AppBarData is typed good though
-const actionStore: Writable<actionStoreT | null> = writable(null);
+const actionStore = writable<actionStoreT | null>(null);
 
-const titleStore: Writable<string> = writable('loading...');
+const titleStore = writable<string>('Loading...');
 
 export const action = readonly(actionStore);
 export const title = readonly(titleStore);
