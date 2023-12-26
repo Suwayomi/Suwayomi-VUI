@@ -5,7 +5,7 @@
 // file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
 import type { FilterChangeInput } from '$lib/generated';
-import { type Writable, writable } from 'svelte/store';
+import { writable } from 'svelte/store';
 
-export const filters: Writable<FilterChangeInput[]> = writable([]);
+export const filters = writable<FilterChangeInput[]>([]);
 export const filtersSause = writable('');

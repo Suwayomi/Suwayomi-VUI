@@ -17,7 +17,7 @@
 	export let langs: Set<string>;
 	export let langFilter: Writable<Set<string>>;
 	export let rawSources: SourcesQuery['sources'] | undefined;
-	const tabSet: Writable<number> = localStorageStore('browseTabSet', 0);
+	const tabSet = localStorageStore<number>('browseTabSet', 0);
 
 	$: LangFilteredSources = rawSources?.nodes.filter((source) => {
 		if (!$langFilter.has(source.lang)) return false;
