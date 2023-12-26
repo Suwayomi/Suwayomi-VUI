@@ -962,6 +962,7 @@ export type Mutation = {
   installExternalExtension: InstallExternalExtensionPayload;
   reorderChapterDownload: ReorderChapterDownloadPayload;
   resetSettings: ResetSettingsPayload;
+  resetWebUIUpdateStatus: WebUiUpdateStatus;
   restoreBackup: RestoreBackupPayload;
   setCategoryMeta: SetCategoryMetaPayload;
   setChapterMeta: SetChapterMetaPayload;
@@ -2027,7 +2028,7 @@ export enum UpdateState {
   Downloading = 'DOWNLOADING',
   Error = 'ERROR',
   Finished = 'FINISHED',
-  Stopped = 'STOPPED'
+  Idle = 'IDLE'
 }
 
 export type UpdateStatus = {
@@ -2103,7 +2104,6 @@ export type WebUiUpdateInfo = {
   __typename?: 'WebUIUpdateInfo';
   channel: Scalars['String']['output'];
   tag: Scalars['String']['output'];
-  updateAvailable: Scalars['Boolean']['output'];
 };
 
 export type WebUiUpdateInput = {

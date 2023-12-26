@@ -379,6 +379,7 @@ type Mutation {
   updateExtension(input: UpdateExtensionInput!): UpdateExtensionPayload!
   updateExtensions(input: UpdateExtensionsInput!): UpdateExtensionsPayload!
   clearCachedImages(input: ClearCachedImagesInput!): ClearCachedImagesPayload!
+  resetWebUIUpdateStatus: WebUIUpdateStatus!
   updateWebUI(input: WebUIUpdateInput!): WebUIUpdatePayload!
   deleteMangaMeta(input: DeleteMangaMetaInput!): DeleteMangaMetaPayload!
   fetchManga(input: FetchMangaInput!): FetchMangaPayload!
@@ -694,7 +695,6 @@ type WebUIUpdateCheck {
 type WebUIUpdateInfo {
   channel: String!
   tag: String!
-  updateAvailable: Boolean!
 }
 type WebUIUpdatePayload {
   clientMutationId: String
@@ -847,7 +847,7 @@ enum TriState {
   EXCLUDE
 }
 enum UpdateState {
-  STOPPED
+  IDLE
   DOWNLOADING
   FINISHED
   ERROR
