@@ -103,7 +103,7 @@
 						class="aspect-cover card"
 					>
 						{#if intersecting}
-							<a href="source/{source.id}/popular">
+							<a href="/browse/source/{source.id}/popular">
 								<MangaCard
 									thumbnailUrl={source.iconUrl}
 									title={source.displayName}

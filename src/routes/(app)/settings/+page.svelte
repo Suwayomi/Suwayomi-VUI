@@ -26,7 +26,7 @@
 </script>
 
 <a
-	href="settings/categories"
+	href="/settings/categories"
 	class=" text-left flex items-center w-full h-16 hover:variant-glass-surface cursor-pointer"
 >
 	<IconWrapper class="h-full w-auto p-2" name="mdi:shape" />
@@ -126,7 +126,7 @@
 	</button>
 {/if}
 <a
-	href="settings/about"
+	href="/settings/about"
 	class=" text-left flex items-center w-full h-16 hover:variant-glass-surface cursor-pointer"
 >
 	<IconWrapper class="h-full w-auto p-2" name="mdi:information" />
