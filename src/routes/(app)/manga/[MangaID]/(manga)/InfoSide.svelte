@@ -161,7 +161,7 @@
 				</a>
 				{#if $manga.data.manga.inLibrary}
 					<a
-						href="../browse/migrate/manga/{$manga.data.manga.id}"
+						href="/browse/migrate/manga/{$manga.data.manga.id}"
 						class="btn variant-soft h-12 flex items-center px-2 sm:px-5"
 					>
 						<IconWrapper name="mdi:bird" class="w-auto h-full aspect-square" />

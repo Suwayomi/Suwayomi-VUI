@@ -75,7 +75,7 @@
 		>
 			{#if intersecting}
 				<a
-					href="manga/{dls.manga.id}"
+					href="/manga/{dls.manga.id}"
 					class="hover:variant-glass-surface px-4 h-full flex flex-nowrap items-center"
 				>
 					<div class="py-1 h-full aspect-cover mr-2">

@@ -110,7 +110,7 @@
 					<a
 						use:longPress
 						on:longPress={() => $selectMode || LongHandler()}
-						href="manga/{updat.manga.id}"
+						href="/manga/{updat.manga.id}"
 						on:click|stopPropagation={(e) => {
 							if (e.ctrlKey) return;
 							if ($selectMode) {

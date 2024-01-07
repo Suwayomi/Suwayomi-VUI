@@ -45,8 +45,9 @@
 			if (!extensionsData) throw new Error('failed to read extensions');
 			const { extensions } = extensionsData;
 
-			extensions.nodes[extensions.nodes.findIndex((extension) => extension.pkgName === pkgName)] =
-				data.updateExtension.extension;
+			if (data.updateExtension.extension)
+				extensions.nodes[extensions.nodes.findIndex((extension) => extension.pkgName === pkgName)] =
+					data.updateExtension.extension;
 
 			cache.writeQuery({
 				query: ExtensionsDoc,
@@ -63,7 +64,7 @@
 		if (!sourcesData) return;
 		const { sources } = sourcesData;
 
-		if (data.updateExtension.extension.isInstalled) {
+		if (data.updateExtension.extension?.isInstalled) {
 			const sourcesToPush: SourcesQuery['sources']['nodes'] = [];
 			data.updateExtension.extension.source.nodes.forEach((source) => {
 				if (!sources.nodes.find((existingSource) => existingSource.id === source.id)) {
@@ -156,6 +157,9 @@
 						<span class="text-red-600">18+</span>
 					{/if}
 				</div>
+				<div class="opacity-70 text-sm line-clamp-1 break-all">
+					{ext.repo}
+				</div>
 			</div>
 			<div class="flex flex-wrap flex-1 justify-end">
 				{#if ext.isObsolete}
@@ -166,7 +170,7 @@
 							Obsolete
 						{/if}
 					</button>
-				{:else}
+				{:else if ext.isInstalled}
 					{#if ext.hasUpdate}
 						<button on:click={() => Update(ext.pkgName)} class="btn variant-ghost-surface m-1">
 							{#if loadingUpdate}
@@ -176,23 +180,21 @@
 							{/if}
 						</button>
 					{/if}
-					{#if ext.isInstalled}
-						<button on:click={() => unInstall(ext.pkgName)} class="btn variant-ghost-surface m-1">
-							{#if loadingUnInstall}
-								Uninstalling<ProgressRadial class="ml-1 h-4 aspect-square w-auto" />
-							{:else}
-								Uninstall
-							{/if}
-						</button>
-					{:else}
-						<button on:click={() => Install(ext.pkgName)} class="btn variant-ghost-surface m-1">
-							{#if loadingInstall}
-								Installing<ProgressRadial class="ml-1 h-4 aspect-square w-auto" />
-							{:else}
-								Install
-							{/if}
-						</button>
-					{/if}
+					<button on:click={() => unInstall(ext.pkgName)} class="btn variant-ghost-surface m-1">
+						{#if loadingUnInstall}
+							Uninstalling<ProgressRadial class="ml-1 h-4 aspect-square w-auto" />
+						{:else}
+							Uninstall
+						{/if}
+					</button>
+				{:else}
+					<button on:click={() => Install(ext.pkgName)} class="btn variant-ghost-surface m-1">
+						{#if loadingInstall}
+							Installing<ProgressRadial class="ml-1 h-4 aspect-square w-auto" />
+						{:else}
+							Install
+						{/if}
+					</button>
 				{/if}
 			</div>
 		</div>
