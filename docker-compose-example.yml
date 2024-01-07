@@ -1,12 +1,12 @@
 version: '3.7'
 services:
   vui3:
-    image: ghcr.io/suwayomi/tachidesk-vui
+    image: ghcr.io/suwayomi/suwayomi-vui
     ports:
       - '9013:8080'
     environment:
-      - tachidesk=http://tachidesk:4567/
-      # will proxy the tachidesk server to the UI
+      - suwayomi=http://suwayomi:4567/
+      # will proxy the suwayomi server to the UI
       # if you plan on proxying it externally then this is unnecessary
     restart: unless-stopped
 
@@ -17,7 +17,7 @@ services:
     ports:
       - '5173:5173'
     environment:
-      - VITE_URL=http://tachidesk:4567
+      - VITE_URL=http://suwayomi:4567
     volumes:
       - '.:/app'
     command: /bin/sh -c "bun i && bun run dev --host"

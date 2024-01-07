@@ -6,5 +6,5 @@
 # sed -i "s@// CONFIGURATIONS_PLACEHOLDER@${JSON_STRING}@" /usr/share/nginx/html/index.html
 # exec "$@"
 
-TMP=$(echo "$tachidesk" | sed "s@/\$@@")
+TMP=$(echo "$suwayomi" | sed "s@/\$@@")
 sed -i "s@PLACEHOLDER@$TMP@" /etc/nginx/conf.d/default.conf

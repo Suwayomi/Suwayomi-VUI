@@ -5,7 +5,7 @@
 	"display": "standalone",
 	"background_color": "#1f2937",
 	"theme_color": "#1f2937",
-	"description": "Robonau's Svelte + skeleton Tachidesk UI",
+	"description": "Robonau's Svelte + skeleton Suwayomi UI",
 	"icons": [
 		{
 			"src": "pwa-64x64.png",
