@@ -368,7 +368,7 @@
 							class="card variant-glass p-2 flex items-center space-x-1 h-full relative"
 							use:longPress
 							on:longPress={() => $selectMode || LongHandler()}
-							href="{manga.data.manga.id}/chapter/{chapter.id}"
+							href="/manga/{manga.data.manga.id}/chapter/{chapter.id}"
 							on:click|stopPropagation={(e) => {
 								if (e.ctrlKey) return;
 								if ($selectMode) {
@@ -376,7 +376,7 @@
 									lastSelected = HelpDoSelect(chapter, e, lastSelected, sortedChapters, selected);
 								} else {
 									e.preventDefault();
-									goto(`${manga?.data.manga.id}/chapter/${chapter.id}`);
+									goto(`/manga/${manga?.data.manga.id}/chapter/${chapter.id}`);
 								}
 							}}
 						>
@@ -506,7 +506,7 @@
 	</div>
 	{#if sortedChapters.filter((e) => !e.isRead).length}
 		<a
-			href="{manga.data.manga.id}/chapter/{sortedChapters
+			href="/manga/{manga.data.manga.id}/chapter/{sortedChapters
 				.filter((e) => !e.isRead)
 				.toSorted((a, b) => (a.sourceOrder > b.sourceOrder ? 1 : -1))[0].id}"
 			class="btn variant-filled-primary hover:variant-glass-primary fixed bottom-2 right-16"

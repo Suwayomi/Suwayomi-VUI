@@ -56,7 +56,7 @@
 				<div class="aspect-cover">
 					{#if intersecting}
 						<a
-							href="../manga/{manga.id}"
+							href="/manga/{manga.id}"
 							class="hover:opacity-70 cursor-pointer h-full"
 							tabindex="-1"
 						>

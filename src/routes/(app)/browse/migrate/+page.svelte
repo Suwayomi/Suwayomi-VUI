@@ -84,7 +84,7 @@
 					class="h-24"
 				>
 					{#if intersecting}
-						<a href="migrate/source/{source.id}">
+						<a href="/migrate/source/{source.id}">
 							<div
 								class="card m-1 flex h-full items-center variant-glass hover:variant-glass-primary"
 							>
