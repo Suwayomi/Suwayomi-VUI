@@ -1,18 +1,18 @@
-# Tachidesk-VUI
+# Suwayomi-VUI
 
-Robonau's Svelte + skeleton tachidesk UI
+Robonau's Svelte + skeleton suwayomi UI
 
-| Discord                                                                                                                                                    | Github                                                                                                                                                                                                                                                                                                                                                                                                                                    | Docker                                                                                                                                                      |
-| ---------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| [![Discord](https://img.shields.io/discord/801021177333940224.svg?label=discord&labelColor=7289da&color=2c2f33&style=flat)](https://discord.gg/DDZdqZWaHA) | ![](https://img.shields.io/github/stars/Suwayomi/Tachidesk-VUI.svg) ![](https://img.shields.io/github/forks/Suwayomi/Tachidesk-VUI.svg) ![](https://img.shields.io/github/tag/Suwayomi/Tachidesk-VUI.svg) ![](https://img.shields.io/github/release/Suwayomi/Tachidesk-VUI.svg) ![](https://img.shields.io/github/issues/Suwayomi/Tachidesk-VUI.svg) ![](https://github.com/Suwayomi/Tachidesk-VUI/actions/workflows/build.yml/badge.svg) | ![](https://ghcr-badge.deta.dev/suwayomi/tachidesk-vui/latest_tag?filter=latest) ![](https://ghcr-badge.deta.dev/suwayomi/tachidesk-vui/size?filter=latest) |
+| Discord                                                                                                                                                    | Github                                                                                                                                                                                                                                                                                                                                                                                                                              | Docker                                                                                                                                                    |
+| ---------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| [![Discord](https://img.shields.io/discord/801021177333940224.svg?label=discord&labelColor=7289da&color=2c2f33&style=flat)](https://discord.gg/DDZdqZWaHA) | ![](https://img.shields.io/github/stars/Suwayomi/Suwayomi-VUI.svg) ![](https://img.shields.io/github/forks/Suwayomi/Suwayomi-VUI.svg) ![](https://img.shields.io/github/tag/Suwayomi/Suwayomi-VUI.svg) ![](https://img.shields.io/github/release/Suwayomi/Suwayomi-VUI.svg) ![](https://img.shields.io/github/issues/Suwayomi/Suwayomi-VUI.svg) ![](https://github.com/Suwayomi/Suwayomi-VUI/actions/workflows/build.yml/badge.svg) | ![](https://ghcr-badge.deta.dev/suwayomi/suwayomi-vui/latest_tag?filter=latest) ![](https://ghcr-badge.deta.dev/suwayomi/suwayomi-vui/size?filter=latest) |
 
 # How To Use:
 
 ## Web Server files
 
-The Tachidesk-VUI-Web.zip file in the release is for hosting the ui though `server.webUIFlavor = "Custom"` config and replacing the contents of the webUI folder in the Tachidesk data directory
+The Suwayomi-VUI-Web.zip file in the release is for hosting the ui though `server.webUIFlavor = "Custom"` config and replacing the contents of the webUI folder in the Suwayomi data directory
 
-The files could also be used in a stand alone webserver though you would have to redirect `/api` trafic to tachidesk server
+The files could also be used in a stand alone webserver though you would have to redirect `/api` trafic to suwayomi server
 
 ## Docker
 
@@ -22,12 +22,12 @@ The files could also be used in a stand alone webserver though you would have to
 version: '3.7'
 services:
   vui3:
-    image: ghcr.io/suwayomi/tachidesk-vui
+    image: ghcr.io/suwayomi/suwayomi-vui
     ports:
       - '9013:8080'
     environment:
-      - tachidesk=http://tachidesk:4567/
-      # will proxy the tachidesk server to the UI
+      - suwayomi=http://suwayomi:4567/
+      # will proxy the suwayomi server to the UI
       # if you plan on proxying it externally then this is unnecessary
     restart: unless-stopped
 ```
