@@ -226,6 +226,7 @@ type ExtensionType {
   lang: String!
   name: String!
   pkgName: String!
+  repo: String
   versionCode: Int!
   versionName: String!
   source: SourceNodeList!
@@ -318,6 +319,7 @@ type MangaType {
   status: MangaStatus!
   thumbnailUrl: String
   title: String!
+  updateStrategy: UpdateStrategy!
   url: String!
   age: LongString
   categories: CategoryNodeList!
@@ -424,6 +426,7 @@ type PartialSettingsType implements Settings {
   excludeEntryWithUnreadChapters: Boolean
   excludeNotStarted: Boolean
   excludeUnreadChapters: Boolean
+  extensionRepos: [String!]
   globalUpdateInterval: Float
   gqlDebugLogsEnabled: Boolean
   initialOpenInBrowserEnabled: Boolean
@@ -525,6 +528,7 @@ type SettingsType implements Settings {
   excludeEntryWithUnreadChapters: Boolean!
   excludeNotStarted: Boolean!
   excludeUnreadChapters: Boolean!
+  extensionRepos: [String!]!
   globalUpdateInterval: Float!
   gqlDebugLogsEnabled: Boolean!
   initialOpenInBrowserEnabled: Boolean!
@@ -630,7 +634,7 @@ type UpdateChaptersPayload {
 }
 type UpdateExtensionPayload {
   clientMutationId: String
-  extension: ExtensionType!
+  extension: ExtensionType
 }
 type UpdateExtensionsPayload {
   clientMutationId: String
@@ -743,6 +747,7 @@ interface Settings {
   excludeEntryWithUnreadChapters: Boolean
   excludeNotStarted: Boolean
   excludeUnreadChapters: Boolean
+  extensionRepos: [String!]
   globalUpdateInterval: Float
   gqlDebugLogsEnabled: Boolean
   initialOpenInBrowserEnabled: Boolean
@@ -851,6 +856,10 @@ enum UpdateState {
   DOWNLOADING
   FINISHED
   ERROR
+}
+enum UpdateStrategy {
+  ALWAYS_UPDATE
+  ONLY_FETCH_ONCE
 }
 enum WebUIChannel {
   BUNDLED
@@ -1026,6 +1035,7 @@ input ExtensionConditionInput {
   lang: String
   name: String
   pkgName: String
+  repo: String
   versionCode: Int
   versionName: String
 }
@@ -1042,6 +1052,7 @@ input ExtensionFilterInput {
   not: ExtensionFilterInput
   or: [ExtensionFilterInput!]
   pkgName: StringFilterInput
+  repo: StringFilterInput
   versionCode: IntFilterInput
   versionName: StringFilterInput
 }
@@ -1212,6 +1223,7 @@ input PartialSettingsTypeInput {
   excludeEntryWithUnreadChapters: Boolean
   excludeNotStarted: Boolean
   excludeUnreadChapters: Boolean
+  extensionRepos: [String!]
   globalUpdateInterval: Float
   gqlDebugLogsEnabled: Boolean
   initialOpenInBrowserEnabled: Boolean

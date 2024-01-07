@@ -18,7 +18,7 @@
 		>
 			<div class="py-2 flex space-x-2">
 				<a
-					href="sources"
+					href="/browse/sources"
 					class="btn
     {$page.url.pathname.includes('/browse/sources')
 						? 'variant-filled-secondary'
@@ -27,7 +27,7 @@
 					Sources
 				</a>
 				<a
-					href="extensions"
+					href="/browse/extensions"
 					class="btn
     {$page.url.pathname.includes('/browse/extensions')
 						? 'variant-filled-secondary'
@@ -36,7 +36,7 @@
 					Extensions
 				</a>
 				<a
-					href="migrate"
+					href="/browse/migrate"
 					class="btn
     {$page.url.pathname.includes('/browse/migrate')
 						? 'variant-filled-secondary'
@@ -45,7 +45,7 @@
 					Migrate
 				</a>
 				<a
-					href="globalsearch"
+					href="/browse/globalsearch"
 					class="btn
     {$page.url.pathname.includes('/browse/globalsearch')
 						? 'variant-filled-secondary'

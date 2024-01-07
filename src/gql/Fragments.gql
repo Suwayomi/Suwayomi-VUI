@@ -62,6 +62,7 @@ fragment SourceTypeFragment on SourceType {
 
 fragment ExtensionTypeFragment on ExtensionType {
 	name
+	repo
 	versionName
 	pkgName
 	lang
