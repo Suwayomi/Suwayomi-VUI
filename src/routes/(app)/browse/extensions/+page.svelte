@@ -46,15 +46,16 @@
 	checkIfFetchNewExtensions();
 
 	async function checkIfFetchNewExtensions() {
-		if ($lastFetched.valueOf() + 8.64e7 < Date.now().valueOf()) {
-			await ErrorHelp(
-				'failed to fetch new extensions',
-				fetchExtensions({
-					update: fetchExtensionsUpdater
-				})
-			);
-		}
-		extensions = getExtensions({ variables: { isNsfw: $Meta.nsfw ? null : false } });
+		await ErrorHelp(
+			'failed to fetch new extensions',
+			fetchExtensions({
+				update: fetchExtensionsUpdater
+			})
+		);
+		extensions = getExtensions({
+			variables: { isNsfw: $Meta.nsfw ? null : false },
+			fetchPolicy: 'cache-first'
+		});
 	}
 
 	function fetchExtensionsUpdater(

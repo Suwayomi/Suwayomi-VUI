@@ -521,6 +521,7 @@ export type ExtensionConditionInput = {
   lang?: InputMaybe<Scalars['String']['input']>;
   name?: InputMaybe<Scalars['String']['input']>;
   pkgName?: InputMaybe<Scalars['String']['input']>;
+  repo?: InputMaybe<Scalars['String']['input']>;
   versionCode?: InputMaybe<Scalars['Int']['input']>;
   versionName?: InputMaybe<Scalars['String']['input']>;
 };
@@ -544,6 +545,7 @@ export type ExtensionFilterInput = {
   not?: InputMaybe<ExtensionFilterInput>;
   or?: InputMaybe<Array<ExtensionFilterInput>>;
   pkgName?: InputMaybe<StringFilterInput>;
+  repo?: InputMaybe<StringFilterInput>;
   versionCode?: InputMaybe<IntFilterInput>;
   versionName?: InputMaybe<StringFilterInput>;
 };
@@ -573,6 +575,7 @@ export type ExtensionType = {
   lang: Scalars['String']['output'];
   name: Scalars['String']['output'];
   pkgName: Scalars['String']['output'];
+  repo?: Maybe<Scalars['String']['output']>;
   source: SourceNodeList;
   versionCode: Scalars['Int']['output'];
   versionName: Scalars['String']['output'];
@@ -890,6 +893,7 @@ export type MangaType = {
   thumbnailUrl?: Maybe<Scalars['String']['output']>;
   title: Scalars['String']['output'];
   unreadCount: Scalars['Int']['output'];
+  updateStrategy: UpdateStrategy;
   url: Scalars['String']['output'];
 };
 
@@ -1273,6 +1277,7 @@ export type PartialSettingsType = Settings & {
   excludeEntryWithUnreadChapters?: Maybe<Scalars['Boolean']['output']>;
   excludeNotStarted?: Maybe<Scalars['Boolean']['output']>;
   excludeUnreadChapters?: Maybe<Scalars['Boolean']['output']>;
+  extensionRepos?: Maybe<Array<Scalars['String']['output']>>;
   globalUpdateInterval?: Maybe<Scalars['Float']['output']>;
   gqlDebugLogsEnabled?: Maybe<Scalars['Boolean']['output']>;
   initialOpenInBrowserEnabled?: Maybe<Scalars['Boolean']['output']>;
@@ -1309,6 +1314,7 @@ export type PartialSettingsTypeInput = {
   excludeEntryWithUnreadChapters?: InputMaybe<Scalars['Boolean']['input']>;
   excludeNotStarted?: InputMaybe<Scalars['Boolean']['input']>;
   excludeUnreadChapters?: InputMaybe<Scalars['Boolean']['input']>;
+  extensionRepos?: InputMaybe<Array<Scalars['String']['input']>>;
   globalUpdateInterval?: InputMaybe<Scalars['Float']['input']>;
   gqlDebugLogsEnabled?: InputMaybe<Scalars['Boolean']['input']>;
   initialOpenInBrowserEnabled?: InputMaybe<Scalars['Boolean']['input']>;
@@ -1593,6 +1599,7 @@ export type Settings = {
   excludeEntryWithUnreadChapters?: Maybe<Scalars['Boolean']['output']>;
   excludeNotStarted?: Maybe<Scalars['Boolean']['output']>;
   excludeUnreadChapters?: Maybe<Scalars['Boolean']['output']>;
+  extensionRepos?: Maybe<Array<Scalars['String']['output']>>;
   globalUpdateInterval?: Maybe<Scalars['Float']['output']>;
   gqlDebugLogsEnabled?: Maybe<Scalars['Boolean']['output']>;
   initialOpenInBrowserEnabled?: Maybe<Scalars['Boolean']['output']>;
@@ -1630,6 +1637,7 @@ export type SettingsType = Settings & {
   excludeEntryWithUnreadChapters: Scalars['Boolean']['output'];
   excludeNotStarted: Scalars['Boolean']['output'];
   excludeUnreadChapters: Scalars['Boolean']['output'];
+  extensionRepos: Array<Scalars['String']['output']>;
   globalUpdateInterval: Scalars['Float']['output'];
   gqlDebugLogsEnabled: Scalars['Boolean']['output'];
   initialOpenInBrowserEnabled: Scalars['Boolean']['output'];
@@ -1928,7 +1936,7 @@ export type UpdateExtensionPatchInput = {
 export type UpdateExtensionPayload = {
   __typename?: 'UpdateExtensionPayload';
   clientMutationId?: Maybe<Scalars['String']['output']>;
-  extension: ExtensionType;
+  extension?: Maybe<ExtensionType>;
 };
 
 export type UpdateExtensionsInput = {
@@ -2062,6 +2070,11 @@ export type UpdateStopPayload = {
   clientMutationId?: Maybe<Scalars['String']['output']>;
 };
 
+export enum UpdateStrategy {
+  AlwaysUpdate = 'ALWAYS_UPDATE',
+  OnlyFetchOnce = 'ONLY_FETCH_ONCE'
+}
+
 export type ValidateBackupInput = {
   backup: Scalars['Upload']['input'];
 };
@@ -2129,14 +2142,14 @@ export type MangaTypeFragmentFragment = { __typename?: 'MangaType', artist?: str
 
 export type SourceTypeFragmentFragment = { __typename?: 'SourceType', id: any, displayName: string, iconUrl: string, lang: string };
 
-export type ExtensionTypeFragmentFragment = { __typename?: 'ExtensionType', name: string, versionName: string, pkgName: string, lang: string, iconUrl: string, isNsfw: boolean, isInstalled: boolean, isObsolete: boolean, hasUpdate: boolean };
+export type ExtensionTypeFragmentFragment = { __typename?: 'ExtensionType', name: string, repo?: string | null, versionName: string, pkgName: string, lang: string, iconUrl: string, isNsfw: boolean, isInstalled: boolean, isObsolete: boolean, hasUpdate: boolean };
 
 export type CategoryTypeFragmentFragment = { __typename?: 'CategoryType', id: number, default: boolean, order: number, name: string, mangas: { __typename?: 'MangaNodeList', totalCount: number } };
 
 export type FetchExtensionsMutationVariables = Exact<{ [key: string]: never; }>;
 
 
-export type FetchExtensionsMutation = { __typename?: 'Mutation', fetchExtensions: { __typename?: 'FetchExtensionsPayload', extensions: Array<{ __typename?: 'ExtensionType', name: string, versionName: string, pkgName: string, lang: string, iconUrl: string, isNsfw: boolean, isInstalled: boolean, isObsolete: boolean, hasUpdate: boolean }> } };
+export type FetchExtensionsMutation = { __typename?: 'Mutation', fetchExtensions: { __typename?: 'FetchExtensionsPayload', extensions: Array<{ __typename?: 'ExtensionType', name: string, repo?: string | null, versionName: string, pkgName: string, lang: string, iconUrl: string, isNsfw: boolean, isInstalled: boolean, isObsolete: boolean, hasUpdate: boolean }> } };
 
 export type UpdateChaptersMutationVariables = Exact<{
   ids: Array<Scalars['Int']['input']> | Scalars['Int']['input'];
@@ -2219,7 +2232,7 @@ export type UpdateExtensionMutationVariables = Exact<{
 }>;
 
 
-export type UpdateExtensionMutation = { __typename?: 'Mutation', updateExtension: { __typename?: 'UpdateExtensionPayload', extension: { __typename?: 'ExtensionType', name: string, versionName: string, pkgName: string, lang: string, iconUrl: string, isNsfw: boolean, isInstalled: boolean, isObsolete: boolean, hasUpdate: boolean, source: { __typename?: 'SourceNodeList', nodes: Array<{ __typename?: 'SourceType', isNsfw: boolean, id: any, displayName: string, iconUrl: string, lang: string, extension: { __typename?: 'ExtensionType', pkgName: string } }> } } } };
+export type UpdateExtensionMutation = { __typename?: 'Mutation', updateExtension: { __typename?: 'UpdateExtensionPayload', extension?: { __typename?: 'ExtensionType', name: string, repo?: string | null, versionName: string, pkgName: string, lang: string, iconUrl: string, isNsfw: boolean, isInstalled: boolean, isObsolete: boolean, hasUpdate: boolean, source: { __typename?: 'SourceNodeList', nodes: Array<{ __typename?: 'SourceType', isNsfw: boolean, id: any, displayName: string, iconUrl: string, lang: string, extension: { __typename?: 'ExtensionType', pkgName: string } }> } } | null } };
 
 export type FetchSourceMangaMutationVariables = Exact<{
   page: Scalars['Int']['input'];
@@ -2420,7 +2433,7 @@ export type ExtensionsQueryVariables = Exact<{
 }>;
 
 
-export type ExtensionsQuery = { __typename?: 'Query', extensions: { __typename?: 'ExtensionNodeList', nodes: Array<{ __typename?: 'ExtensionType', name: string, versionName: string, pkgName: string, lang: string, iconUrl: string, isNsfw: boolean, isInstalled: boolean, isObsolete: boolean, hasUpdate: boolean }> } };
+export type ExtensionsQuery = { __typename?: 'Query', extensions: { __typename?: 'ExtensionNodeList', nodes: Array<{ __typename?: 'ExtensionType', name: string, repo?: string | null, versionName: string, pkgName: string, lang: string, iconUrl: string, isNsfw: boolean, isInstalled: boolean, isObsolete: boolean, hasUpdate: boolean }> } };
 
 export type SourcesQueryVariables = Exact<{
   isNsfw?: InputMaybe<Scalars['Boolean']['input']>;
@@ -2586,6 +2599,7 @@ export const SourceTypeFragmentFragmentDoc = gql`
 export const ExtensionTypeFragmentFragmentDoc = gql`
     fragment ExtensionTypeFragment on ExtensionType {
   name
+  repo
   versionName
   pkgName
   lang
