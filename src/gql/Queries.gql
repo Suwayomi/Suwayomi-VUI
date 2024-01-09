@@ -69,6 +69,7 @@ query sources($isNsfw: Boolean = null) {
 			isNsfw
 			extension {
 				pkgName
+				repo
 			}
 		}
 	}

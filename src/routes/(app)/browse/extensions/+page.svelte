@@ -9,12 +9,10 @@
 <script lang="ts">
 	import { AppBarData } from '$lib/MountTitleAction';
 	import {
-		ExtensionsDoc,
 		fetchExtensions,
 		extensions as getExtensions,
 		type Exact,
 		type ExtensionsQuery,
-		type FetchExtensionsMutation,
 		type InputMaybe
 	} from '$lib/generated';
 	import { ErrorHelp, Partition, groupBy } from '$lib/util';
@@ -24,10 +22,9 @@
 	import Nav from '../Nav.svelte';
 	import { FindLangName } from '../languages';
 	import ExtensionsActions from './ExtensionsActions.svelte';
-	import { langFilter, lastFetched } from './ExtensionsStores';
+	import { fetchExtensionsUpdater, langFilter, lastFetched } from './ExtensionsStores';
 	import ExtensionCard from './ExtensionCard.svelte';
 	import { Meta } from '$lib/simpleStores';
-	import type { ApolloCache, FetchResult } from '@apollo/client';
 
 	const query = queryParam('q', ssp.string(), { pushHistory: false });
 	type TExtension = ExtensionsQuery['extensions']['nodes'][0];
@@ -46,31 +43,19 @@
 	checkIfFetchNewExtensions();
 
 	async function checkIfFetchNewExtensions() {
-		await ErrorHelp(
-			'failed to fetch new extensions',
-			fetchExtensions({
-				update: fetchExtensionsUpdater
-			})
-		);
+		if ($lastFetched.getTime() > new Date().getTime() - 60000) {
+			await ErrorHelp(
+				'failed to fetch new extensions',
+				fetchExtensions({
+					update: fetchExtensionsUpdater
+				})
+			);
+			$lastFetched = new Date();
+		}
 		extensions = getExtensions({
 			variables: { isNsfw: $Meta.nsfw ? null : false },
 			fetchPolicy: 'cache-first'
 		});
-	}
-
-	function fetchExtensionsUpdater(
-		cache: ApolloCache<unknown>,
-		{ data }: FetchResult<FetchExtensionsMutation>
-	) {
-		if (!data) return;
-		let filteredExtensions = data.fetchExtensions.extensions;
-		if (!$Meta.nsfw) filteredExtensions = filteredExtensions.filter((e) => !e.isNsfw);
-		cache.writeQuery({
-			query: ExtensionsDoc,
-			data: { extensions: { nodes: filteredExtensions } },
-			variables: { isNsfw: $Meta.nsfw ? null : false }
-		});
-		$lastFetched = new Date();
 	}
 
 	$: langs = getLangs($extensions?.data);
@@ -156,7 +141,7 @@
 				<h2 class="h2 p-2">
 					{FindLangName(lang)}
 				</h2>
-				{#each sause as ext (ext.pkgName)}
+				{#each sause as ext (ext.pkgName + ext.repo)}
 					<ExtensionCard {ext} {scrollingElement} />
 				{/each}
 			{/each}

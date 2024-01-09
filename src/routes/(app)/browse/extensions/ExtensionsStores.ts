@@ -6,6 +6,10 @@
 
 import { localStorageStore } from '@skeletonlabs/skeleton';
 import * as devalue from 'devalue';
+import { ExtensionsDoc, type FetchExtensionsMutation } from '$lib/generated';
+import { Meta } from '$lib/simpleStores';
+import type { ApolloCache, FetchResult } from '@apollo/client';
+import { get } from 'svelte/store';
 
 export const lastFetched = localStorageStore<Date>('lastFetchedExtensions', new Date(0), {
 	serializer: devalue
@@ -18,3 +22,18 @@ export const langFilter = localStorageStore<Set<string>>(
 		serializer: devalue
 	}
 );
+
+export function fetchExtensionsUpdater(
+	cache: ApolloCache<unknown>,
+	{ data }: FetchResult<FetchExtensionsMutation>
+) {
+	if (!data) return;
+	let filteredExtensions = data.fetchExtensions.extensions;
+	if (!get(Meta).nsfw) filteredExtensions = filteredExtensions.filter((e) => !e.isNsfw);
+	cache.writeQuery({
+		query: ExtensionsDoc,
+		data: { extensions: { nodes: filteredExtensions } },
+		variables: { isNsfw: get(Meta).nsfw ? null : false }
+	});
+	lastFetched.set(new Date());
+}
