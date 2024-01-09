@@ -2232,7 +2232,7 @@ export type UpdateExtensionMutationVariables = Exact<{
 }>;
 
 
-export type UpdateExtensionMutation = { __typename?: 'Mutation', updateExtension: { __typename?: 'UpdateExtensionPayload', extension?: { __typename?: 'ExtensionType', name: string, repo?: string | null, versionName: string, pkgName: string, lang: string, iconUrl: string, isNsfw: boolean, isInstalled: boolean, isObsolete: boolean, hasUpdate: boolean, source: { __typename?: 'SourceNodeList', nodes: Array<{ __typename?: 'SourceType', isNsfw: boolean, id: any, displayName: string, iconUrl: string, lang: string, extension: { __typename?: 'ExtensionType', pkgName: string } }> } } | null } };
+export type UpdateExtensionMutation = { __typename?: 'Mutation', updateExtension: { __typename?: 'UpdateExtensionPayload', extension?: { __typename?: 'ExtensionType', name: string, repo?: string | null, versionName: string, pkgName: string, lang: string, iconUrl: string, isNsfw: boolean, isInstalled: boolean, isObsolete: boolean, hasUpdate: boolean, source: { __typename?: 'SourceNodeList', nodes: Array<{ __typename?: 'SourceType', isNsfw: boolean, id: any, displayName: string, iconUrl: string, lang: string, extension: { __typename?: 'ExtensionType', pkgName: string, repo?: string | null } }> } } | null } };
 
 export type FetchSourceMangaMutationVariables = Exact<{
   page: Scalars['Int']['input'];
@@ -2440,7 +2440,7 @@ export type SourcesQueryVariables = Exact<{
 }>;
 
 
-export type SourcesQuery = { __typename?: 'Query', sources: { __typename?: 'SourceNodeList', nodes: Array<{ __typename?: 'SourceType', isNsfw: boolean, id: any, displayName: string, iconUrl: string, lang: string, extension: { __typename?: 'ExtensionType', pkgName: string } }> } };
+export type SourcesQuery = { __typename?: 'Query', sources: { __typename?: 'SourceNodeList', nodes: Array<{ __typename?: 'SourceType', isNsfw: boolean, id: any, displayName: string, iconUrl: string, lang: string, extension: { __typename?: 'ExtensionType', pkgName: string, repo?: string | null } }> } };
 
 export type SourcesMigrationQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -2749,6 +2749,7 @@ export const UpdateExtensionDoc = gql`
           isNsfw
           extension {
             pkgName
+            repo
           }
         }
       }
@@ -3087,6 +3088,7 @@ export const SourcesDoc = gql`
       isNsfw
       extension {
         pkgName
+        repo
       }
     }
   }

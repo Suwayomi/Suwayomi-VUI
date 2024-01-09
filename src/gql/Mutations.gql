@@ -135,6 +135,7 @@ mutation updateExtension(
 					isNsfw
 					extension {
 						pkgName
+						repo
 					}
 				}
 			}
