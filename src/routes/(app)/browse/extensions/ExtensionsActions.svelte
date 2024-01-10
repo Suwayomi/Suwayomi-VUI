@@ -7,12 +7,20 @@
 -->
 
 <script lang="ts">
-	import { fetchExtensionsUpdater, langFilter, lastFetched } from './ExtensionsStores';
+	import {
+		fetchExtensionsUpdater,
+		installExternalExtensionUpdater,
+		langFilter,
+		lastFetched
+	} from './ExtensionsStores';
 	import Search from '$lib/components/Search.svelte';
 	import LangFilterButton from '$lib/components/LangFilterButton.svelte';
-	import { fetchExtensions } from '$lib/generated';
+	import { fetchExtensions, installExternalExtension } from '$lib/generated';
 	import { ErrorHelp } from '$lib/util';
 	import TooltipIconButton from '$lib/components/TooltipIconButton.svelte';
+	import { FileButton } from '@skeletonlabs/skeleton';
+	import Tooltip from '$lib/components/Tooltip.svelte';
+	import IconWrapper from '$lib/components/IconWrapper.svelte';
 	export let langs: Set<string>;
 	let loading = false;
 	async function handelRefresh() {
@@ -26,6 +34,17 @@
 		$lastFetched = new Date();
 		loading = false;
 	}
+
+	let files: FileList | undefined;
+	function onChangeHandler(): void {
+		ErrorHelp(
+			'failed to install external extension',
+			installExternalExtension({
+				variables: { extensionFile: files?.[0] },
+				update: installExternalExtensionUpdater
+			})
+		);
+	}
 </script>
 
 <div class="h-full flex">
@@ -38,5 +57,22 @@
 		hover={loading ? '' : 'hover:variant-glass-surface'}
 		class={loading && 'animate-spin'}
 	/>
+	<Tooltip
+		tipclass="z-20"
+		placement="top"
+		tip="install external extension"
+		class=" cursor-pointer h-full"
+	>
+		<FileButton
+			class="h-full aspect-square hover:variant-glass-surface"
+			button=""
+			name="files2"
+			accept=".apk"
+			on:change={onChangeHandler}
+			bind:files
+		>
+			<IconWrapper name="mdi:plus" width="100%" height="100%" class="text-5xl  m-0 p-2" />
+		</FileButton>
+	</Tooltip>
 	<LangFilterButton {langFilter} {langs} />
 </div>

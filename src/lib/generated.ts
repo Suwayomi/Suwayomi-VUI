@@ -2400,6 +2400,13 @@ export type ClearCachedImagesMutationVariables = Exact<{ [key: string]: never; }
 
 export type ClearCachedImagesMutation = { __typename?: 'Mutation', clearCachedImages: { __typename?: 'ClearCachedImagesPayload', clientMutationId?: string | null } };
 
+export type InstallExternalExtensionMutationVariables = Exact<{
+  extensionFile: Scalars['Upload']['input'];
+}>;
+
+
+export type InstallExternalExtensionMutation = { __typename?: 'Mutation', installExternalExtension: { __typename?: 'InstallExternalExtensionPayload', extension: { __typename?: 'ExtensionType', name: string, repo?: string | null, versionName: string, pkgName: string, lang: string, iconUrl: string, isNsfw: boolean, isInstalled: boolean, isObsolete: boolean, hasUpdate: boolean, source: { __typename?: 'SourceNodeList', nodes: Array<{ __typename?: 'SourceType', isNsfw: boolean, id: any, displayName: string, iconUrl: string, lang: string, extension: { __typename?: 'ExtensionType', pkgName: string, repo?: string | null } }> } } } };
+
 export type CategoriesQueryVariables = Exact<{
   notEqualTo?: InputMaybe<Scalars['Int']['input']>;
 }>;
@@ -3019,6 +3026,26 @@ export const ClearCachedImagesDoc = gql`
   }
 }
     `;
+export const InstallExternalExtensionDoc = gql`
+    mutation installExternalExtension($extensionFile: Upload!) {
+  installExternalExtension(input: {extensionFile: $extensionFile}) {
+    extension {
+      ...ExtensionTypeFragment
+      source {
+        nodes {
+          ...SourceTypeFragment
+          isNsfw
+          extension {
+            pkgName
+            repo
+          }
+        }
+      }
+    }
+  }
+}
+    ${ExtensionTypeFragmentFragmentDoc}
+${SourceTypeFragmentFragmentDoc}`;
 export const CategoriesDoc = gql`
     query categories($notEqualTo: Int = null) {
   categories(filter: {id: {notEqualTo: $notEqualTo}}) {
@@ -3828,6 +3855,18 @@ export const clearCachedImages = (
           ) => {
             const m = client.mutate<ClearCachedImagesMutation, ClearCachedImagesMutationVariables>({
               mutation: ClearCachedImagesDoc,
+              ...options,
+            });
+            return m;
+          }
+export const installExternalExtension = (
+            options: Omit<
+              MutationOptions<any, InstallExternalExtensionMutationVariables>, 
+              "mutation"
+            >
+          ) => {
+            const m = client.mutate<InstallExternalExtensionMutation, InstallExternalExtensionMutationVariables>({
+              mutation: InstallExternalExtensionDoc,
               ...options,
             });
             return m;

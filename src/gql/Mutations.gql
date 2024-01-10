@@ -413,3 +413,21 @@ mutation clearCachedImages {
 		clientMutationId
 	}
 }
+
+mutation installExternalExtension($extensionFile: Upload!) {
+	installExternalExtension(input: { extensionFile: $extensionFile }) {
+		extension {
+			...ExtensionTypeFragment
+			source {
+				nodes {
+					...SourceTypeFragment
+					isNsfw
+					extension {
+						pkgName
+						repo
+					}
+				}
+			}
+		}
+	}
+}

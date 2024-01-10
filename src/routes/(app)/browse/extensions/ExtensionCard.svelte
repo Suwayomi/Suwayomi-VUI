@@ -10,88 +10,28 @@
 	import IntersectionObserver from '$lib/components/IntersectionObserver.svelte';
 	import Image from '$lib/components/Image.svelte';
 	import {
-		ExtensionsDoc,
-		SourcesDoc,
 		updateExtension,
 		type ExtensionsQuery,
-		type SourcesQuery,
 		type UpdateExtensionMutation
 	} from '$lib/generated';
-	import type { ApolloCache, FetchResult } from '@apollo/client';
 	import { ErrorHelp } from '$lib/util';
 	import { ProgressRadial } from '@skeletonlabs/skeleton';
-	import { Meta } from '$lib/simpleStores';
+	import { UpdateExtensionUpdater } from './ExtensionsStores';
+	import type { ApolloCache, FetchResult } from '@apollo/client';
 
 	export let scrollingElement: HTMLDivElement;
 	export let ext: ExtensionsQuery['extensions']['nodes'][0];
 
+	function preUpdater(
+		cache: ApolloCache<unknown>,
+		{ data }: Omit<FetchResult<UpdateExtensionMutation>, 'context'>
+	) {
+		UpdateExtensionUpdater(cache, { data }, ext);
+	}
+
 	let loadingUpdate = false;
 	let loadingInstall = false;
 	let loadingUnInstall = false;
-
-	function UpdateExtensionUpdater(
-		cache: ApolloCache<unknown>,
-		{ data }: Omit<FetchResult<UpdateExtensionMutation>, 'context'>
-	): void {
-		if (!data) return;
-
-		// update the extentions list
-		try {
-			const extensionsData = structuredClone(
-				cache.readQuery<ExtensionsQuery>({
-					query: ExtensionsDoc,
-					variables: { isNsfw: $Meta.nsfw ? null : false }
-				})
-			);
-			if (!extensionsData) throw new Error('failed to read extensions');
-			const { extensions } = extensionsData;
-
-			if (data.updateExtension.extension)
-				extensions.nodes[
-					extensions.nodes.findIndex(
-						(extension) => extension.pkgName === ext.pkgName && extension.repo === ext.repo
-					)
-				] = data.updateExtension.extension;
-
-			cache.writeQuery({
-				query: ExtensionsDoc,
-				data: { extensions },
-				variables: { isNsfw: $Meta.nsfw ? null : false }
-			});
-		} catch {}
-
-		// update the sources list
-		try {
-			const sourcesData = structuredClone(
-				cache.readQuery<SourcesQuery>({
-					query: SourcesDoc,
-					variables: { isNsfw: $Meta.nsfw ? null : false }
-				})
-			);
-			if (!sourcesData) throw new Error('failed to read sources');
-			const { sources } = sourcesData;
-
-			if (data.updateExtension.extension?.isInstalled) {
-				data.updateExtension.extension.source.nodes.forEach((source) => {
-					if (!sources.nodes.find((existingSource) => existingSource.id === source.id)) {
-						sources.nodes.push(source);
-					}
-				});
-			} else {
-				sources.nodes = sources.nodes.filter(
-					(existingSource) =>
-						existingSource.extension.repo !== ext.repo ||
-						existingSource.extension.pkgName !== ext.pkgName
-				);
-			}
-
-			cache.writeQuery({
-				query: SourcesDoc,
-				variables: { isNsfw: $Meta.nsfw ? null : false },
-				data: { sources }
-			});
-		} catch {}
-	}
 
 	async function unInstall() {
 		loadingUnInstall = true;
@@ -100,7 +40,7 @@
 				'failed to Uninstall extension',
 				updateExtension({
 					variables: { pkgName: ext.pkgName, uninstall: true },
-					update: UpdateExtensionUpdater
+					update: preUpdater
 				})
 			);
 		} finally {
@@ -115,7 +55,7 @@
 				'Failed to Install extension',
 				updateExtension({
 					variables: { pkgName: ext.pkgName, install: true },
-					update: UpdateExtensionUpdater
+					update: preUpdater
 				})
 			);
 		} finally {
@@ -130,7 +70,7 @@
 				'Failed to Update extension',
 				updateExtension({
 					variables: { pkgName: ext.pkgName, update: true },
-					update: UpdateExtensionUpdater
+					update: preUpdater
 				})
 			);
 		} finally {
