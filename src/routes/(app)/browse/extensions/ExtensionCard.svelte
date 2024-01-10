@@ -10,91 +10,37 @@
 	import IntersectionObserver from '$lib/components/IntersectionObserver.svelte';
 	import Image from '$lib/components/Image.svelte';
 	import {
-		ExtensionsDoc,
-		SourcesDoc,
 		updateExtension,
 		type ExtensionsQuery,
-		type SourcesQuery,
 		type UpdateExtensionMutation
 	} from '$lib/generated';
-	import type { ApolloCache, FetchResult } from '@apollo/client';
 	import { ErrorHelp } from '$lib/util';
 	import { ProgressRadial } from '@skeletonlabs/skeleton';
-	import { Meta } from '$lib/simpleStores';
+	import { UpdateExtensionUpdater } from './ExtensionsStores';
+	import type { ApolloCache, FetchResult } from '@apollo/client';
 
 	export let scrollingElement: HTMLDivElement;
 	export let ext: ExtensionsQuery['extensions']['nodes'][0];
+
+	function preUpdater(
+		cache: ApolloCache<unknown>,
+		{ data }: Omit<FetchResult<UpdateExtensionMutation>, 'context'>
+	) {
+		UpdateExtensionUpdater(cache, { data }, ext);
+	}
 
 	let loadingUpdate = false;
 	let loadingInstall = false;
 	let loadingUnInstall = false;
 
-	function UpdateExtensionUpdater(
-		cache: ApolloCache<unknown>,
-		{ data }: Omit<FetchResult<UpdateExtensionMutation>, 'context'>,
-		pkgName: string
-	): void {
-		if (!data) return;
-		try {
-			const extensionsData = structuredClone(
-				cache.readQuery<ExtensionsQuery>({
-					query: ExtensionsDoc,
-					variables: { isNsfw: $Meta.nsfw ? null : false }
-				})
-			);
-			if (!extensionsData) throw new Error('failed to read extensions');
-			const { extensions } = extensionsData;
-
-			if (data.updateExtension.extension)
-				extensions.nodes[extensions.nodes.findIndex((extension) => extension.pkgName === pkgName)] =
-					data.updateExtension.extension;
-
-			cache.writeQuery({
-				query: ExtensionsDoc,
-				data: { extensions },
-				variables: { isNsfw: $Meta.nsfw ? null : false }
-			});
-		} catch {}
-		const sourcesData = structuredClone(
-			cache.readQuery<SourcesQuery>({
-				query: SourcesDoc,
-				variables: { isNsfw: $Meta.nsfw ? null : false }
-			})
-		);
-		if (!sourcesData) return;
-		const { sources } = sourcesData;
-
-		if (data.updateExtension.extension?.isInstalled) {
-			const sourcesToPush: SourcesQuery['sources']['nodes'] = [];
-			data.updateExtension.extension.source.nodes.forEach((source) => {
-				if (!sources.nodes.find((existingSource) => existingSource.id === source.id)) {
-					sourcesToPush.push(source);
-				}
-			});
-			sources.nodes.push(...sourcesToPush);
-		} else {
-			sources.nodes = sources.nodes.filter(
-				(existingSource) => existingSource.extension.pkgName !== pkgName
-			);
-		}
-
-		cache.writeQuery({
-			query: SourcesDoc,
-			variables: { isNsfw: $Meta.nsfw ? null : false },
-			data: { sources }
-		});
-	}
-
-	async function unInstall(pkgName: string) {
+	async function unInstall() {
 		loadingUnInstall = true;
 		try {
 			await ErrorHelp(
 				'failed to Uninstall extension',
 				updateExtension({
-					variables: { pkgName, uninstall: true },
-					update: (cache, data) => {
-						UpdateExtensionUpdater(cache, data, pkgName);
-					}
+					variables: { pkgName: ext.pkgName, uninstall: true },
+					update: preUpdater
 				})
 			);
 		} finally {
@@ -102,16 +48,14 @@
 		}
 	}
 
-	async function Install(pkgName: string) {
+	async function Install() {
 		loadingInstall = true;
 		try {
 			await ErrorHelp(
 				'Failed to Install extension',
 				updateExtension({
-					variables: { pkgName, install: true },
-					update: (cache, data) => {
-						UpdateExtensionUpdater(cache, data, pkgName);
-					}
+					variables: { pkgName: ext.pkgName, install: true },
+					update: preUpdater
 				})
 			);
 		} finally {
@@ -119,16 +63,14 @@
 		}
 	}
 
-	async function Update(pkgName: string) {
+	async function Update() {
 		loadingUpdate = true;
 		try {
 			await ErrorHelp(
 				'Failed to Update extension',
 				updateExtension({
-					variables: { pkgName, update: true },
-					update: (cache, data) => {
-						UpdateExtensionUpdater(cache, data, pkgName);
-					}
+					variables: { pkgName: ext.pkgName, update: true },
+					update: preUpdater
 				})
 			);
 		} finally {
@@ -163,7 +105,7 @@
 			</div>
 			<div class="flex flex-wrap flex-1 justify-end">
 				{#if ext.isObsolete}
-					<button on:click={() => unInstall(ext.pkgName)} class="btn variant-ghost-error m-1">
+					<button on:click={() => unInstall()} class="btn variant-ghost-error m-1">
 						{#if loadingUnInstall}
 							Uninstalling<ProgressRadial class="ml-1 h-4 aspect-square w-auto" />
 						{:else}
@@ -172,7 +114,7 @@
 					</button>
 				{:else if ext.isInstalled}
 					{#if ext.hasUpdate}
-						<button on:click={() => Update(ext.pkgName)} class="btn variant-ghost-surface m-1">
+						<button on:click={() => Update()} class="btn variant-ghost-surface m-1">
 							{#if loadingUpdate}
 								Updating<ProgressRadial class="ml-1 h-4 aspect-square w-auto" />
 							{:else}
@@ -180,7 +122,7 @@
 							{/if}
 						</button>
 					{/if}
-					<button on:click={() => unInstall(ext.pkgName)} class="btn variant-ghost-surface m-1">
+					<button on:click={() => unInstall()} class="btn variant-ghost-surface m-1">
 						{#if loadingUnInstall}
 							Uninstalling<ProgressRadial class="ml-1 h-4 aspect-square w-auto" />
 						{:else}
@@ -188,7 +130,7 @@
 						{/if}
 					</button>
 				{:else}
-					<button on:click={() => Install(ext.pkgName)} class="btn variant-ghost-surface m-1">
+					<button on:click={() => Install()} class="btn variant-ghost-surface m-1">
 						{#if loadingInstall}
 							Installing<ProgressRadial class="ml-1 h-4 aspect-square w-auto" />
 						{:else}

@@ -135,6 +135,7 @@ mutation updateExtension(
 					isNsfw
 					extension {
 						pkgName
+						repo
 					}
 				}
 			}
@@ -410,5 +411,23 @@ mutation clearCachedImages {
 		input: { cachedPages: true, cachedThumbnails: true, downloadedThumbnails: true }
 	) {
 		clientMutationId
+	}
+}
+
+mutation installExternalExtension($extensionFile: Upload!) {
+	installExternalExtension(input: { extensionFile: $extensionFile }) {
+		extension {
+			...ExtensionTypeFragment
+			source {
+				nodes {
+					...SourceTypeFragment
+					isNsfw
+					extension {
+						pkgName
+						repo
+					}
+				}
+			}
+		}
 	}
 }
