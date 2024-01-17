@@ -50,11 +50,15 @@
 		nextFetchPolicy: 'cache-only'
 	});
 
-	if ($tab === null) {
+	$: if ($tab === null) {
 		categories.subscribe((e) => {
-			$tab = e.data?.categories?.nodes.find((ele) => ele.default)?.id ?? 0;
+			window.requestAnimationFrame(() => {
+				tab.set(e.data?.categories?.nodes.find((ele) => ele.default && ele.id !== 0)?.id ?? 0);
+			});
 		});
 	}
+
+	$: console.log($tab);
 
 	$: orderedCategories = [...($categories.data?.categories?.nodes ?? [])]
 		.toSorted((a, b) => {
