@@ -7,4 +7,6 @@
 # exec "$@"
 
 TMP=$(echo "$suwayomi" | sed "s@/\$@@")
+TMP2=$(awk 'BEGIN{ORS=" "} $1=="nameserver" {print $2}' /etc/resolv.conf)
+sed -i "s@resolverPLACEHOLDER@$TMP2@" /etc/nginx/conf.d/default.conf
 sed -i "s@PLACEHOLDER@$TMP@" /etc/nginx/conf.d/default.conf
