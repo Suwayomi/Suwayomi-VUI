@@ -3,7 +3,6 @@ import { sveltekit } from '@sveltejs/kit/vite';
 import { defineConfig } from 'vite';
 
 export default defineConfig({
-	// @ts-expect-error Type 'Promise<Plugin<any>[]>' is not assignable to type 'PluginOption'
 	plugins: [sveltekit(), purgeCss()],
 	server: {
 		proxy: {
