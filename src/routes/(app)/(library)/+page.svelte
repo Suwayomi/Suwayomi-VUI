@@ -56,9 +56,11 @@
 		});
 	}
 
-	$: orderedCategories = [...($categories.data?.categories?.nodes ?? [])].toSorted((a, b) => {
-		return a.order > b.order ? 1 : -1;
-	});
+	$: orderedCategories = [...($categories.data?.categories?.nodes ?? [])]
+		.toSorted((a, b) => {
+			return a.order > b.order ? 1 : -1;
+		})
+		.filter((e) => e.mangas.totalCount);
 
 	function LongHandler() {
 		$selectMode = true;
