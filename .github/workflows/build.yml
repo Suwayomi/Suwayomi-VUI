@@ -59,8 +59,8 @@ jobs:
           tags: |
             ghcr.io/${{ steps.string.outputs.lowercase }}:latest,
             ghcr.io/${{ steps.string.outputs.lowercase }}:${{ needs.GenTag.outputs.value }},
-            # ${{ steps.string.outputs.lowercase }}:latest,
-            # ${{ steps.string.outputs.lowercase }}:${{ needs.GenTag.outputs.value }},
+          # ${{ steps.string.outputs.lowercase }}:latest,
+          # ${{ steps.string.outputs.lowercase }}:${{ needs.GenTag.outputs.value }},
   build:
     needs: GenTag
     runs-on: ubuntu-latest
