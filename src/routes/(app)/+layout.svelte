@@ -8,15 +8,11 @@
 
 <script lang="ts">
 	import { action, title } from '$lib/MountTitleAction';
-	// import IconButton from '$lib/components/IconButton.svelte';
 	import MainAppRail from '$lib/components/MainAppRail.svelte';
 	import MediaQuery from '$lib/components/MediaQuery.svelte';
 	import MobileAppNavigation from '$lib/components/MobileAppNavigation.svelte';
 	import { screens } from '$lib/screens';
 	import { AppBar, AppShell } from '@skeletonlabs/skeleton';
-	import { getDrawerStore } from '@skeletonlabs/skeleton';
-
-	const drawerStore = getDrawerStore();
 </script>
 
 <AppShell slotHeader="">
