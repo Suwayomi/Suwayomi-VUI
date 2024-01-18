@@ -7,7 +7,6 @@
 -->
 
 <script lang="ts">
-	import MainAppRail from '$lib/components/MainAppRail.svelte';
 	import Toast from '$lib/components/Toast/Toast.svelte';
 	import { Meta, toastStore } from '$lib/simpleStores';
 	import { title as titleStore } from '$lib/MountTitleAction';
@@ -95,9 +94,7 @@
 	</title>
 </svelte:head>
 <Drawer>
-	{#if $drawerStore.id === 'MainMenu'}
-		<MainAppRail />
-	{:else if $drawerStore.id === 'ChapterMenu'}
+	{#if $drawerStore.id === 'ChapterMenu'}
 		<ChapterDrawer />
 	{:else}
 		(fallback contents)
