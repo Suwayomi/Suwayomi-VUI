@@ -12,7 +12,7 @@
 </script>
 
 {#if text}
-	<h3 class="h3 md:h5 lg:h4 xl:h3 flex items-center space-x-2">
+	<h3 class="h6 xs:h3 md:h5 lg:h4 xl:h3 flex items-center space-x-2">
 		<span>{name}:</span>
 		<span class=" line-clamp-1">{text}</span>
 	</h3>

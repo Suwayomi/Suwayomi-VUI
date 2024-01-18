@@ -249,7 +249,7 @@
 	>
 		<div class="sticky top-0 z-10 h-10 xs:h-14">
 			<div class="card variant-glass p-0 flex items-center space-x-1 h-full">
-				<span class="w-full text-3xl font-medium pl-2 line-clamp-1">
+				<span class="w-full text-2xl md:text-3xl font-medium pl-2 line-clamp-1">
 					{sortedChapters.length} Chapters
 				</span>
 				<MediaQuery
@@ -387,13 +387,13 @@
 								/>
 							{/if}
 							<div class="space-y-0 w-full {chapter.isRead && 'opacity-50'}">
-								<div class="w-full line-clamp-1 text-2xl">
+								<div class="w-full line-clamp-1 text-xl md:text-2xl">
 									{$mangaMeta.ChapterTitle === ChapterTitle['Source Title']
 										? chapter.name
 										: `Chapter ${chapter.chapterNumber}`}
 								</div>
 								<div
-									class="w-full line-clamp-1 font-light"
+									class="w-full line-clamp-1 font-light text-sm md:text-base"
 									title="Fetched Date: {new Date(
 										chapter.fetchedAt * 1000
 									).toLocaleString()}&#013;Upload Date: {new Date(
@@ -505,13 +505,17 @@
 		</MediaQuery>
 	</div>
 	{#if sortedChapters.filter((e) => !e.isRead).length}
-		<a
-			href="/manga/{manga.data.manga.id}/chapter/{sortedChapters
-				.filter((e) => !e.isRead)
-				.toSorted((a, b) => (a.sourceOrder > b.sourceOrder ? 1 : -1))[0].id}"
-			class="btn variant-filled-primary hover:variant-glass-primary fixed bottom-2 right-16"
-		>
-			resume
-		</a>
+		<MediaQuery query="(min-width: {screens.md})" let:matches>
+			<a
+				href="/manga/{manga.data.manga.id}/chapter/{sortedChapters
+					.filter((e) => !e.isRead)
+					.toSorted((a, b) => (a.sourceOrder > b.sourceOrder ? 1 : -1))[0].id}"
+				class="btn variant-filled-primary hover:variant-glass-primary fixed {matches
+					? 'bottom-2'
+					: 'bottom-[4.5rem]'} right-16 z-10"
+			>
+				resume
+			</a>
+		</MediaQuery>
 	{/if}
 {/if}
