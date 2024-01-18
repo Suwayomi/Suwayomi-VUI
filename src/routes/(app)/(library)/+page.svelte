@@ -58,8 +58,6 @@
 		});
 	}
 
-	$: console.log($tab);
-
 	$: orderedCategories = [...($categories.data?.categories?.nodes ?? [])]
 		.toSorted((a, b) => {
 			return a.order > b.order ? 1 : -1;
