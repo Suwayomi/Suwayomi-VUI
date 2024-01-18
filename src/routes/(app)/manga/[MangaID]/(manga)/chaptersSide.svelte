@@ -505,13 +505,17 @@
 		</MediaQuery>
 	</div>
 	{#if sortedChapters.filter((e) => !e.isRead).length}
-		<a
-			href="/manga/{manga.data.manga.id}/chapter/{sortedChapters
-				.filter((e) => !e.isRead)
-				.toSorted((a, b) => (a.sourceOrder > b.sourceOrder ? 1 : -1))[0].id}"
-			class="btn variant-filled-primary hover:variant-glass-primary fixed bottom-2 right-16 z-10"
-		>
-			resume
-		</a>
+		<MediaQuery query="(min-width: {screens.md})" let:matches>
+			<a
+				href="/manga/{manga.data.manga.id}/chapter/{sortedChapters
+					.filter((e) => !e.isRead)
+					.toSorted((a, b) => (a.sourceOrder > b.sourceOrder ? 1 : -1))[0].id}"
+				class="btn variant-filled-primary hover:variant-glass-primary fixed {matches
+					? 'bottom-2'
+					: 'bottom-[4.5rem]'} right-16 z-10"
+			>
+				resume
+			</a>
+		</MediaQuery>
 	{/if}
 {/if}
