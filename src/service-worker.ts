@@ -17,8 +17,8 @@ const ASSETS = [...files, ...build];
 
 self.addEventListener('install', (event) => {
 	async function addFilesToCache() {
-		const cache = await caches.open(CACHE);
-		await cache.addAll(ASSETS);
+		await caches.open(CACHE);
+		// await cache.addAll(ASSETS);
 	}
 
 	event.waitUntil(addFilesToCache());
@@ -32,10 +32,10 @@ self.addEventListener('fetch', (event) => {
 	const url = new URL(event.request.url);
 	if (url.protocol !== 'https:' && url.protocol !== 'http:') return;
 
-	if (event.request.method === 'POST' && event.request.url.includes('/api/graphql')) {
-		respondGQL(event);
-		return;
-	}
+	// if (event.request.method === 'POST' && event.request.url.includes('/api/graphql')) {
+	// 	respondGQL(event);
+	// 	return;
+	// }
 
 	if (event.request.method === 'GET') {
 		respondGET(event);
@@ -61,94 +61,90 @@ self.addEventListener('message', (event) => {
 	}
 });
 
-function respondGQL(event: FetchEvent) {
-	const generateQueryId = event.request
-		.clone()
-		.json()
-		.then(async ({ query, operationName, variables }) => {
-			// skip mutation caching...
-			if (query.startsWith('mutation') || query.startsWith('subscription')) {
-				return null;
-			}
+// function respondGQL(event: FetchEvent) {
+// 	const generateQueryId = event.request
+// 		.clone()
+// 		.json()
+// 		.then(async ({ query, operationName, variables }) => {
+// 			// skip mutation caching...
+// 			if (query.startsWith('mutation') || query.startsWith('subscription')) {
+// 				return null;
+// 			}
 
-			// Mocks a request since `caches` only works with requests.
-			return `https://GQL?Q=${JSON.stringify({ operationName, variables }).toString()}`;
-		});
-	const url = new URL(event.request.url);
-	const openCache = caches.open(CACHE);
-	const networkResponse = fetch(event.request);
+// 			// Mocks a request since `caches` only works with requests.
+// 			return `https://GQL?Q=${JSON.stringify({ operationName, variables }).toString()}`;
+// 		});
+// 	const url = new URL(event.request.url);
+// 	const openCache = caches.open(CACHE);
+// 	const networkResponse = fetch(event.request);
 
-	async function response() {
-		try {
-			const resp = await networkResponse;
-			if (resp.status === 401) {
-				const client = await self.clients.get(event.clientId);
-				if (client) {
-					client.postMessage({ type: 'auth401' });
-				}
-			}
-		} catch {}
+// 	async function response() {
+// 		try {
+// 			const resp = await networkResponse;
+// 			if (resp.status === 401) {
+// 				const client = await self.clients.get(event.clientId);
+// 				if (client) {
+// 					client.postMessage({ type: 'auth401' });
+// 				}
+// 			}
+// 		} catch {}
 
-		//general Response, network first
-		try {
-			return await networkResponse;
-		} catch (error) {
-			const cache = await openCache;
-			const queryId = await generateQueryId;
-			const cachedResult = queryId && (await cache.match(queryId));
-			if (cachedResult) {
-				return cachedResult;
-			}
-		}
-		return Response.json(
-			{
-				errors: [
-					{
-						message:
-							"You are offline (or the server is) and this data hasn't been cached, please try again.",
-						path: ['cache']
-					}
-				]
-			},
-			{ status: 200 }
-		);
-	}
-	async function cacheResponse() {
-		try {
-			if (url.protocol !== 'https:' && url.protocol !== 'http:') return;
-			const response = (await networkResponse).clone();
-			const queryId = await generateQueryId;
-			if (queryId) {
-				const cache = await openCache;
-				await cache.put(queryId, response);
-			}
-		} catch {}
-	}
+// 		//general Response, network first
+// 		try {
+// 			return await networkResponse;
+// 		} catch (error) {
+// 			const cache = await openCache;
+// 			const queryId = await generateQueryId;
+// 			const cachedResult = queryId && (await cache.match(queryId));
+// 			if (cachedResult) {
+// 				return cachedResult;
+// 			}
+// 		}
+// 		return Response.json(
+// 			{
+// 				errors: [
+// 					{
+// 						message:
+// 							"You are offline (or the server is) and this data hasn't been cached, please try again.",
+// 						path: ['cache']
+// 					}
+// 				]
+// 			},
+// 			{ status: 200 }
+// 		);
+// 	}
+// 	async function cacheResponse() {
+// 		try {
+// 			if (url.protocol !== 'https:' && url.protocol !== 'http:') return;
+// 			const response = (await networkResponse).clone();
+// 			const queryId = await generateQueryId;
+// 			if (queryId) {
+// 				const cache = await openCache;
+// 				await cache.put(queryId, response);
+// 			}
+// 		} catch {}
+// 	}
 
-	event.respondWith(response());
-	event.waitUntil(cacheResponse());
-}
+// 	event.respondWith(response());
+// 	event.waitUntil(cacheResponse());
+// }
 
 function respondGET(event: FetchEvent) {
 	const url = new URL(event.request.url);
-	const openCache = caches.open(CACHE);
+	// const openCache = caches.open(CACHE);
 	const openImageCache = caches.open(ImageCache);
 	const networkResponse = fetch(event.request);
-
-	let putToCache = async (clone: Response, cache: Cache) => {
-		await cache.put(event.request, clone);
-	};
 
 	// given event return appropriate Response
 	async function response() {
 		// static assets, cache first
-		if (ASSETS.includes(url.pathname)) {
-			const cache = await openCache;
-			const cachedResponse = await cache.match(event.request);
-			if (cachedResponse) {
-				return cachedResponse;
-			}
-		}
+		// if (ASSETS.includes(url.pathname)) {
+		// 	const cache = await openCache;
+		// 	const cachedResponse = await cache.match(event.request);
+		// 	if (cachedResponse) {
+		// 		return cachedResponse;
+		// 	}
+		// }
 
 		// thumbnails, cache first
 		if (url.pathname.endsWith('thumbnail') || url.pathname.startsWith('/api/v1/extension/icon/')) {
@@ -160,43 +156,36 @@ function respondGET(event: FetchEvent) {
 		}
 
 		// the main html page, cache first
-		if (event.request.referrer === url.href) {
-			const cache = await openCache;
-			const cachedResponse = await cache.match('/');
-			putToCache = async (clone: Response, cache: Cache) => {
-				await cache.put('/', clone);
-			};
-			if (cachedResponse) {
-				return cachedResponse;
-			}
-		}
+		// if (event.request.referrer === url.href) {
+		// 	const cache = await openCache;
+		// 	const cachedResponse = await cache.match('/');
+		// 	putToCache = async (clone: Response, cache: Cache) => {
+		// 		await cache.put('/', clone);
+		// 	};
+		// 	if (cachedResponse) {
+		// 		return cachedResponse;
+		// 	}
+		// }
 
-		//general Response, network first
+		//general Response, no-cache
 		try {
 			return await networkResponse;
 		} catch (error) {
-			const cache = await openCache;
-			const cachedResponse = await cache.match(url.pathname);
-			if (cachedResponse) {
-				return cachedResponse;
-			}
+			return new Response('not Found', { status: 404 });
 		}
-		return new Response('not Found', { status: 404 });
 	}
 
 	//Caches the network response.
 	async function cacheResponse() {
 		try {
-			const response = await networkResponse;
-			const clone = response.clone();
-			let cache: Promise<Cache> = openCache;
 			if (
 				url.pathname.endsWith('thumbnail') ||
 				url.pathname.startsWith('/api/v1/extension/icon/')
 			) {
-				cache = openImageCache;
+				const response = await networkResponse;
+				const clone = response.clone();
+				await (await openImageCache).put(event.request, clone);
 			}
-			await putToCache(clone, await cache);
 		} catch {}
 	}
 
