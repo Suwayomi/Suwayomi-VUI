@@ -128,7 +128,7 @@
 				<h1 class="h1 md:h3 lg:h2 xl:h1 line-clamp-2 xl:leading-[4rem]">
 					{$manga.data.manga.title}
 				</h1>
-				<div class="w-3/4 space-y-1 lg:space-y-2">
+				<div class="space-y-1 lg:space-y-2">
 					<InfoSubTitles text={$manga.data.manga.author} name="Author" />
 					<InfoSubTitles text={$manga.data.manga.artist} name="Artist" />
 					<InfoSubTitles text={$manga.data.manga.status} name="Status" />
@@ -188,7 +188,7 @@
 				{/if}
 			</div>
 		</MediaQuery>
-		<section class="w-full">
+		<section class="w-full text-xs xs:text-sm md:text-base">
 			<p>{$manga.data.manga.description}</p>
 		</section>
 		<div class="space-x-2">
