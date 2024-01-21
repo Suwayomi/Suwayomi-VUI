@@ -82,3 +82,28 @@ fragment CategoryTypeFragment on CategoryType {
 		totalCount
 	}
 }
+
+fragment TrackRecordTypeFragment on TrackRecordType {
+	displayScore
+	finishDate
+	id
+	lastChapterRead
+	libraryId
+	mangaId
+	remoteId
+	remoteUrl
+	score
+	startDate
+	status
+	title
+	totalChapters
+	trackerId
+}
+
+fragment TrackerTypeFragment on TrackerType {
+	authUrl
+	icon
+	id
+	isLoggedIn
+	name
+}

@@ -431,3 +431,47 @@ mutation installExternalExtension($extensionFile: Upload!) {
 		}
 	}
 }
+
+mutation loginTrackerOAuth($callbackUrl: String!, $trackerId: Int!) {
+	loginTrackerOAuth(input: { callbackUrl: $callbackUrl, trackerId: $trackerId }) {
+		isLoggedIn
+		tracker {
+			...TrackerTypeFragment
+		}
+	}
+}
+
+mutation logoutTracker($trackerId: Int!) {
+	logoutTracker(input: { trackerId: $trackerId }) {
+		isLoggedIn
+		tracker {
+			...TrackerTypeFragment
+		}
+	}
+}
+
+mutation loginTrackerCredentials($password: String!, $trackerId: Int!, $username: String!) {
+	loginTrackerCredentials(
+		input: { password: $password, trackerId: $trackerId, username: $username }
+	) {
+		tracker {
+			...TrackerTypeFragment
+		}
+	}
+}
+
+mutation bindTrack($trackSearchId: Int!, $mangaId: Int!) {
+	bindTrack(input: { mangaId: $mangaId, trackSearchId: $trackSearchId }) {
+		trackRecord {
+			...TrackRecordTypeFragment
+		}
+	}
+}
+
+mutation updateTrack($input: UpdateTrackInput!) {
+	updateTrack(input: $input) {
+		trackRecord {
+			...TrackRecordTypeFragment
+		}
+	}
+}
