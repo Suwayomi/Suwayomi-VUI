@@ -25,7 +25,6 @@
 	function message_receive(event: StorageEvent) {
 		if (event.key === 'VUI3_TRACKER_LOGIN' && event.newValue === 'true') {
 			localStorage.setItem('VUI3_TRACKER_LOGIN', 'false');
-			console.log(event);
 			Trackers = trackers({ fetchPolicy: 'network-only', nextFetchPolicy: 'cache-first' });
 		}
 	}

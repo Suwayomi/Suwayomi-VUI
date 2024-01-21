@@ -129,18 +129,6 @@
 
 	let chapterSideElement: HTMLDivElement | undefined;
 
-	// async function updateTracker() {
-	// 	if (window.tracking !== 'docker') return;
-	// 	if (!manga) return;
-	// 	if (!$Meta.mangaUpdatesTracking.enabled) return;
-	// 	if ($mangaMeta.mangaUpdatesSeriesID === null) return;
-	// 	const mangaUpdates = await MangaUpdates;
-	// 	await mangaUpdates.updateMangaListStatus(
-	// 		$mangaMeta.mangaUpdatesSeriesID,
-	// 		HighestChapterNumber(manga)
-	// 	);
-	// }
-
 	async function handelPrevRead(chapter: chaptertype) {
 		if (!manga) return;
 		if (!sortedChapters) return;
