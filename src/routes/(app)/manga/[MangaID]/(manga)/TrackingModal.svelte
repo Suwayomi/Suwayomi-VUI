@@ -1,4 +1,4 @@
-<!--
+<!-- 
  Copyright (c) 2023 Contributors to the Suwayomi project
  
  This Source Code Form is subject to the terms of the Mozilla Public
@@ -7,99 +7,99 @@
 -->
 
 <script lang="ts">
-	import Image from '$lib/components/Image.svelte';
-	import { getToastStore } from '$lib/components/Toast/stores';
-	import type { GetMangaQuery } from '$lib/generated';
-	import { MangaMeta, Meta } from '$lib/simpleStores';
-	import {
-		MangaUpdates,
-		type GetMangaResponse,
-		type SearchResult
-	} from '$lib/tracking/mangaUpdates';
-	import type { ApolloQueryResult } from '@apollo/client';
-	import { getModalStore } from '@skeletonlabs/skeleton';
-	import sanitizeHtml from 'sanitize-html';
-	import type { SvelteComponent } from 'svelte';
-	import { writable, type Readable } from 'svelte/store';
-	import TrackingModal from './../../../settings/TrackingModal.svelte';
+	// import Image from '$lib/components/Image.svelte';
+	// import { getToastStore } from '$lib/components/Toast/stores';
+	// import type { GetMangaQuery } from '$lib/generated';
+	// import { MangaMeta, Meta } from '$lib/simpleStores';
+	// import {
+	// 	MangaUpdates,
+	// 	type GetMangaResponse,
+	// 	type SearchResult
+	// } from '$lib/tracking/mangaUpdates';
+	// import type { ApolloQueryResult } from '@apollo/client';
+	// import { getModalStore } from '@skeletonlabs/skeleton';
+	// import sanitizeHtml from 'sanitize-html';
+	// import type { SvelteComponent } from 'svelte';
+	// import { writable, type Readable } from 'svelte/store';
+	// import TrackingModal from './../../../settings/TrackingModal.svelte';
 
-	export let parent: SvelteComponent;
-	export let manga: Readable<ApolloQueryResult<GetMangaQuery>>;
-	export let mangaMeta: ReturnType<typeof MangaMeta>;
+	// export let parent: SvelteComponent;
+	// export let manga: Readable<ApolloQueryResult<GetMangaQuery>>;
+	// export let mangaMeta: ReturnType<typeof MangaMeta>;
 
-	const modalStore = getModalStore();
-	const toastStore = getToastStore();
+	// const modalStore = getModalStore();
+	// const toastStore = getToastStore();
 
-	let searchItems = writable<{
-		data?: SearchResult;
-		loading: boolean;
-		error?: unknown;
-	}>({
-		loading: true
-	});
+	// let searchItems = writable<{
+	// 	data?: SearchResult;
+	// 	loading: boolean;
+	// 	error?: unknown;
+	// }>({
+	// 	loading: true
+	// });
 
-	let value = $manga.data?.manga.title ?? '';
-	doSearch();
+	// let value = $manga.data?.manga.title ?? '';
+	// doSearch();
 
-	async function doSearch() {
-		$searchItems = { loading: true };
-		try {
-			const mangaUpdates = await MangaUpdates;
-			const result = await mangaUpdates.search(value);
-			if ('page' in result) {
-				$searchItems.data = result;
-			}
-		} catch (error) {
-			$searchItems.error = error;
-		}
-		$searchItems.loading = false;
-	}
+	// async function doSearch() {
+	// 	$searchItems = { loading: true };
+	// 	try {
+	// 		const mangaUpdates = await MangaUpdates;
+	// 		const result = await mangaUpdates.search(value);
+	// 		if ('page' in result) {
+	// 			$searchItems.data = result;
+	// 		}
+	// 	} catch (error) {
+	// 		$searchItems.error = error;
+	// 	}
+	// 	$searchItems.loading = false;
+	// }
 
-	function HighestChapterNumber() {
-		return Math.floor(
-			$manga.data.manga.chapters.nodes.reduce((a, c) => {
-				return c.isRead && c.chapterNumber > a ? c.chapterNumber : a;
-			}, 0)
-		);
-	}
+	// function HighestChapterNumber() {
+	// 	return Math.floor(
+	// 		$manga.data.manga.chapters.nodes.reduce((a, c) => {
+	// 			return c.isRead && c.chapterNumber > a ? c.chapterNumber : a;
+	// 		}, 0)
+	// 	);
+	// }
 
-	async function trackAs(id: number) {
-		try {
-			const mangaUpdates = await MangaUpdates;
-			if ($mangaMeta.mangaUpdatesSeriesID === id) {
-				await mangaUpdates.removeMangaFromList($mangaMeta.mangaUpdatesSeriesID);
-				$mangaMeta.mangaUpdatesSeriesID = null;
-				return;
-			}
-			if ($mangaMeta.mangaUpdatesSeriesID)
-				await mangaUpdates.removeMangaFromList($mangaMeta.mangaUpdatesSeriesID);
-			await mangaUpdates.addMangaToList(id, HighestChapterNumber());
-			$mangaMeta.mangaUpdatesSeriesID = id;
-		} catch (error) {
-			if (error instanceof Error) {
-				toastStore.trigger({
-					message: error.message,
-					background: 'bg-error-500'
-				});
-			}
-		}
-	}
+	// async function trackAs(id: number) {
+	// 	try {
+	// 		const mangaUpdates = await MangaUpdates;
+	// 		if ($mangaMeta.mangaUpdatesSeriesID === id) {
+	// 			await mangaUpdates.removeMangaFromList($mangaMeta.mangaUpdatesSeriesID);
+	// 			$mangaMeta.mangaUpdatesSeriesID = null;
+	// 			return;
+	// 		}
+	// 		if ($mangaMeta.mangaUpdatesSeriesID)
+	// 			await mangaUpdates.removeMangaFromList($mangaMeta.mangaUpdatesSeriesID);
+	// 		await mangaUpdates.addMangaToList(id, HighestChapterNumber());
+	// 		$mangaMeta.mangaUpdatesSeriesID = id;
+	// 	} catch (error) {
+	// 		if (error instanceof Error) {
+	// 			toastStore.trigger({
+	// 				message: error.message,
+	// 				background: 'bg-error-500'
+	// 			});
+	// 		}
+	// 	}
+	// }
 
-	let currentTracking: undefined | Promise<GetMangaResponse> = undefined;
-	$: getCurrentManga($mangaMeta.mangaUpdatesSeriesID);
+	// let currentTracking: undefined | Promise<GetMangaResponse> = undefined;
+	// $: getCurrentManga($mangaMeta.mangaUpdatesSeriesID);
 
-	async function getCurrentManga(id: number | null) {
-		if (id && currentTracking === undefined) {
-			currentTracking = (await MangaUpdates).getManga(id);
-			return;
-		}
-		if (!id) {
-			currentTracking = undefined;
-		}
-	}
+	// async function getCurrentManga(id: number | null) {
+	// 	if (id && currentTracking === undefined) {
+	// 		currentTracking = (await MangaUpdates).getManga(id);
+	// 		return;
+	// 	}
+	// 	if (!id) {
+	// 		currentTracking = undefined;
+	// 	}
+	// }
 </script>
 
-{#if $modalStore[0]}
+<!-- {#if $modalStore[0]}
 	<div class="card p-0 w-modal shadow-xl rounded-lg max-h-screen">
 		<h1 class="h3 py-4 pl-4">Tracking settings</h1>
 		<div class="pl-4 border-y border-surface-700">
@@ -138,13 +138,13 @@
 										<div class="w-auto space-y-2">
 											<h2 class="h5 md:h4 lg:h3 xl:h2 line-clamp-1">
 												<span title={sanitizeHtml(value.record.title)}>
-													<!-- eslint-disable-next-line svelte/no-at-html-tags -->
+													<!-- eslint-disable-next-line svelte/no-at-html-tags -\->
 													{@html sanitizeHtml(value.record.title)}
 												</span>
 											</h2>
 											<h3 class="text-sm xl:text-base flex items-center space-x-2">
 												<span class=" line-clamp-3" title={sanitizeHtml(value.record.description)}>
-													<!-- eslint-disable-next-line svelte/no-at-html-tags -->
+													<!-- eslint-disable-next-line svelte/no-at-html-tags -\->
 													{@html sanitizeHtml(value.record.description)}
 												</span>
 											</h3>
@@ -191,12 +191,12 @@
 						</div>
 						<div class="w-auto space-y-2">
 							<h2 class="h5 md:h4 lg:h3 xl:h2 line-clamp-1">
-								<!-- eslint-disable-next-line svelte/no-at-html-tags -->
+								<!-- eslint-disable-next-line svelte/no-at-html-tags -\->
 								<span title={sanitizeHtml(track.title)}>{@html sanitizeHtml(track.title)}</span>
 							</h2>
 							<h3 class="text-sm xl:text-base flex items-center space-x-2">
 								<span class=" line-clamp-3" title={sanitizeHtml(track.description)}>
-									<!-- eslint-disable-next-line svelte/no-at-html-tags -->
+									<!-- eslint-disable-next-line svelte/no-at-html-tags -\->
 									{@html sanitizeHtml(track.description)}
 								</span>
 							</h3>
@@ -208,4 +208,4 @@
 			<h2 class="p-4">Currently not tracking</h2>
 		{/if}
 	</div>
-{/if}
+{/if} -->
