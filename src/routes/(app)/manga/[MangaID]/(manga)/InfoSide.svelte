@@ -17,12 +17,12 @@
 	import InfoSubTitles from './InfoSubTitles.svelte';
 	import TrackingModal from './TrackingModal.svelte';
 	import { getModalStore } from '@skeletonlabs/skeleton';
-	import type { MangaMeta } from '$lib/simpleStores';
+	// import type { MangaMeta } from '$lib/simpleStores';
 	const modalStore = getModalStore();
 
 	export let manga: Readable<ApolloQueryResult<GetMangaQuery>>;
 	export let MangaID: number;
-	export let mangaMeta: ReturnType<typeof MangaMeta>;
+	// export let mangaMeta: ReturnType<typeof MangaMeta>;
 
 	async function libtoggle() {
 		await updateMangas({
@@ -169,7 +169,7 @@
 							<span class="uppercase text-sm sm:text-base">Migrate</span>
 						{/if}
 					</a>
-					{#if window.tracking === 'docker'}
+					<!-- {#if window.tracking === 'docker'}
 						<button
 							on:click={() => {
 								modalStore.trigger({
@@ -184,7 +184,7 @@
 								<span class="uppercase text-sm sm:text-base"> Tracking</span>
 							{/if}
 						</button>
-					{/if}
+					{/if} -->
 				{/if}
 			</div>
 		</MediaQuery>

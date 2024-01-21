@@ -7,39 +7,39 @@
 -->
 
 <script lang="ts">
-	import Slide from '$lib/components/Slide.svelte';
-	import { getModalStore } from '@skeletonlabs/skeleton';
-	import { Meta } from '$lib/simpleStores';
-	import { MangaUpdates } from '$lib/tracking/mangaUpdates';
-	import { getToastStore } from '$lib/components/Toast/stores';
-	import Tooltip from '$lib/components/Tooltip.svelte';
-	const modalStore = getModalStore();
-	const toastStore = getToastStore();
+	// import Slide from '$lib/components/Slide.svelte';
+	// import { getModalStore } from '@skeletonlabs/skeleton';
+	// import { Meta } from '$lib/simpleStores';
+	// import { MangaUpdates } from '$lib/tracking/mangaUpdates';
+	// import { getToastStore } from '$lib/components/Toast/stores';
+	// import Tooltip from '$lib/components/Tooltip.svelte';
+	// const modalStore = getModalStore();
+	// const toastStore = getToastStore();
 
-	async function handelLogout() {
-		await (await MangaUpdates).logout();
-		$Meta.mangaUpdatesTracking.enabled = false;
-		$Meta.mangaUpdatesTracking.username = '';
-		$Meta.mangaUpdatesTracking.password = '';
-	}
+	// async function handelLogout() {
+	// 	await (await MangaUpdates).logout();
+	// 	$Meta.mangaUpdatesTracking.enabled = false;
+	// 	$Meta.mangaUpdatesTracking.username = '';
+	// 	$Meta.mangaUpdatesTracking.password = '';
+	// }
 
-	async function test() {
-		const fail = `Failed to login: check console for more details`;
-		try {
-			const tmp = await (await MangaUpdates).login();
-			toastStore.trigger({
-				message: tmp ?? fail
-			});
-		} catch (error) {
-			toastStore.trigger({
-				message: fail,
-				background: 'bg-error-500'
-			});
-		}
-	}
+	// async function test() {
+	// 	const fail = `Failed to login: check console for more details`;
+	// 	try {
+	// 		const tmp = await (await MangaUpdates).login();
+	// 		toastStore.trigger({
+	// 			message: tmp ?? fail
+	// 		});
+	// 	} catch (error) {
+	// 		toastStore.trigger({
+	// 			message: fail,
+	// 			background: 'bg-error-500'
+	// 		});
+	// 	}
+	// }
 </script>
 
-{#if $modalStore[0]}
+<!-- {#if $modalStore[0]}
 	<div class="card p-0 w-modal shadow-xl space-y-4 rounded-lg max-h-screen">
 		<h1 class="h3 pt-4 pl-4">Tracking</h1>
 		<div class="pl-4 border-y border-surface-700">
@@ -79,4 +79,4 @@
 		</div>
 		<div class="p-4" />
 	</div>
-{/if}
+{/if} -->
