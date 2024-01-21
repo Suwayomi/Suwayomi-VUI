@@ -27,6 +27,10 @@ type BackupRestoreStatus {
   state: BackupRestoreState!
   totalManga: Int!
 }
+type BindTrackPayload {
+  clientMutationId: String
+  trackRecord: TrackRecordType!
+}
 type CategoryEdge implements Edge {
   cursor: Cursor!
   node: CategoryType!
@@ -46,7 +50,8 @@ type CategoryNodeList implements NodeList {
 type CategoryType {
   default: Boolean!
   id: Int!
-  includeInUpdate: IncludeInUpdate!
+  includeInDownload: IncludeOrExclude!
+  includeInUpdate: IncludeOrExclude!
   name: String!
   order: Int!
   mangas: MangaNodeList!
@@ -287,6 +292,21 @@ type ListPreference {
   title: String
   visible: Boolean!
 }
+type LoginTrackerCredentialsPayload {
+  clientMutationId: String
+  isLoggedIn: Boolean!
+  tracker: TrackerType!
+}
+type LoginTrackerOAuthPayload {
+  clientMutationId: String
+  isLoggedIn: Boolean!
+  tracker: TrackerType!
+}
+type LogoutTrackerPayload {
+  clientMutationId: String
+  isLoggedIn: Boolean!
+  tracker: TrackerType!
+}
 type MangaEdge implements Edge {
   cursor: Cursor!
   node: MangaType!
@@ -327,8 +347,12 @@ type MangaType {
   chaptersAge: LongString
   downloadCount: Int!
   lastReadChapter: ChapterType
+  latestFetchedChapter: ChapterType
+  latestReadChapter: ChapterType
+  latestUploadedChapter: ChapterType
   meta: [MangaMetaType!]!
   source: SourceType
+  trackRecords: TrackRecordNodeList!
   unreadCount: Int!
 }
 type MetaEdge implements Edge {
@@ -394,6 +418,11 @@ type Mutation {
   setSettings(input: SetSettingsInput!): SetSettingsPayload!
   fetchSourceManga(input: FetchSourceMangaInput!): FetchSourceMangaPayload!
   updateSourcePreference(input: UpdateSourcePreferenceInput!): UpdateSourcePreferencePayload!
+  bindTrack(input: BindTrackInput!): BindTrackPayload!
+  loginTrackerCredentials(input: LoginTrackerCredentialsInput!): LoginTrackerCredentialsPayload!
+  loginTrackerOAuth(input: LoginTrackerOAuthInput!): LoginTrackerOAuthPayload!
+  logoutTracker(input: LogoutTrackerInput!): LogoutTrackerPayload!
+  updateTrack(input: UpdateTrackInput!): UpdateTrackPayload!
   updateCategoryManga(input: UpdateCategoryMangaInput!): UpdateCategoryMangaPayload!
   updateLibraryManga(input: UpdateLibraryMangaInput!): UpdateLibraryMangaPayload!
   updateStop(input: UpdateStopInput!): UpdateStopPayload!
@@ -466,6 +495,11 @@ type Query {
   settings: SettingsType!
   source(id: LongString!): SourceType!
   sources(condition: SourceConditionInput, filter: SourceFilterInput, orderBy: SourceOrderBy, orderByType: SortOrder, before: Cursor, after: Cursor, first: Int, last: Int, offset: Int): SourceNodeList!
+  searchTracker(input: SearchTrackerInput!): SearchTrackerPayload!
+  trackRecord(id: Int!): TrackRecordType!
+  trackRecords(condition: TrackRecordConditionInput, filter: TrackRecordFilterInput, orderBy: TrackRecordOrderBy, orderByType: SortOrder, before: Cursor, after: Cursor, first: Int, last: Int, offset: Int): TrackRecordNodeList!
+  tracker(id: Int!): TrackerType!
+  trackers(condition: TrackerConditionInput, orderBy: TrackerOrderBy, orderByType: SortOrder, before: Cursor, after: Cursor, first: Int, last: Int, offset: Int): TrackerNodeList!
   lastUpdateTimestamp: LastUpdateTimestampPayload!
   updateStatus: UpdateStatus!
 }
@@ -481,6 +515,9 @@ type RestoreBackupPayload {
   clientMutationId: String
   id: String!
   status: BackupRestoreStatus
+}
+type SearchTrackerPayload {
+  trackSearches: [TrackSearchType!]!
 }
 type SelectFilter {
   default: Int!
@@ -604,6 +641,66 @@ type TextFilter {
   default: String!
   name: String!
 }
+type TrackRecordEdge implements Edge {
+  cursor: Cursor!
+  node: TrackRecordType!
+}
+type TrackRecordNodeList implements NodeList {
+  edges: [TrackRecordEdge!]!
+  nodes: [TrackRecordType!]!
+  pageInfo: PageInfo!
+  totalCount: Int!
+}
+type TrackRecordType {
+  finishDate: LongString!
+  id: Int!
+  lastChapterRead: Float!
+  libraryId: LongString
+  mangaId: Int!
+  remoteId: LongString!
+  remoteUrl: String!
+  score: Float!
+  startDate: LongString!
+  status: Int!
+  title: String!
+  totalChapters: Int!
+  trackerId: Int!
+  displayScore: String!
+  manga: MangaType!
+  tracker: TrackerType!
+}
+type TrackSearchType {
+  coverUrl: String!
+  id: Int!
+  publishingStatus: String!
+  publishingType: String!
+  remoteId: LongString!
+  startDate: String!
+  summary: String!
+  title: String!
+  totalChapters: Int!
+  trackerId: Int!
+  trackingUrl: String!
+  tracker: TrackerType!
+}
+type TrackerEdge implements Edge {
+  cursor: Cursor!
+  node: TrackerType!
+}
+type TrackerNodeList implements NodeList {
+  edges: [TrackerEdge!]!
+  nodes: [TrackerType!]!
+  pageInfo: PageInfo!
+  totalCount: Int!
+}
+type TrackerType {
+  authUrl: String
+  icon: String!
+  id: Int!
+  isLoggedIn: Boolean!
+  name: String!
+  trackRecords: TrackRecordNodeList!
+}
 type TriStateFilter {
   default: TriState!
   name: String!
@@ -683,6 +780,10 @@ type UpdateStatusType {
 }
 type UpdateStopPayload {
   clientMutationId: String
+}
+type UpdateTrackPayload {
+  clientMutationId: String
+  trackRecord: TrackRecordType
 }
 type ValidateBackupResult {
   missingSources: [ValidateBackupSource!]!
@@ -766,7 +867,7 @@ interface Settings {
   webUIUpdateCheckInterval: Float
 }
 union Filter = CheckBoxFilter | GroupFilter | HeaderFilter | SelectFilter | SeparatorFilter | SortFilter | TextFilter | TriStateFilter
-union Node = CategoryMetaType | CategoryType | ChapterMetaType | ChapterType | DownloadType | ExtensionType | GlobalMetaType | MangaMetaType | MangaType | PartialSettingsType | SettingsType | SourceType
+union Node = CategoryMetaType | CategoryType | ChapterMetaType | ChapterType | DownloadType | ExtensionType | GlobalMetaType | MangaMetaType | MangaType | PartialSettingsType | SettingsType | SourceType | TrackRecordType | TrackerType
 union Preference = CheckBoxPreference | EditTextPreference | ListPreference | MultiSelectListPreference | SwitchPreference
 enum BackupRestoreState {
   IDLE
@@ -809,7 +910,7 @@ enum FetchSourceMangaType {
   POPULAR
   LATEST
 }
-enum IncludeInUpdate {
+enum IncludeOrExclude {
   EXCLUDE
   INCLUDE
   UNSET
@@ -846,6 +947,23 @@ enum SourceOrderBy {
   NAME
   LANG
 }
+enum TrackRecordOrderBy {
+  ID
+  MANGA_ID
+  TRACKER_ID
+  REMOTE_ID
+  TITLE
+  LAST_CHAPTER_READ
+  TOTAL_CHAPTERS
+  SCORE
+  START_DATE
+  FINISH_DATE
+}
+enum TrackerOrderBy {
+  ID
+  NAME
+  IS_LOGGED_IN
+}
 enum TriState {
   IGNORE
   INCLUDE
@@ -873,6 +991,11 @@ enum WebUIFlavor {
 enum WebUIInterface {
   BROWSER
   ELECTRON
+}
+input BindTrackInput {
+  clientMutationId: String
+  mangaId: Int!
+  trackSearchId: Int!
 }
 input BooleanFilterInput {
   distinctFrom: Boolean
@@ -969,7 +1092,8 @@ input CreateBackupInput {
 input CreateCategoryInput {
   clientMutationId: String
   default: Boolean
-  includeInUpdate: IncludeInUpdate
+  includeInDownload: IncludeOrExclude
+  includeInUpdate: IncludeOrExclude
   name: String!
   order: Int
 }
@@ -1011,6 +1135,19 @@ input DequeueChapterDownloadInput {
 input DequeueChapterDownloadsInput {
   clientMutationId: String
   ids: [Int!]!
+}
+input DoubleFilterInput {
+  distinctFrom: Float
+  equalTo: Float
+  greaterThan: Float
+  greaterThanOrEqualTo: Float
+  in: [Float!]
+  isNull: Boolean
+  lessThan: Float
+  lessThanOrEqualTo: Float
+  notDistinctFrom: Float
+  notEqualTo: Float
+  notIn: [Float!]
 }
 input DownloadAheadInput {
   clientMutationId: String
@@ -1121,6 +1258,21 @@ input IntFilterInput {
   notDistinctFrom: Int
   notEqualTo: Int
   notIn: [Int!]
+}
+input LoginTrackerCredentialsInput {
+  clientMutationId: String
+  password: String!
+  trackerId: Int!
+  username: String!
+}
+input LoginTrackerOAuthInput {
+  callbackUrl: String!
+  clientMutationId: String
+  trackerId: Int!
+}
+input LogoutTrackerInput {
+  clientMutationId: String
+  trackerId: Int!
 }
 input LongFilterInput {
   distinctFrom: LongString
@@ -1253,6 +1405,10 @@ input RestoreBackupInput {
   backup: Upload!
   clientMutationId: String
 }
+input SearchTrackerInput {
+  query: String!
+  trackerId: Int!
+}
 input SetCategoryMetaInput {
   clientMutationId: String
   meta: CategoryMetaTypeInput!
@@ -1343,6 +1499,45 @@ input StringFilterInput {
   startsWith: String
   startsWithInsensitive: String
 }
+input TrackRecordConditionInput {
+  finishDate: LongString
+  id: Int
+  lastChapterRead: Float
+  libraryId: LongString
+  mangaId: Int
+  remoteId: LongString
+  remoteUrl: String
+  score: Float
+  startDate: LongString
+  status: Int
+  title: String
+  totalChapters: Int
+  trackerId: Int
+}
+input TrackRecordFilterInput {
+  and: [TrackRecordFilterInput!]
+  finishDate: LongFilterInput
+  id: IntFilterInput
+  lastChapterRead: DoubleFilterInput
+  libraryId: LongFilterInput
+  mangaId: IntFilterInput
+  not: TrackRecordFilterInput
+  or: [TrackRecordFilterInput!]
+  remoteId: LongFilterInput
+  remoteUrl: StringFilterInput
+  score: DoubleFilterInput
+  startDate: LongFilterInput
+  status: IntFilterInput
+  title: StringFilterInput
+  totalChapters: IntFilterInput
+  trackerId: IntFilterInput
+}
+input TrackerConditionInput {
+  icon: String
+  id: Int
+  isLoggedIn: Boolean
+  name: String
+}
 input UpdateCategoriesInput {
   clientMutationId: String
   ids: [Int!]!
@@ -1364,7 +1559,8 @@ input UpdateCategoryOrderInput {
 }
 input UpdateCategoryPatchInput {
   default: Boolean
-  includeInUpdate: IncludeInUpdate
+  includeInDownload: IncludeOrExclude
+  includeInUpdate: IncludeOrExclude
   name: String
 }
 input UpdateChapterInput {
@@ -1435,6 +1631,16 @@ input UpdateSourcePreferenceInput {
 }
 input UpdateStopInput {
   clientMutationId: String
+}
+input UpdateTrackInput {
+  clientMutationId: String
+  finishDate: LongString
+  lastChapterRead: Float
+  recordId: Int!
+  scoreString: String
+  startDate: LongString
+  status: Int
+  unbind: Boolean
 }
 input ValidateBackupInput {
   backup: Upload!

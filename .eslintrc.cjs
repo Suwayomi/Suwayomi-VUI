@@ -30,6 +30,7 @@ module.exports = {
 	rules: {
 		'no-unused-vars': 'off',
 		'@typescript-eslint/no-unused-vars': ['error', { argsIgnorePattern: '^_' }],
-		'no-empty': ['error', { allowEmptyCatch: true }]
+		'no-empty': ['error', { allowEmptyCatch: true }],
+		'@typescript-eslint/ban-ts-comment': 'off'
 	}
 };

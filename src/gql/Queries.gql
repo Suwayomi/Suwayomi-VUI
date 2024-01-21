@@ -379,3 +379,37 @@ query restoreStatus($id: String!) {
 		totalManga
 	}
 }
+
+query trackers {
+	trackers {
+		nodes {
+			...TrackerTypeFragment
+		}
+	}
+}
+
+query searchTracker($query: String!, $trackerId: Int!) {
+	searchTracker(input: { query: $query, trackerId: $trackerId }) {
+		trackSearches {
+			coverUrl
+			publishingStatus
+			publishingType
+			startDate
+			summary
+			title
+			totalChapters
+			trackingUrl
+			trackerId
+			remoteId
+			id
+		}
+	}
+}
+
+query trackRecords {
+	trackRecords {
+		nodes {
+			...TrackRecordTypeFragment
+		}
+	}
+}
