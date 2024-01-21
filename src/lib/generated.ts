@@ -2445,17 +2445,17 @@ export type WebUiUpdateStatus = {
   state: UpdateState;
 };
 
+export type TrackRecordTypeFragmentFragment = { __typename?: 'TrackRecordType', displayScore: string, finishDate: any, id: number, lastChapterRead: number, libraryId?: any | null, mangaId: number, remoteId: any, remoteUrl: string, score: number, startDate: any, status: number, title: string, totalChapters: number, trackerId: number };
+
 export type ChapterTypeFragmentFragment = { __typename?: 'ChapterType', isBookmarked: boolean, isDownloaded: boolean, isRead: boolean, id: number, chapterNumber: number, fetchedAt: any, lastPageRead: number, name: string, sourceOrder: number, uploadDate: any, pageCount: number, scanlator?: string | null };
 
-export type MangaTypeFragmentFragment = { __typename?: 'MangaType', artist?: string | null, author?: string | null, description?: string | null, genre: Array<string>, id: number, inLibrary: boolean, lastFetchedAt?: any | null, realUrl?: string | null, status: MangaStatus, title: string, thumbnailUrl?: string | null, unreadCount: number, downloadCount: number, lastReadChapter?: { __typename?: 'ChapterType', lastReadAt: any } | null, meta: Array<{ __typename?: 'MangaMetaType', value: string, key: string }>, source?: { __typename?: 'SourceType', displayName: string } | null, categories: { __typename?: 'CategoryNodeList', nodes: Array<{ __typename?: 'CategoryType', id: number }> } };
+export type MangaTypeFragmentFragment = { __typename?: 'MangaType', artist?: string | null, author?: string | null, description?: string | null, genre: Array<string>, id: number, inLibrary: boolean, lastFetchedAt?: any | null, realUrl?: string | null, status: MangaStatus, title: string, thumbnailUrl?: string | null, unreadCount: number, downloadCount: number, lastReadChapter?: { __typename?: 'ChapterType', lastReadAt: any } | null, meta: Array<{ __typename?: 'MangaMetaType', value: string, key: string }>, source?: { __typename?: 'SourceType', displayName: string } | null, categories: { __typename?: 'CategoryNodeList', nodes: Array<{ __typename?: 'CategoryType', id: number }> }, trackRecords: { __typename?: 'TrackRecordNodeList', nodes: Array<{ __typename?: 'TrackRecordType', displayScore: string, finishDate: any, id: number, lastChapterRead: number, libraryId?: any | null, mangaId: number, remoteId: any, remoteUrl: string, score: number, startDate: any, status: number, title: string, totalChapters: number, trackerId: number }> } };
 
 export type SourceTypeFragmentFragment = { __typename?: 'SourceType', id: any, displayName: string, iconUrl: string, lang: string };
 
 export type ExtensionTypeFragmentFragment = { __typename?: 'ExtensionType', name: string, repo?: string | null, versionName: string, pkgName: string, lang: string, iconUrl: string, isNsfw: boolean, isInstalled: boolean, isObsolete: boolean, hasUpdate: boolean };
 
 export type CategoryTypeFragmentFragment = { __typename?: 'CategoryType', id: number, default: boolean, order: number, name: string, mangas: { __typename?: 'MangaNodeList', totalCount: number } };
-
-export type TrackRecordTypeFragmentFragment = { __typename?: 'TrackRecordType', displayScore: string, finishDate: any, id: number, lastChapterRead: number, libraryId?: any | null, mangaId: number, remoteId: any, remoteUrl: string, score: number, startDate: any, status: number, title: string, totalChapters: number, trackerId: number };
 
 export type TrackerTypeFragmentFragment = { __typename?: 'TrackerType', authUrl?: string | null, icon: string, id: number, isLoggedIn: boolean, name: string };
 
@@ -2528,7 +2528,7 @@ export type FetchMangaInfoMutationVariables = Exact<{
 }>;
 
 
-export type FetchMangaInfoMutation = { __typename?: 'Mutation', fetchManga: { __typename?: 'FetchMangaPayload', manga: { __typename?: 'MangaType', artist?: string | null, author?: string | null, description?: string | null, genre: Array<string>, id: number, inLibrary: boolean, lastFetchedAt?: any | null, realUrl?: string | null, status: MangaStatus, title: string, thumbnailUrl?: string | null, unreadCount: number, downloadCount: number, lastReadChapter?: { __typename?: 'ChapterType', lastReadAt: any } | null, meta: Array<{ __typename?: 'MangaMetaType', value: string, key: string }>, source?: { __typename?: 'SourceType', displayName: string } | null, categories: { __typename?: 'CategoryNodeList', nodes: Array<{ __typename?: 'CategoryType', id: number }> } } } };
+export type FetchMangaInfoMutation = { __typename?: 'Mutation', fetchManga: { __typename?: 'FetchMangaPayload', manga: { __typename?: 'MangaType', artist?: string | null, author?: string | null, description?: string | null, genre: Array<string>, id: number, inLibrary: boolean, lastFetchedAt?: any | null, realUrl?: string | null, status: MangaStatus, title: string, thumbnailUrl?: string | null, unreadCount: number, downloadCount: number, lastReadChapter?: { __typename?: 'ChapterType', lastReadAt: any } | null, meta: Array<{ __typename?: 'MangaMetaType', value: string, key: string }>, source?: { __typename?: 'SourceType', displayName: string } | null, categories: { __typename?: 'CategoryNodeList', nodes: Array<{ __typename?: 'CategoryType', id: number }> }, trackRecords: { __typename?: 'TrackRecordNodeList', nodes: Array<{ __typename?: 'TrackRecordType', displayScore: string, finishDate: any, id: number, lastChapterRead: number, libraryId?: any | null, mangaId: number, remoteId: any, remoteUrl: string, score: number, startDate: any, status: number, title: string, totalChapters: number, trackerId: number }> } } } };
 
 export type FetchMangaChaptersMutationVariables = Exact<{
   id: Scalars['Int']['input'];
@@ -2752,12 +2752,12 @@ export type BindTrackMutationVariables = Exact<{
 
 export type BindTrackMutation = { __typename?: 'Mutation', bindTrack: { __typename?: 'BindTrackPayload', trackRecord: { __typename?: 'TrackRecordType', displayScore: string, finishDate: any, id: number, lastChapterRead: number, libraryId?: any | null, mangaId: number, remoteId: any, remoteUrl: string, score: number, startDate: any, status: number, title: string, totalChapters: number, trackerId: number } } };
 
-export type MyMutationMutationVariables = Exact<{
+export type UpdateTrackMutationVariables = Exact<{
   input: UpdateTrackInput;
 }>;
 
 
-export type MyMutationMutation = { __typename?: 'Mutation', updateTrack: { __typename?: 'UpdateTrackPayload', trackRecord?: { __typename?: 'TrackRecordType', displayScore: string, finishDate: any, id: number, lastChapterRead: number, libraryId?: any | null, mangaId: number, remoteId: any, remoteUrl: string, score: number, startDate: any, status: number, title: string, totalChapters: number, trackerId: number } | null } };
+export type UpdateTrackMutation = { __typename?: 'Mutation', updateTrack: { __typename?: 'UpdateTrackPayload', trackRecord?: { __typename?: 'TrackRecordType', displayScore: string, finishDate: any, id: number, lastChapterRead: number, libraryId?: any | null, mangaId: number, remoteId: any, remoteUrl: string, score: number, startDate: any, status: number, title: string, totalChapters: number, trackerId: number } | null } };
 
 export type CategoriesQueryVariables = Exact<{
   notEqualTo?: InputMaybe<Scalars['Int']['input']>;
@@ -2778,7 +2778,7 @@ export type GetMangaQueryVariables = Exact<{
 }>;
 
 
-export type GetMangaQuery = { __typename?: 'Query', manga: { __typename?: 'MangaType', artist?: string | null, author?: string | null, description?: string | null, genre: Array<string>, id: number, inLibrary: boolean, lastFetchedAt?: any | null, realUrl?: string | null, status: MangaStatus, title: string, thumbnailUrl?: string | null, unreadCount: number, downloadCount: number, chapters: { __typename?: 'ChapterNodeList', totalCount: number, nodes: Array<{ __typename?: 'ChapterType', isBookmarked: boolean, isDownloaded: boolean, isRead: boolean, id: number, chapterNumber: number, fetchedAt: any, lastPageRead: number, name: string, sourceOrder: number, uploadDate: any, pageCount: number, scanlator?: string | null }> }, lastReadChapter?: { __typename?: 'ChapterType', lastReadAt: any } | null, meta: Array<{ __typename?: 'MangaMetaType', value: string, key: string }>, source?: { __typename?: 'SourceType', displayName: string } | null, categories: { __typename?: 'CategoryNodeList', nodes: Array<{ __typename?: 'CategoryType', id: number }> } } };
+export type GetMangaQuery = { __typename?: 'Query', manga: { __typename?: 'MangaType', artist?: string | null, author?: string | null, description?: string | null, genre: Array<string>, id: number, inLibrary: boolean, lastFetchedAt?: any | null, realUrl?: string | null, status: MangaStatus, title: string, thumbnailUrl?: string | null, unreadCount: number, downloadCount: number, chapters: { __typename?: 'ChapterNodeList', totalCount: number, nodes: Array<{ __typename?: 'ChapterType', isBookmarked: boolean, isDownloaded: boolean, isRead: boolean, id: number, chapterNumber: number, fetchedAt: any, lastPageRead: number, name: string, sourceOrder: number, uploadDate: any, pageCount: number, scanlator?: string | null }> }, lastReadChapter?: { __typename?: 'ChapterType', lastReadAt: any } | null, meta: Array<{ __typename?: 'MangaMetaType', value: string, key: string }>, source?: { __typename?: 'SourceType', displayName: string } | null, categories: { __typename?: 'CategoryNodeList', nodes: Array<{ __typename?: 'CategoryType', id: number }> }, trackRecords: { __typename?: 'TrackRecordNodeList', nodes: Array<{ __typename?: 'TrackRecordType', displayScore: string, finishDate: any, id: number, lastChapterRead: number, libraryId?: any | null, mangaId: number, remoteId: any, remoteUrl: string, score: number, startDate: any, status: number, title: string, totalChapters: number, trackerId: number }> } } };
 
 export type GetSingleChapterQueryVariables = Exact<{
   id: Scalars['Int']['input'];
@@ -2889,7 +2889,9 @@ export type RestoreStatusQueryVariables = Exact<{
 
 export type RestoreStatusQuery = { __typename?: 'Query', restoreStatus?: { __typename?: 'BackupRestoreStatus', mangaProgress: number, state: BackupRestoreState, totalManga: number } | null };
 
-export type TrackersQueryVariables = Exact<{ [key: string]: never; }>;
+export type TrackersQueryVariables = Exact<{
+  isLoggedIn?: InputMaybe<Scalars['Boolean']['input']>;
+}>;
 
 
 export type TrackersQuery = { __typename?: 'Query', trackers: { __typename?: 'TrackerNodeList', nodes: Array<{ __typename?: 'TrackerType', authUrl?: string | null, icon: string, id: number, isLoggedIn: boolean, name: string }> } };
@@ -2933,6 +2935,24 @@ export const ChapterTypeFragmentFragmentDoc = gql`
   scanlator
 }
     `;
+export const TrackRecordTypeFragmentFragmentDoc = gql`
+    fragment TrackRecordTypeFragment on TrackRecordType {
+  displayScore
+  finishDate
+  id
+  lastChapterRead
+  libraryId
+  mangaId
+  remoteId
+  remoteUrl
+  score
+  startDate
+  status
+  title
+  totalChapters
+  trackerId
+}
+    `;
 export const MangaTypeFragmentFragmentDoc = gql`
     fragment MangaTypeFragment on MangaType {
   artist
@@ -2963,8 +2983,13 @@ export const MangaTypeFragmentFragmentDoc = gql`
       id
     }
   }
+  trackRecords {
+    nodes {
+      ...TrackRecordTypeFragment
+    }
+  }
 }
-    `;
+    ${TrackRecordTypeFragmentFragmentDoc}`;
 export const SourceTypeFragmentFragmentDoc = gql`
     fragment SourceTypeFragment on SourceType {
   id
@@ -2996,24 +3021,6 @@ export const CategoryTypeFragmentFragmentDoc = gql`
   mangas {
     totalCount
   }
-}
-    `;
-export const TrackRecordTypeFragmentFragmentDoc = gql`
-    fragment TrackRecordTypeFragment on TrackRecordType {
-  displayScore
-  finishDate
-  id
-  lastChapterRead
-  libraryId
-  mangaId
-  remoteId
-  remoteUrl
-  score
-  startDate
-  status
-  title
-  totalChapters
-  trackerId
 }
     `;
 export const TrackerTypeFragmentFragmentDoc = gql`
@@ -3483,8 +3490,8 @@ export const BindTrackDoc = gql`
   }
 }
     ${TrackRecordTypeFragmentFragmentDoc}`;
-export const MyMutationDoc = gql`
-    mutation MyMutation($input: UpdateTrackInput!) {
+export const UpdateTrackDoc = gql`
+    mutation updateTrack($input: UpdateTrackInput!) {
   updateTrack(input: $input) {
     trackRecord {
       ...TrackRecordTypeFragment
@@ -3872,8 +3879,8 @@ export const RestoreStatusDoc = gql`
 }
     `;
 export const TrackersDoc = gql`
-    query trackers {
-  trackers {
+    query trackers($isLoggedIn: Boolean = null) {
+  trackers(condition: {isLoggedIn: $isLoggedIn}) {
     nodes {
       ...TrackerTypeFragment
     }
@@ -4402,14 +4409,14 @@ export const bindTrack = (
             });
             return m;
           }
-export const MyMutation = (
+export const updateTrack = (
             options: Omit<
-              MutationOptions<any, MyMutationMutationVariables>, 
+              MutationOptions<any, UpdateTrackMutationVariables>, 
               "mutation"
             >
           ) => {
-            const m = client.mutate<MyMutationMutation, MyMutationMutationVariables>({
-              mutation: MyMutationDoc,
+            const m = client.mutate<UpdateTrackMutation, UpdateTrackMutationVariables>({
+              mutation: UpdateTrackDoc,
               ...options,
             });
             return m;

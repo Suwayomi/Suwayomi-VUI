@@ -28,7 +28,6 @@
 	import type { PageData } from './$types';
 	import { ViewNav, chapterTitle, mangaTitle } from './chapterStores';
 	import { paths, type PathLayout, type Paths, type Tpath } from './paths';
-	// import { MangaUpdates } from '$lib/tracking/mangaUpdates';
 
 	export let data: PageData;
 	let mangaMeta = MangaMeta(data.MangaID);
@@ -331,10 +330,6 @@
 
 	let updatedChaps: string[] = [];
 
-	// let trackerMangaStatus:
-	// 	| undefined
-	// 	| Awaited<ReturnType<Awaited<typeof MangaUpdates>['mangaStatus']>> = undefined;
-
 	function HighestChapterNumber() {
 		return Math.floor(
 			$manga.data.manga.chapters.nodes.reduce((a, c) => {
@@ -342,50 +337,6 @@
 			}, 0)
 		);
 	}
-
-	// async function initTracker() {
-	// 	if (window.tracking !== 'docker') return;
-	// 	if (!$Meta.mangaUpdatesTracking.enabled) return;
-	// 	if ($mangaMeta.mangaUpdatesSeriesID === null) return;
-
-	// 	const mangaUpdates = await MangaUpdates;
-	// 	try {
-	// 		trackerMangaStatus = await mangaUpdates.mangaStatus($mangaMeta.mangaUpdatesSeriesID);
-	// 	} catch (error) {
-	// 		await mangaUpdates.addMangaToList($mangaMeta.mangaUpdatesSeriesID, HighestChapterNumber());
-	// 		trackerMangaStatus = await mangaUpdates.mangaStatus($mangaMeta.mangaUpdatesSeriesID);
-	// 	}
-	// }
-
-	// async function updateTracker(id: number) {
-	// 	if (window.tracking !== 'docker') return;
-	// 	if (!$Meta.mangaUpdatesTracking.enabled) return;
-	// 	if ($mangaMeta.mangaUpdatesSeriesID === null) return;
-	// 	const chapter = getChapterOfID(id);
-	// 	if (!chapter) return;
-	// 	if (trackerMangaStatus === undefined) {
-	// 		await initTracker();
-	// 	}
-	// 	if (
-	// 		trackerMangaStatus !== undefined &&
-	// 		'list_id' in trackerMangaStatus &&
-	// 		trackerMangaStatus.status.chapter >= Math.floor(chapter.chapterNumber)
-	// 	) {
-	// 		return;
-	// 	}
-	// 	const mangaUpdates = await MangaUpdates;
-	// 	try {
-	// 		mangaUpdates.updateMangaListStatus(
-	// 			$mangaMeta.mangaUpdatesSeriesID,
-	// 			Math.floor(chapter.chapterNumber)
-	// 		);
-	// 	} catch (error) {
-	// 		await mangaUpdates.addMangaToList(id, Math.floor(chapter.chapterNumber));
-	// 	}
-	// 	if (trackerMangaStatus !== undefined && 'list_id' in trackerMangaStatus) {
-	// 		trackerMangaStatus.status.chapter = Math.floor(chapter.chapterNumber);
-	// 	}
-	// }
 
 	function PageIntersect(
 		e: CustomEvent<boolean>,
@@ -417,9 +368,6 @@
 				setTimeout(() => {
 					updatedChaps = updatedChaps.filter((e) => e !== selector);
 				}, 5000);
-				// if (pageIndex >= maxPages * 0.8) {
-				// 	updateTracker(id);
-				// }
 			}
 		} else {
 			visiblePages = visiblePages.filter((e) => e.selector !== selector);

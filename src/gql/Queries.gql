@@ -380,8 +380,8 @@ query restoreStatus($id: String!) {
 	}
 }
 
-query trackers {
-	trackers {
+query trackers($isLoggedIn: Boolean = null) {
+	trackers(condition: { isLoggedIn: $isLoggedIn }) {
 		nodes {
 			...TrackerTypeFragment
 		}
