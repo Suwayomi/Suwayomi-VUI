@@ -7,9 +7,7 @@
 -->
 <script lang="ts">
 	import { loginTrackerCredentials, logoutTracker, type TrackersQuery } from '$lib/generated';
-	import type { ApolloQueryResult } from '@apollo/client';
 	import { getModalStore } from '@skeletonlabs/skeleton';
-	import type { Readable } from 'svelte/store';
 
 	const modalStore = getModalStore();
 	export let tracker: TrackersQuery['trackers']['nodes'][0];

@@ -20,7 +20,7 @@
 		type FetchChapterPagesMutation,
 		type GetMangaQuery
 	} from '$lib/generated';
-	import { Layout, MangaMeta, Meta, Mode } from '$lib/simpleStores';
+	import { Layout, MangaMeta, Mode } from '$lib/simpleStores';
 	import { ErrorHelp } from '$lib/util';
 	import type { FetchResult } from '@apollo/client';
 	import { getDrawerStore } from '@skeletonlabs/skeleton';
@@ -329,14 +329,6 @@
 	}
 
 	let updatedChaps: string[] = [];
-
-	function HighestChapterNumber() {
-		return Math.floor(
-			$manga.data.manga.chapters.nodes.reduce((a, c) => {
-				return c.isRead && c.chapterNumber > a ? c.chapterNumber : a;
-			}, 0)
-		);
-	}
 
 	function PageIntersect(
 		e: CustomEvent<boolean>,

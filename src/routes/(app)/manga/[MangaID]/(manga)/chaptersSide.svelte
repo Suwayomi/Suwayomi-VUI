@@ -26,7 +26,7 @@
 	} from '$lib/generated';
 	import { longPress } from '$lib/press';
 	import { screens } from '$lib/screens';
-	import { ChapterSort, ChapterTitle, MangaMeta, Meta } from '$lib/simpleStores';
+	import { ChapterSort, ChapterTitle, MangaMeta } from '$lib/simpleStores';
 	// import { MangaUpdates } from '$lib/tracking/mangaUpdates';
 	import { HelpDoSelect, HelpSelectAll, HelpUpdateChapters, dlreabook } from '$lib/util';
 	import type { ApolloQueryResult } from '@apollo/client';
