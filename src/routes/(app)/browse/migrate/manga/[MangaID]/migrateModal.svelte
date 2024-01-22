@@ -21,7 +21,6 @@
 		type GetMangaQuery,
 		type UpdateMangaCategoriesMutation
 	} from '$lib/generated';
-	import { MangaMeta } from '$lib/simpleStores';
 	import type { ApolloCache, FetchResult } from '@apollo/client';
 	import { ProgressRadial, getModalStore } from '@skeletonlabs/skeleton';
 	import type { SvelteComponent } from 'svelte';
@@ -33,11 +32,10 @@
 
 	let doChapters = true;
 	let doCategories = true;
-	let doTracking = true;
+	let doTracking = false;
 
 	let MigrateLoading = false;
 	let CopyLoading = false;
-	const mangaMeta = MangaMeta(id);
 
 	async function MigrateManga() {
 		MigrateLoading = true;
@@ -258,10 +256,10 @@
 		});
 	}
 
-	async function CopyMangaTracking() {
-		$mangaMeta.mangaUpdatesSeriesID =
-			JSON.parse(manga.meta.find((e) => e.key === 'VUI3_mangaUpdatesSeriesID')?.value ?? 'null') ??
-			null;
+	async function CopyMangaTracking(): Promise<void> {
+		// TODO: implement ofical tracking, currently impossable
+		// const trackers = manga.trackRecords.nodes
+		// const { data: dat } = await AsyncGetManga({ variables: { id } });
 	}
 </script>
 
@@ -276,7 +274,11 @@
 				<Slide class="outline-0 p-1 pl-2 hover:variant-glass-surface" bind:checked={doCategories}>
 					Categories
 				</Slide>
-				<Slide class="outline-0 p-1 pl-2 hover:variant-glass-surface" bind:checked={doTracking}>
+				<Slide
+					class="outline-0 p-1 pl-2 hover:variant-glass-surface"
+					bind:checked={doTracking}
+					disabled
+				>
 					Tracking
 				</Slide>
 			</div>

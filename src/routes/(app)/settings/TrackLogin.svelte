@@ -62,7 +62,7 @@
 			<div class="space-y-2 px-4">
 				<input class="input" title="Username" type="text" bind:value={username} />
 				<input class="input" title="Password" type="password" bind:value={password} />
-				<button class="btn variant-filled-primary float-right" on:click={login}> Login </button>
+				<button class="btn variant-filled-surface float-right" on:click={login}> Login </button>
 			</div>
 		{/if}
 	</div>

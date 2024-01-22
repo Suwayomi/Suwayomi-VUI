@@ -41,6 +41,7 @@
 
 	const modalStore = getModalStore();
 
+	let preQuery = $manga.data?.manga?.title;
 	let query = $manga.data?.manga?.title;
 	$: items = searchTracker({ variables: { query, trackerId: tabSet } });
 
@@ -52,11 +53,7 @@
 		}
 	});
 
-	function unbindUpdater(
-		cache: ApolloCache<unknown>,
-		{ data }: FetchResult<UpdateTrackMutation>,
-		id: number
-	) {
+	function unbindUpdater(cache: ApolloCache<unknown>, { data }: FetchResult<UpdateTrackMutation>) {
 		if (!data) return;
 		const mangaData = structuredClone(
 			cache.readQuery<GetMangaQuery>({
@@ -66,7 +63,7 @@
 		);
 		if (!mangaData || !mangaData.manga) return;
 		const mga = mangaData.manga;
-		mga.trackRecords.nodes = mga.trackRecords.nodes.filter((ee) => ee.id !== id);
+		mga.trackRecords.nodes = mga.trackRecords.nodes.filter((ee) => ee.trackerId !== tabSet);
 		cache.writeQuery({
 			query: GetMangaDoc,
 			variables: { id: $manga.data.manga.id },
@@ -84,6 +81,7 @@
 		);
 		if (!mangaData || !mangaData.manga) return;
 		const mga = mangaData.manga;
+		mga.trackRecords.nodes = mga.trackRecords.nodes.filter((ee) => ee.trackerId !== tabSet);
 		mga.trackRecords.nodes.push(data.bindTrack.trackRecord);
 		cache.writeQuery({
 			query: GetMangaDoc,
@@ -101,7 +99,7 @@
 		if (same) {
 			await updateTrack({
 				variables: { input: { recordId: same.id, unbind: true } },
-				update: (a, b) => unbindUpdater(a, b, same.id)
+				update: unbindUpdater
 			});
 			return;
 		}
@@ -125,7 +123,12 @@
 					{JSON.stringify($Trackers.errors)}
 				{:else if $Trackers.data.trackers.nodes.length}
 					<div class="px-4 pt-1">
-						<input type="text" class="input" bind:value={query} />
+						<input
+							type="text"
+							class="input"
+							bind:value={preQuery}
+							on:change={() => (query = preQuery)}
+						/>
 					</div>
 					<TabGroup>
 						{#each $Trackers.data.trackers.nodes as tracker}
@@ -133,17 +136,43 @@
 						{/each}
 						<!-- Tab Panels --->
 						<svelte:fragment slot="panel">
-							{#if $items.error}
-								{JSON.stringify($items.error)}
-							{:else if $items.errors}
-								{JSON.stringify($items.errors)}
-							{:else if $items.loading}
-								Loading...
-							{:else if $items.data}
-								{@const ThisTrack = $manga.data.manga.trackRecords.nodes.find(
-									(e) => e.trackerId === tabSet
-								)}
-								<div class="overflow-auto max-h-64">
+							{@const ThisTrack = $manga.data.manga.trackRecords.nodes.find(
+								(e) => e.trackerId === tabSet
+							)}
+							<div class="overflow-auto h-64">
+								{#if $items.error}
+									<div class="p-4">
+										{JSON.stringify($items.error)}
+									</div>
+								{:else if $items.errors}
+									<div class="p-4">
+										{JSON.stringify($items.errors)}
+									</div>
+								{:else if $items.loading}
+									{#each new Array(3).fill(0) as _}
+										<span class="flex pl-4 p-1 w-full text-left hover:variant-ghost-surface">
+											<div class="w-1/5 pr-1 flex-shrink-0">
+												<div
+													class="rounded-lg placeholder animate-pulse w-full h-full aspect-cover"
+												/>
+											</div>
+											<div class="w-full">
+												<div class="h-7 mb-2 placeholder w-full" />
+												<div class="text-sm xl:text-base">
+													<div class="grid grid-cols-2 mb-2 w-full gap-1">
+														<div class="placeholder animate-pulse h-4 w-full" />
+														<div class="placeholder animate-pulse h-4 w-full" />
+														<div class="placeholder animate-pulse h-4 w-full" />
+														<div class="placeholder animate-pulse h-4 w-full" />
+													</div>
+													{#each new Array(3).fill(0) as _}
+														<div class="line-clamp-3 placeholder animate-pulse h-4 w-full mt-1" />
+													{/each}
+												</div>
+											</div>
+										</span>
+									{/each}
+								{:else if $items.data}
 									{#each $items.data.searchTracker.trackSearches as item}
 										<a
 											href={item.trackingUrl}
@@ -167,7 +196,7 @@
 													{item.title}
 												</span>
 												<div class="text-sm xl:text-base">
-													<div class="grid grid-cols-2 mb-2">
+													<div class="grid grid-cols-2 mb-2 w-full">
 														<div>
 															Status: {item.publishingStatus}
 														</div>
@@ -188,25 +217,32 @@
 											</div>
 										</a>
 									{/each}
-								</div>
-								<div>
+								{/if}
+							</div>
+							<div>
+								<div class="h-24 pl-4">
+									<div class="line-clamp-1 text-lg font-bold mb-2">
+										Tracking: {ThisTrack ? ThisTrack.title : 'None'}
+									</div>
 									{#if ThisTrack}
-										<div class=" pl-4 line-clamp-1 text-lg font-bold mb-2">
-											Tracking: <a target="_blank" href={ThisTrack.remoteUrl} class="anchor">
-												{ThisTrack.title}
-											</a>
-										</div>
-										<div class="pr-4 pl-4">
+										<div class=" flex justify-between pr-4">
 											<button
-												class="btn variant-filled-primary mb-4"
+												class="btn variant-filled-surface mb-4"
 												on:click={() => trackThis(ThisTrack)}
 											>
-												unTrack
+												Untrack
 											</button>
+											<a
+												target="_blank"
+												class="btn variant-filled-surface mb-4"
+												href={ThisTrack.remoteUrl}
+											>
+												Open tracked manga
+											</a>
 										</div>
 									{/if}
 								</div>
-							{/if}
+							</div>
 						</svelte:fragment>
 					</TabGroup>
 				{:else}

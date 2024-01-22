@@ -70,8 +70,7 @@ const mangaMetaDefaults = {
 	NavLayout: Layout.L,
 	preLoadNextChapter: true,
 	mobileFullScreenOnChapterPage: true,
-	doPageIndicator: false,
-	mangaUpdatesSeriesID: null as null | number
+	doPageIndicator: false
 };
 type mangaMeta = typeof mangaMetaDefaults;
 
@@ -233,13 +232,6 @@ function MangaMetaUpdater(cache: ApolloCache<unknown>, key: string, value: strin
 export function MangaMeta(id: number) {
 	const MMeta = getManga({ variables: { id } });
 	const store = writable(get(Meta).mangaMetaDefaults);
-
-	if (get(store).mangaUpdatesSeriesID === undefined) {
-		store.update((n) => {
-			n.mangaUpdatesSeriesID = mangaMetaDefaults.mangaUpdatesSeriesID;
-			return n;
-		});
-	}
 
 	MMeta.subscribe((queryResult) => {
 		store.update((value) => {
