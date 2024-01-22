@@ -3,6 +3,7 @@ import { sveltekit } from '@sveltejs/kit/vite';
 import { defineConfig } from 'vite';
 
 export default defineConfig({
+	// @ts-ignore
 	plugins: [sveltekit(), purgeCss()],
 	server: {
 		proxy: {
@@ -10,10 +11,6 @@ export default defineConfig({
 				target: process.env.VITE_URL,
 				changeOrigin: true,
 				ws: true
-			},
-			'/v1': {
-				target: 'https://api.mangaupdates.com',
-				changeOrigin: true
 			}
 		}
 	}

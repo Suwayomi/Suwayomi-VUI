@@ -112,19 +112,17 @@
 	<div class="w-full">Show Nsfw</div>
 	<Slide bind:checked={$Meta.nsfw} class=" focus:outline-0 p-1 pl-2 hover:variant-glass-surface" />
 </button>
-{#if window.tracking === 'docker'}
-	<button
-		on:click={() =>
-			modalStore.trigger({
-				type: 'component',
-				component: { ref: TrackingModal }
-			})}
-		class=" text-left flex items-center w-full h-16 hover:variant-glass-surface cursor-pointer"
-	>
-		<IconWrapper class="h-full w-auto p-2" name="mdi:target" />
-		<div class="w-full">Tracking settings</div>
-	</button>
-{/if}
+<button
+	on:click={() =>
+		modalStore.trigger({
+			type: 'component',
+			component: { ref: TrackingModal }
+		})}
+	class=" text-left flex items-center w-full h-16 hover:variant-glass-surface cursor-pointer"
+>
+	<IconWrapper class="h-full w-auto p-2" name="mdi:target" />
+	<div class="w-full">Tracking settings</div>
+</button>
 <a
 	href="/settings/about"
 	class=" text-left flex items-center w-full h-16 hover:variant-glass-surface cursor-pointer"

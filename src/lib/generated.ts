@@ -59,6 +59,18 @@ export type BackupRestoreStatus = {
   totalManga: Scalars['Int']['output'];
 };
 
+export type BindTrackInput = {
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
+  mangaId: Scalars['Int']['input'];
+  trackSearchId: Scalars['Int']['input'];
+};
+
+export type BindTrackPayload = {
+  __typename?: 'BindTrackPayload';
+  clientMutationId?: Maybe<Scalars['String']['output']>;
+  trackRecord: TrackRecordType;
+};
+
 export type BooleanFilterInput = {
   distinctFrom?: InputMaybe<Scalars['Boolean']['input']>;
   equalTo?: InputMaybe<Scalars['Boolean']['input']>;
@@ -128,7 +140,8 @@ export type CategoryType = {
   __typename?: 'CategoryType';
   default: Scalars['Boolean']['output'];
   id: Scalars['Int']['output'];
-  includeInUpdate: IncludeInUpdate;
+  includeInDownload: IncludeOrExclude;
+  includeInUpdate: IncludeOrExclude;
   mangas: MangaNodeList;
   meta: Array<CategoryMetaType>;
   name: Scalars['String']['output'];
@@ -300,7 +313,8 @@ export type CreateBackupPayload = {
 export type CreateCategoryInput = {
   clientMutationId?: InputMaybe<Scalars['String']['input']>;
   default?: InputMaybe<Scalars['Boolean']['input']>;
-  includeInUpdate?: InputMaybe<IncludeInUpdate>;
+  includeInDownload?: InputMaybe<IncludeOrExclude>;
+  includeInUpdate?: InputMaybe<IncludeOrExclude>;
   name: Scalars['String']['input'];
   order?: InputMaybe<Scalars['Int']['input']>;
 };
@@ -415,6 +429,20 @@ export type DequeueChapterDownloadsPayload = {
   __typename?: 'DequeueChapterDownloadsPayload';
   clientMutationId?: Maybe<Scalars['String']['output']>;
   downloadStatus: DownloadStatus;
+};
+
+export type DoubleFilterInput = {
+  distinctFrom?: InputMaybe<Scalars['Float']['input']>;
+  equalTo?: InputMaybe<Scalars['Float']['input']>;
+  greaterThan?: InputMaybe<Scalars['Float']['input']>;
+  greaterThanOrEqualTo?: InputMaybe<Scalars['Float']['input']>;
+  in?: InputMaybe<Array<Scalars['Float']['input']>>;
+  isNull?: InputMaybe<Scalars['Boolean']['input']>;
+  lessThan?: InputMaybe<Scalars['Float']['input']>;
+  lessThanOrEqualTo?: InputMaybe<Scalars['Float']['input']>;
+  notDistinctFrom?: InputMaybe<Scalars['Float']['input']>;
+  notEqualTo?: InputMaybe<Scalars['Float']['input']>;
+  notIn?: InputMaybe<Array<Scalars['Float']['input']>>;
 };
 
 export type DownloadAheadInput = {
@@ -703,7 +731,7 @@ export type HeaderFilter = {
   name: Scalars['String']['output'];
 };
 
-export enum IncludeInUpdate {
+export enum IncludeOrExclude {
   Exclude = 'EXCLUDE',
   Include = 'INCLUDE',
   Unset = 'UNSET'
@@ -749,6 +777,45 @@ export type ListPreference = {
   summary?: Maybe<Scalars['String']['output']>;
   title?: Maybe<Scalars['String']['output']>;
   visible: Scalars['Boolean']['output'];
+};
+
+export type LoginTrackerCredentialsInput = {
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
+  password: Scalars['String']['input'];
+  trackerId: Scalars['Int']['input'];
+  username: Scalars['String']['input'];
+};
+
+export type LoginTrackerCredentialsPayload = {
+  __typename?: 'LoginTrackerCredentialsPayload';
+  clientMutationId?: Maybe<Scalars['String']['output']>;
+  isLoggedIn: Scalars['Boolean']['output'];
+  tracker: TrackerType;
+};
+
+export type LoginTrackerOAuthInput = {
+  callbackUrl: Scalars['String']['input'];
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
+  trackerId: Scalars['Int']['input'];
+};
+
+export type LoginTrackerOAuthPayload = {
+  __typename?: 'LoginTrackerOAuthPayload';
+  clientMutationId?: Maybe<Scalars['String']['output']>;
+  isLoggedIn: Scalars['Boolean']['output'];
+  tracker: TrackerType;
+};
+
+export type LogoutTrackerInput = {
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
+  trackerId: Scalars['Int']['input'];
+};
+
+export type LogoutTrackerPayload = {
+  __typename?: 'LogoutTrackerPayload';
+  clientMutationId?: Maybe<Scalars['String']['output']>;
+  isLoggedIn: Scalars['Boolean']['output'];
+  tracker: TrackerType;
 };
 
 export type LongFilterInput = {
@@ -885,6 +952,9 @@ export type MangaType = {
   initialized: Scalars['Boolean']['output'];
   lastFetchedAt?: Maybe<Scalars['LongString']['output']>;
   lastReadChapter?: Maybe<ChapterType>;
+  latestFetchedChapter?: Maybe<ChapterType>;
+  latestReadChapter?: Maybe<ChapterType>;
+  latestUploadedChapter?: Maybe<ChapterType>;
   meta: Array<MangaMetaType>;
   realUrl?: Maybe<Scalars['String']['output']>;
   source?: Maybe<SourceType>;
@@ -892,6 +962,7 @@ export type MangaType = {
   status: MangaStatus;
   thumbnailUrl?: Maybe<Scalars['String']['output']>;
   title: Scalars['String']['output'];
+  trackRecords: TrackRecordNodeList;
   unreadCount: Scalars['Int']['output'];
   updateStrategy: UpdateStrategy;
   url: Scalars['String']['output'];
@@ -942,6 +1013,7 @@ export type MultiSelectListPreference = {
 
 export type Mutation = {
   __typename?: 'Mutation';
+  bindTrack: BindTrackPayload;
   clearCachedImages: ClearCachedImagesPayload;
   clearDownloader: ClearDownloaderPayload;
   createBackup: CreateBackupPayload;
@@ -964,6 +1036,9 @@ export type Mutation = {
   fetchManga: FetchMangaPayload;
   fetchSourceManga: FetchSourceMangaPayload;
   installExternalExtension: InstallExternalExtensionPayload;
+  loginTrackerCredentials: LoginTrackerCredentialsPayload;
+  loginTrackerOAuth: LoginTrackerOAuthPayload;
+  logoutTracker: LogoutTrackerPayload;
   reorderChapterDownload: ReorderChapterDownloadPayload;
   resetSettings: ResetSettingsPayload;
   resetWebUIUpdateStatus: WebUiUpdateStatus;
@@ -990,7 +1065,13 @@ export type Mutation = {
   updateMangasCategories: UpdateMangasCategoriesPayload;
   updateSourcePreference: UpdateSourcePreferencePayload;
   updateStop: UpdateStopPayload;
+  updateTrack: UpdateTrackPayload;
   updateWebUI: WebUiUpdatePayload;
+};
+
+
+export type MutationBindTrackArgs = {
+  input: BindTrackInput;
 };
 
 
@@ -1101,6 +1182,21 @@ export type MutationFetchSourceMangaArgs = {
 
 export type MutationInstallExternalExtensionArgs = {
   input: InstallExternalExtensionInput;
+};
+
+
+export type MutationLoginTrackerCredentialsArgs = {
+  input: LoginTrackerCredentialsInput;
+};
+
+
+export type MutationLoginTrackerOAuthArgs = {
+  input: LoginTrackerOAuthInput;
+};
+
+
+export type MutationLogoutTrackerArgs = {
+  input: LogoutTrackerInput;
 };
 
 
@@ -1229,11 +1325,16 @@ export type MutationUpdateStopArgs = {
 };
 
 
+export type MutationUpdateTrackArgs = {
+  input: UpdateTrackInput;
+};
+
+
 export type MutationUpdateWebUiArgs = {
   input: WebUiUpdateInput;
 };
 
-export type Node = CategoryMetaType | CategoryType | ChapterMetaType | ChapterType | DownloadType | ExtensionType | GlobalMetaType | MangaMetaType | MangaType | PartialSettingsType | SettingsType | SourceType;
+export type Node = CategoryMetaType | CategoryType | ChapterMetaType | ChapterType | DownloadType | ExtensionType | GlobalMetaType | MangaMetaType | MangaType | PartialSettingsType | SettingsType | SourceType | TrackRecordType | TrackerType;
 
 export type NodeList = {
   /** A list of edges which contains the [T] and cursor to aid in pagination. */
@@ -1355,9 +1456,14 @@ export type Query = {
   meta: GlobalMetaType;
   metas: GlobalMetaNodeList;
   restoreStatus?: Maybe<BackupRestoreStatus>;
+  searchTracker: SearchTrackerPayload;
   settings: SettingsType;
   source: SourceType;
   sources: SourceNodeList;
+  trackRecord: TrackRecordType;
+  trackRecords: TrackRecordNodeList;
+  tracker: TrackerType;
+  trackers: TrackerNodeList;
   updateStatus: UpdateStatus;
   validateBackup: ValidateBackupResult;
 };
@@ -1458,6 +1564,11 @@ export type QueryRestoreStatusArgs = {
 };
 
 
+export type QuerySearchTrackerArgs = {
+  input: SearchTrackerInput;
+};
+
+
 export type QuerySourceArgs = {
   id: Scalars['LongString']['input'];
 };
@@ -1472,6 +1583,41 @@ export type QuerySourcesArgs = {
   last?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<SourceOrderBy>;
+  orderByType?: InputMaybe<SortOrder>;
+};
+
+
+export type QueryTrackRecordArgs = {
+  id: Scalars['Int']['input'];
+};
+
+
+export type QueryTrackRecordsArgs = {
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
+  condition?: InputMaybe<TrackRecordConditionInput>;
+  filter?: InputMaybe<TrackRecordFilterInput>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<TrackRecordOrderBy>;
+  orderByType?: InputMaybe<SortOrder>;
+};
+
+
+export type QueryTrackerArgs = {
+  id: Scalars['Int']['input'];
+};
+
+
+export type QueryTrackersArgs = {
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
+  condition?: InputMaybe<TrackerConditionInput>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<TrackerOrderBy>;
   orderByType?: InputMaybe<SortOrder>;
 };
 
@@ -1512,6 +1658,16 @@ export type RestoreBackupPayload = {
   clientMutationId?: Maybe<Scalars['String']['output']>;
   id: Scalars['String']['output'];
   status?: Maybe<BackupRestoreStatus>;
+};
+
+export type SearchTrackerInput = {
+  query: Scalars['String']['input'];
+  trackerId: Scalars['Int']['input'];
+};
+
+export type SearchTrackerPayload = {
+  __typename?: 'SearchTrackerPayload';
+  trackSearches: Array<TrackSearchType>;
 };
 
 export type SelectFilter = {
@@ -1826,6 +1982,141 @@ export type TextFilter = {
   name: Scalars['String']['output'];
 };
 
+export type TrackRecordConditionInput = {
+  finishDate?: InputMaybe<Scalars['LongString']['input']>;
+  id?: InputMaybe<Scalars['Int']['input']>;
+  lastChapterRead?: InputMaybe<Scalars['Float']['input']>;
+  libraryId?: InputMaybe<Scalars['LongString']['input']>;
+  mangaId?: InputMaybe<Scalars['Int']['input']>;
+  remoteId?: InputMaybe<Scalars['LongString']['input']>;
+  remoteUrl?: InputMaybe<Scalars['String']['input']>;
+  score?: InputMaybe<Scalars['Float']['input']>;
+  startDate?: InputMaybe<Scalars['LongString']['input']>;
+  status?: InputMaybe<Scalars['Int']['input']>;
+  title?: InputMaybe<Scalars['String']['input']>;
+  totalChapters?: InputMaybe<Scalars['Int']['input']>;
+  trackerId?: InputMaybe<Scalars['Int']['input']>;
+};
+
+export type TrackRecordEdge = Edge & {
+  __typename?: 'TrackRecordEdge';
+  cursor: Scalars['Cursor']['output'];
+  node: TrackRecordType;
+};
+
+export type TrackRecordFilterInput = {
+  and?: InputMaybe<Array<TrackRecordFilterInput>>;
+  finishDate?: InputMaybe<LongFilterInput>;
+  id?: InputMaybe<IntFilterInput>;
+  lastChapterRead?: InputMaybe<DoubleFilterInput>;
+  libraryId?: InputMaybe<LongFilterInput>;
+  mangaId?: InputMaybe<IntFilterInput>;
+  not?: InputMaybe<TrackRecordFilterInput>;
+  or?: InputMaybe<Array<TrackRecordFilterInput>>;
+  remoteId?: InputMaybe<LongFilterInput>;
+  remoteUrl?: InputMaybe<StringFilterInput>;
+  score?: InputMaybe<DoubleFilterInput>;
+  startDate?: InputMaybe<LongFilterInput>;
+  status?: InputMaybe<IntFilterInput>;
+  title?: InputMaybe<StringFilterInput>;
+  totalChapters?: InputMaybe<IntFilterInput>;
+  trackerId?: InputMaybe<IntFilterInput>;
+};
+
+export type TrackRecordNodeList = NodeList & {
+  __typename?: 'TrackRecordNodeList';
+  edges: Array<TrackRecordEdge>;
+  nodes: Array<TrackRecordType>;
+  pageInfo: PageInfo;
+  totalCount: Scalars['Int']['output'];
+};
+
+export enum TrackRecordOrderBy {
+  FinishDate = 'FINISH_DATE',
+  Id = 'ID',
+  LastChapterRead = 'LAST_CHAPTER_READ',
+  MangaId = 'MANGA_ID',
+  RemoteId = 'REMOTE_ID',
+  Score = 'SCORE',
+  StartDate = 'START_DATE',
+  Title = 'TITLE',
+  TotalChapters = 'TOTAL_CHAPTERS',
+  TrackerId = 'TRACKER_ID'
+}
+
+export type TrackRecordType = {
+  __typename?: 'TrackRecordType';
+  displayScore: Scalars['String']['output'];
+  finishDate: Scalars['LongString']['output'];
+  id: Scalars['Int']['output'];
+  lastChapterRead: Scalars['Float']['output'];
+  libraryId?: Maybe<Scalars['LongString']['output']>;
+  manga: MangaType;
+  mangaId: Scalars['Int']['output'];
+  remoteId: Scalars['LongString']['output'];
+  remoteUrl: Scalars['String']['output'];
+  score: Scalars['Float']['output'];
+  startDate: Scalars['LongString']['output'];
+  status: Scalars['Int']['output'];
+  title: Scalars['String']['output'];
+  totalChapters: Scalars['Int']['output'];
+  tracker: TrackerType;
+  trackerId: Scalars['Int']['output'];
+};
+
+export type TrackSearchType = {
+  __typename?: 'TrackSearchType';
+  coverUrl: Scalars['String']['output'];
+  id: Scalars['Int']['output'];
+  publishingStatus: Scalars['String']['output'];
+  publishingType: Scalars['String']['output'];
+  remoteId: Scalars['LongString']['output'];
+  startDate: Scalars['String']['output'];
+  summary: Scalars['String']['output'];
+  title: Scalars['String']['output'];
+  totalChapters: Scalars['Int']['output'];
+  tracker: TrackerType;
+  trackerId: Scalars['Int']['output'];
+  trackingUrl: Scalars['String']['output'];
+};
+
+export type TrackerConditionInput = {
+  icon?: InputMaybe<Scalars['String']['input']>;
+  id?: InputMaybe<Scalars['Int']['input']>;
+  isLoggedIn?: InputMaybe<Scalars['Boolean']['input']>;
+  name?: InputMaybe<Scalars['String']['input']>;
+};
+
+export type TrackerEdge = Edge & {
+  __typename?: 'TrackerEdge';
+  cursor: Scalars['Cursor']['output'];
+  node: TrackerType;
+};
+
+export type TrackerNodeList = NodeList & {
+  __typename?: 'TrackerNodeList';
+  edges: Array<TrackerEdge>;
+  nodes: Array<TrackerType>;
+  pageInfo: PageInfo;
+  totalCount: Scalars['Int']['output'];
+};
+
+export enum TrackerOrderBy {
+  Id = 'ID',
+  IsLoggedIn = 'IS_LOGGED_IN',
+  Name = 'NAME'
+}
+
+export type TrackerType = {
+  __typename?: 'TrackerType';
+  authUrl?: Maybe<Scalars['String']['output']>;
+  icon: Scalars['String']['output'];
+  id: Scalars['Int']['output'];
+  isLoggedIn: Scalars['Boolean']['output'];
+  name: Scalars['String']['output'];
+  trackRecords: TrackRecordNodeList;
+};
+
 export enum TriState {
   Exclude = 'EXCLUDE',
   Ignore = 'IGNORE',
@@ -1881,7 +2172,8 @@ export type UpdateCategoryOrderPayload = {
 
 export type UpdateCategoryPatchInput = {
   default?: InputMaybe<Scalars['Boolean']['input']>;
-  includeInUpdate?: InputMaybe<IncludeInUpdate>;
+  includeInDownload?: InputMaybe<IncludeOrExclude>;
+  includeInUpdate?: InputMaybe<IncludeOrExclude>;
   name?: InputMaybe<Scalars['String']['input']>;
 };
 
@@ -2075,6 +2367,23 @@ export enum UpdateStrategy {
   OnlyFetchOnce = 'ONLY_FETCH_ONCE'
 }
 
+export type UpdateTrackInput = {
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
+  finishDate?: InputMaybe<Scalars['LongString']['input']>;
+  lastChapterRead?: InputMaybe<Scalars['Float']['input']>;
+  recordId: Scalars['Int']['input'];
+  scoreString?: InputMaybe<Scalars['String']['input']>;
+  startDate?: InputMaybe<Scalars['LongString']['input']>;
+  status?: InputMaybe<Scalars['Int']['input']>;
+  unbind?: InputMaybe<Scalars['Boolean']['input']>;
+};
+
+export type UpdateTrackPayload = {
+  __typename?: 'UpdateTrackPayload';
+  clientMutationId?: Maybe<Scalars['String']['output']>;
+  trackRecord?: Maybe<TrackRecordType>;
+};
+
 export type ValidateBackupInput = {
   backup: Scalars['Upload']['input'];
 };
@@ -2136,15 +2445,19 @@ export type WebUiUpdateStatus = {
   state: UpdateState;
 };
 
+export type TrackRecordTypeFragmentFragment = { __typename?: 'TrackRecordType', displayScore: string, finishDate: any, id: number, lastChapterRead: number, libraryId?: any | null, mangaId: number, remoteId: any, remoteUrl: string, score: number, startDate: any, status: number, title: string, totalChapters: number, trackerId: number };
+
 export type ChapterTypeFragmentFragment = { __typename?: 'ChapterType', isBookmarked: boolean, isDownloaded: boolean, isRead: boolean, id: number, chapterNumber: number, fetchedAt: any, lastPageRead: number, name: string, sourceOrder: number, uploadDate: any, pageCount: number, scanlator?: string | null };
 
-export type MangaTypeFragmentFragment = { __typename?: 'MangaType', artist?: string | null, author?: string | null, description?: string | null, genre: Array<string>, id: number, inLibrary: boolean, lastFetchedAt?: any | null, realUrl?: string | null, status: MangaStatus, title: string, thumbnailUrl?: string | null, unreadCount: number, downloadCount: number, lastReadChapter?: { __typename?: 'ChapterType', lastReadAt: any } | null, meta: Array<{ __typename?: 'MangaMetaType', value: string, key: string }>, source?: { __typename?: 'SourceType', displayName: string } | null, categories: { __typename?: 'CategoryNodeList', nodes: Array<{ __typename?: 'CategoryType', id: number }> } };
+export type MangaTypeFragmentFragment = { __typename?: 'MangaType', artist?: string | null, author?: string | null, description?: string | null, genre: Array<string>, id: number, inLibrary: boolean, lastFetchedAt?: any | null, realUrl?: string | null, status: MangaStatus, title: string, thumbnailUrl?: string | null, unreadCount: number, downloadCount: number, lastReadChapter?: { __typename?: 'ChapterType', lastReadAt: any } | null, meta: Array<{ __typename?: 'MangaMetaType', value: string, key: string }>, source?: { __typename?: 'SourceType', displayName: string } | null, categories: { __typename?: 'CategoryNodeList', nodes: Array<{ __typename?: 'CategoryType', id: number }> }, trackRecords: { __typename?: 'TrackRecordNodeList', nodes: Array<{ __typename?: 'TrackRecordType', displayScore: string, finishDate: any, id: number, lastChapterRead: number, libraryId?: any | null, mangaId: number, remoteId: any, remoteUrl: string, score: number, startDate: any, status: number, title: string, totalChapters: number, trackerId: number }> } };
 
 export type SourceTypeFragmentFragment = { __typename?: 'SourceType', id: any, displayName: string, iconUrl: string, lang: string };
 
 export type ExtensionTypeFragmentFragment = { __typename?: 'ExtensionType', name: string, repo?: string | null, versionName: string, pkgName: string, lang: string, iconUrl: string, isNsfw: boolean, isInstalled: boolean, isObsolete: boolean, hasUpdate: boolean };
 
 export type CategoryTypeFragmentFragment = { __typename?: 'CategoryType', id: number, default: boolean, order: number, name: string, mangas: { __typename?: 'MangaNodeList', totalCount: number } };
+
+export type TrackerTypeFragmentFragment = { __typename?: 'TrackerType', authUrl?: string | null, icon: string, id: number, isLoggedIn: boolean, name: string };
 
 export type FetchExtensionsMutationVariables = Exact<{ [key: string]: never; }>;
 
@@ -2215,7 +2528,7 @@ export type FetchMangaInfoMutationVariables = Exact<{
 }>;
 
 
-export type FetchMangaInfoMutation = { __typename?: 'Mutation', fetchManga: { __typename?: 'FetchMangaPayload', manga: { __typename?: 'MangaType', artist?: string | null, author?: string | null, description?: string | null, genre: Array<string>, id: number, inLibrary: boolean, lastFetchedAt?: any | null, realUrl?: string | null, status: MangaStatus, title: string, thumbnailUrl?: string | null, unreadCount: number, downloadCount: number, lastReadChapter?: { __typename?: 'ChapterType', lastReadAt: any } | null, meta: Array<{ __typename?: 'MangaMetaType', value: string, key: string }>, source?: { __typename?: 'SourceType', displayName: string } | null, categories: { __typename?: 'CategoryNodeList', nodes: Array<{ __typename?: 'CategoryType', id: number }> } } } };
+export type FetchMangaInfoMutation = { __typename?: 'Mutation', fetchManga: { __typename?: 'FetchMangaPayload', manga: { __typename?: 'MangaType', artist?: string | null, author?: string | null, description?: string | null, genre: Array<string>, id: number, inLibrary: boolean, lastFetchedAt?: any | null, realUrl?: string | null, status: MangaStatus, title: string, thumbnailUrl?: string | null, unreadCount: number, downloadCount: number, lastReadChapter?: { __typename?: 'ChapterType', lastReadAt: any } | null, meta: Array<{ __typename?: 'MangaMetaType', value: string, key: string }>, source?: { __typename?: 'SourceType', displayName: string } | null, categories: { __typename?: 'CategoryNodeList', nodes: Array<{ __typename?: 'CategoryType', id: number }> }, trackRecords: { __typename?: 'TrackRecordNodeList', nodes: Array<{ __typename?: 'TrackRecordType', displayScore: string, finishDate: any, id: number, lastChapterRead: number, libraryId?: any | null, mangaId: number, remoteId: any, remoteUrl: string, score: number, startDate: any, status: number, title: string, totalChapters: number, trackerId: number }> } } } };
 
 export type FetchMangaChaptersMutationVariables = Exact<{
   id: Scalars['Int']['input'];
@@ -2407,6 +2720,45 @@ export type InstallExternalExtensionMutationVariables = Exact<{
 
 export type InstallExternalExtensionMutation = { __typename?: 'Mutation', installExternalExtension: { __typename?: 'InstallExternalExtensionPayload', extension: { __typename?: 'ExtensionType', name: string, repo?: string | null, versionName: string, pkgName: string, lang: string, iconUrl: string, isNsfw: boolean, isInstalled: boolean, isObsolete: boolean, hasUpdate: boolean, source: { __typename?: 'SourceNodeList', nodes: Array<{ __typename?: 'SourceType', isNsfw: boolean, id: any, displayName: string, iconUrl: string, lang: string, extension: { __typename?: 'ExtensionType', pkgName: string, repo?: string | null } }> } } } };
 
+export type LoginTrackerOAuthMutationVariables = Exact<{
+  callbackUrl: Scalars['String']['input'];
+  trackerId: Scalars['Int']['input'];
+}>;
+
+
+export type LoginTrackerOAuthMutation = { __typename?: 'Mutation', loginTrackerOAuth: { __typename?: 'LoginTrackerOAuthPayload', isLoggedIn: boolean, tracker: { __typename?: 'TrackerType', authUrl?: string | null, icon: string, id: number, isLoggedIn: boolean, name: string } } };
+
+export type LogoutTrackerMutationVariables = Exact<{
+  trackerId: Scalars['Int']['input'];
+}>;
+
+
+export type LogoutTrackerMutation = { __typename?: 'Mutation', logoutTracker: { __typename?: 'LogoutTrackerPayload', isLoggedIn: boolean, tracker: { __typename?: 'TrackerType', authUrl?: string | null, icon: string, id: number, isLoggedIn: boolean, name: string } } };
+
+export type LoginTrackerCredentialsMutationVariables = Exact<{
+  password: Scalars['String']['input'];
+  trackerId: Scalars['Int']['input'];
+  username: Scalars['String']['input'];
+}>;
+
+
+export type LoginTrackerCredentialsMutation = { __typename?: 'Mutation', loginTrackerCredentials: { __typename?: 'LoginTrackerCredentialsPayload', tracker: { __typename?: 'TrackerType', authUrl?: string | null, icon: string, id: number, isLoggedIn: boolean, name: string } } };
+
+export type BindTrackMutationVariables = Exact<{
+  trackSearchId: Scalars['Int']['input'];
+  mangaId: Scalars['Int']['input'];
+}>;
+
+
+export type BindTrackMutation = { __typename?: 'Mutation', bindTrack: { __typename?: 'BindTrackPayload', trackRecord: { __typename?: 'TrackRecordType', displayScore: string, finishDate: any, id: number, lastChapterRead: number, libraryId?: any | null, mangaId: number, remoteId: any, remoteUrl: string, score: number, startDate: any, status: number, title: string, totalChapters: number, trackerId: number } } };
+
+export type UpdateTrackMutationVariables = Exact<{
+  input: UpdateTrackInput;
+}>;
+
+
+export type UpdateTrackMutation = { __typename?: 'Mutation', updateTrack: { __typename?: 'UpdateTrackPayload', trackRecord?: { __typename?: 'TrackRecordType', displayScore: string, finishDate: any, id: number, lastChapterRead: number, libraryId?: any | null, mangaId: number, remoteId: any, remoteUrl: string, score: number, startDate: any, status: number, title: string, totalChapters: number, trackerId: number } | null } };
+
 export type CategoriesQueryVariables = Exact<{
   notEqualTo?: InputMaybe<Scalars['Int']['input']>;
 }>;
@@ -2426,7 +2778,7 @@ export type GetMangaQueryVariables = Exact<{
 }>;
 
 
-export type GetMangaQuery = { __typename?: 'Query', manga: { __typename?: 'MangaType', artist?: string | null, author?: string | null, description?: string | null, genre: Array<string>, id: number, inLibrary: boolean, lastFetchedAt?: any | null, realUrl?: string | null, status: MangaStatus, title: string, thumbnailUrl?: string | null, unreadCount: number, downloadCount: number, chapters: { __typename?: 'ChapterNodeList', totalCount: number, nodes: Array<{ __typename?: 'ChapterType', isBookmarked: boolean, isDownloaded: boolean, isRead: boolean, id: number, chapterNumber: number, fetchedAt: any, lastPageRead: number, name: string, sourceOrder: number, uploadDate: any, pageCount: number, scanlator?: string | null }> }, lastReadChapter?: { __typename?: 'ChapterType', lastReadAt: any } | null, meta: Array<{ __typename?: 'MangaMetaType', value: string, key: string }>, source?: { __typename?: 'SourceType', displayName: string } | null, categories: { __typename?: 'CategoryNodeList', nodes: Array<{ __typename?: 'CategoryType', id: number }> } } };
+export type GetMangaQuery = { __typename?: 'Query', manga: { __typename?: 'MangaType', artist?: string | null, author?: string | null, description?: string | null, genre: Array<string>, id: number, inLibrary: boolean, lastFetchedAt?: any | null, realUrl?: string | null, status: MangaStatus, title: string, thumbnailUrl?: string | null, unreadCount: number, downloadCount: number, chapters: { __typename?: 'ChapterNodeList', totalCount: number, nodes: Array<{ __typename?: 'ChapterType', isBookmarked: boolean, isDownloaded: boolean, isRead: boolean, id: number, chapterNumber: number, fetchedAt: any, lastPageRead: number, name: string, sourceOrder: number, uploadDate: any, pageCount: number, scanlator?: string | null }> }, lastReadChapter?: { __typename?: 'ChapterType', lastReadAt: any } | null, meta: Array<{ __typename?: 'MangaMetaType', value: string, key: string }>, source?: { __typename?: 'SourceType', displayName: string } | null, categories: { __typename?: 'CategoryNodeList', nodes: Array<{ __typename?: 'CategoryType', id: number }> }, trackRecords: { __typename?: 'TrackRecordNodeList', nodes: Array<{ __typename?: 'TrackRecordType', displayScore: string, finishDate: any, id: number, lastChapterRead: number, libraryId?: any | null, mangaId: number, remoteId: any, remoteUrl: string, score: number, startDate: any, status: number, title: string, totalChapters: number, trackerId: number }> } } };
 
 export type GetSingleChapterQueryVariables = Exact<{
   id: Scalars['Int']['input'];
@@ -2537,6 +2889,26 @@ export type RestoreStatusQueryVariables = Exact<{
 
 export type RestoreStatusQuery = { __typename?: 'Query', restoreStatus?: { __typename?: 'BackupRestoreStatus', mangaProgress: number, state: BackupRestoreState, totalManga: number } | null };
 
+export type TrackersQueryVariables = Exact<{
+  isLoggedIn?: InputMaybe<Scalars['Boolean']['input']>;
+}>;
+
+
+export type TrackersQuery = { __typename?: 'Query', trackers: { __typename?: 'TrackerNodeList', nodes: Array<{ __typename?: 'TrackerType', authUrl?: string | null, icon: string, id: number, isLoggedIn: boolean, name: string }> } };
+
+export type SearchTrackerQueryVariables = Exact<{
+  query: Scalars['String']['input'];
+  trackerId: Scalars['Int']['input'];
+}>;
+
+
+export type SearchTrackerQuery = { __typename?: 'Query', searchTracker: { __typename?: 'SearchTrackerPayload', trackSearches: Array<{ __typename?: 'TrackSearchType', coverUrl: string, publishingStatus: string, publishingType: string, startDate: string, summary: string, title: string, totalChapters: number, trackingUrl: string, trackerId: number, remoteId: any, id: number }> } };
+
+export type TrackRecordsQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type TrackRecordsQuery = { __typename?: 'Query', trackRecords: { __typename?: 'TrackRecordNodeList', nodes: Array<{ __typename?: 'TrackRecordType', displayScore: string, finishDate: any, id: number, lastChapterRead: number, libraryId?: any | null, mangaId: number, remoteId: any, remoteUrl: string, score: number, startDate: any, status: number, title: string, totalChapters: number, trackerId: number }> } };
+
 export type DownloadChangedSubscriptionVariables = Exact<{ [key: string]: never; }>;
 
 
@@ -2561,6 +2933,24 @@ export const ChapterTypeFragmentFragmentDoc = gql`
   uploadDate
   pageCount
   scanlator
+}
+    `;
+export const TrackRecordTypeFragmentFragmentDoc = gql`
+    fragment TrackRecordTypeFragment on TrackRecordType {
+  displayScore
+  finishDate
+  id
+  lastChapterRead
+  libraryId
+  mangaId
+  remoteId
+  remoteUrl
+  score
+  startDate
+  status
+  title
+  totalChapters
+  trackerId
 }
     `;
 export const MangaTypeFragmentFragmentDoc = gql`
@@ -2593,8 +2983,13 @@ export const MangaTypeFragmentFragmentDoc = gql`
       id
     }
   }
+  trackRecords {
+    nodes {
+      ...TrackRecordTypeFragment
+    }
+  }
 }
-    `;
+    ${TrackRecordTypeFragmentFragmentDoc}`;
 export const SourceTypeFragmentFragmentDoc = gql`
     fragment SourceTypeFragment on SourceType {
   id
@@ -2626,6 +3021,15 @@ export const CategoryTypeFragmentFragmentDoc = gql`
   mangas {
     totalCount
   }
+}
+    `;
+export const TrackerTypeFragmentFragmentDoc = gql`
+    fragment TrackerTypeFragment on TrackerType {
+  authUrl
+  icon
+  id
+  isLoggedIn
+  name
 }
     `;
 export const FetchExtensionsDoc = gql`
@@ -3046,6 +3450,55 @@ export const InstallExternalExtensionDoc = gql`
 }
     ${ExtensionTypeFragmentFragmentDoc}
 ${SourceTypeFragmentFragmentDoc}`;
+export const LoginTrackerOAuthDoc = gql`
+    mutation loginTrackerOAuth($callbackUrl: String!, $trackerId: Int!) {
+  loginTrackerOAuth(input: {callbackUrl: $callbackUrl, trackerId: $trackerId}) {
+    isLoggedIn
+    tracker {
+      ...TrackerTypeFragment
+    }
+  }
+}
+    ${TrackerTypeFragmentFragmentDoc}`;
+export const LogoutTrackerDoc = gql`
+    mutation logoutTracker($trackerId: Int!) {
+  logoutTracker(input: {trackerId: $trackerId}) {
+    isLoggedIn
+    tracker {
+      ...TrackerTypeFragment
+    }
+  }
+}
+    ${TrackerTypeFragmentFragmentDoc}`;
+export const LoginTrackerCredentialsDoc = gql`
+    mutation loginTrackerCredentials($password: String!, $trackerId: Int!, $username: String!) {
+  loginTrackerCredentials(
+    input: {password: $password, trackerId: $trackerId, username: $username}
+  ) {
+    tracker {
+      ...TrackerTypeFragment
+    }
+  }
+}
+    ${TrackerTypeFragmentFragmentDoc}`;
+export const BindTrackDoc = gql`
+    mutation bindTrack($trackSearchId: Int!, $mangaId: Int!) {
+  bindTrack(input: {mangaId: $mangaId, trackSearchId: $trackSearchId}) {
+    trackRecord {
+      ...TrackRecordTypeFragment
+    }
+  }
+}
+    ${TrackRecordTypeFragmentFragmentDoc}`;
+export const UpdateTrackDoc = gql`
+    mutation updateTrack($input: UpdateTrackInput!) {
+  updateTrack(input: $input) {
+    trackRecord {
+      ...TrackRecordTypeFragment
+    }
+  }
+}
+    ${TrackRecordTypeFragmentFragmentDoc}`;
 export const CategoriesDoc = gql`
     query categories($notEqualTo: Int = null) {
   categories(filter: {id: {notEqualTo: $notEqualTo}}) {
@@ -3425,6 +3878,43 @@ export const RestoreStatusDoc = gql`
   }
 }
     `;
+export const TrackersDoc = gql`
+    query trackers($isLoggedIn: Boolean = null) {
+  trackers(condition: {isLoggedIn: $isLoggedIn}) {
+    nodes {
+      ...TrackerTypeFragment
+    }
+  }
+}
+    ${TrackerTypeFragmentFragmentDoc}`;
+export const SearchTrackerDoc = gql`
+    query searchTracker($query: String!, $trackerId: Int!) {
+  searchTracker(input: {query: $query, trackerId: $trackerId}) {
+    trackSearches {
+      coverUrl
+      publishingStatus
+      publishingType
+      startDate
+      summary
+      title
+      totalChapters
+      trackingUrl
+      trackerId
+      remoteId
+      id
+    }
+  }
+}
+    `;
+export const TrackRecordsDoc = gql`
+    query trackRecords {
+  trackRecords {
+    nodes {
+      ...TrackRecordTypeFragment
+    }
+  }
+}
+    ${TrackRecordTypeFragmentFragmentDoc}`;
 export const DownloadChangedDoc = gql`
     subscription downloadChanged {
   downloadChanged {
@@ -3867,6 +4357,66 @@ export const installExternalExtension = (
           ) => {
             const m = client.mutate<InstallExternalExtensionMutation, InstallExternalExtensionMutationVariables>({
               mutation: InstallExternalExtensionDoc,
+              ...options,
+            });
+            return m;
+          }
+export const loginTrackerOAuth = (
+            options: Omit<
+              MutationOptions<any, LoginTrackerOAuthMutationVariables>, 
+              "mutation"
+            >
+          ) => {
+            const m = client.mutate<LoginTrackerOAuthMutation, LoginTrackerOAuthMutationVariables>({
+              mutation: LoginTrackerOAuthDoc,
+              ...options,
+            });
+            return m;
+          }
+export const logoutTracker = (
+            options: Omit<
+              MutationOptions<any, LogoutTrackerMutationVariables>, 
+              "mutation"
+            >
+          ) => {
+            const m = client.mutate<LogoutTrackerMutation, LogoutTrackerMutationVariables>({
+              mutation: LogoutTrackerDoc,
+              ...options,
+            });
+            return m;
+          }
+export const loginTrackerCredentials = (
+            options: Omit<
+              MutationOptions<any, LoginTrackerCredentialsMutationVariables>, 
+              "mutation"
+            >
+          ) => {
+            const m = client.mutate<LoginTrackerCredentialsMutation, LoginTrackerCredentialsMutationVariables>({
+              mutation: LoginTrackerCredentialsDoc,
+              ...options,
+            });
+            return m;
+          }
+export const bindTrack = (
+            options: Omit<
+              MutationOptions<any, BindTrackMutationVariables>, 
+              "mutation"
+            >
+          ) => {
+            const m = client.mutate<BindTrackMutation, BindTrackMutationVariables>({
+              mutation: BindTrackDoc,
+              ...options,
+            });
+            return m;
+          }
+export const updateTrack = (
+            options: Omit<
+              MutationOptions<any, UpdateTrackMutationVariables>, 
+              "mutation"
+            >
+          ) => {
+            const m = client.mutate<UpdateTrackMutation, UpdateTrackMutationVariables>({
+              mutation: UpdateTrackDoc,
               ...options,
             });
             return m;
@@ -4705,6 +5255,138 @@ export const restoreStatus = (
                 >
               ) => {
                 return client.query<RestoreStatusQuery>({query: RestoreStatusDoc, ...options})
+              }
+            
+export const trackers = (
+            options: Omit<
+              WatchQueryOptions<TrackersQueryVariables>, 
+              "query"
+            >
+          ): Readable<
+            ApolloQueryResult<TrackersQuery> & {
+              query: ObservableQuery<
+                TrackersQuery,
+                TrackersQueryVariables
+              >;
+            }
+          > => {
+            const q = client.watchQuery({
+              query: TrackersDoc,
+              ...options,
+            });
+            var result = readable<
+              ApolloQueryResult<TrackersQuery> & {
+                query: ObservableQuery<
+                  TrackersQuery,
+                  TrackersQueryVariables
+                >;
+              }
+            >(
+              { data: {} as any, loading: true, error: undefined, networkStatus: 1, query: q },
+              (set) => {
+                q.subscribe((v: any) => {
+                  set({ ...v, query: q });
+                });
+              }
+            );
+            return result;
+          }
+        
+              export const Asynctrackers = (
+                options: Omit<
+                  QueryOptions<TrackersQueryVariables>,
+                  "query"
+                >
+              ) => {
+                return client.query<TrackersQuery>({query: TrackersDoc, ...options})
+              }
+            
+export const searchTracker = (
+            options: Omit<
+              WatchQueryOptions<SearchTrackerQueryVariables>, 
+              "query"
+            >
+          ): Readable<
+            ApolloQueryResult<SearchTrackerQuery> & {
+              query: ObservableQuery<
+                SearchTrackerQuery,
+                SearchTrackerQueryVariables
+              >;
+            }
+          > => {
+            const q = client.watchQuery({
+              query: SearchTrackerDoc,
+              ...options,
+            });
+            var result = readable<
+              ApolloQueryResult<SearchTrackerQuery> & {
+                query: ObservableQuery<
+                  SearchTrackerQuery,
+                  SearchTrackerQueryVariables
+                >;
+              }
+            >(
+              { data: {} as any, loading: true, error: undefined, networkStatus: 1, query: q },
+              (set) => {
+                q.subscribe((v: any) => {
+                  set({ ...v, query: q });
+                });
+              }
+            );
+            return result;
+          }
+        
+              export const AsyncsearchTracker = (
+                options: Omit<
+                  QueryOptions<SearchTrackerQueryVariables>,
+                  "query"
+                >
+              ) => {
+                return client.query<SearchTrackerQuery>({query: SearchTrackerDoc, ...options})
+              }
+            
+export const trackRecords = (
+            options: Omit<
+              WatchQueryOptions<TrackRecordsQueryVariables>, 
+              "query"
+            >
+          ): Readable<
+            ApolloQueryResult<TrackRecordsQuery> & {
+              query: ObservableQuery<
+                TrackRecordsQuery,
+                TrackRecordsQueryVariables
+              >;
+            }
+          > => {
+            const q = client.watchQuery({
+              query: TrackRecordsDoc,
+              ...options,
+            });
+            var result = readable<
+              ApolloQueryResult<TrackRecordsQuery> & {
+                query: ObservableQuery<
+                  TrackRecordsQuery,
+                  TrackRecordsQueryVariables
+                >;
+              }
+            >(
+              { data: {} as any, loading: true, error: undefined, networkStatus: 1, query: q },
+              (set) => {
+                q.subscribe((v: any) => {
+                  set({ ...v, query: q });
+                });
+              }
+            );
+            return result;
+          }
+        
+              export const AsynctrackRecords = (
+                options: Omit<
+                  QueryOptions<TrackRecordsQueryVariables>,
+                  "query"
+                >
+              ) => {
+                return client.query<TrackRecordsQuery>({query: TrackRecordsDoc, ...options})
               }
             
 export const downloadChanged = (

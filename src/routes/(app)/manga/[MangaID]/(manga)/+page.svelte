@@ -98,6 +98,6 @@
 </script>
 
 <div class="block md:flex md:relative md:h-full">
-	<InfoSide {manga} MangaID={data.MangaID} {mangaMeta} />
+	<InfoSide {manga} MangaID={data.MangaID} />
 	<ChaptersSide manga={$manga} MangaID={data.MangaID} {mangaMeta} />
 </div>

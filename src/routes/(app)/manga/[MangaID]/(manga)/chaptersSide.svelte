@@ -26,8 +26,8 @@
 	} from '$lib/generated';
 	import { longPress } from '$lib/press';
 	import { screens } from '$lib/screens';
-	import { ChapterSort, ChapterTitle, MangaMeta, Meta } from '$lib/simpleStores';
-	import { MangaUpdates } from '$lib/tracking/mangaUpdates';
+	import { ChapterSort, ChapterTitle, MangaMeta } from '$lib/simpleStores';
+	// import { MangaUpdates } from '$lib/tracking/mangaUpdates';
 	import { HelpDoSelect, HelpSelectAll, HelpUpdateChapters, dlreabook } from '$lib/util';
 	import type { ApolloQueryResult } from '@apollo/client';
 	import { getModalStore, popup } from '@skeletonlabs/skeleton';
@@ -129,18 +129,6 @@
 
 	let chapterSideElement: HTMLDivElement | undefined;
 
-	async function updateTracker() {
-		if (window.tracking !== 'docker') return;
-		if (!manga) return;
-		if (!$Meta.mangaUpdatesTracking.enabled) return;
-		if ($mangaMeta.mangaUpdatesSeriesID === null) return;
-		const mangaUpdates = await MangaUpdates;
-		await mangaUpdates.updateMangaListStatus(
-			$mangaMeta.mangaUpdatesSeriesID,
-			HighestChapterNumber(manga)
-		);
-	}
-
 	async function handelPrevRead(chapter: chaptertype) {
 		if (!manga) return;
 		if (!sortedChapters) return;
@@ -159,7 +147,7 @@
 			return;
 		}
 		await updateChapters({ variables: { isRead: true, ids: ids } });
-		updateTracker();
+		// updateTracker();
 	}
 
 	function HighestChapterNumber(manga: ApolloQueryResult<GetMangaQuery>) {
@@ -177,7 +165,7 @@
 			return;
 		}
 		await updateChapters({ variables: { isRead: true, ids: chapter.id } });
-		updateTracker();
+		// updateTracker();
 	}
 
 	async function handelUnRead(chapter: chaptertype) {
@@ -187,7 +175,7 @@
 			return;
 		}
 		await updateChapters({ variables: { isRead: false, ids: chapter.id } });
-		updateTracker();
+		// updateTracker();
 	}
 
 	function LongHandler() {
