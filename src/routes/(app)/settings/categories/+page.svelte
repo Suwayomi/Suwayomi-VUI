@@ -23,6 +23,9 @@
 	import { getToastStore } from '$lib/components/Toast/stores';
 	import type { ApolloCache, FetchResult } from '@apollo/client';
 	import TooltipIconButton from '$lib/components/TooltipIconButton.svelte';
+	import { AppBarData } from '$lib/MountTitleAction';
+
+	AppBarData('Categories');
 
 	const modalStore = getModalStore();
 	const toastStore = getToastStore();
