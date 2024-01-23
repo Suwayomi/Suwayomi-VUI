@@ -401,7 +401,6 @@ query searchTracker($query: String!, $trackerId: Int!) {
 			trackingUrl
 			trackerId
 			remoteId
-			id
 		}
 	}
 }

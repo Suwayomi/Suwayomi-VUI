@@ -22,6 +22,10 @@
 	import { getModalStore } from '@skeletonlabs/skeleton';
 	import { getToastStore } from '$lib/components/Toast/stores';
 	import type { ApolloCache, FetchResult } from '@apollo/client';
+	import TooltipIconButton from '$lib/components/TooltipIconButton.svelte';
+	import { AppBarData } from '$lib/MountTitleAction';
+
+	AppBarData('Categories');
 
 	const modalStore = getModalStore();
 	const toastStore = getToastStore();
@@ -156,38 +160,47 @@
 		>
 			<IconWrapper class="h-full w-auto" name="mdi:theme" />
 			<div class="w-full px-2">{cat.name}</div>
-			<div class="sm:mr-8 h-full flex">
-				<IconButton
-					on:click={(e) => move(e, cat, Movement.top)}
-					name="mdi:chevron-double-up"
-					class="hover:variant-ghost  h-full w-auto"
-				/>
-				<IconButton
-					on:click={(e) => move(e, cat, Movement.up)}
-					name="mdi:chevron-up"
-					class="hover:variant-ghost  h-full w-auto"
-				/>
-				<IconButton
-					on:click={(e) => move(e, cat, Movement.down)}
-					name="mdi:chevron-down"
-					class="hover:variant-ghost  h-full w-auto"
-				/>
-				<IconButton
-					on:click={(e) => move(e, cat, Movement.bottom)}
-					name="mdi:chevron-double-down"
-					class="hover:variant-ghost  h-full w-auto"
-				/>
-			</div>
-			<IconButton on:click={(e) => edit(e, cat)} name="mdi:edit" class="hover:variant-ghost" />
 			{#if cat.id !== 0}
-				<IconButton
-					on:click={(e) => delCategory(e, cat)}
-					name="mdi:delete"
-					class="hover:variant-ghost"
-				/>
-			{:else}
-				<div class="h-full aspect-square w-auto" />
+				<div class="sm:mr-8 h-full flex">
+					<IconButton
+						on:click={(e) => move(e, cat, Movement.top)}
+						name="mdi:chevron-double-up"
+						class="hover:variant-ghost  h-full w-auto"
+					/>
+					<IconButton
+						on:click={(e) => move(e, cat, Movement.up)}
+						name="mdi:chevron-up"
+						class="hover:variant-ghost  h-full w-auto"
+					/>
+					<IconButton
+						on:click={(e) => move(e, cat, Movement.down)}
+						name="mdi:chevron-down"
+						class="hover:variant-ghost  h-full w-auto"
+					/>
+					<IconButton
+						on:click={(e) => move(e, cat, Movement.bottom)}
+						name="mdi:chevron-double-down"
+						class="hover:variant-ghost  h-full w-auto"
+					/>
+				</div>
 			{/if}
+			<TooltipIconButton
+				tip="Edit"
+				on:click={(e) => edit(e, cat)}
+				name="mdi:edit"
+				hover="hover:variant-ghost"
+			/>
+			<TooltipIconButton
+				tip={cat.id !== 0
+					? 'Delete'
+					: `Remove all ${cat.mangas.totalCount} manga from this category for it to not show up in the library`}
+				on:click={(e) => {
+					if (cat.id !== 0) delCategory(e, cat);
+				}}
+				name="mdi:delete"
+				class={cat.id !== 0 ? '' : 'text-surface-500'}
+				hover={cat.id !== 0 ? 'hover:variant-ghost' : ''}
+			/>
 		</button>
 	{/each}
 	<IconButton
