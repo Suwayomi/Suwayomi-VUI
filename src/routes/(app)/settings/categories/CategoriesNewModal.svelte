@@ -12,19 +12,21 @@
 		CategoriesDoc,
 		type CategoriesQuery,
 		createCategory,
-		type CreateCategoryMutation
+		type CreateCategoryMutation,
+		IncludeOrExclude
 	} from '$lib/generated';
 	import type { ApolloCache, FetchResult } from '@apollo/client';
 	import { getModalStore } from '@skeletonlabs/skeleton';
 	import type { SvelteComponent } from 'svelte';
-	import { writable } from 'svelte/store';
 
 	const modalStore = getModalStore();
 
 	export let parent: SvelteComponent;
 
-	$: catinput = writable('');
-	$: Defaul = writable(false);
+	let catinput = '';
+	let Defaul = false;
+	let includeInDownload = true;
+	let includeInUpdate = true;
 
 	function createCategoryUpdater(
 		cache: ApolloCache<unknown>,
@@ -47,7 +49,12 @@
 
 	async function submitChange(): Promise<void> {
 		createCategory({
-			variables: { name: $catinput, default: $Defaul },
+			variables: {
+				name: catinput,
+				default: Defaul,
+				includeInDownload: includeInDownload ? IncludeOrExclude.Include : IncludeOrExclude.Exclude,
+				includeInUpdate: includeInUpdate ? IncludeOrExclude.Include : IncludeOrExclude.Exclude
+			},
 			update: createCategoryUpdater
 		});
 		parent.onClose();
@@ -61,14 +68,28 @@
 			<div class="max-h-96 overflow-y-auto grid grid-cols-1 gap-1">
 				<label class="label">
 					<span class="pl-2">Category name</span>
-					<input class="input" type="text" bind:value={$catinput} />
+					<input class="input" type="text" bind:value={catinput} />
 				</label>
 				<Slide
 					labelClass="ml-2"
-					bind:checked={$Defaul}
+					bind:checked={Defaul}
 					class="w-full focus:outline-0 p-1 hover:variant-glass-surface"
 				>
 					<div class="w-full">Default category when adding new manga to the library</div>
+				</Slide>
+				<Slide
+					labelClass="ml-2"
+					bind:checked={includeInUpdate}
+					class="w-full focus:outline-0 p-1 hover:variant-glass-surface"
+				>
+					<div class="w-full">Include category in automatic updates</div>
+				</Slide>
+				<Slide
+					labelClass="ml-2"
+					bind:checked={includeInDownload}
+					class="w-full focus:outline-0 p-1 hover:variant-glass-surface"
+				>
+					<div class="w-full">Include category in downloads from automatic updates</div>
 				</Slide>
 			</div>
 		</div>

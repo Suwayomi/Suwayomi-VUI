@@ -99,6 +99,8 @@ fragment CategoryTypeFragment on CategoryType {
 	default
 	order
 	name
+	includeInDownload
+	includeInUpdate
 	mangas {
 		totalCount
 	}

@@ -43,7 +43,7 @@
 			type: 'component',
 			component: {
 				ref: CategoriesEditModal,
-				props: { ...cat, defaultt: cat.default }
+				props: { cat }
 			}
 		});
 	}
@@ -149,9 +149,7 @@
 {:else if $cats.errors}
 	{JSON.stringify($cats.errors)}
 {:else if $cats.data.categories.nodes}
-	{#each $cats.data.categories.nodes
-		.filter((e) => e.id !== 0)
-		.toSorted((a, b) => (a.order > b.order ? 1 : -1)) as cat}
+	{#each $cats.data.categories.nodes.toSorted((a, b) => (a.order > b.order ? 1 : -1)) as cat}
 		<button
 			on:click={(e) => edit(e, cat)}
 			class="text-left flex items-center w-full h-16 hover:variant-glass-surface cursor-pointer p-2"
@@ -181,11 +179,15 @@
 				/>
 			</div>
 			<IconButton on:click={(e) => edit(e, cat)} name="mdi:edit" class="hover:variant-ghost" />
-			<IconButton
-				on:click={(e) => delCategory(e, cat)}
-				name="mdi:delete"
-				class="hover:variant-ghost"
-			/>
+			{#if cat.id !== 0}
+				<IconButton
+					on:click={(e) => delCategory(e, cat)}
+					name="mdi:delete"
+					class="hover:variant-ghost"
+				/>
+			{:else}
+				<div class="h-full aspect-square w-auto" />
+			{/if}
 		</button>
 	{/each}
 	<IconButton
