@@ -129,7 +129,7 @@
 										</span>
 									{/each}
 								{:else if $items.data}
-									{#each $items.data.searchTracker.trackSearches as item}
+									{#each $items.data.searchTracker.trackSearches as item (item.trackerId + ' ' + item.remoteId)}
 										<a
 											href={item.trackingUrl}
 											on:click={(e) => {
