@@ -995,7 +995,8 @@ enum WebUIInterface {
 input BindTrackInput {
   clientMutationId: String
   mangaId: Int!
-  trackSearchId: Int!
+  remoteId: LongString!
+  trackerId: Int!
 }
 input BooleanFilterInput {
   distinctFrom: Boolean

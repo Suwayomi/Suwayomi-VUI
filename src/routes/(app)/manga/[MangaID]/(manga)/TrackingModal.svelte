@@ -15,17 +15,10 @@
 		type SearchTrackerQuery,
 		updateTrack,
 		bindTrack,
-		type UpdateTrackMutation,
-		type Exact,
-		GetMangaDoc,
-		type BindTrackMutation
+		type Exact
 	} from '$lib/generated';
-	import type {
-		ApolloCache,
-		ApolloQueryResult,
-		FetchResult,
-		ObservableQuery
-	} from '@apollo/client';
+	import { bindTrackUpdater, unbindUpdater } from '$lib/util';
+	import type { ApolloQueryResult, ObservableQuery } from '@apollo/client';
 	import { Tab, TabGroup, getModalStore } from '@skeletonlabs/skeleton';
 	import type { Readable } from 'svelte/store';
 	export let manga: Readable<
@@ -53,43 +46,6 @@
 		}
 	});
 
-	function unbindUpdater(cache: ApolloCache<unknown>, { data }: FetchResult<UpdateTrackMutation>) {
-		if (!data) return;
-		const mangaData = structuredClone(
-			cache.readQuery<GetMangaQuery>({
-				query: GetMangaDoc,
-				variables: { id: $manga.data.manga.id }
-			})
-		);
-		if (!mangaData || !mangaData.manga) return;
-		const mga = mangaData.manga;
-		mga.trackRecords.nodes = mga.trackRecords.nodes.filter((ee) => ee.trackerId !== tabSet);
-		cache.writeQuery({
-			query: GetMangaDoc,
-			variables: { id: $manga.data.manga.id },
-			data: { manga: mga }
-		});
-	}
-
-	function bindTrackUpdater(cache: ApolloCache<unknown>, { data }: FetchResult<BindTrackMutation>) {
-		if (!data || !data?.bindTrack?.trackRecord) return;
-		const mangaData = structuredClone(
-			cache.readQuery<GetMangaQuery>({
-				query: GetMangaDoc,
-				variables: { id: $manga.data.manga.id }
-			})
-		);
-		if (!mangaData || !mangaData.manga) return;
-		const mga = mangaData.manga;
-		mga.trackRecords.nodes = mga.trackRecords.nodes.filter((ee) => ee.trackerId !== tabSet);
-		mga.trackRecords.nodes.push(data.bindTrack.trackRecord);
-		cache.writeQuery({
-			query: GetMangaDoc,
-			variables: { id: $manga.data.manga.id },
-			data: { manga: mga }
-		});
-	}
-
 	async function trackThis(
 		item:
 			| SearchTrackerQuery['searchTracker']['trackSearches'][0]
@@ -99,13 +55,13 @@
 		if (same) {
 			await updateTrack({
 				variables: { input: { recordId: same.id, unbind: true } },
-				update: unbindUpdater
+				update: (a, b) => unbindUpdater(a, b, $manga.data.manga.id, tabSet)
 			});
 			return;
 		}
 		await bindTrack({
-			variables: { trackSearchId: item.id, mangaId: $manga.data.manga.id },
-			update: bindTrackUpdater
+			variables: { mangaId: $manga.data.manga.id, trackerId: tabSet, remoteId: item.remoteId },
+			update: (a, b) => bindTrackUpdater(a, b, $manga.data.manga.id, tabSet)
 		});
 	}
 </script>

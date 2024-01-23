@@ -19,8 +19,11 @@
 		updateMangas,
 		type CategoryQuery,
 		type GetMangaQuery,
-		type UpdateMangaCategoriesMutation
+		type UpdateMangaCategoriesMutation,
+		bindTrack,
+		updateTrack
 	} from '$lib/generated';
+	import { bindTrackUpdater, unbindUpdater } from '$lib/util';
 	import type { ApolloCache, FetchResult } from '@apollo/client';
 	import { ProgressRadial, getModalStore } from '@skeletonlabs/skeleton';
 	import type { SvelteComponent } from 'svelte';
@@ -32,7 +35,7 @@
 
 	let doChapters = true;
 	let doCategories = true;
-	let doTracking = false;
+	let doTracking = true;
 
 	let MigrateLoading = false;
 	let CopyLoading = false;
@@ -58,15 +61,17 @@
 		await updateMangas({
 			variables: { ids: id, inLibrary: true }
 		});
+		const ToDo: Promise<void>[] = [];
 		if (doChapters) {
-			await CopyMangaChapters();
+			ToDo.push(CopyMangaChapters());
 		}
 		if (doCategories) {
-			await CopyMangaCategories();
+			ToDo.push(CopyMangaCategories());
 		}
 		if (doTracking) {
-			await CopyMangaTracking();
+			ToDo.push(CopyMangaTracking());
 		}
+		await Promise.all(ToDo);
 		parent.onClose();
 	}
 
@@ -257,9 +262,30 @@
 	}
 
 	async function CopyMangaTracking(): Promise<void> {
-		// TODO: implement ofical tracking, currently impossable
-		// const trackers = manga.trackRecords.nodes
-		// const { data: dat } = await AsyncGetManga({ variables: { id } });
+		const trackers = manga.trackRecords.nodes;
+		await Promise.all(
+			trackers.map(async (tracker) => {
+				try {
+					await updateTrack({
+						variables: {
+							input: {
+								unbind: true,
+								recordId: tracker.id
+							}
+						},
+						update: (a, b) => unbindUpdater(a, b, id, tracker.trackerId)
+					});
+					await bindTrack({
+						variables: {
+							mangaId: id,
+							trackerId: tracker.trackerId,
+							remoteId: tracker.remoteId
+						},
+						update: (a, b) => bindTrackUpdater(a, b, id, tracker.trackerId)
+					});
+				} catch {}
+			})
+		);
 	}
 </script>
 
@@ -274,11 +300,7 @@
 				<Slide class="outline-0 p-1 pl-2 hover:variant-glass-surface" bind:checked={doCategories}>
 					Categories
 				</Slide>
-				<Slide
-					class="outline-0 p-1 pl-2 hover:variant-glass-surface"
-					bind:checked={doTracking}
-					disabled
-				>
+				<Slide class="outline-0 p-1 pl-2 hover:variant-glass-surface" bind:checked={doTracking}>
 					Tracking
 				</Slide>
 			</div>

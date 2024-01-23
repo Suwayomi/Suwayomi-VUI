@@ -62,7 +62,8 @@ export type BackupRestoreStatus = {
 export type BindTrackInput = {
   clientMutationId?: InputMaybe<Scalars['String']['input']>;
   mangaId: Scalars['Int']['input'];
-  trackSearchId: Scalars['Int']['input'];
+  remoteId: Scalars['LongString']['input'];
+  trackerId: Scalars['Int']['input'];
 };
 
 export type BindTrackPayload = {
@@ -2455,7 +2456,7 @@ export type SourceTypeFragmentFragment = { __typename?: 'SourceType', id: any, d
 
 export type ExtensionTypeFragmentFragment = { __typename?: 'ExtensionType', name: string, repo?: string | null, versionName: string, pkgName: string, lang: string, iconUrl: string, isNsfw: boolean, isInstalled: boolean, isObsolete: boolean, hasUpdate: boolean };
 
-export type CategoryTypeFragmentFragment = { __typename?: 'CategoryType', id: number, default: boolean, order: number, name: string, mangas: { __typename?: 'MangaNodeList', totalCount: number } };
+export type CategoryTypeFragmentFragment = { __typename?: 'CategoryType', id: number, default: boolean, order: number, name: string, includeInDownload: IncludeOrExclude, includeInUpdate: IncludeOrExclude, mangas: { __typename?: 'MangaNodeList', totalCount: number } };
 
 export type TrackerTypeFragmentFragment = { __typename?: 'TrackerType', authUrl?: string | null, icon: string, id: number, isLoggedIn: boolean, name: string };
 
@@ -2577,31 +2578,35 @@ export type UpdateCategoryOrderMutationVariables = Exact<{
 }>;
 
 
-export type UpdateCategoryOrderMutation = { __typename?: 'Mutation', updateCategoryOrder: { __typename?: 'UpdateCategoryOrderPayload', categories: Array<{ __typename?: 'CategoryType', id: number, default: boolean, order: number, name: string, mangas: { __typename?: 'MangaNodeList', totalCount: number } }> } };
+export type UpdateCategoryOrderMutation = { __typename?: 'Mutation', updateCategoryOrder: { __typename?: 'UpdateCategoryOrderPayload', categories: Array<{ __typename?: 'CategoryType', id: number, default: boolean, order: number, name: string, includeInDownload: IncludeOrExclude, includeInUpdate: IncludeOrExclude, mangas: { __typename?: 'MangaNodeList', totalCount: number } }> } };
 
 export type CreateCategoryMutationVariables = Exact<{
   name: Scalars['String']['input'];
   default: Scalars['Boolean']['input'];
+  includeInDownload: IncludeOrExclude;
+  includeInUpdate: IncludeOrExclude;
 }>;
 
 
-export type CreateCategoryMutation = { __typename?: 'Mutation', createCategory: { __typename?: 'CreateCategoryPayload', category: { __typename?: 'CategoryType', id: number, default: boolean, order: number, name: string, mangas: { __typename?: 'MangaNodeList', totalCount: number } } } };
+export type CreateCategoryMutation = { __typename?: 'Mutation', createCategory: { __typename?: 'CreateCategoryPayload', category: { __typename?: 'CategoryType', id: number, default: boolean, order: number, name: string, includeInDownload: IncludeOrExclude, includeInUpdate: IncludeOrExclude, mangas: { __typename?: 'MangaNodeList', totalCount: number } } } };
 
 export type DeleteCategoryMutationVariables = Exact<{
   categoryId: Scalars['Int']['input'];
 }>;
 
 
-export type DeleteCategoryMutation = { __typename?: 'Mutation', deleteCategory: { __typename?: 'DeleteCategoryPayload', category?: { __typename?: 'CategoryType', id: number, default: boolean, order: number, name: string, mangas: { __typename?: 'MangaNodeList', totalCount: number } } | null } };
+export type DeleteCategoryMutation = { __typename?: 'Mutation', deleteCategory: { __typename?: 'DeleteCategoryPayload', category?: { __typename?: 'CategoryType', id: number, default: boolean, order: number, name: string, includeInDownload: IncludeOrExclude, includeInUpdate: IncludeOrExclude, mangas: { __typename?: 'MangaNodeList', totalCount: number } } | null } };
 
 export type UpdateCategoryMutationVariables = Exact<{
   id: Scalars['Int']['input'];
   name?: InputMaybe<Scalars['String']['input']>;
   default?: InputMaybe<Scalars['Boolean']['input']>;
+  includeInDownload?: InputMaybe<IncludeOrExclude>;
+  includeInUpdate?: InputMaybe<IncludeOrExclude>;
 }>;
 
 
-export type UpdateCategoryMutation = { __typename?: 'Mutation', updateCategory: { __typename?: 'UpdateCategoryPayload', category: { __typename?: 'CategoryType', id: number, default: boolean, order: number, name: string, mangas: { __typename?: 'MangaNodeList', totalCount: number } } } };
+export type UpdateCategoryMutation = { __typename?: 'Mutation', updateCategory: { __typename?: 'UpdateCategoryPayload', category: { __typename?: 'CategoryType', id: number, default: boolean, order: number, name: string, includeInDownload: IncludeOrExclude, includeInUpdate: IncludeOrExclude, mangas: { __typename?: 'MangaNodeList', totalCount: number } } } };
 
 export type UpdateMangasCategoriesMutationVariables = Exact<{
   addTo?: InputMaybe<Array<Scalars['Int']['input']> | Scalars['Int']['input']>;
@@ -2745,8 +2750,9 @@ export type LoginTrackerCredentialsMutationVariables = Exact<{
 export type LoginTrackerCredentialsMutation = { __typename?: 'Mutation', loginTrackerCredentials: { __typename?: 'LoginTrackerCredentialsPayload', tracker: { __typename?: 'TrackerType', authUrl?: string | null, icon: string, id: number, isLoggedIn: boolean, name: string } } };
 
 export type BindTrackMutationVariables = Exact<{
-  trackSearchId: Scalars['Int']['input'];
   mangaId: Scalars['Int']['input'];
+  remoteId: Scalars['LongString']['input'];
+  trackerId: Scalars['Int']['input'];
 }>;
 
 
@@ -2764,7 +2770,7 @@ export type CategoriesQueryVariables = Exact<{
 }>;
 
 
-export type CategoriesQuery = { __typename?: 'Query', categories: { __typename?: 'CategoryNodeList', nodes: Array<{ __typename?: 'CategoryType', id: number, default: boolean, order: number, name: string, mangas: { __typename?: 'MangaNodeList', totalCount: number } }> } };
+export type CategoriesQuery = { __typename?: 'Query', categories: { __typename?: 'CategoryNodeList', nodes: Array<{ __typename?: 'CategoryType', id: number, default: boolean, order: number, name: string, includeInDownload: IncludeOrExclude, includeInUpdate: IncludeOrExclude, mangas: { __typename?: 'MangaNodeList', totalCount: number } }> } };
 
 export type CategoryQueryVariables = Exact<{
   id: Scalars['Int']['input'];
@@ -3018,6 +3024,8 @@ export const CategoryTypeFragmentFragmentDoc = gql`
   default
   order
   name
+  includeInDownload
+  includeInUpdate
   mangas {
     totalCount
   }
@@ -3252,8 +3260,10 @@ export const UpdateCategoryOrderDoc = gql`
 }
     ${CategoryTypeFragmentFragmentDoc}`;
 export const CreateCategoryDoc = gql`
-    mutation createCategory($name: String!, $default: Boolean!) {
-  createCategory(input: {name: $name, default: $default}) {
+    mutation createCategory($name: String!, $default: Boolean!, $includeInDownload: IncludeOrExclude!, $includeInUpdate: IncludeOrExclude!) {
+  createCategory(
+    input: {name: $name, default: $default, includeInDownload: $includeInDownload, includeInUpdate: $includeInUpdate}
+  ) {
     category {
       ...CategoryTypeFragment
     }
@@ -3270,8 +3280,10 @@ export const DeleteCategoryDoc = gql`
 }
     ${CategoryTypeFragmentFragmentDoc}`;
 export const UpdateCategoryDoc = gql`
-    mutation updateCategory($id: Int!, $name: String = null, $default: Boolean = null) {
-  updateCategory(input: {id: $id, patch: {default: $default, name: $name}}) {
+    mutation updateCategory($id: Int!, $name: String = null, $default: Boolean = null, $includeInDownload: IncludeOrExclude = null, $includeInUpdate: IncludeOrExclude = null) {
+  updateCategory(
+    input: {id: $id, patch: {default: $default, name: $name, includeInDownload: $includeInDownload, includeInUpdate: $includeInUpdate}}
+  ) {
     category {
       ...CategoryTypeFragment
     }
@@ -3482,8 +3494,10 @@ export const LoginTrackerCredentialsDoc = gql`
 }
     ${TrackerTypeFragmentFragmentDoc}`;
 export const BindTrackDoc = gql`
-    mutation bindTrack($trackSearchId: Int!, $mangaId: Int!) {
-  bindTrack(input: {mangaId: $mangaId, trackSearchId: $trackSearchId}) {
+    mutation bindTrack($mangaId: Int!, $remoteId: LongString!, $trackerId: Int!) {
+  bindTrack(
+    input: {mangaId: $mangaId, remoteId: $remoteId, trackerId: $trackerId}
+  ) {
     trackRecord {
       ...TrackRecordTypeFragment
     }
