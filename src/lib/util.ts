@@ -5,10 +5,19 @@
 // file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
 import { get, type Writable } from 'svelte/store';
-import { deleteDownloadedChapters, enqueueChapterDownloads, updateChapters } from './generated';
+import {
+	deleteDownloadedChapters,
+	enqueueChapterDownloads,
+	updateChapters,
+	type BindTrackMutation,
+	type UpdateTrackMutation,
+	type GetMangaQuery,
+	GetMangaDoc
+} from './generated';
 import type { FetchResult } from '@apollo/client/link/core';
 
 import { toastStore } from './simpleStores';
+import type { ApolloCache } from '@apollo/client';
 
 export type TriState = 0 | 1 | 2;
 
@@ -233,4 +242,51 @@ export function getObjectKeys<T extends object>(obj: T): (keyof T)[] {
 
 export function getObjectEntries<T extends object>(obj: T): [keyof T, T[keyof T]][] {
 	return Object.entries(obj) as [keyof T, T[keyof T]][];
+}
+
+export function unbindUpdater(
+	cache: ApolloCache<unknown>,
+	{ data }: FetchResult<UpdateTrackMutation>,
+	MangaId: number,
+	tabSet: number
+) {
+	if (!data) return;
+	const mangaData = structuredClone(
+		cache.readQuery<GetMangaQuery>({
+			query: GetMangaDoc,
+			variables: { id: MangaId }
+		})
+	);
+	if (!mangaData || !mangaData.manga) return;
+	const mga = mangaData.manga;
+	mga.trackRecords.nodes = mga.trackRecords.nodes.filter((ee) => ee.trackerId !== tabSet);
+	cache.writeQuery({
+		query: GetMangaDoc,
+		variables: { id: MangaId },
+		data: { manga: mga }
+	});
+}
+
+export function bindTrackUpdater(
+	cache: ApolloCache<unknown>,
+	{ data }: FetchResult<BindTrackMutation>,
+	MangaId: number,
+	tabSet: number
+) {
+	if (!data || !data?.bindTrack?.trackRecord) return;
+	const mangaData = structuredClone(
+		cache.readQuery<GetMangaQuery>({
+			query: GetMangaDoc,
+			variables: { id: MangaId }
+		})
+	);
+	if (!mangaData || !mangaData.manga) return;
+	const mga = mangaData.manga;
+	mga.trackRecords.nodes = mga.trackRecords.nodes.filter((ee) => ee.trackerId !== tabSet);
+	mga.trackRecords.nodes.push(data.bindTrack.trackRecord);
+	cache.writeQuery({
+		query: GetMangaDoc,
+		variables: { id: MangaId },
+		data: { manga: mga }
+	});
 }

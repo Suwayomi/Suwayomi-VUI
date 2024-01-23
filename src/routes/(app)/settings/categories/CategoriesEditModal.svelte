@@ -9,23 +9,28 @@
 <script lang="ts">
 	import { getModalStore } from '@skeletonlabs/skeleton';
 	import type { SvelteComponent } from 'svelte';
-	import { updateCategory } from '$lib/generated';
-	import { writable } from 'svelte/store';
+	import { IncludeOrExclude, updateCategory, type CategoriesQuery } from '$lib/generated';
 	import Slide from '$lib/components/Slide.svelte';
 	const modalStore = getModalStore();
 	export let parent: SvelteComponent;
 
-	export let name: string;
+	export let cat: CategoriesQuery['categories']['nodes'][0];
 
-	export let defaultt: boolean;
-
-	export let id: number;
-
-	$: catinput = writable(name);
-	$: Defaul = writable(defaultt);
+	let catinput = cat.name;
+	let Defaul = cat.default;
+	let includeInDownload = cat.includeInDownload === IncludeOrExclude.Include;
+	let includeInUpdate = cat.includeInUpdate === IncludeOrExclude.Include;
 
 	function submitChange(): void {
-		updateCategory({ variables: { id: id, name: $catinput, default: $Defaul } });
+		updateCategory({
+			variables: {
+				id: cat.id,
+				name: catinput,
+				default: Defaul,
+				includeInDownload: includeInDownload ? IncludeOrExclude.Include : IncludeOrExclude.Exclude,
+				includeInUpdate: includeInUpdate ? IncludeOrExclude.Include : IncludeOrExclude.Exclude
+			}
+		});
 		parent.onClose();
 	}
 </script>
@@ -37,14 +42,29 @@
 			<div class="max-h-96 overflow-y-auto grid grid-cols-1 gap-1">
 				<label class="label">
 					<span class="pl-2">Category name</span>
-					<input class="input" type="text" bind:value={$catinput} />
+					<input class="input" type="text" bind:value={catinput} />
 				</label>
 				<Slide
 					labelClass="ml-2"
-					bind:checked={$Defaul}
+					bind:checked={Defaul}
+					disabled={cat.id == 0}
 					class="w-full focus:outline-0 p-1 hover:variant-glass-surface"
 				>
 					<div class="w-full">Default category when adding new manga to the library</div>
+				</Slide>
+				<Slide
+					labelClass="ml-2"
+					bind:checked={includeInUpdate}
+					class="w-full focus:outline-0 p-1 hover:variant-glass-surface"
+				>
+					<div class="w-full">Include category in automatic updates</div>
+				</Slide>
+				<Slide
+					labelClass="ml-2"
+					bind:checked={includeInDownload}
+					class="w-full focus:outline-0 p-1 hover:variant-glass-surface"
+				>
+					<div class="w-full">Include category in downloads from automatic updates</div>
 				</Slide>
 			</div>
 		</div>

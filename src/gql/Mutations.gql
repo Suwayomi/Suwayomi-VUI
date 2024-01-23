@@ -246,8 +246,20 @@ mutation updateCategoryOrder($id: Int!, $position: Int!) {
 	}
 }
 
-mutation createCategory($name: String!, $default: Boolean!) {
-	createCategory(input: { name: $name, default: $default }) {
+mutation createCategory(
+	$name: String!
+	$default: Boolean!
+	$includeInDownload: IncludeOrExclude!
+	$includeInUpdate: IncludeOrExclude!
+) {
+	createCategory(
+		input: {
+			name: $name
+			default: $default
+			includeInDownload: $includeInDownload
+			includeInUpdate: $includeInUpdate
+		}
+	) {
 		category {
 			...CategoryTypeFragment
 		}
@@ -262,8 +274,24 @@ mutation deleteCategory($categoryId: Int!) {
 	}
 }
 
-mutation updateCategory($id: Int!, $name: String = null, $default: Boolean = null) {
-	updateCategory(input: { id: $id, patch: { default: $default, name: $name } }) {
+mutation updateCategory(
+	$id: Int!
+	$name: String = null
+	$default: Boolean = null
+	$includeInDownload: IncludeOrExclude = null
+	$includeInUpdate: IncludeOrExclude = null
+) {
+	updateCategory(
+		input: {
+			id: $id
+			patch: {
+				default: $default
+				name: $name
+				includeInDownload: $includeInDownload
+				includeInUpdate: $includeInUpdate
+			}
+		}
+	) {
 		category {
 			...CategoryTypeFragment
 		}
@@ -460,8 +488,8 @@ mutation loginTrackerCredentials($password: String!, $trackerId: Int!, $username
 	}
 }
 
-mutation bindTrack($trackSearchId: Int!, $mangaId: Int!) {
-	bindTrack(input: { mangaId: $mangaId, trackSearchId: $trackSearchId }) {
+mutation bindTrack($mangaId: Int!, $remoteId: LongString!, $trackerId: Int!) {
+	bindTrack(input: { mangaId: $mangaId, remoteId: $remoteId, trackerId: $trackerId }) {
 		trackRecord {
 			...TrackRecordTypeFragment
 		}

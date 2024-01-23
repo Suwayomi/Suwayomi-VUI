@@ -19,9 +19,11 @@
 		updateMangas,
 		type CategoryQuery,
 		type GetMangaQuery,
-		type UpdateMangaCategoriesMutation
+		type UpdateMangaCategoriesMutation,
+		bindTrack,
+		updateTrack
 	} from '$lib/generated';
-	import { MangaMeta } from '$lib/simpleStores';
+	import { bindTrackUpdater, unbindUpdater } from '$lib/util';
 	import type { ApolloCache, FetchResult } from '@apollo/client';
 	import { ProgressRadial, getModalStore } from '@skeletonlabs/skeleton';
 	import type { SvelteComponent } from 'svelte';
@@ -37,7 +39,6 @@
 
 	let MigrateLoading = false;
 	let CopyLoading = false;
-	const mangaMeta = MangaMeta(id);
 
 	async function MigrateManga() {
 		MigrateLoading = true;
@@ -60,15 +61,17 @@
 		await updateMangas({
 			variables: { ids: id, inLibrary: true }
 		});
+		const ToDo: Promise<void>[] = [];
 		if (doChapters) {
-			await CopyMangaChapters();
+			ToDo.push(CopyMangaChapters());
 		}
 		if (doCategories) {
-			await CopyMangaCategories();
+			ToDo.push(CopyMangaCategories());
 		}
 		if (doTracking) {
-			await CopyMangaTracking();
+			ToDo.push(CopyMangaTracking());
 		}
+		await Promise.all(ToDo);
 		parent.onClose();
 	}
 
@@ -258,10 +261,31 @@
 		});
 	}
 
-	async function CopyMangaTracking() {
-		$mangaMeta.mangaUpdatesSeriesID =
-			JSON.parse(manga.meta.find((e) => e.key === 'VUI3_mangaUpdatesSeriesID')?.value ?? 'null') ??
-			null;
+	async function CopyMangaTracking(): Promise<void> {
+		const trackers = manga.trackRecords.nodes;
+		await Promise.all(
+			trackers.map(async (tracker) => {
+				try {
+					await updateTrack({
+						variables: {
+							input: {
+								unbind: true,
+								recordId: tracker.id
+							}
+						},
+						update: (a, b) => unbindUpdater(a, b, id, tracker.trackerId)
+					});
+					await bindTrack({
+						variables: {
+							mangaId: id,
+							trackerId: tracker.trackerId,
+							remoteId: tracker.remoteId
+						},
+						update: (a, b) => bindTrackUpdater(a, b, id, tracker.trackerId)
+					});
+				} catch {}
+			})
+		);
 	}
 </script>
 
