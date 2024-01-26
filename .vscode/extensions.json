@@ -1,0 +1,20 @@
+{
+  "recommendations": [
+    "vdanchenkov.tailwind-class-sorter",
+    "bradlc.vscode-tailwindcss",
+    "formulahendry.auto-close-tag",
+    "formulahendry.auto-rename-tag",
+    "oven.bun-vscode",
+    "streetsidesoftware.code-spell-checker",
+    "dbaeumer.vscode-eslint",
+    "mquandalle.graphql",
+    "ymotongpoo.licenser",
+    "yoavbls.pretty-ts-errors",
+    "esbenp.prettier-vscode",
+    "rvest.vs-code-prettier-eslint",
+    "fivethree.vscode-svelte-snippets",
+    "svelte.svelte-vscode",
+    "ardenivanov.svelte-intellisense",
+    "stivo.tailwind-fold"
+  ]
+}
