@@ -7,7 +7,6 @@
 -->
 
 <script lang="ts">
-	import { goto } from '$app/navigation';
 	import { cache } from '$lib/apollo';
 	import IconWrapper from '$lib/components/IconWrapper.svelte';
 	import IntersectionObserver from '$lib/components/IntersectionObserver.svelte';
@@ -357,14 +356,12 @@
 							use:longPress
 							on:longPress={() => $selectMode || LongHandler()}
 							href="/manga/{manga.data.manga.id}/chapter/{chapter.id}"
-							on:click|stopPropagation={(e) => {
+							on:click={(e) => {
 								if (e.ctrlKey) return;
 								if ($selectMode) {
 									e.preventDefault();
+									e.stopPropagation();
 									lastSelected = HelpDoSelect(chapter, e, lastSelected, sortedChapters, selected);
-								} else {
-									e.preventDefault();
-									goto(`/manga/${manga?.data.manga.id}/chapter/${chapter.id}`);
 								}
 							}}
 						>

@@ -18,7 +18,6 @@
 	import { selected, selectMode } from './LibraryStores';
 	import { onMount } from 'svelte';
 	import { AppBarData } from '$lib/MountTitleAction';
-	import { goto } from '$app/navigation';
 	import { gridValues, HelpDoSelect, HelpSelectAll } from '$lib/util';
 	import IconWrapper from '$lib/components/IconWrapper.svelte';
 
@@ -202,14 +201,12 @@
 										use:longPress
 										on:longPress={() => $selectMode || LongHandler()}
 										href="/manga/{manga.id}"
-										on:click|stopPropagation={(e) => {
+										on:click={(e) => {
 											if (e.ctrlKey) return;
 											if ($selectMode) {
+												e.stopPropagation();
 												e.preventDefault();
 												lastSelected = HelpDoSelect(manga, e, lastSelected, sortedMangas, selected);
-											} else {
-												e.preventDefault();
-												goto(`/manga/${manga.id}`);
 											}
 										}}
 										class="hover:opacity-70 cursor-pointer h-full"
