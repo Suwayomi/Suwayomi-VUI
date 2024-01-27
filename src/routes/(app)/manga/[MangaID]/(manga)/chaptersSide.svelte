@@ -7,7 +7,6 @@
 -->
 
 <script lang="ts">
-	import { goto } from '$app/navigation';
 	import { cache } from '$lib/apollo';
 	import IconWrapper from '$lib/components/IconWrapper.svelte';
 	import IntersectionObserver from '$lib/components/IntersectionObserver.svelte';
