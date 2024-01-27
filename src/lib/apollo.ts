@@ -5,10 +5,10 @@
 // file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
 import { ApolloClient, InMemoryCache, split, type ApolloLink } from '@apollo/client/core';
-import { createUploadLink } from 'apollo-upload-client';
 import { GraphQLWsLink } from '@apollo/client/link/subscriptions';
 import { createClient } from 'graphql-ws';
 import { getMainDefinition } from '@apollo/client/utilities';
+import createUploadLink from 'apollo-upload-client/createUploadLink.mjs';
 
 let splitLink: ApolloLink = createUploadLink({ uri: '/api/graphql' }) as unknown as ApolloLink;
 
