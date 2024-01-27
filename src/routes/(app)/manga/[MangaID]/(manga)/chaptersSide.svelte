@@ -357,14 +357,12 @@
 							use:longPress
 							on:longPress={() => $selectMode || LongHandler()}
 							href="/manga/{manga.data.manga.id}/chapter/{chapter.id}"
-							on:click|stopPropagation={(e) => {
+							on:click={(e) => {
 								if (e.ctrlKey) return;
 								if ($selectMode) {
 									e.preventDefault();
+									e.stopPropagation();
 									lastSelected = HelpDoSelect(chapter, e, lastSelected, sortedChapters, selected);
-								} else {
-									e.preventDefault();
-									goto(`/manga/${manga?.data.manga.id}/chapter/${chapter.id}`);
 								}
 							}}
 						>
