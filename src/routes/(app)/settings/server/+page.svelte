@@ -344,20 +344,20 @@
 			on:change={() => setSettings({ socksProxyHost })}
 		/>
 		<!-- socksProxyPort -->
-		<Number
+		<Text
 			title="Socks Proxy Port"
-			value={parseInt(socksProxyPort)}
-			max={65535}
-			on:change={({ detail: { value, reset } }) => {
-				if (value < 65535 && value > 0) {
-					setSettings({ socksProxyPort: value.toString() });
+			bind:value={socksProxyPort}
+			on:change={() => {
+				const int = parseInt(socksProxyPort);
+				if (!isNaN(int) && int < 65535 && int > 0) {
+					setSettings({ socksProxyPort });
 					return;
 				}
 				errortoast(
 					'socksProxyPort validation failed',
-					'socksProxyPort must be between 0 and 65535'
+					'socksProxyPort must be a number between 0 and 65535'
 				);
-				reset(parseInt(settings.socksProxyPort));
+				socksProxyPort = settings.socksProxyPort;
 			}}
 		/>
 		<!-- systemTrayEnabled -->
