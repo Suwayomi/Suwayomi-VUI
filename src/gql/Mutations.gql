@@ -503,3 +503,49 @@ mutation updateTrack($input: UpdateTrackInput!) {
 		}
 	}
 }
+
+mutation setServerSettings($settings: PartialSettingsTypeInput = {}) {
+	setSettings(input: { settings: $settings }) {
+		settings {
+			autoDownloadAheadLimit
+			autoDownloadNewChapters
+			backupInterval
+			backupPath
+			backupTTL
+			backupTime
+			basicAuthEnabled
+			basicAuthPassword
+			basicAuthUsername
+			debugLogsEnabled
+			downloadAsCbz
+			downloadsPath
+			electronPath
+			excludeCompleted
+			excludeNotStarted
+			excludeEntryWithUnreadChapters
+			excludeUnreadChapters
+			flareSolverrEnabled
+			extensionRepos
+			flareSolverrSessionName
+			flareSolverrSessionTtl
+			flareSolverrTimeout
+			flareSolverrUrl
+			globalUpdateInterval
+			gqlDebugLogsEnabled
+			initialOpenInBrowserEnabled
+			ip
+			localSourcePath
+			maxSourcesInParallel
+			port
+			socksProxyEnabled
+			socksProxyHost
+			socksProxyPort
+			systemTrayEnabled
+			updateMangas
+			webUIChannel
+			webUIFlavor
+			webUIInterface
+			webUIUpdateCheckInterval
+		}
+	}
+}
