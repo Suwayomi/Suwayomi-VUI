@@ -78,7 +78,9 @@
 					thumbnailUrl: manga.thumbnailUrl,
 					unreadCount: manga.unreadCount,
 					downloadCount: manga.downloadCount,
-					lastReadChapter: manga.lastReadChapter,
+					latestFetchedChapter: manga.latestFetchedChapter,
+					latestReadChapter: manga.latestReadChapter,
+					latestUploadedChapter: manga.latestUploadedChapter,
 					chapters: manga.chapters
 				};
 				// add to categories that now have it

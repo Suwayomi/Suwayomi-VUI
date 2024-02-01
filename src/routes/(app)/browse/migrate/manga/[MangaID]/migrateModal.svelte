@@ -142,7 +142,9 @@
 					thumbnailUrl: dat.manga.thumbnailUrl,
 					unreadCount: dat.manga.unreadCount ?? 0,
 					downloadCount: dat.manga.downloadCount ?? 0,
-					lastReadChapter: dat.manga.lastReadChapter ?? undefined,
+					latestFetchedChapter: dat.manga.latestFetchedChapter,
+					latestReadChapter: dat.manga.latestReadChapter,
+					latestUploadedChapter: dat.manga.latestUploadedChapter,
 					chapters: dat.manga.chapters ?? {
 						totalCount: 0
 					}

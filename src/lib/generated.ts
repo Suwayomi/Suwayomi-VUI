@@ -1380,6 +1380,11 @@ export type PartialSettingsType = Settings & {
   excludeNotStarted?: Maybe<Scalars['Boolean']['output']>;
   excludeUnreadChapters?: Maybe<Scalars['Boolean']['output']>;
   extensionRepos?: Maybe<Array<Scalars['String']['output']>>;
+  flareSolverrEnabled?: Maybe<Scalars['Boolean']['output']>;
+  flareSolverrSessionName?: Maybe<Scalars['String']['output']>;
+  flareSolverrSessionTtl?: Maybe<Scalars['Int']['output']>;
+  flareSolverrTimeout?: Maybe<Scalars['Int']['output']>;
+  flareSolverrUrl?: Maybe<Scalars['String']['output']>;
   globalUpdateInterval?: Maybe<Scalars['Float']['output']>;
   gqlDebugLogsEnabled?: Maybe<Scalars['Boolean']['output']>;
   initialOpenInBrowserEnabled?: Maybe<Scalars['Boolean']['output']>;
@@ -1417,6 +1422,11 @@ export type PartialSettingsTypeInput = {
   excludeNotStarted?: InputMaybe<Scalars['Boolean']['input']>;
   excludeUnreadChapters?: InputMaybe<Scalars['Boolean']['input']>;
   extensionRepos?: InputMaybe<Array<Scalars['String']['input']>>;
+  flareSolverrEnabled?: InputMaybe<Scalars['Boolean']['input']>;
+  flareSolverrSessionName?: InputMaybe<Scalars['String']['input']>;
+  flareSolverrSessionTtl?: InputMaybe<Scalars['Int']['input']>;
+  flareSolverrTimeout?: InputMaybe<Scalars['Int']['input']>;
+  flareSolverrUrl?: InputMaybe<Scalars['String']['input']>;
   globalUpdateInterval?: InputMaybe<Scalars['Float']['input']>;
   gqlDebugLogsEnabled?: InputMaybe<Scalars['Boolean']['input']>;
   initialOpenInBrowserEnabled?: InputMaybe<Scalars['Boolean']['input']>;
@@ -1757,6 +1767,11 @@ export type Settings = {
   excludeNotStarted?: Maybe<Scalars['Boolean']['output']>;
   excludeUnreadChapters?: Maybe<Scalars['Boolean']['output']>;
   extensionRepos?: Maybe<Array<Scalars['String']['output']>>;
+  flareSolverrEnabled?: Maybe<Scalars['Boolean']['output']>;
+  flareSolverrSessionName?: Maybe<Scalars['String']['output']>;
+  flareSolverrSessionTtl?: Maybe<Scalars['Int']['output']>;
+  flareSolverrTimeout?: Maybe<Scalars['Int']['output']>;
+  flareSolverrUrl?: Maybe<Scalars['String']['output']>;
   globalUpdateInterval?: Maybe<Scalars['Float']['output']>;
   gqlDebugLogsEnabled?: Maybe<Scalars['Boolean']['output']>;
   initialOpenInBrowserEnabled?: Maybe<Scalars['Boolean']['output']>;
@@ -1795,6 +1810,11 @@ export type SettingsType = Settings & {
   excludeNotStarted: Scalars['Boolean']['output'];
   excludeUnreadChapters: Scalars['Boolean']['output'];
   extensionRepos: Array<Scalars['String']['output']>;
+  flareSolverrEnabled: Scalars['Boolean']['output'];
+  flareSolverrSessionName: Scalars['String']['output'];
+  flareSolverrSessionTtl: Scalars['Int']['output'];
+  flareSolverrTimeout: Scalars['Int']['output'];
+  flareSolverrUrl: Scalars['String']['output'];
   globalUpdateInterval: Scalars['Float']['output'];
   gqlDebugLogsEnabled: Scalars['Boolean']['output'];
   initialOpenInBrowserEnabled: Scalars['Boolean']['output'];
@@ -2081,6 +2101,12 @@ export type TrackSearchType = {
   trackingUrl: Scalars['String']['output'];
 };
 
+export type TrackStatusType = {
+  __typename?: 'TrackStatusType';
+  name: Scalars['String']['output'];
+  value: Scalars['Int']['output'];
+};
+
 export type TrackerConditionInput = {
   icon?: InputMaybe<Scalars['String']['input']>;
   id?: InputMaybe<Scalars['Int']['input']>;
@@ -2115,6 +2141,8 @@ export type TrackerType = {
   id: Scalars['Int']['output'];
   isLoggedIn: Scalars['Boolean']['output'];
   name: Scalars['String']['output'];
+  scores: Array<Scalars['String']['output']>;
+  statuses: Array<TrackStatusType>;
   trackRecords: TrackRecordNodeList;
 };
 
@@ -2450,7 +2478,7 @@ export type TrackRecordTypeFragmentFragment = { __typename?: 'TrackRecordType', 
 
 export type ChapterTypeFragmentFragment = { __typename?: 'ChapterType', isBookmarked: boolean, isDownloaded: boolean, isRead: boolean, id: number, chapterNumber: number, fetchedAt: any, lastPageRead: number, name: string, sourceOrder: number, uploadDate: any, pageCount: number, scanlator?: string | null };
 
-export type MangaTypeFragmentFragment = { __typename?: 'MangaType', artist?: string | null, author?: string | null, description?: string | null, genre: Array<string>, id: number, inLibrary: boolean, lastFetchedAt?: any | null, realUrl?: string | null, status: MangaStatus, title: string, thumbnailUrl?: string | null, unreadCount: number, downloadCount: number, lastReadChapter?: { __typename?: 'ChapterType', lastReadAt: any } | null, meta: Array<{ __typename?: 'MangaMetaType', value: string, key: string }>, source?: { __typename?: 'SourceType', displayName: string } | null, categories: { __typename?: 'CategoryNodeList', nodes: Array<{ __typename?: 'CategoryType', id: number }> }, trackRecords: { __typename?: 'TrackRecordNodeList', nodes: Array<{ __typename?: 'TrackRecordType', id: number, mangaId: number, remoteId: any, remoteUrl: string, title: string, trackerId: number }> } };
+export type MangaTypeFragmentFragment = { __typename?: 'MangaType', artist?: string | null, author?: string | null, description?: string | null, genre: Array<string>, id: number, inLibrary: boolean, lastFetchedAt?: any | null, realUrl?: string | null, status: MangaStatus, title: string, thumbnailUrl?: string | null, unreadCount: number, downloadCount: number, latestFetchedChapter?: { __typename?: 'ChapterType', fetchedAt: any } | null, latestUploadedChapter?: { __typename?: 'ChapterType', uploadDate: any } | null, latestReadChapter?: { __typename?: 'ChapterType', lastReadAt: any } | null, lastReadChapter?: { __typename?: 'ChapterType', lastReadAt: any } | null, meta: Array<{ __typename?: 'MangaMetaType', value: string, key: string }>, source?: { __typename?: 'SourceType', displayName: string } | null, categories: { __typename?: 'CategoryNodeList', nodes: Array<{ __typename?: 'CategoryType', id: number }> }, trackRecords: { __typename?: 'TrackRecordNodeList', nodes: Array<{ __typename?: 'TrackRecordType', id: number, mangaId: number, remoteId: any, remoteUrl: string, title: string, trackerId: number }> } };
 
 export type SourceTypeFragmentFragment = { __typename?: 'SourceType', id: any, displayName: string, iconUrl: string, lang: string };
 
@@ -2529,7 +2557,7 @@ export type FetchMangaInfoMutationVariables = Exact<{
 }>;
 
 
-export type FetchMangaInfoMutation = { __typename?: 'Mutation', fetchManga: { __typename?: 'FetchMangaPayload', manga: { __typename?: 'MangaType', artist?: string | null, author?: string | null, description?: string | null, genre: Array<string>, id: number, inLibrary: boolean, lastFetchedAt?: any | null, realUrl?: string | null, status: MangaStatus, title: string, thumbnailUrl?: string | null, unreadCount: number, downloadCount: number, lastReadChapter?: { __typename?: 'ChapterType', lastReadAt: any } | null, meta: Array<{ __typename?: 'MangaMetaType', value: string, key: string }>, source?: { __typename?: 'SourceType', displayName: string } | null, categories: { __typename?: 'CategoryNodeList', nodes: Array<{ __typename?: 'CategoryType', id: number }> }, trackRecords: { __typename?: 'TrackRecordNodeList', nodes: Array<{ __typename?: 'TrackRecordType', id: number, mangaId: number, remoteId: any, remoteUrl: string, title: string, trackerId: number }> } } } };
+export type FetchMangaInfoMutation = { __typename?: 'Mutation', fetchManga: { __typename?: 'FetchMangaPayload', manga: { __typename?: 'MangaType', artist?: string | null, author?: string | null, description?: string | null, genre: Array<string>, id: number, inLibrary: boolean, lastFetchedAt?: any | null, realUrl?: string | null, status: MangaStatus, title: string, thumbnailUrl?: string | null, unreadCount: number, downloadCount: number, latestFetchedChapter?: { __typename?: 'ChapterType', fetchedAt: any } | null, latestUploadedChapter?: { __typename?: 'ChapterType', uploadDate: any } | null, latestReadChapter?: { __typename?: 'ChapterType', lastReadAt: any } | null, lastReadChapter?: { __typename?: 'ChapterType', lastReadAt: any } | null, meta: Array<{ __typename?: 'MangaMetaType', value: string, key: string }>, source?: { __typename?: 'SourceType', displayName: string } | null, categories: { __typename?: 'CategoryNodeList', nodes: Array<{ __typename?: 'CategoryType', id: number }> }, trackRecords: { __typename?: 'TrackRecordNodeList', nodes: Array<{ __typename?: 'TrackRecordType', id: number, mangaId: number, remoteId: any, remoteUrl: string, title: string, trackerId: number }> } } } };
 
 export type FetchMangaChaptersMutationVariables = Exact<{
   id: Scalars['Int']['input'];
@@ -2765,6 +2793,13 @@ export type UpdateTrackMutationVariables = Exact<{
 
 export type UpdateTrackMutation = { __typename?: 'Mutation', updateTrack: { __typename?: 'UpdateTrackPayload', trackRecord?: { __typename?: 'TrackRecordType', id: number, mangaId: number, remoteId: any, remoteUrl: string, title: string, trackerId: number } | null } };
 
+export type SetServerSettingsMutationVariables = Exact<{
+  settings?: InputMaybe<PartialSettingsTypeInput>;
+}>;
+
+
+export type SetServerSettingsMutation = { __typename?: 'Mutation', setSettings: { __typename?: 'SetSettingsPayload', settings: { __typename?: 'SettingsType', autoDownloadAheadLimit: number, autoDownloadNewChapters: boolean, backupInterval: number, backupPath: string, backupTTL: number, backupTime: string, basicAuthEnabled: boolean, basicAuthPassword: string, basicAuthUsername: string, debugLogsEnabled: boolean, downloadAsCbz: boolean, downloadsPath: string, electronPath: string, excludeCompleted: boolean, excludeNotStarted: boolean, excludeEntryWithUnreadChapters: boolean, excludeUnreadChapters: boolean, flareSolverrEnabled: boolean, extensionRepos: Array<string>, flareSolverrSessionName: string, flareSolverrSessionTtl: number, flareSolverrTimeout: number, flareSolverrUrl: string, globalUpdateInterval: number, gqlDebugLogsEnabled: boolean, initialOpenInBrowserEnabled: boolean, ip: string, localSourcePath: string, maxSourcesInParallel: number, port: number, socksProxyEnabled: boolean, socksProxyHost: string, socksProxyPort: string, systemTrayEnabled: boolean, updateMangas: boolean, webUIChannel: WebUiChannel, webUIFlavor: WebUiFlavor, webUIInterface: WebUiInterface, webUIUpdateCheckInterval: number } } };
+
 export type CategoriesQueryVariables = Exact<{
   notEqualTo?: InputMaybe<Scalars['Int']['input']>;
 }>;
@@ -2777,14 +2812,14 @@ export type CategoryQueryVariables = Exact<{
 }>;
 
 
-export type CategoryQuery = { __typename?: 'Query', category: { __typename?: 'CategoryType', mangas: { __typename?: 'MangaNodeList', nodes: Array<{ __typename?: 'MangaType', id: number, title: string, inLibrary: boolean, thumbnailUrl?: string | null, unreadCount: number, downloadCount: number, lastReadChapter?: { __typename?: 'ChapterType', lastReadAt: any } | null, chapters: { __typename?: 'ChapterNodeList', totalCount: number } }> } } };
+export type CategoryQuery = { __typename?: 'Query', category: { __typename?: 'CategoryType', mangas: { __typename?: 'MangaNodeList', nodes: Array<{ __typename?: 'MangaType', id: number, title: string, inLibrary: boolean, thumbnailUrl?: string | null, unreadCount: number, downloadCount: number, latestFetchedChapter?: { __typename?: 'ChapterType', fetchedAt: any } | null, latestUploadedChapter?: { __typename?: 'ChapterType', uploadDate: any } | null, latestReadChapter?: { __typename?: 'ChapterType', lastReadAt: any } | null, chapters: { __typename?: 'ChapterNodeList', totalCount: number } }> } } };
 
 export type GetMangaQueryVariables = Exact<{
   id: Scalars['Int']['input'];
 }>;
 
 
-export type GetMangaQuery = { __typename?: 'Query', manga: { __typename?: 'MangaType', artist?: string | null, author?: string | null, description?: string | null, genre: Array<string>, id: number, inLibrary: boolean, lastFetchedAt?: any | null, realUrl?: string | null, status: MangaStatus, title: string, thumbnailUrl?: string | null, unreadCount: number, downloadCount: number, chapters: { __typename?: 'ChapterNodeList', totalCount: number, nodes: Array<{ __typename?: 'ChapterType', isBookmarked: boolean, isDownloaded: boolean, isRead: boolean, id: number, chapterNumber: number, fetchedAt: any, lastPageRead: number, name: string, sourceOrder: number, uploadDate: any, pageCount: number, scanlator?: string | null }> }, lastReadChapter?: { __typename?: 'ChapterType', lastReadAt: any } | null, meta: Array<{ __typename?: 'MangaMetaType', value: string, key: string }>, source?: { __typename?: 'SourceType', displayName: string } | null, categories: { __typename?: 'CategoryNodeList', nodes: Array<{ __typename?: 'CategoryType', id: number }> }, trackRecords: { __typename?: 'TrackRecordNodeList', nodes: Array<{ __typename?: 'TrackRecordType', id: number, mangaId: number, remoteId: any, remoteUrl: string, title: string, trackerId: number }> } } };
+export type GetMangaQuery = { __typename?: 'Query', manga: { __typename?: 'MangaType', artist?: string | null, author?: string | null, description?: string | null, genre: Array<string>, id: number, inLibrary: boolean, lastFetchedAt?: any | null, realUrl?: string | null, status: MangaStatus, title: string, thumbnailUrl?: string | null, unreadCount: number, downloadCount: number, chapters: { __typename?: 'ChapterNodeList', totalCount: number, nodes: Array<{ __typename?: 'ChapterType', isBookmarked: boolean, isDownloaded: boolean, isRead: boolean, id: number, chapterNumber: number, fetchedAt: any, lastPageRead: number, name: string, sourceOrder: number, uploadDate: any, pageCount: number, scanlator?: string | null }> }, latestFetchedChapter?: { __typename?: 'ChapterType', fetchedAt: any } | null, latestUploadedChapter?: { __typename?: 'ChapterType', uploadDate: any } | null, latestReadChapter?: { __typename?: 'ChapterType', lastReadAt: any } | null, lastReadChapter?: { __typename?: 'ChapterType', lastReadAt: any } | null, meta: Array<{ __typename?: 'MangaMetaType', value: string, key: string }>, source?: { __typename?: 'SourceType', displayName: string } | null, categories: { __typename?: 'CategoryNodeList', nodes: Array<{ __typename?: 'CategoryType', id: number }> }, trackRecords: { __typename?: 'TrackRecordNodeList', nodes: Array<{ __typename?: 'TrackRecordType', id: number, mangaId: number, remoteId: any, remoteUrl: string, title: string, trackerId: number }> } } };
 
 export type GetSingleChapterQueryVariables = Exact<{
   id: Scalars['Int']['input'];
@@ -2915,6 +2950,11 @@ export type TrackRecordsQueryVariables = Exact<{ [key: string]: never; }>;
 
 export type TrackRecordsQuery = { __typename?: 'Query', trackRecords: { __typename?: 'TrackRecordNodeList', nodes: Array<{ __typename?: 'TrackRecordType', id: number, mangaId: number, remoteId: any, remoteUrl: string, title: string, trackerId: number }> } };
 
+export type ServerSettingsQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type ServerSettingsQuery = { __typename?: 'Query', settings: { __typename?: 'SettingsType', autoDownloadAheadLimit: number, autoDownloadNewChapters: boolean, backupInterval: number, backupPath: string, backupTTL: number, backupTime: string, basicAuthEnabled: boolean, basicAuthPassword: string, basicAuthUsername: string, debugLogsEnabled: boolean, downloadAsCbz: boolean, downloadsPath: string, electronPath: string, excludeCompleted: boolean, excludeEntryWithUnreadChapters: boolean, excludeNotStarted: boolean, extensionRepos: Array<string>, excludeUnreadChapters: boolean, flareSolverrEnabled: boolean, flareSolverrSessionName: string, flareSolverrSessionTtl: number, flareSolverrTimeout: number, flareSolverrUrl: string, globalUpdateInterval: number, gqlDebugLogsEnabled: boolean, initialOpenInBrowserEnabled: boolean, ip: string, localSourcePath: string, maxSourcesInParallel: number, port: number, socksProxyEnabled: boolean, socksProxyHost: string, socksProxyPort: string, systemTrayEnabled: boolean, updateMangas: boolean, webUIChannel: WebUiChannel, webUIFlavor: WebUiFlavor, webUIInterface: WebUiInterface, webUIUpdateCheckInterval: number } };
+
 export type DownloadChangedSubscriptionVariables = Exact<{ [key: string]: never; }>;
 
 
@@ -2966,6 +3006,15 @@ export const MangaTypeFragmentFragmentDoc = gql`
   thumbnailUrl
   unreadCount
   downloadCount
+  latestFetchedChapter {
+    fetchedAt
+  }
+  latestUploadedChapter {
+    uploadDate
+  }
+  latestReadChapter {
+    lastReadAt
+  }
   lastReadChapter {
     lastReadAt
   }
@@ -3505,6 +3554,53 @@ export const UpdateTrackDoc = gql`
   }
 }
     ${TrackRecordTypeFragmentFragmentDoc}`;
+export const SetServerSettingsDoc = gql`
+    mutation setServerSettings($settings: PartialSettingsTypeInput = {}) {
+  setSettings(input: {settings: $settings}) {
+    settings {
+      autoDownloadAheadLimit
+      autoDownloadNewChapters
+      backupInterval
+      backupPath
+      backupTTL
+      backupTime
+      basicAuthEnabled
+      basicAuthPassword
+      basicAuthUsername
+      debugLogsEnabled
+      downloadAsCbz
+      downloadsPath
+      electronPath
+      excludeCompleted
+      excludeNotStarted
+      excludeEntryWithUnreadChapters
+      excludeUnreadChapters
+      flareSolverrEnabled
+      extensionRepos
+      flareSolverrSessionName
+      flareSolverrSessionTtl
+      flareSolverrTimeout
+      flareSolverrUrl
+      globalUpdateInterval
+      gqlDebugLogsEnabled
+      initialOpenInBrowserEnabled
+      ip
+      localSourcePath
+      maxSourcesInParallel
+      port
+      socksProxyEnabled
+      socksProxyHost
+      socksProxyPort
+      systemTrayEnabled
+      updateMangas
+      webUIChannel
+      webUIFlavor
+      webUIInterface
+      webUIUpdateCheckInterval
+    }
+  }
+}
+    `;
 export const CategoriesDoc = gql`
     query categories($notEqualTo: Int = null) {
   categories(filter: {id: {notEqualTo: $notEqualTo}}) {
@@ -3525,7 +3621,13 @@ export const CategoryDoc = gql`
         thumbnailUrl
         unreadCount
         downloadCount
-        lastReadChapter {
+        latestFetchedChapter {
+          fetchedAt
+        }
+        latestUploadedChapter {
+          uploadDate
+        }
+        latestReadChapter {
           lastReadAt
         }
         chapters {
@@ -3920,6 +4022,51 @@ export const TrackRecordsDoc = gql`
   }
 }
     ${TrackRecordTypeFragmentFragmentDoc}`;
+export const ServerSettingsDoc = gql`
+    query serverSettings {
+  settings {
+    autoDownloadAheadLimit
+    autoDownloadNewChapters
+    backupInterval
+    backupPath
+    backupTTL
+    backupTime
+    basicAuthEnabled
+    basicAuthPassword
+    basicAuthUsername
+    debugLogsEnabled
+    downloadAsCbz
+    downloadsPath
+    electronPath
+    excludeCompleted
+    excludeEntryWithUnreadChapters
+    excludeNotStarted
+    extensionRepos
+    excludeUnreadChapters
+    flareSolverrEnabled
+    flareSolverrSessionName
+    flareSolverrSessionTtl
+    flareSolverrTimeout
+    flareSolverrUrl
+    globalUpdateInterval
+    gqlDebugLogsEnabled
+    initialOpenInBrowserEnabled
+    ip
+    localSourcePath
+    maxSourcesInParallel
+    port
+    socksProxyEnabled
+    socksProxyHost
+    socksProxyPort
+    systemTrayEnabled
+    updateMangas
+    webUIChannel
+    webUIFlavor
+    webUIInterface
+    webUIUpdateCheckInterval
+  }
+}
+    `;
 export const DownloadChangedDoc = gql`
     subscription downloadChanged {
   downloadChanged {
@@ -4422,6 +4569,18 @@ export const updateTrack = (
           ) => {
             const m = client.mutate<UpdateTrackMutation, UpdateTrackMutationVariables>({
               mutation: UpdateTrackDoc,
+              ...options,
+            });
+            return m;
+          }
+export const setServerSettings = (
+            options: Omit<
+              MutationOptions<any, SetServerSettingsMutationVariables>, 
+              "mutation"
+            >
+          ) => {
+            const m = client.mutate<SetServerSettingsMutation, SetServerSettingsMutationVariables>({
+              mutation: SetServerSettingsDoc,
               ...options,
             });
             return m;
@@ -5392,6 +5551,50 @@ export const trackRecords = (
                 >
               ) => {
                 return client.query<TrackRecordsQuery>({query: TrackRecordsDoc, ...options})
+              }
+            
+export const serverSettings = (
+            options: Omit<
+              WatchQueryOptions<ServerSettingsQueryVariables>, 
+              "query"
+            >
+          ): Readable<
+            ApolloQueryResult<ServerSettingsQuery> & {
+              query: ObservableQuery<
+                ServerSettingsQuery,
+                ServerSettingsQueryVariables
+              >;
+            }
+          > => {
+            const q = client.watchQuery({
+              query: ServerSettingsDoc,
+              ...options,
+            });
+            var result = readable<
+              ApolloQueryResult<ServerSettingsQuery> & {
+                query: ObservableQuery<
+                  ServerSettingsQuery,
+                  ServerSettingsQueryVariables
+                >;
+              }
+            >(
+              { data: {} as any, loading: true, error: undefined, networkStatus: 1, query: q },
+              (set) => {
+                q.subscribe((v: any) => {
+                  set({ ...v, query: q });
+                });
+              }
+            );
+            return result;
+          }
+        
+              export const AsyncserverSettings = (
+                options: Omit<
+                  QueryOptions<ServerSettingsQueryVariables>,
+                  "query"
+                >
+              ) => {
+                return client.query<ServerSettingsQuery>({query: ServerSettingsDoc, ...options})
               }
             
 export const downloadChanged = (

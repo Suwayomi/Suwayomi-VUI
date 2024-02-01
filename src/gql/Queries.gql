@@ -25,7 +25,13 @@ query category($id: Int!) {
 				thumbnailUrl
 				unreadCount
 				downloadCount
-				lastReadChapter {
+				latestFetchedChapter {
+					fetchedAt
+				}
+				latestUploadedChapter {
+					uploadDate
+				}
+				latestReadChapter {
 					lastReadAt
 				}
 				chapters {
@@ -410,5 +416,49 @@ query trackRecords {
 		nodes {
 			...TrackRecordTypeFragment
 		}
+	}
+}
+
+query serverSettings {
+	settings {
+		autoDownloadAheadLimit
+		autoDownloadNewChapters
+		backupInterval
+		backupPath
+		backupTTL
+		backupTime
+		basicAuthEnabled
+		basicAuthPassword
+		basicAuthUsername
+		debugLogsEnabled
+		downloadAsCbz
+		downloadsPath
+		electronPath
+		excludeCompleted
+		excludeEntryWithUnreadChapters
+		excludeNotStarted
+		extensionRepos
+		excludeUnreadChapters
+		flareSolverrEnabled
+		flareSolverrSessionName
+		flareSolverrSessionTtl
+		flareSolverrTimeout
+		flareSolverrUrl
+		globalUpdateInterval
+		gqlDebugLogsEnabled
+		initialOpenInBrowserEnabled
+		ip
+		localSourcePath
+		maxSourcesInParallel
+		port
+		socksProxyEnabled
+		socksProxyHost
+		socksProxyPort
+		systemTrayEnabled
+		updateMangas
+		webUIChannel
+		webUIFlavor
+		webUIInterface
+		webUIUpdateCheckInterval
 	}
 }
