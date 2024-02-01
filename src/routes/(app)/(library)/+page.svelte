@@ -118,9 +118,20 @@
 			case sort.Alphabetical:
 				tru = a.title > b.title;
 				break;
-			case sort['Last Read']:
-				tru = a.lastReadChapter?.lastReadAt > b.lastReadChapter?.lastReadAt;
+			case sort['Latest Read']:
+				tru =
+					parseInt(a.latestReadChapter?.lastReadAt ?? 0) >
+					parseInt(b.latestReadChapter?.lastReadAt ?? 0);
 				break;
+			case sort['Latest Fetched']:
+				tru =
+					parseInt(a.latestFetchedChapter?.fetchedAt ?? 0) >
+					parseInt(b.latestFetchedChapter?.fetchedAt ?? 0);
+				break;
+			case sort['Latest Uploaded']:
+				tru =
+					parseInt(a.latestUploadedChapter?.uploadDate ?? 0) >
+					parseInt(b.latestUploadedChapter?.uploadDate ?? 0);
 		}
 
 		if ($Meta.Asc) tru = !tru;

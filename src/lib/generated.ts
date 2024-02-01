@@ -1380,6 +1380,11 @@ export type PartialSettingsType = Settings & {
   excludeNotStarted?: Maybe<Scalars['Boolean']['output']>;
   excludeUnreadChapters?: Maybe<Scalars['Boolean']['output']>;
   extensionRepos?: Maybe<Array<Scalars['String']['output']>>;
+  flareSolverrEnabled?: Maybe<Scalars['Boolean']['output']>;
+  flareSolverrSessionName?: Maybe<Scalars['String']['output']>;
+  flareSolverrSessionTtl?: Maybe<Scalars['Int']['output']>;
+  flareSolverrTimeout?: Maybe<Scalars['Int']['output']>;
+  flareSolverrUrl?: Maybe<Scalars['String']['output']>;
   globalUpdateInterval?: Maybe<Scalars['Float']['output']>;
   gqlDebugLogsEnabled?: Maybe<Scalars['Boolean']['output']>;
   initialOpenInBrowserEnabled?: Maybe<Scalars['Boolean']['output']>;
@@ -1417,6 +1422,11 @@ export type PartialSettingsTypeInput = {
   excludeNotStarted?: InputMaybe<Scalars['Boolean']['input']>;
   excludeUnreadChapters?: InputMaybe<Scalars['Boolean']['input']>;
   extensionRepos?: InputMaybe<Array<Scalars['String']['input']>>;
+  flareSolverrEnabled?: InputMaybe<Scalars['Boolean']['input']>;
+  flareSolverrSessionName?: InputMaybe<Scalars['String']['input']>;
+  flareSolverrSessionTtl?: InputMaybe<Scalars['Int']['input']>;
+  flareSolverrTimeout?: InputMaybe<Scalars['Int']['input']>;
+  flareSolverrUrl?: InputMaybe<Scalars['String']['input']>;
   globalUpdateInterval?: InputMaybe<Scalars['Float']['input']>;
   gqlDebugLogsEnabled?: InputMaybe<Scalars['Boolean']['input']>;
   initialOpenInBrowserEnabled?: InputMaybe<Scalars['Boolean']['input']>;
@@ -1757,6 +1767,11 @@ export type Settings = {
   excludeNotStarted?: Maybe<Scalars['Boolean']['output']>;
   excludeUnreadChapters?: Maybe<Scalars['Boolean']['output']>;
   extensionRepos?: Maybe<Array<Scalars['String']['output']>>;
+  flareSolverrEnabled?: Maybe<Scalars['Boolean']['output']>;
+  flareSolverrSessionName?: Maybe<Scalars['String']['output']>;
+  flareSolverrSessionTtl?: Maybe<Scalars['Int']['output']>;
+  flareSolverrTimeout?: Maybe<Scalars['Int']['output']>;
+  flareSolverrUrl?: Maybe<Scalars['String']['output']>;
   globalUpdateInterval?: Maybe<Scalars['Float']['output']>;
   gqlDebugLogsEnabled?: Maybe<Scalars['Boolean']['output']>;
   initialOpenInBrowserEnabled?: Maybe<Scalars['Boolean']['output']>;
@@ -1795,6 +1810,11 @@ export type SettingsType = Settings & {
   excludeNotStarted: Scalars['Boolean']['output'];
   excludeUnreadChapters: Scalars['Boolean']['output'];
   extensionRepos: Array<Scalars['String']['output']>;
+  flareSolverrEnabled: Scalars['Boolean']['output'];
+  flareSolverrSessionName: Scalars['String']['output'];
+  flareSolverrSessionTtl: Scalars['Int']['output'];
+  flareSolverrTimeout: Scalars['Int']['output'];
+  flareSolverrUrl: Scalars['String']['output'];
   globalUpdateInterval: Scalars['Float']['output'];
   gqlDebugLogsEnabled: Scalars['Boolean']['output'];
   initialOpenInBrowserEnabled: Scalars['Boolean']['output'];
@@ -2081,6 +2101,12 @@ export type TrackSearchType = {
   trackingUrl: Scalars['String']['output'];
 };
 
+export type TrackStatusType = {
+  __typename?: 'TrackStatusType';
+  name: Scalars['String']['output'];
+  value: Scalars['Int']['output'];
+};
+
 export type TrackerConditionInput = {
   icon?: InputMaybe<Scalars['String']['input']>;
   id?: InputMaybe<Scalars['Int']['input']>;
@@ -2115,6 +2141,8 @@ export type TrackerType = {
   id: Scalars['Int']['output'];
   isLoggedIn: Scalars['Boolean']['output'];
   name: Scalars['String']['output'];
+  scores: Array<Scalars['String']['output']>;
+  statuses: Array<TrackStatusType>;
   trackRecords: TrackRecordNodeList;
 };
 
@@ -2777,7 +2805,7 @@ export type CategoryQueryVariables = Exact<{
 }>;
 
 
-export type CategoryQuery = { __typename?: 'Query', category: { __typename?: 'CategoryType', mangas: { __typename?: 'MangaNodeList', nodes: Array<{ __typename?: 'MangaType', id: number, title: string, inLibrary: boolean, thumbnailUrl?: string | null, unreadCount: number, downloadCount: number, lastReadChapter?: { __typename?: 'ChapterType', lastReadAt: any } | null, chapters: { __typename?: 'ChapterNodeList', totalCount: number } }> } } };
+export type CategoryQuery = { __typename?: 'Query', category: { __typename?: 'CategoryType', mangas: { __typename?: 'MangaNodeList', nodes: Array<{ __typename?: 'MangaType', id: number, title: string, inLibrary: boolean, thumbnailUrl?: string | null, unreadCount: number, downloadCount: number, latestFetchedChapter?: { __typename?: 'ChapterType', fetchedAt: any } | null, latestUploadedChapter?: { __typename?: 'ChapterType', uploadDate: any } | null, latestReadChapter?: { __typename?: 'ChapterType', lastReadAt: any } | null, chapters: { __typename?: 'ChapterNodeList', totalCount: number } }> } } };
 
 export type GetMangaQueryVariables = Exact<{
   id: Scalars['Int']['input'];
@@ -3525,7 +3553,13 @@ export const CategoryDoc = gql`
         thumbnailUrl
         unreadCount
         downloadCount
-        lastReadChapter {
+        latestFetchedChapter {
+          fetchedAt
+        }
+        latestUploadedChapter {
+          uploadDate
+        }
+        latestReadChapter {
           lastReadAt
         }
         chapters {

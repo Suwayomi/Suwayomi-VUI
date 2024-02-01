@@ -77,8 +77,10 @@ type mangaMeta = typeof mangaMetaDefaults;
 export enum sort {
 	Unread = 'Unread',
 	Alphabetical = 'Alphabetical',
-	'Last Read' = 'Last Read',
-	ID = 'ID'
+	ID = 'ID',
+	'Latest Read' = 'Latest Read',
+	'Latest Fetched' = 'Latest Fetched',
+	'Latest Uploaded' = 'Latest Uploaded'
 }
 
 export enum display {

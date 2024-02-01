@@ -25,7 +25,13 @@ query category($id: Int!) {
 				thumbnailUrl
 				unreadCount
 				downloadCount
-				lastReadChapter {
+				latestFetchedChapter {
+					fetchedAt
+				}
+				latestUploadedChapter {
+					uploadDate
+				}
+				latestReadChapter {
 					lastReadAt
 				}
 				chapters {
