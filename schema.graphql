@@ -456,6 +456,11 @@ type PartialSettingsType implements Settings {
   excludeNotStarted: Boolean
   excludeUnreadChapters: Boolean
   extensionRepos: [String!]
+  flareSolverrEnabled: Boolean
+  flareSolverrSessionName: String
+  flareSolverrSessionTtl: Int
+  flareSolverrTimeout: Int
+  flareSolverrUrl: String
   globalUpdateInterval: Float
   gqlDebugLogsEnabled: Boolean
   initialOpenInBrowserEnabled: Boolean
@@ -566,6 +571,11 @@ type SettingsType implements Settings {
   excludeNotStarted: Boolean!
   excludeUnreadChapters: Boolean!
   extensionRepos: [String!]!
+  flareSolverrEnabled: Boolean!
+  flareSolverrSessionName: String!
+  flareSolverrSessionTtl: Int!
+  flareSolverrTimeout: Int!
+  flareSolverrUrl: String!
   globalUpdateInterval: Float!
   gqlDebugLogsEnabled: Boolean!
   initialOpenInBrowserEnabled: Boolean!
@@ -683,6 +693,10 @@ type TrackSearchType {
   trackingUrl: String!
   tracker: TrackerType!
 }
+type TrackStatusType {
+  name: String!
+  value: Int!
+}
 type TrackerEdge implements Edge {
   cursor: Cursor!
   node: TrackerType!
@@ -699,6 +713,8 @@ type TrackerType {
   id: Int!
   isLoggedIn: Boolean!
   name: String!
+  scores: [String!]!
+  statuses: [TrackStatusType!]!
   trackRecords: TrackRecordNodeList!
 }
 type TriStateFilter {
@@ -849,6 +865,11 @@ interface Settings {
   excludeNotStarted: Boolean
   excludeUnreadChapters: Boolean
   extensionRepos: [String!]
+  flareSolverrEnabled: Boolean
+  flareSolverrSessionName: String
+  flareSolverrSessionTtl: Int
+  flareSolverrTimeout: Int
+  flareSolverrUrl: String
   globalUpdateInterval: Float
   gqlDebugLogsEnabled: Boolean
   initialOpenInBrowserEnabled: Boolean
@@ -1377,6 +1398,11 @@ input PartialSettingsTypeInput {
   excludeNotStarted: Boolean
   excludeUnreadChapters: Boolean
   extensionRepos: [String!]
+  flareSolverrEnabled: Boolean
+  flareSolverrSessionName: String
+  flareSolverrSessionTtl: Int
+  flareSolverrTimeout: Int
+  flareSolverrUrl: String
   globalUpdateInterval: Float
   gqlDebugLogsEnabled: Boolean
   initialOpenInBrowserEnabled: Boolean
