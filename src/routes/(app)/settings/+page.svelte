@@ -141,3 +141,10 @@
 	<IconWrapper class="h-full w-auto p-2" name="mdi:files" />
 	<div class="w-full">Cache</div>
 </button>
+<a
+	href="/settings/server"
+	class=" text-left flex items-center w-full h-16 hover:variant-glass-surface cursor-pointer"
+>
+	<IconWrapper class="h-full w-auto p-2" name="mdi:server" />
+	<div class="w-full">Server Settings</div>
+</a>

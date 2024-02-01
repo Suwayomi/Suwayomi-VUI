@@ -2793,6 +2793,13 @@ export type UpdateTrackMutationVariables = Exact<{
 
 export type UpdateTrackMutation = { __typename?: 'Mutation', updateTrack: { __typename?: 'UpdateTrackPayload', trackRecord?: { __typename?: 'TrackRecordType', id: number, mangaId: number, remoteId: any, remoteUrl: string, title: string, trackerId: number } | null } };
 
+export type SetServerSettingsMutationVariables = Exact<{
+  settings?: InputMaybe<PartialSettingsTypeInput>;
+}>;
+
+
+export type SetServerSettingsMutation = { __typename?: 'Mutation', setSettings: { __typename?: 'SetSettingsPayload', settings: { __typename?: 'SettingsType', autoDownloadAheadLimit: number, autoDownloadNewChapters: boolean, backupInterval: number, backupPath: string, backupTTL: number, backupTime: string, basicAuthEnabled: boolean, basicAuthPassword: string, basicAuthUsername: string, debugLogsEnabled: boolean, downloadAsCbz: boolean, downloadsPath: string, electronPath: string, excludeCompleted: boolean, excludeNotStarted: boolean, excludeEntryWithUnreadChapters: boolean, excludeUnreadChapters: boolean, flareSolverrEnabled: boolean, extensionRepos: Array<string>, flareSolverrSessionName: string, flareSolverrSessionTtl: number, flareSolverrTimeout: number, flareSolverrUrl: string, globalUpdateInterval: number, gqlDebugLogsEnabled: boolean, initialOpenInBrowserEnabled: boolean, ip: string, localSourcePath: string, maxSourcesInParallel: number, port: number, socksProxyEnabled: boolean, socksProxyHost: string, socksProxyPort: string, systemTrayEnabled: boolean, updateMangas: boolean, webUIChannel: WebUiChannel, webUIFlavor: WebUiFlavor, webUIInterface: WebUiInterface, webUIUpdateCheckInterval: number } } };
+
 export type CategoriesQueryVariables = Exact<{
   notEqualTo?: InputMaybe<Scalars['Int']['input']>;
 }>;
@@ -2942,6 +2949,11 @@ export type TrackRecordsQueryVariables = Exact<{ [key: string]: never; }>;
 
 
 export type TrackRecordsQuery = { __typename?: 'Query', trackRecords: { __typename?: 'TrackRecordNodeList', nodes: Array<{ __typename?: 'TrackRecordType', id: number, mangaId: number, remoteId: any, remoteUrl: string, title: string, trackerId: number }> } };
+
+export type ServerSettingsQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type ServerSettingsQuery = { __typename?: 'Query', settings: { __typename?: 'SettingsType', autoDownloadAheadLimit: number, autoDownloadNewChapters: boolean, backupInterval: number, backupPath: string, backupTTL: number, backupTime: string, basicAuthEnabled: boolean, basicAuthPassword: string, basicAuthUsername: string, debugLogsEnabled: boolean, downloadAsCbz: boolean, downloadsPath: string, electronPath: string, excludeCompleted: boolean, excludeEntryWithUnreadChapters: boolean, excludeNotStarted: boolean, extensionRepos: Array<string>, excludeUnreadChapters: boolean, flareSolverrEnabled: boolean, flareSolverrSessionName: string, flareSolverrSessionTtl: number, flareSolverrTimeout: number, flareSolverrUrl: string, globalUpdateInterval: number, gqlDebugLogsEnabled: boolean, initialOpenInBrowserEnabled: boolean, ip: string, localSourcePath: string, maxSourcesInParallel: number, port: number, socksProxyEnabled: boolean, socksProxyHost: string, socksProxyPort: string, systemTrayEnabled: boolean, updateMangas: boolean, webUIChannel: WebUiChannel, webUIFlavor: WebUiFlavor, webUIInterface: WebUiInterface, webUIUpdateCheckInterval: number } };
 
 export type DownloadChangedSubscriptionVariables = Exact<{ [key: string]: never; }>;
 
@@ -3533,6 +3545,53 @@ export const UpdateTrackDoc = gql`
   }
 }
     ${TrackRecordTypeFragmentFragmentDoc}`;
+export const SetServerSettingsDoc = gql`
+    mutation setServerSettings($settings: PartialSettingsTypeInput = {}) {
+  setSettings(input: {settings: $settings}) {
+    settings {
+      autoDownloadAheadLimit
+      autoDownloadNewChapters
+      backupInterval
+      backupPath
+      backupTTL
+      backupTime
+      basicAuthEnabled
+      basicAuthPassword
+      basicAuthUsername
+      debugLogsEnabled
+      downloadAsCbz
+      downloadsPath
+      electronPath
+      excludeCompleted
+      excludeNotStarted
+      excludeEntryWithUnreadChapters
+      excludeUnreadChapters
+      flareSolverrEnabled
+      extensionRepos
+      flareSolverrSessionName
+      flareSolverrSessionTtl
+      flareSolverrTimeout
+      flareSolverrUrl
+      globalUpdateInterval
+      gqlDebugLogsEnabled
+      initialOpenInBrowserEnabled
+      ip
+      localSourcePath
+      maxSourcesInParallel
+      port
+      socksProxyEnabled
+      socksProxyHost
+      socksProxyPort
+      systemTrayEnabled
+      updateMangas
+      webUIChannel
+      webUIFlavor
+      webUIInterface
+      webUIUpdateCheckInterval
+    }
+  }
+}
+    `;
 export const CategoriesDoc = gql`
     query categories($notEqualTo: Int = null) {
   categories(filter: {id: {notEqualTo: $notEqualTo}}) {
@@ -3954,6 +4013,51 @@ export const TrackRecordsDoc = gql`
   }
 }
     ${TrackRecordTypeFragmentFragmentDoc}`;
+export const ServerSettingsDoc = gql`
+    query serverSettings {
+  settings {
+    autoDownloadAheadLimit
+    autoDownloadNewChapters
+    backupInterval
+    backupPath
+    backupTTL
+    backupTime
+    basicAuthEnabled
+    basicAuthPassword
+    basicAuthUsername
+    debugLogsEnabled
+    downloadAsCbz
+    downloadsPath
+    electronPath
+    excludeCompleted
+    excludeEntryWithUnreadChapters
+    excludeNotStarted
+    extensionRepos
+    excludeUnreadChapters
+    flareSolverrEnabled
+    flareSolverrSessionName
+    flareSolverrSessionTtl
+    flareSolverrTimeout
+    flareSolverrUrl
+    globalUpdateInterval
+    gqlDebugLogsEnabled
+    initialOpenInBrowserEnabled
+    ip
+    localSourcePath
+    maxSourcesInParallel
+    port
+    socksProxyEnabled
+    socksProxyHost
+    socksProxyPort
+    systemTrayEnabled
+    updateMangas
+    webUIChannel
+    webUIFlavor
+    webUIInterface
+    webUIUpdateCheckInterval
+  }
+}
+    `;
 export const DownloadChangedDoc = gql`
     subscription downloadChanged {
   downloadChanged {
@@ -4456,6 +4560,18 @@ export const updateTrack = (
           ) => {
             const m = client.mutate<UpdateTrackMutation, UpdateTrackMutationVariables>({
               mutation: UpdateTrackDoc,
+              ...options,
+            });
+            return m;
+          }
+export const setServerSettings = (
+            options: Omit<
+              MutationOptions<any, SetServerSettingsMutationVariables>, 
+              "mutation"
+            >
+          ) => {
+            const m = client.mutate<SetServerSettingsMutation, SetServerSettingsMutationVariables>({
+              mutation: SetServerSettingsDoc,
               ...options,
             });
             return m;
@@ -5426,6 +5542,50 @@ export const trackRecords = (
                 >
               ) => {
                 return client.query<TrackRecordsQuery>({query: TrackRecordsDoc, ...options})
+              }
+            
+export const serverSettings = (
+            options: Omit<
+              WatchQueryOptions<ServerSettingsQueryVariables>, 
+              "query"
+            >
+          ): Readable<
+            ApolloQueryResult<ServerSettingsQuery> & {
+              query: ObservableQuery<
+                ServerSettingsQuery,
+                ServerSettingsQueryVariables
+              >;
+            }
+          > => {
+            const q = client.watchQuery({
+              query: ServerSettingsDoc,
+              ...options,
+            });
+            var result = readable<
+              ApolloQueryResult<ServerSettingsQuery> & {
+                query: ObservableQuery<
+                  ServerSettingsQuery,
+                  ServerSettingsQueryVariables
+                >;
+              }
+            >(
+              { data: {} as any, loading: true, error: undefined, networkStatus: 1, query: q },
+              (set) => {
+                q.subscribe((v: any) => {
+                  set({ ...v, query: q });
+                });
+              }
+            );
+            return result;
+          }
+        
+              export const AsyncserverSettings = (
+                options: Omit<
+                  QueryOptions<ServerSettingsQueryVariables>,
+                  "query"
+                >
+              ) => {
+                return client.query<ServerSettingsQuery>({query: ServerSettingsDoc, ...options})
               }
             
 export const downloadChanged = (

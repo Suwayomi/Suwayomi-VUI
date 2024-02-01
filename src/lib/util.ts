@@ -12,7 +12,11 @@ import {
 	type BindTrackMutation,
 	type UpdateTrackMutation,
 	type GetMangaQuery,
-	GetMangaDoc
+	GetMangaDoc,
+	type SetServerSettingsMutation,
+	ServerSettingsDoc,
+	setServerSettings,
+	type PartialSettingsTypeInput
 } from './generated';
 import type { FetchResult } from '@apollo/client/link/core';
 
@@ -217,6 +221,12 @@ export type PartialBy<T, K extends keyof T> = Omit<T, K> & Partial<Pick<T, K>>;
 export function enumKeys<E extends object>(e: E): (keyof E)[] {
 	return Object.keys(e) as (keyof E)[];
 }
+export function enumValues<E extends object>(e: E): E[keyof E][] {
+	return Object.values(e) as E[keyof E][];
+}
+export function enumEntries<E extends object>(e: E): [keyof E, E[keyof E]][] {
+	return Object.entries(e) as [keyof E, E[keyof E]][];
+}
 
 export function groupBy<T extends object, K extends T[keyof T]>(
 	list: T[],
@@ -289,4 +299,23 @@ export function bindTrackUpdater(
 		variables: { id: MangaId },
 		data: { manga: mga }
 	});
+}
+
+export function setServerSettingsUpdater(
+	cache: ApolloCache<unknown>,
+	{ data }: FetchResult<SetServerSettingsMutation>
+) {
+	if (!data) return;
+	const settings = data.setSettings.settings;
+	cache.writeQuery({
+		query: ServerSettingsDoc,
+		data: { settings }
+	});
+}
+
+export function setSettings(settings: PartialSettingsTypeInput) {
+	ErrorHelp(
+		'failed to set server settings',
+		setServerSettings({ variables: { settings }, update: setServerSettingsUpdater })
+	);
 }
