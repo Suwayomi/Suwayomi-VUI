@@ -44,6 +44,15 @@ fragment MangaTypeFragment on MangaType {
 	thumbnailUrl
 	unreadCount
 	downloadCount
+	latestFetchedChapter {
+		fetchedAt
+	}
+	latestUploadedChapter {
+		uploadDate
+	}
+	latestReadChapter {
+		lastReadAt
+	}
 	lastReadChapter {
 		lastReadAt
 	}
