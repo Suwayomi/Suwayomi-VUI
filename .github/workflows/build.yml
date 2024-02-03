@@ -74,13 +74,14 @@ jobs:
       - name: Install bun dependencies
         run: bun i
       - run: bun run build
+      - run: bun run build-md5
       - run: sed -i "s@BUILD_VERSION_PLACEHOLDER@${{ needs.GenTag.outputs.value }}@" ./build/index.html
       - name: Generate zip
         working-directory: ./build
-        run: zip -r  Suwayomi-VUI-Web.zip ./*
+        run: zip -r  Suwayomi-VUI-Web-${{ needs.GenTag.outputs.value }}.zip ./*
       - name: Upload CI Release
         uses: ncipollo/release-action@v1
         with:
-          artifacts: './build/Suwayomi-VUI-Web.zip'
+          artifacts: './build/Suwayomi-VUI-Web-${{ needs.GenTag.outputs.value }}.zip, ./buildZip/md5sum'
           allowUpdates: 'true'
           tag: ${{ needs.GenTag.outputs.value }}
