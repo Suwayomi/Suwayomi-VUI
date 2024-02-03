@@ -76,6 +76,7 @@ jobs:
       - run: bun run build
       - run: bun run build-md5
       - run: sed -i "s@BUILD_VERSION_PLACEHOLDER@${{ needs.GenTag.outputs.value }}@" ./build/index.html
+      - run: echo "${{ needs.GenTag.outputs.value }}" > ./build/revision
       - name: Generate zip
         working-directory: ./build
         run: zip -r  Suwayomi-VUI-Web-${{ needs.GenTag.outputs.value }}.zip ./*
