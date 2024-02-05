@@ -45,14 +45,14 @@ jobs:
       - run: echo "${{ needs.GenTag.outputs.value }}" > ./build/revision
       - run: sed -i "s@BUILD_VERSION_PLACEHOLDER@${{ needs.GenTag.outputs.value }}@" ./build/index.html
       - run: bun run build-md5
-      - uses: actions/upload-artifact@v3
+      - uses: actions/upload-artifact@v4
         with:
           name: build-files-${{ needs.GenTag.outputs.value }}
-          path: ./build
-      - uses: actions/upload-artifact@v3
+          path: ./build/
+      - uses: actions/upload-artifact@v4
         with:
           name: build-md5-${{ needs.GenTag.outputs.value }}
-          path: ./buildZip
+          path: ./buildZip/md5sum
   web:
     needs:
       - build
@@ -60,13 +60,15 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: get Build files
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: build-files-${{ needs.GenTag.outputs.value }}
+          path: ./build
       - name: get md5
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: build-md5-${{ needs.GenTag.outputs.value }}
+          path: ./buildZip/md5sum
       - name: Generate zip
         working-directory: ./build
         run: zip -r  Suwayomi-VUI-Web.zip ./*
@@ -102,7 +104,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: get Build files
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: build-files-${{ needs.GenTag.outputs.value }}
       - name: Set up QEMU
