@@ -1,5 +1,5 @@
 # develop stage
-FROM oven/bun:1.0.18-alpine as develop-stage
+FROM oven/bun:1.0.25-alpine as develop-stage
 WORKDIR /app
 COPY . .
 ARG version="DevBuild"
@@ -10,7 +10,7 @@ FROM develop-stage as build-stage
 RUN bun install
 RUN bun run build
 # production stage
-FROM nginxinc/nginx-unprivileged:1.23.2-alpine-slim as production-stage
+FROM ghcr.io/nginxinc/nginx-unprivileged:1.25.3-alpine-slim as production-stage
 USER root
 COPY --from=build-stage /app/build /usr/share/nginx/html
 # COPY ./build /usr/share/nginx/html
