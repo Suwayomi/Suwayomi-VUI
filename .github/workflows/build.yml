@@ -66,41 +66,34 @@ jobs:
       - name: Generate zip
         working-directory: ./build
         run: zip -r  Suwayomi-VUI-Web.zip ./*
-      - name: Create release
-        uses: actions/create-release@v1
-        id: create_release
+      - run: ls ./build
+      - name: Release
+        uses: softprops/action-gh-release@v1
         with:
+          files: |
+            ./build/Suwayomi-VUI-Web.zip
+            ./buildZip/md5sum
+          name: ${{ needs.GenTag.outputs.value }}
           tag_name: ${{ needs.GenTag.outputs.value }}
-          release_name: ${{ needs.GenTag.outputs.value }}
           body: ''
           draft: false
           prerelease: false
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      - name: Upload artifact to release
-        uses: actions/upload-release-asset@v1
-        with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./build/Suwayomi-VUI-Web.zip
-          asset_name: Suwayomi-VUI-Web-${{ needs.GenTag.outputs.value }}.zip
-          asset_content_type: application/zip
-      - name: Upload md5
-        uses: actions/upload-release-asset@v1
-        with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./buildZip/md5sum
-          asset_name: md5sum
-          asset_content_type: text/plain
   docker:
     needs:
       - build
       - GenTag
     runs-on: ubuntu-latest
     steps:
+      - name: Check out Dockerfile
+        uses: actions/checkout@v4
+        with:
+          sparse-checkout: |
+            Dockerfile
       - name: get Build files
         uses: actions/download-artifact@v4
         with:
           name: build-files-${{ needs.GenTag.outputs.value }}
+          path: ./
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v3
       - name: Set up Docker Buildx
