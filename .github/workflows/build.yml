@@ -62,16 +62,14 @@ jobs:
         with:
           name: build-files-${{ needs.GenTag.outputs.value }}
           path: ./
-      - run: ls
       - name: Generate zip
         working-directory: ./build
-        run: zip -r  Suwayomi-VUI-Web.zip ./*
-      - run: ls ./build
+        run: zip -r  Suwayomi-VUI-Web-${{ needs.GenTag.outputs.value }}.zip ./*
       - name: Release
         uses: softprops/action-gh-release@v1
         with:
           files: |
-            ./build/Suwayomi-VUI-Web.zip
+            ./build/Suwayomi-VUI-Web-${{ needs.GenTag.outputs.value }}.zip
             ./buildZip/md5sum
           name: ${{ needs.GenTag.outputs.value }}
           tag_name: ${{ needs.GenTag.outputs.value }}
