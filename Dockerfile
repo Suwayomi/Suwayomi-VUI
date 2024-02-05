@@ -1,5 +1,5 @@
 # develop stage
-FROM oven/bun:1.0.25-alpine as develop-stage
+FROM node:lts-alpine as develop-stage
 WORKDIR /app
 COPY . .
 ARG version="DevBuild"
@@ -7,8 +7,8 @@ RUN sed -i "s@BUILD_VERSION_PLACEHOLDER@${version}@" ./src/app.html
 # RUN sed -i "s@TRACKING_PLACEHOLDER@docker@" ./src/app.html
 # build stage
 FROM develop-stage as build-stage
-RUN bun install
-RUN bun run build
+RUN npm install
+RUN npm run build
 # production stage
 FROM ghcr.io/nginxinc/nginx-unprivileged:1.25.3-alpine-slim as production-stage
 USER root
