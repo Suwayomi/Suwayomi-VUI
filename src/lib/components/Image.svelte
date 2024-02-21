@@ -61,10 +61,11 @@
 	export let LoadingHeight: CssClasses = '';
 	export let LoadingWidth: CssClasses = '';
 	export let draggable = true;
+	export let reload_button = false; // TODO: Implement reload button
 </script>
 
 <div
-	class="relative {aspect} 
+	class="relative {aspect}
 		{State === state.loading && LoadingWidth.length ? LoadingWidth : width}
 		{State === state.loading && LoadingHeight.length ? LoadingHeight : height}
 		{$$props.class}"
@@ -76,11 +77,29 @@
 			{LoadingHeight.length ? LoadingHeight : height}
 			{$$props.class}"
 		>
-			Failed.
+			<div class="flex flex-col space-y-2">
+				<div>Failed.</div>
+				{#if reload_button}
+					<button
+						class="btn variant-filled-surface"
+						on:click|capture|stopPropagation={() => {
+							State = state.loading;
+							if (!img) return;
+							img.src = '';
+							window.requestAnimationFrame(() => {
+								if (!img) return;
+								img.src = src ?? '';
+							});
+						}}
+					>
+						Reload
+					</button>
+				{/if}
+			</div>
 		</div>
 	{:else if State === state.loading}
 		<div
-			class="placeholder absolute top-0 bottom-0 left-0 right-0 animate-pulse {rounded} {aspect} 
+			class="placeholder absolute top-0 bottom-0 left-0 right-0 animate-pulse {rounded} {aspect}
 			{LoadingWidth.length ? LoadingWidth : width}
 			{LoadingHeight.length ? LoadingHeight : height}
 			 {$$props.class}"
