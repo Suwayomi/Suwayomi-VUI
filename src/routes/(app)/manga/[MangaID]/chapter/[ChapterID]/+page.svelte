@@ -504,6 +504,7 @@
 								{$mangaMeta.Scale && $mangaMeta.ReaderMode === Mode.single ? 'max-w-full' : ''}"
 						>
 							<Image
+								reload_button={true}
 								src={page}
 								height={$mangaMeta.Scale && $mangaMeta.ReaderMode !== Mode.Vertical
 									? 'max-h-screen h-full'
