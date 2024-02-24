@@ -160,6 +160,11 @@ type DeleteMangaMetaPayload {
   manga: MangaType!
   meta: MangaMetaType
 }
+type DeleteSourceMetaPayload {
+  clientMutationId: String
+  meta: SourceMetaType
+  source: SourceType
+}
 type DequeueChapterDownloadPayload {
   clientMutationId: String
   downloadStatus: DownloadStatus!
@@ -167,9 +172,6 @@ type DequeueChapterDownloadPayload {
 type DequeueChapterDownloadsPayload {
   clientMutationId: String
   downloadStatus: DownloadStatus!
-}
-type DownloadAheadPayload {
-  clientMutationId: String
 }
 type DownloadEdge implements Edge {
   cursor: Cursor!
@@ -338,6 +340,7 @@ type MangaType {
   sourceId: LongString!
   status: MangaStatus!
   thumbnailUrl: String
+  thumbnailUrlLastFetched: LongString
   title: String!
   updateStrategy: UpdateStrategy!
   url: String!
@@ -394,7 +397,6 @@ type Mutation {
   deleteDownloadedChapters(input: DeleteDownloadedChaptersInput!): DeleteDownloadedChaptersPayload!
   dequeueChapterDownload(input: DequeueChapterDownloadInput!): DequeueChapterDownloadPayload!
   dequeueChapterDownloads(input: DequeueChapterDownloadsInput!): DequeueChapterDownloadsPayload!
-  downloadAhead(input: DownloadAheadInput!): DownloadAheadPayload!
   enqueueChapterDownload(input: EnqueueChapterDownloadInput!): EnqueueChapterDownloadPayload!
   enqueueChapterDownloads(input: EnqueueChapterDownloadsInput!): EnqueueChapterDownloadsPayload!
   reorderChapterDownload(input: ReorderChapterDownloadInput!): ReorderChapterDownloadPayload!
@@ -416,7 +418,9 @@ type Mutation {
   setGlobalMeta(input: SetGlobalMetaInput!): SetGlobalMetaPayload!
   resetSettings(input: ResetSettingsInput!): ResetSettingsPayload!
   setSettings(input: SetSettingsInput!): SetSettingsPayload!
+  deleteSourceMeta(input: DeleteSourceMetaInput!): DeleteSourceMetaPayload!
   fetchSourceManga(input: FetchSourceMangaInput!): FetchSourceMangaPayload!
+  setSourceMeta(input: SetSourceMetaInput!): SetSourceMetaPayload!
   updateSourcePreference(input: UpdateSourcePreferenceInput!): UpdateSourcePreferencePayload!
   bindTrack(input: BindTrackInput!): BindTrackPayload!
   loginTrackerCredentials(input: LoginTrackerCredentialsInput!): LoginTrackerCredentialsPayload!
@@ -438,8 +442,9 @@ type PageInfo {
   startCursor: Cursor
 }
 type PartialSettingsType implements Settings {
-  autoDownloadAheadLimit: Int
+  autoDownloadAheadLimit: Int @deprecated(reason: "Replaced with autoDownloadNewChaptersLimit, replace with autoDownloadNewChaptersLimit")
   autoDownloadNewChapters: Boolean
+  autoDownloadNewChaptersLimit: Int
   backupInterval: Int
   backupPath: String
   backupTTL: Int
@@ -470,7 +475,10 @@ type PartialSettingsType implements Settings {
   port: Int
   socksProxyEnabled: Boolean
   socksProxyHost: String
+  socksProxyPassword: String
   socksProxyPort: String
+  socksProxyUsername: String
+  socksProxyVersion: Int
   systemTrayEnabled: Boolean
   updateMangas: Boolean
   webUIChannel: WebUIChannel
@@ -552,9 +560,14 @@ type SetSettingsPayload {
   clientMutationId: String
   settings: SettingsType!
 }
+type SetSourceMetaPayload {
+  clientMutationId: String
+  meta: SourceMetaType!
+}
 type SettingsType implements Settings {
-  autoDownloadAheadLimit: Int!
+  autoDownloadAheadLimit: Int! @deprecated(reason: "Replaced with autoDownloadNewChaptersLimit, replace with autoDownloadNewChaptersLimit")
   autoDownloadNewChapters: Boolean!
+  autoDownloadNewChaptersLimit: Int!
   backupInterval: Int!
   backupPath: String!
   backupTTL: Int!
@@ -585,7 +598,10 @@ type SettingsType implements Settings {
   port: Int!
   socksProxyEnabled: Boolean!
   socksProxyHost: String!
+  socksProxyPassword: String!
   socksProxyPort: String!
+  socksProxyUsername: String!
+  socksProxyVersion: Int!
   systemTrayEnabled: Boolean!
   updateMangas: Boolean!
   webUIChannel: WebUIChannel!
@@ -606,6 +622,12 @@ type SourceEdge implements Edge {
   cursor: Cursor!
   node: SourceType!
 }
+type SourceMetaType implements MetaType {
+  key: String!
+  sourceId: LongString!
+  value: String!
+  source: SourceType!
+}
 type SourceNodeList implements NodeList {
   edges: [SourceEdge!]!
   nodes: [SourceType!]!
@@ -624,6 +646,7 @@ type SourceType {
   extension: ExtensionType!
   filters: [Filter!]!
   manga: MangaNodeList!
+  meta: [SourceMetaType!]!
   preferences: [Preference!]!
 }
 type StartDownloaderPayload {
@@ -713,6 +736,7 @@ type TrackerType {
   id: Int!
   isLoggedIn: Boolean!
   name: String!
+  isTokenExpired: Boolean!
   scores: [String!]!
   statuses: [TrackStatusType!]!
   trackRecords: TrackRecordNodeList!
@@ -847,8 +871,9 @@ interface NodeList {
   totalCount: Int!
 }
 interface Settings {
-  autoDownloadAheadLimit: Int
+  autoDownloadAheadLimit: Int @deprecated(reason: "Replaced with autoDownloadNewChaptersLimit, replace with autoDownloadNewChaptersLimit")
   autoDownloadNewChapters: Boolean
+  autoDownloadNewChaptersLimit: Int
   backupInterval: Int
   backupPath: String
   backupTTL: Int
@@ -879,7 +904,10 @@ interface Settings {
   port: Int
   socksProxyEnabled: Boolean
   socksProxyHost: String
+  socksProxyPassword: String
   socksProxyPort: String
+  socksProxyUsername: String
+  socksProxyVersion: Int
   systemTrayEnabled: Boolean
   updateMangas: Boolean
   webUIChannel: WebUIChannel
@@ -888,7 +916,7 @@ interface Settings {
   webUIUpdateCheckInterval: Float
 }
 union Filter = CheckBoxFilter | GroupFilter | HeaderFilter | SelectFilter | SeparatorFilter | SortFilter | TextFilter | TriStateFilter
-union Node = CategoryMetaType | CategoryType | ChapterMetaType | ChapterType | DownloadType | ExtensionType | GlobalMetaType | MangaMetaType | MangaType | PartialSettingsType | SettingsType | SourceType | TrackRecordType | TrackerType
+union Node = CategoryMetaType | CategoryType | ChapterMetaType | ChapterType | DownloadType | ExtensionType | GlobalMetaType | MangaMetaType | MangaType | PartialSettingsType | SettingsType | SourceMetaType | SourceType | TrackRecordType | TrackerType
 union Preference = CheckBoxPreference | EditTextPreference | ListPreference | MultiSelectListPreference | SwitchPreference
 enum BackupRestoreState {
   IDLE
@@ -1007,6 +1035,7 @@ enum WebUIChannel {
 }
 enum WebUIFlavor {
   WEBUI
+  VUI
   CUSTOM
 }
 enum WebUIInterface {
@@ -1150,6 +1179,11 @@ input DeleteMangaMetaInput {
   key: String!
   mangaId: Int!
 }
+input DeleteSourceMetaInput {
+  clientMutationId: String
+  key: String!
+  sourceId: LongString!
+}
 input DequeueChapterDownloadInput {
   clientMutationId: String
   id: Int!
@@ -1170,11 +1204,6 @@ input DoubleFilterInput {
   notDistinctFrom: Float
   notEqualTo: Float
   notIn: [Float!]
-}
-input DownloadAheadInput {
-  clientMutationId: String
-  latestReadChapterIds: [Int!]
-  mangaIds: [Int!]!
 }
 input EnqueueChapterDownloadInput {
   clientMutationId: String
@@ -1380,8 +1409,8 @@ input MetaFilterInput {
   value: StringFilterInput
 }
 input PartialSettingsTypeInput {
-  autoDownloadAheadLimit: Int
   autoDownloadNewChapters: Boolean
+  autoDownloadNewChaptersLimit: Int
   backupInterval: Int
   backupPath: String
   backupTTL: Int
@@ -1412,7 +1441,10 @@ input PartialSettingsTypeInput {
   port: Int
   socksProxyEnabled: Boolean
   socksProxyHost: String
+  socksProxyPassword: String
   socksProxyPort: String
+  socksProxyUsername: String
+  socksProxyVersion: Int
   systemTrayEnabled: Boolean
   updateMangas: Boolean
   webUIChannel: WebUIChannel
@@ -1456,6 +1488,10 @@ input SetSettingsInput {
   clientMutationId: String
   settings: PartialSettingsTypeInput!
 }
+input SetSourceMetaInput {
+  clientMutationId: String
+  meta: SourceMetaTypeInput!
+}
 input SortSelectionInput {
   ascending: Boolean!
   index: Int!
@@ -1474,6 +1510,11 @@ input SourceFilterInput {
   name: StringFilterInput
   not: SourceFilterInput
   or: [SourceFilterInput!]
+}
+input SourceMetaTypeInput {
+  key: String!
+  sourceId: LongString!
+  value: String!
 }
 input SourcePreferenceChangeInput {
   checkBoxState: Boolean

@@ -90,6 +90,34 @@ mutation setMangaMeta($value: String!, $id: Int!, $key: String!) {
 	}
 }
 
+mutation setSourceMeta($value: String!, $sourceId: LongString!, $key: String!) {
+	setSourceMeta(input: { meta: { key: $key, sourceId: $sourceId, value: $value } }) {
+		meta {
+			source {
+				...SourceTypeFragment
+				isNsfw
+				extension {
+					pkgName
+					repo
+				}
+			}
+		}
+	}
+}
+
+mutation deleteSourceMeta($key: String!, $sourceId: LongString!) {
+	deleteSourceMeta(input: { key: $key, sourceId: $sourceId }) {
+		source {
+			...SourceTypeFragment
+			isNsfw
+			extension {
+				pkgName
+				repo
+			}
+		}
+	}
+}
+
 mutation deleteMangaMeta($id: Int!, $key: String!) {
 	deleteMangaMeta(input: { key: $key, mangaId: $id }) {
 		manga {

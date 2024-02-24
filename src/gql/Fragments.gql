@@ -80,6 +80,10 @@ fragment SourceTypeFragment on SourceType {
 	displayName
 	iconUrl
 	lang
+	meta {
+		value
+		key
+	}
 }
 
 fragment ExtensionTypeFragment on ExtensionType {

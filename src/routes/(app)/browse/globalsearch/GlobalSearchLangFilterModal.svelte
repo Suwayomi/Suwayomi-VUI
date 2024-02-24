@@ -16,10 +16,14 @@
 	const modalStore = getModalStore();
 	export let langs: Set<string>;
 	export let langFilter: Writable<Set<string>>;
-	export let rawSources: SourcesQuery['sources'] | undefined;
+	export let rawSources: SourcesQuery['sources']['nodes'] | undefined;
 	const tabSet = localStorageStore<number>('browseTabSet', 0);
 
-	$: LangFilteredSources = rawSources?.nodes.filter((source) => {
+	$: LangFilteredSources = rawSources?.filter((source) => {
+		console.log(source.lang, $langFilter);
+		if ($langFilter.has('pinned') && source.meta.find((e) => e.key === 'pinned')) {
+			return true;
+		}
 		if (!$langFilter.has(source.lang)) return false;
 		return true;
 	});
