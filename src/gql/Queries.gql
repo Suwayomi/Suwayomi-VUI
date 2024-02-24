@@ -421,7 +421,6 @@ query trackRecords {
 
 query serverSettings {
 	settings {
-		autoDownloadAheadLimit
 		autoDownloadNewChapters
 		backupInterval
 		backupPath

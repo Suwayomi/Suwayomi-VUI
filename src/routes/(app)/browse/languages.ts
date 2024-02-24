@@ -6,6 +6,7 @@
 
 // full list: https://github.com/meikidd/iso-639-1/blob/master/src/data.js
 const ISOLanguages = [
+	{ code: 'pinned', name: 'Pinned', nativeName: 'Pinned' },
 	{ code: 'all', name: 'All', nativeName: 'All' },
 	{ code: 'installed', name: 'Installed', nativeName: 'Installed' },
 	{ code: 'updates pending', name: 'Updates pending', nativeName: 'Updates pending' },

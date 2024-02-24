@@ -9,7 +9,12 @@
 <script lang="ts">
 	import IntersectionObserver from '$lib/components/IntersectionObserver.svelte';
 	import MangaCard from '$lib/components/MangaCard.svelte';
-	import { sources as getsources, type SourcesQuery } from '$lib/generated';
+	import {
+		sources as getsources,
+		type SourcesQuery,
+		deleteSourceMeta,
+		setSourceMeta
+	} from '$lib/generated';
 	import { AppBarData } from '$lib/MountTitleAction';
 	import { queryParam, ssp } from 'sveltekit-search-params';
 	import { FindLangName } from '../languages';
@@ -18,6 +23,7 @@
 	import { SourceLangFilter } from './SourcesStores';
 	import { Meta } from '$lib/simpleStores';
 	import { groupBy } from '$lib/util';
+	import { longPress } from '$lib/press';
 
 	AppBarData('Sources');
 
@@ -27,6 +33,7 @@
 	const query = queryParam('q', ssp.string(), { pushHistory: false });
 
 	$: filteredSources = $sources.data?.sources?.nodes.filter((ele) => {
+		if (ele.meta.find((e) => e.key === 'pinned')) return true;
 		if (!$SourceLangFilter.has(ele.lang)) return false;
 		if ($query !== '' && $query !== null) {
 			return ele.displayName.toLowerCase().includes($query.toLocaleLowerCase());
@@ -54,7 +61,24 @@
 
 	function doGroupSources(filteredExts: Tsource[] | undefined) {
 		if (!filteredExts) return;
-		return groupBy(filteredExts, ({ lang }) => lang);
+		return groupBy(filteredExts, (source) =>
+			source.meta.find((e) => e.key === 'pinned') ? 'Pinned' : source.lang
+		);
+	}
+
+	let stopClick: string = '';
+
+	async function LongHandler(source: Tsource) {
+		stopClick = source.id;
+		document.addEventListener('click', () => (stopClick = ''), { once: true });
+		document.addEventListener('pointercancel', () => (stopClick = ''), { once: true });
+		if (source.meta.find((e) => e.key === 'pinned')) {
+			await deleteSourceMeta({ variables: { sourceId: source.id, key: 'pinned' } });
+		} else {
+			await setSourceMeta({
+				variables: { sourceId: source.id, key: 'pinned', value: '' }
+			});
+		}
 	}
 </script>
 
@@ -87,7 +111,7 @@
 			</div>
 		{/each}
 	{:else if groupSources}
-		{#each groupSources as [lang, sous]}
+		{#each groupSources.sort( (a, b) => (a[0] === 'Pinned' ? -1 : b[0] === 'Pinned' ? 1 : 0) ) as [lang, sous]}
 			<div class="text-5xl py-4 px-8">
 				{FindLangName(lang)}
 			</div>
@@ -103,7 +127,17 @@
 						class="aspect-cover card"
 					>
 						{#if intersecting}
-							<a href="/browse/source/{source.id}/popular">
+							<a
+								use:longPress
+								on:longPress|preventDefault|stopPropagation={() => LongHandler(source)}
+								href="/browse/source/{source.id}/popular"
+								on:click={(e) => {
+									if (e.ctrlKey) return;
+									if (stopClick === source.id) {
+										e.preventDefault();
+									}
+								}}
+							>
 								<MangaCard
 									thumbnailUrl={source.iconUrl}
 									title={source.displayName}

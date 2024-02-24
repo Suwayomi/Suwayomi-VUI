@@ -21,7 +21,6 @@
 
 	const settingsData = serverSettings({});
 
-	let autoDownloadAheadLimit = 99999;
 	let autoDownloadNewChapters = true;
 	let backupInterval = 1;
 	let backupPath = '';
@@ -63,7 +62,6 @@
 
 	settingsData.subscribe((data) => {
 		if (data.data.settings) {
-			autoDownloadAheadLimit = data.data.settings.autoDownloadAheadLimit;
 			autoDownloadNewChapters = data.data.settings.autoDownloadNewChapters;
 			backupInterval = data.data.settings.backupInterval;
 			backupPath = data.data.settings.backupPath;
@@ -115,13 +113,6 @@
 {:else if $settingsData.data}
 	{@const settings = $settingsData.data.settings}
 	<div class="[&>*]:px-4">
-		<!-- autoDownloadAheadLimit -->
-		<Number
-			title="Auto Download Ahead Limit"
-			bind:value={autoDownloadAheadLimit}
-			max={100}
-			on:change={() => setSettings({ autoDownloadAheadLimit })}
-		/>
 		<!-- autoDownloadNewChapters -->
 		<Toggle
 			title="Auto Download New Chapters"

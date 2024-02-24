@@ -1,6 +1,10 @@
 [
 	{
 		"uiVersion": "PREVIEW",
-		"serverVersion": "r1477"
+		"serverVersion": "r1498"
+	},
+	{
+		"uiVersion": "r545",
+		"serverVersion": "r1498"
 	}
 ]
