@@ -21,7 +21,6 @@
 
 	const settingsData = serverSettings({});
 
-	let autoDownloadAheadLimit = 99999;
 	let autoDownloadNewChapters = true;
 	let backupInterval = 1;
 	let backupPath = '';
