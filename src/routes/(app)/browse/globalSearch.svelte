@@ -33,14 +33,6 @@
 
 	let rawSources = sources({ variables: { isNsfw: $Meta.nsfw ? null : false } });
 
-	$: AppBarData(title, {
-		component: GlobalSearchActions,
-		props: {
-			rawSources: $rawSources.data?.sources,
-			langs
-		}
-	});
-
 	$: langs = getLanguages($rawSources.data);
 
 	function getLanguages(extensions: SourcesQuery) {
@@ -50,17 +42,31 @@
 					return accumulator.add(currentNode.lang);
 				}
 				return accumulator;
-			}, new Set<string>());
+			}, new Set<string>(['pinned']));
 		}
-		return new Set<string>();
+		return new Set<string>(['pinned']);
 	}
 
 	let alterableRaw: sourceWithManga[] | undefined = undefined;
 
-	$: filteredSources = $rawSources.data?.sources?.nodes?.filter((source) => {
-		if (!$SpecificSourceFilter.has(source.id)) return false;
-		return true;
-	}) as SourcesQuery['sources']['nodes'] | undefined;
+	$: filteredSources = $rawSources.data?.sources?.nodes
+		?.filter((source) => {
+			if (!$SpecificSourceFilter.has(source.id)) return false;
+			return true;
+		})
+		.sort((a, b) => {
+			if (a.meta.find((e) => e.key === 'pinned')) return -1;
+			if (b.meta.find((e) => e.key === 'pinned')) return 1;
+			return 0;
+		}) as SourcesQuery['sources']['nodes'] | undefined;
+
+	$: AppBarData(title, {
+		component: GlobalSearchActions,
+		props: {
+			rawSources: filteredSources,
+			langs
+		}
+	});
 
 	$: filteredSources, $query, onQueryChange();
 	function onQueryChange() {
@@ -107,7 +113,9 @@
 
 	function doGroupSources(filteredSources: SourcesQuery['sources']['nodes'] | undefined) {
 		if (!filteredSources) return [];
-		return groupBy(filteredSources, (item) => item.lang) as [string, sourceWithManga[]][];
+		return groupBy(filteredSources, (item) =>
+			item.meta.find((e) => e.key === 'pinned') ? 'Pinned' : item.lang
+		) as [string, sourceWithManga[]][];
 	}
 
 	onDestroy(() => {

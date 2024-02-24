@@ -17,7 +17,7 @@
 	import Tooltip from '$lib/components/Tooltip.svelte';
 	import IconWrapper from '$lib/components/IconWrapper.svelte';
 
-	export let rawSources: SourcesQuery['sources'] | undefined;
+	export let rawSources: SourcesQuery['sources']['nodes'] | undefined;
 	export let langs: Set<string>;
 
 	const modalStore = getModalStore();

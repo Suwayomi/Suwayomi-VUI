@@ -410,6 +410,19 @@ export type DeleteMangaMetaPayload = {
   meta?: Maybe<MangaMetaType>;
 };
 
+export type DeleteSourceMetaInput = {
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
+  key: Scalars['String']['input'];
+  sourceId: Scalars['LongString']['input'];
+};
+
+export type DeleteSourceMetaPayload = {
+  __typename?: 'DeleteSourceMetaPayload';
+  clientMutationId?: Maybe<Scalars['String']['output']>;
+  meta?: Maybe<SourceMetaType>;
+  source?: Maybe<SourceType>;
+};
+
 export type DequeueChapterDownloadInput = {
   clientMutationId?: InputMaybe<Scalars['String']['input']>;
   id: Scalars['Int']['input'];
@@ -444,17 +457,6 @@ export type DoubleFilterInput = {
   notDistinctFrom?: InputMaybe<Scalars['Float']['input']>;
   notEqualTo?: InputMaybe<Scalars['Float']['input']>;
   notIn?: InputMaybe<Array<Scalars['Float']['input']>>;
-};
-
-export type DownloadAheadInput = {
-  clientMutationId?: InputMaybe<Scalars['String']['input']>;
-  latestReadChapterIds?: InputMaybe<Array<Scalars['Int']['input']>>;
-  mangaIds: Array<Scalars['Int']['input']>;
-};
-
-export type DownloadAheadPayload = {
-  __typename?: 'DownloadAheadPayload';
-  clientMutationId?: Maybe<Scalars['String']['output']>;
 };
 
 export type DownloadEdge = Edge & {
@@ -962,6 +964,7 @@ export type MangaType = {
   sourceId: Scalars['LongString']['output'];
   status: MangaStatus;
   thumbnailUrl?: Maybe<Scalars['String']['output']>;
+  thumbnailUrlLastFetched?: Maybe<Scalars['LongString']['output']>;
   title: Scalars['String']['output'];
   trackRecords: TrackRecordNodeList;
   unreadCount: Scalars['Int']['output'];
@@ -1026,9 +1029,9 @@ export type Mutation = {
   deleteDownloadedChapters: DeleteDownloadedChaptersPayload;
   deleteGlobalMeta: DeleteGlobalMetaPayload;
   deleteMangaMeta: DeleteMangaMetaPayload;
+  deleteSourceMeta: DeleteSourceMetaPayload;
   dequeueChapterDownload: DequeueChapterDownloadPayload;
   dequeueChapterDownloads: DequeueChapterDownloadsPayload;
-  downloadAhead: DownloadAheadPayload;
   enqueueChapterDownload: EnqueueChapterDownloadPayload;
   enqueueChapterDownloads: EnqueueChapterDownloadsPayload;
   fetchChapterPages: FetchChapterPagesPayload;
@@ -1049,6 +1052,7 @@ export type Mutation = {
   setGlobalMeta: SetGlobalMetaPayload;
   setMangaMeta: SetMangaMetaPayload;
   setSettings: SetSettingsPayload;
+  setSourceMeta: SetSourceMetaPayload;
   startDownloader: StartDownloaderPayload;
   stopDownloader: StopDownloaderPayload;
   updateCategories: UpdateCategoriesPayload;
@@ -1131,6 +1135,11 @@ export type MutationDeleteMangaMetaArgs = {
 };
 
 
+export type MutationDeleteSourceMetaArgs = {
+  input: DeleteSourceMetaInput;
+};
+
+
 export type MutationDequeueChapterDownloadArgs = {
   input: DequeueChapterDownloadInput;
 };
@@ -1138,11 +1147,6 @@ export type MutationDequeueChapterDownloadArgs = {
 
 export type MutationDequeueChapterDownloadsArgs = {
   input: DequeueChapterDownloadsInput;
-};
-
-
-export type MutationDownloadAheadArgs = {
-  input: DownloadAheadInput;
 };
 
 
@@ -1241,6 +1245,11 @@ export type MutationSetSettingsArgs = {
 };
 
 
+export type MutationSetSourceMetaArgs = {
+  input: SetSourceMetaInput;
+};
+
+
 export type MutationStartDownloaderArgs = {
   input: StartDownloaderInput;
 };
@@ -1335,7 +1344,7 @@ export type MutationUpdateWebUiArgs = {
   input: WebUiUpdateInput;
 };
 
-export type Node = CategoryMetaType | CategoryType | ChapterMetaType | ChapterType | DownloadType | ExtensionType | GlobalMetaType | MangaMetaType | MangaType | PartialSettingsType | SettingsType | SourceType | TrackRecordType | TrackerType;
+export type Node = CategoryMetaType | CategoryType | ChapterMetaType | ChapterType | DownloadType | ExtensionType | GlobalMetaType | MangaMetaType | MangaType | PartialSettingsType | SettingsType | SourceMetaType | SourceType | TrackRecordType | TrackerType;
 
 export type NodeList = {
   /** A list of edges which contains the [T] and cursor to aid in pagination. */
@@ -1362,8 +1371,10 @@ export type PageInfo = {
 
 export type PartialSettingsType = Settings & {
   __typename?: 'PartialSettingsType';
+  /** @deprecated Replaced with autoDownloadNewChaptersLimit, replace with autoDownloadNewChaptersLimit */
   autoDownloadAheadLimit?: Maybe<Scalars['Int']['output']>;
   autoDownloadNewChapters?: Maybe<Scalars['Boolean']['output']>;
+  autoDownloadNewChaptersLimit?: Maybe<Scalars['Int']['output']>;
   backupInterval?: Maybe<Scalars['Int']['output']>;
   backupPath?: Maybe<Scalars['String']['output']>;
   backupTTL?: Maybe<Scalars['Int']['output']>;
@@ -1394,7 +1405,10 @@ export type PartialSettingsType = Settings & {
   port?: Maybe<Scalars['Int']['output']>;
   socksProxyEnabled?: Maybe<Scalars['Boolean']['output']>;
   socksProxyHost?: Maybe<Scalars['String']['output']>;
+  socksProxyPassword?: Maybe<Scalars['String']['output']>;
   socksProxyPort?: Maybe<Scalars['String']['output']>;
+  socksProxyUsername?: Maybe<Scalars['String']['output']>;
+  socksProxyVersion?: Maybe<Scalars['Int']['output']>;
   systemTrayEnabled?: Maybe<Scalars['Boolean']['output']>;
   updateMangas?: Maybe<Scalars['Boolean']['output']>;
   webUIChannel?: Maybe<WebUiChannel>;
@@ -1404,8 +1418,8 @@ export type PartialSettingsType = Settings & {
 };
 
 export type PartialSettingsTypeInput = {
-  autoDownloadAheadLimit?: InputMaybe<Scalars['Int']['input']>;
   autoDownloadNewChapters?: InputMaybe<Scalars['Boolean']['input']>;
+  autoDownloadNewChaptersLimit?: InputMaybe<Scalars['Int']['input']>;
   backupInterval?: InputMaybe<Scalars['Int']['input']>;
   backupPath?: InputMaybe<Scalars['String']['input']>;
   backupTTL?: InputMaybe<Scalars['Int']['input']>;
@@ -1436,7 +1450,10 @@ export type PartialSettingsTypeInput = {
   port?: InputMaybe<Scalars['Int']['input']>;
   socksProxyEnabled?: InputMaybe<Scalars['Boolean']['input']>;
   socksProxyHost?: InputMaybe<Scalars['String']['input']>;
+  socksProxyPassword?: InputMaybe<Scalars['String']['input']>;
   socksProxyPort?: InputMaybe<Scalars['String']['input']>;
+  socksProxyUsername?: InputMaybe<Scalars['String']['input']>;
+  socksProxyVersion?: InputMaybe<Scalars['Int']['input']>;
   systemTrayEnabled?: InputMaybe<Scalars['Boolean']['input']>;
   updateMangas?: InputMaybe<Scalars['Boolean']['input']>;
   webUIChannel?: InputMaybe<WebUiChannel>;
@@ -1748,9 +1765,22 @@ export type SetSettingsPayload = {
   settings: SettingsType;
 };
 
+export type SetSourceMetaInput = {
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
+  meta: SourceMetaTypeInput;
+};
+
+export type SetSourceMetaPayload = {
+  __typename?: 'SetSourceMetaPayload';
+  clientMutationId?: Maybe<Scalars['String']['output']>;
+  meta: SourceMetaType;
+};
+
 export type Settings = {
+  /** @deprecated Replaced with autoDownloadNewChaptersLimit, replace with autoDownloadNewChaptersLimit */
   autoDownloadAheadLimit?: Maybe<Scalars['Int']['output']>;
   autoDownloadNewChapters?: Maybe<Scalars['Boolean']['output']>;
+  autoDownloadNewChaptersLimit?: Maybe<Scalars['Int']['output']>;
   backupInterval?: Maybe<Scalars['Int']['output']>;
   backupPath?: Maybe<Scalars['String']['output']>;
   backupTTL?: Maybe<Scalars['Int']['output']>;
@@ -1781,7 +1811,10 @@ export type Settings = {
   port?: Maybe<Scalars['Int']['output']>;
   socksProxyEnabled?: Maybe<Scalars['Boolean']['output']>;
   socksProxyHost?: Maybe<Scalars['String']['output']>;
+  socksProxyPassword?: Maybe<Scalars['String']['output']>;
   socksProxyPort?: Maybe<Scalars['String']['output']>;
+  socksProxyUsername?: Maybe<Scalars['String']['output']>;
+  socksProxyVersion?: Maybe<Scalars['Int']['output']>;
   systemTrayEnabled?: Maybe<Scalars['Boolean']['output']>;
   updateMangas?: Maybe<Scalars['Boolean']['output']>;
   webUIChannel?: Maybe<WebUiChannel>;
@@ -1792,8 +1825,10 @@ export type Settings = {
 
 export type SettingsType = Settings & {
   __typename?: 'SettingsType';
+  /** @deprecated Replaced with autoDownloadNewChaptersLimit, replace with autoDownloadNewChaptersLimit */
   autoDownloadAheadLimit: Scalars['Int']['output'];
   autoDownloadNewChapters: Scalars['Boolean']['output'];
+  autoDownloadNewChaptersLimit: Scalars['Int']['output'];
   backupInterval: Scalars['Int']['output'];
   backupPath: Scalars['String']['output'];
   backupTTL: Scalars['Int']['output'];
@@ -1824,7 +1859,10 @@ export type SettingsType = Settings & {
   port: Scalars['Int']['output'];
   socksProxyEnabled: Scalars['Boolean']['output'];
   socksProxyHost: Scalars['String']['output'];
+  socksProxyPassword: Scalars['String']['output'];
   socksProxyPort: Scalars['String']['output'];
+  socksProxyUsername: Scalars['String']['output'];
+  socksProxyVersion: Scalars['Int']['output'];
   systemTrayEnabled: Scalars['Boolean']['output'];
   updateMangas: Scalars['Boolean']['output'];
   webUIChannel: WebUiChannel;
@@ -1883,6 +1921,20 @@ export type SourceFilterInput = {
   or?: InputMaybe<Array<SourceFilterInput>>;
 };
 
+export type SourceMetaType = MetaType & {
+  __typename?: 'SourceMetaType';
+  key: Scalars['String']['output'];
+  source: SourceType;
+  sourceId: Scalars['LongString']['output'];
+  value: Scalars['String']['output'];
+};
+
+export type SourceMetaTypeInput = {
+  key: Scalars['String']['input'];
+  sourceId: Scalars['LongString']['input'];
+  value: Scalars['String']['input'];
+};
+
 export type SourceNodeList = NodeList & {
   __typename?: 'SourceNodeList';
   edges: Array<SourceEdge>;
@@ -1917,6 +1969,7 @@ export type SourceType = {
   isNsfw: Scalars['Boolean']['output'];
   lang: Scalars['String']['output'];
   manga: MangaNodeList;
+  meta: Array<SourceMetaType>;
   name: Scalars['String']['output'];
   preferences: Array<Preference>;
   supportsLatest: Scalars['Boolean']['output'];
@@ -2140,6 +2193,7 @@ export type TrackerType = {
   icon: Scalars['String']['output'];
   id: Scalars['Int']['output'];
   isLoggedIn: Scalars['Boolean']['output'];
+  isTokenExpired: Scalars['Boolean']['output'];
   name: Scalars['String']['output'];
   scores: Array<Scalars['String']['output']>;
   statuses: Array<TrackStatusType>;
@@ -2436,6 +2490,7 @@ export enum WebUiChannel {
 
 export enum WebUiFlavor {
   Custom = 'CUSTOM',
+  Vui = 'VUI',
   Webui = 'WEBUI'
 }
 
@@ -2480,7 +2535,7 @@ export type ChapterTypeFragmentFragment = { __typename?: 'ChapterType', isBookma
 
 export type MangaTypeFragmentFragment = { __typename?: 'MangaType', artist?: string | null, author?: string | null, description?: string | null, genre: Array<string>, id: number, inLibrary: boolean, lastFetchedAt?: any | null, realUrl?: string | null, status: MangaStatus, title: string, thumbnailUrl?: string | null, unreadCount: number, downloadCount: number, latestFetchedChapter?: { __typename?: 'ChapterType', fetchedAt: any } | null, latestUploadedChapter?: { __typename?: 'ChapterType', uploadDate: any } | null, latestReadChapter?: { __typename?: 'ChapterType', lastReadAt: any } | null, lastReadChapter?: { __typename?: 'ChapterType', lastReadAt: any } | null, meta: Array<{ __typename?: 'MangaMetaType', value: string, key: string }>, source?: { __typename?: 'SourceType', displayName: string } | null, categories: { __typename?: 'CategoryNodeList', nodes: Array<{ __typename?: 'CategoryType', id: number }> }, trackRecords: { __typename?: 'TrackRecordNodeList', nodes: Array<{ __typename?: 'TrackRecordType', id: number, mangaId: number, remoteId: any, remoteUrl: string, title: string, trackerId: number }> } };
 
-export type SourceTypeFragmentFragment = { __typename?: 'SourceType', id: any, displayName: string, iconUrl: string, lang: string };
+export type SourceTypeFragmentFragment = { __typename?: 'SourceType', id: any, displayName: string, iconUrl: string, lang: string, meta: Array<{ __typename?: 'SourceMetaType', value: string, key: string }> };
 
 export type ExtensionTypeFragmentFragment = { __typename?: 'ExtensionType', name: string, repo?: string | null, versionName: string, pkgName: string, lang: string, iconUrl: string, isNsfw: boolean, isInstalled: boolean, isObsolete: boolean, hasUpdate: boolean };
 
@@ -2544,6 +2599,23 @@ export type SetMangaMetaMutationVariables = Exact<{
 
 export type SetMangaMetaMutation = { __typename?: 'Mutation', setMangaMeta: { __typename?: 'SetMangaMetaPayload', meta: { __typename?: 'MangaMetaType', manga: { __typename?: 'MangaType', id: number, meta: Array<{ __typename?: 'MangaMetaType', key: string, mangaId: number, value: string }> } } } };
 
+export type SetSourceMetaMutationVariables = Exact<{
+  value: Scalars['String']['input'];
+  sourceId: Scalars['LongString']['input'];
+  key: Scalars['String']['input'];
+}>;
+
+
+export type SetSourceMetaMutation = { __typename?: 'Mutation', setSourceMeta: { __typename?: 'SetSourceMetaPayload', meta: { __typename?: 'SourceMetaType', source: { __typename?: 'SourceType', isNsfw: boolean, id: any, displayName: string, iconUrl: string, lang: string, extension: { __typename?: 'ExtensionType', pkgName: string, repo?: string | null }, meta: Array<{ __typename?: 'SourceMetaType', value: string, key: string }> } } } };
+
+export type DeleteSourceMetaMutationVariables = Exact<{
+  key: Scalars['String']['input'];
+  sourceId: Scalars['LongString']['input'];
+}>;
+
+
+export type DeleteSourceMetaMutation = { __typename?: 'Mutation', deleteSourceMeta: { __typename?: 'DeleteSourceMetaPayload', source?: { __typename?: 'SourceType', isNsfw: boolean, id: any, displayName: string, iconUrl: string, lang: string, extension: { __typename?: 'ExtensionType', pkgName: string, repo?: string | null }, meta: Array<{ __typename?: 'SourceMetaType', value: string, key: string }> } | null } };
+
 export type DeleteMangaMetaMutationVariables = Exact<{
   id: Scalars['Int']['input'];
   key: Scalars['String']['input'];
@@ -2574,7 +2646,7 @@ export type UpdateExtensionMutationVariables = Exact<{
 }>;
 
 
-export type UpdateExtensionMutation = { __typename?: 'Mutation', updateExtension: { __typename?: 'UpdateExtensionPayload', extension?: { __typename?: 'ExtensionType', name: string, repo?: string | null, versionName: string, pkgName: string, lang: string, iconUrl: string, isNsfw: boolean, isInstalled: boolean, isObsolete: boolean, hasUpdate: boolean, source: { __typename?: 'SourceNodeList', nodes: Array<{ __typename?: 'SourceType', isNsfw: boolean, id: any, displayName: string, iconUrl: string, lang: string, extension: { __typename?: 'ExtensionType', pkgName: string, repo?: string | null } }> } } | null } };
+export type UpdateExtensionMutation = { __typename?: 'Mutation', updateExtension: { __typename?: 'UpdateExtensionPayload', extension?: { __typename?: 'ExtensionType', name: string, repo?: string | null, versionName: string, pkgName: string, lang: string, iconUrl: string, isNsfw: boolean, isInstalled: boolean, isObsolete: boolean, hasUpdate: boolean, source: { __typename?: 'SourceNodeList', nodes: Array<{ __typename?: 'SourceType', isNsfw: boolean, id: any, displayName: string, iconUrl: string, lang: string, extension: { __typename?: 'ExtensionType', pkgName: string, repo?: string | null }, meta: Array<{ __typename?: 'SourceMetaType', value: string, key: string }> }> } } | null } };
 
 export type FetchSourceMangaMutationVariables = Exact<{
   page: Scalars['Int']['input'];
@@ -2751,7 +2823,7 @@ export type InstallExternalExtensionMutationVariables = Exact<{
 }>;
 
 
-export type InstallExternalExtensionMutation = { __typename?: 'Mutation', installExternalExtension: { __typename?: 'InstallExternalExtensionPayload', extension: { __typename?: 'ExtensionType', name: string, repo?: string | null, versionName: string, pkgName: string, lang: string, iconUrl: string, isNsfw: boolean, isInstalled: boolean, isObsolete: boolean, hasUpdate: boolean, source: { __typename?: 'SourceNodeList', nodes: Array<{ __typename?: 'SourceType', isNsfw: boolean, id: any, displayName: string, iconUrl: string, lang: string, extension: { __typename?: 'ExtensionType', pkgName: string, repo?: string | null } }> } } } };
+export type InstallExternalExtensionMutation = { __typename?: 'Mutation', installExternalExtension: { __typename?: 'InstallExternalExtensionPayload', extension: { __typename?: 'ExtensionType', name: string, repo?: string | null, versionName: string, pkgName: string, lang: string, iconUrl: string, isNsfw: boolean, isInstalled: boolean, isObsolete: boolean, hasUpdate: boolean, source: { __typename?: 'SourceNodeList', nodes: Array<{ __typename?: 'SourceType', isNsfw: boolean, id: any, displayName: string, iconUrl: string, lang: string, extension: { __typename?: 'ExtensionType', pkgName: string, repo?: string | null }, meta: Array<{ __typename?: 'SourceMetaType', value: string, key: string }> }> } } } };
 
 export type LoginTrackerOAuthMutationVariables = Exact<{
   callbackUrl: Scalars['String']['input'];
@@ -2840,12 +2912,12 @@ export type SourcesQueryVariables = Exact<{
 }>;
 
 
-export type SourcesQuery = { __typename?: 'Query', sources: { __typename?: 'SourceNodeList', nodes: Array<{ __typename?: 'SourceType', isNsfw: boolean, id: any, displayName: string, iconUrl: string, lang: string, extension: { __typename?: 'ExtensionType', pkgName: string, repo?: string | null } }> } };
+export type SourcesQuery = { __typename?: 'Query', sources: { __typename?: 'SourceNodeList', nodes: Array<{ __typename?: 'SourceType', isNsfw: boolean, id: any, displayName: string, iconUrl: string, lang: string, extension: { __typename?: 'ExtensionType', pkgName: string, repo?: string | null }, meta: Array<{ __typename?: 'SourceMetaType', value: string, key: string }> }> } };
 
 export type SourcesMigrationQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type SourcesMigrationQuery = { __typename?: 'Query', sources: { __typename?: 'SourceNodeList', nodes: Array<{ __typename?: 'SourceType', id: any, displayName: string, iconUrl: string, lang: string }> }, mangas: { __typename?: 'MangaNodeList', totalCount: number, nodes: Array<{ __typename?: 'MangaType', sourceId: any }> } };
+export type SourcesMigrationQuery = { __typename?: 'Query', sources: { __typename?: 'SourceNodeList', nodes: Array<{ __typename?: 'SourceType', id: any, displayName: string, iconUrl: string, lang: string, meta: Array<{ __typename?: 'SourceMetaType', value: string, key: string }> }> }, mangas: { __typename?: 'MangaNodeList', totalCount: number, nodes: Array<{ __typename?: 'MangaType', sourceId: any }> } };
 
 export type SourceMigrationMangaQueryVariables = Exact<{
   sourceId: Scalars['LongString']['input'];
@@ -3043,6 +3115,10 @@ export const SourceTypeFragmentFragmentDoc = gql`
   displayName
   iconUrl
   lang
+  meta {
+    value
+    key
+  }
 }
     `;
 export const ExtensionTypeFragmentFragmentDoc = gql`
@@ -3165,6 +3241,36 @@ export const SetMangaMetaDoc = gql`
   }
 }
     `;
+export const SetSourceMetaDoc = gql`
+    mutation setSourceMeta($value: String!, $sourceId: LongString!, $key: String!) {
+  setSourceMeta(input: {meta: {key: $key, sourceId: $sourceId, value: $value}}) {
+    meta {
+      source {
+        ...SourceTypeFragment
+        isNsfw
+        extension {
+          pkgName
+          repo
+        }
+      }
+    }
+  }
+}
+    ${SourceTypeFragmentFragmentDoc}`;
+export const DeleteSourceMetaDoc = gql`
+    mutation deleteSourceMeta($key: String!, $sourceId: LongString!) {
+  deleteSourceMeta(input: {key: $key, sourceId: $sourceId}) {
+    source {
+      ...SourceTypeFragment
+      isNsfw
+      extension {
+        pkgName
+        repo
+      }
+    }
+  }
+}
+    ${SourceTypeFragmentFragmentDoc}`;
 export const DeleteMangaMetaDoc = gql`
     mutation deleteMangaMeta($id: Int!, $key: String!) {
   deleteMangaMeta(input: {key: $key, mangaId: $id}) {
@@ -4185,6 +4291,30 @@ export const setMangaMeta = (
           ) => {
             const m = client.mutate<SetMangaMetaMutation, SetMangaMetaMutationVariables>({
               mutation: SetMangaMetaDoc,
+              ...options,
+            });
+            return m;
+          }
+export const setSourceMeta = (
+            options: Omit<
+              MutationOptions<any, SetSourceMetaMutationVariables>, 
+              "mutation"
+            >
+          ) => {
+            const m = client.mutate<SetSourceMetaMutation, SetSourceMetaMutationVariables>({
+              mutation: SetSourceMetaDoc,
+              ...options,
+            });
+            return m;
+          }
+export const deleteSourceMeta = (
+            options: Omit<
+              MutationOptions<any, DeleteSourceMetaMutationVariables>, 
+              "mutation"
+            >
+          ) => {
+            const m = client.mutate<DeleteSourceMetaMutation, DeleteSourceMetaMutationVariables>({
+              mutation: DeleteSourceMetaDoc,
               ...options,
             });
             return m;
