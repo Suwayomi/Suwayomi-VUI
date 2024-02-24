@@ -115,13 +115,6 @@
 {:else if $settingsData.data}
 	{@const settings = $settingsData.data.settings}
 	<div class="[&>*]:px-4">
-		<!-- autoDownloadAheadLimit -->
-		<Number
-			title="Auto Download Ahead Limit"
-			bind:value={autoDownloadAheadLimit}
-			max={100}
-			on:change={() => setSettings({ autoDownloadAheadLimit })}
-		/>
 		<!-- autoDownloadNewChapters -->
 		<Toggle
 			title="Auto Download New Chapters"

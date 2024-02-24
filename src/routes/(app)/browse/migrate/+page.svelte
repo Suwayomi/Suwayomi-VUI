@@ -41,7 +41,8 @@
 					broken: true,
 					mangas: {
 						TotalCount: 1
-					}
+					},
+					meta: []
 				});
 				return;
 			}
