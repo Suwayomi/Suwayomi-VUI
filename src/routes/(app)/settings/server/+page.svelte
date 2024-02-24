@@ -62,7 +62,6 @@
 
 	settingsData.subscribe((data) => {
 		if (data.data.settings) {
-			autoDownloadAheadLimit = data.data.settings.autoDownloadAheadLimit;
 			autoDownloadNewChapters = data.data.settings.autoDownloadNewChapters;
 			backupInterval = data.data.settings.backupInterval;
 			backupPath = data.data.settings.backupPath;
