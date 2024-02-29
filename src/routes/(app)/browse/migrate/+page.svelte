@@ -83,7 +83,7 @@
 		{/each}
 	{:else if $Migration.error}
 		<div class="white-space-pre-wrap">
-			{JSON.stringify($Migration.error)}
+			{JSON.stringify($Migration.error, null, 4)}
 		</div>
 	{:else if sources}
 		<div>
