@@ -26,7 +26,9 @@
 		<a
 			href="./latest"
 			class="btn rounded-none
-  {$page.url.pathname.includes('/latest') ? 'variant-filled-secondary' : 'variant-ghost-secondary'}"
+  {$page.url.pathname.includes('/latest')
+				? 'variant-filled-secondary'
+				: 'variant-ghost-secondary'}"
 		>
 			Latest
 		</a>
@@ -34,7 +36,9 @@
 	<a
 		href="./filter"
 		class="btn rounded-none
-  {$page.url.pathname.includes('/filter') ? 'variant-filled-secondary' : 'variant-ghost-secondary'}"
+  {$page.url.pathname.includes('/filter')
+			? 'variant-filled-secondary'
+			: 'variant-ghost-secondary'}"
 	>
 		Filter
 	</a>

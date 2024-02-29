@@ -5,23 +5,17 @@
 // file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
 import { get, type Writable } from 'svelte/store';
+
+import { toastStore } from './simpleStores';
+import { client } from './gql/graphqlClient';
 import {
 	deleteDownloadedChapters,
 	enqueueChapterDownloads,
-	updateChapters,
-	type BindTrackMutation,
-	type UpdateTrackMutation,
-	type GetMangaQuery,
-	GetMangaDoc,
-	type SetServerSettingsMutation,
-	ServerSettingsDoc,
 	setServerSettings,
-	type PartialSettingsTypeInput
-} from './generated';
-import type { FetchResult } from '@apollo/client/link/core';
-
-import { toastStore } from './simpleStores';
-import type { ApolloCache } from '@apollo/client';
+	updateChapters
+} from './gql/Mutations';
+import type { VariablesOf } from 'gql.tada';
+import type { OperationResult } from '@urql/svelte';
 
 export type TriState = 0 | 1 | 2;
 
@@ -39,7 +33,10 @@ export function HelpDoSelect<T extends { id: number }>(
 		const lastone = chaps?.findIndex((ele) => ele.id === lastSelected?.id);
 		if (thisone !== undefined && lastone !== undefined && chaps !== undefined) {
 			const biger = lastone > thisone;
-			ids = chaps.slice(biger ? thisone : lastone, (biger ? lastone : thisone) + 1);
+			ids = chaps.slice(
+				biger ? thisone : lastone,
+				(biger ? lastone : thisone) + 1
+			);
 		}
 	}
 	lastSelected = update;
@@ -95,7 +92,12 @@ function getToastStore() {
 }
 
 export async function HelpUpdateChapters<
-	T extends { id: number; isBookmarked: boolean; isDownloaded: boolean; isRead: boolean }
+	T extends {
+		id: number;
+		isBookmarked: boolean;
+		isDownloaded: boolean;
+		isRead: boolean;
+	}
 >(param: dlreabook, selected: Writable<T[]>) {
 	const ids = get(selected)
 		.filter((e) => e)
@@ -107,12 +109,12 @@ export async function HelpUpdateChapters<
 				is = !get(selected).filter((e) => e)[0].isBookmarked;
 				ErrorHelp(
 					'failed to update Bookmark status',
-					updateChapters({
-						variables: {
+					client
+						.mutation(updateChapters, {
 							isBookmarked: is,
 							ids
-						}
-					})
+						})
+						.toPromise()
 				);
 				return is;
 			case dlreabook.download:
@@ -120,12 +122,18 @@ export async function HelpUpdateChapters<
 				if (is) {
 					ErrorHelp(
 						'failed to delete Downloaded chapters',
-						deleteDownloadedChapters({ variables: { ids } })
+						client
+							.mutation(deleteDownloadedChapters, {
+								ids
+							})
+							.toPromise()
+						// deleteDownloadedChapters({ variables: { ids } })
 					);
 				} else {
 					ErrorHelp(
 						'failed to enqueue chapters Downloads',
-						enqueueChapterDownloads({ variables: { ids } })
+						client.mutation(enqueueChapterDownloads, { ids }).toPromise()
+						// enqueueChapterDownloads({ variables: { ids } })
 					);
 				}
 				return !is;
@@ -133,12 +141,12 @@ export async function HelpUpdateChapters<
 				is = !get(selected).filter((e) => e)[0].isRead;
 				ErrorHelp(
 					'failed to update Read status',
-					updateChapters({
-						variables: {
+					client
+						.mutation(updateChapters, {
 							isRead: !get(selected).filter((e) => e)[0].isRead,
 							ids
-						}
-					})
+						})
+						.toPromise()
 				);
 				return is;
 		}
@@ -146,14 +154,13 @@ export async function HelpUpdateChapters<
 
 export async function ErrorHelp<T>(
 	failMessage: string,
-	func: Promise<FetchResult<T>>,
-	callback: (result: FetchResult<T>) => void = () => {}
+	func: Promise<OperationResult<T>>,
+	callback: (result: OperationResult<T>) => void = () => {}
 ) {
 	try {
 		const response = await func;
-		if (response.errors) {
-			response.errors.forEach((e) => console.error(e));
-			errortoast(failMessage, JSON.stringify(response.errors));
+		if (response.error) {
+			errortoast(failMessage, JSON.stringify(response.error));
 			return;
 		}
 		callback(response);
@@ -167,13 +174,13 @@ export async function ErrorHelp<T>(
 
 export async function ErrorHelpUntyped(
 	failMessage: string,
-	...func: Promise<FetchResult<unknown>>[]
+	...func: Promise<OperationResult<unknown>>[]
 ) {
 	try {
 		const results = await Promise.all(func);
 		results.forEach((e) => {
-			if (e.errors) {
-				errortoast(failMessage, JSON.stringify(e.errors));
+			if (e.error) {
+				errortoast(failMessage, JSON.stringify(e.error));
 			}
 		});
 	} catch (error) {
@@ -198,7 +205,10 @@ export function errortoast(failMessage: string, errorMessage: string) {
 	});
 }
 
-export function Partition<T>(arr: T[], comparator: (e: T) => boolean): [T[], T[]] {
+export function Partition<T>(
+	arr: T[],
+	comparator: (e: T) => boolean
+): [T[], T[]] {
 	const trueArr: T[] = [];
 	const falseArr: T[] = [];
 
@@ -213,7 +223,10 @@ export function Partition<T>(arr: T[], comparator: (e: T) => boolean): [T[], T[]
 	return [trueArr, falseArr];
 }
 
-export type Rename<T, K extends keyof T, N extends string> = Pick<T, Exclude<keyof T, K>> & {
+export type Rename<T, K extends keyof T, N extends string> = Pick<
+	T,
+	Exclude<keyof T, K>
+> & {
 	[P in N]: T[K];
 };
 
@@ -228,7 +241,7 @@ export function enumEntries<E extends object>(e: E): [keyof E, E[keyof E]][] {
 	return Object.entries(e) as [keyof E, E[keyof E]][];
 }
 
-export function groupBy<T extends object, K extends T[keyof T]>(
+export function groupBy<T extends object, K extends string>(
 	list: T[],
 	keyGetter: (item: T) => K
 ): [K, T[]][] {
@@ -250,72 +263,17 @@ export function getObjectKeys<T extends object>(obj: T): (keyof T)[] {
 	return Object.keys(obj) as (keyof T)[];
 }
 
-export function getObjectEntries<T extends object>(obj: T): [keyof T, T[keyof T]][] {
+export function getObjectEntries<T extends object>(
+	obj: T
+): [keyof T, T[keyof T]][] {
 	return Object.entries(obj) as [keyof T, T[keyof T]][];
 }
 
-export function unbindUpdater(
-	cache: ApolloCache<unknown>,
-	{ data }: FetchResult<UpdateTrackMutation>,
-	MangaId: number,
-	tabSet: number
+export function setSettings(
+	settings: VariablesOf<typeof setServerSettings>['settings']
 ) {
-	if (!data) return;
-	const mangaData = structuredClone(
-		cache.readQuery<GetMangaQuery>({
-			query: GetMangaDoc,
-			variables: { id: MangaId }
-		})
-	);
-	if (!mangaData || !mangaData.manga) return;
-	const mga = mangaData.manga;
-	mga.trackRecords.nodes = mga.trackRecords.nodes.filter((ee) => ee.trackerId !== tabSet);
-	cache.writeQuery({
-		query: GetMangaDoc,
-		variables: { id: MangaId },
-		data: { manga: mga }
-	});
-}
-
-export function bindTrackUpdater(
-	cache: ApolloCache<unknown>,
-	{ data }: FetchResult<BindTrackMutation>,
-	MangaId: number,
-	tabSet: number
-) {
-	if (!data || !data?.bindTrack?.trackRecord) return;
-	const mangaData = structuredClone(
-		cache.readQuery<GetMangaQuery>({
-			query: GetMangaDoc,
-			variables: { id: MangaId }
-		})
-	);
-	if (!mangaData || !mangaData.manga) return;
-	const mga = mangaData.manga;
-	mga.trackRecords.nodes = mga.trackRecords.nodes.filter((ee) => ee.trackerId !== tabSet);
-	mga.trackRecords.nodes.push(data.bindTrack.trackRecord);
-	cache.writeQuery({
-		query: GetMangaDoc,
-		variables: { id: MangaId },
-		data: { manga: mga }
-	});
-}
-
-export function setServerSettingsUpdater(
-	cache: ApolloCache<unknown>,
-	{ data }: FetchResult<SetServerSettingsMutation>
-) {
-	if (!data) return;
-	const settings = data.setSettings.settings;
-	cache.writeQuery({
-		query: ServerSettingsDoc,
-		data: { settings }
-	});
-}
-
-export function setSettings(settings: PartialSettingsTypeInput) {
 	ErrorHelp(
 		'failed to set server settings',
-		setServerSettings({ variables: { settings }, update: setServerSettingsUpdater })
+		client.mutation(setServerSettings, { settings }).toPromise()
 	);
 }

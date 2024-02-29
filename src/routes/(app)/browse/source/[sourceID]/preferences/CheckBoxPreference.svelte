@@ -8,19 +8,25 @@
 
 <script lang="ts">
 	import Slide from '$lib/components/Slide.svelte';
-	import { updateSourcePreference, type SourceQuery } from '$lib/generated';
+	import { updateSourcePreference } from '$lib/gql/Mutations';
+	import type { getSource } from '$lib/gql/Queries';
+	import { getContextClient, queryStore } from '@urql/svelte';
+	import type { ResultOf } from 'gql.tada';
 
 	export let pref: Extract<
-		SourceQuery['source']['preferences'][0],
+		ResultOf<typeof getSource>['source']['preferences'][0],
 		{ __typename?: 'CheckBoxPreference' | undefined }
 	>;
+
 	export let index: number;
 	export let id: string;
 
 	let checked = pref.CheckBoxCheckBoxCurrentValue ?? pref.CheckBoxDefault;
-
+	const client = getContextClient();
 	function handelcheck(state: CustomEvent<boolean>) {
-		updateSourcePreference({
+		queryStore({
+			client,
+			query: updateSourcePreference,
 			variables: {
 				source: id,
 				checkBoxState: state.detail,

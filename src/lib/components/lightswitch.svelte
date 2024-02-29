@@ -37,7 +37,9 @@
 		$$props.class ?? ''
 	}`;
 	$: classesThumb = `aspect-square scale-[0.8] flex justify-center items-center ${cTransition} ${height} ${rounded} ${thumbBg} ${thumbPosition}`;
-	$: classesIcon = `w-[70%] aspect-square ${!$Meta.dark ? fillLight : fillDark}`;
+	$: classesIcon = `w-[70%] aspect-square ${
+		!$Meta.dark ? fillLight : fillDark
+	}`;
 </script>
 
 <button

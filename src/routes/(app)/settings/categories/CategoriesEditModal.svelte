@@ -9,34 +9,38 @@
 <script lang="ts">
 	import { getModalStore } from '@skeletonlabs/skeleton';
 	import type { SvelteComponent } from 'svelte';
-	import { IncludeOrExclude, updateCategory, type CategoriesQuery } from '$lib/generated';
 	import Slide from '$lib/components/Slide.svelte';
+	import type { ResultOf } from 'gql.tada';
+	import type { CategoryTypeFragment } from '$lib/gql/Fragments';
+	import { getContextClient } from '@urql/svelte';
+	import { updateCategory } from '$lib/gql/Mutations';
 	const modalStore = getModalStore();
 	export let parent: SvelteComponent;
 
-	export let cat: CategoriesQuery['categories']['nodes'][0];
+	export let cat: ResultOf<typeof CategoryTypeFragment>;
 
 	let catinput = cat.name;
 	let Defaul = cat.default;
-	let includeInDownload = cat.includeInDownload === IncludeOrExclude.Include;
-	let includeInUpdate = cat.includeInUpdate === IncludeOrExclude.Include;
+	let includeInDownload = cat.includeInDownload === 'INCLUDE';
+	let includeInUpdate = cat.includeInUpdate === 'INCLUDE';
+	const client = getContextClient();
 
 	function submitChange(): void {
-		updateCategory({
-			variables: {
-				id: cat.id,
-				name: catinput,
-				default: Defaul,
-				includeInDownload: includeInDownload ? IncludeOrExclude.Include : IncludeOrExclude.Exclude,
-				includeInUpdate: includeInUpdate ? IncludeOrExclude.Include : IncludeOrExclude.Exclude
-			}
+		client.mutation(updateCategory, {
+			id: cat.id,
+			name: catinput,
+			default: Defaul,
+			includeInDownload: includeInDownload ? 'INCLUDE' : 'EXCLUDE',
+			includeInUpdate: includeInUpdate ? 'INCLUDE' : 'EXCLUDE'
 		});
 		parent.onClose();
 	}
 </script>
 
 {#if $modalStore[0]}
-	<div class="card p-0 w-modal shadow-xl space-y-4 rounded-lg max-h-screen py-4">
+	<div
+		class="card p-0 w-modal shadow-xl space-y-4 rounded-lg max-h-screen py-4"
+	>
 		<h1 class="h3 pl-4">Edit category</h1>
 		<div class="px-4 border-y border-surface-700">
 			<div class="max-h-96 overflow-y-auto grid grid-cols-1 gap-1">
@@ -50,7 +54,9 @@
 					disabled={cat.id == 0}
 					class="w-full focus:outline-0 p-1 hover:variant-glass-surface"
 				>
-					<div class="w-full">Default category when adding new manga to the library</div>
+					<div class="w-full">
+						Default category when adding new manga to the library
+					</div>
 				</Slide>
 				<Slide
 					labelClass="ml-2"
@@ -64,7 +70,9 @@
 					bind:checked={includeInDownload}
 					class="w-full focus:outline-0 p-1 hover:variant-glass-surface"
 				>
-					<div class="w-full">Include category in downloads from automatic updates</div>
+					<div class="w-full">
+						Include category in downloads from automatic updates
+					</div>
 				</Slide>
 			</div>
 		</div>

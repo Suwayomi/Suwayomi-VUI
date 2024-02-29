@@ -7,12 +7,21 @@
 -->
 
 <script lang="ts">
+	import { title as titleStore } from '$lib/MountTitleAction';
 	import Toast from '$lib/components/Toast/Toast.svelte';
 	import { Meta, toastStore } from '$lib/simpleStores';
-	import { title as titleStore } from '$lib/MountTitleAction';
 	import '../app.postcss';
 	// Floating UI for Popups
-	import { arrow, autoUpdate, computePosition, flip, offset, shift } from '@floating-ui/dom';
+	import { getToastStore } from '$lib/components/Toast/stores';
+	import { client } from '$lib/gql/graphqlClient';
+	import {
+		arrow,
+		autoUpdate,
+		computePosition,
+		flip,
+		offset,
+		shift
+	} from '@floating-ui/dom';
 	import {
 		Drawer,
 		Modal,
@@ -21,10 +30,11 @@
 		initializeStores,
 		storePopup
 	} from '@skeletonlabs/skeleton';
-	import ChapterDrawer from './(app)/manga/[MangaID]/chapter/[ChapterID]/chapterDrawer.svelte';
+	import { setContextClient } from '@urql/svelte';
 	import { onMount } from 'svelte';
+	import ChapterDrawer from './(app)/manga/[MangaID]/chapter/[ChapterID]/chapterDrawer.svelte';
 	import QuickSearchModal from './QuickSearchModal.svelte';
-	import { getToastStore } from '$lib/components/Toast/stores';
+	setContextClient(client);
 
 	storePopup.set({ computePosition, autoUpdate, flip, shift, offset, arrow });
 	initializeStores();
@@ -34,7 +44,10 @@
 		document.body.dataset.theme = $Meta.theme;
 		if ($Meta.dark && !document.documentElement.classList.contains('dark')) {
 			document.documentElement.classList.add('dark');
-		} else if (!$Meta.dark && document.documentElement.classList.contains('dark')) {
+		} else if (
+			!$Meta.dark &&
+			document.documentElement.classList.contains('dark')
+		) {
 			document.documentElement.classList.remove('dark');
 		}
 	}

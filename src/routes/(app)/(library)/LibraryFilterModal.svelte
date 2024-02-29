@@ -42,7 +42,9 @@
 				name="tab1"
 				value={0}
 			>
-				<div class="flex flex-row justify-center items-center h-full focus:outline-0">
+				<div
+					class="flex flex-row justify-center items-center h-full focus:outline-0"
+				>
 					<IconWrapper name="mdi:filter" class="text-4xl" />
 					<span>Filter</span>
 				</div>
@@ -110,7 +112,12 @@
 							active="variant-glass-primary"
 						>
 							{#each enumKeys(sort) as value}
-								<RadioItem bind:group={$Meta.Sort} class="focus:outline-0" name="justify" {value}>
+								<RadioItem
+									bind:group={$Meta.Sort}
+									class="focus:outline-0"
+									name="justify"
+									{value}
+								>
 									{value}
 								</RadioItem>
 							{/each}
@@ -118,11 +125,13 @@
 					{:else if $tabSet === 2}
 						<Slide
 							bind:checked={$Meta.downloadsBadge}
-							class="outline-0 p-1 pl-2 hover:variant-glass-surface w-full">Downloads Badge</Slide
+							class="outline-0 p-1 pl-2 hover:variant-glass-surface w-full"
+							>Downloads Badge</Slide
 						>
 						<Slide
 							bind:checked={$Meta.unreadBadge}
-							class="outline-0 p-1 pl-2 hover:variant-glass-surface w-full">Unread Badge</Slide
+							class="outline-0 p-1 pl-2 hover:variant-glass-surface w-full"
+							>Unread Badge</Slide
 						>
 						<RadioGroup
 							rounded="rounded-container-token"

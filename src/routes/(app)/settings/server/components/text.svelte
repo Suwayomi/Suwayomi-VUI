@@ -11,7 +11,9 @@
 	export let type: string = 'text';
 </script>
 
-<label class="text-left flex items-center w-full h-16 hover:variant-glass-surface cursor-pointer">
+<label
+	class="text-left flex items-center w-full h-16 hover:variant-glass-surface cursor-pointer"
+>
 	{title}
 	<div class="flex items-center flex-nowrap flex-1 justify-end space-x-2">
 		{#if type === 'password'}

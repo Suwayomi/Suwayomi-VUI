@@ -81,7 +81,9 @@
 	 * Transition params provided to `transitionIn`.
 	 * @type {TransitionParams}
 	 */
-	export let transitionInParams: TransitionParams<TransitionIn> = { duration: 250 };
+	export let transitionInParams: TransitionParams<TransitionIn> = {
+		duration: 250
+	};
 	/**
 	 * Provide the transition to used on exit.
 	 * @type {TransitionOut}
@@ -91,10 +93,13 @@
 	 * Transition params provided to `transitionOut`.
 	 * @type {TransitionParams}
 	 */
-	export let transitionOutParams: TransitionParams<TransitionOut> = { duration: 250 };
+	export let transitionOutParams: TransitionParams<TransitionOut> = {
+		duration: 250
+	};
 
 	// Base Classes
-	const cWrapper = 'flex fixed top-0 left-0 right-0 bottom-0 pointer-events-none';
+	const cWrapper =
+		'flex fixed top-0 left-0 right-0 bottom-0 pointer-events-none';
 	const cSnackbar = 'flex flex-col gap-y-2';
 	const cToast = 'flex justify-between items-center pointer-events-auto';
 	const cToastActions = 'flex items-center space-x-2';
@@ -139,7 +144,9 @@
 	}
 
 	// Reactive
-	$: classesWrapper = `${cWrapper} ${cPosition} ${zIndex} ${$$props.class || ''}`;
+	$: classesWrapper = `${cWrapper} ${cPosition} ${zIndex} ${
+		$$props.class || ''
+	}`;
 	$: classesSnackbar = `${cSnackbar} ${cAlign} ${padding}`;
 	$: classesToast = `${cToast} ${width} ${color} ${padding} ${spacing} ${rounded} ${shadow}`;
 	// Filtered Toast Store
@@ -170,7 +177,10 @@
 					aria-live="polite"
 				>
 					<!-- Toast -->
-					<div class="toast {classesToast} {t.background ?? background} {t.classes ?? ''}">
+					<div
+						class="toast {classesToast} {t.background ??
+							background} {t.classes ?? ''}"
+					>
 						<!-- eslint-disable-next-line svelte/no-at-html-tags -->
 						<div class="text-base">{@html t.message}</div>
 						{#if t.action || !t.hideDismiss}
@@ -186,7 +196,8 @@
 								{#if !t.hideDismiss}<button
 										class={buttonDismiss}
 										aria-label="Dismiss toast"
-										on:click={() => toastStore.close(t.id)}>{buttonDismissLabel}</button
+										on:click={() => toastStore.close(t.id)}
+										>{buttonDismissLabel}</button
 									>{/if}
 							</div>
 						{/if}

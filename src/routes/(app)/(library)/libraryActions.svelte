@@ -12,17 +12,21 @@
 	import LibraryFilterModal from './LibraryFilterModal.svelte';
 	import TooltipIconButton from '$lib/components/TooltipIconButton.svelte';
 	import {
-		AsyncConditionalChaptersOfGivenManga,
-		enqueueChapterDownloads,
-		updateMangas
-	} from '$lib/generated';
-	import { getModalStore, popup, type PopupSettings } from '@skeletonlabs/skeleton';
+		getModalStore,
+		popup,
+		type PopupSettings
+	} from '@skeletonlabs/skeleton';
 	import { getToastStore } from '$lib/components/Toast/stores';
 	import MediaQuery from '$lib/components/MediaQuery.svelte';
 	import { screens } from '$lib/screens';
 	import IconWrapper from '$lib/components/IconWrapper.svelte';
 	import { selected, selectMode } from './LibraryStores';
 	import { ErrorHelp } from '$lib/util';
+	import { getContextClient } from '@urql/svelte';
+	import { ConditionalChaptersOfGivenManga } from '$lib/gql/Queries';
+	import { enqueueChapterDownloads, updateMangas } from '$lib/gql/Mutations';
+
+	const client = getContextClient();
 
 	export let selectAll: () => void;
 
@@ -38,15 +42,14 @@
 
 	async function removeSelectedFromLibrary() {
 		const ids = $selected.filter((item) => item).map((item) => item.id);
-		const variables = {
-			ids,
-			inLibrary: false
-		};
 		ErrorHelp(
 			'Failed to delete mangas from library',
-			updateMangas({
-				variables
-			})
+			client
+				.mutation(updateMangas, {
+					ids,
+					inLibrary: false
+				})
+				.toPromise()
 		);
 	}
 
@@ -89,7 +92,12 @@
 
 		ErrorHelp(
 			'failed to get selected mangas non-downloaded chapters',
-			AsyncConditionalChaptersOfGivenManga({ variables: { in: selectedIds, isDownloaded: false } }),
+			client
+				.query(ConditionalChaptersOfGivenManga, {
+					in: selectedIds,
+					isDownloaded: false
+				})
+				.toPromise(),
 			(result) => {
 				if (!result?.data) return;
 				const tmp = result.data;
@@ -97,7 +105,8 @@
 					message: `You are about to download ${tmp.chapters.nodes.length} chapters to your library!`,
 					action: {
 						label: 'Download',
-						response: () => downloadAllChapters(tmp.chapters.nodes.map((e) => e.id))
+						response: () =>
+							downloadAllChapters(tmp.chapters.nodes.map((e) => e.id))
 					}
 				});
 			}
@@ -107,7 +116,7 @@
 	function downloadAllChapters(ids: number[]) {
 		ErrorHelp(
 			'failed to enqueue chapters Downloads',
-			enqueueChapterDownloads({ variables: { ids } })
+			client.mutation(enqueueChapterDownloads, { ids }).toPromise()
 		);
 	}
 </script>
@@ -121,11 +130,23 @@
 					tip="Download unread chapters"
 					name="mdi:download"
 				/>
-				<TooltipIconButton on:click={handelCategory} tip="Change Categories" name="mdi:shape" />
-				<TooltipIconButton on:click={handelDelete} tip="Remove Selected" name="mdi:bin" />
+				<TooltipIconButton
+					on:click={handelCategory}
+					tip="Change Categories"
+					name="mdi:shape"
+				/>
+				<TooltipIconButton
+					on:click={handelDelete}
+					tip="Remove Selected"
+					name="mdi:bin"
+				/>
 			{/if}
 
-			<TooltipIconButton on:click={selectAll} name="mdi:select-all" tip="Select all/none" />
+			<TooltipIconButton
+				on:click={selectAll}
+				name="mdi:select-all"
+				tip="Select all/none"
+			/>
 		{:else if $selectMode}
 			<div class="card p-0" data-popup="popupClick">
 				<div class="h-12 xs:h-14 flex">
@@ -134,9 +155,21 @@
 						tip="Download unread chapters"
 						name="mdi:download"
 					/>
-					<TooltipIconButton on:click={handelCategory} tip="Change Categories" name="mdi:shape" />
-					<TooltipIconButton on:click={handelDelete} tip="Remove Selected" name="mdi:bin" />
-					<TooltipIconButton on:click={selectAll} name="mdi:select-all" tip="Select all/none" />
+					<TooltipIconButton
+						on:click={handelCategory}
+						tip="Change Categories"
+						name="mdi:shape"
+					/>
+					<TooltipIconButton
+						on:click={handelDelete}
+						tip="Remove Selected"
+						name="mdi:bin"
+					/>
+					<TooltipIconButton
+						on:click={selectAll}
+						name="mdi:select-all"
+						tip="Select all/none"
+					/>
 				</div>
 				<div class="arrow bg-surface-100-800-token" />
 			</div>
@@ -158,5 +191,9 @@
 		tip="Select Mode"
 	/>
 	<Search />
-	<TooltipIconButton on:click={handelFilter} name="mdi:filter" tip="Filter/Sort" />
+	<TooltipIconButton
+		on:click={handelFilter}
+		name="mdi:filter"
+		tip="Filter/Sort"
+	/>
 </div>

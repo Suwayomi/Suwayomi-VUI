@@ -8,20 +8,28 @@
 
 <script lang="ts">
 	import Slide from '$lib/components/Slide.svelte';
-	import type { SourcesQuery } from '$lib/generated';
-	import { Tab, TabGroup, getModalStore, localStorageStore } from '@skeletonlabs/skeleton';
+	import {
+		Tab,
+		TabGroup,
+		getModalStore,
+		localStorageStore
+	} from '@skeletonlabs/skeleton';
 	import type { Writable } from 'svelte/store';
 	import { FindLangName } from '../languages';
 	import { SpecificSourceFilter } from '../BrowseStores';
+	import { type ResultOf } from 'gql.tada';
+	import type { getSources } from '$lib/gql/Queries';
 	const modalStore = getModalStore();
 	export let langs: Set<string>;
 	export let langFilter: Writable<Set<string>>;
-	export let rawSources: SourcesQuery['sources']['nodes'] | undefined;
+	export let rawSources: ResultOf<typeof getSources>['sources']['nodes'];
 	const tabSet = localStorageStore<number>('browseTabSet', 0);
 
 	$: LangFilteredSources = rawSources?.filter((source) => {
-		console.log(source.lang, $langFilter);
-		if ($langFilter.has('pinned') && source.meta.find((e) => e.key === 'pinned')) {
+		if (
+			$langFilter.has('pinned') &&
+			source.meta.find((e) => e.key === 'pinned')
+		) {
 			return true;
 		}
 		if (!$langFilter.has(source.lang)) return false;
@@ -66,21 +74,22 @@
 					</div>
 				{:else if $tabSet === 1 && LangFilteredSources}
 					<div class="max-h-96 overflow-y-auto grid grid-cols-1 gap-1 pr-4">
-						{#each LangFilteredSources as lang}
+						{#each LangFilteredSources as sourc}
+							{@const source = sourc}
 							<Slide
 								class="outline-0 p-1 pl-2 hover:variant-glass-surface"
 								on:changeE={(e) => {
 									if (e.detail) {
-										$SpecificSourceFilter.add(lang.id);
+										$SpecificSourceFilter.add(source.id);
 										$SpecificSourceFilter = $SpecificSourceFilter;
 										return;
 									}
-									$SpecificSourceFilter.delete(lang.id);
+									$SpecificSourceFilter.delete(source.id);
 									$SpecificSourceFilter = $SpecificSourceFilter;
 								}}
-								checked={$SpecificSourceFilter.has(lang.id)}
+								checked={$SpecificSourceFilter.has(source.id)}
 							>
-								{lang.displayName}
+								{source.displayName}
 							</Slide>
 						{/each}
 					</div>

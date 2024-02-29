@@ -10,29 +10,25 @@
 	import { goto } from '$app/navigation';
 	import Slide from '$lib/components/Slide.svelte';
 	import {
-		AsyncgetManga as AsyncGetManga,
-		CategoryDoc,
-		GetMangaDoc,
+		bindTrack,
 		fetchChaptersMigration,
 		updateChapters,
 		updateMangaCategories,
 		updateMangas,
-		type CategoryQuery,
-		type GetMangaQuery,
-		type UpdateMangaCategoriesMutation,
-		bindTrack,
 		updateTrack
-	} from '$lib/generated';
-	import { bindTrackUpdater, unbindUpdater } from '$lib/util';
-	import type { ApolloCache, FetchResult } from '@apollo/client';
+	} from '$lib/gql/Mutations';
+	import { getManga } from '$lib/gql/Queries';
 	import { ProgressRadial, getModalStore } from '@skeletonlabs/skeleton';
+	import { getContextClient } from '@urql/svelte';
+	import { type ResultOf } from 'gql.tada';
 	import type { SvelteComponent } from 'svelte';
 
 	const modalStore = getModalStore();
 	export let parent: SvelteComponent;
 	export let id: number;
-	export let manga: GetMangaQuery['manga'];
+	export let manga: ResultOf<typeof getManga>['manga'];
 
+	const client = getContextClient();
 	let doChapters = true;
 	let doCategories = true;
 	let doTracking = true;
@@ -43,24 +39,33 @@
 	async function MigrateManga() {
 		MigrateLoading = true;
 		await migrationBulk();
-		await updateMangas({
-			variables: { ids: manga.id, inLibrary: false }
-		});
+		await client
+			.mutation(updateMangas, {
+				ids: [manga.id],
+				inLibrary: false
+			})
+			.toPromise();
 		MigrateLoading = false;
-		goto(`/manga/${id}`, { replaceState: true });
+		setTimeout(() => {
+			goto(`/manga/${id}`, { replaceState: true });
+		}, 1);
+		parent.onClose();
 	}
 
 	async function CopyManga() {
 		CopyLoading = true;
 		await migrationBulk();
 		CopyLoading = false;
-		goto(`/manga/${id}`, { replaceState: true });
+		setTimeout(() => {
+			goto(`/manga/${id}`, { replaceState: true });
+		}, 1);
+		parent.onClose();
 	}
 
 	async function migrationBulk() {
-		await updateMangas({
-			variables: { ids: id, inLibrary: true }
-		});
+		await client
+			.mutation(updateMangas, { ids: [id], inLibrary: true })
+			.toPromise();
 		const ToDo: Promise<void>[] = [];
 		if (doChapters) {
 			ToDo.push(CopyMangaChapters());
@@ -72,11 +77,13 @@
 			ToDo.push(CopyMangaTracking());
 		}
 		await Promise.all(ToDo);
-		parent.onClose();
 	}
 
 	async function CopyMangaChapters() {
-		const newChapters = await fetchChaptersMigration({ variables: { id } });
+		const newChapters = await client
+			.mutation(fetchChaptersMigration, { id })
+			.toPromise();
+		// const newChapters = await fetchChaptersMigration({ variables: { id } });
 		const CurrMappedToNew = manga.chapters.nodes.map((current) => {
 			if (!newChapters.data) return undefined;
 			const tmp = newChapters.data.fetchChapters.chapters.findIndex(
@@ -89,177 +96,29 @@
 			};
 		});
 
-		const areRead = CurrMappedToNew.filter((ele) => (ele ? ele.isRead : false)).map(
-			(ele) => ele?.id
-		) as number[];
-		const areBookmarked = CurrMappedToNew.filter((ele) => (ele ? ele.isBookmarked : false)).map(
-			(ele) => ele?.id
-		) as number[];
+		const areRead = CurrMappedToNew.filter((ele) =>
+			ele ? ele.isRead : false
+		).map((ele) => ele?.id) as number[];
+		const areBookmarked = CurrMappedToNew.filter((ele) =>
+			ele ? ele.isBookmarked : false
+		).map((ele) => ele?.id) as number[];
 
-		updateChapters({
-			variables: { ids: areRead, isRead: true }
+		await client.mutation(updateChapters, {
+			ids: areRead,
+			isRead: true
 		});
-		updateChapters({
-			variables: { ids: areBookmarked, isBookmarked: true }
+		await client.mutation(updateChapters, {
+			ids: areBookmarked,
+			isBookmarked: true
 		});
-	}
-
-	async function updateMangaCategoriesUpdate(
-		cache: ApolloCache<unknown>,
-		{ data }: Omit<FetchResult<UpdateMangaCategoriesMutation>, 'context'>,
-		dat: GetMangaQuery
-	): Promise<void> {
-		if (!data?.updateMangaCategories.manga.categories.nodes) return;
-		const nodes = data.updateMangaCategories.manga.categories.nodes;
-
-		const errors: Error[] = [];
-
-		//// update this mangas categories
-		try {
-			const magna = structuredClone(manga);
-			magna.categories.nodes = nodes;
-
-			cache.writeQuery({
-				query: GetMangaDoc,
-				variables: { id: manga.id },
-				data: { manga: magna }
-			});
-		} catch (e) {
-			if (e instanceof Error) errors.push(e);
-		}
-
-		//// update the categories in library
-		try {
-			if (!dat.manga) throw '';
-
-			const oldNodes = dat.manga.categories.nodes;
-			if (!oldNodes) return;
-			try {
-				const currentManga: CategoryQuery['category']['mangas']['nodes'][0] = {
-					id: id,
-					title: dat.manga.title,
-					inLibrary: dat.manga.inLibrary ?? true,
-					thumbnailUrl: dat.manga.thumbnailUrl,
-					unreadCount: dat.manga.unreadCount ?? 0,
-					downloadCount: dat.manga.downloadCount ?? 0,
-					latestFetchedChapter: dat.manga.latestFetchedChapter,
-					latestReadChapter: dat.manga.latestReadChapter,
-					latestUploadedChapter: dat.manga.latestUploadedChapter,
-					chapters: dat.manga.chapters ?? {
-						totalCount: 0
-					}
-				};
-				// add to categories that now have it
-
-				nodes.forEach((newNode) => {
-					if (oldNodes.find((oldNode) => oldNode.id === newNode.id)) return;
-					try {
-						const categoryData = structuredClone(
-							cache.readQuery<CategoryQuery>({
-								query: CategoryDoc,
-								variables: { id: newNode.id }
-							})
-						);
-						if (!categoryData) return;
-						const category = categoryData.category;
-						category.mangas.nodes.push(currentManga);
-
-						cache.writeQuery({
-							query: CategoryDoc,
-							variables: { id: newNode.id },
-							data: { category }
-						});
-					} catch {}
-				});
-				// add to 0 if now in default
-				if (nodes.length === 0 && oldNodes.length > 0) {
-					try {
-						const categoryData = structuredClone(
-							cache.readQuery<CategoryQuery>({
-								query: CategoryDoc,
-								variables: { id: 0 }
-							})
-						);
-
-						if (!categoryData) return;
-						const category = categoryData.category;
-
-						category.mangas.nodes.push(currentManga);
-
-						cache.writeQuery({
-							query: CategoryDoc,
-							variables: { id: 0 },
-							data: { category }
-						});
-					} catch {}
-				}
-			} catch {}
-
-			//remove from categories that no longer have it
-			oldNodes.forEach((oldNode) => {
-				if (nodes.find((newNode) => oldNode.id === newNode.id)) return;
-				try {
-					const categoryData = structuredClone(
-						cache.readQuery<CategoryQuery>({
-							query: CategoryDoc,
-							variables: { id: oldNode.id }
-						})
-					);
-
-					if (!categoryData) return;
-					const category = categoryData.category;
-
-					category.mangas.nodes = category.mangas.nodes.filter((e) => e.id !== dat.manga.id);
-
-					cache.writeQuery({
-						query: CategoryDoc,
-						variables: { id: oldNode.id },
-						data: { category }
-					});
-				} catch {}
-			});
-
-			// remove from 0 if no longer in default
-			if (oldNodes.length === 0 && nodes.length > 0) {
-				//remove from default
-				try {
-					const categoryData = structuredClone(
-						cache.readQuery<CategoryQuery>({
-							query: CategoryDoc,
-							variables: { id: 0 }
-						})
-					);
-
-					if (!categoryData) return;
-					const category = categoryData.category;
-
-					category.mangas.nodes = category.mangas.nodes.filter((e) => e.id !== dat.manga.id);
-
-					cache.writeQuery({
-						query: CategoryDoc,
-						variables: { id: 0 },
-						data: { category }
-					});
-				} catch {}
-			}
-		} catch {}
-
-		if (errors.length > 0) {
-			console.error(errors);
-			throw new Error('check console');
-		}
 	}
 
 	async function CopyMangaCategories() {
 		const categories = manga.categories.nodes.map((ele) => ele.id);
-		const { data: dat } = await AsyncGetManga({ variables: { id } });
-		await updateMangaCategories({
-			variables: {
-				id: id,
-				addTo: categories,
-				clear: true
-			},
-			update: (a, b) => updateMangaCategoriesUpdate(a, b, dat)
+		await client.mutation(updateMangaCategories, {
+			id: id,
+			addTo: categories,
+			clear: true
 		});
 	}
 
@@ -268,23 +127,34 @@
 		await Promise.all(
 			trackers.map(async (tracker) => {
 				try {
-					await updateTrack({
-						variables: {
-							input: {
-								unbind: true,
-								recordId: tracker.id
-							}
-						},
-						update: (a, b) => unbindUpdater(a, b, id, tracker.trackerId)
+					await client.mutation(updateTrack, {
+						input: {
+							unbind: true,
+							recordId: tracker.id
+						}
 					});
-					await bindTrack({
-						variables: {
-							mangaId: id,
-							trackerId: tracker.trackerId,
-							remoteId: tracker.remoteId
-						},
-						update: (a, b) => bindTrackUpdater(a, b, id, tracker.trackerId)
+					// await updateTrack({
+					// 	variables: {
+					// 		input: {
+					// 			unbind: true,
+					// 			recordId: (tracker).id
+					// 		}
+					// 	},
+					// 	update: (a, b) => unbindUpdater(a, b, id, tracker.trackerId)
+					// });
+					await client.mutation(bindTrack, {
+						mangaId: id,
+						trackerId: tracker.trackerId,
+						remoteId: tracker.remoteId
 					});
+					// await bindTrack({
+					// 	variables: {
+					// 		mangaId: id,
+					// 		trackerId: (tracker).trackerId,
+					// 		remoteId: (tracker).remoteId
+					// 	},
+					// 	update: (a, b) => bindTrackUpdater(a, b, id, tracker.trackerId)
+					// });
 				} catch {}
 			})
 		);
@@ -296,13 +166,22 @@
 		<h1 class="h3 pt-4 pl-4">Select data to include</h1>
 		<div class="pl-4 border-y border-surface-700">
 			<div class="max-h-96 overflow-y-auto grid grid-cols-1 gap-1 pr-4">
-				<Slide class="outline-0 p-1 pl-2 hover:variant-glass-surface" bind:checked={doChapters}>
+				<Slide
+					class="outline-0 p-1 pl-2 hover:variant-glass-surface"
+					bind:checked={doChapters}
+				>
 					Chapters
 				</Slide>
-				<Slide class="outline-0 p-1 pl-2 hover:variant-glass-surface" bind:checked={doCategories}>
+				<Slide
+					class="outline-0 p-1 pl-2 hover:variant-glass-surface"
+					bind:checked={doCategories}
+				>
 					Categories
 				</Slide>
-				<Slide class="outline-0 p-1 pl-2 hover:variant-glass-surface" bind:checked={doTracking}>
+				<Slide
+					class="outline-0 p-1 pl-2 hover:variant-glass-surface"
+					bind:checked={doTracking}
+				>
 					Tracking
 				</Slide>
 			</div>
@@ -316,7 +195,10 @@
 				show entry
 			</a>
 			<div>
-				<button on:click={CopyManga} class="btn variant-filled-surface hover:variant-glass-surface">
+				<button
+					on:click={CopyManga}
+					class="btn variant-filled-surface hover:variant-glass-surface"
+				>
 					{#if CopyLoading}
 						Copying<ProgressRadial class="ml-1 h-4 aspect-square w-auto" />
 					{:else}

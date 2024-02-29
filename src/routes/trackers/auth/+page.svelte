@@ -7,16 +7,19 @@
 -->
 
 <script lang="ts">
-	import { loginTrackerOAuth } from '$lib/generated';
+	import { loginTrackerOAuth } from '$lib/gql/Mutations';
+	import { getContextClient } from '@urql/svelte';
+
+	const client = getContextClient();
 
 	async function login() {
 		const url = new URL(window.location.href);
-		const state: { trackerId: number } = JSON.parse(url.searchParams.get('state') ?? '{}');
-		await loginTrackerOAuth({
-			variables: {
-				callbackUrl: url.href,
-				trackerId: state.trackerId
-			}
+		const state: { trackerId: number } = JSON.parse(
+			url.searchParams.get('state') ?? '{}'
+		);
+		client.mutation(loginTrackerOAuth, {
+			callbackUrl: url.href,
+			trackerId: state.trackerId
 		});
 		localStorage.setItem('VUI3_TRACKER_LOGIN', 'true');
 		window.close();

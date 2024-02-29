@@ -55,7 +55,8 @@
 	const cBase = 'inline-block';
 	const cLabel = 'unstyled flex items-center';
 	const cTrack = 'flex transition-all duration-[200ms] cursor-pointer';
-	const cThumb = 'w-[50%] h-full scale-[0.8] transition-all duration-[200ms] shadow';
+	const cThumb =
+		'w-[50%] h-full scale-[0.8] transition-all duration-[200ms] shadow';
 
 	// Set track size
 	let trackSize: string;
@@ -180,9 +181,14 @@
 			disabled={$$props.disabled}
 		/>
 		<!-- Label -->
-		{#if $$slots.default}<div class="slide-toggle-text flex-1 {labelClass}"><slot /></div>{/if}
+		{#if $$slots.default}<div class="slide-toggle-text flex-1 {labelClass}">
+				<slot />
+			</div>{/if}
 		<!-- Slider Track/Thumb -->
-		<div class="slide-toggle-track {classesTrack}" class:cursor-not-allowed={$$props.disabled}>
+		<div
+			class="slide-toggle-track {classesTrack}"
+			class:cursor-not-allowed={$$props.disabled}
+		>
 			<div
 				class="slide-toggle-thumb text-surface-500 {classesThumb} aspect-square"
 				class:cursor-not-allowed={$$props.disabled}

@@ -30,7 +30,10 @@
 			class="h-full [&>.tab-interface]:h-full [&>div>.tab-label]:h-full"
 		>
 			<div class="w-full h-full flex flex-col items-center">
-				<IconWrapper name={Loc.icon} class="max-h-full w-full grow aspect-square" />
+				<IconWrapper
+					name={Loc.icon}
+					class="max-h-full w-full grow aspect-square"
+				/>
 				<span class="text-sm">{Loc.title}</span>
 			</div>
 		</TabAnchor>

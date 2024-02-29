@@ -72,7 +72,8 @@ function toastService() {
 				const selectedToast = tStore[index];
 				if (selectedToast) {
 					// Trigger Callback
-					if (selectedToast.callback) selectedToast.callback({ id, status: 'closed' });
+					if (selectedToast.callback)
+						selectedToast.callback({ id, status: 'closed' });
 					// Clear timeout
 					if (selectedToast.timeoutId) clearTimeout(selectedToast.timeoutId);
 					// Remove
@@ -122,7 +123,8 @@ function toastService() {
 		/** Cancel remain visible on leave */
 		unfreeze: (index: number) =>
 			update((tStore) => {
-				if (tStore.length > 0) tStore[index].timeoutId = handleAutoHide(tStore[index]);
+				if (tStore.length > 0)
+					tStore[index].timeoutId = handleAutoHide(tStore[index]);
 				return tStore;
 			}),
 		/** Remove all toasts from queue */

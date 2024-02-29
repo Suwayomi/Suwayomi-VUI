@@ -7,10 +7,10 @@
 -->
 
 <script lang="ts">
-	import type { SourceQuery } from '$lib/generated';
-
+	import type { getSource } from '$lib/gql/Queries';
+	import type { ResultOf } from 'gql.tada';
 	export let filter: Extract<
-		SourceQuery['source']['filters'][0],
+		ResultOf<typeof getSource>['source']['filters'][0],
 		{ __typename?: 'HeaderFilter' | undefined }
 	>;
 </script>
