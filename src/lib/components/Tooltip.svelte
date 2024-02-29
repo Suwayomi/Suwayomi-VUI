@@ -8,7 +8,11 @@
 
 <script lang="ts">
 	import type { OffsetOptions, Placement } from '@floating-ui/dom';
-	import { popup, type CssClasses, type PopupSettings } from '@skeletonlabs/skeleton';
+	import {
+		popup,
+		type CssClasses,
+		type PopupSettings
+	} from '@skeletonlabs/skeleton';
 	export let tip: string;
 	export let tipclass: CssClasses = 'z-50';
 	export let placement: Placement = 'top';

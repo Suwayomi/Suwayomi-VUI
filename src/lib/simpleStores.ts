@@ -4,26 +4,21 @@
 // License, v. 2.0. If a copy of the MPL was not distributed with this
 // file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
-import { get, writable } from 'svelte/store';
 import { localStorageStore } from '@skeletonlabs/skeleton';
+import { queryStore, type OperationResultState } from '@urql/svelte';
+import type { ResultOf } from 'gql.tada';
+import { get, writable } from 'svelte/store';
+import type { ToastStore } from './components/Toast/types';
 import {
-	metas,
-	MetasDoc,
-	setGlobalMeta,
-	type MetasQuery,
 	deleteGlobalMeta,
 	deleteMangaMeta,
-	setMangaMeta,
-	getManga,
-	GetMangaDoc,
-	type GetMangaQuery
-} from './generated';
+	setGlobalMeta,
+	setMangaMeta
+} from './gql/Mutations';
+import { getManga, metas } from './gql/Queries';
+import { client } from './gql/graphqlClient';
 import type { presetConst } from './presets';
-import type { ApolloCache } from '@apollo/client';
-import { cache } from './apollo';
 import { getObjectEntries, getObjectKeys, type TriState } from './util';
-import type { ApolloQueryResult } from '@apollo/client';
-import type { ToastStore } from './components/Toast/types';
 
 export const toastStore = writable<ToastStore | null>(null);
 
@@ -112,32 +107,35 @@ const trueDefaults = {
 
 type globalMeta = typeof trueDefaults;
 
-function GlobalMetaUpdater(cache: ApolloCache<unknown>, key: string, value: string) {
-	const metasData = structuredClone(
-		cache.readQuery<MetasQuery>({
-			query: MetasDoc
-		})
-	);
-	if (!metasData) return;
-	const filteredNodes = metasData.metas.nodes.filter((e) => e.key !== key);
-	const updatedNode = {
-		key,
-		value
-	};
+// function GlobalMetaUpdater(cache: ApolloCache<unknown>, key: string, value: string) {
+// 	const metasData = structuredClone(
+// 		cache.readQuery<MetasQuery>({
+// 			query: MetasDoc
+// 		})
+// 	);
+// 	if (!metasData) return;
+// 	const filteredNodes = metasData.metas.nodes.filter((e) => e.key !== key);
+// 	const updatedNode = {
+// 		key,
+// 		value
+// 	};
 
-	const updatedMetas = {
-		...metas,
-		nodes: [...filteredNodes, updatedNode]
-	};
+// 	const updatedMetas = {
+// 		...metas,
+// 		nodes: [...filteredNodes, updatedNode]
+// 	};
 
-	cache.writeQuery({
-		query: MetasDoc,
-		data: { metas: updatedMetas }
-	});
-}
+// 	cache.writeQuery({
+// 		query: MetasDoc,
+// 		data: { metas: updatedMetas }
+// 	});
+// }
 
 function GlobalMeta() {
-	const Meta = metas({});
+	const Meta = queryStore({
+		client,
+		query: metas
+	});
 	const store = localStorageStore('GlobalMeta', trueDefaults);
 
 	if (get(store).mangaUpdatesTracking === undefined) {
@@ -155,12 +153,14 @@ function GlobalMeta() {
 
 	function extractGlobalMeta(
 		value: typeof trueDefaults,
-		queryResult: ApolloQueryResult<MetasQuery>
+		queryResult: OperationResultState<ResultOf<typeof metas>>
 	): globalMeta {
 		const globalMetaCopy = { ...get(store) } as globalMeta;
 		const metas = queryResult.data?.metas?.nodes || [];
 		getObjectKeys(value).forEach(<T extends keyof globalMeta>(key: T) => {
-			const foundMeta = metas.find((node) => node.key.replace('VUI3_', '') === key);
+			const foundMeta = metas.find(
+				(node) => node.key.replace('VUI3_', '') === key
+			);
 			if (foundMeta) {
 				globalMetaCopy[key] = JSON.parse(foundMeta.value) as globalMeta[T];
 			}
@@ -172,19 +172,23 @@ function GlobalMeta() {
 		for (const [key, value] of getObjectEntries(val)) {
 			const stringValue = JSON.stringify(value);
 			const metaKey = `VUI3_${key}`;
-			const existingValue = get(Meta).data.metas?.nodes.find((e) => e.key === metaKey)?.value;
+			const existingValue = get(Meta).data?.metas?.nodes.find(
+				(e) => e.key === metaKey
+			)?.value;
 
 			if (stringValue !== existingValue) {
 				try {
-					GlobalMetaUpdater(cache, metaKey, stringValue);
+					// GlobalMetaUpdater(cache, metaKey, stringValue);
 
 					const variables = { key: metaKey, value: stringValue };
-					const update = (a: ApolloCache<unknown>) => GlobalMetaUpdater(a, metaKey, stringValue);
+					// const update = (a: ApolloCache<unknown>) => GlobalMetaUpdater(a, metaKey, stringValue);
 
 					if (stringValue !== JSON.stringify(trueDefaults[key])) {
-						await setGlobalMeta({ variables, update });
+						await client.mutation(setGlobalMeta, variables);
+						// await setGlobalMeta({ variables, update });
 					} else if (existingValue !== undefined) {
-						await deleteGlobalMeta({ variables, update });
+						await client.mutation(deleteGlobalMeta, variables);
+						// await deleteGlobalMeta({ variables, update });
 					}
 				} catch {}
 			}
@@ -206,33 +210,37 @@ function GlobalMeta() {
 
 export const Meta = GlobalMeta();
 
-function MangaMetaUpdater(cache: ApolloCache<unknown>, key: string, value: string, id: number) {
-	const query = GetMangaDoc;
-	const mangaData = structuredClone(
-		cache.readQuery<GetMangaQuery>({
-			query,
-			variables: { id }
-		})
-	);
-	if (!mangaData) return;
+// function MangaMetaUpdater(cache: ApolloCache<unknown>, key: string, value: string, id: number) {
+// 	const query = GetMangaDoc;
+// 	const mangaData = structuredClone(
+// 		cache.readQuery<GetMangaQuery>({
+// 			query,
+// 			variables: { id }
+// 		})
+// 	);
+// 	if (!mangaData) return;
 
-	const updatedMeta = mangaData.manga.meta.filter((e) => e.key !== key);
-	updatedMeta.push({
-		key,
-		value
-	});
+// 	const updatedMeta = mangaData.manga.meta.filter((e) => e.key !== key);
+// 	updatedMeta.push({
+// 		key,
+// 		value
+// 	});
 
-	mangaData.manga.meta = updatedMeta;
+// 	mangaData.manga.meta = updatedMeta;
 
-	cache.writeQuery({
-		query,
-		data: mangaData,
-		variables: { id }
-	});
-}
+// 	cache.writeQuery({
+// 		query,
+// 		data: mangaData,
+// 		variables: { id }
+// 	});
+// }
 
 export function MangaMeta(id: number) {
-	const MMeta = getManga({ variables: { id } });
+	const MMeta = queryStore({
+		client,
+		query: getManga,
+		variables: { id }
+	});
 	const store = writable(get(Meta).mangaMetaDefaults);
 
 	MMeta.subscribe((queryResult) => {
@@ -243,12 +251,14 @@ export function MangaMeta(id: number) {
 
 	function extractMangaMeta(
 		newMeta: mangaMeta,
-		queryResult: ApolloQueryResult<GetMangaQuery>
+		queryResult: OperationResultState<ResultOf<typeof getManga>>
 	): mangaMeta {
 		const clonedStore = { ...get(store) } as mangaMeta;
-		const metas = queryResult.data.manga?.meta || [];
+		const metas = queryResult.data?.manga.meta || [];
 		getObjectKeys(newMeta).forEach(<T extends keyof mangaMeta>(key: T) => {
-			const matchedMeta = metas.find((meta) => meta.key.replace('VUI3_', '') === key);
+			const matchedMeta = metas.find(
+				(meta) => meta.key.replace('VUI3_', '') === key
+			);
 			if (!matchedMeta) return;
 			clonedStore[key] = JSON.parse(matchedMeta.value) as mangaMeta[T];
 		});
@@ -259,18 +269,17 @@ export function MangaMeta(id: number) {
 		for (const [key, val] of getObjectEntries(value)) {
 			const jsonValue = JSON.stringify(val);
 			const cacheKey = `VUI3_${key}`;
-			const cachedValue = get(MMeta).data.manga?.meta.find((e) => e.key === cacheKey)?.value;
+			const cachedValue = get(MMeta).data?.manga?.meta.find(
+				(e) => e.key === cacheKey
+			)?.value;
 
 			if (jsonValue !== cachedValue) {
 				try {
-					MangaMetaUpdater(cache, cacheKey, jsonValue, id);
-
 					const variables = { key: cacheKey, value: jsonValue, id };
-
 					if (val !== get(Meta).mangaMetaDefaults[key]) {
-						await setMangaMeta({ variables });
+						await client.mutation(setMangaMeta, variables);
 					} else if (cachedValue !== undefined) {
-						await deleteMangaMeta({ variables });
+						await client.mutation(deleteMangaMeta, variables);
 					}
 				} catch {}
 			}

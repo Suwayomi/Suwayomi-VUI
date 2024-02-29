@@ -19,7 +19,9 @@
 	<div class="card p-0 w-modal shadow-xl space-y-4 rounded-lg max-h-screen">
 		<h1 class="h3 pt-4 pl-4">Extension Repos</h1>
 		<div class="border-y border-surface-700">
-			<div class="max-h-96 overflow-y-auto grid grid-cols-1 gap-1 p-1 space-y-1">
+			<div
+				class="max-h-96 overflow-y-auto grid grid-cols-1 gap-1 p-1 space-y-1"
+			>
 				<div class="flex flex-nowrap justify-between items-center space-x-1">
 					<input
 						type="text"
@@ -38,7 +40,9 @@
 				</div>
 				<div class="w-full space-y-1">
 					{#each repos as value}
-						<div class="flex flex-nowrap justify-between items-center space-x-1">
+						<div
+							class="flex flex-nowrap justify-between items-center space-x-1"
+						>
 							<div>
 								{value}
 							</div>

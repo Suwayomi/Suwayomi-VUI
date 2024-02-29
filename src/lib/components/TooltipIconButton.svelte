@@ -20,6 +20,12 @@
 	export let offset: OffsetOptions = 0;
 </script>
 
-<Tooltip {offset} {tipclass} {placement} {tip} class=" cursor-pointer h-full {$$props.class}">
+<Tooltip
+	{offset}
+	{tipclass}
+	{placement}
+	{tip}
+	class=" cursor-pointer h-full {$$props.class}"
+>
 	<IconButton {name} {hover} on:click />
 </Tooltip>

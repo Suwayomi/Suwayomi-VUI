@@ -7,44 +7,52 @@
 -->
 
 <script lang="ts">
-	import { cache } from '$lib/apollo';
 	import IconWrapper from '$lib/components/IconWrapper.svelte';
 	import IntersectionObserver from '$lib/components/IntersectionObserver.svelte';
 	import MediaQuery from '$lib/components/MediaQuery.svelte';
 	import TooltipIconButton from '$lib/components/TooltipIconButton.svelte';
-	import {
-		AsyncgetSingleChapter as AsyncGetSingleChapter,
-		GetMangaDoc,
-		deleteDownloadedChapters,
-		downloadsOnChapters,
-		// downloadsOnChapters,
-		enqueueChapterDownloads,
-		updateChapters,
-		type DownloadsOnChaptersSubscription,
-		type GetMangaQuery
-	} from '$lib/generated';
 	import { longPress } from '$lib/press';
 	import { screens } from '$lib/screens';
 	import { ChapterSort, ChapterTitle, MangaMeta } from '$lib/simpleStores';
-	// import { MangaUpdates } from '$lib/tracking/mangaUpdates';
-	import { HelpDoSelect, HelpSelectAll, HelpUpdateChapters, dlreabook } from '$lib/util';
-	import type { ApolloQueryResult } from '@apollo/client';
+	import {
+		HelpDoSelect,
+		HelpSelectAll,
+		HelpUpdateChapters,
+		dlreabook
+	} from '$lib/util';
 	import { getModalStore, popup } from '@skeletonlabs/skeleton';
 	import { fade } from 'svelte/transition';
 	import ChaptersFilterModal from './ChaptersFilterModal.svelte';
 	import DownloadProgressRadial from './DownloadProgressRadial.svelte';
 	import { selected, selectMode, type chaptertype } from './mangaStores';
+	import {
+		getContextClient,
+		subscriptionStore,
+		type OperationResultStore,
+		type Pausable
+	} from '@urql/svelte';
+	import { getSingleChapter, type getManga } from '$lib/gql/Queries';
+	import { type ResultOf } from 'gql.tada';
+	import { downloadsOnChapters } from '$lib/gql/Subscriptions';
+	import {
+		deleteDownloadedChapters,
+		enqueueChapterDownloads,
+		updateChapters
+	} from '$lib/gql/Mutations';
 
-	export let manga: ApolloQueryResult<GetMangaQuery> | undefined;
+	export let manga: OperationResultStore<ResultOf<typeof getManga>> & Pausable;
 	export let MangaID: number;
 	export let mangaMeta: ReturnType<typeof MangaMeta>;
 
+	const client = getContextClient();
 	const modalStore = getModalStore();
-	const downloads = downloadsOnChapters({
-		fetchPolicy: 'network-only'
+	const downloads = subscriptionStore({
+		client,
+		query: downloadsOnChapters
 	});
 
-	let lastDownloads: DownloadsOnChaptersSubscription | undefined = undefined;
+	let lastDownloads: ResultOf<typeof downloadsOnChapters> | undefined =
+		undefined;
 
 	$: if ($downloads?.data?.downloadChanged) {
 		checkinNeedRefresh();
@@ -53,51 +61,40 @@
 
 	function checkinNeedRefresh() {
 		lastDownloads?.downloadChanged.queue
-			.filter((e) => manga?.data.manga.chapters.nodes.find((ee) => ee.id === e.chapter.id))
+			.filter((e) =>
+				$manga?.data?.manga.chapters.nodes.find((ee) => ee.id === e.chapter.id)
+			)
 			.forEach((element) => {
 				const existingDownload = $downloads?.data?.downloadChanged.queue.find(
 					(e) => e.chapter.id === element.chapter.id
 				);
 				if (!existingDownload) {
-					const fetchChapter = AsyncGetSingleChapter({
-						variables: { id: element.chapter.id },
-						fetchPolicy: 'network-only'
-					});
-					fetchChapter.then((e) => {
-						const mangaData = structuredClone(
-							cache.readQuery<GetMangaQuery>({
-								query: GetMangaDoc,
-								variables: { id: MangaID }
-							})
-						);
-						if (!mangaData || !mangaData.manga) return;
-						const mga = mangaData.manga;
-
-						mga.chapters.nodes = mga.chapters.nodes.filter((ee) => ee.id !== e.data.chapter.id);
-						mga.chapters.nodes.push(e.data.chapter);
-						cache.writeQuery({
-							query: GetMangaDoc,
-							variables: { id: MangaID },
-							data: { manga: mga }
-						});
-					});
+					client
+						.query(
+							getSingleChapter,
+							{ id: element.chapter.id },
+							{ requestPolicy: 'network-only' }
+						)
+						.toPromise();
 				}
 			});
 	}
 
-	$: chaptersInfo = manga?.data.manga?.chapters.nodes as
-		| GetMangaQuery['manga']['chapters']['nodes']
-		| undefined;
+	$: chaptersInfo = $manga?.data?.manga?.chapters.nodes;
 
 	$: filteredChapters = chaptersInfo?.filter((chapter) => {
 		if ($mangaMeta.ChapterUnread === 1 && chapter.isRead) return false;
 		if ($mangaMeta.ChapterUnread === 2 && !chapter.isRead) return false;
 
-		if ($mangaMeta.ChapterDownloaded === 1 && !chapter.isDownloaded) return false;
-		if ($mangaMeta.ChapterDownloaded === 2 && chapter.isDownloaded) return false;
+		if ($mangaMeta.ChapterDownloaded === 1 && !chapter.isDownloaded)
+			return false;
+		if ($mangaMeta.ChapterDownloaded === 2 && chapter.isDownloaded)
+			return false;
 
-		if ($mangaMeta.ChapterBookmarked === 1 && !chapter.isBookmarked) return false;
-		if ($mangaMeta.ChapterBookmarked === 2 && chapter.isBookmarked) return false;
+		if ($mangaMeta.ChapterBookmarked === 1 && !chapter.isBookmarked)
+			return false;
+		if ($mangaMeta.ChapterBookmarked === 2 && chapter.isBookmarked)
+			return false;
 		return true;
 	});
 
@@ -129,7 +126,6 @@
 	let chapterSideElement: HTMLDivElement | undefined;
 
 	async function handelPrevRead(chapter: chaptertype) {
-		if (!manga) return;
 		if (!sortedChapters) return;
 		const ind = sortedChapters?.findIndex((e) => e.id === chapter.id);
 		const chapters = sortedChapters.slice(ind, sortedChapters.length);
@@ -140,41 +136,46 @@
 				chapters.reduce((a, c) => {
 					return c.chapterNumber > a ? c.chapterNumber : a;
 				}, 0)
-			) <= HighestChapterNumber(manga)
+			) <= HighestChapterNumber()
 		) {
-			updateChapters({ variables: { isRead: true, ids: ids } });
+			client.mutation(updateChapters, { isRead: true, ids }).toPromise();
 			return;
 		}
-		await updateChapters({ variables: { isRead: true, ids: ids } });
-		// updateTracker();
+		await client.mutation(updateChapters, { isRead: true, ids }).toPromise();
 	}
 
-	function HighestChapterNumber(manga: ApolloQueryResult<GetMangaQuery>) {
+	function HighestChapterNumber() {
 		return Math.floor(
-			manga.data.manga.chapters.nodes.reduce((a, c) => {
+			$manga.data?.manga.chapters.nodes?.reduce((a, c) => {
 				return c.isRead && c.chapterNumber > a ? c.chapterNumber : a;
-			}, 0)
+			}, 0) ?? 0
 		);
 	}
 
 	async function handelRead(chapter: chaptertype) {
 		if (!manga) return;
-		if (Math.floor(chapter.chapterNumber) <= HighestChapterNumber(manga)) {
-			updateChapters({ variables: { isRead: true, ids: chapter.id } });
+		if (Math.floor(chapter.chapterNumber) <= HighestChapterNumber()) {
+			client
+				.mutation(updateChapters, { isRead: true, ids: [chapter.id] })
+				.toPromise();
 			return;
 		}
-		await updateChapters({ variables: { isRead: true, ids: chapter.id } });
-		// updateTracker();
+		await client
+			.mutation(updateChapters, { isRead: true, ids: [chapter.id] })
+			.toPromise();
 	}
 
 	async function handelUnRead(chapter: chaptertype) {
 		if (!manga) return '';
-		if (Math.floor(chapter.chapterNumber) !== HighestChapterNumber(manga)) {
-			updateChapters({ variables: { isRead: false, ids: chapter.id } });
+		if (Math.floor(chapter.chapterNumber) !== HighestChapterNumber()) {
+			client
+				.mutation(updateChapters, { isRead: false, ids: [chapter.id] })
+				.toPromise();
 			return;
 		}
-		await updateChapters({ variables: { isRead: false, ids: chapter.id } });
-		// updateTracker();
+		await client
+			.mutation(updateChapters, { isRead: false, ids: [chapter.id] })
+			.toPromise();
 	}
 
 	function LongHandler() {
@@ -191,7 +192,7 @@
 	}
 </script>
 
-{#if !manga || manga.loading}
+{#if !$manga || $manga.fetching}
 	<div
 		class="w-full md:w-1/2
 			md:overflow-y-auto overflow-x-hidden max-h-full md:absolute md:right-0 md:bottom-0 md:top-0"
@@ -212,23 +213,16 @@
 			</div>
 		{/each}
 	</div>
-{:else if manga.error}
+{:else if $manga.error}
 	<div
 		bind:this={chapterSideElement}
 		id="chapterSideElement"
-		class="w-full md:w-1/2 md:overflow-y-auto max-h-full md:absolute md:right-0 md:bottom-0 md:top-0"
+		class="w-full md:w-1/2 md:overflow-y-auto max-h-full md:absolute md:right-0 md:bottom-0 md:top-0 whitespace-pre-wrap"
 	>
-		Error loading chapters: {JSON.stringify(manga.error)}
-	</div>
-{:else if manga.errors}
-	<div
-		bind:this={chapterSideElement}
-		id="chapterSideElement"
-		class="w-full md:w-1/2 md:overflow-y-auto max-h-full md:absolute md:right-0 md:bottom-0 md:top-0"
-	>
-		Errors loading chapters: {JSON.stringify(manga.errors)}
+		Error loading chapters: {JSON.stringify($manga.error, null, 4)}
 	</div>
 {:else if sortedChapters}
+	{@const mangaFrag = $manga.data?.manga}
 	<div
 		bind:this={chapterSideElement}
 		id="chapterSideElement"
@@ -272,7 +266,8 @@
 						{/if}
 						<TooltipIconButton
 							class="text-surface-700 dark:text-surface-300"
-							on:click={() => HelpSelectAll(selectMode, selected, sortedChapters)}
+							on:click={() =>
+								HelpSelectAll(selectMode, selected, sortedChapters)}
 							name="mdi:select-all"
 							tip="Select all/none"
 						/>
@@ -297,7 +292,8 @@
 									HelpUpdateChapters(dlreabook.download, selected);
 								}}
 							>
-								<IconWrapper name="mdi:download" class="mr-2" />download / delete
+								<IconWrapper name="mdi:download" class="mr-2" />download /
+								delete
 							</button>
 							<button
 								class="text-2xl hover:variant-glass-surface w-full p-4 flex items-center justify-start"
@@ -305,7 +301,10 @@
 									HelpUpdateChapters(dlreabook.read, selected);
 								}}
 							>
-								<IconWrapper name="mdi:book-open-page-variant-outline" class="mr-2" />Un/Read
+								<IconWrapper
+									name="mdi:book-open-page-variant-outline"
+									class="mr-2"
+								/>Un/Read
 							</button>
 							<button
 								class="text-2xl hover:variant-glass-surface w-full p-4 flex items-center justify-start"
@@ -317,7 +316,8 @@
 							</button>
 							<button
 								class="text-2xl hover:variant-glass-surface w-full rounded-b-lg p-4 flex items-center justify-start"
-								on:click={() => HelpSelectAll(selectMode, selected, sortedChapters)}
+								on:click={() =>
+									HelpSelectAll(selectMode, selected, sortedChapters)}
 							>
 								<IconWrapper name="mdi:select-all" class="mr-2" />Select all
 							</button>
@@ -345,7 +345,9 @@
 				<IntersectionObserver
 					let:intersecting
 					class="h-20 relative"
-					root={(matches ? chapterSideElement : document.querySelector('#page')) ?? undefined}
+					root={(matches
+						? chapterSideElement
+						: document.querySelector('#page')) ?? undefined}
 					top={400}
 					bottom={400}
 				>
@@ -355,13 +357,19 @@
 							class="card variant-glass p-2 flex items-center space-x-1 h-full relative"
 							use:longPress
 							on:longPress={() => $selectMode || LongHandler()}
-							href="/manga/{manga.data.manga.id}/chapter/{chapter.id}"
+							href="/manga/{mangaFrag?.id}/chapter/{chapter.id}"
 							on:click={(e) => {
 								if (e.ctrlKey) return;
 								if ($selectMode) {
 									e.preventDefault();
 									e.stopPropagation();
-									lastSelected = HelpDoSelect(chapter, e, lastSelected, sortedChapters, selected);
+									lastSelected = HelpDoSelect(
+										chapter,
+										e,
+										lastSelected,
+										sortedChapters,
+										selected
+									);
 								}
 							}}
 						>
@@ -380,7 +388,7 @@
 								<div
 									class="w-full line-clamp-1 font-light text-sm md:text-base"
 									title="Fetched Date: {new Date(
-										chapter.fetchedAt * 1000
+										parseInt(chapter.fetchedAt) * 1000
 									).toLocaleString()}&#013;Upload Date: {new Date(
 										parseInt(chapter.uploadDate)
 									).toLocaleString()}"
@@ -388,8 +396,10 @@
 									{new Date(
 										$mangaMeta.ChapterFetchUpload
 											? parseInt(chapter.uploadDate)
-											: chapter.fetchedAt * 1000
-									).toLocaleDateString()}{chapter.isDownloaded ? ' • Downloaded' : ''}
+											: parseInt(chapter.fetchedAt) * 1000
+									).toLocaleDateString()}{chapter.isDownloaded
+										? ' • Downloaded'
+										: ''}
 								</div>
 							</div>
 
@@ -429,7 +439,11 @@
 								{#if chapter.isDownloaded}
 									<button
 										on:click={() => {
-											deleteDownloadedChapters({ variables: { ids: chapter.id } });
+											client
+												.mutation(deleteDownloadedChapters, {
+													ids: [chapter.id]
+												})
+												.toPromise();
 										}}
 										class="variant-glass hover:variant-soft p-2 cursor-pointer select-none w-full"
 									>
@@ -437,7 +451,12 @@
 									</button>
 								{:else}
 									<button
-										on:click={() => enqueueChapterDownloads({ variables: { ids: chapter.id } })}
+										on:click={() =>
+											client
+												.mutation(enqueueChapterDownloads, {
+													ids: [chapter.id]
+												})
+												.toPromise()}
 										class="variant-glass hover:variant-soft p-2 cursor-pointer select-none w-full"
 									>
 										download
@@ -446,7 +465,12 @@
 								{#if chapter.isBookmarked}
 									<button
 										on:click={() =>
-											updateChapters({ variables: { isBookmarked: false, ids: chapter.id } })}
+											client
+												.mutation(updateChapters, {
+													isBookmarked: false,
+													ids: [chapter.id]
+												})
+												.toPromise()}
 										class="variant-glass hover:variant-soft p-2 cursor-pointer select-none w-full"
 									>
 										unbookmark
@@ -454,7 +478,12 @@
 								{:else}
 									<button
 										on:click={() =>
-											updateChapters({ variables: { isBookmarked: true, ids: chapter.id } })}
+											client
+												.mutation(updateChapters, {
+													isBookmarked: true,
+													ids: [chapter.id]
+												})
+												.toPromise()}
 										class="variant-glass hover:variant-soft p-2 cursor-pointer select-none w-full"
 									>
 										bookmark
@@ -492,7 +521,7 @@
 	{#if sortedChapters.filter((e) => !e.isRead).length}
 		<MediaQuery query="(min-width: {screens.md})" let:matches>
 			<a
-				href="/manga/{manga.data.manga.id}/chapter/{sortedChapters
+				href="/manga/{mangaFrag?.id}/chapter/{sortedChapters
 					.filter((e) => !e.isRead)
 					.toSorted((a, b) => (a.sourceOrder > b.sourceOrder ? 1 : -1))[0].id}"
 				class="btn variant-filled-primary hover:variant-glass-primary fixed {matches

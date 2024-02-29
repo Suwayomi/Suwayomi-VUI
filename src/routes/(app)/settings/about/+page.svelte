@@ -8,13 +8,14 @@
 
 <script lang="ts">
 	import { AppBarData } from '$lib/MountTitleAction';
-	import { about as getabout } from '$lib/generated';
+	import { getabout } from '$lib/gql/Queries';
+	import { getContextClient, queryStore } from '@urql/svelte';
 
-	let about = getabout({});
+	let about = queryStore({ client: getContextClient(), query: getabout });
 	AppBarData('About');
 </script>
 
-{#if $about.loading}
+{#if $about.fetching}
 	{#if window.version}
 		<div class="pl-4 py-2">
 			<div class="text-xl">client version</div>
@@ -30,9 +31,9 @@
 		</div>
 	{/each}
 {:else if $about.error}
-	{JSON.stringify($about.error)}
-{:else if $about.errors}
-	{JSON.stringify($about.errors)}
+	<div class="white-space-pre-wrap">
+		{JSON.stringify($about.error, null, 4)}
+	</div>
 {:else if $about.data}
 	<div class="pt-2">
 		<div class="pl-4 py-2">
@@ -59,16 +60,24 @@
 		<div class="pl-4 py-2">
 			<div class="text-xl">Build time</div>
 			<div class="opacity-80">
-				{new Date($about.data.aboutServer.buildTime * 1000).toUTCString()}
+				{new Date(
+					parseInt($about.data.aboutServer.buildTime) * 1000
+				).toUTCString()}
 			</div>
 		</div>
-		<a class="block hover:variant-glass-surface pl-4 py-2" href={$about.data.aboutServer.github}>
+		<a
+			class="block hover:variant-glass-surface pl-4 py-2"
+			href={$about.data.aboutServer.github}
+		>
 			<div class="text-xl">Github</div>
 			<div class="opacity-80">
 				{$about.data.aboutServer.github}
 			</div>
 		</a>
-		<a class="block hover:variant-glass-surface pl-4 py-2" href={$about.data.aboutServer.discord}>
+		<a
+			class="block hover:variant-glass-surface pl-4 py-2"
+			href={$about.data.aboutServer.discord}
+		>
 			<div class="text-xl">Discord</div>
 			<div class="opacity-80">
 				{$about.data.aboutServer.discord}

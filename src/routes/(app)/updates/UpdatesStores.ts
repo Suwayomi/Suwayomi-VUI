@@ -5,9 +5,10 @@
 // file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
 import { writable } from 'svelte/store';
-import type { UpdatesQuery } from '$lib/generated';
+import type { updates } from '$lib/gql/Queries';
+import type { ResultOf } from 'gql.tada';
 
-export type UpdateNode = UpdatesQuery['chapters']['nodes'][0];
+export type UpdateNode = ResultOf<typeof updates>['chapters']['nodes'][0];
 
 export const selected = writable<UpdateNode[]>([]);
 export const selectMode = writable(false);

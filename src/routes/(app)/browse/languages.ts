@@ -9,20 +9,32 @@ const ISOLanguages = [
 	{ code: 'pinned', name: 'Pinned', nativeName: 'Pinned' },
 	{ code: 'all', name: 'All', nativeName: 'All' },
 	{ code: 'installed', name: 'Installed', nativeName: 'Installed' },
-	{ code: 'updates pending', name: 'Updates pending', nativeName: 'Updates pending' },
+	{
+		code: 'updates pending',
+		name: 'Updates pending',
+		nativeName: 'Updates pending'
+	},
 	{ code: 'other', name: 'other langs?', nativeName: 'Other' },
 	{ code: 'localsourcelang', name: 'Local source', nativeName: 'Local source' },
 	{ code: 'en', name: 'English', nativeName: 'English' },
 	{ code: 'ca', name: 'Catalan; Valencian', nativeName: 'Català' },
 	{ code: 'de', name: 'German', nativeName: 'Deutsch' },
 	{ code: 'es', name: 'Spanish; Castilian', nativeName: 'Español' },
-	{ code: 'es-419', name: 'Spanish; Castilian', nativeName: 'Español (Latinoamérica)' },
+	{
+		code: 'es-419',
+		name: 'Spanish; Castilian',
+		nativeName: 'Español (Latinoamérica)'
+	},
 	{ code: 'fr', name: 'French', nativeName: 'Français' },
 	{ code: 'id', name: 'Indonesian', nativeName: 'Indonesia' },
 	{ code: 'it', name: 'Italian', nativeName: 'Italiano' },
 	{ code: 'pt', name: 'Portuguese', nativeName: 'Português' },
 	{ code: 'pt-pt', name: 'Portuguese', nativeName: 'Português (Portugal)' },
-	{ code: 'pt-br', name: 'Portuguese; Brasil', nativeName: 'Português (Brasil)' },
+	{
+		code: 'pt-br',
+		name: 'Portuguese; Brasil',
+		nativeName: 'Português (Brasil)'
+	},
 	{ code: 'vi', name: 'Vietnamese', nativeName: 'Tiếng Việt' },
 	{ code: 'tr', name: 'Turkish', nativeName: 'Türkçe' },
 	{ code: 'ru', name: 'Russian', nativeName: 'русский' },

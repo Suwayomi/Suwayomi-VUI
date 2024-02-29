@@ -24,7 +24,11 @@ mutation updateChapters(
 	updateChapters(
 		input: {
 			ids: $ids
-			patch: { isRead: $isRead, isBookmarked: $isBookmarked, lastPageRead: $lastPageRead }
+			patch: {
+				isRead: $isRead
+				isBookmarked: $isBookmarked
+				lastPageRead: $lastPageRead
+			}
 		}
 	) {
 		chapters {
@@ -36,8 +40,14 @@ mutation updateChapters(
 	}
 }
 
-mutation updateChapter($isRead: Boolean = null, $lastPageRead: Int!, $id: Int!) {
-	updateChapter(input: { id: $id, patch: { isRead: $isRead, lastPageRead: $lastPageRead } }) {
+mutation updateChapter(
+	$isRead: Boolean = null
+	$lastPageRead: Int!
+	$id: Int!
+) {
+	updateChapter(
+		input: { id: $id, patch: { isRead: $isRead, lastPageRead: $lastPageRead } }
+	) {
 		chapter {
 			id
 			isRead
@@ -91,7 +101,9 @@ mutation setMangaMeta($value: String!, $id: Int!, $key: String!) {
 }
 
 mutation setSourceMeta($value: String!, $sourceId: LongString!, $key: String!) {
-	setSourceMeta(input: { meta: { key: $key, sourceId: $sourceId, value: $value } }) {
+	setSourceMeta(
+		input: { meta: { key: $key, sourceId: $sourceId, value: $value } }
+	) {
 		meta {
 			source {
 				...SourceTypeFragment
@@ -153,7 +165,10 @@ mutation updateExtension(
 	$update: Boolean = null
 ) {
 	updateExtension(
-		input: { id: $pkgName, patch: { install: $install, uninstall: $uninstall, update: $update } }
+		input: {
+			id: $pkgName
+			patch: { install: $install, uninstall: $uninstall, update: $update }
+		}
 	) {
 		extension {
 			...ExtensionTypeFragment
@@ -179,7 +194,13 @@ mutation fetchSourceManga(
 	$filters: [FilterChangeInput!]
 ) {
 	fetchSourceManga(
-		input: { page: $page, source: $source, type: $type, query: $query, filters: $filters }
+		input: {
+			page: $page
+			source: $source
+			type: $type
+			query: $query
+			filters: $filters
+		}
 	) {
 		hasNextPage
 		mangas {
@@ -326,9 +347,16 @@ mutation updateCategory(
 	}
 }
 
-mutation updateMangasCategories($addTo: [Int!] = null, $clear: Boolean = null, $id: [Int!]!) {
+mutation updateMangasCategories(
+	$addTo: [Int!] = null
+	$clear: Boolean = null
+	$id: [Int!]!
+) {
 	updateMangasCategories(
-		input: { ids: $id, patch: { addToCategories: $addTo, clearCategories: $clear } }
+		input: {
+			ids: $id
+			patch: { addToCategories: $addTo, clearCategories: $clear }
+		}
 	) {
 		mangas {
 			id
@@ -341,9 +369,16 @@ mutation updateMangasCategories($addTo: [Int!] = null, $clear: Boolean = null, $
 	}
 }
 
-mutation updateMangaCategories($addTo: [Int!] = null, $clear: Boolean = null, $id: Int!) {
+mutation updateMangaCategories(
+	$addTo: [Int!] = null
+	$clear: Boolean = null
+	$id: Int!
+) {
 	updateMangaCategories(
-		input: { id: $id, patch: { addToCategories: $addTo, clearCategories: $clear } }
+		input: {
+			id: $id
+			patch: { addToCategories: $addTo, clearCategories: $clear }
+		}
 	) {
 		manga {
 			id
@@ -371,7 +406,11 @@ mutation ChaptersMigration(
 	updateChapters(
 		input: {
 			ids: $ids
-			patch: { isBookmarked: $isBookmarked, isRead: $isRead, lastPageRead: $lastPageRead }
+			patch: {
+				isBookmarked: $isBookmarked
+				isRead: $isRead
+				lastPageRead: $lastPageRead
+			}
 		}
 	) {
 		clientMutationId
@@ -464,7 +503,11 @@ mutation deleteDownloadedChapters($ids: [Int!]!) {
 
 mutation clearCachedImages {
 	clearCachedImages(
-		input: { cachedPages: true, cachedThumbnails: true, downloadedThumbnails: true }
+		input: {
+			cachedPages: true
+			cachedThumbnails: true
+			downloadedThumbnails: true
+		}
 	) {
 		clientMutationId
 	}
@@ -489,7 +532,9 @@ mutation installExternalExtension($extensionFile: Upload!) {
 }
 
 mutation loginTrackerOAuth($callbackUrl: String!, $trackerId: Int!) {
-	loginTrackerOAuth(input: { callbackUrl: $callbackUrl, trackerId: $trackerId }) {
+	loginTrackerOAuth(
+		input: { callbackUrl: $callbackUrl, trackerId: $trackerId }
+	) {
 		isLoggedIn
 		tracker {
 			...TrackerTypeFragment
@@ -506,7 +551,11 @@ mutation logoutTracker($trackerId: Int!) {
 	}
 }
 
-mutation loginTrackerCredentials($password: String!, $trackerId: Int!, $username: String!) {
+mutation loginTrackerCredentials(
+	$password: String!
+	$trackerId: Int!
+	$username: String!
+) {
 	loginTrackerCredentials(
 		input: { password: $password, trackerId: $trackerId, username: $username }
 	) {
@@ -517,7 +566,9 @@ mutation loginTrackerCredentials($password: String!, $trackerId: Int!, $username
 }
 
 mutation bindTrack($mangaId: Int!, $remoteId: LongString!, $trackerId: Int!) {
-	bindTrack(input: { mangaId: $mangaId, remoteId: $remoteId, trackerId: $trackerId }) {
+	bindTrack(
+		input: { mangaId: $mangaId, remoteId: $remoteId, trackerId: $trackerId }
+	) {
 		trackRecord {
 			...TrackRecordTypeFragment
 		}

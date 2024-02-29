@@ -7,7 +7,12 @@
 -->
 
 <script lang="ts">
-	import { RadioGroup, RadioItem, SlideToggle, getModalStore } from '@skeletonlabs/skeleton';
+	import {
+		RadioGroup,
+		RadioItem,
+		SlideToggle,
+		getModalStore
+	} from '@skeletonlabs/skeleton';
 	import { ChapterSort, ChapterTitle, Meta } from '$lib/simpleStores';
 	import { enumKeys } from '$lib/util';
 	import TriStateSlide from '$lib/components/TriStateSlide.svelte';

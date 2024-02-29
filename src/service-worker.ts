@@ -147,7 +147,10 @@ function respondGET(event: FetchEvent) {
 		// }
 
 		// thumbnails, cache first
-		if (url.pathname.endsWith('thumbnail') || url.pathname.startsWith('/api/v1/extension/icon/')) {
+		if (
+			url.pathname.endsWith('thumbnail') ||
+			url.pathname.startsWith('/api/v1/extension/icon/')
+		) {
 			const imageCache = await openImageCache;
 			const cachedResponse = await imageCache.match(event.request);
 			if (cachedResponse) {

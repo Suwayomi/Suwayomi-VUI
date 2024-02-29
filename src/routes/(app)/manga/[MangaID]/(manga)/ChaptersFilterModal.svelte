@@ -44,7 +44,9 @@
 				name="tab1"
 				value={0}
 			>
-				<div class="flex flex-row justify-center items-center h-full focus:outline-0">
+				<div
+					class="flex flex-row justify-center items-center h-full focus:outline-0"
+				>
 					<IconWrapper name="mdi:filter" class="text-4xl" />
 					<span>Filter</span>
 				</div>
@@ -134,7 +136,8 @@
 						<button
 							class="w-full focus:outline-0 p-1 pl-2 flex justify-between hover:variant-glass-surface rounded-full items-center"
 							on:click|preventDefault|stopPropagation={() =>
-								($mangaMeta.ChapterFetchUpload = !$mangaMeta.ChapterFetchUpload)}
+								($mangaMeta.ChapterFetchUpload =
+									!$mangaMeta.ChapterFetchUpload)}
 						>
 							<span>FetchDate/UploadDate</span>
 							<SlideToggle

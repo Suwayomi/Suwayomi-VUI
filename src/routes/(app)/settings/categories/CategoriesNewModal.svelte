@@ -8,15 +8,9 @@
 
 <script lang="ts">
 	import Slide from '$lib/components/Slide.svelte';
-	import {
-		CategoriesDoc,
-		type CategoriesQuery,
-		createCategory,
-		type CreateCategoryMutation,
-		IncludeOrExclude
-	} from '$lib/generated';
-	import type { ApolloCache, FetchResult } from '@apollo/client';
+	import { createCategory } from '$lib/gql/Mutations';
 	import { getModalStore } from '@skeletonlabs/skeleton';
+	import { getContextClient } from '@urql/svelte';
 	import type { SvelteComponent } from 'svelte';
 
 	const modalStore = getModalStore();
@@ -28,41 +22,22 @@
 	let includeInDownload = true;
 	let includeInUpdate = true;
 
-	function createCategoryUpdater(
-		cache: ApolloCache<unknown>,
-		{ data }: Omit<FetchResult<CreateCategoryMutation>, 'context'>
-	) {
-		if (!data) return;
-		const categoriesData = structuredClone(
-			cache.readQuery<CategoriesQuery>({
-				query: CategoriesDoc
-			})
-		);
-		if (!categoriesData) return;
-		categoriesData.categories.nodes.push(data.createCategory.category);
-
-		cache.writeQuery({
-			query: CategoriesDoc,
-			data: categoriesData
-		});
-	}
-
+	const client = getContextClient();
 	async function submitChange(): Promise<void> {
-		createCategory({
-			variables: {
-				name: catinput,
-				default: Defaul,
-				includeInDownload: includeInDownload ? IncludeOrExclude.Include : IncludeOrExclude.Exclude,
-				includeInUpdate: includeInUpdate ? IncludeOrExclude.Include : IncludeOrExclude.Exclude
-			},
-			update: createCategoryUpdater
+		client.mutation(createCategory, {
+			name: catinput,
+			default: Defaul,
+			includeInDownload: includeInDownload ? 'INCLUDE' : 'INCLUDE',
+			includeInUpdate: includeInUpdate ? 'INCLUDE' : 'INCLUDE'
 		});
 		parent.onClose();
 	}
 </script>
 
 {#if $modalStore[0]}
-	<div class="card p-0 w-modal shadow-xl space-y-4 rounded-lg max-h-screen py-4">
+	<div
+		class="card p-0 w-modal shadow-xl space-y-4 rounded-lg max-h-screen py-4"
+	>
 		<h1 class="h3 pl-4">New category</h1>
 		<div class="px-4 border-y border-surface-700">
 			<div class="max-h-96 overflow-y-auto grid grid-cols-1 gap-1">
@@ -75,7 +50,9 @@
 					bind:checked={Defaul}
 					class="w-full focus:outline-0 p-1 hover:variant-glass-surface"
 				>
-					<div class="w-full">Default category when adding new manga to the library</div>
+					<div class="w-full">
+						Default category when adding new manga to the library
+					</div>
 				</Slide>
 				<Slide
 					labelClass="ml-2"
@@ -89,7 +66,9 @@
 					bind:checked={includeInDownload}
 					class="w-full focus:outline-0 p-1 hover:variant-glass-surface"
 				>
-					<div class="w-full">Include category in downloads from automatic updates</div>
+					<div class="w-full">
+						Include category in downloads from automatic updates
+					</div>
 				</Slide>
 			</div>
 		</div>

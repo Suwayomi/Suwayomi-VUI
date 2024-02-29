@@ -8,11 +8,14 @@
 
 <script lang="ts">
 	import MangaCard from '$lib/components/MangaCard.svelte';
-	import type { FetchSourceMangaMutation } from '$lib/generated';
 	import IntersectionObserver from '$lib/components/IntersectionObserver.svelte';
 	import { Meta, display } from '$lib/simpleStores';
+	import type { fetchSourceManga } from '$lib/gql/Mutations';
+	import type { ResultOf } from 'gql.tada';
 
-	export let mangas: FetchSourceMangaMutation['fetchSourceManga']['mangas'];
+	export let mangas: ResultOf<
+		typeof fetchSourceManga
+	>['fetchSourceManga']['mangas'];
 	export let gridnumber: number;
 	export let OpenModal: ((id: number) => void) | undefined = undefined;
 
@@ -20,7 +23,10 @@
 </script>
 
 <div class="overflow-x-auto" bind:this={scrollingElement}>
-	<div class="flex flex-nowrap" style="width:calc({mangas.length / gridnumber} * 100%)">
+	<div
+		class="flex flex-nowrap"
+		style="width:calc({mangas.length / gridnumber} * 100%)"
+	>
 		{#each mangas as manga}
 			<IntersectionObserver
 				let:intersecting
@@ -39,7 +45,8 @@
 								OpenModal(manga.id);
 							}
 						}}
-						class="{manga.inLibrary && 'opacity-70'} hover:opacity-70 cursor-pointer h-full"
+						class="{manga.inLibrary &&
+							'opacity-70'} hover:opacity-70 cursor-pointer h-full"
 						tabindex="-1"
 					>
 						<div class="aspect-cover w-auto h-full">
@@ -47,24 +54,37 @@
 								thumbnailUrl={manga.thumbnailUrl ?? ''}
 								title={manga.title}
 								rounded="{$Meta.Display === display.Compact && 'rounded-lg'}
-                  {$Meta.Display === display.Comfortable && 'rounded-none rounded-t-lg'}"
+                  {$Meta.Display === display.Comfortable &&
+									'rounded-none rounded-t-lg'}"
 								aspect="aspect-cover"
 							>
 								{#if $Meta.Display === display.Compact}
-									<div class="absolute bottom-0 left-0 right-0 variant-glass rounded-b-olg">
-										<div class="line-clamp-2 px-2 h-12 text-center" title={manga.title}>
+									<div
+										class="absolute bottom-0 left-0 right-0 variant-glass rounded-b-olg"
+									>
+										<div
+											class="line-clamp-2 px-2 h-12 text-center"
+											title={manga.title}
+										>
 											{manga.title}
 										</div>
 									</div>
 								{/if}
 								{#if manga.inLibrary}
-									<div class="absolute top-1 right-1 badge variant-filled-primary">In Library</div>
+									<div
+										class="absolute top-1 right-1 badge variant-filled-primary"
+									>
+										In Library
+									</div>
 								{/if}
 							</MangaCard>
 						</div>
 						{#if $Meta.Display === display.Comfortable}
 							<div class="variant-glass-surface rounded-b-lg">
-								<div class="line-clamp-2 px-2 h-12 text-center" title={manga.title}>
+								<div
+									class="line-clamp-2 px-2 h-12 text-center"
+									title={manga.title}
+								>
 									{manga.title}
 								</div>
 							</div>

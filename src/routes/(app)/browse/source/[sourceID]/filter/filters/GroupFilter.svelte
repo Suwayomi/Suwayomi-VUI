@@ -7,7 +7,6 @@
 -->
 
 <script lang="ts">
-	import type { FilterChangeInput, InputMaybe, Scalars, SourceQuery } from '$lib/generated';
 	import { AccordionItem } from '@skeletonlabs/skeleton';
 	import CheckBoxFilter from './CheckBoxFilter.svelte';
 	import HeaderFilter from './HeaderFilter.svelte';
@@ -16,26 +15,34 @@
 	import SortFilter from './SortFilter.svelte';
 	import TextFilter from './TextFilter.svelte';
 	import TriStateFilter from './TriStateFilter.svelte';
+	import type { ResultOf, VariablesOf } from 'gql.tada';
+	import type { getSource } from '$lib/gql/Queries';
+	import type { fetchSourceManga } from '$lib/gql/Mutations';
 
 	export let filter: Extract<
-		SourceQuery['source']['filters'][0],
+		ResultOf<typeof getSource>['source']['filters'][0],
 		{ __typename?: 'GroupFilter' | undefined }
 	>;
-	export let filters: FilterChangeInput[];
+	export let filters: VariablesOf<typeof fetchSourceManga>['filters'];
 	export let index: number;
 
-	let groupFilters = filters.filter((e) => e.position === index) as {
-		groupChange: InputMaybe<FilterChangeInput> | undefined;
-		position: Scalars['Int']['input'];
+	let groupFilters = filters?.filter((e) => e.position === index) as {
+		groupChange:
+			| NonNullable<VariablesOf<typeof fetchSourceManga>['filters']>[0]
+			| undefined;
+		position: number;
 	}[];
 
 	$: fakeFilters = groupFilters
 		.map((e) => e.groupChange)
-		.filter((e) => e !== undefined) as FilterChangeInput[];
+		.filter((e) => e) as NonNullable<
+		VariablesOf<typeof fetchSourceManga>['filters']
+	>;
 
 	$: if (fakeFilters.length !== 0) {
-		filters = filters.filter((e) => e.position !== index);
+		filters = filters?.filter((e) => e.position !== index) ?? [];
 		fakeFilters.forEach((e) => {
+			if (!filters) filters = [];
 			filters.push({
 				position: index,
 				groupChange: e
@@ -43,7 +50,7 @@
 		});
 		filters = filters;
 	} else {
-		filters = filters.filter((e) => e.position !== index);
+		filters = filters?.filter((e) => e.position !== index);
 	}
 </script>
 
@@ -52,20 +59,22 @@
 	<svelte:fragment slot="content">
 		<div class="space-y-1 p-1 variant-ghost-surface">
 			{#each filter.filters as filte, index}
-				{#if filte.__typename === 'CheckBoxFilter'}
-					<CheckBoxFilter filter={filte} {index} bind:filters={fakeFilters} />
-				{:else if filte.__typename === 'TriStateFilter'}
-					<TriStateFilter filter={filte} {index} bind:filters={fakeFilters} />
-				{:else if filte.__typename === 'SeparatorFilter'}
-					<SeparatorFilter />
-				{:else if filte.__typename === 'HeaderFilter'}
-					<HeaderFilter filter={filte} />
-				{:else if filte.__typename === 'SelectFilter'}
-					<SelectFilter filter={filte} {index} bind:filters={fakeFilters} />
-				{:else if filte.__typename === 'SortFilter'}
-					<SortFilter filter={filte} {index} bind:filters={fakeFilters} />
-				{:else if filte.__typename === 'TextFilter'}
-					<TextFilter filter={filte} {index} bind:filters={fakeFilters} />
+				{#if '__typename' in filte}
+					{#if filte.__typename === 'CheckBoxFilter'}
+						<CheckBoxFilter filter={filte} {index} bind:filters={fakeFilters} />
+					{:else if filte.__typename === 'TriStateFilter'}
+						<TriStateFilter filter={filte} {index} bind:filters={fakeFilters} />
+					{:else if filte.__typename === 'SeparatorFilter'}
+						<SeparatorFilter />
+					{:else if filte.__typename === 'HeaderFilter'}
+						<HeaderFilter filter={filte} />
+					{:else if filte.__typename === 'SelectFilter'}
+						<SelectFilter filter={filte} {index} bind:filters={fakeFilters} />
+					{:else if filte.__typename === 'SortFilter'}
+						<SortFilter filter={filte} {index} bind:filters={fakeFilters} />
+					{:else if filte.__typename === 'TextFilter'}
+						<TextFilter filter={filte} {index} bind:filters={fakeFilters} />
+					{/if}
 				{/if}
 			{/each}
 		</div>

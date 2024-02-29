@@ -9,15 +9,18 @@
 <script lang="ts">
 	import Search from '$lib/components/Search.svelte';
 	import TooltipIconButton from '$lib/components/TooltipIconButton.svelte';
-	import type { SourcesQuery } from '$lib/generated';
 	import { getModalStore } from '@skeletonlabs/skeleton';
 	import { langFilter } from '../BrowseStores';
 	import GlobalSearchLangFilterModal from './GlobalSearchLangFilterModal.svelte';
 	import { page } from '$app/stores';
 	import Tooltip from '$lib/components/Tooltip.svelte';
 	import IconWrapper from '$lib/components/IconWrapper.svelte';
+	import type { getSources } from '$lib/gql/Queries';
+	import type { ResultOf } from 'gql.tada';
 
-	export let rawSources: SourcesQuery['sources']['nodes'] | undefined;
+	export let rawSources:
+		| ResultOf<typeof getSources>['sources']['nodes']
+		| undefined;
 	export let langs: Set<string>;
 
 	const modalStore = getModalStore();
@@ -26,7 +29,10 @@
 <div class="h-full flex">
 	<Search />
 	{#if $page.url.pathname.includes('/browse/migrate/manga/')}
-		<Tooltip tip="open migrating manga" class="cursor-pointer h-full hover:variant-glass-surface">
+		<Tooltip
+			tip="open migrating manga"
+			class="cursor-pointer h-full hover:variant-glass-surface"
+		>
 			<a
 				class="aspect-square h-full w-auto"
 				href={$page.url.pathname.replace('/browse/migrate', '')}

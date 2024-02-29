@@ -8,17 +8,23 @@
 
 <script lang="ts">
 	import { AppBarData } from '$lib/MountTitleAction';
+	import { getContextClient, queryStore } from '@urql/svelte';
 	import type { LayoutData } from './$types';
 	import NavActions from './NavActions.svelte';
+	import { getSource } from '$lib/gql/Queries';
 
 	export let data: LayoutData;
+	const client = getContextClient();
+	const sause = queryStore({
+		client,
+		query: getSource,
+		variables: { id: data.sourceID }
+	});
 
-	const sause = data.sause;
-
-	$: AppBarData($sause.data.source?.displayName, {
+	$: AppBarData($sause.data?.source?.displayName ?? '', {
 		component: NavActions,
 		props: {
-			supportsLatest: $sause.data.source?.supportsLatest
+			supportsLatest: $sause.data?.source?.supportsLatest
 		}
 	});
 </script>

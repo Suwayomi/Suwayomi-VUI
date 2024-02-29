@@ -22,6 +22,14 @@
 </script>
 
 <div class="relative h-full w-full {$$props.class}" in:fade>
-	<Image {draggable} {fit} {aspect} src={thumbnailUrl} alt={title} title={titleA} {rounded} />
+	<Image
+		{draggable}
+		{fit}
+		{aspect}
+		src={thumbnailUrl}
+		alt={title}
+		title={titleA}
+		{rounded}
+	/>
 	<slot />
 </div>
