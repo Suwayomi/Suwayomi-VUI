@@ -8,15 +8,19 @@
 <script lang="ts">
 	export let value: string;
 	export let title: string;
-	export let options: [string, string][];
+	export let options: Array<string>;
 </script>
 
-<label class="text-left flex items-center w-full h-16 hover:variant-glass-surface cursor-pointer">
+<label
+	class="text-left flex items-center w-full h-16 hover:variant-glass-surface cursor-pointer"
+>
 	{title}
 	<div class="flex items-center flex-nowrap flex-1 justify-end space-x-2">
 		<select class="input max-w-32 sm:max-w-[36.5rem]" bind:value on:change>
 			{#each options as option}
-				<option value={option[1]}>{option[0]}</option>
+				<option class="capitalize" value={option}
+					>{option.toLocaleLowerCase()}</option
+				>
 			{/each}
 		</select>
 	</div>

@@ -8,37 +8,33 @@
 
 <script lang="ts">
 	import { AppBarData } from '$lib/MountTitleAction';
-	import {
-		fetchExtensions,
-		extensions as getExtensions,
-		type Exact,
-		type ExtensionsQuery,
-		type InputMaybe
-	} from '$lib/generated';
 	import { ErrorHelp, Partition, groupBy } from '$lib/util';
-	import type { ApolloQueryResult, ObservableQuery } from '@apollo/client';
-	import type { Readable } from 'svelte/motion';
 	import { queryParam, ssp } from 'sveltekit-search-params';
 	import Nav from '../Nav.svelte';
 	import { FindLangName } from '../languages';
 	import ExtensionsActions from './ExtensionsActions.svelte';
-	import { fetchExtensionsUpdater, langFilter, lastFetched } from './ExtensionsStores';
+	import { langFilter, lastFetched } from './ExtensionsStores';
 	import ExtensionCard from './ExtensionCard.svelte';
 	import { Meta } from '$lib/simpleStores';
+	import { queryStore } from '@urql/svelte';
+	import {
+		getContextClient,
+		type OperationResultStore,
+		type Pausable
+	} from '@urql/svelte';
+	import { getExtensions } from '$lib/gql/Queries';
+	import { ExtensionTypeFragment } from '$lib/gql/Fragments';
+	import { type ResultOf } from 'gql.tada';
+	import { fetchExtensions } from '$lib/gql/Mutations';
+
+	const client = getContextClient();
 
 	const query = queryParam('q', ssp.string(), { pushHistory: false });
-	type TExtension = ExtensionsQuery['extensions']['nodes'][0];
+	type TExtension = ResultOf<typeof ExtensionTypeFragment>;
 
-	let extensions: Readable<
-		ApolloQueryResult<ExtensionsQuery> & {
-			query: ObservableQuery<
-				ExtensionsQuery,
-				Exact<{
-					isNsfw?: InputMaybe<boolean> | undefined;
-				}>
-			>;
-		}
-	>;
+	let extensions:
+		| (OperationResultStore<ResultOf<typeof getExtensions>> & Pausable)
+		| undefined;
 
 	checkIfFetchNewExtensions();
 
@@ -46,34 +42,41 @@
 		if ($lastFetched.getTime() > new Date().getTime() - 60000) {
 			await ErrorHelp(
 				'failed to fetch new extensions',
-				fetchExtensions({
-					update: fetchExtensionsUpdater
-				})
+				client.mutation(fetchExtensions, {}).toPromise()
 			);
 			$lastFetched = new Date();
 		}
-		extensions = getExtensions({
-			variables: { isNsfw: $Meta.nsfw ? null : false },
-			fetchPolicy: 'cache-first'
+		extensions = queryStore({
+			client,
+			query: getExtensions,
+			variables: { isNsfw: $Meta.nsfw ? null : false }
 		});
 	}
 
 	$: langs = getLangs($extensions?.data);
-	$: AppBarData('Extensions', { component: ExtensionsActions, props: { langs } });
+	$: AppBarData('Extensions', {
+		component: ExtensionsActions,
+		props: { langs }
+	});
 
-	function getLangs(extensionsQuery: ExtensionsQuery | undefined) {
+	function getLangs(
+		extensionsQuery: ResultOf<typeof getExtensions> | undefined
+	) {
 		if (extensionsQuery?.extensions?.nodes) {
-			return extensionsQuery.extensions.nodes.reduce((accumulatedSet, currentExtension) => {
-				if (!accumulatedSet.has(currentExtension.lang)) {
-					accumulatedSet.add(currentExtension.lang);
-				}
-				return accumulatedSet;
-			}, new Set<string>());
+			return extensionsQuery.extensions.nodes.reduce(
+				(accumulatedSet, currentExtension) => {
+					if (!accumulatedSet.has(currentExtension.lang)) {
+						accumulatedSet.add(currentExtension.lang);
+					}
+					return accumulatedSet;
+				},
+				new Set<string>()
+			);
 		}
 		return new Set<string>();
 	}
 
-	$: filteredExtensions = $extensions?.data?.extensions?.nodes.filter((ele) => {
+	$: filteredExtensions = $extensions?.data?.extensions.nodes?.filter((ele) => {
 		if (!$langFilter.has(ele.lang)) return false;
 		if ($query !== '' && $query !== null) {
 			return ele.name.toLowerCase().includes($query.toLocaleLowerCase());
@@ -105,12 +108,15 @@
 
 		if (!(notInstalledExtensions?.length || languages.size)) return always;
 
-		return [...always, ...groupBy(notInstalledExtensions, (extension) => extension.lang)];
+		return [
+			...always,
+			...groupBy(notInstalledExtensions, (extension) => extension.lang)
+		];
 	}
 </script>
 
 <Nav let:scrollingElement>
-	{#if $extensions === undefined || $extensions.loading}
+	{#if $extensions === undefined || $extensions.fetching}
 		<div class="px-4">
 			{#each new Array(5) as _}
 				<div class="h-8 md:h-10 m-2 placeholder animate-pulse max-w-xs" />
@@ -118,7 +124,9 @@
 					<div class="h-28 m-1">
 						<div class="card variant-ghost flex w-full h-full items-center">
 							<div class="p-1 h-full w-auto">
-								<div class="placeholder animate-pulse h-full w-auto rounded-lg aspect-square" />
+								<div
+									class="placeholder animate-pulse h-full w-auto rounded-lg aspect-square"
+								/>
 							</div>
 							<div class="w-full h-full max-w-xs flex flex-col justify-center">
 								<div class="placeholder animate-pulse my-2 max-w-[10rem]" />
@@ -131,10 +139,10 @@
 				{/each}
 			{/each}
 		</div>
-	{:else if $extensions.errors}
-		{JSON.stringify($extensions.errors)}
 	{:else if $extensions.error}
-		{JSON.stringify($extensions.error)}
+		<div class="white-space-pre-wrap">
+			{JSON.stringify($extensions.error, null, 4)}
+		</div>
 	{:else if groupExtensions}
 		<div class="px-4">
 			{#each groupExtensions as [lang, sause]}

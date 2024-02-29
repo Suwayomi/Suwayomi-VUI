@@ -9,27 +9,36 @@
 <script lang="ts">
 	import Image from '$lib/components/Image.svelte';
 	import IntersectionObserver from '$lib/components/IntersectionObserver.svelte';
-	import { sourcesMigration, type SourcesMigrationQuery } from '$lib/generated';
 	import { AppBarData } from '$lib/MountTitleAction';
+	import { type ResultOf } from 'gql.tada';
 	import Nav from '../Nav.svelte';
+	import { getContextClient, queryStore } from '@urql/svelte';
+	import { sourcesMigration } from '$lib/gql/Queries';
+	import { SourceTypeFragment } from '$lib/gql/Fragments';
 
 	AppBarData('Migrate');
-	const Migration = sourcesMigration({});
+	const client = getContextClient();
+	const Migration = queryStore({
+		client,
+		query: sourcesMigration
+	});
 
 	$: sources = FigureOutSources($Migration.data);
 
-	type Source = SourcesMigrationQuery['sources']['nodes'][0];
+	type Source = ResultOf<typeof SourceTypeFragment>; //SourcesMigrationQuery['sources']['nodes'][0];
 
-	interface sourceWithMangaCount extends Source {
+	type sourceWithMangaCount = Source & {
 		mangas?: {
 			TotalCount: number;
 		};
 		broken?: boolean;
-	}
+	};
 
-	function FigureOutSources(data: SourcesMigrationQuery | undefined) {
+	function FigureOutSources(
+		data: ResultOf<typeof sourcesMigration> | undefined
+	) {
 		if (!data?.sources || !data.mangas) return undefined;
-		const tmpSources: sourceWithMangaCount[] = structuredClone(data.sources.nodes);
+		const tmpSources: sourceWithMangaCount[] = data.sources.nodes;
 		data.mangas.nodes.forEach((manga) => {
 			const tmp = tmpSources.find((source) => source.id === manga.sourceId);
 			if (!tmp) {
@@ -54,12 +63,14 @@
 </script>
 
 <Nav let:scrollingElement>
-	{#if $Migration.loading}
+	{#if $Migration.fetching}
 		{#each new Array(8) as _}
 			<div class="h-24 m-1">
 				<div class="card variant-ghost flex w-full h-full items-center">
 					<div class="p-1 h-full w-auto">
-						<div class="placeholder animate-pulse h-full w-auto rounded-lg aspect-square" />
+						<div
+							class="placeholder animate-pulse h-full w-auto rounded-lg aspect-square"
+						/>
 					</div>
 					<div class="w-full h-full flex flex-col justify-center">
 						<div class="placeholder animate-pulse my-2 max-w-[10rem]" />
@@ -71,9 +82,9 @@
 			</div>
 		{/each}
 	{:else if $Migration.error}
-		{JSON.stringify($Migration.error)}
-	{:else if $Migration.errors}
-		{JSON.stringify($Migration.errors)}
+		<div class="white-space-pre-wrap">
+			{JSON.stringify($Migration.error, null, 4)}
+		</div>
 	{:else if sources}
 		<div>
 			{#each sources as source (source.id)}
@@ -90,13 +101,19 @@
 								class="card m-1 flex h-full items-center variant-glass hover:variant-glass-primary"
 							>
 								<div class="p-1 h-full">
-									<Image src={source.iconUrl} aspect="aspect-square" width="h-auto" />
+									<Image
+										src={source.iconUrl}
+										aspect="aspect-square"
+										width="h-auto"
+									/>
 								</div>
 								<div class="w-full">
 									{source.displayName}
 								</div>
 								<div class="m-2">
-									<span class="badge variant-filled-primary">{source.mangas?.TotalCount}</span>
+									<span class="badge variant-filled-primary"
+										>{source.mangas?.TotalCount}</span
+									>
 								</div>
 							</div>
 						</a>

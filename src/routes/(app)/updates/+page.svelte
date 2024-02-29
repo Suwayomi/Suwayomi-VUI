@@ -9,7 +9,6 @@
 <script lang="ts">
 	import UpdatesActions from './UpdatesActions.svelte';
 	import { AppBarData } from '$lib/MountTitleAction';
-	import { updates, type UpdatesQuery } from '$lib/generated';
 	import { writable } from 'svelte/store';
 	import MangaCard from '$lib/components/MangaCard.svelte';
 	import { longPress } from '$lib/press';
@@ -18,8 +17,16 @@
 	import IconWrapper from '$lib/components/IconWrapper.svelte';
 	import { goto } from '$app/navigation';
 	import type { UpdateNode } from './UpdatesStores';
-	import { dlreabook, gridValues, HelpDoSelect, HelpSelectAll } from '$lib/util';
+	import {
+		dlreabook,
+		gridValues,
+		HelpDoSelect,
+		HelpSelectAll
+	} from '$lib/util';
 	import { display, Meta } from '$lib/simpleStores';
+	import { getContextClient, queryStore } from '@urql/svelte';
+	import { updates } from '$lib/gql/Queries';
+	import type { ResultOf } from 'gql.tada';
 
 	AppBarData('Updates', {
 		component: UpdatesActions,
@@ -30,8 +37,13 @@
 	});
 
 	let page = writable(0);
-	let all = writable<UpdatesQuery['chapters'] | null>(null);
-	$: update = updates({ variables: { offset: $page } });
+	let all = writable<ResultOf<typeof updates>['chapters'] | null>(null);
+	const client = getContextClient();
+	$: update = queryStore({
+		client,
+		query: updates,
+		variables: { offset: $page }
+	});
 	$: $update, updateall();
 	function updateall() {
 		if (!$update.data?.chapters) return;
@@ -77,7 +89,7 @@
 	}
 </script>
 
-{#if !$all && $update.loading}
+{#if !$all && $update.fetching}
 	<div class="grid {gridValues} gap-2 m-2">
 		{#each new Array(110) as _}
 			<div class="aspect-cover w-full">
@@ -87,15 +99,17 @@
 						{$Meta.Display === display.Comfortable && 'rounded-none rounded-t-lg'}"
 				/>
 				{#if $Meta.Display === display.Comfortable}
-					<div class="placeholder animate-pulse px-2 h-12 text-center rounded-none rounded-b-lg" />
+					<div
+						class="placeholder animate-pulse px-2 h-12 text-center rounded-none rounded-b-lg"
+					/>
 				{/if}
 			</div>
 		{/each}
 	</div>
-{:else if !$all && $update.errors}
-	{JSON.stringify($update.errors)}
 {:else if !$all && $update.error}
-	{JSON.stringify($update.error)}
+	<div class="white-space-pre-wrap">
+		{JSON.stringify($update.error, null, 4)}
+	</div>
 {:else if $all?.nodes}
 	<div class="grid {gridValues} gap-2 m-2">
 		{#each $all.nodes as updat}
@@ -115,7 +129,13 @@
 							if (e.ctrlKey) return;
 							if ($selectMode) {
 								e.preventDefault();
-								lastSelected = HelpDoSelect(updat, e, lastSelected, $all?.nodes, selected);
+								lastSelected = HelpDoSelect(
+									updat,
+									e,
+									lastSelected,
+									$all?.nodes,
+									selected
+								);
 							} else {
 								e.preventDefault();
 								goto(`/manga/${updat.manga.id}`);
@@ -135,7 +155,9 @@
 							{$Meta.Display === display.Comfortable && 'rounded-none rounded-t-lg'}"
 						>
 							{#if $selectMode}
-								<div class="cursor-pointer absolute top-0 right-0 left-0 bottom-0 bg-base-100/75">
+								<div
+									class="cursor-pointer absolute top-0 right-0 left-0 bottom-0 bg-base-100/75"
+								>
 									<IconWrapper
 										name={$selected[updat.id] === undefined
 											? 'fluent:checkbox-unchecked-24-filled'
@@ -145,18 +167,30 @@
 								</div>
 							{/if}
 							{#if $Meta.Display === display.Compact}
-								<div class="absolute bottom-0 left-0 right-0 variant-glass rounded-b-olg">
-									<div class="line-clamp-1 px-2 h-6 text-center" title={updat.manga.title}>
+								<div
+									class="absolute bottom-0 left-0 right-0 variant-glass rounded-b-olg"
+								>
+									<div
+										class="line-clamp-1 px-2 h-6 text-center"
+										title={updat.manga.title}
+									>
 										{updat.manga.title}
 									</div>
-									<div class="line-clamp-1 px-2 h-6 text-center" title={updat.name}>
+									<div
+										class="line-clamp-1 px-2 h-6 text-center"
+										title={updat.name}
+									>
 										{updat.name}
 									</div>
 									<div
 										class="line-clamp-1 px-2 h-6 text-center"
-										title={new Date(updat.fetchedAt * 1000).toLocaleString()}
+										title={new Date(
+											parseInt(updat.fetchedAt) * 1000
+										).toLocaleString()}
 									>
-										{new Date(updat.fetchedAt * 1000).toLocaleString()}
+										{new Date(
+											parseInt(updat.fetchedAt) * 1000
+										).toLocaleString()}
 									</div>
 								</div>
 							{/if}
@@ -165,7 +199,10 @@
 									<IconWrapper class="w-full h-full" name="mdi:download" />
 								{/if}
 								{#if updat.isRead}
-									<IconWrapper class="w-full h-full" name="mdi:book-open-page-variant-outline" />
+									<IconWrapper
+										class="w-full h-full"
+										name="mdi:book-open-page-variant-outline"
+									/>
 								{/if}
 								{#if updat.isBookmarked}
 									<IconWrapper class="w-full h-full" name="mdi:bookmark" />
@@ -174,17 +211,25 @@
 						</MangaCard>
 						{#if $Meta.Display === display.Comfortable}
 							<div class="variant-glass-surface rounded-b-lg">
-								<div class="line-clamp-1 px-2 h-6 text-center" title={updat.manga.title}>
+								<div
+									class="line-clamp-1 px-2 h-6 text-center"
+									title={updat.manga.title}
+								>
 									{updat.manga.title}
 								</div>
-								<div class="line-clamp-1 px-2 h-6 text-center" title={updat.name}>
+								<div
+									class="line-clamp-1 px-2 h-6 text-center"
+									title={updat.name}
+								>
 									{updat.name}
 								</div>
 								<div
 									class="line-clamp-1 px-2 h-6 text-center"
-									title={new Date(updat.fetchedAt * 1000).toLocaleString()}
+									title={new Date(
+										parseInt(updat.fetchedAt) * 1000
+									).toLocaleString()}
 								>
-									{new Date(updat.fetchedAt * 1000).toLocaleString()}
+									{new Date(parseInt(updat.fetchedAt) * 1000).toLocaleString()}
 								</div>
 							</div>
 						{/if}
@@ -192,7 +237,7 @@
 				{/if}
 			</IntersectionObserver>
 		{/each}
-		{#if !$update.loading && $all.pageInfo.hasNextPage}
+		{#if !$update.fetching && $all.pageInfo.hasNextPage}
 			<IntersectionObserver
 				root={document.querySelector('#page') ?? undefined}
 				top={400}
@@ -202,7 +247,7 @@
 				}}
 			/>
 		{/if}
-		{#if $update.loading && $all.pageInfo.hasNextPage}
+		{#if $update.fetching && $all.pageInfo.hasNextPage}
 			{#each new Array(10) as _}
 				<div class="aspect-cover w-full">
 					<div

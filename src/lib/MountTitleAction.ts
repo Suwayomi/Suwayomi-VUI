@@ -21,7 +21,10 @@ const titleStore = writable<string>('Loading...');
 export const action = readonly(actionStore);
 export const title = readonly(titleStore);
 
-export function AppBarData<T extends ComponentType>(title: string, action?: actionStoreT<T>) {
+export function AppBarData<T extends ComponentType>(
+	title: string,
+	action?: actionStoreT<T>
+) {
 	if (action) actionStore.set(action);
 	titleStore.set(title);
 	onDestroy(() => {

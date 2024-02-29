@@ -7,19 +7,77 @@
 -->
 <script lang="ts">
 	import { AppBarData } from '$lib/MountTitleAction';
-	import { serverSettings, WebUiChannel, WebUiFlavor, WebUiInterface } from '$lib/generated';
-	import { enumEntries, errortoast, setSettings } from '$lib/util';
+	import { errortoast, setSettings } from '$lib/util';
+	import { getContextClient, queryStore } from '@urql/svelte';
 	import Select from './components/Select.svelte';
 	import ExtensionReposModal from './components/extensionReposModal.svelte';
 	import Number from './components/number.svelte';
 	import Text from './components/text.svelte';
 	import Toggle from './components/toggle.svelte';
 	import { getModalStore } from '@skeletonlabs/skeleton';
+	import { serverSettings } from '$lib/gql/Queries';
+	import type { setServerSettings } from '$lib/gql/Mutations';
+	import { graphql, type VariablesOf } from 'gql.tada';
 	const modalStore = getModalStore();
 
 	AppBarData('Server Settings');
+	const client = getContextClient();
+	const settingsData = queryStore({
+		client,
+		query: serverSettings
+	});
 
-	const settingsData = serverSettings({});
+	const chanels = queryStore({
+		client,
+		query: graphql(`
+			{
+				__type(name: "WebUIChannel") {
+					enumValues {
+						name
+					}
+				}
+			}
+		`)
+	});
+
+	const flavors = queryStore({
+		client,
+		query: graphql(`
+			{
+				__type(name: "WebUIFlavor") {
+					enumValues {
+						name
+					}
+				}
+			}
+		`)
+	});
+
+	const interfaces = queryStore({
+		client,
+		query: graphql(`
+			{
+				__type(name: "WebUIInterface") {
+					enumValues {
+						name
+					}
+				}
+			}
+		`)
+	});
+
+	$: webUIChannels =
+		(
+			$chanels.data?.__type as { enumValues: { name: string }[] | undefined }
+		)?.enumValues!.map((x) => x.name) ?? []; //['BUNDLED', 'STABLE', 'PREVIEW'];
+	$: webUIFlavors =
+		(
+			$flavors.data?.__type as { enumValues: { name: string }[] | undefined }
+		)?.enumValues!.map((x) => x.name) ?? []; //['WEBUI', 'VUI', 'CUSTOM'];
+	$: webUIInterfaces =
+		(
+			$interfaces.data?.__type as { enumValues: { name: string }[] | undefined }
+		)?.enumValues!.map((x) => x.name) ?? []; //['BROWSER', 'ELECTRON'];
 
 	let autoDownloadNewChapters = true;
 	let backupInterval = 1;
@@ -55,13 +113,25 @@
 	let socksProxyPort = '';
 	let systemTrayEnabled = false;
 	let updateMangas = false;
-	let webUIChannel = WebUiChannel.Stable;
-	let webUIFlavor = WebUiFlavor.Webui;
-	let webUIInterface = WebUiInterface.Browser;
+	let webUIChannel = 'STABLE' as NonNullable<
+		NonNullable<
+			VariablesOf<typeof setServerSettings>['settings']
+		>['webUIChannel']
+	>;
+	let webUIFlavor = 'WEBUI' as NonNullable<
+		NonNullable<
+			VariablesOf<typeof setServerSettings>['settings']
+		>['webUIFlavor']
+	>;
+	let webUIInterface = 'BROWSER' as NonNullable<
+		NonNullable<
+			VariablesOf<typeof setServerSettings>['settings']
+		>['webUIInterface']
+	>;
 	let webUIUpdateCheckInterval = 23;
 
 	settingsData.subscribe((data) => {
-		if (data.data.settings) {
+		if (data.data?.settings) {
 			autoDownloadNewChapters = data.data.settings.autoDownloadNewChapters;
 			backupInterval = data.data.settings.backupInterval;
 			backupPath = data.data.settings.backupPath;
@@ -75,7 +145,8 @@
 			downloadsPath = data.data.settings.downloadsPath;
 			electronPath = data.data.settings.electronPath;
 			excludeCompleted = data.data.settings.excludeCompleted;
-			excludeEntryWithUnreadChapters = data.data.settings.excludeEntryWithUnreadChapters;
+			excludeEntryWithUnreadChapters =
+				data.data.settings.excludeEntryWithUnreadChapters;
 			excludeNotStarted = data.data.settings.excludeNotStarted;
 			extensionRepos = data.data.settings.extensionRepos;
 			excludeUnreadChapters = data.data.settings.excludeUnreadChapters;
@@ -86,7 +157,8 @@
 			flareSolverrUrl = data.data.settings.flareSolverrUrl;
 			globalUpdateInterval = data.data.settings.globalUpdateInterval;
 			gqlDebugLogsEnabled = data.data.settings.gqlDebugLogsEnabled;
-			initialOpenInBrowserEnabled = data.data.settings.initialOpenInBrowserEnabled;
+			initialOpenInBrowserEnabled =
+				data.data.settings.initialOpenInBrowserEnabled;
 			ip = data.data.settings.ip;
 			localSourcePath = data.data.settings.localSourcePath;
 			maxSourcesInParallel = data.data.settings.maxSourcesInParallel;
@@ -105,10 +177,10 @@
 </script>
 
 {#if $settingsData.error}
-	{JSON.stringify($settingsData.error)}
-{:else if $settingsData.errors}
-	{JSON.stringify($settingsData.errors)}
-{:else if $settingsData.loading}
+	<div class="white-space-pre-wrap">
+		{JSON.stringify($settingsData.error, null, 4)}
+	</div>
+{:else if $settingsData.fetching}
 	Loading...
 {:else if $settingsData.data}
 	{@const settings = $settingsData.data.settings}
@@ -148,7 +220,10 @@
 					setSettings({ backupTime });
 					return;
 				}
-				errortoast('Time validation failed', 'Backup Time must be in format HH:MM');
+				errortoast(
+					'Time validation failed',
+					'Backup Time must be in format HH:MM'
+				);
 				backupTime = settings.backupTime;
 			}}
 		/>
@@ -219,7 +294,10 @@
 			on:click={() => {
 				modalStore.trigger({
 					type: 'component',
-					component: { ref: ExtensionReposModal, props: { repos: extensionRepos } }
+					component: {
+						ref: ExtensionReposModal,
+						props: { repos: extensionRepos }
+					}
 				});
 			}}
 		>
@@ -291,7 +369,10 @@
 					setSettings({ ip });
 					return;
 				}
-				errortoast('Time validation failed', 'Backup Time must be in format HH:MM');
+				errortoast(
+					'Time validation failed',
+					'Backup Time must be in format HH:MM'
+				);
 				ip = settings.ip;
 			}}
 		/>
@@ -318,7 +399,10 @@
 					setSettings({ port });
 					return;
 				}
-				errortoast('Port validation failed', 'Port must be between 0 and 65535');
+				errortoast(
+					'Port validation failed',
+					'Port must be between 0 and 65535'
+				);
 				port = settings.port;
 			}}
 		/>
@@ -367,21 +451,21 @@
 		<Select
 			title="Web UI Channel"
 			bind:value={webUIChannel}
-			options={enumEntries(WebUiChannel)}
+			options={webUIChannels}
 			on:change={() => setSettings({ webUIChannel })}
 		/>
 		<!-- webUIFlavor -->
 		<Select
 			title="Web UI Flavor"
 			bind:value={webUIFlavor}
-			options={enumEntries(WebUiFlavor)}
+			options={webUIFlavors}
 			on:change={() => setSettings({ webUIFlavor })}
 		/>
 		<!-- webUIInterface -->
 		<Select
 			title="Web UI Interface"
 			bind:value={webUIInterface}
-			options={enumEntries(WebUiInterface)}
+			options={webUIInterfaces}
 			on:change={() => setSettings({ webUIInterface })}
 		/>
 		<!-- webUIUpdateCheckInterval -->

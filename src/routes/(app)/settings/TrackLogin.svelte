@@ -6,14 +6,18 @@
  file, You can obtain one at http://mozilla.org/MPL/2.0/.
 -->
 <script lang="ts">
-	import { loginTrackerCredentials, logoutTracker, type TrackersQuery } from '$lib/generated';
+	import type { TrackerTypeFragment } from '$lib/gql/Fragments';
+	import { loginTrackerCredentials, logoutTracker } from '$lib/gql/Mutations';
 	import { getModalStore } from '@skeletonlabs/skeleton';
+	import { getContextClient } from '@urql/svelte';
+	import type { ResultOf } from 'gql.tada';
 
+	const client = getContextClient();
 	const modalStore = getModalStore();
-	export let tracker: TrackersQuery['trackers']['nodes'][0];
+	export let tracker: ResultOf<typeof TrackerTypeFragment>;
 
 	async function logout() {
-		await logoutTracker({ variables: { trackerId: tracker.id } });
+		await client.mutation(logoutTracker, { trackerId: tracker.id });
 	}
 	const urlAdon = JSON.stringify({
 		redirectUrl: `${window.location.origin}/trackers/auth`,
@@ -25,13 +29,13 @@
 	let password = '';
 
 	async function login() {
-		await loginTrackerCredentials({
-			variables: {
+		await client
+			.mutation(loginTrackerCredentials, {
 				username,
 				password,
 				trackerId: tracker.id
-			}
-		});
+			})
+			.toPromise();
 		modalStore.close();
 	}
 </script>
@@ -60,9 +64,21 @@
 			</a>
 		{:else}
 			<div class="space-y-2 px-4">
-				<input class="input" title="Username" type="text" bind:value={username} />
-				<input class="input" title="Password" type="password" bind:value={password} />
-				<button class="btn variant-filled-surface float-right" on:click={login}> Login </button>
+				<input
+					class="input"
+					title="Username"
+					type="text"
+					bind:value={username}
+				/>
+				<input
+					class="input"
+					title="Password"
+					type="password"
+					bind:value={password}
+				/>
+				<button class="btn variant-filled-surface float-right" on:click={login}>
+					Login
+				</button>
 			</div>
 		{/if}
 	</div>

@@ -8,12 +8,16 @@
 
 <script lang="ts">
 	import Image from '$lib/components/Image.svelte';
-	import { trackers, type TrackersQuery } from '$lib/generated';
 	import { getModalStore } from '@skeletonlabs/skeleton';
 	import TrackLogin from './TrackLogin.svelte';
 	import { onMount } from 'svelte';
+	import { getContextClient, queryStore } from '@urql/svelte';
+	import { trackers } from '$lib/gql/Queries';
+	import { type ResultOf } from 'gql.tada';
+	import { TrackerTypeFragment } from '$lib/gql/Fragments';
 	const modalStore = getModalStore();
-	let Trackers = trackers({});
+	const client = getContextClient();
+	let Trackers = queryStore({ client, query: trackers });
 
 	onMount(() => {
 		window.addEventListener('storage', message_receive);
@@ -25,11 +29,16 @@
 	function message_receive(event: StorageEvent) {
 		if (event.key === 'VUI3_TRACKER_LOGIN' && event.newValue === 'true') {
 			localStorage.setItem('VUI3_TRACKER_LOGIN', 'false');
-			Trackers = trackers({ fetchPolicy: 'network-only', nextFetchPolicy: 'cache-first' });
+			client.query(trackers, {}, { requestPolicy: 'network-only' }).toPromise();
+			Trackers = queryStore({
+				client,
+				query: trackers,
+				requestPolicy: 'cache-first'
+			});
 		}
 	}
 
-	function clickedTracker(tracker: TrackersQuery['trackers']['nodes'][0]) {
+	function clickedTracker(tracker: ResultOf<typeof TrackerTypeFragment>) {
 		modalStore.trigger({
 			type: 'component',
 			component: { ref: TrackLogin, props: { tracker } }
@@ -47,13 +56,15 @@
 			<div class="max-h-96 overflow-y-auto grid grid-cols-1 gap-1 pr-4">
 				<div class="pl-4">
 					{#if $Trackers.error}
-						{JSON.stringify($Trackers.error)}
-					{:else if $Trackers.errors}
-						{JSON.stringify($Trackers.errors)}
-					{:else if $Trackers.loading}
+						<div class="white-space-pre-wrap">
+							{JSON.stringify($Trackers.error, null, 4)}
+						</div>
+					{:else if $Trackers.fetching}
 						{#each new Array(4).fill(0) as _}
 							<div class="flex pl-4 p-1 w-full text-left">
-								<div class="w-1/5 mr-1 h-full placeholder animate-pulse aspect-square rounded-xl" />
+								<div
+									class="w-1/5 mr-1 h-full placeholder animate-pulse aspect-square rounded-xl"
+								/>
 								<div class="space-y-2 h-full w-full">
 									<div class="placeholder animate-pulse h-6 w-full" />
 									<div class="placeholder h-4 w-2/3" />
@@ -82,7 +93,9 @@
 										<span class="line-clamp-1 text-lg font-bold">
 											{tracker.name}
 										</span>
-										<span class="text-sm xl:text-base flex items-center space-x-2">
+										<span
+											class="text-sm xl:text-base flex items-center space-x-2"
+										>
 											Logged in: {tracker.isLoggedIn}
 										</span>
 									</div>

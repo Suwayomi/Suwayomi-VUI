@@ -10,28 +10,34 @@
 	import IconButton from '$lib/components/IconButton.svelte';
 	import Image from '$lib/components/Image.svelte';
 	import IntersectionObserver from '$lib/components/IntersectionObserver.svelte';
-	import {
-		dequeueChapterDownloads,
-		downloadChanged,
-		type DownloadChangedSubscription
-	} from '$lib/generated';
 	import { AppBarData } from '$lib/MountTitleAction';
 	import { ProgressBar } from '@skeletonlabs/skeleton';
 	import DownloadsActions from './DownloadsActions.svelte';
 	import { filter } from './downloadsStores';
+	import { getContextClient, subscriptionStore } from '@urql/svelte';
+	import { downloadChanged } from '$lib/gql/Subscriptions';
+	import type { ResultOf } from 'gql.tada';
+	import { dequeueChapterDownloads } from '$lib/gql/Mutations';
+	const client = getContextClient();
 
-	let downloads = downloadChanged({
-		fetchPolicy: 'network-only'
+	let downloads = subscriptionStore({
+		client,
+		query: downloadChanged
 	});
 
-	AppBarData('Downloads', { component: DownloadsActions, props: { downloads } });
+	AppBarData('Downloads', {
+		component: DownloadsActions,
+		props: { downloads }
+	});
 
-	type DLS = DownloadChangedSubscription['downloadChanged']['queue'][0];
+	type DLS = ResultOf<typeof downloadChanged>['downloadChanged']['queue'][0];
 
 	function handelclick(e: MouseEvent, dls: DLS): void {
 		e.preventDefault();
 		e.stopPropagation();
-		dequeueChapterDownloads({ variables: { ids: dls.chapter.id } });
+		client
+			.mutation(dequeueChapterDownloads, { ids: [dls.chapter.id] })
+			.toPromise();
 	}
 
 	$: filteredQueue = $downloads?.data?.downloadChanged.queue.filter(
@@ -39,12 +45,20 @@
 	);
 </script>
 
-{#if !$downloads}
+{#if $downloads.error}
+	<div class="white-space-pre-wrap">
+		{JSON.stringify($downloads.error, null, 4)}
+	</div>
+{:else if !$downloads.data}
 	{#each new Array(15) as _}
 		<div class="h-28">
-			<div class="hover:variant-glass-surface px-4 h-full flex flex-nowrap items-center">
+			<div
+				class="hover:variant-glass-surface px-4 h-full flex flex-nowrap items-center"
+			>
 				<div class="py-1 h-full aspect-cover mr-2">
-					<div class="placeholder animate-pulse aspect-cover h-full w-auto rounded-lg" />
+					<div
+						class="placeholder animate-pulse aspect-cover h-full w-auto rounded-lg"
+					/>
 				</div>
 				<div class="w-full py-4">
 					<div class="placeholder animate-pulse max-w-xs mb-1" />
@@ -62,8 +76,6 @@
 			</div>
 		</div>
 	{/each}
-{:else if $downloads.errors}
-	{JSON.stringify($downloads.errors)}
 {:else if filteredQueue}
 	{#each filteredQueue as dls (dls.chapter.id)}
 		<IntersectionObserver
@@ -96,7 +108,9 @@
 								dls.state.slice(1, dls.state.length).toLowerCase()}
 						</div>
 						<div class="max-w-3xl flex items-center">
-							<span class="flex-none pr-1">{Math.round(dls.progress * 1000) / 10}%</span>
+							<span class="flex-none pr-1"
+								>{Math.round(dls.progress * 1000) / 10}%</span
+							>
 							<ProgressBar
 								meter="bg-primary-500"
 								track="bg-primary-500/30"
@@ -118,6 +132,6 @@
 			{/if}
 		</IntersectionObserver>
 	{:else}
-		there are no downloads happening
+		there are no downloads in queue matching filters
 	{/each}
 {/if}

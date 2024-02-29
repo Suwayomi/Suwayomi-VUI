@@ -10,26 +10,23 @@
 	import Image from '../lib/components/Image.svelte';
 	import { getModalStore } from '@skeletonlabs/skeleton';
 	import IconWrapper from '../lib/components/IconWrapper.svelte';
-	import {
-		sources as getSources,
-		type Exact,
-		type InputMaybe,
-		type SourcesQuery,
-		categories as getCategories,
-		category as getCategory,
-		type CategoryQuery,
-		getManga,
-		type GetMangaQuery,
-		type GetMangaQueryVariables
-	} from '$lib/generated';
-	import type { Readable } from 'svelte/motion';
-	import type { ApolloQueryResult, ObservableQuery } from '@apollo/client';
 	import { FindLangName } from './(app)/browse/languages';
 	import { goto } from '$app/navigation';
 	import type { SvelteComponent } from 'svelte';
 	import { SourceLangFilter } from './(app)/browse/sources/SourcesStores';
 	import { queryParam, ssp } from 'sveltekit-search-params';
 	import { page } from '$app/stores';
+	import { getContextClient, queryStore } from '@urql/svelte';
+	import {
+		getCategories,
+		getCategory,
+		getManga,
+		getSources
+	} from '$lib/gql/Queries';
+	import type { OperationResultStore, Pausable } from '@urql/svelte';
+	import type { ResultOf } from 'gql.tada';
+	import { ChapterTypeFragment } from '$lib/gql/Fragments';
+
 	export let parent: SvelteComponent;
 
 	const modalStore = getModalStore();
@@ -78,39 +75,21 @@
 	$: if (value === '') {
 		items = help;
 	}
+	const client = getContextClient();
 
-	let sources: Readable<
-		ApolloQueryResult<SourcesQuery> & {
-			query: ObservableQuery<
-				SourcesQuery,
-				Exact<{
-					isNsfw?: InputMaybe<boolean> | undefined;
-				}>
-			>;
-		}
-	>;
+	let sources: OperationResultStore<ResultOf<typeof getSources>> & Pausable;
 
-	let categories = getCategories({});
+	let categories = queryStore({
+		client,
+		query: getCategories
+	});
 
 	let catId: undefined | number = undefined;
 	let mangaId: undefined | number = undefined;
 
-	let category: Readable<
-		ApolloQueryResult<CategoryQuery> & {
-			query: ObservableQuery<
-				CategoryQuery,
-				Exact<{
-					id: number;
-				}>
-			>;
-		}
-	>;
+	let category: OperationResultStore<ResultOf<typeof getCategory>> & Pausable;
 
-	let manga: Readable<
-		ApolloQueryResult<GetMangaQuery> & {
-			query: ObservableQuery<GetMangaQuery, GetMangaQueryVariables>;
-		}
-	>;
+	let manga: OperationResultStore<ResultOf<typeof getManga>> & Pausable;
 
 	$: $category, $categories, value, doCategory();
 	$: $sources, value, doSource();
@@ -121,19 +100,22 @@
 			const categorySearch: string | undefined = parsed[0];
 			const mangaSearch: string | undefined = parsed[1];
 			const chapterNameSearch: string | undefined = parsed[2];
-			const includeCategory = $categories.data?.categories.nodes.filter((e) =>
+			const includeCategory = $categories.data?.categories.nodes?.filter((e) =>
 				e.name.toLowerCase().includes(categorySearch.toLowerCase())
 			);
-			let includeMangas: CategoryQuery['category']['mangas']['nodes'] | undefined = undefined;
-			let includeChapters: GetMangaQuery['manga']['chapters']['nodes'] | undefined = undefined;
-			if (mangaSearch && includeCategory[0]) {
+			let includeMangas:
+				| ResultOf<typeof getCategory>['category']['mangas']['nodes']
+				| undefined = undefined;
+			let includeChapters: ResultOf<typeof ChapterTypeFragment>[] | undefined =
+				undefined;
+			if (mangaSearch && includeCategory?.[0]) {
 				catId = includeCategory[0].id;
 				includeMangas = $category?.data?.category?.mangas.nodes.filter((e) =>
 					e.title.toLowerCase().includes(mangaSearch.toLowerCase())
 				);
-				if (chapterNameSearch && includeMangas[0]) {
+				if (chapterNameSearch && includeMangas?.[0]) {
 					mangaId = includeMangas[0].id;
-					includeChapters = $manga?.data?.manga?.chapters.nodes.filter((e) =>
+					includeChapters = $manga?.data?.manga?.chapters.nodes?.filter((e) =>
 						e.name.toLowerCase().includes(chapterNameSearch.toLowerCase())
 					);
 				}
@@ -178,12 +160,14 @@
 
 	function doSource() {
 		if (value.startsWith('@')) {
-			if (!sources) sources = getSources({});
+			if (!sources) sources = queryStore({ client, query: getSources });
 			const parsed = value.slice(1).split('/');
 			const sourceSearch: string | undefined = parsed[0];
 			const mangaSearch: string | undefined = parsed[1];
 			const includeSource = $sources.data?.sources?.nodes
-				.filter((e) => e.displayName.toLowerCase().includes(sourceSearch.toLowerCase()))
+				?.filter((e) =>
+					e.displayName.toLowerCase().includes(sourceSearch.toLowerCase())
+				)
 				.filter((e) => $SourceLangFilter.has(e.lang));
 			if (includeSource) {
 				items = includeSource.map((e) => {
@@ -206,7 +190,9 @@
 			if (items[0].url) {
 				goto(items[0].url);
 			} else if (!['#', '@'].includes(value[0])) {
-				if (/(\/browse\/source\/\d*\/)popular|latest/.test($page.url.pathname)) {
+				if (
+					/(\/browse\/source\/\d*\/)popular|latest/.test($page.url.pathname)
+				) {
 					goto(
 						$page.url.pathname.replace(
 							/(\/browse\/source\/\d*\/)popular|latest/,
@@ -248,8 +234,14 @@
 		}
 	}
 
-	$: if (catId !== undefined) category = getCategory({ variables: { id: catId } });
-	$: if (mangaId) manga = getManga({ variables: { id: mangaId } });
+	$: if (catId !== undefined)
+		category = queryStore({
+			client,
+			query: getCategory,
+			variables: { id: catId }
+		});
+	$: if (mangaId)
+		manga = queryStore({ client, query: getManga, variables: { id: mangaId } });
 
 	$: if ($modalStore[0]) {
 		window.addEventListener('keydown', handelArrows);
@@ -276,7 +268,8 @@
 						if (item.url) parent.onClose();
 					}}
 					href={item.url}
-					class="{index !== 0 && 'tabindex'} flex flex-nowrap hover:variant-glass p-2 outline-0
+					class="{index !== 0 &&
+						'tabindex'} flex flex-nowrap hover:variant-glass p-2 outline-0
 					first:rounded-t-2xl last:rounded-b-2xl
 					focus:variant-glass-primary {inputElement && 'first:variant-glass-primary'}"
 				>

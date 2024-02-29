@@ -7,19 +7,25 @@
 -->
 
 <script lang="ts">
-	import { updateSourcePreference, type SourceQuery } from '$lib/generated';
+	import { updateSourcePreference } from '$lib/gql/Mutations';
+	import type { getSource } from '$lib/gql/Queries';
+	import { getContextClient, queryStore } from '@urql/svelte';
+	import type { ResultOf } from 'gql.tada';
 
 	export let pref: Extract<
-		SourceQuery['source']['preferences'][0],
+		ResultOf<typeof getSource>['source']['preferences'][0],
 		{ __typename?: 'ListPreference' | undefined }
 	>;
+
 	export let index: number;
 	export let id: string;
 
 	let selected = pref.ListCurrentValue ?? pref.ListDefault;
-
+	const client = getContextClient();
 	function handelchange() {
-		updateSourcePreference({
+		queryStore({
+			client,
+			query: updateSourcePreference,
 			variables: {
 				source: id,
 				listState: selected,
