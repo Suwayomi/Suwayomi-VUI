@@ -13,28 +13,31 @@
 	import Image from '$lib/components/Image.svelte';
 	import IntersectionObserver from '$lib/components/IntersectionObserver.svelte';
 	import { getToastStore } from '$lib/components/Toast/stores';
-	import {
-		fetchChapterPages,
-		getManga,
-		updateChapter,
-		type FetchChapterPagesMutation,
-		type GetMangaQuery
-	} from '$lib/generated';
 	import { Layout, MangaMeta, Mode } from '$lib/simpleStores';
 	import { ErrorHelp } from '$lib/util';
-	import type { FetchResult } from '@apollo/client';
 	import { getDrawerStore } from '@skeletonlabs/skeleton';
 	import { onMount } from 'svelte';
 	import type { PageData } from './$types';
 	import { ViewNav, chapterTitle, mangaTitle } from './chapterStores';
 	import { paths, type PathLayout, type Paths, type Tpath } from './paths';
+	import {
+		getContextClient,
+		queryStore,
+		type OperationResult
+	} from '@urql/svelte';
+	import { getManga } from '$lib/gql/Queries';
+	import { type ResultOf } from 'gql.tada';
+	import { fetchChapterPages, updateChapter } from '$lib/gql/Mutations';
+	import { ChapterTypeFragment } from '$lib/gql/Fragments';
 
 	export let data: PageData;
 	let mangaMeta = MangaMeta(data.MangaID);
 
 	onMount(() => {
 		if (
-			/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) &&
+			/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
+				navigator.userAgent
+			) &&
 			$mangaMeta.mobileFullScreenOnChapterPage
 		) {
 			document.documentElement.requestFullscreen();
@@ -59,7 +62,12 @@
 	$: currentChapterID = data.ChapterID;
 
 	const toastStore = getToastStore();
-	const manga = getManga({ variables: { id: data.MangaID } });
+	const client = getContextClient();
+	const manga = queryStore({
+		client,
+		query: getManga,
+		variables: { id: data.MangaID }
+	});
 	let pageElement = undefined as HTMLDivElement | undefined;
 	const drawerStore = getDrawerStore();
 
@@ -72,25 +80,38 @@
 	}[] = [];
 	let all: {
 		chapterID: number;
-		pages: FetchChapterPagesMutation['fetchChapterPages']['pages'];
+		pages: ResultOf<typeof fetchChapterPages>['fetchChapterPages']['pages']; //FetchChapterPagesMutation['fetchChapterPages']['pages'];
 	}[] = [];
 
-	let pages: Promise<FetchResult<FetchChapterPagesMutation>>;
+	let pages: Promise<OperationResult<ResultOf<typeof fetchChapterPages>>>;
 	$: currentChapterID, loadNew();
 	function loadNew() {
 		if (preload) pages = preload;
-		else pages = fetchChapterPages({ variables: { chapterId: currentChapterID } });
+		else
+			pages = client
+				.mutation(fetchChapterPages, { chapterId: currentChapterID })
+				.toPromise();
 	}
 
-	let preload: Promise<FetchResult<FetchChapterPagesMutation>> | undefined = undefined;
+	let preload:
+		| Promise<OperationResult<ResultOf<typeof fetchChapterPages>>>
+		| undefined = undefined;
 	let preloadingid: number | undefined = undefined;
 	$: nextid = getChapterAfterID(currentChapterID, $manga)?.id;
-	$: if (nextid !== undefined && $mangaMeta.preLoadNextChapter && nextid !== preloadingid) {
+	$: if (
+		nextid !== undefined &&
+		$mangaMeta.preLoadNextChapter &&
+		nextid !== preloadingid
+	) {
 		preloadingid = nextid;
-		preload = fetchChapterPages({ variables: { chapterId: nextid } });
+		preload = client
+			.mutation(fetchChapterPages, { chapterId: nextid })
+			.toPromise();
 	}
 	$: updatepages(pages);
-	async function updatepages(pages: Promise<FetchResult<FetchChapterPagesMutation>>) {
+	async function updatepages(
+		pages: Promise<OperationResult<ResultOf<typeof fetchChapterPages>>>
+	) {
 		chapterLoading = true;
 		const obj: (typeof all)[0] = {
 			chapterID: currentChapterID,
@@ -112,25 +133,25 @@
 
 	function getChapterOfID(
 		currentID: number
-	): GetMangaQuery['manga']['chapters']['nodes'][0] | undefined {
-		return $manga.data.manga?.chapters.nodes.find((e) => e.id === currentID);
+	): ResultOf<typeof ChapterTypeFragment> | undefined {
+		return $manga.data?.manga?.chapters.nodes?.find((e) => e.id === currentID);
 	}
 
 	function getChapterAfterID(
 		currentID: number,
 		_: unknown = undefined
-	): GetMangaQuery['manga']['chapters']['nodes'][0] | undefined {
+	): ResultOf<typeof ChapterTypeFragment> | undefined {
 		const currentChapter = getChapterOfID(currentID);
-		return $manga.data.manga?.chapters.nodes.find((e) =>
+		return $manga.data?.manga?.chapters.nodes?.find((e) =>
 			currentChapter ? e.sourceOrder === currentChapter.sourceOrder + 1 : false
 		);
 	}
 
 	function getChapterBeforeID(
 		currentID: number
-	): GetMangaQuery['manga']['chapters']['nodes'][0] | undefined {
+	): ResultOf<typeof ChapterTypeFragment> | undefined {
 		const currentChapter = getChapterOfID(currentID);
-		return $manga.data.manga?.chapters.nodes.find((e) =>
+		return $manga.data?.manga?.chapters.nodes?.find((e) =>
 			currentChapter ? e.sourceOrder === currentChapter.sourceOrder - 1 : false
 		);
 	}
@@ -232,16 +253,24 @@
 		if (pageElement.scrollTop === 0) {
 			const tmp = getChapterBeforeID(topchapter);
 			if (tmp) {
-				const tttmp = fetchChapterPages({ variables: { chapterId: tmp.id } });
+				const tttmp = client
+					.mutation('fetchChapterPages', {
+						chapterId: tmp.id
+					})
+					.toPromise();
 				const obj: (typeof all)[0] = {
 					chapterID: tmp.id,
 					pages: []
 				};
-				await ErrorHelp(`failed to load chapter ${obj.chapterID}`, tttmp, (e) => {
-					if (!e.data) return;
-					obj.pages = e.data.fetchChapterPages.pages;
-					all = [obj, ...all];
-				});
+				await ErrorHelp(
+					`failed to load chapter ${obj.chapterID}`,
+					tttmp,
+					(e) => {
+						if (!e.data) return;
+						obj.pages = e.data.fetchChapterPages.pages;
+						all = [obj, ...all];
+					}
+				);
 				const topimg = document.querySelector(`#c1p0`);
 				if (topimg)
 					pageElement?.scrollTo({
@@ -277,7 +306,10 @@
 		}
 	}
 
-	function pointInPoly(point: [number, number], vs: [number, number][] | undefined): boolean {
+	function pointInPoly(
+		point: [number, number],
+		vs: [number, number][] | undefined
+	): boolean {
 		// ray-casting algorithm based on
 		// https://wrf.ecse.rpi.edu/Research/Short_Notes/pnpoly.html/pnpoly.html
 		if (vs === undefined) {
@@ -295,7 +327,8 @@
 			const xj = jj[0];
 			const yj = jj[1];
 
-			const intersect = yi > y !== yj > y && x < ((xj - xi) * (y - yi)) / (yj - yi) + xi;
+			const intersect =
+				yi > y !== yj > y && x < ((xj - xi) * (y - yi)) / (yj - yi) + xi;
 			if (intersect) {
 				inside = !inside;
 			}
@@ -304,12 +337,17 @@
 		return inside;
 	}
 
-	function polyToPOLLY(polly: Tpath | undefined): [number, number][] | undefined {
+	function polyToPOLLY(
+		polly: Tpath | undefined
+	): [number, number][] | undefined {
 		if (polly === undefined) {
 			return undefined;
 		}
 		return polly.map((point) => {
-			return [(point[0] * window.innerWidth) / 100, (point[1] * window.innerHeight) / 100];
+			return [
+				(point[0] * window.innerWidth) / 100,
+				(point[1] * window.innerHeight) / 100
+			];
 		});
 	}
 
@@ -323,7 +361,8 @@
 
 	function scrollBy(decimal: number, addition = 0) {
 		pageElement?.scrollTo({
-			top: addition + (pageElement.scrollTop + pageElement.clientHeight * decimal),
+			top:
+				addition + (pageElement.scrollTop + pageElement.clientHeight * decimal),
 			behavior: $mangaMeta.SmoothScroll ? 'smooth' : 'instant'
 		});
 	}
@@ -349,13 +388,13 @@
 				}
 			];
 			if (!updatedChaps.includes(selector)) {
-				updateChapter({
-					variables: {
+				client
+					.mutation(updateChapter, {
 						id,
 						lastPageRead: pageIndex,
 						isRead: pageIndex >= maxPages * 0.8 ? true : null
-					}
-				});
+					})
+					.toPromise();
 				updatedChaps.push(selector);
 				setTimeout(() => {
 					updatedChaps = updatedChaps.filter((e) => e !== selector);
@@ -366,9 +405,10 @@
 		}
 	}
 
-	$: $mangaTitle = $manga.data.manga?.title ?? '';
+	$: $mangaTitle = $manga.data?.manga?.title ?? '';
 	$: $chapterTitle =
-		$manga.data.manga?.chapters.nodes.find((e) => e.id === currentChapterID)?.name ?? '';
+		$manga.data?.manga?.chapters.nodes?.find((e) => e.id === currentChapterID)
+			?.name ?? '';
 	$: currentChapterID, got();
 
 	function got() {
@@ -394,7 +434,8 @@
 		).selector
 	) as HTMLElement | undefined;
 
-	$: $manga.data.manga, AppBarData(`${$manga.data.manga?.title} ${$chapterTitle}` || 'Manga');
+	$: $manga.data?.manga,
+		AppBarData(`${$manga.data?.manga?.title} ${$chapterTitle}` || 'Manga');
 	type tmp = (typeof path)[keyof typeof path];
 	type ttmp = keyof typeof path;
 
@@ -438,7 +479,12 @@
 	let pageIndicator: string = '1/0';
 </script>
 
-<button tabindex="0" bind:this={buttonElement} on:click={handleClick} class="w-full">
+<button
+	tabindex="0"
+	bind:this={buttonElement}
+	on:click={handleClick}
+	class="w-full"
+>
 	{#if $ViewNav}
 		<div class="pointer-events-none">
 			<div class="fixed bg-blue-500/50 z-10" style={currpath.forward} />
@@ -470,11 +516,16 @@
 						class="w-auto h-auto
 							{$mangaMeta.Margins && $mangaMeta.ReaderMode === Mode.Vertical && 'mb-4'}
 							{$mangaMeta.Margins && $mangaMeta.ReaderMode === Mode.single && 'mb-4'}
-							{$mangaMeta.Margins && $mangaMeta.ReaderMode === Mode.RTL && 'even:mr-2 odd:ml-2 mb-4'}
-							{$mangaMeta.Margins && $mangaMeta.ReaderMode === Mode.LTR && 'even:ml-2 odd:mr-2 mb-4'}
+							{$mangaMeta.Margins &&
+							$mangaMeta.ReaderMode === Mode.RTL &&
+							'even:mr-2 odd:ml-2 mb-4'}
+							{$mangaMeta.Margins &&
+							$mangaMeta.ReaderMode === Mode.LTR &&
+							'even:ml-2 odd:mr-2 mb-4'}
 							{$mangaMeta.Scale && $mangaMeta.ReaderMode !== Mode.Vertical
 							? 'max-h-screen h-full'
-							: 'h-auto'} {$mangaMeta.Scale && $mangaMeta.ReaderMode === Mode.Vertical
+							: 'h-auto'} {$mangaMeta.Scale &&
+						$mangaMeta.ReaderMode === Mode.Vertical
 							? 'w-full'
 							: 'w-auto'}
 								{$mangaMeta.Scale && $mangaMeta.ReaderMode === Mode.single ? 'max-w-full' : ''}"
@@ -496,9 +547,11 @@
 						/>
 						<div
 							id="c{index}p{pageindex}"
-							class="{$mangaMeta.Scale && $mangaMeta.ReaderMode !== Mode.Vertical
+							class="{$mangaMeta.Scale &&
+							$mangaMeta.ReaderMode !== Mode.Vertical
 								? 'max-h-screen h-full'
-								: 'h-auto'} {$mangaMeta.Scale && $mangaMeta.ReaderMode === Mode.Vertical
+								: 'h-auto'} {$mangaMeta.Scale &&
+							$mangaMeta.ReaderMode === Mode.Vertical
 								? 'w-full'
 								: 'w-auto'}
 								{$mangaMeta.Scale && $mangaMeta.ReaderMode === Mode.single ? 'max-w-full' : ''}"
@@ -506,10 +559,12 @@
 							<Image
 								reload_button={true}
 								src={page}
-								height={$mangaMeta.Scale && $mangaMeta.ReaderMode !== Mode.Vertical
+								height={$mangaMeta.Scale &&
+								$mangaMeta.ReaderMode !== Mode.Vertical
 									? 'max-h-screen h-full'
 									: 'h-auto'}
-								width="{$mangaMeta.Scale && $mangaMeta.ReaderMode === Mode.Vertical
+								width="{$mangaMeta.Scale &&
+								$mangaMeta.ReaderMode === Mode.Vertical
 									? 'w-full'
 									: 'w-auto'}
 									{$mangaMeta.Scale && $mangaMeta.ReaderMode === Mode.single ? 'max-w-full' : ''}"
@@ -526,12 +581,10 @@
 			<IntersectionObserver
 				on:intersect={(e) => {
 					if (e.detail) {
-						updateChapter({
-							variables: {
-								id: chapter.chapterID,
-								lastPageRead: chapter.pages.length,
-								isRead: true
-							}
+						client.mutation(updateChapter, {
+							id: chapter.chapterID,
+							lastPageRead: chapter.pages.length,
+							isRead: true
 						});
 						LoadNextChapter(currentChapterID);
 					}

@@ -7,28 +7,37 @@
 -->
 
 <script lang="ts">
-	import {
-		AsyncvalidateBackup,
-		createBackup,
-		restoreBackup,
-		restoreStatus,
-		type RestoreStatusQuery
-	} from '$lib/generated';
 	import { ErrorHelp } from '$lib/util';
-	import { FileDropzone, ProgressBar, getModalStore } from '@skeletonlabs/skeleton';
+	import {
+		FileDropzone,
+		ProgressBar,
+		getModalStore
+	} from '@skeletonlabs/skeleton';
 	import { getToastStore } from '$lib/components/Toast/stores';
-	import type { Readable } from 'svelte/motion';
-	import type { ApolloQueryResult } from '@apollo/client';
 	import { AppBarData } from '$lib/MountTitleAction';
+	import {
+		getContextClient,
+		queryStore,
+		type Pausable,
+		type OperationResultStore
+	} from '@urql/svelte';
+	import { createBackup, restoreBackup } from '$lib/gql/Mutations';
+	import { restoreStatus, validateBackup } from '$lib/gql/Queries';
+	import type { ResultOf } from 'gql.tada';
 	const toastStore = getToastStore();
 	const modalStore = getModalStore();
 	let MakingBackup = false;
+	const client = getContextClient();
 	async function MakeBacup() {
 		if (MakingBackup) return;
 		MakingBackup = true;
-		await ErrorHelp('failed to create backup', createBackup({}), (e) => {
-			if (e?.data) window.location.href = e.data.createBackup.url;
-		});
+		await ErrorHelp(
+			'failed to create backup',
+			client.mutation(createBackup, {}).toPromise(),
+			(e) => {
+				if (e?.data) window.location.href = e.data.createBackup.url;
+			}
+		);
 		MakingBackup = false;
 	}
 	AppBarData('Backup');
@@ -36,14 +45,16 @@
 	async function validateRestore() {
 		await ErrorHelp(
 			'failed to validate backup file',
-			AsyncvalidateBackup({ variables: { backup: files[0] } }),
+			client.query(validateBackup, { backup: files[0] }).toPromise(),
 			(e) => {
 				if (e.data?.validateBackup.missingSources.length) {
 					toastStore.trigger({
 						hoverable: true,
 						message: `
         <h3>you are missing sources to restore</h3>
-        <p title='${e.data?.validateBackup.missingSources.map((ele) => ele.id).join(',')}'>
+        <p title='${e.data?.validateBackup.missingSources
+					.map((ele) => ele.id)
+					.join(',')}'>
 ${e.data?.validateBackup.missingSources.map((ele) => ele.name).join(',')}
 				</p>
         `,
@@ -61,11 +72,13 @@ ${e.data?.validateBackup.missingSources.map((ele) => ele.name).join(',')}
 		);
 	}
 
-	type RestoreStatus = Readable<ApolloQueryResult<RestoreStatusQuery>> | undefined;
+	type RestoreStatus =
+		| (OperationResultStore<ResultOf<typeof restoreStatus>> & Pausable)
+		| undefined;
 
 	let restoreStat: RestoreStatus;
 
-	$: if ($restoreStat?.data.restoreStatus?.state === 'SUCCESS') {
+	$: if ($restoreStat?.data?.restoreStatus?.state === 'SUCCESS') {
 		toastStore.trigger({
 			hoverable: true,
 			message: `<h3>you successfully restored the backup</h3>`,
@@ -74,7 +87,7 @@ ${e.data?.validateBackup.missingSources.map((ele) => ele.name).join(',')}
 		restoreStat = undefined;
 	}
 
-	$: if ($restoreStat?.data.restoreStatus?.state === 'FAILURE') {
+	$: if ($restoreStat?.data?.restoreStatus?.state === 'FAILURE') {
 		toastStore.trigger({
 			hoverable: true,
 			message: `<h3>The backup failed to restore</h3>`,
@@ -86,13 +99,34 @@ ${e.data?.validateBackup.missingSources.map((ele) => ele.name).join(',')}
 	function restore() {
 		ErrorHelp(
 			'failed to start restoring backup',
-			restoreBackup({ variables: { backup: files[0] } }),
+			client.mutation(restoreBackup, { backup: files[0] }).toPromise(),
 			(e) => {
-				if (e.data?.restoreBackup.id)
-					restoreStat = restoreStatus({
-						variables: { id: e.data?.restoreBackup.id },
-						pollInterval: 1000
+				if (e.data?.restoreBackup.id) {
+					restoreStat = queryStore({
+						client,
+						query: restoreStatus,
+						variables: { id: e.data.restoreBackup.id },
+						requestPolicy: 'cache-only'
 					});
+					const clear = setInterval(() => {
+						if (!e.data?.restoreBackup.id) {
+							clearInterval(clear);
+							return;
+						}
+						client
+							.query(
+								restoreStatus,
+								{ id: e.data.restoreBackup.id },
+								{ requestPolicy: 'network-only' }
+							)
+							.toPromise()
+							.then((e) => {
+								if (e.data?.restoreStatus?.state === 'SUCCESS') {
+									clearInterval(clear);
+								}
+							});
+					}, 1000);
+				}
 			}
 		);
 	}
@@ -110,7 +144,9 @@ ${e.data?.validateBackup.missingSources.map((ele) => ele.name).join(',')}
 					>
 						<div class="text-xl">Create backup</div>
 						<div class="opacity-80">
-							<span class="flex-none">Back up library as a Tachiyomi backup</span>
+							<span class="flex-none"
+								>Back up library as a Tachiyomi backup</span
+							>
 						</div>
 						{#if MakingBackup}
 							<ProgressBar />
@@ -130,7 +166,7 @@ ${e.data?.validateBackup.missingSources.map((ele) => ele.name).join(',')}
 							<div>Upload a file or drag and drop</div>
 						</div>
 					</FileDropzone>
-					{#if $restoreStat?.data.restoreStatus?.state}
+					{#if $restoreStat?.data?.restoreStatus?.state}
 						<div
 							class="p-4"
 							title="{$restoreStat.data.restoreStatus.state

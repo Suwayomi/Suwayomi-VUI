@@ -18,7 +18,9 @@
 	const mangaMeta = MangaMeta($drawerStore.meta.id);
 	onMount(() => {
 		if (
-			/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) &&
+			/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
+				navigator.userAgent
+			) &&
 			$mangaMeta.mobileFullScreenOnChapterPage
 		) {
 			document.exitFullscreen();
@@ -52,17 +54,30 @@
 		<h1 class="h2 line-clamp-3 my-2 pl-4">{$mangaTitle}</h1>
 		<h2 class="h3 border-y mt-4 border-surface-500 p-4">{$chapterTitle}</h2>
 		<div class="flex flex-col space-y-2 my-2">
-			<Slide tabindex={0} class="p-1 hover:variant-glass-surface" bind:checked={$mangaMeta.Margins}>
+			<Slide
+				tabindex={0}
+				class="p-1 hover:variant-glass-surface"
+				bind:checked={$mangaMeta.Margins}
+			>
 				Page Margins
 			</Slide>
-			<Slide class="p-1 hover:variant-glass-surface" bind:checked={$mangaMeta.Scale}>
+			<Slide
+				class="p-1 hover:variant-glass-surface"
+				bind:checked={$mangaMeta.Scale}
+			>
 				Page Scale
 			</Slide>
-			<Slide class="p-1 hover:variant-glass-surface" bind:checked={$mangaMeta.SmoothScroll}>
+			<Slide
+				class="p-1 hover:variant-glass-surface"
+				bind:checked={$mangaMeta.SmoothScroll}
+			>
 				Smooth Scroll
 			</Slide>
 			{#if $mangaMeta.ReaderMode !== Mode.Vertical}
-				<Slide class="p-1 hover:variant-glass-surface" bind:checked={$mangaMeta.Offset}>
+				<Slide
+					class="p-1 hover:variant-glass-surface"
+					bind:checked={$mangaMeta.Offset}
+				>
 					Page Offset
 				</Slide>
 			{/if}

@@ -7,26 +7,28 @@
 -->
 
 <script lang="ts">
-	import type { FilterChangeInput, SourceQuery } from '$lib/generated';
-
+	import type { fetchSourceManga } from '$lib/gql/Mutations';
+	import type { getSource } from '$lib/gql/Queries';
+	import type { ResultOf, VariablesOf } from 'gql.tada';
 	export let filter: Extract<
-		SourceQuery['source']['filters'][0],
+		ResultOf<typeof getSource>['source']['filters'][0],
 		{ __typename?: 'TextFilter' | undefined }
 	>;
-	export let filters: FilterChangeInput[];
+	export let filters: VariablesOf<typeof fetchSourceManga>['filters'];
 	export let index: number;
 
-	let text = filters.find((e) => e.position === index)?.textState ?? filter.TextDefault;
+	let text =
+		filters?.find((e) => e.position === index)?.textState ?? filter.TextDefault;
 
 	$: if (text !== filter.TextDefault) {
-		filters = filters.filter((e) => e.position !== index);
+		filters = filters?.filter((e) => e.position !== index) ?? [];
 		filters.push({
 			position: index,
 			textState: text
 		});
 		filters = filters;
 	} else {
-		filters = filters.filter((e) => e.position !== index);
+		filters = filters?.filter((e) => e.position !== index);
 	}
 </script>
 

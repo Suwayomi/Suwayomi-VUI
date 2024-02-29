@@ -8,25 +8,32 @@
 
 <script lang="ts">
 	import Slide from '$lib/components/Slide.svelte';
-	import type { FilterChangeInput, SourceQuery } from '$lib/generated';
 	import { AccordionItem } from '@skeletonlabs/skeleton';
 
+	import type { getSource } from '$lib/gql/Queries';
+	import type { ResultOf, VariablesOf } from 'gql.tada';
+	import type { fetchSourceManga } from '$lib/gql/Mutations';
 	export let filter: Extract<
-		SourceQuery['source']['filters'][0],
+		ResultOf<typeof getSource>['source']['filters'][0],
 		{ __typename?: 'SortFilter' | undefined }
 	>;
-	export let filters: FilterChangeInput[];
+	export let filters: VariablesOf<typeof fetchSourceManga>['filters'];
 	export let index: number;
 
 	let selected =
-		filters.find((e) => e.position === index)?.sortState?.index ?? filter.SortDefault?.index ?? 0;
+		filters?.find((e) => e.position === index)?.sortState?.index ??
+		filter.SortDefault?.index ??
+		0;
 	let checked =
-		filters.find((e) => e.position === index)?.sortState?.ascending ??
+		filters?.find((e) => e.position === index)?.sortState?.ascending ??
 		filter.SortDefault?.ascending ??
 		false;
 
-	$: if (selected !== filter.SortDefault?.index || checked !== filter.SortDefault?.ascending) {
-		filters = filters.filter((e) => e.position !== index);
+	$: if (
+		selected !== filter.SortDefault?.index ||
+		checked !== filter.SortDefault?.ascending
+	) {
+		filters = filters?.filter((e) => e.position !== index) ?? [];
 		filters.push({
 			position: index,
 			sortState: {
@@ -36,7 +43,7 @@
 		});
 		filters = filters;
 	} else {
-		filters = filters.filter((e) => e.position !== index);
+		filters = filters?.filter((e) => e.position !== index);
 	}
 </script>
 

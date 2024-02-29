@@ -7,10 +7,12 @@
 -->
 <script lang="ts">
 	import IconWrapper from '$lib/components/IconWrapper.svelte';
-	import { clearCachedImages } from '$lib/generated';
+	import { clearCachedImages } from '$lib/gql/Mutations';
 	import { getModalStore } from '@skeletonlabs/skeleton';
+	import { getContextClient } from '@urql/svelte';
 	const modalStore = getModalStore();
 
+	const client = getContextClient();
 	async function clearCache() {
 		navigator.serviceWorker.ready.then((registration) => {
 			if (!registration.active) {
@@ -58,21 +60,28 @@
 						class="flex h-[76px] text-left w-full hover:variant-glass-surface py-2"
 						on:click={clearCachedImgs}
 					>
-						<IconWrapper class="h-full w-auto p-2" name="mdi:file-image-remove-outline" />
+						<IconWrapper
+							class="h-full w-auto p-2"
+							name="mdi:file-image-remove-outline"
+						/>
 						<div>
 							<div class="text-xl">Clear Local Image Cache</div>
 							<div class="opacity-80">
 								<span class="flex-none">
-									Clears the local on device image cache (just images not any other data)
+									Clears the local on device image cache (just images not any
+									other data)
 								</span>
 							</div>
 						</div>
 					</button>
 					<button
 						class="flex h-[76px] text-left w-full hover:variant-glass-surface py-2"
-						on:click={() => clearCachedImages({})}
+						on:click={() => client.mutation(clearCachedImages, {}).toPromise()}
 					>
-						<IconWrapper class="h-full w-auto p-2" name="mdi:file-document-remove" />
+						<IconWrapper
+							class="h-full w-auto p-2"
+							name="mdi:file-document-remove"
+						/>
 
 						<div>
 							<div class="text-xl">Clear Server Cache</div>

@@ -10,7 +10,10 @@ interface Attributes {
 	'on:longPress': (e: CustomEvent<boolean>) => void;
 }
 
-export function longPress(node: HTMLElement, threshold = 500): ActionReturn<number, Attributes> {
+export function longPress(
+	node: HTMLElement,
+	threshold = 500
+): ActionReturn<number, Attributes> {
 	const handle_mousedown = () => {
 		const move = (e: MouseEvent | TouchEvent) => {
 			if (window.TouchEvent && e instanceof TouchEvent) {

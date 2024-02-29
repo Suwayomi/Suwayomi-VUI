@@ -9,10 +9,11 @@
 <script lang="ts">
 	import TooltipIconButton from '$lib/components/TooltipIconButton.svelte';
 	import MangaCatagoryModal from './MangaCatagoryModal.svelte';
-	import type { GetMangaQuery } from '$lib/generated';
 	import { getModalStore } from '@skeletonlabs/skeleton';
+	import { type ResultOf } from 'gql.tada';
+	import type { getManga } from '$lib/gql/Queries';
 
-	export let manga: GetMangaQuery['manga'];
+	export let manga: ResultOf<typeof getManga>['manga'] | undefined;
 	export let fetchChapters: () => Promise<void>;
 
 	const modalStore = getModalStore();

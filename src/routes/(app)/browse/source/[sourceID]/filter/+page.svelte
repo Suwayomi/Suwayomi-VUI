@@ -7,7 +7,6 @@
 -->
 
 <script lang="ts">
-	import { FetchSourceMangaType, type FilterChangeInput } from '$lib/generated';
 	import { queryParam, ssp } from 'sveltekit-search-params';
 	import type { LayoutData } from '../$types';
 	import { filters, filtersSause } from './stores';
@@ -15,6 +14,10 @@
 	import IconWrapper from '$lib/components/IconWrapper.svelte';
 	import { getModalStore } from '@skeletonlabs/skeleton';
 	import FilterModal from './FilterModal.svelte';
+	import type { fetchSourceManga } from '$lib/gql/Mutations';
+	import type { VariablesOf } from 'gql.tada';
+	import { getContextClient, queryStore } from '@urql/svelte';
+	import { getSource } from '$lib/gql/Queries';
 
 	const modalStore = getModalStore();
 
@@ -25,7 +28,11 @@
 	}
 	$filtersSause = data.sourceID;
 
-	const sause = data.sause;
+	const sause = queryStore({
+		client: getContextClient(),
+		query: getSource,
+		variables: { id: data.sourceID }
+	});
 	const query = queryParam('q', ssp.string(), { pushHistory: false });
 
 	$: $query, doSearch();
@@ -35,16 +42,19 @@
 
 	let queryfilter = {
 		query: $query === '' ? undefined : $query ?? undefined,
-		filters: $filters.length ? $filters : undefined
+		filters: $filters?.length ? $filters : undefined
 	};
 
-	function submit(filterss: FilterChangeInput[], queryy: string) {
+	function submit(
+		filterss: VariablesOf<typeof fetchSourceManga>['filters'],
+		queryy: string
+	) {
 		queryfilter = {
 			query: queryy === '' ? undefined : queryy ?? undefined,
-			filters: filterss.length ? filterss : undefined
+			filters: filterss?.length ? filterss : undefined
 		};
 		$query = queryy === '' ? null : queryy ?? null;
-		$filters = filterss.length ? filterss : [];
+		$filters = filterss?.length ? filterss : [];
 	}
 </script>
 
@@ -52,10 +62,10 @@
 	filters={queryfilter.filters}
 	query={queryfilter.query}
 	{data}
-	type={FetchSourceMangaType.Search}
+	type="SEARCH"
 />
 
-{#if $sause.data.source}
+{#if $sause.data?.source}
 	<button
 		on:click={() => {
 			modalStore.trigger({

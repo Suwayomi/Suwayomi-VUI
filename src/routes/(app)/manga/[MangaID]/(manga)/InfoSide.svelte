@@ -10,39 +10,36 @@
 	import IconWrapper from '$lib/components/IconWrapper.svelte';
 	import Image from '$lib/components/Image.svelte';
 	import MediaQuery from '$lib/components/MediaQuery.svelte';
-	import { updateMangas, type GetMangaQuery, type Exact } from '$lib/generated';
 	import { screens } from '$lib/screens';
-	import type { ApolloQueryResult, ObservableQuery } from '@apollo/client';
-	import type { Readable } from 'svelte/store';
 	import InfoSubTitles from './InfoSubTitles.svelte';
 	import TrackingModal from './TrackingModal.svelte';
 	import { getModalStore } from '@skeletonlabs/skeleton';
+	import type { getManga } from '$lib/gql/Queries';
+	import {
+		getContextClient,
+		type OperationResultStore,
+		type Pausable
+	} from '@urql/svelte';
+	import { type ResultOf } from 'gql.tada';
+	import { updateMangas } from '$lib/gql/Mutations';
 	const modalStore = getModalStore();
+	const client = getContextClient();
 
-	export let manga: Readable<
-		ApolloQueryResult<GetMangaQuery> & {
-			query: ObservableQuery<
-				GetMangaQuery,
-				Exact<{
-					id: number;
-				}>
-			>;
-		}
-	>;
+	export let manga: OperationResultStore<ResultOf<typeof getManga>> & Pausable;
 	export let MangaID: number;
 
 	async function libtoggle() {
-		await updateMangas({
-			variables: {
+		await client
+			.mutation(updateMangas, {
 				ids: [MangaID],
-				inLibrary: !$manga.data.manga?.inLibrary ?? false
-			}
-		});
+				inLibrary: !$manga.data?.manga?.inLibrary
+			})
+			.toPromise();
 	}
 	let ImageFailed = false;
 </script>
 
-{#if $manga.loading}
+{#if $manga.fetching}
 	<div
 		class="w-full md:w-1/2 space-y-8 p-4
 			md:overflow-y-auto max-h-full md:absolute md:left-0 md:bottom-0 md:top-0"
@@ -57,20 +54,36 @@
 				</h1>
 				<div class="w-3/4 space-y-1 lg:space-y-2">
 					<h3 class="h3 flex items-center space-x-2">
-						<span class="placeholder animate-pulse inline-block max-w-[33%] w-full" />
-						<span class="placeholder animate-pulse inline-block max-w-[66%] w-full" />
+						<span
+							class="placeholder animate-pulse inline-block max-w-[33%] w-full"
+						/>
+						<span
+							class="placeholder animate-pulse inline-block max-w-[66%] w-full"
+						/>
 					</h3>
 					<h3 class="h3 flex items-center space-x-2">
-						<span class="placeholder animate-pulse inline-block max-w-[33%] w-full" />
-						<span class="placeholder animate-pulse inline-block max-w-[66%] w-full" />
+						<span
+							class="placeholder animate-pulse inline-block max-w-[33%] w-full"
+						/>
+						<span
+							class="placeholder animate-pulse inline-block max-w-[66%] w-full"
+						/>
 					</h3>
 					<h3 class="h3 flex items-center space-x-2">
-						<span class="placeholder animate-pulse inline-block max-w-[33%] w-full" />
-						<span class="placeholder animate-pulse inline-block max-w-[66%] w-full" />
+						<span
+							class="placeholder animate-pulse inline-block max-w-[33%] w-full"
+						/>
+						<span
+							class="placeholder animate-pulse inline-block max-w-[66%] w-full"
+						/>
 					</h3>
 					<h3 class="h3 flex items-center space-x-2">
-						<span class="placeholder animate-pulse inline-block max-w-[33%] w-full" />
-						<span class="placeholder animate-pulse inline-block max-w-[66%] w-full" />
+						<span
+							class="placeholder animate-pulse inline-block max-w-[33%] w-full"
+						/>
+						<span
+							class="placeholder animate-pulse inline-block max-w-[66%] w-full"
+						/>
 					</h3>
 				</div>
 			</div>
@@ -100,23 +113,20 @@
 		</section>
 		<div class="space-x-2">
 			{#each new Array(8) as _}
-				<div class="placeholder animate-pulse inline-block variant-filled-primary w-16" />
+				<div
+					class="placeholder animate-pulse inline-block variant-filled-primary w-16"
+				/>
 			{/each}
 		</div>
 	</div>
 {:else if $manga.error}
 	<div
-		class="w-full md:w-1/2 space-y-8 p-4 md:overflow-y-auto max-h-full md:absolute md:left-0 md:bottom-0 md:top-0"
+		class="w-full md:w-1/2 space-y-8 p-4 md:overflow-y-auto max-h-full md:absolute md:left-0 md:bottom-0 md:top-0 whitespace-pre-wrap"
 	>
-		Error loading manga Info: {JSON.stringify($manga.error)}
+		Errors loading manga Info: {JSON.stringify($manga.error, null, 4)}
 	</div>
-{:else if $manga.errors}
-	<div
-		class="w-full md:w-1/2 space-y-8 p-4 md:overflow-y-auto max-h-full md:absolute md:left-0 md:bottom-0 md:top-0"
-	>
-		Errors loading manga Info: {JSON.stringify($manga.errors)}
-	</div>
-{:else if $manga.data.manga}
+{:else if $manga.data?.manga}
+	{@const mangaFrag = $manga.data.manga}
 	<div
 		class="w-full md:w-1/2 space-y-8 p-4 md:overflow-y-auto max-h-full md:absolute md:left-0 md:bottom-0 md:top-0"
 	>
@@ -124,8 +134,8 @@
 			<div class="md:max-w-[33%] md:flex-0">
 				<Image
 					on:failed={() => (ImageFailed = true)}
-					src={$manga.data.manga.thumbnailUrl ?? ''}
-					alt={$manga.data.manga.title}
+					src={mangaFrag.thumbnailUrl ?? ''}
+					alt={mangaFrag.title}
 					width="w-auto"
 					height="h-auto"
 					class="rounded-lg {ImageFailed && 'hidden'}"
@@ -133,31 +143,35 @@
 			</div>
 			<div class="md:min-w-[66%] space-y-2 lg:space-y-8 md:mt-8 md:flex-1">
 				<h1 class="h1 md:h3 lg:h2 xl:h1 line-clamp-2 xl:leading-[4rem]">
-					{$manga.data.manga.title}
+					{mangaFrag.title}
 				</h1>
 				<div class="space-y-1 lg:space-y-2">
-					<InfoSubTitles text={$manga.data.manga.author} name="Author" />
-					<InfoSubTitles text={$manga.data.manga.artist} name="Artist" />
-					<InfoSubTitles text={$manga.data.manga.status} name="Status" />
-					<InfoSubTitles text={$manga.data.manga.source?.displayName} name="Source" />
+					<InfoSubTitles text={mangaFrag.author} name="Author" />
+					<InfoSubTitles text={mangaFrag.artist} name="Artist" />
+					<InfoSubTitles text={mangaFrag.status} name="Status" />
+					<InfoSubTitles text={mangaFrag.source?.displayName} name="Source" />
 				</div>
 			</div>
 		</div>
 		<MediaQuery query="(min-width: {screens.sm})" let:matches>
 			<div class="grid gap-1 grid-cols-2">
-				<button on:click={libtoggle} class="btn variant-soft h-12 flex items-center px-2 sm:px-5">
+				<button
+					on:click={libtoggle}
+					class="btn variant-soft h-12 flex items-center px-2 sm:px-5"
+				>
 					<IconWrapper
 						name="mdi:heart"
-						class="w-auto h-full aspect-square {$manga.data.manga.inLibrary && 'text-red-500'}"
+						class="w-auto h-full aspect-square {mangaFrag.inLibrary &&
+							'text-red-500'}"
 					/>
 					{#if matches}
 						<span class="uppercase text-sm sm:text-base">
-							{$manga.data.manga.inLibrary ? 'In Library' : 'Add to library'}
+							{mangaFrag.inLibrary ? 'In Library' : 'Add to library'}
 						</span>
 					{/if}
 				</button>
 				<a
-					href={$manga.data.manga.realUrl}
+					href={mangaFrag.realUrl}
 					target="_blank"
 					class="btn variant-soft h-12 flex items-center px-2 sm:px-5"
 				>
@@ -166,9 +180,9 @@
 						<span class="uppercase text-sm sm:text-base">Open site</span>
 					{/if}
 				</a>
-				{#if $manga.data.manga.inLibrary}
+				{#if mangaFrag.inLibrary}
 					<a
-						href="/browse/migrate/manga/{$manga.data.manga.id}"
+						href="/browse/migrate/manga/{mangaFrag.id}"
 						class="btn variant-soft h-12 flex items-center px-2 sm:px-5"
 					>
 						<IconWrapper name="mdi:bird" class="w-auto h-full aspect-square" />
@@ -187,8 +201,8 @@
 					>
 						<IconWrapper
 							name="mdi:target"
-							class="w-auto h-full aspect-square {$manga.data.manga.trackRecords.nodes.length > 0 &&
-								'text-red-500'}"
+							class="w-auto h-full aspect-square {mangaFrag.trackRecords.nodes
+								.length > 0 && 'text-red-500'}"
 						/>
 						{#if matches}
 							<span class="uppercase text-sm sm:text-base"> Tracking</span>
@@ -198,10 +212,10 @@
 			</div>
 		</MediaQuery>
 		<section class="w-full text-xs xs:text-sm md:text-base">
-			<p>{$manga.data.manga.description}</p>
+			<p>{mangaFrag.description}</p>
 		</section>
 		<div class="space-x-2">
-			{#each $manga.data.manga?.genre as genre}
+			{#each mangaFrag?.genre as genre}
 				{#if genre}
 					<div class="badge variant-outline-primary">{genre}</div>
 				{/if}

@@ -16,7 +16,10 @@
 	import Icon from '$lib/components/IconWrapper.svelte';
 	import IconWrapper from '$lib/components/IconWrapper.svelte';
 	export let selectAll: () => void;
-	export let updateSelectedValues: (prop: dlreabook, is: boolean | undefined) => void;
+	export let updateSelectedValues: (
+		prop: dlreabook,
+		is: boolean | undefined
+	) => void;
 </script>
 
 <div class="p-0 flex items-center space-x-1 h-full">
@@ -90,7 +93,10 @@
 							updateSelectedValues(dlreabook.read, is);
 						}}
 					>
-						<IconWrapper name="mdi:book-open-page-variant-outline" class="mr-2" />Un/Read
+						<IconWrapper
+							name="mdi:book-open-page-variant-outline"
+							class="mr-2"
+						/>Un/Read
 					</button>
 					<button
 						class="text-2xl hover:variant-glass-surface w-full p-4 flex items-center justify-start"

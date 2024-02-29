@@ -47,7 +47,10 @@
 				{/if}
 				<label class="pl-3">
 					<span>Reader Mode</span>
-					<select bind:value={$Meta.mangaMetaDefaults.ReaderMode} class="select">
+					<select
+						bind:value={$Meta.mangaMetaDefaults.ReaderMode}
+						class="select"
+					>
 						{#each enumKeys(Mode) as value}
 							<option {value}>{value}</option>
 						{/each}

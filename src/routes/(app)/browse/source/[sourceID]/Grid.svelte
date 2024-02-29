@@ -7,15 +7,7 @@
 -->
 
 <script lang="ts">
-	import {
-		FetchSourceMangaType,
-		fetchSourceManga,
-		type FetchSourceMangaMutation,
-		type FilterChangeInput,
-		type InputMaybe
-	} from '$lib/generated';
 	import type { LayoutData } from './$types';
-	import type { FetchResult } from '@apollo/client';
 	import { errortoast, gridValues } from '$lib/util';
 	import IntersectionObserver from '$lib/components/IntersectionObserver.svelte';
 	import MangaCard from '$lib/components/MangaCard.svelte';
@@ -23,18 +15,29 @@
 	import PreferencesModal from './PreferencesModal.svelte';
 	import { getModalStore } from '@skeletonlabs/skeleton';
 	import { Meta, display } from '$lib/simpleStores';
+	import type { ResultOf, VariablesOf } from 'gql.tada';
+	import { fetchSourceManga } from '$lib/gql/Mutations';
+	import { getContextClient, mutationStore, queryStore } from '@urql/svelte';
+	import { getSource } from '$lib/gql/Queries';
 
 	export let data: LayoutData;
-	export let type: FetchSourceMangaType;
-	export let query: InputMaybe<string> | undefined = undefined;
-	export let filters: InputMaybe<FilterChangeInput | FilterChangeInput[]> | undefined = undefined;
+	export let type: VariablesOf<typeof fetchSourceManga>['type'];
+	export let query: string | undefined = undefined;
+	export let filters:
+		| VariablesOf<typeof fetchSourceManga>['filters']
+		| undefined = undefined;
+	const client = getContextClient();
 
-	let sause = data.sause;
+	let sause = queryStore({
+		client,
+		query: getSource,
+		variables: { id: data.sourceID }
+	});
 	const modalStore = getModalStore();
 
 	let page = 1;
 	let isLoading = true;
-	let all: FetchSourceMangaMutation['fetchSourceManga'] = {
+	let all: ResultOf<typeof fetchSourceManga>['fetchSourceManga'] = {
 		hasNextPage: true,
 		mangas: []
 	};
@@ -50,7 +53,9 @@
 		page = 1;
 	}
 
-	$: source = fetchSourceManga({
+	$: source = mutationStore({
+		client,
+		query: fetchSourceManga,
 		variables: {
 			page: page,
 			source: data.sourceID,
@@ -60,15 +65,17 @@
 		}
 	});
 
-	$: parseall(source);
+	$: parseall($source.data);
 
-	async function parseall(source: Promise<FetchResult<FetchSourceMangaMutation>>) {
+	async function parseall(
+		sourcee: ResultOf<typeof fetchSourceManga> | undefined
+	) {
+		if (!sourcee) return;
 		isLoading = true;
 		try {
-			const result = await source;
-			if (!result.data) throw new Error('Missing data');
-			all.hasNextPage = result.data.fetchSourceManga.hasNextPage;
-			all.mangas.push(...result.data.fetchSourceManga.mangas);
+			if (!sourcee) throw new Error('Missing data');
+			all.hasNextPage = sourcee.fetchSourceManga.hasNextPage;
+			all.mangas.push(...sourcee.fetchSourceManga.mangas);
 			all = all;
 		} catch (error) {
 			if (error instanceof Error) {
@@ -87,7 +94,7 @@
 	}
 </script>
 
-{#if $sause.data.source?.isConfigurable}
+{#if $sause.data?.source?.isConfigurable}
 	<button
 		on:click={() => {
 			modalStore.trigger({
@@ -112,7 +119,9 @@
 						{$Meta.Display === display.Comfortable && 'rounded-none rounded-t-lg'}"
 				/>
 				{#if $Meta.Display === display.Comfortable}
-					<div class="placeholder animate-pulse px-2 h-12 text-center rounded-none rounded-b-lg" />
+					<div
+						class="placeholder animate-pulse px-2 h-12 text-center rounded-none rounded-b-lg"
+					/>
 				{/if}
 			</div>
 		{/each}
@@ -140,19 +149,31 @@
 										{$Meta.Display === display.Comfortable && 'rounded-none rounded-t-lg'}"
 							>
 								{#if $Meta.Display === display.Compact}
-									<div class="absolute bottom-0 left-0 right-0 variant-glass rounded-b-olg">
-										<div class="line-clamp-2 px-2 h-12 text-center" title={manga.title}>
+									<div
+										class="absolute bottom-0 left-0 right-0 variant-glass rounded-b-olg"
+									>
+										<div
+											class="line-clamp-2 px-2 h-12 text-center"
+											title={manga.title}
+										>
 											{manga.title}
 										</div>
 									</div>
 								{/if}
 								{#if manga.inLibrary}
-									<div class="absolute top-1 right-1 badge variant-filled-primary">In Library</div>
+									<div
+										class="absolute top-1 right-1 badge variant-filled-primary"
+									>
+										In Library
+									</div>
 								{/if}
 							</MangaCard>
 							{#if $Meta.Display === display.Comfortable}
 								<div class="variant-glass-surface rounded-b-lg">
-									<div class="line-clamp-2 px-2 h-12 text-center" title={manga.title}>
+									<div
+										class="line-clamp-2 px-2 h-12 text-center"
+										title={manga.title}
+									>
 										{manga.title}
 									</div>
 								</div>

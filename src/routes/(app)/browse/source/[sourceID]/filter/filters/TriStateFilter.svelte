@@ -8,32 +8,35 @@
 
 <script lang="ts">
 	import TriStateSlide from '$lib/components/TriStateSlide.svelte';
-	import {
-		TriState as TriStateenum,
-		type FilterChangeInput,
-		type SourceQuery
-	} from '$lib/generated';
 	import type { TriState } from '$lib/util';
-
+	import type { getSource } from '$lib/gql/Queries';
+	import type { ResultOf, VariablesOf } from 'gql.tada';
+	import type { fetchSourceManga } from '$lib/gql/Mutations';
 	export let filter: Extract<
-		SourceQuery['source']['filters'][0],
+		ResultOf<typeof getSource>['source']['filters'][0],
 		{ __typename?: 'TriStateFilter' | undefined }
 	>;
-	export let filters: FilterChangeInput[];
+
+	export let filters: VariablesOf<typeof fetchSourceManga>['filters'];
 	export let index: number;
 
-	const tmpp = filters.find((e) => e.position === index)?.triState;
-	let state: TriState = TriToonetwothree(tmpp) ?? TriToonetwothree(filter.TriStateDefault);
+	const tmpp = filters?.find((e) => e.position === index)?.triState;
+	let state: TriState =
+		TriToonetwothree(tmpp) ?? TriToonetwothree(filter.TriStateDefault);
 
-	function TriToonetwothree(tri: TriStateenum): TriState;
-	function TriToonetwothree(tri: TriStateenum | undefined | null): TriState | undefined;
-	function TriToonetwothree(tri: unknown): unknown {
+	function TriToonetwothree(tri: (typeof filter)['TriStateDefault']): TriState;
+	function TriToonetwothree(
+		tri: (typeof filter)['TriStateDefault'] | undefined | null
+	): TriState | undefined;
+	function TriToonetwothree(
+		tri: (typeof filter)['TriStateDefault'] | undefined | null
+	): unknown {
 		switch (tri) {
-			case TriStateenum.Ignore:
+			case 'IGNORE':
 				return 0;
-			case TriStateenum.Exclude:
+			case 'EXCLUDE':
 				return 2;
-			case TriStateenum.Include:
+			case 'INCLUDE':
 				return 1;
 		}
 		return undefined;
@@ -42,23 +45,23 @@
 	function OneTwoThreetoTri(tri: TriState) {
 		switch (tri) {
 			case 0:
-				return TriStateenum.Ignore;
+				return 'IGNORE';
 			case 2:
-				return TriStateenum.Exclude;
+				return 'EXCLUDE';
 			case 1:
-				return TriStateenum.Include;
+				return 'INCLUDE';
 		}
 	}
 
 	$: if (state !== TriToonetwothree(filter.TriStateDefault)) {
-		filters = filters.filter((e) => e.position !== index);
+		filters = filters?.filter((e) => e.position !== index) ?? [];
 		filters.push({
 			position: index,
 			triState: OneTwoThreetoTri(state)
 		});
 		filters = filters;
 	} else {
-		filters = filters.filter((e) => e.position !== index);
+		filters = filters?.filter((e) => e.position !== index);
 	}
 </script>
 

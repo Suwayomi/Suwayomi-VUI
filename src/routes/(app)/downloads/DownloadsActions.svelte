@@ -8,18 +8,25 @@
 
 <script lang="ts">
 	import IconButton from '$lib/components/IconButton.svelte';
+	import { getModalStore } from '@skeletonlabs/skeleton';
+	import DownloadsFilterModal from './DownloadsFilterModal.svelte';
+	import type { downloadChanged } from '$lib/gql/Subscriptions';
+	import {
+		getContextClient,
+		type OperationResultStore,
+		type Pausable
+	} from '@urql/svelte';
+	import type { ResultOf } from 'gql.tada';
 	import {
 		clearDownloader,
 		startDownloader,
-		stopDownloader,
-		type DownloadChangedSubscription
-	} from '$lib/generated';
-	import type { FetchResult, Observable } from '@apollo/client';
-	import { getModalStore } from '@skeletonlabs/skeleton';
-	import DownloadsFilterModal from './DownloadsFilterModal.svelte';
+		stopDownloader
+	} from '$lib/gql/Mutations';
 
-	export let downloads: Observable<FetchResult<DownloadChangedSubscription>>;
+	export let downloads: OperationResultStore<ResultOf<typeof downloadChanged>> &
+		Pausable;
 	const modalStore = getModalStore();
+	const client = getContextClient();
 </script>
 
 <div class="h-full">
@@ -36,18 +43,20 @@
 	<IconButton
 		name="mdi:notification-clear-all"
 		on:click={() => {
-			clearDownloader({});
+			client.mutation(clearDownloader, {}).toPromise();
 		}}
 	/>
 
 	<IconButton
-		name="mdi:{$downloads?.data?.downloadChanged.state === 'STARTED' ? 'pause' : 'play'}"
+		name="mdi:{$downloads?.data?.downloadChanged.state === 'STARTED'
+			? 'pause'
+			: 'play'}"
 		on:click={() => {
 			if ($downloads?.data?.downloadChanged.state === 'STARTED') {
-				stopDownloader({});
+				client.mutation(stopDownloader, {}).toPromise();
 				return;
 			}
-			startDownloader({});
+			client.mutation(startDownloader, {}).toPromise();
 		}}
 	/>
 </div>
