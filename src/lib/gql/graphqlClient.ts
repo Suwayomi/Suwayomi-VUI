@@ -574,7 +574,6 @@ function updateTrackUpdater(
 	frag.trackRecords.nodes = frag.trackRecords.nodes.filter(
 		(ee) => ee.id !== trackRecord.id
 	);
-	console.log(frag);
 
 	cache.writeFragment(
 		MangaTypeFragment,
