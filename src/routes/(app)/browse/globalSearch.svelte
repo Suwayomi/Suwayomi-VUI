@@ -192,7 +192,9 @@
 						</div>
 					</div>
 				{:else if source.error}
-					<div>{JSON.stringify(source.error)}</div>
+					<div class="white-space-pre-wrap">
+						{JSON.stringify(source.error, null, 4)}
+					</div>
 				{:else if source.mangas}
 					<HorisontalmangaElement
 						mangas={source.mangas}

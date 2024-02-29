@@ -97,7 +97,9 @@
 
 <Nav let:scrollingElement>
 	{#if $sources.error}
-		{JSON.stringify($sources.error)}
+		<div class="white-space-pre-wrap">
+			{JSON.stringify($sources.error, null, 4)}
+		</div>
 	{:else if $sources.fetching}
 		{#each new Array(5) as _}
 			<div class=" py-4 px-8">
