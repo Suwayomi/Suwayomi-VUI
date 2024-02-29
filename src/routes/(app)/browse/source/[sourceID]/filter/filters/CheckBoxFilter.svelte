@@ -8,25 +8,29 @@
 
 <script lang="ts">
 	import Slide from '$lib/components/Slide.svelte';
-	import type { FilterChangeInput, SourceQuery } from '$lib/generated';
+	import type { fetchSourceManga } from '$lib/gql/Mutations';
+	import type { getSource } from '$lib/gql/Queries';
+	import type { ResultOf, VariablesOf } from 'gql.tada';
 
 	export let filter: Extract<
-		SourceQuery['source']['filters'][0],
+		ResultOf<typeof getSource>['source']['filters'][0],
 		{ __typename?: 'CheckBoxFilter' | undefined }
 	>;
-	export let filters: FilterChangeInput[];
+	export let filters: VariablesOf<typeof fetchSourceManga>['filters'];
 	export let index: number;
 
-	let checked = filters.find((e) => e.position === index)?.checkBoxState ?? filter.CheckBoxDefault;
+	let checked =
+		filters?.find((e) => e.position === index)?.checkBoxState ??
+		filter.CheckBoxDefault;
 	$: if (checked !== filter.CheckBoxDefault) {
-		filters = filters.filter((e) => e.position !== index);
+		filters = filters?.filter((e) => e.position !== index) ?? [];
 		filters.push({
 			position: index,
 			checkBoxState: checked
 		});
 		filters = filters;
 	} else {
-		filters = filters.filter((e) => e.position !== index);
+		filters = filters?.filter((e) => e.position !== index);
 	}
 </script>
 

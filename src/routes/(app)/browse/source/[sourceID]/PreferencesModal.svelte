@@ -15,17 +15,26 @@
 	import SwitchPreference from './preferences/SwitchPreference.svelte';
 	import MultiSelectListPreference from './preferences/MultiSelectListPreference.svelte';
 	import EditTextPreference from './preferences/EditTextPreference.svelte';
+	import { getContextClient, queryStore } from '@urql/svelte';
+	import { getSource } from '$lib/gql/Queries';
 
 	export let data: LayoutData;
 	export let clearAll: () => void;
 
 	const modalStore = getModalStore();
-	const sause = data.sause;
+	const client = getContextClient();
+	const sause = queryStore({
+		client,
+		query: getSource,
+		variables: { id: data.sourceID }
+	});
 	onDestroy(clearAll);
 </script>
 
-{#if $modalStore[0] && $sause.data.source?.isConfigurable}
-	<div class="card p-0 w-modal shadow-xl space-y-4 rounded-lg max-h-screen overflow-y-auto">
+{#if $modalStore[0] && $sause.data?.source?.isConfigurable}
+	<div
+		class="card p-0 w-modal shadow-xl space-y-4 rounded-lg max-h-screen overflow-y-auto"
+	>
 		<h1 class="h3 p-4 border-b border-surface-500">Preferences</h1>
 		<div class="pl-4 pb-4 max-h-96 overflow-y-auto">
 			{#each $sause.data.source.preferences as pref, index}

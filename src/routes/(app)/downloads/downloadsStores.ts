@@ -7,8 +7,13 @@
 import { localStorageStore } from '@skeletonlabs/skeleton';
 import * as devalue from 'devalue';
 
-export type Filter = 'QUEUED' | 'DOWNLOADING' | 'FINISHED' | 'ERROR';
+export const FilterT = ['QUEUED', 'DOWNLOADING', 'FINISHED', 'ERROR'] as const;
+export type Filter = (typeof FilterT)[number];
 
-export const filter = localStorageStore<Set<Filter>>('Downlaodsfilter', new Set([]), {
-	serializer: devalue
-});
+export const filter = localStorageStore<Set<Filter>>(
+	'Downlaodsfilter',
+	new Set([]),
+	{
+		serializer: devalue
+	}
+);

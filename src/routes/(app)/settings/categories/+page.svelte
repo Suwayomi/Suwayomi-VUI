@@ -11,28 +11,27 @@
 	import CategoriesEditModal from './CategoriesEditModal.svelte';
 	import IconButton from '$lib/components/IconButton.svelte';
 	import IconWrapper from '$lib/components/IconWrapper.svelte';
-	import {
-		deleteCategory,
-		type CategoriesQuery,
-		updateCategoryOrder,
-		type DeleteCategoryMutation,
-		CategoriesDoc
-	} from '$lib/generated';
-	import { categories } from '$lib/generated';
 	import { getModalStore } from '@skeletonlabs/skeleton';
 	import { getToastStore } from '$lib/components/Toast/stores';
-	import type { ApolloCache, FetchResult } from '@apollo/client';
 	import TooltipIconButton from '$lib/components/TooltipIconButton.svelte';
 	import { AppBarData } from '$lib/MountTitleAction';
+	import { type ResultOf } from 'gql.tada';
+	import { getCategories } from '$lib/gql/Queries';
+	import { getContextClient, queryStore } from '@urql/svelte';
+	import { CategoryTypeFragment } from '$lib/gql/Fragments';
+	import { deleteCategory, updateCategoryOrder } from '$lib/gql/Mutations';
 
 	AppBarData('Categories');
 
 	const modalStore = getModalStore();
 	const toastStore = getToastStore();
+	const client = getContextClient();
+	let cats = queryStore({
+		client,
+		query: getCategories
+	});
 
-	let cats = categories({});
-
-	type catT = CategoriesQuery['categories']['nodes'][0];
+	type catT = ResultOf<typeof CategoryTypeFragment>;
 
 	enum Movement {
 		top = 'top',
@@ -52,26 +51,26 @@
 		});
 	}
 
-	function deleteCategoryUpdater(
-		cache: ApolloCache<unknown>,
-		{ data }: Omit<FetchResult<DeleteCategoryMutation>, 'context'>
-	) {
-		if (!data) return;
-		const categoriesData = structuredClone(
-			cache.readQuery<CategoriesQuery>({
-				query: CategoriesDoc
-			})
-		);
-		if (!categoriesData) return;
-		categoriesData.categories.nodes = categoriesData.categories.nodes.filter(
-			(e) => e.id !== data.deleteCategory.category?.id
-		);
+	// function deleteCategoryUpdater(
+	// 	cache: ApolloCache<unknown>,
+	// 	{ data }: Omit<FetchResult<DeleteCategoryMutation>, 'context'>
+	// ) {
+	// 	if (!data) return;
+	// 	const categoriesData = structuredClone(
+	// 		cache.readQuery<CategoriesQuery>({
+	// 			query: CategoriesDoc
+	// 		})
+	// 	);
+	// 	if (!categoriesData) return;
+	// 	categoriesData.categories.nodes = categoriesData.categories.nodes.filter(
+	// 		(e) => e.id !== data.deleteCategory.category?.id
+	// 	);
 
-		cache.writeQuery({
-			query: CategoriesDoc,
-			data: categoriesData
-		});
-	}
+	// 	cache.writeQuery({
+	// 		query: CategoriesDoc,
+	// 		data: categoriesData
+	// 	});
+	// }
 
 	function delCategory(e: MouseEvent, cat: catT): void {
 		e.stopPropagation();
@@ -80,7 +79,8 @@
 			action: {
 				label: 'Delete',
 				response: () => {
-					deleteCategory({ variables: { categoryId: cat.id }, update: deleteCategoryUpdater });
+					client.mutation(deleteCategory, { categoryId: cat.id }).toPromise();
+					// deleteCategory({ variables: { categoryId: cat.id }, update: deleteCategoryUpdater });
 				}
 			},
 			actionClass: 'btn variant-filled-error',
@@ -90,26 +90,37 @@
 
 	function move(e: MouseEvent, cat: catT, movement: Movement) {
 		e.stopPropagation();
+		if (!$cats.data) return;
 		switch (movement) {
 			case Movement.top:
 				if (cat.order !== 1) {
-					updateCategoryOrder({ variables: { id: cat.id, position: 1 } });
+					client.mutation(updateCategoryOrder, {
+						id: cat.id,
+						position: 1
+					});
 				}
 				break;
 			case Movement.up:
 				if (cat.order !== 1) {
-					updateCategoryOrder({ variables: { id: cat.id, position: cat.order - 1 } });
+					client.mutation(updateCategoryOrder, {
+						id: cat.id,
+						position: cat.order - 1
+					});
 				}
 				break;
 			case Movement.down:
 				if (cat.order !== $cats.data.categories.nodes.length - 1) {
-					updateCategoryOrder({ variables: { id: cat.id, position: cat.order + 1 } });
+					client.mutation(updateCategoryOrder, {
+						id: cat.id,
+						position: cat.order + 1
+					});
 				}
 				break;
 			default:
-				if (cat.order !== $cats.data.categories.nodes.length - 1) {
-					updateCategoryOrder({
-						variables: { id: cat.id, position: $cats.data.categories.nodes.length - 1 }
+				if (cat.order !== $cats.data?.categories.nodes.length - 1) {
+					client.mutation(updateCategoryOrder, {
+						id: cat.id,
+						position: $cats.data.categories.nodes.length - 1
 					});
 				}
 				break;
@@ -127,7 +138,7 @@
 	}
 </script>
 
-{#if $cats.loading}
+{#if $cats.fetching}
 	{#each new Array(5) as _}
 		<div
 			class="text-left flex items-center w-full h-16 hover:variant-glass-surface cursor-pointer p-2"
@@ -149,11 +160,11 @@
 		</div>
 	{/each}
 {:else if $cats.error}
-	{JSON.stringify($cats.error)}
-{:else if $cats.errors}
-	{JSON.stringify($cats.errors)}
-{:else if $cats.data.categories.nodes}
-	{#each $cats.data.categories.nodes.toSorted((a, b) => (a.order > b.order ? 1 : -1)) as cat}
+	<div class="whitespace-pre-wrap">
+		{JSON.stringify($cats.error, null, 4)}
+	</div>
+{:else if $cats.data?.categories.nodes}
+	{#each $cats.data.categories.nodes.toSorted( (a, b) => (a.order > b.order ? 1 : -1) ) as cat}
 		<button
 			on:click={(e) => edit(e, cat)}
 			class="text-left flex items-center w-full h-16 hover:variant-glass-surface cursor-pointer p-2"

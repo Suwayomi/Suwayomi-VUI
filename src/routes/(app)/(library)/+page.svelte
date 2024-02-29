@@ -7,7 +7,6 @@
 -->
 
 <script lang="ts">
-	import { category, type CategoryQuery, categories as getCategories } from '$lib/generated';
 	import IntersectionObserver from '$lib/components/IntersectionObserver.svelte';
 	import MangaCard from '$lib/components/MangaCard.svelte';
 	import { longPress } from '$lib/press';
@@ -15,13 +14,21 @@
 	import { Tab, TabGroup } from '@skeletonlabs/skeleton';
 	import { queryParam, ssp } from 'sveltekit-search-params';
 	import LibraryActions from './libraryActions.svelte';
-	import { selected, selectMode } from './LibraryStores';
+	import { selected, selectMode, type MangaType } from './LibraryStores';
 	import { onMount } from 'svelte';
 	import { AppBarData } from '$lib/MountTitleAction';
 	import { gridValues, HelpDoSelect, HelpSelectAll } from '$lib/util';
 	import IconWrapper from '$lib/components/IconWrapper.svelte';
 
-	const categories = getCategories({});
+	import { getCategories, getCategory } from '$lib/gql/Queries';
+	import { getContextClient, queryStore } from '@urql/svelte';
+
+	const client = getContextClient();
+
+	const categories = queryStore({
+		client,
+		query: getCategories
+	});
 
 	AppBarData('Library', {
 		component: LibraryActions,
@@ -37,22 +44,24 @@
 		};
 	});
 
-	type MangaType = NonNullable<CategoryQuery['category']>['mangas']['nodes'][0];
-
 	let lastSelected: MangaType | undefined;
 
 	const query = queryParam('q', ssp.string(), { pushHistory: false });
 	const tab = queryParam('tab', ssp.number(), { pushHistory: false });
-	$: mangas = category({
+	$: mangas = queryStore({
+		client,
+		query: getCategory,
 		variables: { id: $tab ?? 0 },
-		fetchPolicy: 'cache-first',
-		nextFetchPolicy: 'cache-only'
+		requestPolicy: 'cache-first'
 	});
 
 	$: if ($tab === null) {
 		categories.subscribe((e) => {
 			window.requestAnimationFrame(() => {
-				tab.set(e.data?.categories?.nodes.find((ele) => ele.default && ele.id !== 0)?.id ?? 0);
+				tab.set(
+					e.data?.categories.nodes?.find((ele) => ele.default && ele.id !== 0)
+						?.id ?? 0
+				);
 			});
 		});
 	}
@@ -74,7 +83,9 @@
 	$: if ($selectMode && Object.keys($selected).length > 0) {
 		Object.keys($selected).forEach((ele) => {
 			if (filteredMangas !== undefined) {
-				const tmp = filteredMangas.findIndex((elem) => elem.id.toString() === ele);
+				const tmp = filteredMangas.findIndex(
+					(elem) => elem.id.toString() === ele
+				);
 				if (tmp === -1) {
 					delete $selected[parseInt(ele)];
 					$selected = $selected;
@@ -100,7 +111,11 @@
 		if ($Meta.Unread === 1 && ele.unreadCount === 0) return false;
 		if ($Meta.Unread === 2 && ele.unreadCount !== 0) return false;
 
-		if ($query !== '' && $query !== null && !ele.title.toLowerCase().includes($query.toLowerCase()))
+		if (
+			$query !== '' &&
+			$query !== null &&
+			!ele.title.toLowerCase().includes($query.toLowerCase())
+		)
 			return false;
 
 		return true;
@@ -120,18 +135,18 @@
 				break;
 			case sort['Latest Read']:
 				tru =
-					parseInt(a.latestReadChapter?.lastReadAt ?? 0) >
-					parseInt(b.latestReadChapter?.lastReadAt ?? 0);
+					parseInt(a.latestReadChapter?.lastReadAt ?? '0') >
+					parseInt(b.latestReadChapter?.lastReadAt ?? '0');
 				break;
 			case sort['Latest Fetched']:
 				tru =
-					parseInt(a.latestFetchedChapter?.fetchedAt ?? 0) >
-					parseInt(b.latestFetchedChapter?.fetchedAt ?? 0);
+					parseInt(a.latestFetchedChapter?.fetchedAt ?? '0') >
+					parseInt(b.latestFetchedChapter?.fetchedAt ?? '0');
 				break;
 			case sort['Latest Uploaded']:
 				tru =
-					parseInt(a.latestUploadedChapter?.uploadDate ?? 0) >
-					parseInt(b.latestUploadedChapter?.uploadDate ?? 0);
+					parseInt(a.latestUploadedChapter?.uploadDate ?? '0') >
+					parseInt(b.latestUploadedChapter?.uploadDate ?? '0');
 		}
 
 		if ($Meta.Asc) tru = !tru;
@@ -143,7 +158,7 @@
 	}
 </script>
 
-{#if $categories.loading}
+{#if $categories.fetching}
 	<div class="flex pl-4 space-x-4 h-[47px] mb-3 items-center">
 		<div class="placeholder animate-pulse w-20" />
 		<div class="placeholder animate-pulse w-20" />
@@ -158,15 +173,17 @@
 			{$Meta.Display === display.Comfortable && 'rounded-none rounded-t-lg'}"
 				/>
 				{#if $Meta.Display === display.Comfortable}
-					<div class="placeholder animate-pulse px-2 h-12 text-center rounded-none rounded-b-lg" />
+					<div
+						class="placeholder animate-pulse px-2 h-12 text-center rounded-none rounded-b-lg"
+					/>
 				{/if}
 			</div>
 		{/each}
 	</div>
 {:else if $categories.error}
-	Error loading categories: {JSON.stringify($categories.error)}
-{:else if $categories.errors}
-	Errors loading categories: {JSON.stringify($categories.errors)}
+	<div class="whitespace-pre-wrap">
+		Error loading categories: {JSON.stringify($categories.error, null, 4)}
+	</div>
 {:else}
 	<TabGroup>
 		{#if orderedCategories}
@@ -177,7 +194,7 @@
 			{/each}
 		{/if}
 		<svelte:fragment slot="panel">
-			{#if $mangas.loading}
+			{#if $mangas.fetching}
 				<div class="yoy grid m-2 gap-2 {gridValues}">
 					{#each new Array(orderedCategories.find((e) => e.id === $tab ?? 0)?.mangas.totalCount ?? 10) as _}
 						<div class="aspect-cover w-full">
@@ -194,8 +211,10 @@
 						</div>
 					{/each}
 				</div>
-			{:else if $mangas.errors}
-				Error loading Mangas of category: {JSON.stringify($mangas.errors)}
+			{:else if $mangas.error}
+				<div class="whitespace-pre-wrap">
+					Error loading mangas: {JSON.stringify($mangas.error, null, 4)}
+				</div>
 			{:else if sortedMangas}
 				<div class="yoy grid {gridValues} gap-2 m-2">
 					{#each sortedMangas as manga (manga.id)}
@@ -217,7 +236,13 @@
 											if ($selectMode) {
 												e.stopPropagation();
 												e.preventDefault();
-												lastSelected = HelpDoSelect(manga, e, lastSelected, sortedMangas, selected);
+												lastSelected = HelpDoSelect(
+													manga,
+													e,
+													lastSelected,
+													sortedMangas,
+													selected
+												);
 											}
 										}}
 										class="hover:opacity-70 cursor-pointer h-full"
@@ -228,7 +253,8 @@
 											thumbnailUrl={manga.thumbnailUrl ?? ''}
 											title={manga.title}
 											class="select-none {$selectMode && 'opacity-80'}"
-											rounded="{$Meta.Display === display.Compact && 'rounded-lg'}
+											rounded="{$Meta.Display === display.Compact &&
+												'rounded-lg'}
 										{$Meta.Display === display.Comfortable && 'rounded-none rounded-t-lg'}"
 										>
 											<div class="absolute top-2 left-2 flex">
@@ -266,8 +292,13 @@
 												</div>
 											{/if}
 											{#if $Meta.Display === display.Compact}
-												<div class="absolute bottom-0 left-0 right-0 variant-glass rounded-b-olg">
-													<div class="line-clamp-2 px-2 h-12 text-center" title={manga.title}>
+												<div
+													class="absolute bottom-0 left-0 right-0 variant-glass rounded-b-olg"
+												>
+													<div
+														class="line-clamp-2 px-2 h-12 text-center"
+														title={manga.title}
+													>
 														{manga.title}
 													</div>
 												</div>
@@ -275,7 +306,10 @@
 										</MangaCard>
 										{#if $Meta.Display === display.Comfortable}
 											<div class="variant-glass-surface rounded-b-lg">
-												<div class="line-clamp-2 px-2 h-12 text-center" title={manga.title}>
+												<div
+													class="line-clamp-2 px-2 h-12 text-center"
+													title={manga.title}
+												>
 													{manga.title}
 												</div>
 											</div>

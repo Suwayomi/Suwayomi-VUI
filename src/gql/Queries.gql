@@ -349,7 +349,11 @@ query ConditionalChaptersOfGivenManga(
 ) {
 	chapters(
 		filter: { mangaId: { in: $in } }
-		condition: { isDownloaded: $isDownloaded, isRead: $isRead, isBookmarked: $isBookmarked }
+		condition: {
+			isDownloaded: $isDownloaded
+			isRead: $isRead
+			isBookmarked: $isBookmarked
+		}
 	) {
 		nodes {
 			id

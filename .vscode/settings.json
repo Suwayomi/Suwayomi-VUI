@@ -122,5 +122,7 @@
 	"licenser.projectName": "suwayomi-VUI",
 	"licenser.author": "Contributors to the Suwayomi project",
 	"cSpell.words": ["iconify", "localsourcelang", "tipclass"],
-	"cSpell.ignoreRegExpList": ["\\s*import (.+\n?)+ from '.*';"]
+	"cSpell.ignoreRegExpList": ["\\s*import (.+\n?)+ from '.*';"],
+	"typescript.tsdk": "node_modules/typescript/lib",
+	"typescript.enablePromptUseWorkspaceTsdk": true
 }

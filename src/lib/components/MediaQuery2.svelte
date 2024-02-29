@@ -19,9 +19,10 @@
 	let mql: Screens<MediaQueryList | undefined> = Object.fromEntries(
 		Object.entries(screens).map((e) => [e[0], undefined])
 	) as Screens<MediaQueryList | undefined>;
-	let mqlListener: Screens<((e: MediaQueryListEvent) => void) | undefined> = Object.fromEntries(
-		Object.entries(screens).map((e) => [e[0], undefined])
-	) as Screens<((e: MediaQueryListEvent) => void) | undefined>;
+	let mqlListener: Screens<((e: MediaQueryListEvent) => void) | undefined> =
+		Object.fromEntries(
+			Object.entries(screens).map((e) => [e[0], undefined])
+		) as Screens<((e: MediaQueryListEvent) => void) | undefined>;
 
 	let wasMounted = false;
 	let matches: Screens<boolean> = Object.fromEntries(
@@ -43,26 +44,30 @@
 	}
 
 	function addNewListener(queries: Screens<string>) {
-		(Object.entries(queries) as [keyof Screens<string>, string][]).forEach((query) => {
-			mql[query[0]] = window.matchMedia(query[1]);
-			mqlListener[query[0]] = (e: MediaQueryListEvent) => {
-				matches[query[0]] = e.matches;
-			};
-			const listne = mqlListener[query[0]];
-			const ml = mql[query[0]];
-			if (!listne || !ml) return;
-			ml.addEventListener('change', listne);
-			matches[query[0]] = ml.matches;
-		});
+		(Object.entries(queries) as [keyof Screens<string>, string][]).forEach(
+			(query) => {
+				mql[query[0]] = window.matchMedia(query[1]);
+				mqlListener[query[0]] = (e: MediaQueryListEvent) => {
+					matches[query[0]] = e.matches;
+				};
+				const listne = mqlListener[query[0]];
+				const ml = mql[query[0]];
+				if (!listne || !ml) return;
+				ml.addEventListener('change', listne);
+				matches[query[0]] = ml.matches;
+			}
+		);
 	}
 
 	function removeActiveListener(queries: Screens<string>) {
-		(Object.entries(queries) as [keyof Screens<string>, string][]).forEach((query) => {
-			const listne = mqlListener[query[0]];
-			const ml = mql[query[0]];
-			if (!listne || !ml) return;
-			ml.removeEventListener('change', listne);
-		});
+		(Object.entries(queries) as [keyof Screens<string>, string][]).forEach(
+			(query) => {
+				const listne = mqlListener[query[0]];
+				const ml = mql[query[0]];
+				if (!listne || !ml) return;
+				ml.removeEventListener('change', listne);
+			}
+		);
 	}
 
 	$: gridnumber = getgridnumber(matches);

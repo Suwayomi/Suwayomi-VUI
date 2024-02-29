@@ -7,14 +7,17 @@
 -->
 
 <script lang="ts">
-	import { DownloadState, type DownloadsOnChaptersSubscription } from '$lib/generated';
+	import type { downloadsOnChapters } from '$lib/gql/Subscriptions';
 	import { ProgressRadial } from '@skeletonlabs/skeleton';
+	import type { ResultOf } from 'gql.tada';
 
-	export let download: DownloadsOnChaptersSubscription['downloadChanged']['queue'][0] | undefined;
+	export let download:
+		| ResultOf<typeof downloadsOnChapters>['downloadChanged']['queue'][0]
+		| undefined;
 </script>
 
 {#if download}
-	{#if download.state === DownloadState.Downloading}
+	{#if download.state === 'DOWNLOADING'}
 		<ProgressRadial
 			width="w-auto"
 			class="h-full aspect-square flex items-center"
@@ -23,11 +26,7 @@
 		>
 			{Math.round(download.progress * 100)}%
 		</ProgressRadial>
-	{:else if download.state === DownloadState.Queued}
-		<div>Queued</div>
-	{:else if download.state === DownloadState.Error}
-		<div>Error</div>
-	{:else if download.state === DownloadState.Finished}
-		<div>Finished</div>
+	{:else}
+		<div class="capitalize">{download.state.toLocaleLowerCase()}</div>
 	{/if}
 {/if}

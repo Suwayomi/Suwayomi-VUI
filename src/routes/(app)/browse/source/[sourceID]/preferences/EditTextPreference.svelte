@@ -7,19 +7,25 @@
 -->
 
 <script lang="ts">
-	import { updateSourcePreference, type SourceQuery } from '$lib/generated';
 	import { popup } from '@skeletonlabs/skeleton';
+	import { updateSourcePreference } from '$lib/gql/Mutations';
+	import type { getSource } from '$lib/gql/Queries';
+	import { getContextClient, queryStore } from '@urql/svelte';
+	import type { ResultOf } from 'gql.tada';
 
 	export let pref: Extract<
-		SourceQuery['source']['preferences'][0],
+		ResultOf<typeof getSource>['source']['preferences'][0],
 		{ __typename?: 'EditTextPreference' | undefined }
 	>;
+
 	export let index: number;
 	export let id: string;
 	let value = pref.EditTextCurrentValue ?? pref.EditTextDefault;
-
+	const client = getContextClient();
 	function handelChange() {
-		updateSourcePreference({
+		queryStore({
+			client,
+			query: updateSourcePreference,
 			variables: {
 				source: id,
 				editTextState: value,

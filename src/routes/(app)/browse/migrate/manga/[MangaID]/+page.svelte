@@ -7,21 +7,27 @@
 -->
 
 <script lang="ts">
-	import { getManga } from '$lib/generated';
 	import { queryParam, ssp } from 'sveltekit-search-params';
 	import type { PageData } from './$types';
 	import GlobalSearch from '../../../globalSearch.svelte';
 	import { getModalStore } from '@skeletonlabs/skeleton';
 	import MigrateModal from './migrateModal.svelte';
+	import { getContextClient, queryStore } from '@urql/svelte';
+	import { getManga } from '$lib/gql/Queries';
+
 	export let data: PageData;
 
 	const modalStore = getModalStore();
 
 	const query = queryParam('q', ssp.string(), { pushHistory: false });
+	const client = getContextClient();
+	const manga = queryStore({
+		client,
+		query: getManga,
+		variables: { id: data.MangaID }
+	});
 
-	const manga = getManga({ variables: { id: data.MangaID } });
-
-	$: $query = $manga.data.manga?.title || null;
+	$: $query = $manga.data?.manga?.title || null;
 
 	function OpenModal(id: number) {
 		modalStore.trigger({
@@ -30,13 +36,13 @@
 				ref: MigrateModal,
 				props: {
 					id,
-					manga: $manga.data.manga
+					manga: $manga.data?.manga
 				}
 			}
 		});
 	}
 </script>
 
-{#if $manga.data.manga?.title}
-	<GlobalSearch title={$manga.data.manga.title} {OpenModal} />
+{#if $manga.data?.manga?.title}
+	<GlobalSearch title={$manga.data?.manga?.title} {OpenModal} />
 {/if}

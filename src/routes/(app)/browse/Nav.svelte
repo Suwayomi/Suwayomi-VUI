@@ -12,7 +12,10 @@
 </script>
 
 <div class="flex relative h-full">
-	<div bind:this={scrollingElement} class="w-full overflow-y-auto absolute top-0 bottom-0">
+	<div
+		bind:this={scrollingElement}
+		class="w-full overflow-y-auto absolute top-0 bottom-0"
+	>
 		<div
 			class="sticky top-0 z-10 overflow-x-auto hide-scrollbar grid justify-items-center card rounded-none variant-glass"
 		>

@@ -61,7 +61,7 @@
 	export let LoadingHeight: CssClasses = '';
 	export let LoadingWidth: CssClasses = '';
 	export let draggable = true;
-	export let reload_button = false; // TODO: Implement reload button
+	export let reload_button = false;
 </script>
 
 <div

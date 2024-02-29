@@ -13,5 +13,8 @@ export default defineConfig({
 				ws: true
 			}
 		}
+	},
+	optimizeDeps: {
+		exclude: ['@urql/svelte']
 	}
 });

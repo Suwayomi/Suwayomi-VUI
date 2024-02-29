@@ -8,37 +8,38 @@
 
 <script lang="ts">
 	import Image from '$lib/components/Image.svelte';
-	import {
-		searchTracker,
-		type GetMangaQuery,
-		trackers,
-		type SearchTrackerQuery,
-		updateTrack,
-		bindTrack,
-		type Exact
-	} from '$lib/generated';
-	import { bindTrackUpdater, unbindUpdater } from '$lib/util';
-	import type { ApolloQueryResult, ObservableQuery } from '@apollo/client';
+	import { TrackRecordTypeFragment } from '$lib/gql/Fragments';
+	import { bindTrack, updateTrack } from '$lib/gql/Mutations';
+	import { searchTracker, type getManga, trackers } from '$lib/gql/Queries';
 	import { Tab, TabGroup, getModalStore } from '@skeletonlabs/skeleton';
-	import type { Readable } from 'svelte/store';
-	export let manga: Readable<
-		ApolloQueryResult<GetMangaQuery> & {
-			query: ObservableQuery<
-				GetMangaQuery,
-				Exact<{
-					id: number;
-				}>
-			>;
-		}
-	>;
+	import {
+		getContextClient,
+		queryStore,
+		type OperationResultStore,
+		type Pausable
+	} from '@urql/svelte';
+	import { type ResultOf } from 'gql.tada';
+
+	export let manga: OperationResultStore<ResultOf<typeof getManga>> & Pausable;
 
 	const modalStore = getModalStore();
 
-	let preQuery = $manga.data?.manga?.title;
-	let query = $manga.data?.manga?.title;
-	$: items = searchTracker({ variables: { query, trackerId: tabSet } });
+	let preQuery = $manga.data?.manga?.title ?? '';
+	let query = $manga.data?.manga?.title ?? '';
+	const client = getContextClient();
+	$: items = queryStore({
+		client,
+		query: searchTracker,
+		variables: { query, trackerId: tabSet }
+	});
 
-	const Trackers = trackers({ variables: { isLoggedIn: true }, fetchPolicy: 'network-only' });
+	const Trackers = queryStore({
+		client,
+		query: trackers,
+		variables: { isLoggedIn: true },
+		requestPolicy: 'network-only'
+	});
+
 	let tabSet: number = 0;
 	Trackers.subscribe((e) => {
 		if (e.data?.trackers?.nodes?.length) {
@@ -48,21 +49,32 @@
 
 	async function trackThis(
 		item:
-			| SearchTrackerQuery['searchTracker']['trackSearches'][0]
-			| GetMangaQuery['manga']['trackRecords']['nodes'][0]
+			| ResultOf<typeof TrackRecordTypeFragment>
+			| ResultOf<typeof searchTracker>['searchTracker']['trackSearches'][0]
 	) {
-		const same = $manga.data.manga.trackRecords.nodes.find((e) => e.remoteId === item.remoteId);
+		const same = $manga.data?.manga?.trackRecords.nodes.find(
+			(e) => e.remoteId === item.remoteId
+		);
 		if (same) {
-			await updateTrack({
-				variables: { input: { recordId: same.id, unbind: true } },
-				update: (a, b) => unbindUpdater(a, b, $manga.data.manga.id, tabSet)
-			});
+			await client
+				.mutation(updateTrack, {
+					input: {
+						recordId: same.id,
+						unbind: true
+					}
+				})
+				.toPromise();
 			return;
 		}
-		await bindTrack({
-			variables: { mangaId: $manga.data.manga.id, trackerId: tabSet, remoteId: item.remoteId },
-			update: (a, b) => bindTrackUpdater(a, b, $manga.data.manga.id, tabSet)
-		});
+		const id = $manga.data?.manga?.id;
+		if (!id) return;
+		await client
+			.mutation(bindTrack, {
+				mangaId: id,
+				trackerId: tabSet,
+				remoteId: item.remoteId
+			})
+			.toPromise();
 	}
 </script>
 
@@ -71,13 +83,13 @@
 		<h1 class="h3 py-4 pl-4">Tracking</h1>
 		<div class="border-t border-surface-700">
 			<div class="grid grid-cols-1 gap-1">
-				{#if $Trackers.loading}
+				{#if $Trackers.fetching}
 					Loading...
 				{:else if $Trackers.error}
-					{JSON.stringify($Trackers.error)}
-				{:else if $Trackers.errors}
-					{JSON.stringify($Trackers.errors)}
-				{:else if $Trackers.data.trackers.nodes.length}
+					<div class="white-space-pre-wrap">
+						{JSON.stringify($Trackers.error, null, 4)}
+					</div>
+				{:else if $Trackers.data?.trackers.nodes.length}
 					<div class="px-4 pt-1">
 						<input
 							type="text"
@@ -87,26 +99,27 @@
 						/>
 					</div>
 					<TabGroup>
-						{#each $Trackers.data.trackers.nodes as tracker}
-							<Tab bind:group={tabSet} name={tracker.name} value={tracker.id}>{tracker.name}</Tab>
+						{#each $Trackers.data.trackers.nodes as tracke}
+							{@const tracker = tracke}
+							<Tab bind:group={tabSet} name={tracker.name} value={tracker.id}
+								>{tracker.name}</Tab
+							>
 						{/each}
 						<!-- Tab Panels --->
 						<svelte:fragment slot="panel">
-							{@const ThisTrack = $manga.data.manga.trackRecords.nodes.find(
+							{@const ThisTrack = $manga.data?.manga?.trackRecords.nodes?.find(
 								(e) => e.trackerId === tabSet
 							)}
 							<div class="overflow-auto h-64">
 								{#if $items.error}
-									<div class="p-4">
-										{JSON.stringify($items.error)}
+									<div class="p-4 whitespace-pre-wrap">
+										{JSON.stringify($items.error, null, 4)}
 									</div>
-								{:else if $items.errors}
-									<div class="p-4">
-										{JSON.stringify($items.errors)}
-									</div>
-								{:else if $items.loading}
+								{:else if $items.fetching}
 									{#each new Array(3).fill(0) as _}
-										<span class="flex pl-4 p-1 w-full text-left hover:variant-ghost-surface">
+										<span
+											class="flex pl-4 p-1 w-full text-left hover:variant-ghost-surface"
+										>
 											<div class="w-1/5 pr-1 flex-shrink-0">
 												<div
 													class="rounded-lg placeholder animate-pulse w-full h-full aspect-cover"
@@ -122,7 +135,9 @@
 														<div class="placeholder animate-pulse h-4 w-full" />
 													</div>
 													{#each new Array(3).fill(0) as _}
-														<div class="line-clamp-3 placeholder animate-pulse h-4 w-full mt-1" />
+														<div
+															class="line-clamp-3 placeholder animate-pulse h-4 w-full mt-1"
+														/>
 													{/each}
 												</div>
 											</div>

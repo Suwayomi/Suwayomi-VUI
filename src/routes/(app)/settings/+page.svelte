@@ -51,7 +51,10 @@
 		})}
 	class=" text-left flex items-center w-full h-16 hover:variant-glass-surface cursor-pointer"
 >
-	<IconWrapper class="h-full w-auto p-2" name="mdi:book-open-page-variant-outline" />
+	<IconWrapper
+		class="h-full w-auto p-2"
+		name="mdi:book-open-page-variant-outline"
+	/>
 	<div class="w-full">Default Reader Settings</div>
 </button>
 <button
@@ -76,7 +79,9 @@
 	<IconWrapper class="h-full w-auto p-2" name="streamline:insert-top-left" />
 	<div class="w-full">Manga Settings</div>
 </button>
-<label class="text-left flex items-center w-full h-16 hover:variant-glass-surface cursor-pointer">
+<label
+	class="text-left flex items-center w-full h-16 hover:variant-glass-surface cursor-pointer"
+>
 	<IconWrapper class="h-full w-auto p-2" name="mdi:television-guide" />
 	<div class="w-full">Grid Display</div>
 	<select bind:value={$Meta.Display} class="select max-w-sm mr-1">
@@ -86,14 +91,17 @@
 	</select>
 </label>
 <button
-	on:click|preventDefault|stopPropagation|capture={() => ($Meta.dark = !$Meta.dark)}
+	on:click|preventDefault|stopPropagation|capture={() =>
+		($Meta.dark = !$Meta.dark)}
 	class=" text-left flex items-center w-full h-16 hover:variant-glass-surface cursor-pointer"
 >
 	<IconWrapper class="h-full w-auto p-2" name="mdi:theme-light-dark" />
 	<div class="w-full">Dark mode</div>
 	<Lightswitch width="w-16" height="h-8" class="mr-1" />
 </button>
-<label class="text-left flex items-center w-full h-16 hover:variant-glass-surface cursor-pointer">
+<label
+	class="text-left flex items-center w-full h-16 hover:variant-glass-surface cursor-pointer"
+>
 	<IconWrapper class="h-full w-auto p-2" name="mdi:palette-outline" />
 	<div class="w-full">Theme settings</div>
 	<select bind:value={$Meta.theme} class="select max-w-sm mr-1">
@@ -110,7 +118,10 @@
 >
 	<IconWrapper class="h-full w-auto p-2" name="mdi:heart" />
 	<div class="w-full">Show Nsfw</div>
-	<Slide bind:checked={$Meta.nsfw} class=" focus:outline-0 p-1 pl-2 hover:variant-glass-surface" />
+	<Slide
+		bind:checked={$Meta.nsfw}
+		class=" focus:outline-0 p-1 pl-2 hover:variant-glass-surface"
+	/>
 </button>
 <button
 	on:click={() =>

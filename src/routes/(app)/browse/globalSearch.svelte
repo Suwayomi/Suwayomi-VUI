@@ -8,13 +8,6 @@
 
 <script lang="ts">
 	import GlobalSearchActions from './globalsearch/GlobalSearchActions.svelte';
-	import {
-		FetchSourceMangaType,
-		fetchSourceManga,
-		sources,
-		type FetchSourceMangaMutation,
-		type SourcesQuery
-	} from '$lib/generated';
 	import PQueue from 'p-queue';
 	import { queryParam, ssp } from 'sveltekit-search-params';
 	import { onDestroy } from 'svelte';
@@ -24,20 +17,30 @@
 	import { AppBarData } from '$lib/MountTitleAction';
 	import { Meta, display } from '$lib/simpleStores';
 	import { groupBy } from '$lib/util';
+	import { getContextClient, queryStore } from '@urql/svelte';
+	import { getSources } from '$lib/gql/Queries';
+	import { type ResultOf } from 'gql.tada';
+	import { fetchSourceManga } from '$lib/gql/Mutations';
 
 	export let title: string = 'Loading...';
 	export let OpenModal: ((id: number) => void) | undefined = undefined;
 
 	const queue = new PQueue({ concurrency: 4 });
 	const query = queryParam('q', ssp.string(), { pushHistory: false });
-
-	let rawSources = sources({ variables: { isNsfw: $Meta.nsfw ? null : false } });
+	const client = getContextClient();
+	let rawSources = queryStore({
+		client,
+		query: getSources,
+		variables: {
+			isNsfw: $Meta.nsfw ? null : false
+		}
+	});
 
 	$: langs = getLanguages($rawSources.data);
 
-	function getLanguages(extensions: SourcesQuery) {
+	function getLanguages(extensions: ResultOf<typeof getSources> | undefined) {
 		if (extensions?.sources?.nodes !== undefined) {
-			return $rawSources.data?.sources.nodes.reduce((accumulator, currentNode) => {
+			return extensions?.sources?.nodes.reduce((accumulator, currentNode) => {
 				if (!accumulator.has(currentNode.lang)) {
 					return accumulator.add(currentNode.lang);
 				}
@@ -58,12 +61,16 @@
 			if (a.meta.find((e) => e.key === 'pinned')) return -1;
 			if (b.meta.find((e) => e.key === 'pinned')) return 1;
 			return 0;
-		}) as SourcesQuery['sources']['nodes'] | undefined;
+		});
 
 	$: AppBarData(title, {
 		component: GlobalSearchActions,
 		props: {
-			rawSources: filteredSources,
+			rawSources: $rawSources.data?.sources?.nodes.sort((a, b) => {
+				if (a.meta.find((e) => e.key === 'pinned')) return -1;
+				if (b.meta.find((e) => e.key === 'pinned')) return 1;
+				return 0;
+			}),
 			langs
 		}
 	});
@@ -97,21 +104,28 @@
 	}
 
 	function getMangasFromSource(source: string, query: string) {
-		return fetchSourceManga({
-			variables: { source, query, type: FetchSourceMangaType.Search, page: 1 }
-		});
+		return client
+			.mutation(fetchSourceManga, {
+				source,
+				query,
+				type: 'SEARCH',
+				page: 1
+			})
+			.toPromise();
 	}
 
-	type sourceNode = SourcesQuery['sources']['nodes'][0];
-	interface sourceWithManga extends sourceNode {
-		mangas?: FetchSourceMangaMutation['fetchSourceManga']['mangas'];
+	type sourceNode = ResultOf<typeof getSources>['sources']['nodes'][number];
+	type sourceWithManga = sourceNode & {
+		mangas?: ResultOf<typeof fetchSourceManga>['fetchSourceManga']['mangas'];
 		Loading?: boolean;
 		error?: unknown;
-	}
+	};
 
 	$: groupSources = doGroupSources(alterableRaw);
 
-	function doGroupSources(filteredSources: SourcesQuery['sources']['nodes'] | undefined) {
+	function doGroupSources(
+		filteredSources: ResultOf<typeof getSources>['sources']['nodes'] | undefined
+	) {
 		if (!filteredSources) return [];
 		return groupBy(filteredSources, (item) =>
 			item.meta.find((e) => e.key === 'pinned') ? 'Pinned' : item.lang
@@ -125,9 +139,11 @@
 
 <MediaQuery2 let:gridnumber>
 	{#if $query === null || $query === ''}
-		<div class="flex justify-center p-8">Try searching for a manga in the top right</div>
+		<div class="flex justify-center p-8">
+			Try searching for a manga in the top right
+		</div>
 	{/if}
-	{#if $rawSources.loading}
+	{#if $rawSources.fetching}
 		{#each new Array(5) as _}
 			<div class="placeholder animate-pulse h-12 max-w-xs m-4" />
 			{#each new Array(5) as _}
@@ -135,10 +151,8 @@
 			{/each}
 		{/each}
 	{:else if $rawSources.error}
-		{JSON.stringify($rawSources.error)}
-	{:else if $rawSources.errors}
-		<div class="flex justify-center p-8">
-			{JSON.stringify($rawSources.errors)}
+		<div class="white-space-pre-wrap">
+			{JSON.stringify($rawSources.error, null, 4)}
 		</div>
 	{:else if !filteredSources?.length}
 		<div class="flex justify-center p-8">
@@ -150,17 +164,22 @@
 				{Lang}
 			</div>
 			{#each sous as source}
-				<div class="text-4xl ml-8 my-4">{source.displayName}</div>
+				{@const sorcFrag = source}
+				<div class="text-4xl ml-8 my-4">{sorcFrag.displayName}</div>
 				{#if source.Loading}
 					<div class="overflow-x-auto">
-						<div class="flex flex-nowrap" style="width:calc({10 / gridnumber} * 100%)">
+						<div
+							class="flex flex-nowrap"
+							style="width:calc({10 / gridnumber} * 100%)"
+						>
 							{#each new Array(10) as _}
 								<div class="w-full h-full flex flex-col flex-nowrap m-1">
 									<div class="aspect-cover w-auto h-full">
 										<div
 											class="placeholder animate-pulse w-full h-full
                         {$Meta.Display === display.Compact && 'rounded-lg'}
-                        {$Meta.Display === display.Comfortable && 'rounded-none rounded-t-lg'}"
+                        {$Meta.Display === display.Comfortable &&
+												'rounded-none rounded-t-lg'}"
 										/>
 									</div>
 									{#if $Meta.Display === display.Comfortable}
@@ -173,9 +192,15 @@
 						</div>
 					</div>
 				{:else if source.error}
-					<div>{JSON.stringify(source.error)}</div>
+					<div class="white-space-pre-wrap">
+						{JSON.stringify(source.error, null, 4)}
+					</div>
 				{:else if source.mangas}
-					<HorisontalmangaElement mangas={source.mangas} {gridnumber} {OpenModal} />
+					<HorisontalmangaElement
+						mangas={source.mangas}
+						{gridnumber}
+						{OpenModal}
+					/>
 				{/if}
 			{/each}
 		{/each}
