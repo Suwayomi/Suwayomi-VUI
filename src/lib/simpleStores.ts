@@ -253,7 +253,7 @@ export function MangaMeta(id: number) {
 		newMeta: mangaMeta,
 		queryResult: OperationResultState<ResultOf<typeof getManga>>
 	): mangaMeta {
-		const clonedStore = { ...get(store) } as mangaMeta;
+		const clonedStore = { ...get(Meta).mangaMetaDefaults } as mangaMeta;
 		const metas = queryResult.data?.manga.meta || [];
 		getObjectKeys(newMeta).forEach(<T extends keyof mangaMeta>(key: T) => {
 			const matchedMeta = metas.find(
