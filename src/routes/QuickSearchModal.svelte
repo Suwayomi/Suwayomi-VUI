@@ -24,7 +24,7 @@
 		getSources
 	} from '$lib/gql/Queries';
 	import type { OperationResultStore, Pausable } from '@urql/svelte';
-	import type { ResultOf } from '$lib/gql/graphql.ts';
+	import type { ResultOf } from '$lib/gql/graphql';
 	import { ChapterTypeFragment } from '$lib/gql/Fragments';
 
 	export let parent: SvelteComponent;
