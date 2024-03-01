@@ -26,13 +26,15 @@
 	const client = getContextClient();
 
 	function submitChange(): void {
-		client.mutation(updateCategory, {
-			id: cat.id,
-			name: catinput,
-			default: Defaul,
-			includeInDownload: includeInDownload ? 'INCLUDE' : 'EXCLUDE',
-			includeInUpdate: includeInUpdate ? 'INCLUDE' : 'EXCLUDE'
-		});
+		client
+			.mutation(updateCategory, {
+				id: cat.id,
+				name: catinput,
+				default: Defaul,
+				includeInDownload: includeInDownload ? 'INCLUDE' : 'EXCLUDE',
+				includeInUpdate: includeInUpdate ? 'INCLUDE' : 'EXCLUDE'
+			})
+			.toPromise();
 		parent.onClose();
 	}
 </script>

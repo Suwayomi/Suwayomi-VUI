@@ -581,11 +581,13 @@
 			<IntersectionObserver
 				on:intersect={(e) => {
 					if (e.detail) {
-						client.mutation(updateChapter, {
-							id: chapter.chapterID,
-							lastPageRead: chapter.pages.length,
-							isRead: true
-						});
+						client
+							.mutation(updateChapter, {
+								id: chapter.chapterID,
+								lastPageRead: chapter.pages.length,
+								isRead: true
+							})
+							.toPromise();
 						LoadNextChapter(currentChapterID);
 					}
 				}}
