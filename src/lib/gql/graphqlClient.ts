@@ -39,7 +39,7 @@ import type {
 	updateMangasCategories,
 	updateTrack
 } from './Mutations';
-import type { ResultOf, VariablesOf } from '$lib/gql/graphql.ts';
+import type { ResultOf, VariablesOf } from '$lib/gql/graphql';
 import { get } from 'svelte/store';
 import { lastFetched } from '../../../src/routes/(app)/browse/extensions/ExtensionsStores';
 import { Meta } from '$lib/simpleStores';

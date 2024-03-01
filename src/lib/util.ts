@@ -14,7 +14,7 @@ import {
 	setServerSettings,
 	updateChapters
 } from './gql/Mutations';
-import type { VariablesOf } from '$lib/gql/graphql.ts';
+import type { VariablesOf } from '$lib/gql/graphql';
 import type { OperationResult } from '@urql/svelte';
 import { introspection } from '../graphql-env';
 
