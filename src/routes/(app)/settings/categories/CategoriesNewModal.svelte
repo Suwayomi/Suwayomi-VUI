@@ -24,12 +24,14 @@
 
 	const client = getContextClient();
 	async function submitChange(): Promise<void> {
-		client.mutation(createCategory, {
-			name: catinput,
-			default: Defaul,
-			includeInDownload: includeInDownload ? 'INCLUDE' : 'INCLUDE',
-			includeInUpdate: includeInUpdate ? 'INCLUDE' : 'INCLUDE'
-		});
+		client
+			.mutation(createCategory, {
+				name: catinput,
+				default: Defaul,
+				includeInDownload: includeInDownload ? 'INCLUDE' : 'INCLUDE',
+				includeInUpdate: includeInUpdate ? 'INCLUDE' : 'INCLUDE'
+			})
+			.toPromise();
 		parent.onClose();
 	}
 </script>
