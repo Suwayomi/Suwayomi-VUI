@@ -14,7 +14,7 @@
 	import { getContextClient } from '@urql/svelte';
 	import { updateExtension } from '$lib/gql/Mutations';
 	import type { ExtensionTypeFragment } from '$lib/gql/Fragments';
-	import type { ResultOf } from 'gql.tada';
+	import type { ResultOf } from '$lib/gql/graphql';
 
 	export let scrollingElement: HTMLDivElement;
 	export let ext: ResultOf<typeof ExtensionTypeFragment>;

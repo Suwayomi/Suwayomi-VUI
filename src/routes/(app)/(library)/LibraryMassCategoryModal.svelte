@@ -14,7 +14,7 @@
 	import { getContextClient, queryStore } from '@urql/svelte';
 	import { updateMangasCategories } from '$lib/gql/Mutations';
 	import { getCategories } from '$lib/gql/Queries';
-	import { type ResultOf } from 'gql.tada';
+	import { type ResultOf } from '$lib/gql/graphql';
 	import { CategoryTypeFragment } from '$lib/gql/Fragments';
 
 	const client = getContextClient();

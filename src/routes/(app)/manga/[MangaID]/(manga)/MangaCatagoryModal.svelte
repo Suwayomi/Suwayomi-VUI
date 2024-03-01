@@ -17,7 +17,7 @@
 	import { ErrorHelp } from '$lib/util';
 	import { getModalStore } from '@skeletonlabs/skeleton';
 	import { getContextClient, queryStore } from '@urql/svelte';
-	import { type ResultOf } from 'gql.tada';
+	import { type ResultOf } from '$lib/gql/graphql';
 
 	export let manga: ResultOf<typeof getManga>['manga'] | undefined;
 	const client = getContextClient();

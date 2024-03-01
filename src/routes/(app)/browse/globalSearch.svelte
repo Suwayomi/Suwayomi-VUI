@@ -19,7 +19,7 @@
 	import { groupBy } from '$lib/util';
 	import { getContextClient, queryStore } from '@urql/svelte';
 	import { getSources } from '$lib/gql/Queries';
-	import { type ResultOf } from 'gql.tada';
+	import { type ResultOf } from '$lib/gql/graphql';
 	import { fetchSourceManga } from '$lib/gql/Mutations';
 
 	export let title: string = 'Loading...';

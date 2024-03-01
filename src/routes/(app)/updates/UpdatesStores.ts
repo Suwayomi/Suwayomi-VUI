@@ -6,7 +6,7 @@
 
 import { writable } from 'svelte/store';
 import type { updates } from '$lib/gql/Queries';
-import type { ResultOf } from 'gql.tada';
+import type { ResultOf } from '$lib/gql/graphql';
 
 export type UpdateNode = ResultOf<typeof updates>['chapters']['nodes'][0];
 

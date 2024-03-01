@@ -5,7 +5,7 @@
 // file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
 import type { fetchSourceManga } from '$lib/gql/Mutations';
-import type { VariablesOf } from 'gql.tada';
+import type { VariablesOf } from '$lib/gql/graphql';
 import { writable } from 'svelte/store';
 
 export const filters = writable<

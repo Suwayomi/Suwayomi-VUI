@@ -20,7 +20,7 @@
 		type OperationResultStore,
 		type Pausable
 	} from '@urql/svelte';
-	import { type ResultOf } from 'gql.tada';
+	import { type ResultOf } from '$lib/gql/graphql';
 	import { updateMangas } from '$lib/gql/Mutations';
 	const modalStore = getModalStore();
 	const client = getContextClient();

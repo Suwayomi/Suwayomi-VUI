@@ -10,7 +10,7 @@
 	import TooltipIconButton from '$lib/components/TooltipIconButton.svelte';
 	import MangaCatagoryModal from './MangaCatagoryModal.svelte';
 	import { getModalStore } from '@skeletonlabs/skeleton';
-	import { type ResultOf } from 'gql.tada';
+	import { type ResultOf } from '$lib/gql/graphql';
 	import type { getManga } from '$lib/gql/Queries';
 
 	export let manga: ResultOf<typeof getManga>['manga'] | undefined;

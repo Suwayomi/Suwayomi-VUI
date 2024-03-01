@@ -20,7 +20,7 @@
 	import { filters as filtersStore } from './stores';
 	import type { SvelteComponent } from 'svelte';
 	import { queryParam, ssp } from 'sveltekit-search-params';
-	import type { VariablesOf } from 'gql.tada';
+	import type { VariablesOf } from '$lib/gql/graphql';
 	import type { fetchSourceManga } from '$lib/gql/Mutations';
 	import { getContextClient, queryStore } from '@urql/svelte';
 	import { getSource } from '$lib/gql/Queries';

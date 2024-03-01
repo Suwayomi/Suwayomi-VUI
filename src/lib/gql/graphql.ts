@@ -8,7 +8,7 @@ import { initGraphQLTada } from 'gql.tada';
 import type { introspection } from '../../graphql-env';
 
 export const graphql = initGraphQLTada<{
-	introspection: introspection;
+	introspection: typeof introspection;
 	scalars: {
 		LongString: string;
 	};
@@ -17,3 +17,4 @@ export const graphql = initGraphQLTada<{
 }>();
 
 export type { FragmentOf, ResultOf, VariablesOf } from 'gql.tada';
+export { readFragment } from 'gql.tada';

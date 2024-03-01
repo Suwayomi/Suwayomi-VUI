@@ -26,7 +26,7 @@
 		type OperationResult
 	} from '@urql/svelte';
 	import { getManga } from '$lib/gql/Queries';
-	import { type ResultOf } from 'gql.tada';
+	import { type ResultOf } from '$lib/gql/graphql';
 	import { fetchChapterPages, updateChapter } from '$lib/gql/Mutations';
 	import { ChapterTypeFragment } from '$lib/gql/Fragments';
 

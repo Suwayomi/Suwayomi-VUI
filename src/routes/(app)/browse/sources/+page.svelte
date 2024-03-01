@@ -19,7 +19,7 @@
 	import { groupBy } from '$lib/util';
 	import { longPress } from '$lib/press';
 	import { getSources } from '$lib/gql/Queries';
-	import { type ResultOf } from 'gql.tada';
+	import { type ResultOf } from '$lib/gql/graphql';
 	import { getContextClient, queryStore } from '@urql/svelte';
 	import { SourceTypeFragment } from '$lib/gql/Fragments';
 	import { deleteSourceMeta, setSourceMeta } from '$lib/gql/Mutations';

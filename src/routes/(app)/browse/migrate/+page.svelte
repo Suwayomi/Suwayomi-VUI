@@ -10,7 +10,7 @@
 	import Image from '$lib/components/Image.svelte';
 	import IntersectionObserver from '$lib/components/IntersectionObserver.svelte';
 	import { AppBarData } from '$lib/MountTitleAction';
-	import { type ResultOf } from 'gql.tada';
+	import { type ResultOf } from '$lib/gql/graphql';
 	import Nav from '../Nav.svelte';
 	import { getContextClient, queryStore } from '@urql/svelte';
 	import { sourcesMigration } from '$lib/gql/Queries';
