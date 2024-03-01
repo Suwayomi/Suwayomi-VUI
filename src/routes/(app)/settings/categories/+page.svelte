@@ -94,34 +94,42 @@
 		switch (movement) {
 			case Movement.top:
 				if (cat.order !== 1) {
-					client.mutation(updateCategoryOrder, {
-						id: cat.id,
-						position: 1
-					});
+					client
+						.mutation(updateCategoryOrder, {
+							id: cat.id,
+							position: 1
+						})
+						.toPromise();
 				}
 				break;
 			case Movement.up:
 				if (cat.order !== 1) {
-					client.mutation(updateCategoryOrder, {
-						id: cat.id,
-						position: cat.order - 1
-					});
+					client
+						.mutation(updateCategoryOrder, {
+							id: cat.id,
+							position: cat.order - 1
+						})
+						.toPromise();
 				}
 				break;
 			case Movement.down:
 				if (cat.order !== $cats.data.categories.nodes.length - 1) {
-					client.mutation(updateCategoryOrder, {
-						id: cat.id,
-						position: cat.order + 1
-					});
+					client
+						.mutation(updateCategoryOrder, {
+							id: cat.id,
+							position: cat.order + 1
+						})
+						.toPromise();
 				}
 				break;
 			default:
 				if (cat.order !== $cats.data?.categories.nodes.length - 1) {
-					client.mutation(updateCategoryOrder, {
-						id: cat.id,
-						position: $cats.data.categories.nodes.length - 1
-					});
+					client
+						.mutation(updateCategoryOrder, {
+							id: cat.id,
+							position: $cats.data.categories.nodes.length - 1
+						})
+						.toPromise();
 				}
 				break;
 		}
