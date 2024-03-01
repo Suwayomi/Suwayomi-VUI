@@ -178,17 +178,17 @@ function GlobalMeta() {
 
 			if (stringValue !== existingValue) {
 				try {
-					// GlobalMetaUpdater(cache, metaKey, stringValue);
+					//update early for instant UI updates
+					store.update((vall) => {
+						(vall[key] as unknown) = value;
+						return vall;
+					});
 
 					const variables = { key: metaKey, value: stringValue };
-					// const update = (a: ApolloCache<unknown>) => GlobalMetaUpdater(a, metaKey, stringValue);
-
 					if (stringValue !== JSON.stringify(trueDefaults[key])) {
-						await client.mutation(setGlobalMeta, variables);
-						// await setGlobalMeta({ variables, update });
+						await client.mutation(setGlobalMeta, variables).toPromise();
 					} else if (existingValue !== undefined) {
-						await client.mutation(deleteGlobalMeta, variables);
-						// await deleteGlobalMeta({ variables, update });
+						await client.mutation(deleteGlobalMeta, variables).toPromise();
 					}
 				} catch {}
 			}
@@ -209,31 +209,6 @@ function GlobalMeta() {
 }
 
 export const Meta = GlobalMeta();
-
-// function MangaMetaUpdater(cache: ApolloCache<unknown>, key: string, value: string, id: number) {
-// 	const query = GetMangaDoc;
-// 	const mangaData = structuredClone(
-// 		cache.readQuery<GetMangaQuery>({
-// 			query,
-// 			variables: { id }
-// 		})
-// 	);
-// 	if (!mangaData) return;
-
-// 	const updatedMeta = mangaData.manga.meta.filter((e) => e.key !== key);
-// 	updatedMeta.push({
-// 		key,
-// 		value
-// 	});
-
-// 	mangaData.manga.meta = updatedMeta;
-
-// 	cache.writeQuery({
-// 		query,
-// 		data: mangaData,
-// 		variables: { id }
-// 	});
-// }
 
 export function MangaMeta(id: number) {
 	const MMeta = queryStore({
@@ -275,6 +250,12 @@ export function MangaMeta(id: number) {
 
 			if (jsonValue !== cachedValue) {
 				try {
+					//update early for instant UI updates
+					store.update((vall) => {
+						(vall[key] as unknown) = val;
+						return vall;
+					});
+
 					const variables = { key: cacheKey, value: jsonValue, id };
 					if (val !== get(Meta).mangaMetaDefaults[key]) {
 						await client.mutation(setMangaMeta, variables);
