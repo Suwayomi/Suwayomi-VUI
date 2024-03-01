@@ -10,7 +10,7 @@
 	import { updateSourcePreference } from '$lib/gql/Mutations';
 	import type { getSource } from '$lib/gql/Queries';
 	import { getContextClient, queryStore } from '@urql/svelte';
-	import type { ResultOf } from 'gql.tada';
+	import type { ResultOf } from '$lib/gql/graphql';
 
 	export let pref: Extract<
 		ResultOf<typeof getSource>['source']['preferences'][0],

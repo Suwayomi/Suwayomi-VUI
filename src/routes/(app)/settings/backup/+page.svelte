@@ -23,7 +23,7 @@
 	} from '@urql/svelte';
 	import { createBackup, restoreBackup } from '$lib/gql/Mutations';
 	import { restoreStatus, validateBackup } from '$lib/gql/Queries';
-	import type { ResultOf } from 'gql.tada';
+	import type { ResultOf } from '$lib/gql/graphql';
 	const toastStore = getToastStore();
 	const modalStore = getModalStore();
 	let MakingBackup = false;

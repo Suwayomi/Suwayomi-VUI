@@ -6,7 +6,7 @@
 
 import { localStorageStore } from '@skeletonlabs/skeleton';
 import { queryStore, type OperationResultState } from '@urql/svelte';
-import type { ResultOf } from 'gql.tada';
+import type { ResultOf } from '$lib/gql/graphql.ts';
 import { get, writable } from 'svelte/store';
 import type { ToastStore } from './components/Toast/types';
 import {

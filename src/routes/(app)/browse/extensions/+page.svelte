@@ -24,7 +24,7 @@
 	} from '@urql/svelte';
 	import { getExtensions } from '$lib/gql/Queries';
 	import { ExtensionTypeFragment } from '$lib/gql/Fragments';
-	import { type ResultOf } from 'gql.tada';
+	import { type ResultOf } from '$lib/gql/graphql';
 	import { fetchExtensions } from '$lib/gql/Mutations';
 
 	const client = getContextClient();

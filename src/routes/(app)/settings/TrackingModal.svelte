@@ -13,7 +13,7 @@
 	import { onMount } from 'svelte';
 	import { getContextClient, queryStore } from '@urql/svelte';
 	import { trackers } from '$lib/gql/Queries';
-	import { type ResultOf } from 'gql.tada';
+	import { type ResultOf } from '$lib/gql/graphql';
 	import { TrackerTypeFragment } from '$lib/gql/Fragments';
 	const modalStore = getModalStore();
 	const client = getContextClient();

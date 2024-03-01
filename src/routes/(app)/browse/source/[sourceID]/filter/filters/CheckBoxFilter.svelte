@@ -10,7 +10,7 @@
 	import Slide from '$lib/components/Slide.svelte';
 	import type { fetchSourceManga } from '$lib/gql/Mutations';
 	import type { getSource } from '$lib/gql/Queries';
-	import type { ResultOf, VariablesOf } from 'gql.tada';
+	import type { ResultOf, VariablesOf } from '$lib/gql/graphql';
 
 	export let filter: Extract<
 		ResultOf<typeof getSource>['source']['filters'][0],

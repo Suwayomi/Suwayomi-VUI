@@ -17,7 +17,7 @@
 	import type { Writable } from 'svelte/store';
 	import { FindLangName } from '../languages';
 	import { SpecificSourceFilter } from '../BrowseStores';
-	import { type ResultOf } from 'gql.tada';
+	import { type ResultOf } from '$lib/gql/graphql';
 	import type { getSources } from '$lib/gql/Queries';
 	const modalStore = getModalStore();
 	export let langs: Set<string>;

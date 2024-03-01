@@ -11,7 +11,7 @@
 	import IntersectionObserver from '$lib/components/IntersectionObserver.svelte';
 	import { Meta, display } from '$lib/simpleStores';
 	import type { fetchSourceManga } from '$lib/gql/Mutations';
-	import type { ResultOf } from 'gql.tada';
+	import type { ResultOf } from '$lib/gql/graphql';
 
 	export let mangas: ResultOf<
 		typeof fetchSourceManga

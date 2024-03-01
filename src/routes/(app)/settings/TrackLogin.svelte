@@ -10,7 +10,7 @@
 	import { loginTrackerCredentials, logoutTracker } from '$lib/gql/Mutations';
 	import { getModalStore } from '@skeletonlabs/skeleton';
 	import { getContextClient } from '@urql/svelte';
-	import type { ResultOf } from 'gql.tada';
+	import type { ResultOf } from '$lib/gql/graphql';
 
 	const client = getContextClient();
 	const modalStore = getModalStore();

@@ -15,7 +15,7 @@
 	import PreferencesModal from './PreferencesModal.svelte';
 	import { getModalStore } from '@skeletonlabs/skeleton';
 	import { Meta, display } from '$lib/simpleStores';
-	import type { ResultOf, VariablesOf } from 'gql.tada';
+	import type { ResultOf, VariablesOf } from '$lib/gql/graphql';
 	import { fetchSourceManga } from '$lib/gql/Mutations';
 	import { getContextClient, mutationStore, queryStore } from '@urql/svelte';
 	import { getSource } from '$lib/gql/Queries';

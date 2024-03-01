@@ -26,7 +26,7 @@
 	import { display, Meta } from '$lib/simpleStores';
 	import { getContextClient, queryStore } from '@urql/svelte';
 	import { updates } from '$lib/gql/Queries';
-	import type { ResultOf } from 'gql.tada';
+	import type { ResultOf } from '$lib/gql/graphql';
 
 	AppBarData('Updates', {
 		component: UpdatesActions,

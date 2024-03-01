@@ -5,7 +5,7 @@
 // file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
 import type { getCategory } from '$lib/gql/Queries';
-import type { ResultOf } from 'gql.tada';
+import type { ResultOf } from '$lib/gql/graphql';
 import { writable } from 'svelte/store';
 
 export type MangaType = ResultOf<

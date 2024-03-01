@@ -32,7 +32,7 @@
 		type Pausable
 	} from '@urql/svelte';
 	import { getSingleChapter, type getManga } from '$lib/gql/Queries';
-	import { type ResultOf } from 'gql.tada';
+	import { type ResultOf } from '$lib/gql/graphql';
 	import { downloadsOnChapters } from '$lib/gql/Subscriptions';
 	import {
 		deleteDownloadedChapters,

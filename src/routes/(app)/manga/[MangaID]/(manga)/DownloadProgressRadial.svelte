@@ -9,7 +9,7 @@
 <script lang="ts">
 	import type { downloadsOnChapters } from '$lib/gql/Subscriptions';
 	import { ProgressRadial } from '@skeletonlabs/skeleton';
-	import type { ResultOf } from 'gql.tada';
+	import type { ResultOf } from '$lib/gql/graphql';
 
 	export let download:
 		| ResultOf<typeof downloadsOnChapters>['downloadChanged']['queue'][0]

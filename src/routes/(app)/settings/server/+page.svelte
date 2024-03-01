@@ -7,7 +7,7 @@
 -->
 <script lang="ts">
 	import { AppBarData } from '$lib/MountTitleAction';
-	import { errortoast, setSettings } from '$lib/util';
+	import { GetEnumArray, errortoast, setSettings } from '$lib/util';
 	import { getContextClient, queryStore } from '@urql/svelte';
 	import Select from './components/Select.svelte';
 	import ExtensionReposModal from './components/extensionReposModal.svelte';
@@ -17,7 +17,7 @@
 	import { getModalStore } from '@skeletonlabs/skeleton';
 	import { serverSettings } from '$lib/gql/Queries';
 	import type { setServerSettings } from '$lib/gql/Mutations';
-	import { graphql, type VariablesOf } from 'gql.tada';
+	import { type VariablesOf } from '$lib/gql/graphql';
 	const modalStore = getModalStore();
 
 	AppBarData('Server Settings');
@@ -27,57 +27,11 @@
 		query: serverSettings
 	});
 
-	const chanels = queryStore({
-		client,
-		query: graphql(`
-			{
-				__type(name: "WebUIChannel") {
-					enumValues {
-						name
-					}
-				}
-			}
-		`)
-	});
+	const webUIChannels = GetEnumArray('WebUIChannel');
 
-	const flavors = queryStore({
-		client,
-		query: graphql(`
-			{
-				__type(name: "WebUIFlavor") {
-					enumValues {
-						name
-					}
-				}
-			}
-		`)
-	});
+	const webUIFlavors = GetEnumArray('WebUIFlavor');
 
-	const interfaces = queryStore({
-		client,
-		query: graphql(`
-			{
-				__type(name: "WebUIInterface") {
-					enumValues {
-						name
-					}
-				}
-			}
-		`)
-	});
-
-	$: webUIChannels =
-		(
-			$chanels.data?.__type as { enumValues: { name: string }[] | undefined }
-		)?.enumValues!.map((x) => x.name) ?? []; //['BUNDLED', 'STABLE', 'PREVIEW'];
-	$: webUIFlavors =
-		(
-			$flavors.data?.__type as { enumValues: { name: string }[] | undefined }
-		)?.enumValues!.map((x) => x.name) ?? []; //['WEBUI', 'VUI', 'CUSTOM'];
-	$: webUIInterfaces =
-		(
-			$interfaces.data?.__type as { enumValues: { name: string }[] | undefined }
-		)?.enumValues!.map((x) => x.name) ?? []; //['BROWSER', 'ELECTRON'];
+	const webUIInterfaces = GetEnumArray('WebUIInterface');
 
 	let autoDownloadNewChapters = true;
 	let backupInterval = 1;

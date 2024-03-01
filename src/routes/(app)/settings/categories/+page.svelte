@@ -15,7 +15,7 @@
 	import { getToastStore } from '$lib/components/Toast/stores';
 	import TooltipIconButton from '$lib/components/TooltipIconButton.svelte';
 	import { AppBarData } from '$lib/MountTitleAction';
-	import { type ResultOf } from 'gql.tada';
+	import { type ResultOf } from '$lib/gql/graphql';
 	import { getCategories } from '$lib/gql/Queries';
 	import { getContextClient, queryStore } from '@urql/svelte';
 	import { CategoryTypeFragment } from '$lib/gql/Fragments';
