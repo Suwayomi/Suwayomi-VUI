@@ -133,6 +133,7 @@ export const sourcesMigration = graphql(
 			mangas(condition: { inLibrary: true }) {
 				totalCount
 				nodes {
+					id
 					sourceId
 				}
 			}
@@ -161,6 +162,7 @@ export const sourceMigrationSource = graphql(
 		query sourceMigrationSource($sourceId: LongString!) {
 			source(id: $sourceId) {
 				displayName
+				id
 			}
 		}
 	`,
