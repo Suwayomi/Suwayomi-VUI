@@ -17,10 +17,12 @@
 		const state: { trackerId: number } = JSON.parse(
 			url.searchParams.get('state') ?? '{}'
 		);
-		client.mutation(loginTrackerOAuth, {
-			callbackUrl: url.href,
-			trackerId: state.trackerId
-		});
+		await client
+			.mutation(loginTrackerOAuth, {
+				callbackUrl: url.href,
+				trackerId: state.trackerId
+			})
+			.toPromise();
 		localStorage.setItem('VUI3_TRACKER_LOGIN', 'true');
 		window.close();
 	}
