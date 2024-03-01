@@ -47,7 +47,7 @@
 		"@urql/exchange-graphcache": "^6.4.1",
 		"@urql/svelte": "^4.0.4",
 		"devalue": "^4.3.2",
-		"gql.tada": "^1.2.1",
+		"gql.tada": "canary",
 		"graphql": "^16.8.1",
 		"graphql-ws": "^5.14.3",
 		"p-queue": "^8.0.1",
