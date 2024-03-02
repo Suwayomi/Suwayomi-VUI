@@ -94,6 +94,7 @@ const trueDefaults = {
 	Asc: true,
 	Unread: 0 as TriState,
 	Downloaded: 0 as TriState,
+	Tracked: 0 as TriState,
 	mangaMetaDefaults,
 	downloadsBadge: true,
 	unreadBadge: true,
