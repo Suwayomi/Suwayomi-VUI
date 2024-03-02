@@ -15,7 +15,7 @@
 	import SortFilter from './SortFilter.svelte';
 	import TextFilter from './TextFilter.svelte';
 	import TriStateFilter from './TriStateFilter.svelte';
-	import type { ResultOf, VariablesOf } from 'gql.tada';
+	import type { ResultOf, VariablesOf } from '$lib/gql/graphql';
 	import type { getSource } from '$lib/gql/Queries';
 	import type { fetchSourceManga } from '$lib/gql/Mutations';
 

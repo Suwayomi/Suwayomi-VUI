@@ -16,7 +16,7 @@
 	import Tooltip from '$lib/components/Tooltip.svelte';
 	import IconWrapper from '$lib/components/IconWrapper.svelte';
 	import type { getSources } from '$lib/gql/Queries';
-	import type { ResultOf } from 'gql.tada';
+	import type { ResultOf } from '$lib/gql/graphql';
 
 	export let rawSources:
 		| ResultOf<typeof getSources>['sources']['nodes']

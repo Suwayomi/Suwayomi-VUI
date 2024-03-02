@@ -111,6 +111,11 @@
 		if ($Meta.Unread === 1 && ele.unreadCount === 0) return false;
 		if ($Meta.Unread === 2 && ele.unreadCount !== 0) return false;
 
+		if ($Meta.Tracked === 1 && ele.trackRecords.nodes.length === 0)
+			return false;
+		if ($Meta.Tracked === 2 && ele.trackRecords.nodes.length !== 0)
+			return false;
+
 		if (
 			$query !== '' &&
 			$query !== null &&

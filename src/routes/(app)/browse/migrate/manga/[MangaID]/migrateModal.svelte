@@ -20,7 +20,7 @@
 	import { getManga } from '$lib/gql/Queries';
 	import { ProgressRadial, getModalStore } from '@skeletonlabs/skeleton';
 	import { getContextClient } from '@urql/svelte';
-	import { type ResultOf } from 'gql.tada';
+	import { type ResultOf } from '$lib/gql/graphql';
 	import type { SvelteComponent } from 'svelte';
 
 	const modalStore = getModalStore();

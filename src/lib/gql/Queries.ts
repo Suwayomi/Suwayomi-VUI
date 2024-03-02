@@ -52,6 +52,11 @@ export const getCategory = graphql(
 							lastReadAt
 							id
 						}
+						trackRecords {
+							nodes {
+								...TrackRecordTypeFragment
+							}
+						}
 						chapters {
 							totalCount
 						}
@@ -60,7 +65,7 @@ export const getCategory = graphql(
 			}
 		}
 	`,
-	[]
+	[TrackRecordTypeFragment]
 );
 
 export const getManga = graphql(

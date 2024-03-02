@@ -10,7 +10,7 @@
 	import { getModalStore } from '@skeletonlabs/skeleton';
 	import type { SvelteComponent } from 'svelte';
 	import Slide from '$lib/components/Slide.svelte';
-	import type { ResultOf } from 'gql.tada';
+	import type { ResultOf } from '$lib/gql/graphql';
 	import type { CategoryTypeFragment } from '$lib/gql/Fragments';
 	import { getContextClient } from '@urql/svelte';
 	import { updateCategory } from '$lib/gql/Mutations';

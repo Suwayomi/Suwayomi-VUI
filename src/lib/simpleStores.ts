@@ -6,7 +6,7 @@
 
 import { localStorageStore } from '@skeletonlabs/skeleton';
 import { queryStore, type OperationResultState } from '@urql/svelte';
-import type { ResultOf } from 'gql.tada';
+import type { ResultOf } from '$lib/gql/graphql';
 import { get, writable } from 'svelte/store';
 import type { ToastStore } from './components/Toast/types';
 import {
@@ -94,6 +94,7 @@ const trueDefaults = {
 	Asc: true,
 	Unread: 0 as TriState,
 	Downloaded: 0 as TriState,
+	Tracked: 0 as TriState,
 	mangaMetaDefaults,
 	downloadsBadge: true,
 	unreadBadge: true,

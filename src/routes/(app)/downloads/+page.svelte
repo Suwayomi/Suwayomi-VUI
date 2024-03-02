@@ -16,7 +16,7 @@
 	import { filter } from './downloadsStores';
 	import { getContextClient, subscriptionStore } from '@urql/svelte';
 	import { downloadChanged } from '$lib/gql/Subscriptions';
-	import type { ResultOf } from 'gql.tada';
+	import type { ResultOf } from '$lib/gql/graphql';
 	import { dequeueChapterDownloads } from '$lib/gql/Mutations';
 	const client = getContextClient();
 

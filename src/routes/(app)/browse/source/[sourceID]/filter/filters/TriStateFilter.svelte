@@ -10,7 +10,7 @@
 	import TriStateSlide from '$lib/components/TriStateSlide.svelte';
 	import type { TriState } from '$lib/util';
 	import type { getSource } from '$lib/gql/Queries';
-	import type { ResultOf, VariablesOf } from 'gql.tada';
+	import type { ResultOf, VariablesOf } from '$lib/gql/graphql';
 	import type { fetchSourceManga } from '$lib/gql/Mutations';
 	export let filter: Extract<
 		ResultOf<typeof getSource>['source']['filters'][0],

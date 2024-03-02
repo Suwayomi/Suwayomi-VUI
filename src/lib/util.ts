@@ -14,8 +14,9 @@ import {
 	setServerSettings,
 	updateChapters
 } from './gql/Mutations';
-import type { VariablesOf } from 'gql.tada';
+import type { VariablesOf } from '$lib/gql/graphql';
 import type { OperationResult } from '@urql/svelte';
+import { introspection } from '../graphql-env';
 
 export type TriState = 0 | 1 | 2;
 
@@ -276,4 +277,24 @@ export function setSettings(
 		'failed to set server settings',
 		client.mutation(setServerSettings, { settings }).toPromise()
 	);
+}
+
+export function GetEnumArray(EnumName: string): string[] {
+	const tmp = introspection.__schema.types.find(
+		(x) => x.name === EnumName && x.kind === 'ENUM'
+	);
+	if (!isENUM(tmp)) {
+		throw new Error('Enum not found');
+	}
+	return tmp.enumValues.map((e) => e.name);
+}
+
+type hasEnumVals = {
+	enumValues: {
+		name: string;
+	}[];
+};
+
+function isENUM(enu: unknown): enu is hasEnumVals {
+	return enu instanceof Object && 'enumValues' in enu;
 }
