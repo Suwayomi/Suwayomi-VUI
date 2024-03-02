@@ -273,6 +273,7 @@ function updateMangaCategoriesUpdater(
 			latestFetchedChapter: dat.manga.latestFetchedChapter,
 			latestReadChapter: dat.manga.latestReadChapter,
 			latestUploadedChapter: dat.manga.latestUploadedChapter,
+			trackRecords: dat.manga.trackRecords,
 			chapters: dat.manga.chapters ?? {
 				totalCount: 0
 			}

@@ -93,6 +93,14 @@
 						>
 							<span>Downloaded</span>
 						</TriStateSlide>
+						<TriStateSlide
+							bind:state={$Meta.Tracked}
+							label={'Tracked'}
+							class="w-full focus:outline-0 p-1 pl-2 hover:variant-glass-surface"
+							labelClass="w-full"
+						>
+							<span>Tracked</span>
+						</TriStateSlide>
 					{:else if $tabSet === 1}
 						<TriStateSlide
 							triState={false}
