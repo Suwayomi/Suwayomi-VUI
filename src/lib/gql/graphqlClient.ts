@@ -43,6 +43,7 @@ import type { ResultOf, VariablesOf } from '$lib/gql/graphql';
 import { get } from 'svelte/store';
 import { lastFetched } from '../../../src/routes/(app)/browse/extensions/ExtensionsStores';
 import { Meta } from '$lib/simpleStores';
+import { introspection } from '../../graphql-env';
 // import type { downloadChanged } from './Subscriptions';
 
 const wsClient = createWSClient({
@@ -126,14 +127,14 @@ export const client = new Client({
 						const variables = info.variables as VariablesOf<typeof bindTrack>;
 						bindTrackUpdater(res, variables, cache);
 					},
-					fetchMangaInfo(result, _, cache, info) {
+					fetchManga(result, _, cache, info) {
 						const res = result as ResultOf<typeof fetchMangaInfo>;
 						const variables = info.variables as VariablesOf<
 							typeof fetchMangaInfo
 						>;
 						fetchMangaInfoUpdater(res, variables, cache);
 					},
-					fetchMangaChapters(result, _, cache, info) {
+					fetchChapters(result, _, cache, info) {
 						const res = result as ResultOf<typeof fetchMangaChapters>;
 						const variables = info.variables as VariablesOf<
 							typeof fetchMangaChapters
@@ -147,7 +148,7 @@ export const client = new Client({
 						>;
 						createCategoryUpdater(res, variables, cache);
 					},
-					setServerSettings(result, _, cache, info) {
+					setSettings(result, _, cache, info) {
 						const res = result as ResultOf<typeof setServerSettings>;
 						const variables = info.variables as VariablesOf<
 							typeof setServerSettings
@@ -191,7 +192,7 @@ export const client = new Client({
 					}
 				},
 				Query: {
-					getSingleChapter(result, _, cache, info) {
+					chapter(result, _, cache, info) {
 						const res = result as ResultOf<typeof getSingleChapter>;
 						const variables = info.variables as VariablesOf<
 							typeof getSingleChapter
@@ -206,7 +207,8 @@ export const client = new Client({
 					// 	downloadChangedUpdater(res, variables, cache);
 					// }
 				}
-			}
+			},
+			schema: introspection
 		}),
 		fetchExchange,
 		subscriptionExchange({
