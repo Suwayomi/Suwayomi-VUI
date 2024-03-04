@@ -16,7 +16,7 @@ import {
 import { graphql } from './graphql';
 
 export const fetchExtensions = graphql(
-	/* GraphQL */ `
+	`
 		mutation fetchExtensions {
 			fetchExtensions(input: {}) {
 				extensions {
@@ -29,7 +29,7 @@ export const fetchExtensions = graphql(
 );
 
 export const updateChapters = graphql(
-	/* GraphQL */ `
+	`
 		mutation updateChapters(
 			$ids: [Int!]!
 			$isBookmarked: Boolean
@@ -59,7 +59,7 @@ export const updateChapters = graphql(
 );
 
 export const updateChapter = graphql(
-	/* GraphQL */ `
+	`
 		mutation updateChapter(
 			$isRead: Boolean = null
 			$lastPageRead: Int!
@@ -83,7 +83,7 @@ export const updateChapter = graphql(
 );
 
 export const updateMangas = graphql(
-	/* GraphQL */ `
+	`
 		mutation updateMangas($ids: [Int!]!, $inLibrary: Boolean!) {
 			updateMangas(input: { patch: { inLibrary: $inLibrary }, ids: $ids }) {
 				mangas {
@@ -96,7 +96,7 @@ export const updateMangas = graphql(
 );
 
 export const setGlobalMeta = graphql(
-	/* GraphQL */ `
+	`
 		mutation setGlobalMeta($key: String!, $value: String!) {
 			setGlobalMeta(input: { meta: { key: $key, value: $value } }) {
 				meta {
@@ -110,7 +110,7 @@ export const setGlobalMeta = graphql(
 );
 
 export const deleteGlobalMeta = graphql(
-	/* GraphQL */ `
+	`
 		mutation deleteGlobalMeta($key: String!) {
 			deleteGlobalMeta(input: { key: $key }) {
 				clientMutationId
@@ -121,7 +121,7 @@ export const deleteGlobalMeta = graphql(
 );
 
 export const setMangaMeta = graphql(
-	/* GraphQL */ `
+	`
 		mutation setMangaMeta($value: String!, $id: Int!, $key: String!) {
 			setMangaMeta(
 				input: { meta: { key: $key, mangaId: $id, value: $value } }
@@ -143,7 +143,7 @@ export const setMangaMeta = graphql(
 );
 
 export const setSourceMeta = graphql(
-	/* GraphQL */ `
+	`
 		mutation setSourceMeta(
 			$value: String!
 			$sourceId: LongString!
@@ -169,7 +169,7 @@ export const setSourceMeta = graphql(
 );
 
 export const deleteSourceMeta = graphql(
-	/* GraphQL */ `
+	`
 		mutation deleteSourceMeta($key: String!, $sourceId: LongString!) {
 			deleteSourceMeta(input: { key: $key, sourceId: $sourceId }) {
 				source {
@@ -187,7 +187,7 @@ export const deleteSourceMeta = graphql(
 );
 
 export const deleteMangaMeta = graphql(
-	/* GraphQL */ `
+	`
 		mutation deleteMangaMeta($id: Int!, $key: String!) {
 			deleteMangaMeta(input: { key: $key, mangaId: $id }) {
 				manga {
@@ -204,7 +204,7 @@ export const deleteMangaMeta = graphql(
 );
 
 export const fetchMangaInfo = graphql(
-	/* GraphQL */ `
+	`
 		mutation fetchMangaInfo($id: Int!) {
 			fetchManga(input: { id: $id }) {
 				manga {
@@ -217,7 +217,7 @@ export const fetchMangaInfo = graphql(
 );
 
 export const fetchMangaChapters = graphql(
-	/* GraphQL */ `
+	`
 		mutation fetchMangaChapters($id: Int!) {
 			fetchChapters(input: { mangaId: $id }) {
 				chapters {
@@ -230,7 +230,7 @@ export const fetchMangaChapters = graphql(
 );
 
 export const updateExtension = graphql(
-	/* GraphQL */ `
+	`
 		mutation updateExtension(
 			$pkgName: String!
 			$install: Boolean = null
@@ -263,7 +263,7 @@ export const updateExtension = graphql(
 );
 
 export const fetchSourceManga = graphql(
-	/* GraphQL */ `
+	`
 		mutation fetchSourceManga(
 			$page: Int!
 			$source: LongString!
@@ -294,7 +294,7 @@ export const fetchSourceManga = graphql(
 );
 
 export const updateSourcePreference = graphql(
-	/* GraphQL */ `
+	`
 		mutation updateSourcePreference(
 			$position: Int!
 			$source: LongString!
@@ -374,7 +374,7 @@ export const updateSourcePreference = graphql(
 );
 
 export const updateCategoryOrder = graphql(
-	/* GraphQL */ `
+	`
 		mutation updateCategoryOrder($id: Int!, $position: Int!) {
 			updateCategoryOrder(input: { id: $id, position: $position }) {
 				categories {
@@ -387,7 +387,7 @@ export const updateCategoryOrder = graphql(
 );
 
 export const createCategory = graphql(
-	/* GraphQL */ `
+	`
 		mutation createCategory(
 			$name: String!
 			$default: Boolean!
@@ -412,7 +412,7 @@ export const createCategory = graphql(
 );
 
 export const deleteCategory = graphql(
-	/* GraphQL */ `
+	`
 		mutation deleteCategory($categoryId: Int!) {
 			deleteCategory(input: { categoryId: $categoryId }) {
 				category {
@@ -425,7 +425,7 @@ export const deleteCategory = graphql(
 );
 
 export const updateCategory = graphql(
-	/* GraphQL */ `
+	`
 		mutation updateCategory(
 			$id: Int!
 			$name: String = null
@@ -454,7 +454,7 @@ export const updateCategory = graphql(
 );
 
 export const updateMangasCategories = graphql(
-	/* GraphQL */ `
+	`
 		mutation updateMangasCategories(
 			$addTo: [Int!] = null
 			$clear: Boolean = null
@@ -481,7 +481,7 @@ export const updateMangasCategories = graphql(
 );
 
 export const updateMangaCategories = graphql(
-	/* GraphQL */ `
+	`
 		mutation updateMangaCategories(
 			$addTo: [Int!] = null
 			$clear: Boolean = null
@@ -508,7 +508,7 @@ export const updateMangaCategories = graphql(
 );
 
 export const fetchChapterPages = graphql(
-	/* GraphQL */ `
+	`
 		mutation fetchChapterPages($chapterId: Int!) {
 			fetchChapterPages(input: { chapterId: $chapterId }) {
 				pages
@@ -519,7 +519,7 @@ export const fetchChapterPages = graphql(
 );
 
 export const ChaptersMigration = graphql(
-	/* GraphQL */ `
+	`
 		mutation ChaptersMigration(
 			$ids: [Int!]!
 			$lastPageRead: Int = null
@@ -544,7 +544,7 @@ export const ChaptersMigration = graphql(
 );
 
 export const fetchChaptersMigration = graphql(
-	/* GraphQL */ `
+	`
 		mutation fetchChaptersMigration($id: Int!) {
 			fetchChapters(input: { mangaId: $id }) {
 				chapters {
@@ -558,7 +558,7 @@ export const fetchChaptersMigration = graphql(
 );
 
 export const createBackup = graphql(
-	/* GraphQL */ `
+	`
 		mutation createBackup {
 			createBackup {
 				url
@@ -569,7 +569,7 @@ export const createBackup = graphql(
 );
 
 export const restoreBackup = graphql(
-	/* GraphQL */ `
+	`
 		mutation restoreBackup($backup: Upload!) {
 			restoreBackup(input: { backup: $backup }) {
 				status {
@@ -585,7 +585,7 @@ export const restoreBackup = graphql(
 );
 
 export const clearDownloader = graphql(
-	/* GraphQL */ `
+	`
 		mutation clearDownloader {
 			clearDownloader(input: { clientMutationId: "" }) {
 				downloadStatus {
@@ -598,7 +598,7 @@ export const clearDownloader = graphql(
 );
 
 export const dequeueChapterDownloads = graphql(
-	/* GraphQL */ `
+	`
 		mutation dequeueChapterDownloads($ids: [Int!]!) {
 			dequeueChapterDownloads(input: { ids: $ids }) {
 				clientMutationId
@@ -609,7 +609,7 @@ export const dequeueChapterDownloads = graphql(
 );
 
 export const enqueueChapterDownloads = graphql(
-	/* GraphQL */ `
+	`
 		mutation enqueueChapterDownloads($ids: [Int!]!) {
 			enqueueChapterDownloads(input: { ids: $ids }) {
 				clientMutationId
@@ -620,7 +620,7 @@ export const enqueueChapterDownloads = graphql(
 );
 
 export const reorderChapterDownload = graphql(
-	/* GraphQL */ `
+	`
 		mutation reorderChapterDownload($chapterId: Int!, $to: Int!) {
 			reorderChapterDownload(input: { chapterId: $chapterId, to: $to }) {
 				clientMutationId
@@ -631,7 +631,7 @@ export const reorderChapterDownload = graphql(
 );
 
 export const startDownloader = graphql(
-	/* GraphQL */ `
+	`
 		mutation startDownloader {
 			startDownloader(input: { clientMutationId: "" }) {
 				downloadStatus {
@@ -644,7 +644,7 @@ export const startDownloader = graphql(
 );
 
 export const stopDownloader = graphql(
-	/* GraphQL */ `
+	`
 		mutation stopDownloader {
 			stopDownloader(input: { clientMutationId: "" }) {
 				downloadStatus {
@@ -657,7 +657,7 @@ export const stopDownloader = graphql(
 );
 
 export const deleteDownloadedChapter = graphql(
-	/* GraphQL */ `
+	`
 		mutation deleteDownloadedChapter($id: Int!) {
 			deleteDownloadedChapter(input: { id: $id }) {
 				chapters {
@@ -670,7 +670,7 @@ export const deleteDownloadedChapter = graphql(
 );
 
 export const deleteDownloadedChapters = graphql(
-	/* GraphQL */ `
+	`
 		mutation deleteDownloadedChapters($ids: [Int!]!) {
 			deleteDownloadedChapters(input: { ids: $ids }) {
 				chapters {
@@ -683,7 +683,7 @@ export const deleteDownloadedChapters = graphql(
 );
 
 export const clearCachedImages = graphql(
-	/* GraphQL */ `
+	`
 		mutation clearCachedImages {
 			clearCachedImages(
 				input: {
@@ -700,7 +700,7 @@ export const clearCachedImages = graphql(
 );
 
 export const installExternalExtension = graphql(
-	/* GraphQL */ `
+	`
 		mutation installExternalExtension($extensionFile: Upload!) {
 			installExternalExtension(input: { extensionFile: $extensionFile }) {
 				extension {
@@ -723,7 +723,7 @@ export const installExternalExtension = graphql(
 );
 
 export const loginTrackerOAuth = graphql(
-	/* GraphQL */ `
+	`
 		mutation loginTrackerOAuth($callbackUrl: String!, $trackerId: Int!) {
 			loginTrackerOAuth(
 				input: { callbackUrl: $callbackUrl, trackerId: $trackerId }
@@ -739,7 +739,7 @@ export const loginTrackerOAuth = graphql(
 );
 
 export const logoutTracker = graphql(
-	/* GraphQL */ `
+	`
 		mutation logoutTracker($trackerId: Int!) {
 			logoutTracker(input: { trackerId: $trackerId }) {
 				isLoggedIn
@@ -753,7 +753,7 @@ export const logoutTracker = graphql(
 );
 
 export const loginTrackerCredentials = graphql(
-	/* GraphQL */ `
+	`
 		mutation loginTrackerCredentials(
 			$password: String!
 			$trackerId: Int!
@@ -776,7 +776,7 @@ export const loginTrackerCredentials = graphql(
 );
 
 export const bindTrack = graphql(
-	/* GraphQL */ `
+	`
 		mutation bindTrack(
 			$mangaId: Int!
 			$remoteId: LongString!
@@ -795,7 +795,7 @@ export const bindTrack = graphql(
 );
 
 export const updateTrack = graphql(
-	/* GraphQL */ `
+	`
 		mutation updateTrack($input: UpdateTrackInput!) {
 			updateTrack(input: $input) {
 				trackRecord {
@@ -808,7 +808,7 @@ export const updateTrack = graphql(
 );
 
 export const setServerSettings = graphql(
-	/* GraphQL */ `
+	`
 		mutation setServerSettings($settings: PartialSettingsTypeInput = {}) {
 			setSettings(input: { settings: $settings }) {
 				settings {
@@ -850,6 +850,24 @@ export const setServerSettings = graphql(
 					webUIFlavor
 					webUIInterface
 					webUIUpdateCheckInterval
+				}
+			}
+		}
+	`,
+	[]
+);
+
+export const updateWebUI = graphql(
+	`
+		mutation updateWebUI {
+			updateWebUI(input: {}) {
+				updateStatus {
+					progress
+					state
+					info {
+						channel
+						tag
+					}
 				}
 			}
 		}
