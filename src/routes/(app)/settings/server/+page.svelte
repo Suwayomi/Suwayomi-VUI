@@ -8,7 +8,11 @@
 <script lang="ts">
 	import { AppBarData } from '$lib/MountTitleAction';
 	import { GetEnumArray, errortoast, setSettings } from '$lib/util';
-	import { getContextClient, queryStore } from '@urql/svelte';
+	import {
+		getContextClient,
+		queryStore,
+		subscriptionStore
+	} from '@urql/svelte';
 	import Select from './components/Select.svelte';
 	import ExtensionReposModal from './components/extensionReposModal.svelte';
 	import Number from './components/number.svelte';
@@ -16,8 +20,9 @@
 	import Toggle from './components/toggle.svelte';
 	import { getModalStore } from '@skeletonlabs/skeleton';
 	import { serverSettings } from '$lib/gql/Queries';
-	import type { setServerSettings } from '$lib/gql/Mutations';
+	import { updateWebUI, type setServerSettings } from '$lib/gql/Mutations';
 	import { type VariablesOf } from '$lib/gql/graphql';
+	import { webUIUpdateStatusChange } from '$lib/gql/Subscriptions';
 	const modalStore = getModalStore();
 
 	AppBarData('Server Settings');
@@ -32,6 +37,11 @@
 	const webUIFlavors = GetEnumArray('WebUIFlavor');
 
 	const webUIInterfaces = GetEnumArray('WebUIInterface');
+
+	const webuiUpdateStatus = subscriptionStore({
+		client,
+		query: webUIUpdateStatusChange
+	});
 
 	let autoDownloadNewChapters = true;
 	let backupInterval = 1;
@@ -429,5 +439,22 @@
 			max={100}
 			on:change={() => setSettings({ webUIUpdateCheckInterval })}
 		/>
+		<!-- UpdateWebUI -->
+		<button
+			class=" text-left items-center w-full h-16 hover:variant-glass-surface cursor-pointer"
+			on:click={() => {
+				client.mutation(updateWebUI, {}).toPromise();
+			}}
+		>
+			UpdateWebUI
+			<div class="text-sm opacity-50">
+				{#if $webuiUpdateStatus.data}
+					{$webuiUpdateStatus.data.webUIUpdateStatusChange.state} | {$webuiUpdateStatus
+						.data.webUIUpdateStatusChange.progress}% | {$webuiUpdateStatus.data
+						.webUIUpdateStatusChange.info.channel} | {$webuiUpdateStatus.data
+						.webUIUpdateStatusChange.info.tag}
+				{/if}
+			</div>
+		</button>
 	</div>
 {/if}
