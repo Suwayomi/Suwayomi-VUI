@@ -55,25 +55,19 @@
 		requestPolicy: 'cache-first'
 	});
 
-	$: if ($tab === null) {
-		categories.subscribe((e) => {
-			window.requestAnimationFrame(() => {
-				tab.set(
-					e.data?.categories.nodes?.find((ele) => ele.default && ele.id !== 0)
-						?.id ?? 0
-				);
-			});
-		});
-	}
-
-	$: orderedCategories = [...($categories.data?.categories?.nodes ?? [])]
+	$: orderedCategories = ($categories.data?.categories?.nodes ?? [])
 		.toSorted((a, b) => {
 			return a.order > b.order ? 1 : -1;
 		})
 		.filter((e) => e.mangas.totalCount);
 
-	$: if (orderedCategories.find((e) => e.id === $tab) === undefined) {
-		$tab = orderedCategories[0]?.id ?? 0;
+	$: if (
+		orderedCategories.length &&
+		orderedCategories.find((e) => e.id === $tab) === undefined
+	) {
+		window.requestAnimationFrame(() => {
+			$tab = orderedCategories[0]?.id;
+		});
 	}
 
 	function LongHandler() {
