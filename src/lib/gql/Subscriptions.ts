@@ -45,3 +45,16 @@ export const downloadsOnChapters = graphql(`
 		}
 	}
 `);
+
+export const webUIUpdateStatusChange = graphql(`
+	subscription webUIUpdateStatusChange {
+		webUIUpdateStatusChange {
+			info {
+				channel
+				tag
+			}
+			state
+			progress
+		}
+	}
+`);
