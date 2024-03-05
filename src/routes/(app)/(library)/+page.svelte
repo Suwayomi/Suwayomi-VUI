@@ -72,6 +72,10 @@
 		})
 		.filter((e) => e.mangas.totalCount);
 
+	$: if (orderedCategories.find((e) => e.id === $tab) === undefined) {
+		$tab = orderedCategories[0]?.id ?? 0;
+	}
+
 	function LongHandler() {
 		$selectMode = true;
 	}
