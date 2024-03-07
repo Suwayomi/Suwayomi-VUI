@@ -194,22 +194,22 @@
 
 {#if !$manga || $manga.fetching}
 	<div
-		class="w-full md:w-1/2
-			md:overflow-y-auto overflow-x-hidden max-h-full md:absolute md:right-0 md:bottom-0 md:top-0"
+		class="max-h-full w-full
+			overflow-x-hidden md:absolute md:bottom-0 md:right-0 md:top-0 md:w-1/2 md:overflow-y-auto"
 	>
-		<div class="card variant-glass p-2 flex items-center space-x-1">
-			<div class="placeholder animate-pulse w-full" />
-			<div class="placeholder-circle animate-pulse h-12" />
-			<div class="placeholder-circle animate-pulse h-12" />
-			<div class="placeholder-circle animate-pulse h-12" />
+		<div class="card variant-glass flex items-center space-x-1 p-2">
+			<div class="placeholder w-full animate-pulse" />
+			<div class="placeholder-circle h-12 animate-pulse" />
+			<div class="placeholder-circle h-12 animate-pulse" />
+			<div class="placeholder-circle h-12 animate-pulse" />
 		</div>
 		{#each new Array(10) as _}
-			<div class="card variant-glass p-2 flex items-center space-x-1">
-				<div class="space-y-1 w-full">
-					<div class="placeholder animate-pulse w-full" />
-					<div class="placeholder animate-pulse w-full" />
+			<div class="card variant-glass flex items-center space-x-1 p-2">
+				<div class="w-full space-y-1">
+					<div class="placeholder w-full animate-pulse" />
+					<div class="placeholder w-full animate-pulse" />
 				</div>
-				<div class="placeholder-circle animate-pulse h-12" />
+				<div class="placeholder-circle h-12 animate-pulse" />
 			</div>
 		{/each}
 	</div>
@@ -217,7 +217,7 @@
 	<div
 		bind:this={chapterSideElement}
 		id="chapterSideElement"
-		class="w-full md:w-1/2 md:overflow-y-auto max-h-full md:absolute md:right-0 md:bottom-0 md:top-0 whitespace-pre-wrap"
+		class="max-h-full w-full whitespace-pre-wrap md:absolute md:bottom-0 md:right-0 md:top-0 md:w-1/2 md:overflow-y-auto"
 	>
 		Error loading chapters: {JSON.stringify($manga.error, null, 4)}
 	</div>
@@ -226,11 +226,11 @@
 	<div
 		bind:this={chapterSideElement}
 		id="chapterSideElement"
-		class="w-full md:w-1/2 md:overflow-y-auto max-h-full md:absolute md:right-0 md:bottom-0 md:top-0"
+		class="max-h-full w-full md:absolute md:bottom-0 md:right-0 md:top-0 md:w-1/2 md:overflow-y-auto"
 	>
 		<div class="sticky top-0 z-10 h-10 xs:h-14">
-			<div class="card variant-glass p-0 flex items-center space-x-1 h-full">
-				<span class="w-full text-2xl md:text-3xl font-medium pl-2 line-clamp-1">
+			<div class="card variant-glass flex h-full items-center space-x-1 p-0">
+				<span class="line-clamp-1 w-full pl-2 text-2xl font-medium md:text-3xl">
 					{sortedChapters.length} Chapters
 				</span>
 				<MediaQuery
@@ -278,16 +278,16 @@
 								target: 'selectmenu',
 								placement: 'bottom'
 							}}
-							class="hover:variant-glass-surface h-full p-2 aspect-square"
+							class="aspect-square h-full p-2 hover:variant-glass-surface"
 						>
 							<IconWrapper
 								name="mdi:dots-vertical"
-								class="aspect-square w-full h-full text-surface-700 dark:text-surface-300"
+								class="aspect-square h-full w-full text-surface-700 dark:text-surface-300"
 							/>
 						</button>
-						<div class="card p-0 rounded-lg max-w-xs" data-popup="selectmenu">
+						<div class="card max-w-xs rounded-lg p-0" data-popup="selectmenu">
 							<button
-								class="text-2xl hover:variant-glass-surface w-full rounded-t-lg p-4 flex items-center justify-start"
+								class="flex w-full items-center justify-start rounded-t-lg p-4 text-2xl hover:variant-glass-surface"
 								on:click={() => {
 									HelpUpdateChapters(dlreabook.download, selected);
 								}}
@@ -296,7 +296,7 @@
 								delete
 							</button>
 							<button
-								class="text-2xl hover:variant-glass-surface w-full p-4 flex items-center justify-start"
+								class="flex w-full items-center justify-start p-4 text-2xl hover:variant-glass-surface"
 								on:click={() => {
 									HelpUpdateChapters(dlreabook.read, selected);
 								}}
@@ -307,7 +307,7 @@
 								/>Un/Read
 							</button>
 							<button
-								class="text-2xl hover:variant-glass-surface w-full p-4 flex items-center justify-start"
+								class="flex w-full items-center justify-start p-4 text-2xl hover:variant-glass-surface"
 								on:click={() => {
 									HelpUpdateChapters(dlreabook.bookmark, selected);
 								}}
@@ -315,7 +315,7 @@
 								<IconWrapper name="mdi:bookmark" class="mr-2" />Un/bookmark
 							</button>
 							<button
-								class="text-2xl hover:variant-glass-surface w-full rounded-b-lg p-4 flex items-center justify-start"
+								class="flex w-full items-center justify-start rounded-b-lg p-4 text-2xl hover:variant-glass-surface"
 								on:click={() =>
 									HelpSelectAll(selectMode, selected, sortedChapters)}
 							>
@@ -344,7 +344,7 @@
 			{#each sortedChapters as chapter (chapter.id)}
 				<IntersectionObserver
 					let:intersecting
-					class="h-20 relative"
+					class="relative h-20"
 					root={(matches
 						? chapterSideElement
 						: document.querySelector('#page')) ?? undefined}
@@ -354,7 +354,7 @@
 					{#if intersecting}
 						<a
 							in:fade
-							class="card variant-glass p-2 flex items-center space-x-1 h-full relative"
+							class="card variant-glass relative flex h-full items-center space-x-1 p-2"
 							use:longPress
 							on:longPress={() => $selectMode || LongHandler()}
 							href="/manga/{mangaFrag?.id}/chapter/{chapter.id}"
@@ -376,17 +376,17 @@
 							{#if chapter.isBookmarked}
 								<IconWrapper
 									name="mdi:bookmark"
-									class="text-primary-500 h-1/2 w-auto aspect-square"
+									class="aspect-square h-1/2 w-auto text-primary-500"
 								/>
 							{/if}
-							<div class="space-y-0 w-full {chapter.isRead && 'opacity-50'}">
-								<div class="w-full line-clamp-1 text-xl md:text-2xl">
+							<div class="w-full space-y-0 {chapter.isRead && 'opacity-50'}">
+								<div class="line-clamp-1 w-full text-xl md:text-2xl">
 									{$mangaMeta.ChapterTitle === ChapterTitle['Source Title']
 										? chapter.name
 										: `Chapter ${chapter.chapterNumber}`}
 								</div>
 								<div
-									class="w-full line-clamp-1 font-light text-sm md:text-base"
+									class="line-clamp-1 w-full text-sm font-light md:text-base"
 									title="Fetched Date: {new Date(
 										parseInt(chapter.fetchedAt) * 1000
 									).toLocaleString()}&#013;Upload Date: {new Date(
@@ -410,9 +410,9 @@
 							/>
 
 							{#if $selectMode}
-								<button class="hover:variant-ghost rounded-full h-full p-2">
+								<button class="h-full rounded-full p-2 hover:variant-ghost">
 									<IconWrapper
-										class="aspect-square w-full h-full text-surface-700 dark:text-surface-300"
+										class="aspect-square h-full w-full text-surface-700 dark:text-surface-300"
 										name={$selected[chapter.id] === undefined
 											? 'fluent:checkbox-unchecked-24-filled'
 											: 'fluent:checkbox-checked-24-filled'}
@@ -426,15 +426,15 @@
 									placement: 'bottom'
 								}}
 								on:click|preventDefault|stopPropagation={() => {}}
-								class="hover:variant-ghost rounded-full h-full p-2"
+								class="h-full rounded-full p-2 hover:variant-ghost"
 							>
 								<IconWrapper
 									name="mdi:dots-vertical"
-									class="aspect-square w-full h-full text-surface-700 dark:text-surface-300"
+									class="aspect-square h-full w-full text-surface-700 dark:text-surface-300"
 								/>
 							</button>
 						</a>
-						<div class="card p-2 w-72 shadow-xl z-10" data-popup={chapter.id}>
+						<div class="card z-10 w-72 p-2 shadow-xl" data-popup={chapter.id}>
 							<div>
 								{#if chapter.isDownloaded}
 									<button
@@ -445,7 +445,7 @@
 												})
 												.toPromise();
 										}}
-										class="variant-glass hover:variant-soft p-2 cursor-pointer select-none w-full"
+										class="variant-glass w-full cursor-pointer select-none p-2 hover:variant-soft"
 									>
 										delete
 									</button>
@@ -457,7 +457,7 @@
 													ids: [chapter.id]
 												})
 												.toPromise()}
-										class="variant-glass hover:variant-soft p-2 cursor-pointer select-none w-full"
+										class="variant-glass w-full cursor-pointer select-none p-2 hover:variant-soft"
 									>
 										download
 									</button>
@@ -471,7 +471,7 @@
 													ids: [chapter.id]
 												})
 												.toPromise()}
-										class="variant-glass hover:variant-soft p-2 cursor-pointer select-none w-full"
+										class="variant-glass w-full cursor-pointer select-none p-2 hover:variant-soft"
 									>
 										unbookmark
 									</button>
@@ -484,7 +484,7 @@
 													ids: [chapter.id]
 												})
 												.toPromise()}
-										class="variant-glass hover:variant-soft p-2 cursor-pointer select-none w-full"
+										class="variant-glass w-full cursor-pointer select-none p-2 hover:variant-soft"
 									>
 										bookmark
 									</button>
@@ -492,26 +492,26 @@
 								{#if chapter.isRead}
 									<button
 										on:click={() => handelUnRead(chapter)}
-										class="variant-glass hover:variant-soft p-2 cursor-pointer select-none w-full"
+										class="variant-glass w-full cursor-pointer select-none p-2 hover:variant-soft"
 									>
 										mark as unread
 									</button>
 								{:else}
 									<button
 										on:click={() => handelRead(chapter)}
-										class="variant-glass hover:variant-soft p-2 cursor-pointer select-none w-full"
+										class="variant-glass w-full cursor-pointer select-none p-2 hover:variant-soft"
 									>
 										mark as read
 									</button>
 								{/if}
 								<button
 									on:click={() => handelPrevRead(chapter)}
-									class="variant-glass hover:variant-soft p-2 cursor-pointer select-none w-full"
+									class="variant-glass w-full cursor-pointer select-none p-2 hover:variant-soft"
 								>
 									mark previous as read
 								</button>
 							</div>
-							<div class="arrow bg-surface-100-800-token" />
+							<div class="bg-surface-100-800-token arrow" />
 						</div>
 					{/if}
 				</IntersectionObserver>
@@ -524,7 +524,7 @@
 				href="/manga/{mangaFrag?.id}/chapter/{sortedChapters
 					.filter((e) => !e.isRead)
 					.toSorted((a, b) => (a.sourceOrder > b.sourceOrder ? 1 : -1))[0].id}"
-				class="btn variant-filled-primary hover:variant-glass-primary fixed {matches
+				class="variant-filled-primary btn fixed hover:variant-glass-primary {matches
 					? 'bottom-2'
 					: 'bottom-[4.5rem]'} right-16 z-10"
 			>

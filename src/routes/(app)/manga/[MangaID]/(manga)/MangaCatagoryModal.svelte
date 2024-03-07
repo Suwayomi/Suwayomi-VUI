@@ -208,11 +208,11 @@
 
 {#if $modalStore[0] && categories && MangaCategories}
 	<div
-		class="card p-0 w-modal shadow-xl space-y-4 rounded-lg max-h-screen py-4"
+		class="card w-modal max-h-screen space-y-4 rounded-lg p-0 py-4 shadow-xl"
 	>
 		<h1 class="h3 pl-4">Set categories</h1>
-		<div class="pl-4 border-y border-surface-700">
-			<div class="max-h-96 overflow-y-auto grid grid-cols-1 gap-1">
+		<div class="border-y border-surface-700 pl-4">
+			<div class="grid max-h-96 grid-cols-1 gap-1 overflow-y-auto">
 				{#each categories as Category}
 					<TriStateSlide
 						triState={false}
@@ -220,7 +220,7 @@
 						on:changeE={(e) => {
 							handelClicked(Category, e.detail);
 						}}
-						class="outline-0 p-1 pl-2 hover:variant-glass-surface"
+						class="p-1 pl-2 outline-0 hover:variant-glass-surface"
 						labelClass="w-full"
 					>
 						{Category.name}
@@ -228,7 +228,7 @@
 				{/each}
 			</div>
 		</div>
-		<button on:click={handelSubmit} class="btn variant-filled mr-4 float-right"
+		<button on:click={handelSubmit} class="variant-filled btn float-right mr-4"
 			>Submit</button
 		>
 	</div>

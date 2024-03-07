@@ -15,7 +15,7 @@
 
 	export let pref: Extract<
 		ResultOf<typeof getSource>['source']['preferences'][0],
-		{ __typename?: 'CheckBoxPreference' | undefined }
+		{ __typename: 'CheckBoxPreference' | undefined }
 	>;
 
 	export let index: number;
@@ -39,7 +39,7 @@
 <Slide
 	on:changeE={handelcheck}
 	{checked}
-	class="w-full hover:variant-glass-surface py-1 px-3 my-1"
+	class="my-1 w-full px-3 py-1 hover:variant-glass-surface"
 	labelClass="w-full ml-1"
 >
 	<div class="flex flex-col">

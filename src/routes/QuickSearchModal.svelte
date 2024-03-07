@@ -260,7 +260,7 @@
 			class="tabindex input rounded-2xl"
 			type="text"
 		/>
-		<div tabindex="-1" class="card mt-1 rounded-2xl max-h-96 overflow-y-auto">
+		<div tabindex="-1" class="card mt-1 max-h-96 overflow-y-auto rounded-2xl">
 			{#each items as item, index}
 				<a
 					tabindex={index !== 0 ? 0 : -1}
@@ -269,9 +269,9 @@
 					}}
 					href={item.url}
 					class="{index !== 0 &&
-						'tabindex'} flex flex-nowrap hover:variant-glass p-2 outline-0
-					first:rounded-t-2xl last:rounded-b-2xl
-					focus:variant-glass-primary {inputElement && 'first:variant-glass-primary'}"
+						'tabindex'} flex flex-nowrap p-2 outline-0 hover:variant-glass
+					focus:variant-glass-primary first:rounded-t-2xl
+					last:rounded-b-2xl {inputElement && 'first:variant-glass-primary'}"
 				>
 					<div class="pr-4">
 						{#if item.img}
@@ -285,7 +285,7 @@
 						{:else if item.icon}
 							<IconWrapper class="aspect-square h-full" name={item.icon} />
 						{:else if item.str}
-							<div class="h-full flex items-center">
+							<div class="flex h-full items-center">
 								{item.str}
 							</div>
 						{/if}

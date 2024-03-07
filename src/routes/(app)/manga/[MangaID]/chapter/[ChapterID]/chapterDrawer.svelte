@@ -40,7 +40,7 @@
 
 {#if mangaMeta}
 	<div class="flex flex-col p-4">
-		<div class="flex justify-end border-b border-surface-500 mb-4 pb-4">
+		<div class="mb-4 flex justify-end border-b border-surface-500 pb-4">
 			<IconButton
 				tabindex={999}
 				name="mdi:chevron-left"
@@ -51,9 +51,9 @@
 				}}
 			/>
 		</div>
-		<h1 class="h2 line-clamp-3 my-2 pl-4">{$mangaTitle}</h1>
-		<h2 class="h3 border-y mt-4 border-surface-500 p-4">{$chapterTitle}</h2>
-		<div class="flex flex-col space-y-2 my-2">
+		<h1 class="h2 my-2 line-clamp-3 pl-4">{$mangaTitle}</h1>
+		<h2 class="h3 mt-4 border-y border-surface-500 p-4">{$chapterTitle}</h2>
+		<div class="my-2 flex flex-col space-y-2">
 			<Slide
 				tabindex={0}
 				class="p-1 hover:variant-glass-surface"

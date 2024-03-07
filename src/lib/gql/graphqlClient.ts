@@ -476,7 +476,6 @@ function fetchMangaChaptersUpdater(
 		},
 		(manga) => {
 			if (!manga) {
-				console.log('getManga is null');
 				return manga;
 			}
 			manga.manga.chapters.nodes = data.fetchChapters.chapters;

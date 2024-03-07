@@ -15,31 +15,31 @@
 </script>
 
 {#if $modalStore[0]}
-	<div class="card p-0 w-modal shadow-xl space-y-4 rounded-lg max-h-screen">
-		<h1 class="h3 pt-4 pl-4">Reader Defaults</h1>
-		<div class="pl-4 border-y border-surface-700">
-			<div class="max-h-96 overflow-y-auto grid grid-cols-1 gap-1 pr-4">
+	<div class="card w-modal max-h-screen space-y-4 rounded-lg p-0 shadow-xl">
+		<h1 class="h3 pl-4 pt-4">Reader Defaults</h1>
+		<div class="border-y border-surface-700 pl-4">
+			<div class="grid max-h-96 grid-cols-1 gap-1 overflow-y-auto pr-4">
 				<Slide
-					class="outline-0 p-1 hover:variant-glass-surface mt-1"
+					class="mt-1 p-1 outline-0 hover:variant-glass-surface"
 					bind:checked={$Meta.mangaMetaDefaults.Margins}
 				>
 					Page Margins
 				</Slide>
 				<Slide
-					class="outline-0 p-1 hover:variant-glass-surface"
+					class="p-1 outline-0 hover:variant-glass-surface"
 					bind:checked={$Meta.mangaMetaDefaults.Scale}
 				>
 					Page Scale
 				</Slide>
 				<Slide
-					class="outline-0 p-1 hover:variant-glass-surface"
+					class="p-1 outline-0 hover:variant-glass-surface"
 					bind:checked={$Meta.mangaMetaDefaults.SmoothScroll}
 				>
 					Smooth Scroll
 				</Slide>
 				{#if $Meta.mangaMetaDefaults.ReaderMode !== Mode.Vertical}
 					<Slide
-						class="outline-0 p-1 hover:variant-glass-surface"
+						class="p-1 outline-0 hover:variant-glass-surface"
 						bind:checked={$Meta.mangaMetaDefaults.Offset}
 					>
 						Page Offset
@@ -56,7 +56,7 @@
 						{/each}
 					</select>
 				</label>
-				<label class="pl-3 mb-2">
+				<label class="mb-2 pl-3">
 					<span>Navigation Layout</span>
 					<select bind:value={$Meta.mangaMetaDefaults.NavLayout} class="select">
 						{#each enumKeys(Layout) as value}
@@ -65,19 +65,19 @@
 					</select>
 				</label>
 				<Slide
-					class="outline-0 p-1 hover:variant-glass-surface"
+					class="p-1 outline-0 hover:variant-glass-surface"
 					bind:checked={$Meta.mangaMetaDefaults.preLoadNextChapter}
 				>
 					preload Next Chapter
 				</Slide>
 				<Slide
-					class="outline-0 p-1 hover:variant-glass-surface"
+					class="p-1 outline-0 hover:variant-glass-surface"
 					bind:checked={$Meta.mangaMetaDefaults.mobileFullScreenOnChapterPage}
 				>
 					mobile Full Screen On Chapter Page
 				</Slide>
 				<Slide
-					class="outline-0 p-1 hover:variant-glass-surface"
+					class="p-1 outline-0 hover:variant-glass-surface"
 					bind:checked={$Meta.mangaMetaDefaults.doPageIndicator}
 				>
 					Chapter Page Indicator

@@ -25,7 +25,7 @@
 	{tipclass}
 	{placement}
 	{tip}
-	class=" cursor-pointer h-full {$$props.class}"
+	class="h-full cursor-pointer {$$props.class}"
 >
 	<IconButton {name} {hover} on:click />
 </Tooltip>

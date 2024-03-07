@@ -37,13 +37,13 @@
 </script>
 
 {#if $modalStore[0]}
-	<div class="card p-0 w-modal shadow-xl space-y-4 rounded-lg max-h-screen">
-		<h1 class="h3 pt-4 pl-4">Backups</h1>
+	<div class="card w-modal max-h-screen space-y-4 rounded-lg p-0 shadow-xl">
+		<h1 class="h3 pl-4 pt-4">Backups</h1>
 		<div class="border-y border-surface-700">
-			<div class="max-h-96 overflow-y-auto grid grid-cols-1 gap-1">
-				<div class="w-full mt-1">
+			<div class="grid max-h-96 grid-cols-1 gap-1 overflow-y-auto">
+				<div class="mt-1 w-full">
 					<button
-						class="flex h-[76px] text-left w-full hover:variant-glass-surface py-2"
+						class="flex h-[76px] w-full py-2 text-left hover:variant-glass-surface"
 						on:click={clearCache}
 					>
 						<IconWrapper class="h-full w-auto p-2" name="mdi:delete" />
@@ -57,7 +57,7 @@
 						</div>
 					</button>
 					<button
-						class="flex h-[76px] text-left w-full hover:variant-glass-surface py-2"
+						class="flex h-[76px] w-full py-2 text-left hover:variant-glass-surface"
 						on:click={clearCachedImgs}
 					>
 						<IconWrapper
@@ -75,7 +75,7 @@
 						</div>
 					</button>
 					<button
-						class="flex h-[76px] text-left w-full hover:variant-glass-surface py-2"
+						class="flex h-[76px] w-full py-2 text-left hover:variant-glass-surface"
 						on:click={() => client.mutation(clearCachedImages, {}).toPromise()}
 					>
 						<IconWrapper

@@ -50,10 +50,10 @@
 </script>
 
 {#if $modalStore[0]}
-	<div class="card p-0 w-modal shadow-xl space-y-4 rounded-lg max-h-screen">
-		<h1 class="h3 pt-4 pl-4">Tracking</h1>
-		<div class="pl-4 border-y border-surface-700">
-			<div class="max-h-96 overflow-y-auto grid grid-cols-1 gap-1 pr-4">
+	<div class="card w-modal max-h-screen space-y-4 rounded-lg p-0 shadow-xl">
+		<h1 class="h3 pl-4 pt-4">Tracking</h1>
+		<div class="border-y border-surface-700 pl-4">
+			<div class="grid max-h-96 grid-cols-1 gap-1 overflow-y-auto pr-4">
 				<div class="pl-4">
 					{#if $Trackers.error}
 						<div class="white-space-pre-wrap">
@@ -61,12 +61,12 @@
 						</div>
 					{:else if $Trackers.fetching}
 						{#each new Array(4).fill(0) as _}
-							<div class="flex pl-4 p-1 w-full text-left">
+							<div class="flex w-full p-1 pl-4 text-left">
 								<div
-									class="w-1/5 mr-1 h-full placeholder animate-pulse aspect-square rounded-xl"
+									class="placeholder mr-1 aspect-square h-full w-1/5 animate-pulse rounded-xl"
 								/>
-								<div class="space-y-2 h-full w-full">
-									<div class="placeholder animate-pulse h-6 w-full" />
+								<div class="h-full w-full space-y-2">
+									<div class="placeholder h-6 w-full animate-pulse" />
 									<div class="placeholder h-4 w-2/3" />
 								</div>
 							</div>
@@ -74,13 +74,13 @@
 					{:else if $Trackers.data}
 						{#each $Trackers.data.trackers.nodes as tracker}
 							<button
-								class="block hover:variant-ghost-surface w-full"
+								class="block w-full hover:variant-ghost-surface"
 								on:click={() => {
 									clickedTracker(tracker);
 								}}
 							>
-								<div class="flex pl-4 p-1 w-full text-left">
-									<div class="w-1/5 pr-1 flex-shrink-0">
+								<div class="flex w-full p-1 pl-4 text-left">
+									<div class="w-1/5 flex-shrink-0 pr-1">
 										<Image
 											src={tracker.icon}
 											alt={tracker.name}
@@ -94,7 +94,7 @@
 											{tracker.name}
 										</span>
 										<span
-											class="text-sm xl:text-base flex items-center space-x-2"
+											class="flex items-center space-x-2 text-sm xl:text-base"
 										>
 											Logged in: {tracker.isLoggedIn}
 										</span>

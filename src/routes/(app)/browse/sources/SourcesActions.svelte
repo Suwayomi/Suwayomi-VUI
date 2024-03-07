@@ -51,13 +51,13 @@
 	}
 </script>
 
-<div class="h-full flex">
+<div class="flex h-full">
 	<Search />
 	<div
-		class="overflow-hidden
-			max-w-[16rem]
+		class="max-w-[16rem]
+			overflow-hidden
 			transition-all duration-500 ease-in-out
-			{searchElementHidden ? 'max-w-[0rem] sm:max-w-[0rem] opacity-0' : ''}"
+			{searchElementHidden ? 'max-w-[0rem] opacity-0 sm:max-w-[0rem]' : ''}"
 	>
 		<input
 			bind:this={inputElement}

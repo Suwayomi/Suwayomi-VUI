@@ -33,7 +33,7 @@
 				root={scrollingElement ?? undefined}
 				left={400}
 				right={400}
-				class="w-full h-full flex flex-col flex-nowrap m-1"
+				class="m-1 flex h-full w-full flex-col flex-nowrap"
 			>
 				{#if intersecting}
 					<a
@@ -46,10 +46,10 @@
 							}
 						}}
 						class="{manga.inLibrary &&
-							'opacity-70'} hover:opacity-70 cursor-pointer h-full"
+							'opacity-70'} h-full cursor-pointer hover:opacity-70"
 						tabindex="-1"
 					>
-						<div class="aspect-cover w-auto h-full">
+						<div class="aspect-cover h-full w-auto">
 							<MangaCard
 								thumbnailUrl={manga.thumbnailUrl ?? ''}
 								title={manga.title}
@@ -60,10 +60,10 @@
 							>
 								{#if $Meta.Display === display.Compact}
 									<div
-										class="absolute bottom-0 left-0 right-0 variant-glass rounded-b-olg"
+										class="variant-glass absolute bottom-0 left-0 right-0 rounded-b-olg"
 									>
 										<div
-											class="line-clamp-2 px-2 h-12 text-center"
+											class="line-clamp-2 h-12 px-2 text-center"
 											title={manga.title}
 										>
 											{manga.title}
@@ -72,7 +72,7 @@
 								{/if}
 								{#if manga.inLibrary}
 									<div
-										class="absolute top-1 right-1 badge variant-filled-primary"
+										class="variant-filled-primary badge absolute right-1 top-1"
 									>
 										In Library
 									</div>
@@ -82,7 +82,7 @@
 						{#if $Meta.Display === display.Comfortable}
 							<div class="variant-glass-surface rounded-b-lg">
 								<div
-									class="line-clamp-2 px-2 h-12 text-center"
+									class="line-clamp-2 h-12 px-2 text-center"
 									title={manga.title}
 								>
 									{manga.title}

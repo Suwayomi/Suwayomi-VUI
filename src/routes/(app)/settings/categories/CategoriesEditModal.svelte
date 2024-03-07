@@ -41,11 +41,11 @@
 
 {#if $modalStore[0]}
 	<div
-		class="card p-0 w-modal shadow-xl space-y-4 rounded-lg max-h-screen py-4"
+		class="card w-modal max-h-screen space-y-4 rounded-lg p-0 py-4 shadow-xl"
 	>
 		<h1 class="h3 pl-4">Edit category</h1>
-		<div class="px-4 border-y border-surface-700">
-			<div class="max-h-96 overflow-y-auto grid grid-cols-1 gap-1">
+		<div class="border-y border-surface-700 px-4">
+			<div class="grid max-h-96 grid-cols-1 gap-1 overflow-y-auto">
 				<label class="label">
 					<span class="pl-2">Category name</span>
 					<input class="input" type="text" bind:value={catinput} />
@@ -54,7 +54,7 @@
 					labelClass="ml-2"
 					bind:checked={Defaul}
 					disabled={cat.id == 0}
-					class="w-full focus:outline-0 p-1 hover:variant-glass-surface"
+					class="w-full p-1 hover:variant-glass-surface focus:outline-0"
 				>
 					<div class="w-full">
 						Default category when adding new manga to the library
@@ -63,14 +63,14 @@
 				<Slide
 					labelClass="ml-2"
 					bind:checked={includeInUpdate}
-					class="w-full focus:outline-0 p-1 hover:variant-glass-surface"
+					class="w-full p-1 hover:variant-glass-surface focus:outline-0"
 				>
 					<div class="w-full">Include category in automatic updates</div>
 				</Slide>
 				<Slide
 					labelClass="ml-2"
 					bind:checked={includeInDownload}
-					class="w-full focus:outline-0 p-1 hover:variant-glass-surface"
+					class="w-full p-1 hover:variant-glass-surface focus:outline-0"
 				>
 					<div class="w-full">
 						Include category in downloads from automatic updates
@@ -78,8 +78,8 @@
 				</Slide>
 			</div>
 		</div>
-		<div class="pr-2 w-full flex justify-end">
-			<button on:click={submitChange} class="btn variant-filled">Submit</button>
+		<div class="flex w-full justify-end pr-2">
+			<button on:click={submitChange} class="variant-filled btn">Submit</button>
 		</div>
 	</div>
 {/if}

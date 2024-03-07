@@ -20,8 +20,8 @@
 	import type { fetchSourceManga } from '$lib/gql/Mutations';
 
 	export let filter: Extract<
-		ResultOf<typeof getSource>['source']['filters'][0],
-		{ __typename?: 'GroupFilter' | undefined }
+		ResultOf<typeof getSource>['source']['filters'][number],
+		{ __typename: 'GroupFilter' }
 	>;
 	export let filters: VariablesOf<typeof fetchSourceManga>['filters'];
 	export let index: number;
@@ -57,7 +57,7 @@
 <AccordionItem>
 	<svelte:fragment slot="summary">{filter.name}</svelte:fragment>
 	<svelte:fragment slot="content">
-		<div class="space-y-1 p-1 variant-ghost-surface">
+		<div class="variant-ghost-surface space-y-1 p-1">
 			{#each filter.filters as filte, index}
 				{#if '__typename' in filte}
 					{#if filte.__typename === 'CheckBoxFilter'}

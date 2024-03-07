@@ -11,15 +11,15 @@
 	let scrollingElement: HTMLDivElement;
 </script>
 
-<div class="flex relative h-full">
+<div class="relative flex h-full">
 	<div
 		bind:this={scrollingElement}
-		class="w-full overflow-y-auto absolute top-0 bottom-0"
+		class="absolute bottom-0 top-0 w-full overflow-y-auto"
 	>
 		<div
-			class="sticky top-0 z-10 overflow-x-auto hide-scrollbar grid justify-items-center card rounded-none variant-glass"
+			class="card variant-glass hide-scrollbar sticky top-0 z-10 grid justify-items-center overflow-x-auto rounded-none"
 		>
-			<div class="py-2 flex space-x-2">
+			<div class="flex space-x-2 py-2">
 				<a
 					href="/browse/sources"
 					class="btn

@@ -27,11 +27,11 @@
 </script>
 
 {#if $modalStore[0]}
-	<div class="card p-0 w-modal shadow-xl space-y-4 rounded-lg">
+	<div class="card w-modal space-y-4 rounded-lg p-0 shadow-xl">
 		<TabGroup
 			justify="justify-center"
 			flex="flex"
-			class="bg-surface-100-800-token w-full rounded-t-lg select-none focus:outline-0"
+			class="bg-surface-100-800-token w-full select-none rounded-t-lg focus:outline-0"
 			rounded="rounded-t-lg"
 			active="border-b-2 variant-glass-primary"
 			regionList="variant-soft-surface focus:outline-0"
@@ -45,7 +45,7 @@
 				value={0}
 			>
 				<div
-					class="flex flex-row justify-center items-center h-full focus:outline-0"
+					class="flex h-full flex-row items-center justify-center focus:outline-0"
 				>
 					<IconWrapper name="mdi:filter" class="text-4xl" />
 					<span>Filter</span>
@@ -58,7 +58,7 @@
 				name="tab2"
 				value={1}
 			>
-				<div class="flex flex-row justify-center items-center h-full">
+				<div class="flex h-full flex-row items-center justify-center">
 					<IconWrapper name="mdi:sort" class="text-4xl" />
 					<span>Sort</span>
 				</div>
@@ -70,7 +70,7 @@
 				name="tab3"
 				value={2}
 			>
-				<div class="flex flex-row justify-center items-center h-full">
+				<div class="flex h-full flex-row items-center justify-center">
 					<IconWrapper name="mdi:television-guide" class="text-4xl" />
 					<span>Display</span>
 				</div>
@@ -82,7 +82,7 @@
 						<TriStateSlide
 							bind:state={$mangaMeta.ChapterUnread}
 							label={'Unread'}
-							class="w-full focus:outline-0 p-1 pl-2 hover:variant-glass-surface"
+							class="w-full p-1 pl-2 hover:variant-glass-surface focus:outline-0"
 							labelClass="w-full"
 						>
 							<span>Unread</span>
@@ -90,7 +90,7 @@
 						<TriStateSlide
 							bind:state={$mangaMeta.ChapterDownloaded}
 							label={'Downloaded'}
-							class="w-full focus:outline-0 p-1 pl-2 hover:variant-glass-surface"
+							class="w-full p-1 pl-2 hover:variant-glass-surface focus:outline-0"
 							labelClass="w-full"
 						>
 							<span>Downloaded</span>
@@ -98,7 +98,7 @@
 						<TriStateSlide
 							bind:state={$mangaMeta.ChapterBookmarked}
 							label={'Downloaded'}
-							class="w-full focus:outline-0 p-1 pl-2 hover:variant-glass-surface"
+							class="w-full p-1 pl-2 hover:variant-glass-surface focus:outline-0"
 							labelClass="w-full"
 						>
 							<span>Bookmarked</span>
@@ -108,7 +108,7 @@
 							triState={false}
 							bind:checked={$mangaMeta.ChapterAsc}
 							label={'Ascending'}
-							class="w-full focus:outline-0 p-1 pl-2 hover:variant-glass-surface"
+							class="w-full p-1 pl-2 hover:variant-glass-surface focus:outline-0"
 							labelClass="w-full"
 						>
 							<span>Ascending</span>
@@ -134,7 +134,7 @@
 						</RadioGroup>
 					{:else}
 						<button
-							class="w-full focus:outline-0 p-1 pl-2 flex justify-between hover:variant-glass-surface rounded-full items-center"
+							class="flex w-full items-center justify-between rounded-full p-1 pl-2 hover:variant-glass-surface focus:outline-0"
 							on:click|preventDefault|stopPropagation={() =>
 								($mangaMeta.ChapterFetchUpload =
 									!$mangaMeta.ChapterFetchUpload)}

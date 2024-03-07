@@ -12,10 +12,10 @@
 </script>
 
 <label
-	class="text-left flex items-center w-full h-16 hover:variant-glass-surface cursor-pointer"
+	class="flex h-16 w-full cursor-pointer items-center text-left hover:variant-glass-surface"
 >
 	{title}
-	<div class="flex items-center flex-nowrap flex-1 justify-end space-x-2">
+	<div class="flex flex-1 flex-nowrap items-center justify-end space-x-2">
 		{#if type === 'password'}
 			<input
 				on:change

@@ -157,3 +157,106 @@ export const TrackerTypeFragment = graphql(
 	`,
 	[]
 );
+
+export const PreferenceFragment = graphql(
+	`
+		fragment PreferenceFragment on Preference {
+			... on CheckBoxPreference {
+				__typename
+				CheckBoxCheckBoxCurrentValue: currentValue
+				summary
+				CheckBoxDefault: default
+				key
+				CheckBoxTitle: title
+			}
+			... on EditTextPreference {
+				__typename
+				EditTextCurrentValue: currentValue
+				EditTextDefault: default
+				EditTextTitle: title
+				text
+				summary
+				key
+				dialogTitle
+				dialogMessage
+			}
+			... on SwitchPreference {
+				__typename
+				SwitchCurrentValue: currentValue
+				summary
+				key
+				SwitchDefault: default
+				SwitchTitle: title
+			}
+			... on MultiSelectListPreference {
+				__typename
+				dialogMessage
+				dialogTitle
+				MultiSelectListTitle: title
+				summary
+				key
+				entryValues
+				entries
+				MultiSelectListDefault: default
+				MultiSelectListCurrentValue: currentValue
+			}
+			... on ListPreference {
+				__typename
+				ListCurrentValue: currentValue
+				ListDefault: default
+				ListTitle: title
+				summary
+				key
+				entryValues
+				entries
+			}
+		}
+	`,
+	[]
+);
+
+export const FilterFragment = graphql(
+	`
+		fragment FilterFragment on Filter {
+			... on TriStateFilter {
+				__typename
+				name
+				TriStateDefault: default
+			}
+			... on CheckBoxFilter {
+				__typename
+				CheckBoxDefault: default
+				name
+			}
+			... on TextFilter {
+				__typename
+				name
+				TextDefault: default
+			}
+			... on SortFilter {
+				__typename
+				values
+				name
+				SortDefault: default {
+					ascending
+					index
+				}
+			}
+			... on SeparatorFilter {
+				__typename
+				name
+			}
+			... on SelectFilter {
+				__typename
+				values
+				name
+				SelectDefault: default
+			}
+			... on HeaderFilter {
+				__typename
+				name
+			}
+		}
+	`,
+	[]
+);

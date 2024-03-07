@@ -20,7 +20,7 @@
 		<AppBar padding="" slotTrail="h-10 xs:h-14" gap="" slotLead="h-10 xs:h-14">
 			<svelte:fragment slot="lead">
 				<span
-					class="text-xl/[5rem] sm:text-4xl/[5rem] py-2 px-2 sm:px-4 line-clamp-1"
+					class="line-clamp-1 px-2 py-2 text-xl/[5rem] sm:px-4 sm:text-4xl/[5rem]"
 				>
 					{$title}
 				</span>

@@ -14,13 +14,13 @@
 </script>
 
 {#if $modalStore[0]}
-	<div class="card p-0 w-modal shadow-xl space-y-4 rounded-lg max-h-screen">
-		<h1 class="h3 pt-4 pl-4">Library settings</h1>
-		<div class="pl-4 border-y border-surface-700">
-			<div class="max-h-96 overflow-y-auto grid grid-cols-1 gap-1 pr-4">
+	<div class="card w-modal max-h-screen space-y-4 rounded-lg p-0 shadow-xl">
+		<h1 class="h3 pl-4 pt-4">Library settings</h1>
+		<div class="border-y border-surface-700 pl-4">
+			<div class="grid max-h-96 grid-cols-1 gap-1 overflow-y-auto pr-4">
 				<Slide
 					bind:checked={$Meta.ignoreFiltersWhenSearching}
-					class=" focus:outline-0 p-1 pl-2 hover:variant-glass-surface my-1"
+					class="my-1 p-1 pl-2 hover:variant-glass-surface focus:outline-0"
 				>
 					Ignore Filters When Searching
 				</Slide>

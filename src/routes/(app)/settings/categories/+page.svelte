@@ -149,22 +149,22 @@
 {#if $cats.fetching}
 	{#each new Array(5) as _}
 		<div
-			class="text-left flex items-center w-full h-16 hover:variant-glass-surface cursor-pointer p-2"
+			class="flex h-16 w-full cursor-pointer items-center p-2 text-left hover:variant-glass-surface"
 		>
-			<div class="placeholder animate-pulse h-full aspect-square w-auto" />
-			<div class=" w-full">
-				<div class="placeholder animate-pulse max-w-xs mx-2" />
+			<div class="placeholder aspect-square h-full w-auto animate-pulse" />
+			<div class="w-full">
+				<div class="placeholder mx-2 max-w-xs animate-pulse" />
 			</div>
-			<div class="sm:mr-8 h-full flex">
+			<div class="flex h-full sm:mr-8">
 				{#each new Array(4) as _}
-					<div class="placeholder animate-pulse h-full aspect-square w-auto" />
+					<div class="placeholder aspect-square h-full w-auto animate-pulse" />
 				{/each}
 			</div>
-			<div class="placeholder animate-pulse h-full aspect-square w-auto" />
-			<div class="placeholder animate-pulse h-full aspect-square w-auto" />
+			<div class="placeholder aspect-square h-full w-auto animate-pulse" />
+			<div class="placeholder aspect-square h-full w-auto animate-pulse" />
 		</div>
 		<div class="fixed bottom-2 right-2">
-			<div class="placeholder animate-pulse h-16 w-16 rounded-full" />
+			<div class="placeholder h-16 w-16 animate-pulse rounded-full" />
 		</div>
 	{/each}
 {:else if $cats.error}
@@ -175,31 +175,31 @@
 	{#each $cats.data.categories.nodes.toSorted( (a, b) => (a.order > b.order ? 1 : -1) ) as cat}
 		<button
 			on:click={(e) => edit(e, cat)}
-			class="text-left flex items-center w-full h-16 hover:variant-glass-surface cursor-pointer p-2"
+			class="flex h-16 w-full cursor-pointer items-center p-2 text-left hover:variant-glass-surface"
 		>
 			<IconWrapper class="h-full w-auto" name="mdi:theme" />
 			<div class="w-full px-2">{cat.name}</div>
 			{#if cat.id !== 0}
-				<div class="sm:mr-8 h-full flex">
+				<div class="flex h-full sm:mr-8">
 					<IconButton
 						on:click={(e) => move(e, cat, Movement.top)}
 						name="mdi:chevron-double-up"
-						class="hover:variant-ghost  h-full w-auto"
+						class="h-full  w-auto hover:variant-ghost"
 					/>
 					<IconButton
 						on:click={(e) => move(e, cat, Movement.up)}
 						name="mdi:chevron-up"
-						class="hover:variant-ghost  h-full w-auto"
+						class="h-full  w-auto hover:variant-ghost"
 					/>
 					<IconButton
 						on:click={(e) => move(e, cat, Movement.down)}
 						name="mdi:chevron-down"
-						class="hover:variant-ghost  h-full w-auto"
+						class="h-full  w-auto hover:variant-ghost"
 					/>
 					<IconButton
 						on:click={(e) => move(e, cat, Movement.bottom)}
 						name="mdi:chevron-double-down"
-						class="hover:variant-ghost  h-full w-auto"
+						class="h-full  w-auto hover:variant-ghost"
 					/>
 				</div>
 			{/if}
@@ -227,6 +227,6 @@
 		name="mdi:plus"
 		hover="hover:variant-glass-primary"
 		height="h-16"
-		class="variant-filled-primary rounded-full fixed bottom-2 right-2"
+		class="variant-filled-primary fixed bottom-2 right-2 rounded-full"
 	/>
 {/if}

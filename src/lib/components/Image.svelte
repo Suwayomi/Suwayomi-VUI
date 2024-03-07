@@ -72,7 +72,7 @@
 >
 	{#if State === state.error}
 		<div
-			class="card flex justify-center items-center {rounded} {aspect}
+			class="card flex items-center justify-center {rounded} {aspect}
 			{LoadingWidth.length ? LoadingWidth : width}
 			{LoadingHeight.length ? LoadingHeight : height}
 			{$$props.class}"
@@ -81,7 +81,7 @@
 				<div>Failed.</div>
 				{#if reload_button}
 					<button
-						class="btn variant-filled-surface"
+						class="variant-filled-surface btn"
 						on:click|capture|stopPropagation={() => {
 							State = state.loading;
 							if (!img) return;
@@ -99,7 +99,7 @@
 		</div>
 	{:else if State === state.loading}
 		<div
-			class="placeholder absolute top-0 bottom-0 left-0 right-0 animate-pulse {rounded} {aspect}
+			class="placeholder absolute bottom-0 left-0 right-0 top-0 animate-pulse {rounded} {aspect}
 			{LoadingWidth.length ? LoadingWidth : width}
 			{LoadingHeight.length ? LoadingHeight : height}
 			 {$$props.class}"

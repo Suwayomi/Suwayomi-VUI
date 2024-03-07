@@ -7,7 +7,9 @@ import {
 	CategoryTypeFragment,
 	ChapterTypeFragment,
 	ExtensionTypeFragment,
+	FilterFragment,
 	MangaTypeFragment,
+	PreferenceFragment,
 	SourceTypeFragment,
 	TrackerTypeFragment,
 	TrackRecordTypeFragment
@@ -290,144 +292,22 @@ export const getSource = graphql(
 				supportsLatest
 				isConfigurable
 				preferences {
-					... on CheckBoxPreference {
-						__typename
-						CheckBoxCheckBoxCurrentValue: currentValue
-						summary
-						CheckBoxDefault: default
-						key
-						CheckBoxTitle: title
-					}
-					... on EditTextPreference {
-						__typename
-						EditTextCurrentValue: currentValue
-						EditTextDefault: default
-						EditTextTitle: title
-						text
-						summary
-						key
-						dialogTitle
-						dialogMessage
-					}
-					... on SwitchPreference {
-						__typename
-						SwitchCurrentValue: currentValue
-						summary
-						key
-						SwitchDefault: default
-						SwitchTitle: title
-					}
-					... on MultiSelectListPreference {
-						__typename
-						dialogMessage
-						dialogTitle
-						MultiSelectListTitle: title
-						summary
-						key
-						entryValues
-						entries
-						MultiSelectListDefault: default
-						MultiSelectListCurrentValue: currentValue
-					}
-					... on ListPreference {
-						__typename
-						ListCurrentValue: currentValue
-						ListDefault: default
-						ListTitle: title
-						summary
-						key
-						entryValues
-						entries
-					}
+					...PreferenceFragment
 				}
 				filters {
-					... on TriStateFilter {
-						__typename
-						name
-						TriStateDefault: default
-					}
-					... on CheckBoxFilter {
-						__typename
-						CheckBoxDefault: default
-						name
-					}
-					... on TextFilter {
-						__typename
-						name
-						TextDefault: default
-					}
-					... on SortFilter {
-						__typename
-						values
-						name
-						SortDefault: default {
-							ascending
-							index
-						}
-					}
-					... on SeparatorFilter {
-						__typename
-						name
-					}
-					... on SelectFilter {
-						__typename
-						values
-						name
-						SelectDefault: default
-					}
-					... on HeaderFilter {
-						__typename
-						name
-					}
+					...FilterFragment
 					... on GroupFilter {
 						__typename
 						name
 						filters {
-							... on TriStateFilter {
-								__typename
-								name
-								TriStateDefault: default
-							}
-							... on CheckBoxFilter {
-								__typename
-								CheckBoxDefault: default
-								name
-							}
-							... on TextFilter {
-								__typename
-								name
-								TextDefault: default
-							}
-							... on SortFilter {
-								__typename
-								values
-								name
-								SortDefault: default {
-									ascending
-									index
-								}
-							}
-							... on SeparatorFilter {
-								__typename
-								name
-							}
-							... on SelectFilter {
-								__typename
-								values
-								name
-								SelectDefault: default
-							}
-							... on HeaderFilter {
-								__typename
-								name
-							}
+							...FilterFragment
 						}
 					}
 				}
 			}
 		}
 	`,
-	[]
+	[FilterFragment, PreferenceFragment]
 );
 
 export const validateBackup = graphql(

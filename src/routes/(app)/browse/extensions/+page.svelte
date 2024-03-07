@@ -119,17 +119,17 @@
 	{#if $extensions === undefined || $extensions.fetching}
 		<div class="px-4">
 			{#each new Array(5) as _}
-				<div class="h-8 md:h-10 m-2 placeholder animate-pulse max-w-xs" />
+				<div class="placeholder m-2 h-8 max-w-xs animate-pulse md:h-10" />
 				{#each new Array(5) as _}
-					<div class="h-28 m-1">
-						<div class="card variant-ghost flex w-full h-full items-center">
-							<div class="p-1 h-full w-auto">
+					<div class="m-1 h-28">
+						<div class="card variant-ghost flex h-full w-full items-center">
+							<div class="h-full w-auto p-1">
 								<div
-									class="placeholder animate-pulse h-full w-auto rounded-lg aspect-square"
+									class="placeholder aspect-square h-full w-auto animate-pulse rounded-lg"
 								/>
 							</div>
-							<div class="w-full h-full max-w-xs flex flex-col justify-center">
-								<div class="placeholder animate-pulse my-2 max-w-[10rem]" />
+							<div class="flex h-full w-full max-w-xs flex-col justify-center">
+								<div class="placeholder my-2 max-w-[10rem] animate-pulse" />
 								<div class="my-2">
 									<div class="placeholder animate-pulse" />
 								</div>

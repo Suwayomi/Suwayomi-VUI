@@ -27,7 +27,7 @@
 	}
 </script>
 
-<div class="h-full flex">
+<div class="flex h-full">
 	<TooltipIconButton
 		placement="bottom"
 		tip="Refresh Manga"

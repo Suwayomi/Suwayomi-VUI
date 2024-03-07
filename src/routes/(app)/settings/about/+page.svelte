@@ -17,7 +17,7 @@
 
 {#if $about.fetching}
 	{#if window.version}
-		<div class="pl-4 py-2">
+		<div class="py-2 pl-4">
 			<div class="text-xl">client version</div>
 			<div class="opacity-80">
 				VUI-{window.version}
@@ -25,9 +25,9 @@
 		</div>
 	{/if}
 	{#each new Array(5) as _}
-		<div class="pl-4 py-2">
-			<div class="placeholder animate-pulse w-full max-w-xs mb-1 h-7" />
-			<div class="placeholder animate-pulse w-full max-w-sm h-6" />
+		<div class="py-2 pl-4">
+			<div class="placeholder mb-1 h-7 w-full max-w-xs animate-pulse" />
+			<div class="placeholder h-6 w-full max-w-sm animate-pulse" />
 		</div>
 	{/each}
 {:else if $about.error}
@@ -36,7 +36,7 @@
 	</div>
 {:else if $about.data}
 	<div class="pt-2">
-		<div class="pl-4 py-2">
+		<div class="py-2 pl-4">
 			<div class="text-xl">Server</div>
 			<div class="opacity-80">
 				{$about.data.aboutServer.name}
@@ -44,20 +44,20 @@
 			</div>
 		</div>
 		{#if window.version}
-			<div class="pl-4 py-2">
+			<div class="py-2 pl-4">
 				<div class="text-xl">client version</div>
 				<div class="opacity-80">
 					VUI-{window.version}
 				</div>
 			</div>
 		{/if}
-		<div class="pl-4 py-2">
+		<div class="py-2 pl-4">
 			<div class="text-xl">Server version</div>
 			<div class="opacity-80">
 				{$about.data.aboutServer.version}-{$about.data.aboutServer.revision}
 			</div>
 		</div>
-		<div class="pl-4 py-2">
+		<div class="py-2 pl-4">
 			<div class="text-xl">Build time</div>
 			<div class="opacity-80">
 				{new Date(
@@ -66,7 +66,7 @@
 			</div>
 		</div>
 		<a
-			class="block hover:variant-glass-surface pl-4 py-2"
+			class="block py-2 pl-4 hover:variant-glass-surface"
 			href={$about.data.aboutServer.github}
 		>
 			<div class="text-xl">Github</div>
@@ -75,7 +75,7 @@
 			</div>
 		</a>
 		<a
-			class="block hover:variant-glass-surface pl-4 py-2"
+			class="block py-2 pl-4 hover:variant-glass-surface"
 			href={$about.data.aboutServer.discord}
 		>
 			<div class="text-xl">Discord</div>

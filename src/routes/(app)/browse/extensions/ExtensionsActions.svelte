@@ -45,7 +45,7 @@
 	}
 </script>
 
-<div class="h-full flex">
+<div class="flex h-full">
 	<Search />
 	<TooltipIconButton
 		on:click={handelRefresh}
@@ -59,10 +59,10 @@
 		tipclass="z-20"
 		placement="top"
 		tip="install external extension"
-		class=" cursor-pointer h-full"
+		class="h-full cursor-pointer"
 	>
 		<FileButton
-			class="h-full aspect-square hover:variant-glass-surface"
+			class="aspect-square h-full hover:variant-glass-surface"
 			button=""
 			name="files2"
 			accept=".apk"
@@ -73,7 +73,7 @@
 				name="mdi:plus"
 				width="100%"
 				height="100%"
-				class="text-5xl  m-0 p-2"
+				class="m-0  p-2 text-5xl"
 			/>
 		</FileButton>
 	</Tooltip>
