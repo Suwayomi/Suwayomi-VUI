@@ -475,11 +475,12 @@ function fetchMangaChaptersUpdater(
 			variables: { id: vars.id }
 		},
 		(manga) => {
-			if (!manga) return manga;
-			manga.manga.chapters = {
-				nodes: data.fetchChapters.chapters,
-				totalCount: data.fetchChapters.chapters.length
-			};
+			if (!manga) {
+				console.log('getManga is null');
+				return manga;
+			}
+			manga.manga.chapters.nodes = data.fetchChapters.chapters;
+			manga.manga.chapters.totalCount = data.fetchChapters.chapters.length;
 			return manga;
 		}
 	);
