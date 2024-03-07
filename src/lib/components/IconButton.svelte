@@ -27,5 +27,5 @@
 	class="{height} aspect-square {hover} {$$props.class ?? ''}"
 	on:click
 >
-	<IconWrapper width="100%" height="100%" {name} class="text-5xl  m-0 p-2" />
+	<IconWrapper width="100%" height="100%" {name} class="m-0  p-2 text-5xl" />
 </button>

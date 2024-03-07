@@ -11,7 +11,7 @@
 	import type { ResultOf } from '$lib/gql/graphql';
 	export let filter: Extract<
 		ResultOf<typeof getSource>['source']['filters'][0],
-		{ __typename?: 'HeaderFilter' | undefined }
+		{ __typename: 'HeaderFilter' | undefined }
 	>;
 </script>
 

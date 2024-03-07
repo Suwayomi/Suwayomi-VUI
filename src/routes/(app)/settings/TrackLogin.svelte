@@ -41,13 +41,13 @@
 </script>
 
 {#if $modalStore[0]}
-	<div class="card p-0 w-modal shadow-xl space-y-4 rounded-lg py-4">
-		<span class="h3 font-bold border-b border-surface-700 block pl-4">
+	<div class="card w-modal space-y-4 rounded-lg p-0 py-4 shadow-xl">
+		<span class="h3 block border-b border-surface-700 pl-4 font-bold">
 			{tracker.name} Login
 		</span>
 		{#if tracker.isLoggedIn}
 			<button
-				class="hover:variant-ghost-surface w-full text-center block text-xl p-2 font-semibold"
+				class="block w-full p-2 text-center text-xl font-semibold hover:variant-ghost-surface"
 				on:click={() => {
 					logout();
 					modalStore.close();
@@ -55,7 +55,7 @@
 			>
 		{:else if tracker.authUrl}
 			<a
-				class="hover:variant-ghost-surface w-full text-center block text-xl p-2 font-semibold"
+				class="block w-full p-2 text-center text-xl font-semibold hover:variant-ghost-surface"
 				target="_blank"
 				href={`${tracker.authUrl}&state=${urlAdon}`}
 				on:click={modalStore.close}
@@ -76,7 +76,7 @@
 					type="password"
 					bind:value={password}
 				/>
-				<button class="btn variant-filled-surface float-right" on:click={login}>
+				<button class="variant-filled-surface btn float-right" on:click={login}>
 					Login
 				</button>
 			</div>

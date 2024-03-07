@@ -40,12 +40,15 @@
 
 	function getLanguages(extensions: ResultOf<typeof getSources> | undefined) {
 		if (extensions?.sources?.nodes !== undefined) {
-			return extensions?.sources?.nodes.reduce((accumulator, currentNode) => {
-				if (!accumulator.has(currentNode.lang)) {
-					return accumulator.add(currentNode.lang);
-				}
-				return accumulator;
-			}, new Set<string>(['pinned']));
+			return extensions?.sources?.nodes.reduce(
+				(accumulator, currentNode) => {
+					if (!accumulator.has(currentNode.lang)) {
+						return accumulator.add(currentNode.lang);
+					}
+					return accumulator;
+				},
+				new Set<string>(['pinned'])
+			);
 		}
 		return new Set<string>(['pinned']);
 	}
@@ -145,9 +148,9 @@
 	{/if}
 	{#if $rawSources.fetching}
 		{#each new Array(5) as _}
-			<div class="placeholder animate-pulse h-12 max-w-xs m-4" />
+			<div class="placeholder m-4 h-12 max-w-xs animate-pulse" />
 			{#each new Array(5) as _}
-				<div class="placeholder animate-pulse max-w-sm h-10 m-4 ml-8" />
+				<div class="placeholder m-4 ml-8 h-10 max-w-sm animate-pulse" />
 			{/each}
 		{/each}
 	{:else if $rawSources.error}
@@ -160,12 +163,12 @@
 		</div>
 	{:else if groupSources}
 		{#each groupSources as [Lang, sous]}
-			<div class="text-5xl m-4">
+			<div class="m-4 text-5xl">
 				{Lang}
 			</div>
 			{#each sous as source}
 				{@const sorcFrag = source}
-				<div class="text-4xl ml-8 my-4">{sorcFrag.displayName}</div>
+				<div class="my-4 ml-8 text-4xl">{sorcFrag.displayName}</div>
 				{#if source.Loading}
 					<div class="overflow-x-auto">
 						<div
@@ -173,10 +176,10 @@
 							style="width:calc({10 / gridnumber} * 100%)"
 						>
 							{#each new Array(10) as _}
-								<div class="w-full h-full flex flex-col flex-nowrap m-1">
-									<div class="aspect-cover w-auto h-full">
+								<div class="m-1 flex h-full w-full flex-col flex-nowrap">
+									<div class="aspect-cover h-full w-auto">
 										<div
-											class="placeholder animate-pulse w-full h-full
+											class="placeholder h-full w-full animate-pulse
                         {$Meta.Display === display.Compact && 'rounded-lg'}
                         {$Meta.Display === display.Comfortable &&
 												'rounded-none rounded-t-lg'}"
@@ -184,7 +187,7 @@
 									</div>
 									{#if $Meta.Display === display.Comfortable}
 										<div
-											class="placeholder animate-pulse px-2 h-12 text-center rounded-none rounded-b-lg"
+											class="placeholder h-12 animate-pulse rounded-none rounded-b-lg px-2 text-center"
 										/>
 									{/if}
 								</div>

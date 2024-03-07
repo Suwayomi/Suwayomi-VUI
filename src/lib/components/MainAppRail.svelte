@@ -21,9 +21,9 @@
 				tip={Loc.title}
 				placement="right"
 				tipclass="z-20"
-				class="w-full flex justify-center items-center"
+				class="flex w-full items-center justify-center"
 			>
-				<IconWrapper name={Loc.icon} class="w-4/6 h-full aspect-square" />
+				<IconWrapper name={Loc.icon} class="aspect-square h-full w-4/6" />
 			</Tooltip>
 		</AppRailAnchor>
 	{/each}

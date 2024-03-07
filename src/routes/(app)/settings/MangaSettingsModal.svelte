@@ -20,15 +20,15 @@
 </script>
 
 {#if $modalStore[0]}
-	<div class="card p-0 w-modal shadow-xl space-y-4 rounded-lg max-h-screen">
-		<h1 class="h3 pt-4 pl-4">Manga Settings Defaults</h1>
-		<div class="pl-4 border-y border-surface-700">
-			<div class="max-h-96 overflow-y-auto grid grid-cols-1 gap-1 pr-4">
-				<h2 class="h4 border-b border-surface-700 mb-1">Filters</h2>
+	<div class="card w-modal max-h-screen space-y-4 rounded-lg p-0 shadow-xl">
+		<h1 class="h3 pl-4 pt-4">Manga Settings Defaults</h1>
+		<div class="border-y border-surface-700 pl-4">
+			<div class="grid max-h-96 grid-cols-1 gap-1 overflow-y-auto pr-4">
+				<h2 class="h4 mb-1 border-b border-surface-700">Filters</h2>
 				<TriStateSlide
 					bind:state={$Meta.mangaMetaDefaults.ChapterUnread}
 					label={'Unread'}
-					class="w-full focus:outline-0 p-1 pl-2 hover:variant-glass-surface"
+					class="w-full p-1 pl-2 hover:variant-glass-surface focus:outline-0"
 					labelClass="w-full"
 				>
 					<span>Unread</span>
@@ -36,7 +36,7 @@
 				<TriStateSlide
 					bind:state={$Meta.mangaMetaDefaults.ChapterDownloaded}
 					label={'Downloaded'}
-					class="w-full focus:outline-0 p-1 pl-2 hover:variant-glass-surface"
+					class="w-full p-1 pl-2 hover:variant-glass-surface focus:outline-0"
 					labelClass="w-full"
 				>
 					<span>Downloaded</span>
@@ -44,17 +44,17 @@
 				<TriStateSlide
 					bind:state={$Meta.mangaMetaDefaults.ChapterBookmarked}
 					label={'Downloaded'}
-					class="w-full focus:outline-0 p-1 pl-2 hover:variant-glass-surface"
+					class="w-full p-1 pl-2 hover:variant-glass-surface focus:outline-0"
 					labelClass="w-full"
 				>
 					<span>Bookmarked</span>
 				</TriStateSlide>
-				<h2 class="h4 border-b border-surface-700 mb-1">Sort</h2>
+				<h2 class="h4 mb-1 border-b border-surface-700">Sort</h2>
 				<TriStateSlide
 					triState={false}
 					bind:checked={$Meta.mangaMetaDefaults.ChapterAsc}
 					label={'Ascending'}
-					class="w-full focus:outline-0 p-1 pl-2 hover:variant-glass-surface"
+					class="w-full p-1 pl-2 hover:variant-glass-surface focus:outline-0"
 					labelClass="w-full"
 				>
 					<span>Ascending</span>
@@ -78,9 +78,9 @@
 						</RadioItem>
 					{/each}
 				</RadioGroup>
-				<h2 class="h4 border-b border-surface-700 mb-1">Display</h2>
+				<h2 class="h4 mb-1 border-b border-surface-700">Display</h2>
 				<button
-					class="w-full focus:outline-0 p-1 pl-2 flex justify-between hover:variant-glass-surface rounded-full items-center"
+					class="flex w-full items-center justify-between rounded-full p-1 pl-2 hover:variant-glass-surface focus:outline-0"
 					on:click|preventDefault|stopPropagation={() =>
 						($Meta.mangaMetaDefaults.ChapterFetchUpload =
 							!$Meta.mangaMetaDefaults.ChapterFetchUpload)}

@@ -14,7 +14,7 @@
 
 	export let pref: Extract<
 		ResultOf<typeof getSource>['source']['preferences'][0],
-		{ __typename?: 'ListPreference' | undefined }
+		{ __typename: 'ListPreference' | undefined }
 	>;
 
 	export let index: number;

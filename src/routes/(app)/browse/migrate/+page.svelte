@@ -65,18 +65,18 @@
 <Nav let:scrollingElement>
 	{#if $Migration.fetching}
 		{#each new Array(8) as _}
-			<div class="h-24 m-1">
-				<div class="card variant-ghost flex w-full h-full items-center">
-					<div class="p-1 h-full w-auto">
+			<div class="m-1 h-24">
+				<div class="card variant-ghost flex h-full w-full items-center">
+					<div class="h-full w-auto p-1">
 						<div
-							class="placeholder animate-pulse h-full w-auto rounded-lg aspect-square"
+							class="placeholder aspect-square h-full w-auto animate-pulse rounded-lg"
 						/>
 					</div>
-					<div class="w-full h-full flex flex-col justify-center">
-						<div class="placeholder animate-pulse my-2 max-w-[10rem]" />
+					<div class="flex h-full w-full flex-col justify-center">
+						<div class="placeholder my-2 max-w-[10rem] animate-pulse" />
 					</div>
-					<div class="p-1 flex h-full items-center">
-						<div class="badge variant-filled-primary h-6 w-6" />
+					<div class="flex h-full items-center p-1">
+						<div class="variant-filled-primary badge h-6 w-6" />
 					</div>
 				</div>
 			</div>
@@ -98,9 +98,9 @@
 					{#if intersecting}
 						<a href="/browse/migrate/source/{source.id}">
 							<div
-								class="card m-1 flex h-full items-center variant-glass hover:variant-glass-primary"
+								class="card variant-glass m-1 flex h-full items-center hover:variant-glass-primary"
 							>
-								<div class="p-1 h-full">
+								<div class="h-full p-1">
 									<Image
 										src={source.iconUrl}
 										aspect="aspect-square"
@@ -111,7 +111,7 @@
 									{source.displayName}
 								</div>
 								<div class="m-2">
-									<span class="badge variant-filled-primary"
+									<span class="variant-filled-primary badge"
 										>{source.mangas?.TotalCount}</span
 									>
 								</div>

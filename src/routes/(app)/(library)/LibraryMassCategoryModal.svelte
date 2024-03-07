@@ -61,7 +61,7 @@
 </script>
 
 {#if $modalStore[0]}
-	<div class="card py-4 w-modal shadow-xl space-y-4 rounded-lg">
+	<div class="card w-modal space-y-4 rounded-lg py-4 shadow-xl">
 		{#if $categories.fetching}
 			loading...
 		{:else if $categories.error}
@@ -70,7 +70,7 @@
 			</div>
 		{:else if $categories.data}
 			{@const nodes = $categories.data.categories.nodes}
-			<h2 class="text-xl pl-4">Set categories</h2>
+			<h2 class="pl-4 text-xl">Set categories</h2>
 			<div class="border-b border-t border-surface-700 p-4">
 				{#each nodes
 					.filter((e) => e.id !== 0)
@@ -82,7 +82,7 @@
 							on:changeE={(e) => {
 								handelClicked(category, e.detail);
 							}}
-							class="w-full focus:outline-0 p-1 pl-2 hover:variant-glass-surface"
+							class="w-full p-1 pl-2 hover:variant-glass-surface focus:outline-0"
 							labelClass="w-full"
 						>
 							{category.name}
@@ -92,7 +92,7 @@
 			</div>
 			<button
 				on:click={handelSubmit}
-				class="btn variant-filled mr-4 float-right">Submit</button
+				class="variant-filled btn float-right mr-4">Submit</button
 			>
 		{/if}
 	</div>

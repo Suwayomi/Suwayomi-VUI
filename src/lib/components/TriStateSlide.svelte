@@ -194,9 +194,9 @@
 				class:cursor-not-allowed={$$props.disabled}
 			>
 				{#if state === 1}
-					<IconWrapper name="mdi:check" class="w-full h-full aspect-square" />
+					<IconWrapper name="mdi:check" class="aspect-square h-full w-full" />
 				{:else if state === 2}
-					<IconWrapper name="mdi:close" class="w-full h-full aspect-square" />
+					<IconWrapper name="mdi:close" class="aspect-square h-full w-full" />
 				{/if}
 			</div>
 		</div>

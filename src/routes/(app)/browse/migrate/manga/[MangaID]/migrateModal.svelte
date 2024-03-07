@@ -162,33 +162,33 @@
 </script>
 
 {#if $modalStore[0]}
-	<div class="card p-0 w-modal shadow-xl space-y-4 rounded-lg max-h-screen">
-		<h1 class="h3 pt-4 pl-4">Select data to include</h1>
-		<div class="pl-4 border-y border-surface-700">
-			<div class="max-h-96 overflow-y-auto grid grid-cols-1 gap-1 pr-4">
+	<div class="card w-modal max-h-screen space-y-4 rounded-lg p-0 shadow-xl">
+		<h1 class="h3 pl-4 pt-4">Select data to include</h1>
+		<div class="border-y border-surface-700 pl-4">
+			<div class="grid max-h-96 grid-cols-1 gap-1 overflow-y-auto pr-4">
 				<Slide
-					class="outline-0 p-1 pl-2 hover:variant-glass-surface"
+					class="p-1 pl-2 outline-0 hover:variant-glass-surface"
 					bind:checked={doChapters}
 				>
 					Chapters
 				</Slide>
 				<Slide
-					class="outline-0 p-1 pl-2 hover:variant-glass-surface"
+					class="p-1 pl-2 outline-0 hover:variant-glass-surface"
 					bind:checked={doCategories}
 				>
 					Categories
 				</Slide>
 				<Slide
-					class="outline-0 p-1 pl-2 hover:variant-glass-surface"
+					class="p-1 pl-2 outline-0 hover:variant-glass-surface"
 					bind:checked={doTracking}
 				>
 					Tracking
 				</Slide>
 			</div>
 		</div>
-		<div class="p-4 flex justify-between">
+		<div class="flex justify-between p-4">
 			<a
-				class="btn variant-filled-surface hover:variant-glass-surface"
+				class="variant-filled-surface btn hover:variant-glass-surface"
 				target="_blank"
 				href="/manga/{id}"
 			>
@@ -197,20 +197,20 @@
 			<div>
 				<button
 					on:click={CopyManga}
-					class="btn variant-filled-surface hover:variant-glass-surface"
+					class="variant-filled-surface btn hover:variant-glass-surface"
 				>
 					{#if CopyLoading}
-						Copying<ProgressRadial class="ml-1 h-4 aspect-square w-auto" />
+						Copying<ProgressRadial class="ml-1 aspect-square h-4 w-auto" />
 					{:else}
 						Copy
 					{/if}
 				</button>
 				<button
 					on:click={MigrateManga}
-					class="btn variant-filled-surface hover:variant-glass-surface"
+					class="variant-filled-surface btn hover:variant-glass-surface"
 				>
 					{#if MigrateLoading}
-						Migrating<ProgressRadial class="ml-1 h-4 aspect-square w-auto" />
+						Migrating<ProgressRadial class="ml-1 aspect-square h-4 w-auto" />
 					{:else}
 						Migrate
 					{/if}

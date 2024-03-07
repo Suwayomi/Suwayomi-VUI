@@ -102,24 +102,24 @@
 		</div>
 	{:else if $sources.fetching}
 		{#each new Array(5) as _}
-			<div class=" py-4 px-8">
-				<div class="h-12 placeholder animate-pulse" />
+			<div class="px-8 py-4">
+				<div class="placeholder h-12 animate-pulse" />
 			</div>
 			<div
-				class="grid xs:grid-cols-2 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-8 xl:grid-cols-10 2xl:grid-cols-12 gap-2 mx-2"
+				class="mx-2 grid gap-2 xs:grid-cols-2 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-8 xl:grid-cols-10 2xl:grid-cols-12"
 			>
 				{#each new Array(5) as _}
-					<div class="aspect-cover card relative">
-						<div class=" w-full h-full p-4">
+					<div class="card relative aspect-cover">
+						<div class="h-full w-full p-4">
 							<div
-								class="w-full h-auto aspect-square rounded-lg placeholder animate-pulse"
+								class="placeholder aspect-square h-auto w-full animate-pulse rounded-lg"
 							/>
 						</div>
 						<div
-							class="absolute bottom-0 left-0 right-0 variant-glass-surface rounded-b-olg"
+							class="variant-glass-surface absolute bottom-0 left-0 right-0 rounded-b-olg"
 						>
-							<div class="px-2 h-12 text-center">
-								<div class="placeholder animate-pulse my-1" />
+							<div class="h-12 px-2 text-center">
+								<div class="placeholder my-1 animate-pulse" />
 								<div class="placeholder animate-pulse" />
 							</div>
 						</div>
@@ -130,11 +130,11 @@
 	{:else if groupSources}
 		{#each groupSources.sort( (a, b) => (a[0] === 'Pinned' ? -1 : b[0] === 'Pinned' ? 1 : 0) ) as [lang, sous]}
 			{@const sou = sous}
-			<div class="text-5xl py-4 px-8">
+			<div class="px-8 py-4 text-5xl">
 				{FindLangName(lang)}
 			</div>
 			<div
-				class="grid xs:grid-cols-2 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-8 xl:grid-cols-10 2xl:grid-cols-12 gap-2 mx-2"
+				class="mx-2 grid gap-2 xs:grid-cols-2 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-8 xl:grid-cols-10 2xl:grid-cols-12"
 			>
 				{#each sou as source (source.id)}
 					<IntersectionObserver
@@ -142,7 +142,7 @@
 						root={scrollingElement}
 						top={400}
 						bottom={400}
-						class="aspect-cover card"
+						class="card aspect-cover"
 					>
 						{#if intersecting}
 							<a
@@ -163,10 +163,10 @@
 									fit="object-contain object-top"
 								>
 									<div
-										class="absolute bottom-0 left-0 right-0 variant-glass rounded-b-olg"
+										class="variant-glass absolute bottom-0 left-0 right-0 rounded-b-olg"
 									>
 										<div
-											class="line-clamp-2 px-2 h-12 text-center"
+											class="line-clamp-2 h-12 px-2 text-center"
 											title={source.displayName}
 										>
 											{source.displayName}
@@ -179,7 +179,7 @@
 				{/each}
 			</div>
 		{/each}
-		<div class="w-full flex flex-col justify-center items-center p-1">
+		<div class="flex w-full flex-col items-center justify-center p-1">
 			<p>You have reached the end of the list.</p>
 			<p>
 				If you are not seeing a source you expected to see, try changing the

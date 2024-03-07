@@ -22,11 +22,11 @@
 		checked = !checked;
 		dispatch('change');
 	}}
-	class=" text-left flex items-center w-full h-16 hover:variant-glass-surface cursor-pointer"
+	class="flex h-16 w-full cursor-pointer items-center text-left hover:variant-glass-surface"
 >
 	<div class="w-full">{title}</div>
 	<Slide
 		{checked}
-		class=" focus:outline-0 p-1 pl-2 hover:variant-glass-surface pointer-events-none"
+		class="pointer-events-none p-1 pl-2 hover:variant-glass-surface focus:outline-0"
 	/>
 </button>

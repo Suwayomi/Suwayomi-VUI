@@ -102,32 +102,32 @@
 				component: { ref: PreferencesModal, props: { data, clearAll } }
 			});
 		}}
-		class="btn variant-filled-primary hover:bg-primary-500/70 fixed top-20 right-4 h-12 z-40"
+		class="variant-filled-primary btn fixed right-4 top-20 z-40 h-12 hover:bg-primary-500/70"
 	>
-		<IconWrapper name="mdi:filter-outline" class="w-auto h-full" />
+		<IconWrapper name="mdi:filter-outline" class="h-full w-auto" />
 		SourceSettings
 	</button>
 {/if}
 
 {#if !all}
-	<div class="yoy grid m-2 gap-2 {gridValues}">
+	<div class="yoy m-2 grid gap-2 {gridValues}">
 		{#each new Array(30) as _}
 			<div class="aspect-cover w-full">
 				<div
-					class="placeholder animate-pulse h-full
+					class="placeholder h-full animate-pulse
 						{$Meta.Display === display.Compact && 'rounded-lg'}
 						{$Meta.Display === display.Comfortable && 'rounded-none rounded-t-lg'}"
 				/>
 				{#if $Meta.Display === display.Comfortable}
 					<div
-						class="placeholder animate-pulse px-2 h-12 text-center rounded-none rounded-b-lg"
+						class="placeholder h-12 animate-pulse rounded-none rounded-b-lg px-2 text-center"
 					/>
 				{/if}
 			</div>
 		{/each}
 	</div>
 {:else if all.mangas}
-	<div class="grid m-2 gap-2 {gridValues}">
+	<div class="m-2 grid gap-2 {gridValues}">
 		{#each all.mangas.filter((e, i, s) => i === s.findIndex((ee) => e.id === ee.id)) as manga (manga.id)}
 			<IntersectionObserver
 				let:intersecting
@@ -139,7 +139,7 @@
 					{#if intersecting}
 						<a
 							href="/manga/{manga.id}"
-							class="hover:opacity-70 cursor-pointer h-full"
+							class="h-full cursor-pointer hover:opacity-70"
 							tabindex="-1"
 						>
 							<MangaCard
@@ -150,10 +150,10 @@
 							>
 								{#if $Meta.Display === display.Compact}
 									<div
-										class="absolute bottom-0 left-0 right-0 variant-glass rounded-b-olg"
+										class="variant-glass absolute bottom-0 left-0 right-0 rounded-b-olg"
 									>
 										<div
-											class="line-clamp-2 px-2 h-12 text-center"
+											class="line-clamp-2 h-12 px-2 text-center"
 											title={manga.title}
 										>
 											{manga.title}
@@ -162,7 +162,7 @@
 								{/if}
 								{#if manga.inLibrary}
 									<div
-										class="absolute top-1 right-1 badge variant-filled-primary"
+										class="variant-filled-primary badge absolute right-1 top-1"
 									>
 										In Library
 									</div>
@@ -171,7 +171,7 @@
 							{#if $Meta.Display === display.Comfortable}
 								<div class="variant-glass-surface rounded-b-lg">
 									<div
-										class="line-clamp-2 px-2 h-12 text-center"
+										class="line-clamp-2 h-12 px-2 text-center"
 										title={manga.title}
 									>
 										{manga.title}

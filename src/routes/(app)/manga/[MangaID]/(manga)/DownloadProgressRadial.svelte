@@ -20,7 +20,7 @@
 	{#if download.state === 'DOWNLOADING'}
 		<ProgressRadial
 			width="w-auto"
-			class="h-full aspect-square flex items-center"
+			class="flex aspect-square h-full items-center"
 			value={Math.round(download.progress * 100)}
 			font={150}
 		>

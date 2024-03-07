@@ -29,10 +29,10 @@
 			selected={Loc.match($page.url.pathname)}
 			class="h-full [&>.tab-interface]:h-full [&>div>.tab-label]:h-full"
 		>
-			<div class="w-full h-full flex flex-col items-center">
+			<div class="flex h-full w-full flex-col items-center">
 				<IconWrapper
 					name={Loc.icon}
-					class="max-h-full w-full grow aspect-square"
+					class="aspect-square max-h-full w-full grow"
 				/>
 				<span class="text-sm">{Loc.title}</span>
 			</div>

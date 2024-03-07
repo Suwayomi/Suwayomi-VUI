@@ -73,9 +73,9 @@
 				component: { ref: FilterModal, props: { data, submit } }
 			});
 		}}
-		class="btn variant-filled-primary hover:bg-primary-500/70 fixed bottom-4 right-4 h-12"
+		class="variant-filled-primary btn fixed bottom-4 right-4 h-12 hover:bg-primary-500/70"
 	>
-		<IconWrapper name="mdi:filter-outline" class="w-auto h-full" />
+		<IconWrapper name="mdi:filter-outline" class="h-full w-auto" />
 		Filter
 	</button>
 {/if}

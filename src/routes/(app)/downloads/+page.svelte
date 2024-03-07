@@ -53,24 +53,24 @@
 	{#each new Array(15) as _}
 		<div class="h-28">
 			<div
-				class="hover:variant-glass-surface px-4 h-full flex flex-nowrap items-center"
+				class="flex h-full flex-nowrap items-center px-4 hover:variant-glass-surface"
 			>
-				<div class="py-1 h-full aspect-cover mr-2">
+				<div class="mr-2 aspect-cover h-full py-1">
 					<div
-						class="placeholder animate-pulse aspect-cover h-full w-auto rounded-lg"
+						class="placeholder aspect-cover h-full w-auto animate-pulse rounded-lg"
 					/>
 				</div>
 				<div class="w-full py-4">
-					<div class="placeholder animate-pulse max-w-xs mb-1" />
-					<div class="placeholder animate-pulse max-w-sm mb-1" />
+					<div class="placeholder mb-1 max-w-xs animate-pulse" />
+					<div class="placeholder mb-1 max-w-sm animate-pulse" />
 					<div class="flex max-w-3xl items-center">
-						<div class="placeholder animate-pulse w-10 mr-2" />
-						<div class="placeholder animate-pulse h-2 w-full" />
+						<div class="placeholder mr-2 w-10 animate-pulse" />
+						<div class="placeholder h-2 w-full animate-pulse" />
 					</div>
 				</div>
 				<div class="h-full py-4">
-					<div class="w-auto h-full aspect-square p-4">
-						<div class="placeholder animate-pulse h-full w-full" />
+					<div class="aspect-square h-full w-auto p-4">
+						<div class="placeholder h-full w-full animate-pulse" />
 					</div>
 				</div>
 			</div>
@@ -88,9 +88,9 @@
 			{#if intersecting}
 				<a
 					href="/manga/{dls.manga.id}"
-					class="hover:variant-glass-surface px-4 h-full flex flex-nowrap items-center"
+					class="flex h-full flex-nowrap items-center px-4 hover:variant-glass-surface"
 				>
-					<div class="py-1 h-full aspect-cover mr-2">
+					<div class="mr-2 aspect-cover h-full py-1">
 						<Image
 							src={dls.manga.thumbnailUrl}
 							class="rounded-lg"
@@ -107,7 +107,7 @@
 							{dls.chapter.name}, state: {dls.state[0] +
 								dls.state.slice(1, dls.state.length).toLowerCase()}
 						</div>
-						<div class="max-w-3xl flex items-center">
+						<div class="flex max-w-3xl items-center">
 							<span class="flex-none pr-1"
 								>{Math.round(dls.progress * 1000) / 10}%</span
 							>

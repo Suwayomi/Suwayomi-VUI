@@ -135,7 +135,7 @@ ${e.data?.validateBackup.missingSources.map((ele) => ele.name).join(',')}
 {#if $modalStore[0]}
 	<div class="w-full">
 		<button
-			class="block h-[76px] text-left w-full hover:variant-glass-surface px-4 py-2"
+			class="block h-[76px] w-full px-4 py-2 text-left hover:variant-glass-surface"
 			on:click={MakeBacup}
 		>
 			<div class="text-xl">Create backup</div>
@@ -147,7 +147,7 @@ ${e.data?.validateBackup.missingSources.map((ele) => ele.name).join(',')}
 			{/if}
 		</button>
 	</div>
-	<div class="w-full card">
+	<div class="card w-full">
 		<FileDropzone
 			on:change={validateRestore}
 			accept=".proto.gz"

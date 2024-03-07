@@ -51,7 +51,7 @@
 		});
 </script>
 
-<div class="block md:flex md:relative md:h-full">
+<div class="block md:relative md:flex md:h-full">
 	<InfoSide {manga} MangaID={data.MangaID} />
 	<ChaptersSide {manga} MangaID={data.MangaID} {mangaMeta} />
 </div>

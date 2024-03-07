@@ -33,10 +33,10 @@
 </div>
 
 <div class={tipclass} data-popup={tip}>
-	<div class="card p-2 variant-filled-surface">
+	<div class="card variant-filled-surface p-2">
 		<slot name="tooltip">
 			<p>{tip}</p>
 		</slot>
-		<div class="arrow variant-filled-surface" />
+		<div class="variant-filled-surface arrow" />
 	</div>
 </div>

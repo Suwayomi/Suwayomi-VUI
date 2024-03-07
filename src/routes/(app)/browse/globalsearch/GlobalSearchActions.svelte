@@ -26,18 +26,18 @@
 	const modalStore = getModalStore();
 </script>
 
-<div class="h-full flex">
+<div class="flex h-full">
 	<Search />
 	{#if $page.url.pathname.includes('/browse/migrate/manga/')}
 		<Tooltip
 			tip="open migrating manga"
-			class="cursor-pointer h-full hover:variant-glass-surface"
+			class="h-full cursor-pointer hover:variant-glass-surface"
 		>
 			<a
 				class="aspect-square h-full w-auto"
 				href={$page.url.pathname.replace('/browse/migrate', '')}
 			>
-				<IconWrapper name="mdi:step-backward" class="w-auto h-full p-2" />
+				<IconWrapper name="mdi:step-backward" class="h-full w-auto p-2" />
 			</a>
 		</Tooltip>
 	{/if}

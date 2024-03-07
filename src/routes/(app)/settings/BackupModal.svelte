@@ -133,13 +133,13 @@ ${e.data?.validateBackup.missingSources.map((ele) => ele.name).join(',')}
 </script>
 
 {#if $modalStore[0]}
-	<div class="card p-0 w-modal shadow-xl space-y-4 rounded-lg max-h-screen">
-		<h1 class="h3 pt-4 pl-4">Backups</h1>
+	<div class="card w-modal max-h-screen space-y-4 rounded-lg p-0 shadow-xl">
+		<h1 class="h3 pl-4 pt-4">Backups</h1>
 		<div class="border-y border-surface-700">
-			<div class="max-h-96 overflow-y-auto grid grid-cols-1 gap-1">
-				<div class="w-full mt-1">
+			<div class="grid max-h-96 grid-cols-1 gap-1 overflow-y-auto">
+				<div class="mt-1 w-full">
 					<button
-						class="block h-[76px] text-left w-full hover:variant-glass-surface px-4 py-2"
+						class="block h-[76px] w-full px-4 py-2 text-left hover:variant-glass-surface"
 						on:click={MakeBacup}
 					>
 						<div class="text-xl">Create backup</div>
@@ -153,7 +153,7 @@ ${e.data?.validateBackup.missingSources.map((ele) => ele.name).join(',')}
 						{/if}
 					</button>
 				</div>
-				<div class="w-full card mb-1 h-48">
+				<div class="card mb-1 h-48 w-full">
 					<FileDropzone
 						class="h-full"
 						on:change={validateRestore}
