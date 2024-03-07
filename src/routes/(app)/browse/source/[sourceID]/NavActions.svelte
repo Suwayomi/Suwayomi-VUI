@@ -12,7 +12,7 @@
 	export let supportsLatest: boolean = false;
 </script>
 
-<div class="flex space-x-1 h-full">
+<div class="flex h-full space-x-1">
 	<a
 		href="./popular"
 		class="btn rounded-none

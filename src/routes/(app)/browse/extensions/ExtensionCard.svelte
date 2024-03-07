@@ -72,11 +72,11 @@
 	root={scrollingElement}
 	top={400}
 	bottom={400}
-	class="h-28 m-1"
+	class="m-1 h-28"
 >
 	{#if intersecting}
-		<div class="card variant-ghost flex w-full h-full items-center">
-			<div class="p-1 h-full flex-shrink-0">
+		<div class="card variant-ghost flex h-full w-full items-center">
+			<div class="h-full flex-shrink-0 p-1">
 				<Image
 					height="h-full"
 					width="w-auto"
@@ -86,25 +86,25 @@
 			</div>
 			<div>
 				{ext.name}
-				<div class="opacity-70 text-sm">
+				<div class="text-sm opacity-70">
 					{ext.versionName}
 					{#if ext.isNsfw}
 						<span class="text-red-600">18+</span>
 					{/if}
 				</div>
-				<div class="opacity-70 text-sm line-clamp-1 break-all">
+				<div class="line-clamp-1 break-all text-sm opacity-70">
 					{ext.repo}
 				</div>
 			</div>
-			<div class="flex flex-wrap flex-1 justify-end">
+			<div class="flex flex-1 flex-wrap justify-end">
 				{#if ext.isObsolete}
 					<button
 						on:click={() => unInstall()}
-						class="btn variant-ghost-error m-1"
+						class="variant-ghost-error btn m-1"
 					>
 						{#if loadingUnInstall}
 							Uninstalling<ProgressRadial
-								class="ml-1 h-4 aspect-square w-auto"
+								class="ml-1 aspect-square h-4 w-auto"
 							/>
 						{:else}
 							Obsolete
@@ -114,10 +114,10 @@
 					{#if ext.hasUpdate}
 						<button
 							on:click={() => Update()}
-							class="btn variant-ghost-surface m-1"
+							class="variant-ghost-surface btn m-1"
 						>
 							{#if loadingUpdate}
-								Updating<ProgressRadial class="ml-1 h-4 aspect-square w-auto" />
+								Updating<ProgressRadial class="ml-1 aspect-square h-4 w-auto" />
 							{:else}
 								Update
 							{/if}
@@ -125,11 +125,11 @@
 					{/if}
 					<button
 						on:click={() => unInstall()}
-						class="btn variant-ghost-surface m-1"
+						class="variant-ghost-surface btn m-1"
 					>
 						{#if loadingUnInstall}
 							Uninstalling<ProgressRadial
-								class="ml-1 h-4 aspect-square w-auto"
+								class="ml-1 aspect-square h-4 w-auto"
 							/>
 						{:else}
 							Uninstall
@@ -138,10 +138,10 @@
 				{:else}
 					<button
 						on:click={() => Install()}
-						class="btn variant-ghost-surface m-1"
+						class="variant-ghost-surface btn m-1"
 					>
 						{#if loadingInstall}
-							Installing<ProgressRadial class="ml-1 h-4 aspect-square w-auto" />
+							Installing<ProgressRadial class="ml-1 aspect-square h-4 w-auto" />
 						{:else}
 							Install
 						{/if}

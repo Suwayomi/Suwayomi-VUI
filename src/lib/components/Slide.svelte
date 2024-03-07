@@ -168,9 +168,9 @@
 				class:cursor-not-allowed={$$props.disabled}
 			>
 				{#if checked}
-					<IconWrapper name="mdi:check" class="w-full h-full aspect-square" />
+					<IconWrapper name="mdi:check" class="aspect-square h-full w-full" />
 				{:else}
-					<IconWrapper name="mdi:close" class="w-full h-full aspect-square" />
+					<IconWrapper name="mdi:close" class="aspect-square h-full w-full" />
 				{/if}
 			</div>
 		</div>

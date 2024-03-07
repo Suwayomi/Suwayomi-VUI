@@ -12,7 +12,7 @@
 	import type { ResultOf, VariablesOf } from '$lib/gql/graphql';
 	export let filter: Extract<
 		ResultOf<typeof getSource>['source']['filters'][0],
-		{ __typename?: 'TextFilter' | undefined }
+		{ __typename: 'TextFilter' | undefined }
 	>;
 	export let filters: VariablesOf<typeof fetchSourceManga>['filters'];
 	export let index: number;

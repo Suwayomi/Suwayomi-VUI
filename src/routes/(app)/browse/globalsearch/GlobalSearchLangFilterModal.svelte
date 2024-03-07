@@ -38,11 +38,11 @@
 </script>
 
 {#if $modalStore[0]}
-	<div class="card p-0 w-modal shadow-xl space-y-4 rounded-lg">
+	<div class="card w-modal space-y-4 rounded-lg p-0 shadow-xl">
 		<TabGroup
 			justify="justify-center"
 			flex="flex"
-			class="bg-surface-100-800-token w-full rounded-t-lg select-none focus:outline-0"
+			class="bg-surface-100-800-token w-full select-none rounded-t-lg focus:outline-0"
 			rounded="rounded-t-lg"
 			active="border-b-2 variant-glass-primary"
 			regionList="variant-soft-surface focus:outline-0"
@@ -53,10 +53,10 @@
 			<!-- Tab Panels --->
 			<svelte:fragment slot="panel">
 				{#if $tabSet === 0}
-					<div class="max-h-96 overflow-y-auto grid grid-cols-1 gap-1 pr-4">
+					<div class="grid max-h-96 grid-cols-1 gap-1 overflow-y-auto pr-4">
 						{#each langs as lang}
 							<Slide
-								class="outline-0 p-1 pl-2 hover:variant-glass-surface"
+								class="p-1 pl-2 outline-0 hover:variant-glass-surface"
 								on:changeE={(e) => {
 									if (e.detail) {
 										$langFilter.add(lang);
@@ -73,11 +73,11 @@
 						{/each}
 					</div>
 				{:else if $tabSet === 1 && LangFilteredSources}
-					<div class="max-h-96 overflow-y-auto grid grid-cols-1 gap-1 pr-4">
+					<div class="grid max-h-96 grid-cols-1 gap-1 overflow-y-auto pr-4">
 						{#each LangFilteredSources as sourc}
 							{@const source = sourc}
 							<Slide
-								class="outline-0 p-1 pl-2 hover:variant-glass-surface"
+								class="p-1 pl-2 outline-0 hover:variant-glass-surface"
 								on:changeE={(e) => {
 									if (e.detail) {
 										$SpecificSourceFilter.add(source.id);

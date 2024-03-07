@@ -58,8 +58,8 @@
 </script>
 
 {#if $modalStore[0]}
-	<div class="card p-0 w-modal shadow-xl rounded-lg">
-		<div class="mt-4 mx-4">
+	<div class="card w-modal rounded-lg p-0 shadow-xl">
+		<div class="mx-4 mt-4">
 			<input
 				bind:value={query}
 				class="input"
@@ -71,7 +71,7 @@
 		<div class="max-h-96 overflow-y-auto">
 			{#if $sause.data?.source?.filters}
 				{#each $sause.data.source.filters as filter, index}
-					<div class="mt-4 mx-4">
+					<div class="mx-4 mt-4">
 						<Accordion>
 							{#if filter.__typename === 'CheckBoxFilter'}
 								<CheckBoxFilter {filter} {index} bind:filters />
@@ -95,9 +95,9 @@
 				{/each}
 			{/if}
 		</div>
-		<div class="m-4 flex justify-between items-center">
-			<button class="btn variant-filled-warning" on:click={reset}>Reset</button>
-			<button class="btn variant-filled-primary" on:click={Search}
+		<div class="m-4 flex items-center justify-between">
+			<button class="variant-filled-warning btn" on:click={reset}>Reset</button>
+			<button class="variant-filled-primary btn" on:click={Search}
 				>Search</button
 			>
 		</div>

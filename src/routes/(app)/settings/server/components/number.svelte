@@ -12,12 +12,12 @@
 </script>
 
 <label
-	class="text-left flex items-center w-full h-16 hover:variant-glass-surface cursor-pointer"
+	class="flex h-16 w-full cursor-pointer items-center text-left hover:variant-glass-surface"
 >
 	{title}
-	<div class="flex items-center flex-nowrap flex-1 justify-end space-x-2 pl-2">
+	<div class="flex flex-1 flex-nowrap items-center justify-end space-x-2 pl-2">
 		<input
-			class="sm:max-w-96 flex-1 hidden sm:inline"
+			class="hidden flex-1 sm:inline sm:max-w-96"
 			on:change
 			type="range"
 			bind:value
@@ -25,7 +25,7 @@
 		/>
 		<input
 			on:change
-			class="input max-w-32 sm:max-w-48 flex-1"
+			class="input max-w-32 flex-1 sm:max-w-48"
 			bind:value
 			title="backup Interval"
 			type="number"

@@ -39,17 +39,17 @@
 </script>
 
 {#if $Manga.fetching}
-	<div class="yoy grid m-2 gap-2 {gridValues}">
+	<div class="yoy m-2 grid gap-2 {gridValues}">
 		{#each new Array(30) as _}
 			<div class="aspect-cover w-full">
 				<div
-					class="placeholder animate-pulse h-full
+					class="placeholder h-full animate-pulse
 						{$Meta.Display === display.Compact && 'rounded-lg'}
 						{$Meta.Display === display.Comfortable && 'rounded-none rounded-t-lg'}"
 				/>
 				{#if $Meta.Display === display.Comfortable}
 					<div
-						class="placeholder animate-pulse px-2 h-12 text-center rounded-none rounded-b-lg"
+						class="placeholder h-12 animate-pulse rounded-none rounded-b-lg px-2 text-center"
 					/>
 				{/if}
 			</div>
@@ -60,7 +60,7 @@
 		{JSON.stringify($Manga.error, null, 4)}
 	</div>
 {:else if $Manga.data}
-	<div class="yoy grid {gridValues} gap-2 m-2">
+	<div class="yoy grid {gridValues} m-2 gap-2">
 		{#each $Manga.data.mangas.nodes as manga}
 			<IntersectionObserver
 				let:intersecting
@@ -72,7 +72,7 @@
 					{#if intersecting}
 						<a
 							href="/manga/{manga.id}"
-							class="hover:opacity-70 cursor-pointer h-full"
+							class="h-full cursor-pointer hover:opacity-70"
 							tabindex="-1"
 						>
 							<MangaCard
@@ -83,10 +83,10 @@
 							>
 								{#if $Meta.Display === display.Compact}
 									<div
-										class="absolute bottom-0 left-0 right-0 variant-glass rounded-b-olg"
+										class="variant-glass absolute bottom-0 left-0 right-0 rounded-b-olg"
 									>
 										<div
-											class="line-clamp-2 px-2 h-12 text-center"
+											class="line-clamp-2 h-12 px-2 text-center"
 											title={manga.title}
 										>
 											{manga.title}
@@ -97,7 +97,7 @@
 							{#if $Meta.Display === display.Comfortable}
 								<div class="variant-glass-surface rounded-b-lg">
 									<div
-										class="line-clamp-2 px-2 h-12 text-center"
+										class="line-clamp-2 h-12 px-2 text-center"
 										title={manga.title}
 									>
 										{manga.title}

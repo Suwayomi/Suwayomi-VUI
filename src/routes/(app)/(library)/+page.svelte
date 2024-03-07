@@ -162,22 +162,22 @@
 </script>
 
 {#if $categories.fetching}
-	<div class="flex pl-4 space-x-4 h-[47px] mb-3 items-center">
-		<div class="placeholder animate-pulse w-20" />
-		<div class="placeholder animate-pulse w-20" />
-		<div class="placeholder animate-pulse w-20" />
+	<div class="mb-3 flex h-[47px] items-center space-x-4 pl-4">
+		<div class="placeholder w-20 animate-pulse" />
+		<div class="placeholder w-20 animate-pulse" />
+		<div class="placeholder w-20 animate-pulse" />
 	</div>
-	<div class="yoy grid m-2 gap-2 {gridValues}">
+	<div class="yoy m-2 grid gap-2 {gridValues}">
 		{#each new Array(30) as _}
 			<div class="aspect-cover w-full">
 				<div
-					class="placeholder animate-pulse h-full
+					class="placeholder h-full animate-pulse
 			{$Meta.Display === display.Compact && 'rounded-lg'}
 			{$Meta.Display === display.Comfortable && 'rounded-none rounded-t-lg'}"
 				/>
 				{#if $Meta.Display === display.Comfortable}
 					<div
-						class="placeholder animate-pulse px-2 h-12 text-center rounded-none rounded-b-lg"
+						class="placeholder h-12 animate-pulse rounded-none rounded-b-lg px-2 text-center"
 					/>
 				{/if}
 			</div>
@@ -198,17 +198,17 @@
 		{/if}
 		<svelte:fragment slot="panel">
 			{#if $mangas.fetching}
-				<div class="yoy grid m-2 gap-2 {gridValues}">
+				<div class="yoy m-2 grid gap-2 {gridValues}">
 					{#each new Array(orderedCategories.find((e) => e.id === $tab ?? 0)?.mangas.totalCount ?? 10) as _}
 						<div class="aspect-cover w-full">
 							<div
-								class="placeholder animate-pulse h-full
+								class="placeholder h-full animate-pulse
 								{$Meta.Display === display.Compact && 'rounded-lg'}
 								{$Meta.Display === display.Comfortable && 'rounded-none rounded-t-lg'}"
 							/>
 							{#if $Meta.Display === display.Comfortable}
 								<div
-									class="placeholder animate-pulse px-2 h-12 text-center rounded-none rounded-b-lg"
+									class="placeholder h-12 animate-pulse rounded-none rounded-b-lg px-2 text-center"
 								/>
 							{/if}
 						</div>
@@ -219,7 +219,7 @@
 					Error loading mangas: {JSON.stringify($mangas.error, null, 4)}
 				</div>
 			{:else if sortedMangas}
-				<div class="yoy grid {gridValues} gap-2 m-2">
+				<div class="yoy grid {gridValues} m-2 gap-2">
 					{#each sortedMangas as manga (manga.id)}
 						<IntersectionObserver
 							let:intersecting
@@ -248,7 +248,7 @@
 												);
 											}
 										}}
-										class="hover:opacity-70 cursor-pointer h-full"
+										class="h-full cursor-pointer hover:opacity-70"
 										tabindex="-1"
 									>
 										<MangaCard
@@ -260,13 +260,13 @@
 												'rounded-lg'}
 										{$Meta.Display === display.Comfortable && 'rounded-none rounded-t-lg'}"
 										>
-											<div class="absolute top-2 left-2 flex">
+											<div class="absolute left-2 top-2 flex">
 												{#if manga.downloadCount && $Meta.downloadsBadge}
 													<div
 														class="{manga.unreadCount && $Meta.unreadBadge
 															? 'rounded-l'
 															: 'rounded'}
-													variant-filled-primary m-0 py-0.5 px-1"
+													variant-filled-primary m-0 px-1 py-0.5"
 													>
 														{manga.downloadCount}
 													</div>
@@ -276,7 +276,7 @@
 														class="{manga.downloadCount && $Meta.downloadsBadge
 															? 'rounded-r'
 															: 'rounded'}
-													variant-filled-secondary m-0 py-0.5 px-1"
+													variant-filled-secondary m-0 px-1 py-0.5"
 													>
 														{manga.unreadCount}
 													</div>
@@ -284,22 +284,22 @@
 											</div>
 											{#if $selectMode}
 												<div
-													class="cursor-pointer absolute top-0 right-0 left-0 bottom-0 bg-base-100/75"
+													class="bg-base-100/75 absolute bottom-0 left-0 right-0 top-0 cursor-pointer"
 												>
 													<IconWrapper
 														name={$selected[manga.id] === undefined
 															? 'fluent:checkbox-unchecked-24-filled'
 															: 'fluent:checkbox-checked-24-filled'}
-														class="text-4xl absolute top-2 right-2"
+														class="absolute right-2 top-2 text-4xl"
 													/>
 												</div>
 											{/if}
 											{#if $Meta.Display === display.Compact}
 												<div
-													class="absolute bottom-0 left-0 right-0 variant-glass rounded-b-olg"
+													class="variant-glass absolute bottom-0 left-0 right-0 rounded-b-olg"
 												>
 													<div
-														class="line-clamp-2 px-2 h-12 text-center"
+														class="line-clamp-2 h-12 px-2 text-center"
 														title={manga.title}
 													>
 														{manga.title}
@@ -310,7 +310,7 @@
 										{#if $Meta.Display === display.Comfortable}
 											<div class="variant-glass-surface rounded-b-lg">
 												<div
-													class="line-clamp-2 px-2 h-12 text-center"
+													class="line-clamp-2 h-12 px-2 text-center"
 													title={manga.title}
 												>
 													{manga.title}

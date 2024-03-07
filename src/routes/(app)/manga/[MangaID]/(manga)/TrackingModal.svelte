@@ -79,7 +79,7 @@
 </script>
 
 {#if $modalStore[0]}
-	<div class="card p-0 w-modal shadow-xl rounded-lg max-h-screen">
+	<div class="card w-modal max-h-screen rounded-lg p-0 shadow-xl">
 		<h1 class="h3 py-4 pl-4">Tracking</h1>
 		<div class="border-t border-surface-700">
 			<div class="grid grid-cols-1 gap-1">
@@ -110,33 +110,33 @@
 							{@const ThisTrack = $manga.data?.manga?.trackRecords.nodes?.find(
 								(e) => e.trackerId === tabSet
 							)}
-							<div class="overflow-auto h-64">
+							<div class="h-64 overflow-auto">
 								{#if $items.error}
-									<div class="p-4 whitespace-pre-wrap">
+									<div class="whitespace-pre-wrap p-4">
 										{JSON.stringify($items.error, null, 4)}
 									</div>
 								{:else if $items.fetching}
 									{#each new Array(3).fill(0) as _}
 										<span
-											class="flex pl-4 p-1 w-full text-left hover:variant-ghost-surface"
+											class="flex w-full p-1 pl-4 text-left hover:variant-ghost-surface"
 										>
-											<div class="w-1/5 pr-1 flex-shrink-0">
+											<div class="w-1/5 flex-shrink-0 pr-1">
 												<div
-													class="rounded-lg placeholder animate-pulse w-full h-full aspect-cover"
+													class="placeholder aspect-cover h-full w-full animate-pulse rounded-lg"
 												/>
 											</div>
 											<div class="w-full">
-												<div class="h-7 mb-2 placeholder w-full" />
+												<div class="placeholder mb-2 h-7 w-full" />
 												<div class="text-sm xl:text-base">
-													<div class="grid grid-cols-2 mb-2 w-full gap-1">
-														<div class="placeholder animate-pulse h-4 w-full" />
-														<div class="placeholder animate-pulse h-4 w-full" />
-														<div class="placeholder animate-pulse h-4 w-full" />
-														<div class="placeholder animate-pulse h-4 w-full" />
+													<div class="mb-2 grid w-full grid-cols-2 gap-1">
+														<div class="placeholder h-4 w-full animate-pulse" />
+														<div class="placeholder h-4 w-full animate-pulse" />
+														<div class="placeholder h-4 w-full animate-pulse" />
+														<div class="placeholder h-4 w-full animate-pulse" />
 													</div>
 													{#each new Array(3).fill(0) as _}
 														<div
-															class="line-clamp-3 placeholder animate-pulse h-4 w-full mt-1"
+															class="placeholder mt-1 line-clamp-3 h-4 w-full animate-pulse"
 														/>
 													{/each}
 												</div>
@@ -151,9 +151,9 @@
 												e.preventDefault();
 												trackThis(item);
 											}}
-											class="flex pl-4 p-1 w-full text-left hover:variant-ghost-surface"
+											class="flex w-full p-1 pl-4 text-left hover:variant-ghost-surface"
 										>
-											<div class="w-1/5 pr-1 flex-shrink-0">
+											<div class="w-1/5 flex-shrink-0 pr-1">
 												<Image
 													src={item.coverUrl}
 													alt={item.title}
@@ -163,11 +163,11 @@
 												/>
 											</div>
 											<div class="w-auto">
-												<span class="line-clamp-1 text-lg font-bold mb-2">
+												<span class="mb-2 line-clamp-1 text-lg font-bold">
 													{item.title}
 												</span>
 												<div class="text-sm xl:text-base">
-													<div class="grid grid-cols-2 mb-2 w-full">
+													<div class="mb-2 grid w-full grid-cols-2">
 														<div>
 															Status: {item.publishingStatus}
 														</div>
@@ -192,20 +192,20 @@
 							</div>
 							<div>
 								<div class="h-24 pl-4">
-									<div class="line-clamp-1 text-lg font-bold mb-2">
+									<div class="mb-2 line-clamp-1 text-lg font-bold">
 										Tracking: {ThisTrack ? ThisTrack.title : 'None'}
 									</div>
 									{#if ThisTrack}
-										<div class=" flex justify-between pr-4">
+										<div class="flex justify-between pr-4">
 											<button
-												class="btn variant-filled-surface mb-4"
+												class="variant-filled-surface btn mb-4"
 												on:click={() => trackThis(ThisTrack)}
 											>
 												Untrack
 											</button>
 											<a
 												target="_blank"
-												class="btn variant-filled-surface mb-4"
+												class="variant-filled-surface btn mb-4"
 												href={ThisTrack.remoteUrl}
 											>
 												Open tracked manga

@@ -27,7 +27,7 @@
 
 <a
 	href="/settings/categories"
-	class=" text-left flex items-center w-full h-16 hover:variant-glass-surface cursor-pointer"
+	class="flex h-16 w-full cursor-pointer items-center text-left hover:variant-glass-surface"
 >
 	<IconWrapper class="h-full w-auto p-2" name="mdi:shape" />
 	<div class="w-full">Categories</div>
@@ -38,7 +38,7 @@
 			type: 'component',
 			component: { ref: BackupModal }
 		})}
-	class=" text-left flex items-center w-full h-16 hover:variant-glass-surface cursor-pointer"
+	class="flex h-16 w-full cursor-pointer items-center text-left hover:variant-glass-surface"
 >
 	<IconWrapper class="h-full w-auto p-2" name="mdi:backup" />
 	<div class="w-full">Backup</div>
@@ -49,7 +49,7 @@
 			type: 'component',
 			component: { ref: ReaderDefaultsModal }
 		})}
-	class=" text-left flex items-center w-full h-16 hover:variant-glass-surface cursor-pointer"
+	class="flex h-16 w-full cursor-pointer items-center text-left hover:variant-glass-surface"
 >
 	<IconWrapper
 		class="h-full w-auto p-2"
@@ -63,7 +63,7 @@
 			type: 'component',
 			component: { ref: LibrarySettings }
 		})}
-	class=" text-left flex items-center w-full h-16 hover:variant-glass-surface cursor-pointer"
+	class="flex h-16 w-full cursor-pointer items-center text-left hover:variant-glass-surface"
 >
 	<IconWrapper class="h-full w-auto p-2" name="mdi:bookmark-box-multiple" />
 	<div class="w-full">Library Settings</div>
@@ -74,17 +74,17 @@
 			type: 'component',
 			component: { ref: MangaSettingsModal }
 		})}
-	class=" text-left flex items-center w-full h-16 hover:variant-glass-surface cursor-pointer"
+	class="flex h-16 w-full cursor-pointer items-center text-left hover:variant-glass-surface"
 >
 	<IconWrapper class="h-full w-auto p-2" name="streamline:insert-top-left" />
 	<div class="w-full">Manga Settings</div>
 </button>
 <label
-	class="text-left flex items-center w-full h-16 hover:variant-glass-surface cursor-pointer"
+	class="flex h-16 w-full cursor-pointer items-center text-left hover:variant-glass-surface"
 >
 	<IconWrapper class="h-full w-auto p-2" name="mdi:television-guide" />
 	<div class="w-full">Grid Display</div>
-	<select bind:value={$Meta.Display} class="select max-w-sm mr-1">
+	<select bind:value={$Meta.Display} class="select mr-1 max-w-sm">
 		{#each enumKeys(display) as value}
 			<option {value}>{value}</option>
 		{/each}
@@ -93,18 +93,18 @@
 <button
 	on:click|preventDefault|stopPropagation|capture={() =>
 		($Meta.dark = !$Meta.dark)}
-	class=" text-left flex items-center w-full h-16 hover:variant-glass-surface cursor-pointer"
+	class="flex h-16 w-full cursor-pointer items-center text-left hover:variant-glass-surface"
 >
 	<IconWrapper class="h-full w-auto p-2" name="mdi:theme-light-dark" />
 	<div class="w-full">Dark mode</div>
 	<Lightswitch width="w-16" height="h-8" class="mr-1" />
 </button>
 <label
-	class="text-left flex items-center w-full h-16 hover:variant-glass-surface cursor-pointer"
+	class="flex h-16 w-full cursor-pointer items-center text-left hover:variant-glass-surface"
 >
 	<IconWrapper class="h-full w-auto p-2" name="mdi:palette-outline" />
 	<div class="w-full">Theme settings</div>
-	<select bind:value={$Meta.theme} class="select max-w-sm mr-1">
+	<select bind:value={$Meta.theme} class="select mr-1 max-w-sm">
 		{#each presetWithIcons as preset}
 			<option value={preset.name}>{preset.icon} {preset.name}</option>
 		{/each}
@@ -114,13 +114,13 @@
 	on:click={() => {
 		$Meta.nsfw = !$Meta.nsfw;
 	}}
-	class=" text-left flex items-center w-full h-16 hover:variant-glass-surface cursor-pointer"
+	class="flex h-16 w-full cursor-pointer items-center text-left hover:variant-glass-surface"
 >
 	<IconWrapper class="h-full w-auto p-2" name="mdi:heart" />
 	<div class="w-full">Show Nsfw</div>
 	<Slide
 		bind:checked={$Meta.nsfw}
-		class=" focus:outline-0 p-1 pl-2 hover:variant-glass-surface"
+		class="p-1 pl-2 hover:variant-glass-surface focus:outline-0"
 	/>
 </button>
 <button
@@ -129,14 +129,14 @@
 			type: 'component',
 			component: { ref: TrackingModal }
 		})}
-	class=" text-left flex items-center w-full h-16 hover:variant-glass-surface cursor-pointer"
+	class="flex h-16 w-full cursor-pointer items-center text-left hover:variant-glass-surface"
 >
 	<IconWrapper class="h-full w-auto p-2" name="mdi:target" />
 	<div class="w-full">Tracking settings</div>
 </button>
 <a
 	href="/settings/about"
-	class=" text-left flex items-center w-full h-16 hover:variant-glass-surface cursor-pointer"
+	class="flex h-16 w-full cursor-pointer items-center text-left hover:variant-glass-surface"
 >
 	<IconWrapper class="h-full w-auto p-2" name="mdi:information" />
 	<div class="w-full">About</div>
@@ -147,14 +147,14 @@
 			type: 'component',
 			component: { ref: CacheSettingsModal }
 		})}
-	class=" text-left flex items-center w-full h-16 hover:variant-glass-surface cursor-pointer"
+	class="flex h-16 w-full cursor-pointer items-center text-left hover:variant-glass-surface"
 >
 	<IconWrapper class="h-full w-auto p-2" name="mdi:files" />
 	<div class="w-full">Cache</div>
 </button>
 <a
 	href="/settings/server"
-	class=" text-left flex items-center w-full h-16 hover:variant-glass-surface cursor-pointer"
+	class="flex h-16 w-full cursor-pointer items-center text-left hover:variant-glass-surface"
 >
 	<IconWrapper class="h-full w-auto p-2" name="mdi:server" />
 	<div class="w-full">Server Settings</div>

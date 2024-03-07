@@ -121,7 +121,7 @@
 	}
 </script>
 
-<div class="h-full flex max-w-full">
+<div class="flex h-full max-w-full">
 	<MediaQuery query="(min-width: {screens.sm})" let:matches>
 		{#if matches}
 			{#if $selectMode}
@@ -149,7 +149,7 @@
 			/>
 		{:else if $selectMode}
 			<div class="card p-0" data-popup="popupClick">
-				<div class="h-12 xs:h-14 flex">
+				<div class="flex h-12 xs:h-14">
 					<TooltipIconButton
 						on:click={handelDownload}
 						tip="Download unread chapters"
@@ -171,10 +171,10 @@
 						tip="Select all/none"
 					/>
 				</div>
-				<div class="arrow bg-surface-100-800-token" />
+				<div class="bg-surface-100-800-token arrow" />
 			</div>
 			<button
-				class="btn variant-filled-primary fixed right-2 bottom-2 text-xl xs:text-4xl h-12 xs:h-14"
+				class="variant-filled-primary btn fixed bottom-2 right-2 h-12 text-xl xs:h-14 xs:text-4xl"
 				use:popup={popupClick}
 			>
 				{$selected.filter((e) => e).length}

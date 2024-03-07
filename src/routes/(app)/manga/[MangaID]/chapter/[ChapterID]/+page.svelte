@@ -487,10 +487,10 @@
 >
 	{#if $ViewNav}
 		<div class="pointer-events-none">
-			<div class="fixed bg-blue-500/50 z-10" style={currpath.forward} />
-			<div class="fixed bg-red-500/50 z-10" style={currpath.back} />
+			<div class="fixed z-10 bg-blue-500/50" style={currpath.forward} />
+			<div class="fixed z-10 bg-red-500/50" style={currpath.back} />
 			{#if currpath.menu}
-				<div class="fixed bg-green-500/50 z-10" style={currpath.menu} />
+				<div class="fixed z-10 bg-green-500/50" style={currpath.menu} />
 			{/if}
 		</div>
 	{/if}
@@ -502,10 +502,10 @@
 				{$mangaMeta.ReaderMode === Mode.single && 'flex flex-col items-center'}
 				{$mangaMeta.ReaderMode === Mode.RTL &&
 					`grid grid-cols-2 place-content-center
-						[&>div:nth-child(odd)]:justify-self-end [&>div:nth-child(even)]:justify-self-start`}
+						[&>div:nth-child(even)]:justify-self-start [&>div:nth-child(odd)]:justify-self-end`}
 				{$mangaMeta.ReaderMode === Mode.LTR &&
 					`grid grid-cols-2 place-content-center
-						[&>div:nth-child(odd)]:justify-self-end [&>div:nth-child(even)]:justify-self-start`}"
+						[&>div:nth-child(even)]:justify-self-start [&>div:nth-child(odd)]:justify-self-end`}"
 				dir={$mangaMeta.ReaderMode === Mode.RTL ? 'rtl' : 'ltr'}
 			>
 				{#if ($mangaMeta.ReaderMode === Mode.RTL || $mangaMeta.ReaderMode === Mode.LTR) && $mangaMeta.Offset}
@@ -513,17 +513,17 @@
 				{/if}
 				{#each chapter.pages as page, pageindex (page)}
 					<div
-						class="w-auto h-auto
+						class="h-auto w-auto
 							{$mangaMeta.Margins && $mangaMeta.ReaderMode === Mode.Vertical && 'mb-4'}
 							{$mangaMeta.Margins && $mangaMeta.ReaderMode === Mode.single && 'mb-4'}
 							{$mangaMeta.Margins &&
 							$mangaMeta.ReaderMode === Mode.RTL &&
-							'even:mr-2 odd:ml-2 mb-4'}
+							'mb-4 odd:ml-2 even:mr-2'}
 							{$mangaMeta.Margins &&
 							$mangaMeta.ReaderMode === Mode.LTR &&
-							'even:ml-2 odd:mr-2 mb-4'}
+							'mb-4 odd:mr-2 even:ml-2'}
 							{$mangaMeta.Scale && $mangaMeta.ReaderMode !== Mode.Vertical
-							? 'max-h-screen h-full'
+							? 'h-full max-h-screen'
 							: 'h-auto'} {$mangaMeta.Scale &&
 						$mangaMeta.ReaderMode === Mode.Vertical
 							? 'w-full'
@@ -549,7 +549,7 @@
 							id="c{index}p{pageindex}"
 							class="{$mangaMeta.Scale &&
 							$mangaMeta.ReaderMode !== Mode.Vertical
-								? 'max-h-screen h-full'
+								? 'h-full max-h-screen'
 								: 'h-auto'} {$mangaMeta.Scale &&
 							$mangaMeta.ReaderMode === Mode.Vertical
 								? 'w-full'
@@ -596,7 +596,7 @@
 		{/if}
 		<div class="p-2">
 			<div
-				class="card variant-glass-surface w-full flex flex-col justify-center items-center max-h-96 h-[50vh]"
+				class="card variant-glass-surface flex h-[50vh] max-h-96 w-full flex-col items-center justify-center"
 			>
 				<div>
 					{getChapterOfID(chapter.chapterID)?.name ??
@@ -615,7 +615,7 @@
 	{/each}
 	{#if $mangaMeta.doPageIndicator}
 		<div
-			class="fixed bottom-2 left-1/2 -translate-x-1/2 rounded p-2 bg-surface-500/60 text-black dark:text-white"
+			class="fixed bottom-2 left-1/2 -translate-x-1/2 rounded bg-surface-500/60 p-2 text-black dark:text-white"
 		>
 			{pageIndicator}
 		</div>

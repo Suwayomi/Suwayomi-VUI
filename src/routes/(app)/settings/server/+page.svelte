@@ -254,7 +254,7 @@
 		/>
 		<!-- extensionRepos -->
 		<button
-			class=" text-left flex items-center w-full h-16 hover:variant-glass-surface cursor-pointer"
+			class="flex h-16 w-full cursor-pointer items-center text-left hover:variant-glass-surface"
 			on:click={() => {
 				modalStore.trigger({
 					type: 'component',
@@ -441,7 +441,7 @@
 		/>
 		<!-- UpdateWebUI -->
 		<button
-			class=" text-left items-center w-full h-16 hover:variant-glass-surface cursor-pointer"
+			class="h-16 w-full cursor-pointer items-center text-left hover:variant-glass-surface"
 			on:click={() => {
 				client.mutation(updateWebUI, {}).toPromise();
 			}}

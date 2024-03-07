@@ -24,7 +24,7 @@
 </script>
 
 {#if $modalStore[0]}
-	<div class="card p-4 w-modal shadow-xl space-y-4 rounded-lg">
+	<div class="card w-modal space-y-4 rounded-lg p-4 shadow-xl">
 		{#each FilterT as value}
 			<Slide
 				class="w-full outline-0"

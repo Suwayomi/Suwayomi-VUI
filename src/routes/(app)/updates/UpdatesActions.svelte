@@ -22,7 +22,7 @@
 	) => void;
 </script>
 
-<div class="p-0 flex items-center space-x-1 h-full">
+<div class="flex h-full items-center space-x-1 p-0">
 	<MediaQuery
 		query="(min-width: {screens.lg}),(min-width: {screens.sm}) and (max-width: {screens.md})"
 		let:matches
@@ -69,17 +69,17 @@
 					target: 'selectmenu',
 					placement: 'bottom'
 				}}
-				class="hover:variant-glass-surface h-full p-2 aspect-square"
+				class="aspect-square h-full p-2 hover:variant-glass-surface"
 			>
 				<Icon
 					name="mdi:dots-vertical"
-					class="aspect-square w-full h-full text-surface-700 dark:text-surface-300"
+					class="aspect-square h-full w-full text-surface-700 dark:text-surface-300"
 				/>
 			</button>
 			<div class="z-50" data-popup="selectmenu">
-				<div class="card p-0 rounded-lg max-w-xs">
+				<div class="card max-w-xs rounded-lg p-0">
 					<button
-						class="text-2xl hover:variant-glass-surface w-full rounded-t-lg p-4 flex items-center justify-start"
+						class="flex w-full items-center justify-start rounded-t-lg p-4 text-2xl hover:variant-glass-surface"
 						on:click={async () => {
 							await HelpUpdateChapters(dlreabook.download, selected);
 						}}
@@ -87,7 +87,7 @@
 						<IconWrapper name="mdi:download" class="mr-2" />download / delete
 					</button>
 					<button
-						class="text-2xl hover:variant-glass-surface w-full p-4 flex items-center justify-start"
+						class="flex w-full items-center justify-start p-4 text-2xl hover:variant-glass-surface"
 						on:click={async () => {
 							const is = await HelpUpdateChapters(dlreabook.read, selected);
 							updateSelectedValues(dlreabook.read, is);
@@ -99,7 +99,7 @@
 						/>Un/Read
 					</button>
 					<button
-						class="text-2xl hover:variant-glass-surface w-full p-4 flex items-center justify-start"
+						class="flex w-full items-center justify-start p-4 text-2xl hover:variant-glass-surface"
 						on:click={async () => {
 							const is = await HelpUpdateChapters(dlreabook.bookmark, selected);
 							updateSelectedValues(dlreabook.bookmark, is);
@@ -108,7 +108,7 @@
 						<IconWrapper name="mdi:bookmark" class="mr-2" />Un/bookmark
 					</button>
 					<button
-						class="text-2xl hover:variant-glass-surface w-full rounded-b-lg p-4 flex items-center justify-start"
+						class="flex w-full items-center justify-start rounded-b-lg p-4 text-2xl hover:variant-glass-surface"
 						on:click={selectAll}
 					>
 						<IconWrapper name="mdi:select-all" class="mr-2" />Select all

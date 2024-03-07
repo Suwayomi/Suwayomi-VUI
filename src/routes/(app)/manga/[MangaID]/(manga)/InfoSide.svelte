@@ -41,56 +41,56 @@
 
 {#if $manga.fetching}
 	<div
-		class="w-full md:w-1/2 space-y-8 p-4
-			md:overflow-y-auto max-h-full md:absolute md:left-0 md:bottom-0 md:top-0"
+		class="max-h-full w-full space-y-8 p-4
+			md:absolute md:bottom-0 md:left-0 md:top-0 md:w-1/2 md:overflow-y-auto"
 	>
-		<div class="flex flex-col sm:flex-row space-x-4">
-			<div class="md:w-[33%] md:flex-0 aspect-cover">
-				<div class="placeholder animate-pulse h-full rounded-lg" />
+		<div class="flex flex-col space-x-4 sm:flex-row">
+			<div class="md:flex-0 aspect-cover md:w-[33%]">
+				<div class="placeholder h-full animate-pulse rounded-lg" />
 			</div>
-			<div class="md:w-[66%] space-y-2 lg:space-y-8 md:mt-8 md:flex-1">
-				<h1 class="h1 md:h3 lg:h2 xl:h1 line-clamp-2 xl:leading-[4rem]">
-					<span class="placeholder animate-pulse inline-block w-full h-10" />
+			<div class="space-y-2 md:mt-8 md:w-[66%] md:flex-1 lg:space-y-8">
+				<h1 class="h1 line-clamp-2 md:h3 lg:h2 xl:h1 xl:leading-[4rem]">
+					<span class="placeholder inline-block h-10 w-full animate-pulse" />
 				</h1>
 				<div class="w-3/4 space-y-1 lg:space-y-2">
 					<h3 class="h3 flex items-center space-x-2">
 						<span
-							class="placeholder animate-pulse inline-block max-w-[33%] w-full"
+							class="placeholder inline-block w-full max-w-[33%] animate-pulse"
 						/>
 						<span
-							class="placeholder animate-pulse inline-block max-w-[66%] w-full"
-						/>
-					</h3>
-					<h3 class="h3 flex items-center space-x-2">
-						<span
-							class="placeholder animate-pulse inline-block max-w-[33%] w-full"
-						/>
-						<span
-							class="placeholder animate-pulse inline-block max-w-[66%] w-full"
+							class="placeholder inline-block w-full max-w-[66%] animate-pulse"
 						/>
 					</h3>
 					<h3 class="h3 flex items-center space-x-2">
 						<span
-							class="placeholder animate-pulse inline-block max-w-[33%] w-full"
+							class="placeholder inline-block w-full max-w-[33%] animate-pulse"
 						/>
 						<span
-							class="placeholder animate-pulse inline-block max-w-[66%] w-full"
+							class="placeholder inline-block w-full max-w-[66%] animate-pulse"
 						/>
 					</h3>
 					<h3 class="h3 flex items-center space-x-2">
 						<span
-							class="placeholder animate-pulse inline-block max-w-[33%] w-full"
+							class="placeholder inline-block w-full max-w-[33%] animate-pulse"
 						/>
 						<span
-							class="placeholder animate-pulse inline-block max-w-[66%] w-full"
+							class="placeholder inline-block w-full max-w-[66%] animate-pulse"
+						/>
+					</h3>
+					<h3 class="h3 flex items-center space-x-2">
+						<span
+							class="placeholder inline-block w-full max-w-[33%] animate-pulse"
+						/>
+						<span
+							class="placeholder inline-block w-full max-w-[66%] animate-pulse"
 						/>
 					</h3>
 				</div>
 			</div>
 		</div>
 		<div class="flex justify-around">
-			<div class="placeholder animate-pulse w-full max-w-[8rem]" />
-			<div class="placeholder animate-pulse w-full max-w-[8rem]" />
+			<div class="placeholder w-full max-w-[8rem] animate-pulse" />
+			<div class="placeholder w-full max-w-[8rem] animate-pulse" />
 		</div>
 		<section class="w-full">
 			<div class="space-y-4">
@@ -114,24 +114,24 @@
 		<div class="space-x-2">
 			{#each new Array(8) as _}
 				<div
-					class="placeholder animate-pulse inline-block variant-filled-primary w-16"
+					class="placeholder variant-filled-primary inline-block w-16 animate-pulse"
 				/>
 			{/each}
 		</div>
 	</div>
 {:else if $manga.error}
 	<div
-		class="w-full md:w-1/2 space-y-8 p-4 md:overflow-y-auto max-h-full md:absolute md:left-0 md:bottom-0 md:top-0 whitespace-pre-wrap"
+		class="max-h-full w-full space-y-8 whitespace-pre-wrap p-4 md:absolute md:bottom-0 md:left-0 md:top-0 md:w-1/2 md:overflow-y-auto"
 	>
 		Errors loading manga Info: {JSON.stringify($manga.error, null, 4)}
 	</div>
 {:else if $manga.data?.manga}
 	{@const mangaFrag = $manga.data.manga}
 	<div
-		class="w-full md:w-1/2 space-y-8 p-4 md:overflow-y-auto max-h-full md:absolute md:left-0 md:bottom-0 md:top-0"
+		class="max-h-full w-full space-y-8 p-4 md:absolute md:bottom-0 md:left-0 md:top-0 md:w-1/2 md:overflow-y-auto"
 	>
-		<div class="flex flex-col sm:flex-row space-x-4">
-			<div class="md:max-w-[33%] md:flex-0">
+		<div class="flex flex-col space-x-4 sm:flex-row">
+			<div class="md:flex-0 md:max-w-[33%]">
 				<Image
 					on:failed={() => (ImageFailed = true)}
 					src={mangaFrag.thumbnailUrl ?? ''}
@@ -141,8 +141,8 @@
 					class="rounded-lg {ImageFailed && 'hidden'}"
 				/>
 			</div>
-			<div class="md:min-w-[66%] space-y-2 lg:space-y-8 md:mt-8 md:flex-1">
-				<h1 class="h1 md:h3 lg:h2 xl:h1 line-clamp-2 xl:leading-[4rem]">
+			<div class="space-y-2 md:mt-8 md:min-w-[66%] md:flex-1 lg:space-y-8">
+				<h1 class="h1 line-clamp-2 md:h3 lg:h2 xl:h1 xl:leading-[4rem]">
 					{mangaFrag.title}
 				</h1>
 				<div class="space-y-1 lg:space-y-2">
@@ -154,18 +154,18 @@
 			</div>
 		</div>
 		<MediaQuery query="(min-width: {screens.sm})" let:matches>
-			<div class="grid gap-1 grid-cols-2">
+			<div class="grid grid-cols-2 gap-1">
 				<button
 					on:click={libtoggle}
-					class="btn variant-soft h-12 flex items-center px-2 sm:px-5"
+					class="variant-soft btn flex h-12 items-center px-2 sm:px-5"
 				>
 					<IconWrapper
 						name="mdi:heart"
-						class="w-auto h-full aspect-square {mangaFrag.inLibrary &&
+						class="aspect-square h-full w-auto {mangaFrag.inLibrary &&
 							'text-red-500'}"
 					/>
 					{#if matches}
-						<span class="uppercase text-sm sm:text-base">
+						<span class="text-sm uppercase sm:text-base">
 							{mangaFrag.inLibrary ? 'In Library' : 'Add to library'}
 						</span>
 					{/if}
@@ -173,21 +173,21 @@
 				<a
 					href={mangaFrag.realUrl}
 					target="_blank"
-					class="btn variant-soft h-12 flex items-center px-2 sm:px-5"
+					class="variant-soft btn flex h-12 items-center px-2 sm:px-5"
 				>
-					<IconWrapper name="mdi:earth" class="w-auto h-full aspect-square" />
+					<IconWrapper name="mdi:earth" class="aspect-square h-full w-auto" />
 					{#if matches}
-						<span class="uppercase text-sm sm:text-base">Open site</span>
+						<span class="text-sm uppercase sm:text-base">Open site</span>
 					{/if}
 				</a>
 				{#if mangaFrag.inLibrary}
 					<a
 						href="/browse/migrate/manga/{mangaFrag.id}"
-						class="btn variant-soft h-12 flex items-center px-2 sm:px-5"
+						class="variant-soft btn flex h-12 items-center px-2 sm:px-5"
 					>
-						<IconWrapper name="mdi:bird" class="w-auto h-full aspect-square" />
+						<IconWrapper name="mdi:bird" class="aspect-square h-full w-auto" />
 						{#if matches}
-							<span class="uppercase text-sm sm:text-base">Migrate</span>
+							<span class="text-sm uppercase sm:text-base">Migrate</span>
 						{/if}
 					</a>
 					<button
@@ -197,15 +197,15 @@
 								component: { ref: TrackingModal, props: { manga } }
 							});
 						}}
-						class="btn variant-soft h-12 flex items-center px-2 sm:px-5"
+						class="variant-soft btn flex h-12 items-center px-2 sm:px-5"
 					>
 						<IconWrapper
 							name="mdi:target"
-							class="w-auto h-full aspect-square {mangaFrag.trackRecords.nodes
+							class="aspect-square h-full w-auto {mangaFrag.trackRecords.nodes
 								.length > 0 && 'text-red-500'}"
 						/>
 						{#if matches}
-							<span class="uppercase text-sm sm:text-base"> Tracking</span>
+							<span class="text-sm uppercase sm:text-base"> Tracking</span>
 						{/if}
 					</button>
 				{/if}
@@ -217,7 +217,7 @@
 		<div class="space-x-2">
 			{#each mangaFrag?.genre as genre}
 				{#if genre}
-					<div class="badge variant-outline-primary">{genre}</div>
+					<div class="variant-outline-primary badge">{genre}</div>
 				{/if}
 			{:else}
 				<div />

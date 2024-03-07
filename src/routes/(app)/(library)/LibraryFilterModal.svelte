@@ -25,11 +25,11 @@
 </script>
 
 {#if $modalStore[0]}
-	<div class="card p-0 w-modal shadow-xl space-y-4 rounded-lg">
+	<div class="card w-modal space-y-4 rounded-lg p-0 shadow-xl">
 		<TabGroup
 			justify="justify-center"
 			flex="flex"
-			class="bg-surface-100-800-token w-full rounded-t-lg select-none focus:outline-0"
+			class="bg-surface-100-800-token w-full select-none rounded-t-lg focus:outline-0"
 			rounded="rounded-t-lg"
 			active="border-b-2 variant-glass-primary"
 			regionList="variant-soft-surface focus:outline-0"
@@ -43,7 +43,7 @@
 				value={0}
 			>
 				<div
-					class="flex flex-row justify-center items-center h-full focus:outline-0"
+					class="flex h-full flex-row items-center justify-center focus:outline-0"
 				>
 					<IconWrapper name="mdi:filter" class="text-4xl" />
 					<span>Filter</span>
@@ -56,7 +56,7 @@
 				name="tab2"
 				value={1}
 			>
-				<div class="flex flex-row justify-center items-center h-full">
+				<div class="flex h-full flex-row items-center justify-center">
 					<IconWrapper name="mdi:sort" class="text-4xl" />
 					<span>Sort</span>
 				</div>
@@ -68,7 +68,7 @@
 				name="tab3"
 				value={2}
 			>
-				<div class="flex flex-row justify-center items-center h-full">
+				<div class="flex h-full flex-row items-center justify-center">
 					<IconWrapper name="mdi:television-guide" class="text-4xl" />
 					<span>Display</span>
 				</div>
@@ -80,7 +80,7 @@
 						<TriStateSlide
 							bind:state={$Meta.Unread}
 							label={'Unread'}
-							class="w-full focus:outline-0 p-1 pl-2 hover:variant-glass-surface"
+							class="w-full p-1 pl-2 hover:variant-glass-surface focus:outline-0"
 							labelClass="w-full"
 						>
 							<span>Unread</span>
@@ -88,7 +88,7 @@
 						<TriStateSlide
 							bind:state={$Meta.Downloaded}
 							label={'Downloaded'}
-							class="w-full focus:outline-0 p-1 pl-2 hover:variant-glass-surface"
+							class="w-full p-1 pl-2 hover:variant-glass-surface focus:outline-0"
 							labelClass="w-full"
 						>
 							<span>Downloaded</span>
@@ -96,7 +96,7 @@
 						<TriStateSlide
 							bind:state={$Meta.Tracked}
 							label={'Tracked'}
-							class="w-full focus:outline-0 p-1 pl-2 hover:variant-glass-surface"
+							class="w-full p-1 pl-2 hover:variant-glass-surface focus:outline-0"
 							labelClass="w-full"
 						>
 							<span>Tracked</span>
@@ -106,7 +106,7 @@
 							triState={false}
 							bind:checked={$Meta.Asc}
 							label={'Ascending'}
-							class="w-full focus:outline-0 p-1 pl-2 hover:variant-glass-surface"
+							class="w-full p-1 pl-2 hover:variant-glass-surface focus:outline-0"
 							labelClass="w-full"
 						>
 							<span>Ascending</span>
@@ -133,12 +133,12 @@
 					{:else if $tabSet === 2}
 						<Slide
 							bind:checked={$Meta.downloadsBadge}
-							class="outline-0 p-1 pl-2 hover:variant-glass-surface w-full"
+							class="w-full p-1 pl-2 outline-0 hover:variant-glass-surface"
 							>Downloads Badge</Slide
 						>
 						<Slide
 							bind:checked={$Meta.unreadBadge}
-							class="outline-0 p-1 pl-2 hover:variant-glass-surface w-full"
+							class="w-full p-1 pl-2 outline-0 hover:variant-glass-surface"
 							>Unread Badge</Slide
 						>
 						<RadioGroup

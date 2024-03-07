@@ -15,7 +15,7 @@
 
 	export let pref: Extract<
 		ResultOf<typeof getSource>['source']['preferences'][0],
-		{ __typename?: 'EditTextPreference' | undefined }
+		{ __typename: 'EditTextPreference' | undefined }
 	>;
 
 	export let index: number;
@@ -51,7 +51,7 @@
 		placeholder="input text"
 	/>
 </label>
-<div class="card p-4 max-w-sm z-50" data-popup="{id} {index}">
+<div class="card z-50 max-w-sm p-4" data-popup="{id} {index}">
 	<p>{pref.summary}</p>
 	<div class="card arrow z-50" style="border-radius:0" />
 </div>

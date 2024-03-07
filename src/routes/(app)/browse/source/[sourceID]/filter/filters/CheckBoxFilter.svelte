@@ -14,7 +14,7 @@
 
 	export let filter: Extract<
 		ResultOf<typeof getSource>['source']['filters'][0],
-		{ __typename?: 'CheckBoxFilter' | undefined }
+		{ __typename: 'CheckBoxFilter' | undefined }
 	>;
 	export let filters: VariablesOf<typeof fetchSourceManga>['filters'];
 	export let index: number;
@@ -36,7 +36,7 @@
 
 <Slide
 	bind:checked
-	class="w-full hover:variant-glass-surface p-1 pl-1 my-1"
+	class="my-1 w-full p-1 pl-1 hover:variant-glass-surface"
 	labelClass="w-full ml-1"
 >
 	{filter.name}

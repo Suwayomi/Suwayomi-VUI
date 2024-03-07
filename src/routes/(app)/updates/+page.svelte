@@ -90,17 +90,17 @@
 </script>
 
 {#if !$all && $update.fetching}
-	<div class="grid {gridValues} gap-2 m-2">
+	<div class="grid {gridValues} m-2 gap-2">
 		{#each new Array(110) as _}
 			<div class="aspect-cover w-full">
 				<div
-					class="placeholder animate-pulse h-full
+					class="placeholder h-full animate-pulse
 						{$Meta.Display === display.Compact && 'rounded-lg'}
 						{$Meta.Display === display.Comfortable && 'rounded-none rounded-t-lg'}"
 				/>
 				{#if $Meta.Display === display.Comfortable}
 					<div
-						class="placeholder animate-pulse px-2 h-12 text-center rounded-none rounded-b-lg"
+						class="placeholder h-12 animate-pulse rounded-none rounded-b-lg px-2 text-center"
 					/>
 				{/if}
 			</div>
@@ -111,7 +111,7 @@
 		{JSON.stringify($update.error, null, 4)}
 	</div>
 {:else if $all?.nodes}
-	<div class="grid {gridValues} gap-2 m-2">
+	<div class="grid {gridValues} m-2 gap-2">
 		{#each $all.nodes as updat}
 			<IntersectionObserver
 				let:intersecting
@@ -141,7 +141,7 @@
 								goto(`/manga/${updat.manga.id}`);
 							}
 						}}
-						class="hover:opacity-70 cursor-pointer h-full"
+						class="h-full cursor-pointer hover:opacity-70"
 						tabindex="-1"
 					>
 						<MangaCard
@@ -156,34 +156,34 @@
 						>
 							{#if $selectMode}
 								<div
-									class="cursor-pointer absolute top-0 right-0 left-0 bottom-0 bg-base-100/75"
+									class="bg-base-100/75 absolute bottom-0 left-0 right-0 top-0 cursor-pointer"
 								>
 									<IconWrapper
 										name={$selected[updat.id] === undefined
 											? 'fluent:checkbox-unchecked-24-filled'
 											: 'fluent:checkbox-checked-24-filled'}
-										class="text-4xl absolute top-2 right-2"
+										class="absolute right-2 top-2 text-4xl"
 									/>
 								</div>
 							{/if}
 							{#if $Meta.Display === display.Compact}
 								<div
-									class="absolute bottom-0 left-0 right-0 variant-glass rounded-b-olg"
+									class="variant-glass absolute bottom-0 left-0 right-0 rounded-b-olg"
 								>
 									<div
-										class="line-clamp-1 px-2 h-6 text-center"
+										class="line-clamp-1 h-6 px-2 text-center"
 										title={updat.manga.title}
 									>
 										{updat.manga.title}
 									</div>
 									<div
-										class="line-clamp-1 px-2 h-6 text-center"
+										class="line-clamp-1 h-6 px-2 text-center"
 										title={updat.name}
 									>
 										{updat.name}
 									</div>
 									<div
-										class="line-clamp-1 px-2 h-6 text-center"
+										class="line-clamp-1 h-6 px-2 text-center"
 										title={new Date(
 											parseInt(updat.fetchedAt) * 1000
 										).toLocaleString()}
@@ -194,37 +194,37 @@
 									</div>
 								</div>
 							{/if}
-							<div class="absolute top-2 left-2 flex h-8">
+							<div class="absolute left-2 top-2 flex h-8">
 								{#if updat.isDownloaded}
-									<IconWrapper class="w-full h-full" name="mdi:download" />
+									<IconWrapper class="h-full w-full" name="mdi:download" />
 								{/if}
 								{#if updat.isRead}
 									<IconWrapper
-										class="w-full h-full"
+										class="h-full w-full"
 										name="mdi:book-open-page-variant-outline"
 									/>
 								{/if}
 								{#if updat.isBookmarked}
-									<IconWrapper class="w-full h-full" name="mdi:bookmark" />
+									<IconWrapper class="h-full w-full" name="mdi:bookmark" />
 								{/if}
 							</div>
 						</MangaCard>
 						{#if $Meta.Display === display.Comfortable}
 							<div class="variant-glass-surface rounded-b-lg">
 								<div
-									class="line-clamp-1 px-2 h-6 text-center"
+									class="line-clamp-1 h-6 px-2 text-center"
 									title={updat.manga.title}
 								>
 									{updat.manga.title}
 								</div>
 								<div
-									class="line-clamp-1 px-2 h-6 text-center"
+									class="line-clamp-1 h-6 px-2 text-center"
 									title={updat.name}
 								>
 									{updat.name}
 								</div>
 								<div
-									class="line-clamp-1 px-2 h-6 text-center"
+									class="line-clamp-1 h-6 px-2 text-center"
 									title={new Date(
 										parseInt(updat.fetchedAt) * 1000
 									).toLocaleString()}
@@ -251,13 +251,13 @@
 			{#each new Array(10) as _}
 				<div class="aspect-cover w-full">
 					<div
-						class="placeholder animate-pulse h-full
+						class="placeholder h-full animate-pulse
 							{$Meta.Display === display.Compact && 'rounded-lg'}
 							{$Meta.Display === display.Comfortable && 'rounded-none rounded-t-lg'}"
 					/>
 					{#if $Meta.Display === display.Comfortable}
 						<div
-							class="placeholder animate-pulse px-2 h-12 text-center rounded-none rounded-b-lg"
+							class="placeholder h-12 animate-pulse rounded-none rounded-b-lg px-2 text-center"
 						/>
 					{/if}
 				</div>
