@@ -88,6 +88,32 @@ export const updateMangas = graphql(
 			updateMangas(input: { patch: { inLibrary: $inLibrary }, ids: $ids }) {
 				mangas {
 					...MangaTypeFragment
+					id
+					title
+					inLibrary
+					thumbnailUrl
+					unreadCount
+					downloadCount
+					latestFetchedChapter {
+						fetchedAt
+						id
+					}
+					latestUploadedChapter {
+						uploadDate
+						id
+					}
+					latestReadChapter {
+						lastReadAt
+						id
+					}
+					trackRecords {
+						nodes {
+							...TrackRecordTypeFragment
+						}
+					}
+					chapters {
+						totalCount
+					}
 				}
 			}
 		}
