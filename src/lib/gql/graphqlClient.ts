@@ -36,6 +36,7 @@ import type {
 	setServerSettings,
 	updateExtension,
 	updateMangaCategories,
+	updateMangas,
 	updateMangasCategories,
 	updateTrack
 } from './Mutations';
@@ -189,6 +190,13 @@ export const client = new Client({
 							typeof updateMangaCategories
 						>;
 						updateMangaCategoriesUpdater(res, variables, cache);
+					},
+					updateMangas(result, _, cache, info) {
+						const res = result as ResultOf<typeof updateMangas>;
+						const variables = info.variables as VariablesOf<
+							typeof updateMangas
+						>;
+						updateMangasUpdater(res, variables, cache);
 					}
 				},
 				Query: {
@@ -224,6 +232,38 @@ export const client = new Client({
 		})
 	]
 });
+
+function updateMangasUpdater(
+	data: ResultOf<typeof updateMangas> | undefined,
+	vars: VariablesOf<typeof updateMangas>,
+	cache: Cache
+) {
+	if (!data) return;
+	data.updateMangas.mangas.forEach((manga) => {
+		(manga.categories.nodes.length
+			? manga.categories.nodes
+			: [{ id: 0 }]
+		).forEach((category) => {
+			cache.updateQuery(
+				{
+					query: getCategory,
+					variables: {
+						id: category.id
+					}
+				},
+				(categoryData) => {
+					if (!categoryData) return categoryData;
+					categoryData.category.mangas.nodes =
+						categoryData.category.mangas.nodes.filter(
+							(m) => !vars.ids.includes(m.id)
+						);
+					categoryData.category.mangas.nodes.push(...data.updateMangas.mangas);
+					return categoryData;
+				}
+			);
+		});
+	});
+}
 
 function getSingleChapterUpdater(
 	data: ResultOf<typeof getSingleChapter> | undefined,

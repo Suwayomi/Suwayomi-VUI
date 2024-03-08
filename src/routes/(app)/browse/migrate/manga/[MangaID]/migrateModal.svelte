@@ -133,28 +133,11 @@
 							recordId: tracker.id
 						}
 					});
-					// await updateTrack({
-					// 	variables: {
-					// 		input: {
-					// 			unbind: true,
-					// 			recordId: (tracker).id
-					// 		}
-					// 	},
-					// 	update: (a, b) => unbindUpdater(a, b, id, tracker.trackerId)
-					// });
 					await client.mutation(bindTrack, {
 						mangaId: id,
 						trackerId: tracker.trackerId,
 						remoteId: tracker.remoteId
 					});
-					// await bindTrack({
-					// 	variables: {
-					// 		mangaId: id,
-					// 		trackerId: (tracker).trackerId,
-					// 		remoteId: (tracker).remoteId
-					// 	},
-					// 	update: (a, b) => bindTrackUpdater(a, b, id, tracker.trackerId)
-					// });
 				} catch {}
 			})
 		);

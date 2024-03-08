@@ -17,24 +17,46 @@
 	import { AppBarData } from '$lib/MountTitleAction';
 	import { Meta, display } from '$lib/simpleStores';
 	import { groupBy } from '$lib/util';
-	import { getContextClient, queryStore } from '@urql/svelte';
+	import { getContextClient, CombinedError } from '@urql/svelte';
 	import { getSources } from '$lib/gql/Queries';
 	import { type ResultOf } from '$lib/gql/graphql';
 	import { fetchSourceManga } from '$lib/gql/Mutations';
+	import { writable } from 'svelte/store';
 
 	export let title: string = 'Loading...';
 	export let OpenModal: ((id: number) => void) | undefined = undefined;
 
 	const queue = new PQueue({ concurrency: 4 });
 	const query = queryParam('q', ssp.string(), { pushHistory: false });
-	const client = getContextClient();
-	let rawSources = queryStore({
-		client,
-		query: getSources,
-		variables: {
-			isNsfw: $Meta.nsfw ? null : false
-		}
+
+	let lastQuery = $query;
+
+	$: if ($query !== lastQuery) {
+		lastQuery = $query;
+	}
+
+	let rawSources = writable<{
+		data: ResultOf<typeof getSources> | undefined;
+		error: CombinedError | undefined;
+		fetching: boolean;
+	}>({
+		data: undefined,
+		error: undefined,
+		fetching: true
 	});
+
+	const client = getContextClient();
+	client
+		.query(getSources, { isNsfw: $Meta.nsfw ? null : false })
+		.toPromise()
+		.then((ee) => {
+			rawSources.update((e) => {
+				e.data = ee.data;
+				e.error = ee.error;
+				e.fetching = false;
+				return e;
+			});
+		});
 
 	$: langs = getLanguages($rawSources.data);
 
