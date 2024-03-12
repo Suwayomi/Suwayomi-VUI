@@ -138,8 +138,8 @@
 				break;
 			case sort['Latest Read']:
 				tru =
-					parseInt(a.latestReadChapter?.lastReadAt ?? '0') >
-					parseInt(b.latestReadChapter?.lastReadAt ?? '0');
+					parseInt(a.lastReadChapter?.lastReadAt ?? '0') >
+					parseInt(b.lastReadChapter?.lastReadAt ?? '0');
 				break;
 			case sort['Latest Fetched']:
 				tru =
