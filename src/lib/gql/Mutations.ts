@@ -102,7 +102,7 @@ export const updateMangas = graphql(
 						uploadDate
 						id
 					}
-					latestReadChapter {
+					lastReadChapter {
 						lastReadAt
 						id
 					}
