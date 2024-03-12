@@ -50,7 +50,7 @@ export const getCategory = graphql(
 							uploadDate
 							id
 						}
-						latestReadChapter {
+						lastReadChapter {
 							lastReadAt
 							id
 						}

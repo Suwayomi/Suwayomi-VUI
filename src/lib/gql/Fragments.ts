@@ -63,10 +63,6 @@ export const MangaTypeFragment = graphql(
 				uploadDate
 				id
 			}
-			latestReadChapter {
-				lastReadAt
-				id
-			}
 			lastReadChapter {
 				lastReadAt
 				id

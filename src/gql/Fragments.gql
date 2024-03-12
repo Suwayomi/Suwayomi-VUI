@@ -50,9 +50,6 @@ fragment MangaTypeFragment on MangaType {
 	latestUploadedChapter {
 		uploadDate
 	}
-	latestReadChapter {
-		lastReadAt
-	}
 	lastReadChapter {
 		lastReadAt
 	}
