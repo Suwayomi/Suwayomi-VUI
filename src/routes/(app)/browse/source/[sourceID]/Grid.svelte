@@ -41,7 +41,7 @@
 		hasNextPage: true,
 		mangas: []
 	};
-	let mainerror: Error | undefined;
+	let mainerror: string = '';
 
 	$: query, filters, clearAll();
 
@@ -65,29 +65,29 @@
 		}
 	});
 
-	$: parseall($source.data);
+	$: $source, parseall();
 
-	async function parseall(
-		sourcee: ResultOf<typeof fetchSourceManga> | undefined
-	) {
-		if (!sourcee) return;
+	async function parseall() {
+		if ($source.fetching) return;
 		isLoading = true;
 		try {
-			if (!sourcee) throw new Error('Missing data');
-			all.hasNextPage = sourcee.fetchSourceManga.hasNextPage;
-			all.mangas.push(...sourcee.fetchSourceManga.mangas);
+			if ($source.error)
+				throw new Error(JSON.stringify($source.error, null, 4));
+			if (!$source.data) throw '';
+			all.hasNextPage = $source.data.fetchSourceManga.hasNextPage;
+			all.mangas.push(...$source.data.fetchSourceManga.mangas);
 			all = all;
 		} catch (error) {
 			if (error instanceof Error) {
-				console.error(error);
+				all.hasNextPage = false;
 				if (error.message.includes('Already on the Last Page!')) {
-					all.hasNextPage = false;
+					isLoading = false;
+					return;
 				}
-				mainerror = error;
-				errortoast('failed to load page', error.message);
-				return;
+				console.error(error);
+				mainerror = error.message;
+				errortoast('failed to load page', JSON.stringify(error.message));
 			}
-			errortoast('failed to load page', JSON.stringify(error));
 		} finally {
 			isLoading = false;
 		}
@@ -109,24 +109,7 @@
 	</button>
 {/if}
 
-{#if !all}
-	<div class="yoy m-2 grid gap-2 {gridValues}">
-		{#each new Array(30) as _}
-			<div class="aspect-cover w-full">
-				<div
-					class="placeholder h-full animate-pulse
-						{$Meta.Display === display.Compact && 'rounded-lg'}
-						{$Meta.Display === display.Comfortable && 'rounded-none rounded-t-lg'}"
-				/>
-				{#if $Meta.Display === display.Comfortable}
-					<div
-						class="placeholder h-12 animate-pulse rounded-none rounded-b-lg px-2 text-center"
-					/>
-				{/if}
-			</div>
-		{/each}
-	</div>
-{:else if all.mangas}
+{#if all.mangas}
 	<div class="m-2 grid gap-2 {gridValues}">
 		{#each all.mangas.filter((e, i, s) => i === s.findIndex((ee) => e.id === ee.id)) as manga (manga.id)}
 			<IntersectionObserver
@@ -186,18 +169,46 @@
 				{/if}
 			</IntersectionObserver>
 		{/each}
+		{#if all.hasNextPage && !isLoading && !$source.fetching}
+			<IntersectionObserver
+				root={document.querySelector('#page') ?? undefined}
+				top={400}
+				bottom={400}
+				on:intersect={(e) => {
+					if (e.detail && all.hasNextPage) page++;
+				}}
+			/>
+		{/if}
+		{#if all.hasNextPage}
+			{#each new Array((all.mangas.length > 0 ? all.mangas.length : 5) / (page > 0 ? page : 1)) as _}
+				<div class="aspect-cover w-full">
+					<div
+						class="placeholder h-full animate-pulse
+						{$Meta.Display === display.Compact && 'rounded-lg'}
+						{$Meta.Display === display.Comfortable && 'rounded-none rounded-t-lg'}"
+					/>
+					{#if $Meta.Display === display.Comfortable}
+						<div
+							class="placeholder h-12 animate-pulse rounded-none rounded-b-lg px-2 text-center"
+						/>
+					{/if}
+				</div>
+			{/each}
+		{/if}
 	</div>
-	{#if all.hasNextPage && !isLoading}
-		<IntersectionObserver
-			root={document.querySelector('#page') ?? undefined}
-			top={400}
-			bottom={400}
-			on:intersect={(e) => {
-				if (e.detail) page++;
-			}}
-		/>
-	{/if}
 {/if}
 {#if mainerror}
-	{JSON.stringify(mainerror)}
+	<div class="flex w-full flex-col items-center align-middle">
+		ignore error
+		<button
+			class="variant-filled-primary btn"
+			on:click={() => {
+				mainerror = '';
+				all.hasNextPage = true;
+			}}>continue</button
+		>
+	</div>
+	<div class="whitespace-pre-wrap">
+		{mainerror}
+	</div>
 {/if}
