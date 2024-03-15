@@ -180,7 +180,7 @@
 			/>
 		{/if}
 		{#if all.hasNextPage}
-			{#each new Array((all.mangas.length > 0 ? all.mangas.length : 5) / (page > 0 ? page : 1)) as _}
+			{#each new Array(Math.floor(((all.mangas.length > 0 ? all.mangas.length : 5) / (page > 0 ? page : 1)))) as _}
 				<div class="aspect-cover w-full">
 					<div
 						class="placeholder h-full animate-pulse
@@ -205,8 +205,10 @@
 			on:click={() => {
 				mainerror = '';
 				all.hasNextPage = true;
-			}}>continue</button
+			}}
 		>
+			continue
+		</button>
 	</div>
 	<div class="whitespace-pre-wrap">
 		{mainerror}
