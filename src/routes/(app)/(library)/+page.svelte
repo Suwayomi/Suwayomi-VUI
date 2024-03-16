@@ -192,7 +192,16 @@
 		{#if orderedCategories}
 			{#each orderedCategories as cat}
 				<Tab bind:group={$tab} name={cat.name} value={cat.id}>
-					<svelte:fragment slot="lead">{cat.name}</svelte:fragment>
+					<svelte:fragment slot="lead">
+						{cat.name}
+						{#if $Meta.libraryCategoryTotalCounts}
+							<span
+								class="variant-filled-surface m-0 rounded-full px-1 text-sm"
+							>
+								{cat.mangas.totalCount}
+							</span>
+						{/if}
+					</svelte:fragment>
 				</Tab>
 			{/each}
 		{/if}
