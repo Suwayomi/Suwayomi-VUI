@@ -11,6 +11,7 @@
 	import Slide from '$lib/components/Slide.svelte';
 	import {
 		bindTrack,
+		deleteDownloadedChapters,
 		fetchChaptersMigration,
 		updateChapters,
 		updateMangaCategories,
@@ -22,6 +23,7 @@
 	import { getContextClient } from '@urql/svelte';
 	import { type ResultOf } from '$lib/gql/graphql';
 	import type { SvelteComponent } from 'svelte';
+	import { ErrorHelp } from '$lib/util';
 
 	const modalStore = getModalStore();
 	export let parent: SvelteComponent;
@@ -32,6 +34,7 @@
 	let doChapters = true;
 	let doCategories = true;
 	let doTracking = true;
+	let deleteDownloaded = manga.downloadCount > 0 ? true : false;
 
 	let MigrateLoading = false;
 	let CopyLoading = false;
@@ -76,7 +79,22 @@
 		if (doTracking) {
 			ToDo.push(CopyMangaTracking());
 		}
+		if (deleteDownloaded) {
+			ToDo.push(deleteDownloadedMangas());
+		}
 		await Promise.all(ToDo);
+	}
+
+	async function deleteDownloadedMangas() {
+		const ids = manga.chapters.nodes.map((e) => e.id);
+		await ErrorHelp(
+			'failed to delete Downloaded chapters',
+			client
+				.mutation(deleteDownloadedChapters, {
+					ids
+				})
+				.toPromise()
+		);
 	}
 
 	async function CopyMangaChapters() {
@@ -167,6 +185,14 @@
 				>
 					Tracking
 				</Slide>
+				{#if manga.downloadCount > 0}
+					<Slide
+						class="p-1 pl-2 outline-0 hover:variant-glass-surface"
+						bind:checked={deleteDownloaded}
+					>
+						Delete old Downloaded chapters
+					</Slide>
+				{/if}
 			</div>
 		</div>
 		<div class="flex justify-between p-4">
