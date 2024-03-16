@@ -132,6 +132,12 @@
 						</RadioGroup>
 					{:else if $tabSet === 2}
 						<Slide
+							bind:checked={$Meta.libraryCategoryTotalCounts}
+							class="w-full p-1 pl-2 outline-0 hover:variant-glass-surface"
+						>
+							Category Total Counts
+						</Slide>
+						<Slide
 							bind:checked={$Meta.downloadsBadge}
 							class="w-full p-1 pl-2 outline-0 hover:variant-glass-surface"
 							>Downloads Badge</Slide

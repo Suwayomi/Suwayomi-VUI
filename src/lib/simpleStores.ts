@@ -103,7 +103,8 @@ const trueDefaults = {
 		username: '',
 		password: '',
 		Authorization: ''
-	}
+	},
+	libraryCategoryTotalCounts: false
 };
 
 type globalMeta = typeof trueDefaults;
