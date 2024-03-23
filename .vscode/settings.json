@@ -121,12 +121,19 @@
 	"licenser.license": "MPLv2",
 	"licenser.projectName": "suwayomi-VUI",
 	"licenser.author": "Contributors to the Suwayomi project",
-	"cSpell.words": ["iconify", "localsourcelang", "tipclass"],
+	"cSpell.words": [
+		"iconify",
+		"localsourcelang",
+		"Suwayomi",
+		"tipclass"
+	],
 	"cSpell.ignoreRegExpList": ["\\s*import (.+\n?)+ from '.*';"],
 	"typescript.tsdk": "node_modules/typescript/lib",
 	"typescript.enablePromptUseWorkspaceTsdk": true,
 	"codeium.enableCodeLens": true,
 	"codeium.enableExplainProblem": false,
 	"codeium.enableInComments": false,
-	"codeium.enableSearch": true
+	"codeium.enableSearch": true,
+	"tailwind-fold.unfoldIfLineSelected": true,
+	"tailwind-fold.foldLengthThreshold": 5
 }
