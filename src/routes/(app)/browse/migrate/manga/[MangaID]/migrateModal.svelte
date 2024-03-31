@@ -13,10 +13,10 @@
 		bindTrack,
 		deleteDownloadedChapters,
 		fetchChaptersMigration,
+		unbindTrack,
 		updateChapters,
 		updateMangaCategories,
-		updateMangas,
-		updateTrack
+		updateMangas
 	} from '$lib/gql/Mutations';
 	import { getManga } from '$lib/gql/Queries';
 	import { ProgressRadial, getModalStore } from '@skeletonlabs/skeleton';
@@ -145,11 +145,8 @@
 		await Promise.all(
 			trackers.map(async (tracker) => {
 				try {
-					await client.mutation(updateTrack, {
-						input: {
-							unbind: true,
-							recordId: tracker.id
-						}
+					await client.mutation(unbindTrack, {
+						recordId: tracker.id
 					});
 					await client.mutation(bindTrack, {
 						mangaId: id,

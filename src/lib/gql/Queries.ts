@@ -17,7 +17,7 @@ import {
 import { graphql } from './graphql';
 
 export const getCategories = graphql(
-	/* GraphQL */ `
+	`
 		query categories($notEqualTo: Int = null) {
 			categories(filter: { id: { notEqualTo: $notEqualTo } }) {
 				nodes {
@@ -30,7 +30,7 @@ export const getCategories = graphql(
 );
 
 export const getCategory = graphql(
-	/* GraphQL */ `
+	`
 		query category($id: Int!) {
 			category(id: $id) {
 				id
@@ -71,7 +71,7 @@ export const getCategory = graphql(
 );
 
 export const getManga = graphql(
-	/* GraphQL */ `
+	`
 		query getManga($id: Int!) {
 			manga(id: $id) {
 				...MangaTypeFragment
@@ -88,7 +88,7 @@ export const getManga = graphql(
 );
 
 export const getSingleChapter = graphql(
-	/* GraphQL */ `
+	`
 		query getSingleChapter($id: Int!) {
 			chapter(id: $id) {
 				...ChapterTypeFragment
@@ -99,7 +99,7 @@ export const getSingleChapter = graphql(
 );
 
 export const getExtensions = graphql(
-	/* GraphQL */ `
+	`
 		query getExtensions($isNsfw: Boolean = null) {
 			extensions(condition: { isNsfw: $isNsfw }) {
 				nodes {
@@ -112,7 +112,7 @@ export const getExtensions = graphql(
 );
 
 export const getSources = graphql(
-	/* GraphQL */ `
+	`
 		query getSources($isNsfw: Boolean = null) {
 			sources(condition: { isNsfw: $isNsfw }) {
 				nodes {
@@ -130,7 +130,7 @@ export const getSources = graphql(
 );
 
 export const sourcesMigration = graphql(
-	/* GraphQL */ `
+	`
 		query sourcesMigration {
 			sources {
 				nodes {
@@ -150,7 +150,7 @@ export const sourcesMigration = graphql(
 );
 
 export const sourceMigrationManga = graphql(
-	/* GraphQL */ `
+	`
 		query sourceMigrationManga($sourceId: LongString!) {
 			mangas(condition: { inLibrary: true, sourceId: $sourceId }) {
 				nodes {
@@ -165,7 +165,7 @@ export const sourceMigrationManga = graphql(
 );
 
 export const sourceMigrationSource = graphql(
-	/* GraphQL */ `
+	`
 		query sourceMigrationSource($sourceId: LongString!) {
 			source(id: $sourceId) {
 				displayName
@@ -177,7 +177,7 @@ export const sourceMigrationSource = graphql(
 );
 
 export const MangaTitleMigration = graphql(
-	/* GraphQL */ `
+	`
 		query MangaTitleMigration($id: Int!) {
 			manga(id: $id) {
 				title
@@ -188,7 +188,7 @@ export const MangaTitleMigration = graphql(
 );
 
 export const InfoForMigration = graphql(
-	/* GraphQL */ `
+	`
 		query InfoForMigration($id: Int!) {
 			manga(id: $id) {
 				chapters {
@@ -211,7 +211,7 @@ export const InfoForMigration = graphql(
 );
 
 export const metas = graphql(
-	/* GraphQL */ `
+	`
 		query metas {
 			metas {
 				nodes {
@@ -225,7 +225,7 @@ export const metas = graphql(
 );
 
 export const updates = graphql(
-	/* GraphQL */ `
+	`
 		query updates($offset: Int = 0) {
 			chapters(
 				orderBy: FETCHED_AT
@@ -257,7 +257,7 @@ export const updates = graphql(
 );
 
 export const chapters = graphql(
-	/* GraphQL */ `
+	`
 		query chapters($id: Int!) {
 			manga(id: $id) {
 				id
@@ -282,7 +282,7 @@ export const chapters = graphql(
 );
 
 export const getSource = graphql(
-	/* GraphQL */ `
+	`
 		query source($id: LongString!) {
 			source(id: $id) {
 				displayName
@@ -311,7 +311,7 @@ export const getSource = graphql(
 );
 
 export const validateBackup = graphql(
-	/* GraphQL */ `
+	`
 		query validateBackup($backup: Upload!) {
 			validateBackup(input: { backup: $backup }) {
 				missingSources {
@@ -325,7 +325,7 @@ export const validateBackup = graphql(
 );
 
 export const ConditionalChaptersOfGivenManga = graphql(
-	/* GraphQL */ `
+	`
 		query ConditionalChaptersOfGivenManga(
 			$in: [Int!]!
 			$isBookmarked: Boolean = null
@@ -350,7 +350,7 @@ export const ConditionalChaptersOfGivenManga = graphql(
 );
 
 export const getabout = graphql(
-	/* GraphQL */ `
+	`
 		query getabout {
 			aboutServer {
 				buildTime
@@ -367,7 +367,7 @@ export const getabout = graphql(
 );
 
 export const restoreStatus = graphql(
-	/* GraphQL */ `
+	`
 		query restoreStatus($id: String!) {
 			restoreStatus(id: $id) {
 				mangaProgress
@@ -380,7 +380,7 @@ export const restoreStatus = graphql(
 );
 
 export const trackers = graphql(
-	/* GraphQL */ `
+	`
 		query trackers($isLoggedIn: Boolean = null) {
 			trackers(condition: { isLoggedIn: $isLoggedIn }) {
 				nodes {
@@ -393,7 +393,7 @@ export const trackers = graphql(
 );
 
 export const searchTracker = graphql(
-	/* GraphQL */ `
+	`
 		query searchTracker($query: String!, $trackerId: Int!) {
 			searchTracker(input: { query: $query, trackerId: $trackerId }) {
 				trackSearches {
@@ -414,21 +414,21 @@ export const searchTracker = graphql(
 	[]
 );
 
-export const trackRecords = graphql(
-	/* GraphQL */ `
-		query trackRecords {
-			trackRecords {
-				nodes {
-					...TrackRecordTypeFragment
-				}
-			}
-		}
-	`,
-	[TrackRecordTypeFragment]
-);
+// export const trackRecords = graphql(
+// 	`
+// 		query trackRecords {
+// 			trackRecords {
+// 				nodes {
+// 					...TrackRecordTypeFragment
+// 				}
+// 			}
+// 		}
+// 	`,
+// 	[TrackRecordTypeFragment]
+// );
 
 export const serverSettings = graphql(
-	/* GraphQL */ `
+	`
 		query serverSettings {
 			settings {
 				autoDownloadNewChapters

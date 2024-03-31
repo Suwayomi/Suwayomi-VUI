@@ -7,7 +7,6 @@
 		"oven.bun-vscode",
 		"streetsidesoftware.code-spell-checker",
 		"dbaeumer.vscode-eslint",
-		"mquandalle.graphql",
 		"ymotongpoo.licenser",
 		"yoavbls.pretty-ts-errors",
 		"esbenp.prettier-vscode",
@@ -15,6 +14,8 @@
 		"fivethree.vscode-svelte-snippets",
 		"svelte.svelte-vscode",
 		"ardenivanov.svelte-intellisense",
-		"stivo.tailwind-fold"
+		"stivo.tailwind-fold",
+		"graphql.vscode-graphql",
+		"graphql.vscode-graphql-syntax"
 	]
 }

@@ -7,7 +7,7 @@
 		{
 			"name": "Launch server",
 			"request": "launch",
-			"runtimeArgs": ["run", "dev"],
+			"runtimeArgs": ["dev"],
 			"runtimeExecutable": "bun",
 			"skipFiles": ["<node_internals>/**"],
 			"type": "node",
