@@ -6,7 +6,7 @@
 import { graphql } from './graphql';
 
 export const TrackRecordTypeFragment = graphql(
-	/* GraphQL */ `
+	`
 		fragment TrackRecordTypeFragment on TrackRecordType {
 			id
 			mangaId
@@ -14,13 +14,15 @@ export const TrackRecordTypeFragment = graphql(
 			remoteUrl
 			title
 			trackerId
+			status
+			displayScore
 		}
 	`,
 	[]
 );
 
 export const ChapterTypeFragment = graphql(
-	/* GraphQL */ `
+	`
 		fragment ChapterTypeFragment on ChapterType {
 			isBookmarked
 			isDownloaded
@@ -40,7 +42,7 @@ export const ChapterTypeFragment = graphql(
 );
 
 export const MangaTypeFragment = graphql(
-	/* GraphQL */ `
+	`
 		fragment MangaTypeFragment on MangaType {
 			artist
 			author
@@ -91,7 +93,7 @@ export const MangaTypeFragment = graphql(
 );
 
 export const SourceTypeFragment = graphql(
-	/* GraphQL */ `
+	`
 		fragment SourceTypeFragment on SourceType {
 			id
 			displayName
@@ -107,7 +109,7 @@ export const SourceTypeFragment = graphql(
 );
 
 export const ExtensionTypeFragment = graphql(
-	/* GraphQL */ `
+	`
 		fragment ExtensionTypeFragment on ExtensionType {
 			name
 			repo
@@ -125,7 +127,7 @@ export const ExtensionTypeFragment = graphql(
 );
 
 export const CategoryTypeFragment = graphql(
-	/* GraphQL */ `
+	`
 		fragment CategoryTypeFragment on CategoryType {
 			id
 			default
@@ -142,13 +144,18 @@ export const CategoryTypeFragment = graphql(
 );
 
 export const TrackerTypeFragment = graphql(
-	/* GraphQL */ `
+	`
 		fragment TrackerTypeFragment on TrackerType {
 			authUrl
 			icon
 			id
 			isLoggedIn
 			name
+			scores
+			statuses {
+				name
+				value
+			}
 		}
 	`,
 	[]

@@ -7,8 +7,8 @@
 		{
 			"name": "Launch server",
 			"request": "launch",
-			"runtimeArgs": ["run", "dev"],
-			"runtimeExecutable": "bun",
+			"runtimeArgs": ["dev"],
+			"runtimeExecutable": "/home/morgan/.bun/bin/bun",
 			"skipFiles": ["<node_internals>/**"],
 			"type": "node",
 			"console": "internalConsole"

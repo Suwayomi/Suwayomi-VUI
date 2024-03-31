@@ -30,10 +30,12 @@ import type {
 	fetchExtensions,
 	fetchMangaChapters,
 	fetchMangaInfo,
+	fetchTrack,
 	installExternalExtension,
 	setGlobalMeta,
 	setMangaMeta,
 	setServerSettings,
+	unbindTrack,
 	updateExtension,
 	updateMangaCategories,
 	updateMangas,
@@ -84,9 +86,10 @@ export const client = new Client({
 				SearchTrackerPayload: () => null,
 				TrackSearchType: (e) => e.remoteId!.toString(),
 				TrackRecordType: (e) => e.id!.toString(),
-				ExtensionType: (e) => {
-					return ((e.pkgNameas as string) + e.versionNameas) as string;
-				}
+				ExtensionType: (e) =>
+					(e.pkgName as string) + (e.versionName as string) + e.repo,
+				TrackStatusType: () => null,
+				TrackerNodeList: () => null
 			},
 			updates: {
 				Mutation: {
@@ -197,6 +200,16 @@ export const client = new Client({
 							typeof updateMangas
 						>;
 						updateMangasUpdater(res, variables, cache);
+					},
+					fetchTrack(result, _, cache, info) {
+						const res = result as ResultOf<typeof fetchTrack>;
+						const variables = info.variables as VariablesOf<typeof fetchTrack>;
+						fetchTrackUpdater(res, variables, cache);
+					},
+					unbindTrack(result, _, cache, info) {
+						const res = result as ResultOf<typeof unbindTrack>;
+						const variables = info.variables as VariablesOf<typeof unbindTrack>;
+						unbindTrackUpdater(res, variables, cache);
 					}
 				},
 				Query: {
@@ -232,6 +245,51 @@ export const client = new Client({
 		})
 	]
 });
+
+function unbindTrackUpdater(
+	data: ResultOf<typeof unbindTrack> | undefined,
+	vars: VariablesOf<typeof unbindTrack>,
+	cache: Cache
+) {
+	if (!data) return;
+	const trak = cache.readFragment(TrackRecordTypeFragment, {
+		id: vars.recordId
+	} as ResultOf<typeof TrackRecordTypeFragment>);
+	if (!trak) return;
+	const manga = cache.readFragment(MangaTypeFragment, {
+		id: trak.mangaId
+	} as ResultOf<typeof MangaTypeFragment>);
+	if (!manga) return;
+
+	manga.trackRecords.nodes = manga.trackRecords.nodes.filter(
+		(record) => record.id !== vars.recordId
+	);
+	cache.writeFragment(MangaTypeFragment, manga, {
+		id: trak.mangaId
+	});
+}
+
+function fetchTrackUpdater(
+	data: ResultOf<typeof fetchTrack> | undefined,
+	vars: VariablesOf<typeof fetchTrack>,
+	cache: Cache
+) {
+	if (!data) return;
+
+	let trak = cache.readFragment(TrackRecordTypeFragment, {
+		id: vars.recordId
+	} as ResultOf<typeof TrackRecordTypeFragment>);
+	if (!trak) return;
+
+	trak = {
+		...trak,
+		...data.fetchTrack.trackRecord
+	};
+
+	cache.writeFragment(TrackRecordTypeFragment, trak, {
+		id: vars.recordId
+	});
+}
 
 function updateMangasUpdater(
 	data: ResultOf<typeof updateMangas> | undefined,
@@ -600,9 +658,16 @@ function updateTrackUpdater(
 		id: trackRecord.mangaId
 	} as ResultOf<typeof MangaTypeFragment>);
 	if (!frag) return;
-	frag.trackRecords.nodes = frag.trackRecords.nodes.filter(
-		(ee) => ee.id !== trackRecord.id
-	);
+
+	if (!data.updateTrack.trackRecord) return;
+	// if (!data.updateTrack.trackRecord) {
+	// 	frag.trackRecords.nodes = frag.trackRecords.nodes.filter(
+	// 		(ee) => ee.id !== trackRecord.id
+	// 	);
+	// } else {
+	const ind = frag.trackRecords.nodes.findIndex((e) => e.id === trackRecord.id);
+	frag.trackRecords.nodes[ind] = data.updateTrack.trackRecord;
+	// }
 
 	cache.writeFragment(MangaTypeFragment, frag, {
 		id: frag.id
