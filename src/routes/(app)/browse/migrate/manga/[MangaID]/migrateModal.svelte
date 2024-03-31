@@ -16,8 +16,7 @@
 		unbindTrack,
 		updateChapters,
 		updateMangaCategories,
-		updateMangas,
-		updateTrack
+		updateMangas
 	} from '$lib/gql/Mutations';
 	import { getManga } from '$lib/gql/Queries';
 	import { ProgressRadial, getModalStore } from '@skeletonlabs/skeleton';
