@@ -35,6 +35,7 @@ import type {
 	setGlobalMeta,
 	setMangaMeta,
 	setServerSettings,
+	trackProgress,
 	unbindTrack,
 	updateExtension,
 	updateMangaCategories,
@@ -210,6 +211,13 @@ export const client = new Client({
 						const res = result as ResultOf<typeof unbindTrack>;
 						const variables = info.variables as VariablesOf<typeof unbindTrack>;
 						unbindTrackUpdater(res, variables, cache);
+					},
+					trackProgress(result, _, cache, info) {
+						const res = result as ResultOf<typeof trackProgress>;
+						const variables = info.variables as VariablesOf<
+							typeof trackProgress
+						>;
+						trackProgressUpdater(res, variables, cache);
 					}
 				},
 				Query: {
@@ -245,6 +253,19 @@ export const client = new Client({
 		})
 	]
 });
+
+function trackProgressUpdater(
+	data: ResultOf<typeof trackProgress> | undefined,
+	vars: VariablesOf<typeof trackProgress>,
+	cache: Cache
+) {
+	if (!data) return;
+	data.trackProgress.trackRecords.forEach((record) => {
+		cache.writeFragment(TrackRecordTypeFragment, record, {
+			id: record.id
+		});
+	});
+}
 
 function unbindTrackUpdater(
 	data: ResultOf<typeof unbindTrack> | undefined,

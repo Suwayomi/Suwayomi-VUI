@@ -29,8 +29,8 @@
 	import { type ResultOf } from '$lib/gql/graphql';
 	import {
 		fetchChapterPages,
-		updateChapter,
-		updateTrack
+		trackProgress,
+		updateChapter
 	} from '$lib/gql/Mutations';
 	import { ChapterTypeFragment } from '$lib/gql/Fragments';
 
@@ -398,19 +398,13 @@
 						lastPageRead: pageIndex,
 						isRead: pageIndex >= maxPages * 0.8 ? true : null
 					})
-					.toPromise();
-				if (pageIndex >= maxPages * 0.8) {
-					$manga.data?.manga.trackRecords.nodes.forEach((e) => {
-						client.mutation(updateTrack, {
-							input: {
-								recordId: e.id,
-								lastChapterRead: $manga.data?.manga.chapters.nodes.find(
-									(e) => e.id === id
-								)?.chapterNumber
-							}
-						});
+					.toPromise()
+					.then(() => {
+						if ($manga.data?.manga?.id)
+							client.mutation(trackProgress, {
+								mangaId: $manga.data?.manga?.id
+							});
 					});
-				}
 				updatedChaps.push(selector);
 				setTimeout(() => {
 					updatedChaps = updatedChaps.filter((e) => e !== selector);
