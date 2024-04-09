@@ -27,7 +27,11 @@
 	} from '@urql/svelte';
 	import { getManga } from '$lib/gql/Queries';
 	import { type ResultOf } from '$lib/gql/graphql';
-	import { fetchChapterPages, updateChapter } from '$lib/gql/Mutations';
+	import {
+		fetchChapterPages,
+		trackProgress,
+		updateChapter
+	} from '$lib/gql/Mutations';
 	import { ChapterTypeFragment } from '$lib/gql/Fragments';
 
 	export let data: PageData;
@@ -394,7 +398,13 @@
 						lastPageRead: pageIndex,
 						isRead: pageIndex >= maxPages * 0.8 ? true : null
 					})
-					.toPromise();
+					.toPromise()
+					.then(() => {
+						if ($manga.data?.manga?.id)
+							client.mutation(trackProgress, {
+								mangaId: $manga.data?.manga?.id
+							});
+					});
 				updatedChaps.push(selector);
 				setTimeout(() => {
 					updatedChaps = updatedChaps.filter((e) => e !== selector);

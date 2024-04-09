@@ -929,3 +929,16 @@ export const fetchTrack = graphql(`
 		}
 	}
 `);
+
+export const trackProgress = graphql(
+	`
+		mutation trackProgress($mangaId: Int!) {
+			trackProgress(input: { mangaId: $mangaId }) {
+				trackRecords {
+					...TrackRecordTypeFragment
+				}
+			}
+		}
+	`,
+	[TrackRecordTypeFragment]
+);
