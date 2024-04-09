@@ -37,6 +37,7 @@
 	import {
 		deleteDownloadedChapters,
 		enqueueChapterDownloads,
+		trackProgress,
 		updateChapters
 	} from '$lib/gql/Mutations';
 
@@ -131,17 +132,21 @@
 		const chapters = sortedChapters.slice(ind, sortedChapters.length);
 		const ids = chapters.map((e) => e.id);
 
-		if (
-			Math.floor(
-				chapters.reduce((a, c) => {
-					return c.chapterNumber > a ? c.chapterNumber : a;
-				}, 0)
-			) <= HighestChapterNumber()
-		) {
-			client.mutation(updateChapters, { isRead: true, ids }).toPromise();
-			return;
-		}
+		// if (
+		// 	Math.floor(
+		// 		chapters.reduce((a, c) => {
+		// 			return c.chapterNumber > a ? c.chapterNumber : a;
+		// 		}, 0)
+		// 	) <= HighestChapterNumber()
+		// ) {
+		// 	client.mutation(updateChapters, { isRead: true, ids }).toPromise();
+		// 	return;
+		// }
 		await client.mutation(updateChapters, { isRead: true, ids }).toPromise();
+		if ($manga.data?.manga.id)
+			await client
+				.mutation(trackProgress, { mangaId: $manga.data.manga.id })
+				.toPromise();
 	}
 
 	function HighestChapterNumber() {
@@ -154,15 +159,19 @@
 
 	async function handelRead(chapter: chaptertype) {
 		if (!manga) return;
-		if (Math.floor(chapter.chapterNumber) <= HighestChapterNumber()) {
-			client
-				.mutation(updateChapters, { isRead: true, ids: [chapter.id] })
-				.toPromise();
-			return;
-		}
+		// if (Math.floor(chapter.chapterNumber) <= HighestChapterNumber()) {
+		// 	client
+		// 		.mutation(updateChapters, { isRead: true, ids: [chapter.id] })
+		// 		.toPromise();
+		// 	return;
+		// }
 		await client
 			.mutation(updateChapters, { isRead: true, ids: [chapter.id] })
 			.toPromise();
+		if ($manga.data?.manga.id)
+			await client
+				.mutation(trackProgress, { mangaId: $manga.data.manga.id })
+				.toPromise();
 	}
 
 	async function handelUnRead(chapter: chaptertype) {
