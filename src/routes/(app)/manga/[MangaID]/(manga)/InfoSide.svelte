@@ -22,11 +22,14 @@
 	} from '@urql/svelte';
 	import { type ResultOf } from '$lib/gql/graphql';
 	import { updateMangas } from '$lib/gql/Mutations';
+	import type { MangaMeta } from '$lib/simpleStores';
+	import NotesModal from './NotesModal.svelte';
 	const modalStore = getModalStore();
 	const client = getContextClient();
 
 	export let manga: OperationResultStore<ResultOf<typeof getManga>> & Pausable;
 	export let MangaID: number;
+	export let mangaMeta: ReturnType<typeof MangaMeta>;
 
 	async function libtoggle() {
 		await client
@@ -222,6 +225,24 @@
 			{:else}
 				<div />
 			{/each}
+		</div>
+		<div>
+			<button
+				class="w-full cursor-pointer p-2 text-left hover:variant-glass-surface"
+				on:click={() => {
+					modalStore.trigger({
+						type: 'component',
+						component: { ref: NotesModal, props: { mangaMeta } }
+					});
+				}}
+			>
+				Notes:
+			</button>
+			<div class="whitespace-pre-line pl-4 text-left">
+				{#if $mangaMeta.notes}
+					{$mangaMeta.notes}
+				{/if}
+			</div>
 		</div>
 	</div>
 {/if}

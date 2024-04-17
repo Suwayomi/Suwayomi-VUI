@@ -131,7 +131,7 @@
 		const ind = sortedChapters?.findIndex((e) => e.id === chapter.id);
 		const chapters = sortedChapters.slice(ind, sortedChapters.length);
 		const ids = chapters.map((e) => e.id);
-    
+
 		await client.mutation(updateChapters, { isRead: true, ids }).toPromise();
 		if ($manga.data?.manga.id)
 			await client
