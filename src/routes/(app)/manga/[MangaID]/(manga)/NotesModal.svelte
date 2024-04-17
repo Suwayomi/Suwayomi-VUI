@@ -21,7 +21,7 @@
 			<textarea
 				class="textarea h-40 w-full"
 				on:change={(e) => ($mangaMeta.notes = e.currentTarget.value)}
-				value={$mangaMeta.notes}
+				value={$mangaMeta.notes ?? ''}
 			/>
 		</div>
 	</div>
