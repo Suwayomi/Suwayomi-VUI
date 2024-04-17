@@ -65,7 +65,8 @@ const mangaMetaDefaults = {
 	NavLayout: Layout.L,
 	preLoadNextChapter: true,
 	mobileFullScreenOnChapterPage: true,
-	doPageIndicator: false
+	doPageIndicator: false,
+	notes: ''
 };
 type mangaMeta = typeof mangaMetaDefaults;
 
