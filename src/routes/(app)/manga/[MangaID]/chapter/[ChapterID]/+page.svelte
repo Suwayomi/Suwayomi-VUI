@@ -392,7 +392,7 @@
 				}
 			];
 			if (!updatedChaps.includes(selector)) {
-				async () => {
+				(async () => {
 					await client
 						.mutation(updateChapter, {
 							id,
@@ -406,7 +406,7 @@
 							mangaId: $manga.data?.manga?.id
 						})
 						.toPromise();
-				};
+				})();
 				updatedChaps.push(selector);
 				setTimeout(() => {
 					updatedChaps = updatedChaps.filter((e) => e !== selector);
