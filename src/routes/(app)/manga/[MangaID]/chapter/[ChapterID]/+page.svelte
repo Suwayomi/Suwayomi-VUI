@@ -392,19 +392,21 @@
 				}
 			];
 			if (!updatedChaps.includes(selector)) {
-				client
-					.mutation(updateChapter, {
-						id,
-						lastPageRead: pageIndex,
-						isRead: pageIndex >= maxPages * 0.8 ? true : null
-					})
-					.toPromise()
-					.then(() => {
-						if ($manga.data?.manga?.id)
-							client.mutation(trackProgress, {
-								mangaId: $manga.data?.manga?.id
-							});
-					});
+				async () => {
+					await client
+						.mutation(updateChapter, {
+							id,
+							lastPageRead: pageIndex,
+							isRead: pageIndex >= maxPages * 0.8 ? true : null
+						})
+						.toPromise();
+					if (!$manga.data?.manga?.id || pageIndex !== maxPages - 1) return;
+					await client
+						.mutation(trackProgress, {
+							mangaId: $manga.data?.manga?.id
+						})
+						.toPromise();
+				};
 				updatedChaps.push(selector);
 				setTimeout(() => {
 					updatedChaps = updatedChaps.filter((e) => e !== selector);
