@@ -169,7 +169,9 @@
 												/>
 											</div>
 											<div class="flex flex-1 flex-col justify-center">
-												{RecordItem.title}
+												<div class="line-clamp-2">
+													{RecordItem.title}
+												</div>
 											</div>
 											<div class="my-1 mr-1 flex space-x-1">
 												<select
