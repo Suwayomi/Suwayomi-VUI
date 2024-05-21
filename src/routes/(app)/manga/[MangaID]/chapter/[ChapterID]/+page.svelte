@@ -400,7 +400,7 @@
 							isRead: pageIndex >= maxPages * 0.8 ? true : null
 						})
 						.toPromise();
-					if (!$manga.data?.manga?.id || pageIndex !== maxPages) return;
+					if (!$manga.data?.manga?.id || pageIndex !== maxPages-1) return;
 					await client
 						.mutation(trackProgress, {
 							mangaId: $manga.data?.manga?.id
