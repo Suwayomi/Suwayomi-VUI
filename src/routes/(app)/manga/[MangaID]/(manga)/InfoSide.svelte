@@ -46,12 +46,17 @@
 	let ImageFailed = false;
 
 	function LongHandler() {
-		if ($manga.data?.manga?.title){
+		if ($manga.data?.manga?.title) {
 			navigator.clipboard.writeText($manga.data?.manga?.title);
-			toastStore.trigger({ message: 'Title copied to clipboard', background: "bg-success" });
-		}
-		else{
-			toastStore.trigger({ message: 'Failed to copy title to clipboard', background: "bg-error" });
+			toastStore.trigger({
+				message: 'Title copied to clipboard',
+				background: 'bg-success'
+			});
+		} else {
+			toastStore.trigger({
+				message: 'Failed to copy title to clipboard',
+				background: 'bg-error'
+			});
 		}
 	}
 </script>
