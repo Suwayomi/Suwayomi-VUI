@@ -50,12 +50,12 @@
 			navigator.clipboard.writeText($manga.data?.manga?.title);
 			toastStore.trigger({
 				message: 'Title copied to clipboard',
-				background: 'bg-success'
+				background: 'bg-primary-600'
 			});
 		} else {
 			toastStore.trigger({
 				message: 'Failed to copy title to clipboard',
-				background: 'bg-error'
+				background: 'bg-error-600'
 			});
 		}
 	}
@@ -165,7 +165,7 @@
 			</div>
 			<div class="space-y-2 md:mt-8 md:min-w-[66%] md:flex-1 lg:space-y-8">
 				<h1
-					class="h1 line-clamp-2 md:h3 lg:h2 xl:h1 xl:leading-[4rem]"
+					class="h1 line-clamp-2 select-none md:h3 lg:h2 xl:h1 hover:cursor-pointer xl:leading-[4rem]"
 					use:longPress
 					on:longPress={LongHandler}
 				>
