@@ -469,6 +469,11 @@ export const serverSettings = graphql(
 				webUIFlavor
 				webUIInterface
 				webUIUpdateCheckInterval
+				autoDownloadIgnoreReUploads
+				autoDownloadNewChaptersLimit
+				socksProxyPassword
+				socksProxyUsername
+				socksProxyVersion
 			}
 		}
 	`,
