@@ -1046,6 +1046,7 @@ type PageInfo {
 
 type PartialSettingsType implements Settings {
   autoDownloadAheadLimit: Int @deprecated(reason: "Replaced with autoDownloadNewChaptersLimit, replace with autoDownloadNewChaptersLimit")
+  autoDownloadIgnoreReUploads: Boolean
   autoDownloadNewChapters: Boolean
   autoDownloadNewChaptersLimit: Int
   backupInterval: Int
@@ -1091,6 +1092,7 @@ type PartialSettingsType implements Settings {
 }
 
 input PartialSettingsTypeInput {
+  autoDownloadIgnoreReUploads: Boolean
   autoDownloadNewChapters: Boolean
   autoDownloadNewChaptersLimit: Int
   backupInterval: Int
@@ -1280,6 +1282,7 @@ type SetSourceMetaPayload {
 
 interface Settings {
   autoDownloadAheadLimit: Int @deprecated(reason: "Replaced with autoDownloadNewChaptersLimit, replace with autoDownloadNewChaptersLimit")
+  autoDownloadIgnoreReUploads: Boolean
   autoDownloadNewChapters: Boolean
   autoDownloadNewChaptersLimit: Int
   backupInterval: Int
@@ -1326,6 +1329,7 @@ interface Settings {
 
 type SettingsType implements Settings {
   autoDownloadAheadLimit: Int! @deprecated(reason: "Replaced with autoDownloadNewChaptersLimit, replace with autoDownloadNewChaptersLimit")
+  autoDownloadIgnoreReUploads: Boolean
   autoDownloadNewChapters: Boolean!
   autoDownloadNewChaptersLimit: Int!
   backupInterval: Int!
@@ -1961,10 +1965,15 @@ input ValidateBackupInput {
 
 type ValidateBackupResult {
   missingSources: [ValidateBackupSource!]!
+  missingTrackers: [ValidateBackupTracker!]!
 }
 
 type ValidateBackupSource {
   id: LongString!
+  name: String!
+}
+
+type ValidateBackupTracker {
   name: String!
 }
 

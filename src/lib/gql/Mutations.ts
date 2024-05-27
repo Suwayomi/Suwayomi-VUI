@@ -864,11 +864,11 @@ export const setServerSettings = graphql(
 					downloadsPath
 					electronPath
 					excludeCompleted
-					excludeNotStarted
 					excludeEntryWithUnreadChapters
+					excludeNotStarted
+					extensionRepos
 					excludeUnreadChapters
 					flareSolverrEnabled
-					extensionRepos
 					flareSolverrSessionName
 					flareSolverrSessionTtl
 					flareSolverrTimeout
@@ -889,6 +889,11 @@ export const setServerSettings = graphql(
 					webUIFlavor
 					webUIInterface
 					webUIUpdateCheckInterval
+					autoDownloadIgnoreReUploads
+					autoDownloadNewChaptersLimit
+					socksProxyPassword
+					socksProxyUsername
+					socksProxyVersion
 				}
 			}
 		}
@@ -942,3 +947,13 @@ export const trackProgress = graphql(
 	`,
 	[TrackRecordTypeFragment]
 );
+
+export const runUpdateLibraryManga = graphql(`
+	mutation runUpdateLibraryManga {
+		updateLibraryManga(input: {}) {
+			updateStatus {
+				isRunning
+			}
+		}
+	}
+`);

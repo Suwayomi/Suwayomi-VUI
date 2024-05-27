@@ -20,9 +20,17 @@
 	import Toggle from './components/toggle.svelte';
 	import { getModalStore } from '@skeletonlabs/skeleton';
 	import { serverSettings } from '$lib/gql/Queries';
-	import { updateWebUI, type setServerSettings } from '$lib/gql/Mutations';
+	import {
+		updateWebUI,
+		type setServerSettings,
+		runUpdateLibraryManga
+	} from '$lib/gql/Mutations';
 	import { type VariablesOf } from '$lib/gql/graphql';
-	import { webUIUpdateStatusChange } from '$lib/gql/Subscriptions';
+	import {
+		updateStatusChanged,
+		webUIUpdateStatusChange
+	} from '$lib/gql/Subscriptions';
+	import UpdateStatusInfoModal from './components/updateStatusInfoModal.svelte';
 	const modalStore = getModalStore();
 
 	AppBarData('Server Settings');
@@ -44,6 +52,8 @@
 	});
 
 	let autoDownloadNewChapters = true;
+	let autoDownloadIgnoreReUploads = false;
+	let autoDownloadNewChaptersLimit = 0;
 	let backupInterval = 1;
 	let backupPath = '';
 	let backupTTL = 183;
@@ -75,6 +85,9 @@
 	let socksProxyEnabled = false;
 	let socksProxyHost = '';
 	let socksProxyPort = '';
+	let socksProxyPassword = '';
+	let socksProxyUsername = '';
+	let socksProxyVersion = 5;
 	let systemTrayEnabled = false;
 	let updateMangas = false;
 	let webUIChannel = 'STABLE' as NonNullable<
@@ -97,6 +110,10 @@
 	settingsData.subscribe((data) => {
 		if (data.data?.settings) {
 			autoDownloadNewChapters = data.data.settings.autoDownloadNewChapters;
+			autoDownloadIgnoreReUploads = data.data.settings
+				.autoDownloadIgnoreReUploads as boolean;
+			autoDownloadNewChaptersLimit =
+				data.data.settings.autoDownloadNewChaptersLimit;
 			backupInterval = data.data.settings.backupInterval;
 			backupPath = data.data.settings.backupPath;
 			backupTTL = data.data.settings.backupTTL;
@@ -130,6 +147,9 @@
 			socksProxyEnabled = data.data.settings.socksProxyEnabled;
 			socksProxyHost = data.data.settings.socksProxyHost;
 			socksProxyPort = data.data.settings.socksProxyPort;
+			socksProxyPassword = data.data.settings.socksProxyPassword;
+			socksProxyUsername = data.data.settings.socksProxyUsername;
+			socksProxyVersion = data.data.settings.socksProxyVersion;
 			systemTrayEnabled = data.data.settings.systemTrayEnabled;
 			updateMangas = data.data.settings.updateMangas;
 			webUIChannel = data.data.settings.webUIChannel;
@@ -138,6 +158,25 @@
 			webUIUpdateCheckInterval = data.data.settings.webUIUpdateCheckInterval;
 		}
 	});
+
+	let update = subscriptionStore({
+		client,
+		query: updateStatusChanged
+	});
+
+	function manuallyLibraryRunUpdate() {
+		if (!$update.data?.updateStatusChanged.isRunning) {
+			client.mutation(runUpdateLibraryManga, {}).toPromise();
+			return;
+		}
+		modalStore.trigger({
+			type: 'component',
+			component: {
+				ref: UpdateStatusInfoModal,
+				props: { update }
+			}
+		});
+	}
 </script>
 
 {#if $settingsData.error}
@@ -154,6 +193,19 @@
 			title="Auto Download New Chapters"
 			bind:checked={autoDownloadNewChapters}
 			on:change={() => setSettings({ autoDownloadNewChapters })}
+		/>
+		<!-- autoDownloadIgnoreReUploads -->
+		<Toggle
+			title="Auto Download Ignore Re-Uploads"
+			bind:checked={autoDownloadIgnoreReUploads}
+			on:change={() => setSettings({ autoDownloadIgnoreReUploads })}
+		/>
+		<!-- autoDownloadNewChaptersLimit -->
+		<Number
+			title="Auto Download New Chapters Limit"
+			bind:value={autoDownloadNewChaptersLimit}
+			max={999}
+			on:change={() => setSettings({ autoDownloadNewChaptersLimit })}
 		/>
 		<!-- backupInterval -->
 		<Number
@@ -312,6 +364,20 @@
 			max={365}
 			on:change={() => setSettings({ globalUpdateInterval })}
 		/>
+		<!-- manually run global update -->
+		<button
+			class="flex h-16 w-full cursor-pointer items-center text-left hover:variant-glass-surface"
+			on:click={manuallyLibraryRunUpdate}
+			title={!$update.data?.updateStatusChanged.isRunning
+				? 'click to run Global update now'
+				: 'click to see more info in the currently running update'}
+		>
+			{#if !$update.data?.updateStatusChanged.isRunning}
+				Run Global Update now
+			{:else}
+				Running update info
+			{/if}
+		</button>
 		<!-- gqlDebugLogsEnabled -->
 		<Toggle
 			title="GQL Debug Logs"
@@ -398,6 +464,25 @@
 				);
 				socksProxyPort = settings.socksProxyPort;
 			}}
+		/>
+		<!-- socksProxyPassword -->
+		<Text
+			title="Socks Proxy Password"
+			bind:value={socksProxyPassword}
+			on:change={() => setSettings({ socksProxyPassword })}
+		/>
+		<!-- socksProxyUsername -->
+		<Text
+			title="Socks Proxy Username"
+			bind:value={socksProxyUsername}
+			on:change={() => setSettings({ socksProxyUsername })}
+		/>
+		<!-- socksProxyVersion -->
+		<Number
+			title="Socks Proxy Version"
+			value={socksProxyVersion}
+			max={3}
+			on:change={() => setSettings({ socksProxyVersion })}
 		/>
 		<!-- systemTrayEnabled -->
 		<Toggle

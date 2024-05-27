@@ -58,3 +58,51 @@ export const webUIUpdateStatusChange = graphql(`
 		}
 	}
 `);
+
+export const updateStatusChanged = graphql(`
+	subscription updateStatusChanged {
+		updateStatusChanged {
+			isRunning
+			failedJobs {
+				mangas {
+					totalCount
+					nodes {
+						id
+						title
+						thumbnailUrl
+					}
+				}
+			}
+			completeJobs {
+				mangas {
+					totalCount
+					nodes {
+						id
+						title
+						thumbnailUrl
+					}
+				}
+			}
+			pendingJobs {
+				mangas {
+					totalCount
+					nodes {
+						id
+						title
+						thumbnailUrl
+					}
+				}
+			}
+			runningJobs {
+				mangas {
+					totalCount
+					nodes {
+						id
+						title
+						thumbnailUrl
+					}
+				}
+			}
+		}
+	}
+`);

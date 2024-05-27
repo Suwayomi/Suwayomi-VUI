@@ -44,11 +44,11 @@ const introspection = {
               "kind": "NON_NULL",
               "ofType": {
                 "kind": "SCALAR",
-                "name": "LongString",
-                "ofType": null
+                "name": "LongString"
               }
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           },
           {
             "name": "buildType",
@@ -56,11 +56,11 @@ const introspection = {
               "kind": "NON_NULL",
               "ofType": {
                 "kind": "SCALAR",
-                "name": "String",
-                "ofType": null
+                "name": "String"
               }
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           },
           {
             "name": "discord",
@@ -68,11 +68,11 @@ const introspection = {
               "kind": "NON_NULL",
               "ofType": {
                 "kind": "SCALAR",
-                "name": "String",
-                "ofType": null
+                "name": "String"
               }
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           },
           {
             "name": "github",
@@ -80,11 +80,11 @@ const introspection = {
               "kind": "NON_NULL",
               "ofType": {
                 "kind": "SCALAR",
-                "name": "String",
-                "ofType": null
+                "name": "String"
               }
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           },
           {
             "name": "name",
@@ -92,11 +92,11 @@ const introspection = {
               "kind": "NON_NULL",
               "ofType": {
                 "kind": "SCALAR",
-                "name": "String",
-                "ofType": null
+                "name": "String"
               }
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           },
           {
             "name": "revision",
@@ -104,11 +104,11 @@ const introspection = {
               "kind": "NON_NULL",
               "ofType": {
                 "kind": "SCALAR",
-                "name": "String",
-                "ofType": null
+                "name": "String"
               }
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           },
           {
             "name": "version",
@@ -116,18 +116,14 @@ const introspection = {
               "kind": "NON_NULL",
               "ofType": {
                 "kind": "SCALAR",
-                "name": "String",
-                "ofType": null
+                "name": "String"
               }
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           }
         ],
         "interfaces": []
-      },
-      {
-        "kind": "SCALAR",
-        "name": "String"
       },
       {
         "kind": "OBJECT",
@@ -139,11 +135,11 @@ const introspection = {
               "kind": "NON_NULL",
               "ofType": {
                 "kind": "SCALAR",
-                "name": "String",
-                "ofType": null
+                "name": "String"
               }
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           },
           {
             "name": "tag",
@@ -151,11 +147,11 @@ const introspection = {
               "kind": "NON_NULL",
               "ofType": {
                 "kind": "SCALAR",
-                "name": "String",
-                "ofType": null
+                "name": "String"
               }
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           }
         ],
         "interfaces": []
@@ -165,19 +161,24 @@ const introspection = {
         "name": "BackupRestoreState",
         "enumValues": [
           {
-            "name": "IDLE"
+            "name": "IDLE",
+            "isDeprecated": false
           },
           {
-            "name": "SUCCESS"
+            "name": "SUCCESS",
+            "isDeprecated": false
           },
           {
-            "name": "FAILURE"
+            "name": "FAILURE",
+            "isDeprecated": false
           },
           {
-            "name": "RESTORING_CATEGORIES"
+            "name": "RESTORING_CATEGORIES",
+            "isDeprecated": false
           },
           {
-            "name": "RESTORING_MANGA"
+            "name": "RESTORING_MANGA",
+            "isDeprecated": false
           }
         ]
       },
@@ -191,11 +192,11 @@ const introspection = {
               "kind": "NON_NULL",
               "ofType": {
                 "kind": "SCALAR",
-                "name": "Int",
-                "ofType": null
+                "name": "Int"
               }
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           },
           {
             "name": "state",
@@ -203,11 +204,11 @@ const introspection = {
               "kind": "NON_NULL",
               "ofType": {
                 "kind": "ENUM",
-                "name": "BackupRestoreState",
-                "ofType": null
+                "name": "BackupRestoreState"
               }
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           },
           {
             "name": "totalManga",
@@ -215,18 +216,14 @@ const introspection = {
               "kind": "NON_NULL",
               "ofType": {
                 "kind": "SCALAR",
-                "name": "Int",
-                "ofType": null
+                "name": "Int"
               }
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           }
         ],
         "interfaces": []
-      },
-      {
-        "kind": "SCALAR",
-        "name": "Int"
       },
       {
         "kind": "INPUT_OBJECT",
@@ -236,8 +233,7 @@ const introspection = {
             "name": "clientMutationId",
             "type": {
               "kind": "SCALAR",
-              "name": "String",
-              "ofType": null
+              "name": "String"
             }
           },
           {
@@ -246,8 +242,7 @@ const introspection = {
               "kind": "NON_NULL",
               "ofType": {
                 "kind": "SCALAR",
-                "name": "Int",
-                "ofType": null
+                "name": "Int"
               }
             }
           },
@@ -257,8 +252,7 @@ const introspection = {
               "kind": "NON_NULL",
               "ofType": {
                 "kind": "SCALAR",
-                "name": "LongString",
-                "ofType": null
+                "name": "LongString"
               }
             }
           },
@@ -268,12 +262,12 @@ const introspection = {
               "kind": "NON_NULL",
               "ofType": {
                 "kind": "SCALAR",
-                "name": "Int",
-                "ofType": null
+                "name": "Int"
               }
             }
           }
-        ]
+        ],
+        "isOneOf": false
       },
       {
         "kind": "OBJECT",
@@ -283,10 +277,10 @@ const introspection = {
             "name": "clientMutationId",
             "type": {
               "kind": "SCALAR",
-              "name": "String",
-              "ofType": null
+              "name": "String"
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           },
           {
             "name": "trackRecord",
@@ -294,14 +288,18 @@ const introspection = {
               "kind": "NON_NULL",
               "ofType": {
                 "kind": "OBJECT",
-                "name": "TrackRecordType",
-                "ofType": null
+                "name": "TrackRecordType"
               }
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           }
         ],
         "interfaces": []
+      },
+      {
+        "kind": "SCALAR",
+        "name": "Boolean"
       },
       {
         "kind": "INPUT_OBJECT",
@@ -311,32 +309,28 @@ const introspection = {
             "name": "distinctFrom",
             "type": {
               "kind": "SCALAR",
-              "name": "Boolean",
-              "ofType": null
+              "name": "Boolean"
             }
           },
           {
             "name": "equalTo",
             "type": {
               "kind": "SCALAR",
-              "name": "Boolean",
-              "ofType": null
+              "name": "Boolean"
             }
           },
           {
             "name": "greaterThan",
             "type": {
               "kind": "SCALAR",
-              "name": "Boolean",
-              "ofType": null
+              "name": "Boolean"
             }
           },
           {
             "name": "greaterThanOrEqualTo",
             "type": {
               "kind": "SCALAR",
-              "name": "Boolean",
-              "ofType": null
+              "name": "Boolean"
             }
           },
           {
@@ -347,8 +341,7 @@ const introspection = {
                 "kind": "NON_NULL",
                 "ofType": {
                   "kind": "SCALAR",
-                  "name": "Boolean",
-                  "ofType": null
+                  "name": "Boolean"
                 }
               }
             }
@@ -357,40 +350,35 @@ const introspection = {
             "name": "isNull",
             "type": {
               "kind": "SCALAR",
-              "name": "Boolean",
-              "ofType": null
+              "name": "Boolean"
             }
           },
           {
             "name": "lessThan",
             "type": {
               "kind": "SCALAR",
-              "name": "Boolean",
-              "ofType": null
+              "name": "Boolean"
             }
           },
           {
             "name": "lessThanOrEqualTo",
             "type": {
               "kind": "SCALAR",
-              "name": "Boolean",
-              "ofType": null
+              "name": "Boolean"
             }
           },
           {
             "name": "notDistinctFrom",
             "type": {
               "kind": "SCALAR",
-              "name": "Boolean",
-              "ofType": null
+              "name": "Boolean"
             }
           },
           {
             "name": "notEqualTo",
             "type": {
               "kind": "SCALAR",
-              "name": "Boolean",
-              "ofType": null
+              "name": "Boolean"
             }
           },
           {
@@ -401,17 +389,13 @@ const introspection = {
                 "kind": "NON_NULL",
                 "ofType": {
                   "kind": "SCALAR",
-                  "name": "Boolean",
-                  "ofType": null
+                  "name": "Boolean"
                 }
               }
             }
           }
-        ]
-      },
-      {
-        "kind": "SCALAR",
-        "name": "Boolean"
+        ],
+        "isOneOf": false
       },
       {
         "kind": "INPUT_OBJECT",
@@ -421,35 +405,32 @@ const introspection = {
             "name": "default",
             "type": {
               "kind": "SCALAR",
-              "name": "Boolean",
-              "ofType": null
+              "name": "Boolean"
             }
           },
           {
             "name": "id",
             "type": {
               "kind": "SCALAR",
-              "name": "Int",
-              "ofType": null
+              "name": "Int"
             }
           },
           {
             "name": "name",
             "type": {
               "kind": "SCALAR",
-              "name": "String",
-              "ofType": null
+              "name": "String"
             }
           },
           {
             "name": "order",
             "type": {
               "kind": "SCALAR",
-              "name": "Int",
-              "ofType": null
+              "name": "Int"
             }
           }
-        ]
+        ],
+        "isOneOf": false
       },
       {
         "kind": "OBJECT",
@@ -461,11 +442,11 @@ const introspection = {
               "kind": "NON_NULL",
               "ofType": {
                 "kind": "SCALAR",
-                "name": "Cursor",
-                "ofType": null
+                "name": "Cursor"
               }
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           },
           {
             "name": "node",
@@ -473,11 +454,11 @@ const introspection = {
               "kind": "NON_NULL",
               "ofType": {
                 "kind": "OBJECT",
-                "name": "CategoryType",
-                "ofType": null
+                "name": "CategoryType"
               }
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           }
         ],
         "interfaces": [
@@ -499,8 +480,7 @@ const introspection = {
                 "kind": "NON_NULL",
                 "ofType": {
                   "kind": "INPUT_OBJECT",
-                  "name": "CategoryFilterInput",
-                  "ofType": null
+                  "name": "CategoryFilterInput"
                 }
               }
             }
@@ -509,32 +489,28 @@ const introspection = {
             "name": "default",
             "type": {
               "kind": "INPUT_OBJECT",
-              "name": "BooleanFilterInput",
-              "ofType": null
+              "name": "BooleanFilterInput"
             }
           },
           {
             "name": "id",
             "type": {
               "kind": "INPUT_OBJECT",
-              "name": "IntFilterInput",
-              "ofType": null
+              "name": "IntFilterInput"
             }
           },
           {
             "name": "name",
             "type": {
               "kind": "INPUT_OBJECT",
-              "name": "StringFilterInput",
-              "ofType": null
+              "name": "StringFilterInput"
             }
           },
           {
             "name": "not",
             "type": {
               "kind": "INPUT_OBJECT",
-              "name": "CategoryFilterInput",
-              "ofType": null
+              "name": "CategoryFilterInput"
             }
           },
           {
@@ -545,8 +521,7 @@ const introspection = {
                 "kind": "NON_NULL",
                 "ofType": {
                   "kind": "INPUT_OBJECT",
-                  "name": "CategoryFilterInput",
-                  "ofType": null
+                  "name": "CategoryFilterInput"
                 }
               }
             }
@@ -555,27 +530,39 @@ const introspection = {
             "name": "order",
             "type": {
               "kind": "INPUT_OBJECT",
-              "name": "IntFilterInput",
-              "ofType": null
+              "name": "IntFilterInput"
             }
           }
-        ]
+        ],
+        "isOneOf": false
       },
       {
         "kind": "OBJECT",
         "name": "CategoryMetaType",
         "fields": [
           {
+            "name": "category",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "OBJECT",
+                "name": "CategoryType"
+              }
+            },
+            "args": [],
+            "isDeprecated": false
+          },
+          {
             "name": "categoryId",
             "type": {
               "kind": "NON_NULL",
               "ofType": {
                 "kind": "SCALAR",
-                "name": "Int",
-                "ofType": null
+                "name": "Int"
               }
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           },
           {
             "name": "key",
@@ -583,11 +570,11 @@ const introspection = {
               "kind": "NON_NULL",
               "ofType": {
                 "kind": "SCALAR",
-                "name": "String",
-                "ofType": null
+                "name": "String"
               }
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           },
           {
             "name": "value",
@@ -595,23 +582,11 @@ const introspection = {
               "kind": "NON_NULL",
               "ofType": {
                 "kind": "SCALAR",
-                "name": "String",
-                "ofType": null
+                "name": "String"
               }
             },
-            "args": []
-          },
-          {
-            "name": "category",
-            "type": {
-              "kind": "NON_NULL",
-              "ofType": {
-                "kind": "OBJECT",
-                "name": "CategoryType",
-                "ofType": null
-              }
-            },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           }
         ],
         "interfaces": [
@@ -631,8 +606,7 @@ const introspection = {
               "kind": "NON_NULL",
               "ofType": {
                 "kind": "SCALAR",
-                "name": "Int",
-                "ofType": null
+                "name": "Int"
               }
             }
           },
@@ -642,8 +616,7 @@ const introspection = {
               "kind": "NON_NULL",
               "ofType": {
                 "kind": "SCALAR",
-                "name": "String",
-                "ofType": null
+                "name": "String"
               }
             }
           },
@@ -653,12 +626,12 @@ const introspection = {
               "kind": "NON_NULL",
               "ofType": {
                 "kind": "SCALAR",
-                "name": "String",
-                "ofType": null
+                "name": "String"
               }
             }
           }
-        ]
+        ],
+        "isOneOf": false
       },
       {
         "kind": "OBJECT",
@@ -674,13 +647,13 @@ const introspection = {
                   "kind": "NON_NULL",
                   "ofType": {
                     "kind": "OBJECT",
-                    "name": "CategoryEdge",
-                    "ofType": null
+                    "name": "CategoryEdge"
                   }
                 }
               }
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           },
           {
             "name": "nodes",
@@ -692,13 +665,13 @@ const introspection = {
                   "kind": "NON_NULL",
                   "ofType": {
                     "kind": "OBJECT",
-                    "name": "CategoryType",
-                    "ofType": null
+                    "name": "CategoryType"
                   }
                 }
               }
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           },
           {
             "name": "pageInfo",
@@ -706,11 +679,11 @@ const introspection = {
               "kind": "NON_NULL",
               "ofType": {
                 "kind": "OBJECT",
-                "name": "PageInfo",
-                "ofType": null
+                "name": "PageInfo"
               }
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           },
           {
             "name": "totalCount",
@@ -718,11 +691,11 @@ const introspection = {
               "kind": "NON_NULL",
               "ofType": {
                 "kind": "SCALAR",
-                "name": "Int",
-                "ofType": null
+                "name": "Int"
               }
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           }
         ],
         "interfaces": [
@@ -737,13 +710,16 @@ const introspection = {
         "name": "CategoryOrderBy",
         "enumValues": [
           {
-            "name": "ID"
+            "name": "ID",
+            "isDeprecated": false
           },
           {
-            "name": "NAME"
+            "name": "NAME",
+            "isDeprecated": false
           },
           {
-            "name": "ORDER"
+            "name": "ORDER",
+            "isDeprecated": false
           }
         ]
       },
@@ -757,11 +733,11 @@ const introspection = {
               "kind": "NON_NULL",
               "ofType": {
                 "kind": "SCALAR",
-                "name": "Boolean",
-                "ofType": null
+                "name": "Boolean"
               }
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           },
           {
             "name": "id",
@@ -769,11 +745,11 @@ const introspection = {
               "kind": "NON_NULL",
               "ofType": {
                 "kind": "SCALAR",
-                "name": "Int",
-                "ofType": null
+                "name": "Int"
               }
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           },
           {
             "name": "includeInDownload",
@@ -781,11 +757,11 @@ const introspection = {
               "kind": "NON_NULL",
               "ofType": {
                 "kind": "ENUM",
-                "name": "IncludeOrExclude",
-                "ofType": null
+                "name": "IncludeOrExclude"
               }
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           },
           {
             "name": "includeInUpdate",
@@ -793,35 +769,11 @@ const introspection = {
               "kind": "NON_NULL",
               "ofType": {
                 "kind": "ENUM",
-                "name": "IncludeOrExclude",
-                "ofType": null
+                "name": "IncludeOrExclude"
               }
             },
-            "args": []
-          },
-          {
-            "name": "name",
-            "type": {
-              "kind": "NON_NULL",
-              "ofType": {
-                "kind": "SCALAR",
-                "name": "String",
-                "ofType": null
-              }
-            },
-            "args": []
-          },
-          {
-            "name": "order",
-            "type": {
-              "kind": "NON_NULL",
-              "ofType": {
-                "kind": "SCALAR",
-                "name": "Int",
-                "ofType": null
-              }
-            },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           },
           {
             "name": "mangas",
@@ -829,11 +781,11 @@ const introspection = {
               "kind": "NON_NULL",
               "ofType": {
                 "kind": "OBJECT",
-                "name": "MangaNodeList",
-                "ofType": null
+                "name": "MangaNodeList"
               }
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           },
           {
             "name": "meta",
@@ -845,13 +797,37 @@ const introspection = {
                   "kind": "NON_NULL",
                   "ofType": {
                     "kind": "OBJECT",
-                    "name": "CategoryMetaType",
-                    "ofType": null
+                    "name": "CategoryMetaType"
                   }
                 }
               }
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
+          },
+          {
+            "name": "name",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "String"
+              }
+            },
+            "args": [],
+            "isDeprecated": false
+          },
+          {
+            "name": "order",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "Int"
+              }
+            },
+            "args": [],
+            "isDeprecated": false
           }
         ],
         "interfaces": []
@@ -864,135 +840,116 @@ const introspection = {
             "name": "chapterNumber",
             "type": {
               "kind": "SCALAR",
-              "name": "Float",
-              "ofType": null
+              "name": "Float"
             }
           },
           {
             "name": "fetchedAt",
             "type": {
               "kind": "SCALAR",
-              "name": "LongString",
-              "ofType": null
+              "name": "LongString"
             }
           },
           {
             "name": "id",
             "type": {
               "kind": "SCALAR",
-              "name": "Int",
-              "ofType": null
+              "name": "Int"
             }
           },
           {
             "name": "isBookmarked",
             "type": {
               "kind": "SCALAR",
-              "name": "Boolean",
-              "ofType": null
+              "name": "Boolean"
             }
           },
           {
             "name": "isDownloaded",
             "type": {
               "kind": "SCALAR",
-              "name": "Boolean",
-              "ofType": null
+              "name": "Boolean"
             }
           },
           {
             "name": "isRead",
             "type": {
               "kind": "SCALAR",
-              "name": "Boolean",
-              "ofType": null
+              "name": "Boolean"
             }
           },
           {
             "name": "lastPageRead",
             "type": {
               "kind": "SCALAR",
-              "name": "Int",
-              "ofType": null
+              "name": "Int"
             }
           },
           {
             "name": "lastReadAt",
             "type": {
               "kind": "SCALAR",
-              "name": "LongString",
-              "ofType": null
+              "name": "LongString"
             }
           },
           {
             "name": "mangaId",
             "type": {
               "kind": "SCALAR",
-              "name": "Int",
-              "ofType": null
+              "name": "Int"
             }
           },
           {
             "name": "name",
             "type": {
               "kind": "SCALAR",
-              "name": "String",
-              "ofType": null
+              "name": "String"
             }
           },
           {
             "name": "pageCount",
             "type": {
               "kind": "SCALAR",
-              "name": "Int",
-              "ofType": null
+              "name": "Int"
             }
           },
           {
             "name": "realUrl",
             "type": {
               "kind": "SCALAR",
-              "name": "String",
-              "ofType": null
+              "name": "String"
             }
           },
           {
             "name": "scanlator",
             "type": {
               "kind": "SCALAR",
-              "name": "String",
-              "ofType": null
+              "name": "String"
             }
           },
           {
             "name": "sourceOrder",
             "type": {
               "kind": "SCALAR",
-              "name": "Int",
-              "ofType": null
+              "name": "Int"
             }
           },
           {
             "name": "uploadDate",
             "type": {
               "kind": "SCALAR",
-              "name": "LongString",
-              "ofType": null
+              "name": "LongString"
             }
           },
           {
             "name": "url",
             "type": {
               "kind": "SCALAR",
-              "name": "String",
-              "ofType": null
+              "name": "String"
             }
           }
-        ]
-      },
-      {
-        "kind": "SCALAR",
-        "name": "Float"
+        ],
+        "isOneOf": false
       },
       {
         "kind": "OBJECT",
@@ -1004,11 +961,11 @@ const introspection = {
               "kind": "NON_NULL",
               "ofType": {
                 "kind": "SCALAR",
-                "name": "Cursor",
-                "ofType": null
+                "name": "Cursor"
               }
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           },
           {
             "name": "node",
@@ -1016,11 +973,11 @@ const introspection = {
               "kind": "NON_NULL",
               "ofType": {
                 "kind": "OBJECT",
-                "name": "ChapterType",
-                "ofType": null
+                "name": "ChapterType"
               }
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           }
         ],
         "interfaces": [
@@ -1042,8 +999,7 @@ const introspection = {
                 "kind": "NON_NULL",
                 "ofType": {
                   "kind": "INPUT_OBJECT",
-                  "name": "ChapterFilterInput",
-                  "ofType": null
+                  "name": "ChapterFilterInput"
                 }
               }
             }
@@ -1052,96 +1008,84 @@ const introspection = {
             "name": "chapterNumber",
             "type": {
               "kind": "INPUT_OBJECT",
-              "name": "FloatFilterInput",
-              "ofType": null
+              "name": "FloatFilterInput"
             }
           },
           {
             "name": "fetchedAt",
             "type": {
               "kind": "INPUT_OBJECT",
-              "name": "LongFilterInput",
-              "ofType": null
+              "name": "LongFilterInput"
             }
           },
           {
             "name": "id",
             "type": {
               "kind": "INPUT_OBJECT",
-              "name": "IntFilterInput",
-              "ofType": null
+              "name": "IntFilterInput"
             }
           },
           {
             "name": "inLibrary",
             "type": {
               "kind": "INPUT_OBJECT",
-              "name": "BooleanFilterInput",
-              "ofType": null
+              "name": "BooleanFilterInput"
             }
           },
           {
             "name": "isBookmarked",
             "type": {
               "kind": "INPUT_OBJECT",
-              "name": "BooleanFilterInput",
-              "ofType": null
+              "name": "BooleanFilterInput"
             }
           },
           {
             "name": "isDownloaded",
             "type": {
               "kind": "INPUT_OBJECT",
-              "name": "BooleanFilterInput",
-              "ofType": null
+              "name": "BooleanFilterInput"
             }
           },
           {
             "name": "isRead",
             "type": {
               "kind": "INPUT_OBJECT",
-              "name": "BooleanFilterInput",
-              "ofType": null
+              "name": "BooleanFilterInput"
             }
           },
           {
             "name": "lastPageRead",
             "type": {
               "kind": "INPUT_OBJECT",
-              "name": "IntFilterInput",
-              "ofType": null
+              "name": "IntFilterInput"
             }
           },
           {
             "name": "lastReadAt",
             "type": {
               "kind": "INPUT_OBJECT",
-              "name": "LongFilterInput",
-              "ofType": null
+              "name": "LongFilterInput"
             }
           },
           {
             "name": "mangaId",
             "type": {
               "kind": "INPUT_OBJECT",
-              "name": "IntFilterInput",
-              "ofType": null
+              "name": "IntFilterInput"
             }
           },
           {
             "name": "name",
             "type": {
               "kind": "INPUT_OBJECT",
-              "name": "StringFilterInput",
-              "ofType": null
+              "name": "StringFilterInput"
             }
           },
           {
             "name": "not",
             "type": {
               "kind": "INPUT_OBJECT",
-              "name": "ChapterFilterInput",
-              "ofType": null
+              "name": "ChapterFilterInput"
             }
           },
           {
@@ -1152,8 +1096,7 @@ const introspection = {
                 "kind": "NON_NULL",
                 "ofType": {
                   "kind": "INPUT_OBJECT",
-                  "name": "ChapterFilterInput",
-                  "ofType": null
+                  "name": "ChapterFilterInput"
                 }
               }
             }
@@ -1162,67 +1105,74 @@ const introspection = {
             "name": "pageCount",
             "type": {
               "kind": "INPUT_OBJECT",
-              "name": "IntFilterInput",
-              "ofType": null
+              "name": "IntFilterInput"
             }
           },
           {
             "name": "realUrl",
             "type": {
               "kind": "INPUT_OBJECT",
-              "name": "StringFilterInput",
-              "ofType": null
+              "name": "StringFilterInput"
             }
           },
           {
             "name": "scanlator",
             "type": {
               "kind": "INPUT_OBJECT",
-              "name": "StringFilterInput",
-              "ofType": null
+              "name": "StringFilterInput"
             }
           },
           {
             "name": "sourceOrder",
             "type": {
               "kind": "INPUT_OBJECT",
-              "name": "IntFilterInput",
-              "ofType": null
+              "name": "IntFilterInput"
             }
           },
           {
             "name": "uploadDate",
             "type": {
               "kind": "INPUT_OBJECT",
-              "name": "LongFilterInput",
-              "ofType": null
+              "name": "LongFilterInput"
             }
           },
           {
             "name": "url",
             "type": {
               "kind": "INPUT_OBJECT",
-              "name": "StringFilterInput",
-              "ofType": null
+              "name": "StringFilterInput"
             }
           }
-        ]
+        ],
+        "isOneOf": false
       },
       {
         "kind": "OBJECT",
         "name": "ChapterMetaType",
         "fields": [
           {
+            "name": "chapter",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "OBJECT",
+                "name": "ChapterType"
+              }
+            },
+            "args": [],
+            "isDeprecated": false
+          },
+          {
             "name": "chapterId",
             "type": {
               "kind": "NON_NULL",
               "ofType": {
                 "kind": "SCALAR",
-                "name": "Int",
-                "ofType": null
+                "name": "Int"
               }
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           },
           {
             "name": "key",
@@ -1230,11 +1180,11 @@ const introspection = {
               "kind": "NON_NULL",
               "ofType": {
                 "kind": "SCALAR",
-                "name": "String",
-                "ofType": null
+                "name": "String"
               }
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           },
           {
             "name": "value",
@@ -1242,23 +1192,11 @@ const introspection = {
               "kind": "NON_NULL",
               "ofType": {
                 "kind": "SCALAR",
-                "name": "String",
-                "ofType": null
+                "name": "String"
               }
             },
-            "args": []
-          },
-          {
-            "name": "chapter",
-            "type": {
-              "kind": "NON_NULL",
-              "ofType": {
-                "kind": "OBJECT",
-                "name": "ChapterType",
-                "ofType": null
-              }
-            },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           }
         ],
         "interfaces": [
@@ -1278,8 +1216,7 @@ const introspection = {
               "kind": "NON_NULL",
               "ofType": {
                 "kind": "SCALAR",
-                "name": "Int",
-                "ofType": null
+                "name": "Int"
               }
             }
           },
@@ -1289,8 +1226,7 @@ const introspection = {
               "kind": "NON_NULL",
               "ofType": {
                 "kind": "SCALAR",
-                "name": "String",
-                "ofType": null
+                "name": "String"
               }
             }
           },
@@ -1300,12 +1236,12 @@ const introspection = {
               "kind": "NON_NULL",
               "ofType": {
                 "kind": "SCALAR",
-                "name": "String",
-                "ofType": null
+                "name": "String"
               }
             }
           }
-        ]
+        ],
+        "isOneOf": false
       },
       {
         "kind": "OBJECT",
@@ -1321,13 +1257,13 @@ const introspection = {
                   "kind": "NON_NULL",
                   "ofType": {
                     "kind": "OBJECT",
-                    "name": "ChapterEdge",
-                    "ofType": null
+                    "name": "ChapterEdge"
                   }
                 }
               }
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           },
           {
             "name": "nodes",
@@ -1339,13 +1275,13 @@ const introspection = {
                   "kind": "NON_NULL",
                   "ofType": {
                     "kind": "OBJECT",
-                    "name": "ChapterType",
-                    "ofType": null
+                    "name": "ChapterType"
                   }
                 }
               }
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           },
           {
             "name": "pageInfo",
@@ -1353,11 +1289,11 @@ const introspection = {
               "kind": "NON_NULL",
               "ofType": {
                 "kind": "OBJECT",
-                "name": "PageInfo",
-                "ofType": null
+                "name": "PageInfo"
               }
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           },
           {
             "name": "totalCount",
@@ -1365,11 +1301,11 @@ const introspection = {
               "kind": "NON_NULL",
               "ofType": {
                 "kind": "SCALAR",
-                "name": "Int",
-                "ofType": null
+                "name": "Int"
               }
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           }
         ],
         "interfaces": [
@@ -1384,25 +1320,32 @@ const introspection = {
         "name": "ChapterOrderBy",
         "enumValues": [
           {
-            "name": "ID"
+            "name": "ID",
+            "isDeprecated": false
           },
           {
-            "name": "SOURCE_ORDER"
+            "name": "SOURCE_ORDER",
+            "isDeprecated": false
           },
           {
-            "name": "NAME"
+            "name": "NAME",
+            "isDeprecated": false
           },
           {
-            "name": "UPLOAD_DATE"
+            "name": "UPLOAD_DATE",
+            "isDeprecated": false
           },
           {
-            "name": "CHAPTER_NUMBER"
+            "name": "CHAPTER_NUMBER",
+            "isDeprecated": false
           },
           {
-            "name": "LAST_READ_AT"
+            "name": "LAST_READ_AT",
+            "isDeprecated": false
           },
           {
-            "name": "FETCHED_AT"
+            "name": "FETCHED_AT",
+            "isDeprecated": false
           }
         ]
       },
@@ -1416,11 +1359,11 @@ const introspection = {
               "kind": "NON_NULL",
               "ofType": {
                 "kind": "SCALAR",
-                "name": "Float",
-                "ofType": null
+                "name": "Float"
               }
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           },
           {
             "name": "fetchedAt",
@@ -1428,11 +1371,11 @@ const introspection = {
               "kind": "NON_NULL",
               "ofType": {
                 "kind": "SCALAR",
-                "name": "LongString",
-                "ofType": null
+                "name": "LongString"
               }
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           },
           {
             "name": "id",
@@ -1440,11 +1383,11 @@ const introspection = {
               "kind": "NON_NULL",
               "ofType": {
                 "kind": "SCALAR",
-                "name": "Int",
-                "ofType": null
+                "name": "Int"
               }
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           },
           {
             "name": "isBookmarked",
@@ -1452,11 +1395,11 @@ const introspection = {
               "kind": "NON_NULL",
               "ofType": {
                 "kind": "SCALAR",
-                "name": "Boolean",
-                "ofType": null
+                "name": "Boolean"
               }
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           },
           {
             "name": "isDownloaded",
@@ -1464,11 +1407,11 @@ const introspection = {
               "kind": "NON_NULL",
               "ofType": {
                 "kind": "SCALAR",
-                "name": "Boolean",
-                "ofType": null
+                "name": "Boolean"
               }
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           },
           {
             "name": "isRead",
@@ -1476,11 +1419,11 @@ const introspection = {
               "kind": "NON_NULL",
               "ofType": {
                 "kind": "SCALAR",
-                "name": "Boolean",
-                "ofType": null
+                "name": "Boolean"
               }
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           },
           {
             "name": "lastPageRead",
@@ -1488,11 +1431,11 @@ const introspection = {
               "kind": "NON_NULL",
               "ofType": {
                 "kind": "SCALAR",
-                "name": "Int",
-                "ofType": null
+                "name": "Int"
               }
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           },
           {
             "name": "lastReadAt",
@@ -1500,101 +1443,11 @@ const introspection = {
               "kind": "NON_NULL",
               "ofType": {
                 "kind": "SCALAR",
-                "name": "LongString",
-                "ofType": null
+                "name": "LongString"
               }
             },
-            "args": []
-          },
-          {
-            "name": "mangaId",
-            "type": {
-              "kind": "NON_NULL",
-              "ofType": {
-                "kind": "SCALAR",
-                "name": "Int",
-                "ofType": null
-              }
-            },
-            "args": []
-          },
-          {
-            "name": "name",
-            "type": {
-              "kind": "NON_NULL",
-              "ofType": {
-                "kind": "SCALAR",
-                "name": "String",
-                "ofType": null
-              }
-            },
-            "args": []
-          },
-          {
-            "name": "pageCount",
-            "type": {
-              "kind": "NON_NULL",
-              "ofType": {
-                "kind": "SCALAR",
-                "name": "Int",
-                "ofType": null
-              }
-            },
-            "args": []
-          },
-          {
-            "name": "realUrl",
-            "type": {
-              "kind": "SCALAR",
-              "name": "String",
-              "ofType": null
-            },
-            "args": []
-          },
-          {
-            "name": "scanlator",
-            "type": {
-              "kind": "SCALAR",
-              "name": "String",
-              "ofType": null
-            },
-            "args": []
-          },
-          {
-            "name": "sourceOrder",
-            "type": {
-              "kind": "NON_NULL",
-              "ofType": {
-                "kind": "SCALAR",
-                "name": "Int",
-                "ofType": null
-              }
-            },
-            "args": []
-          },
-          {
-            "name": "uploadDate",
-            "type": {
-              "kind": "NON_NULL",
-              "ofType": {
-                "kind": "SCALAR",
-                "name": "LongString",
-                "ofType": null
-              }
-            },
-            "args": []
-          },
-          {
-            "name": "url",
-            "type": {
-              "kind": "NON_NULL",
-              "ofType": {
-                "kind": "SCALAR",
-                "name": "String",
-                "ofType": null
-              }
-            },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           },
           {
             "name": "manga",
@@ -1602,11 +1455,23 @@ const introspection = {
               "kind": "NON_NULL",
               "ofType": {
                 "kind": "OBJECT",
-                "name": "MangaType",
-                "ofType": null
+                "name": "MangaType"
               }
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
+          },
+          {
+            "name": "mangaId",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "Int"
+              }
+            },
+            "args": [],
+            "isDeprecated": false
           },
           {
             "name": "meta",
@@ -1618,13 +1483,91 @@ const introspection = {
                   "kind": "NON_NULL",
                   "ofType": {
                     "kind": "OBJECT",
-                    "name": "ChapterMetaType",
-                    "ofType": null
+                    "name": "ChapterMetaType"
                   }
                 }
               }
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
+          },
+          {
+            "name": "name",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "String"
+              }
+            },
+            "args": [],
+            "isDeprecated": false
+          },
+          {
+            "name": "pageCount",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "Int"
+              }
+            },
+            "args": [],
+            "isDeprecated": false
+          },
+          {
+            "name": "realUrl",
+            "type": {
+              "kind": "SCALAR",
+              "name": "String"
+            },
+            "args": [],
+            "isDeprecated": false
+          },
+          {
+            "name": "scanlator",
+            "type": {
+              "kind": "SCALAR",
+              "name": "String"
+            },
+            "args": [],
+            "isDeprecated": false
+          },
+          {
+            "name": "sourceOrder",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "Int"
+              }
+            },
+            "args": [],
+            "isDeprecated": false
+          },
+          {
+            "name": "uploadDate",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "LongString"
+              }
+            },
+            "args": [],
+            "isDeprecated": false
+          },
+          {
+            "name": "url",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "String"
+              }
+            },
+            "args": [],
+            "isDeprecated": false
           }
         ],
         "interfaces": []
@@ -1639,11 +1582,11 @@ const introspection = {
               "kind": "NON_NULL",
               "ofType": {
                 "kind": "SCALAR",
-                "name": "Boolean",
-                "ofType": null
+                "name": "Boolean"
               }
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           },
           {
             "name": "name",
@@ -1651,11 +1594,11 @@ const introspection = {
               "kind": "NON_NULL",
               "ofType": {
                 "kind": "SCALAR",
-                "name": "String",
-                "ofType": null
+                "name": "String"
               }
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           }
         ],
         "interfaces": []
@@ -1668,10 +1611,10 @@ const introspection = {
             "name": "currentValue",
             "type": {
               "kind": "SCALAR",
-              "name": "Boolean",
-              "ofType": null
+              "name": "Boolean"
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           },
           {
             "name": "default",
@@ -1679,11 +1622,11 @@ const introspection = {
               "kind": "NON_NULL",
               "ofType": {
                 "kind": "SCALAR",
-                "name": "Boolean",
-                "ofType": null
+                "name": "Boolean"
               }
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           },
           {
             "name": "key",
@@ -1691,20 +1634,20 @@ const introspection = {
               "kind": "NON_NULL",
               "ofType": {
                 "kind": "SCALAR",
-                "name": "String",
-                "ofType": null
+                "name": "String"
               }
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           },
           {
             "name": "summary",
             "type": {
               "kind": "SCALAR",
-              "name": "String",
-              "ofType": null
+              "name": "String"
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           },
           {
             "name": "title",
@@ -1712,11 +1655,11 @@ const introspection = {
               "kind": "NON_NULL",
               "ofType": {
                 "kind": "SCALAR",
-                "name": "String",
-                "ofType": null
+                "name": "String"
               }
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           },
           {
             "name": "visible",
@@ -1724,11 +1667,11 @@ const introspection = {
               "kind": "NON_NULL",
               "ofType": {
                 "kind": "SCALAR",
-                "name": "Boolean",
-                "ofType": null
+                "name": "Boolean"
               }
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           }
         ],
         "interfaces": []
@@ -1743,11 +1686,11 @@ const introspection = {
               "kind": "NON_NULL",
               "ofType": {
                 "kind": "SCALAR",
-                "name": "String",
-                "ofType": null
+                "name": "String"
               }
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           },
           {
             "name": "tag",
@@ -1755,11 +1698,11 @@ const introspection = {
               "kind": "NON_NULL",
               "ofType": {
                 "kind": "SCALAR",
-                "name": "String",
-                "ofType": null
+                "name": "String"
               }
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           },
           {
             "name": "url",
@@ -1767,11 +1710,11 @@ const introspection = {
               "kind": "NON_NULL",
               "ofType": {
                 "kind": "SCALAR",
-                "name": "String",
-                "ofType": null
+                "name": "String"
               }
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           }
         ],
         "interfaces": []
@@ -1784,35 +1727,32 @@ const introspection = {
             "name": "cachedPages",
             "type": {
               "kind": "SCALAR",
-              "name": "Boolean",
-              "ofType": null
+              "name": "Boolean"
             }
           },
           {
             "name": "cachedThumbnails",
             "type": {
               "kind": "SCALAR",
-              "name": "Boolean",
-              "ofType": null
+              "name": "Boolean"
             }
           },
           {
             "name": "clientMutationId",
             "type": {
               "kind": "SCALAR",
-              "name": "String",
-              "ofType": null
+              "name": "String"
             }
           },
           {
             "name": "downloadedThumbnails",
             "type": {
               "kind": "SCALAR",
-              "name": "Boolean",
-              "ofType": null
+              "name": "Boolean"
             }
           }
-        ]
+        ],
+        "isOneOf": false
       },
       {
         "kind": "OBJECT",
@@ -1822,37 +1762,37 @@ const introspection = {
             "name": "cachedPages",
             "type": {
               "kind": "SCALAR",
-              "name": "Boolean",
-              "ofType": null
+              "name": "Boolean"
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           },
           {
             "name": "cachedThumbnails",
             "type": {
               "kind": "SCALAR",
-              "name": "Boolean",
-              "ofType": null
+              "name": "Boolean"
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           },
           {
             "name": "clientMutationId",
             "type": {
               "kind": "SCALAR",
-              "name": "String",
-              "ofType": null
+              "name": "String"
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           },
           {
             "name": "downloadedThumbnails",
             "type": {
               "kind": "SCALAR",
-              "name": "Boolean",
-              "ofType": null
+              "name": "Boolean"
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           }
         ],
         "interfaces": []
@@ -1865,11 +1805,11 @@ const introspection = {
             "name": "clientMutationId",
             "type": {
               "kind": "SCALAR",
-              "name": "String",
-              "ofType": null
+              "name": "String"
             }
           }
-        ]
+        ],
+        "isOneOf": false
       },
       {
         "kind": "OBJECT",
@@ -1879,10 +1819,10 @@ const introspection = {
             "name": "clientMutationId",
             "type": {
               "kind": "SCALAR",
-              "name": "String",
-              "ofType": null
+              "name": "String"
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           },
           {
             "name": "downloadStatus",
@@ -1890,11 +1830,11 @@ const introspection = {
               "kind": "NON_NULL",
               "ofType": {
                 "kind": "OBJECT",
-                "name": "DownloadStatus",
-                "ofType": null
+                "name": "DownloadStatus"
               }
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           }
         ],
         "interfaces": []
@@ -1907,27 +1847,25 @@ const introspection = {
             "name": "clientMutationId",
             "type": {
               "kind": "SCALAR",
-              "name": "String",
-              "ofType": null
+              "name": "String"
             }
           },
           {
             "name": "includeCategories",
             "type": {
               "kind": "SCALAR",
-              "name": "Boolean",
-              "ofType": null
+              "name": "Boolean"
             }
           },
           {
             "name": "includeChapters",
             "type": {
               "kind": "SCALAR",
-              "name": "Boolean",
-              "ofType": null
+              "name": "Boolean"
             }
           }
-        ]
+        ],
+        "isOneOf": false
       },
       {
         "kind": "OBJECT",
@@ -1937,10 +1875,10 @@ const introspection = {
             "name": "clientMutationId",
             "type": {
               "kind": "SCALAR",
-              "name": "String",
-              "ofType": null
+              "name": "String"
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           },
           {
             "name": "url",
@@ -1948,11 +1886,11 @@ const introspection = {
               "kind": "NON_NULL",
               "ofType": {
                 "kind": "SCALAR",
-                "name": "String",
-                "ofType": null
+                "name": "String"
               }
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           }
         ],
         "interfaces": []
@@ -1965,32 +1903,28 @@ const introspection = {
             "name": "clientMutationId",
             "type": {
               "kind": "SCALAR",
-              "name": "String",
-              "ofType": null
+              "name": "String"
             }
           },
           {
             "name": "default",
             "type": {
               "kind": "SCALAR",
-              "name": "Boolean",
-              "ofType": null
+              "name": "Boolean"
             }
           },
           {
             "name": "includeInDownload",
             "type": {
               "kind": "ENUM",
-              "name": "IncludeOrExclude",
-              "ofType": null
+              "name": "IncludeOrExclude"
             }
           },
           {
             "name": "includeInUpdate",
             "type": {
               "kind": "ENUM",
-              "name": "IncludeOrExclude",
-              "ofType": null
+              "name": "IncludeOrExclude"
             }
           },
           {
@@ -1999,8 +1933,7 @@ const introspection = {
               "kind": "NON_NULL",
               "ofType": {
                 "kind": "SCALAR",
-                "name": "String",
-                "ofType": null
+                "name": "String"
               }
             }
           },
@@ -2008,11 +1941,11 @@ const introspection = {
             "name": "order",
             "type": {
               "kind": "SCALAR",
-              "name": "Int",
-              "ofType": null
+              "name": "Int"
             }
           }
-        ]
+        ],
+        "isOneOf": false
       },
       {
         "kind": "OBJECT",
@@ -2024,20 +1957,20 @@ const introspection = {
               "kind": "NON_NULL",
               "ofType": {
                 "kind": "OBJECT",
-                "name": "CategoryType",
-                "ofType": null
+                "name": "CategoryType"
               }
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           },
           {
             "name": "clientMutationId",
             "type": {
               "kind": "SCALAR",
-              "name": "String",
-              "ofType": null
+              "name": "String"
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           }
         ],
         "interfaces": []
@@ -2056,8 +1989,7 @@ const introspection = {
               "kind": "NON_NULL",
               "ofType": {
                 "kind": "SCALAR",
-                "name": "Int",
-                "ofType": null
+                "name": "Int"
               }
             }
           },
@@ -2065,11 +1997,11 @@ const introspection = {
             "name": "clientMutationId",
             "type": {
               "kind": "SCALAR",
-              "name": "String",
-              "ofType": null
+              "name": "String"
             }
           }
-        ]
+        ],
+        "isOneOf": false
       },
       {
         "kind": "INPUT_OBJECT",
@@ -2081,8 +2013,7 @@ const introspection = {
               "kind": "NON_NULL",
               "ofType": {
                 "kind": "SCALAR",
-                "name": "Int",
-                "ofType": null
+                "name": "Int"
               }
             }
           },
@@ -2090,8 +2021,7 @@ const introspection = {
             "name": "clientMutationId",
             "type": {
               "kind": "SCALAR",
-              "name": "String",
-              "ofType": null
+              "name": "String"
             }
           },
           {
@@ -2100,12 +2030,12 @@ const introspection = {
               "kind": "NON_NULL",
               "ofType": {
                 "kind": "SCALAR",
-                "name": "String",
-                "ofType": null
+                "name": "String"
               }
             }
           }
-        ]
+        ],
+        "isOneOf": false
       },
       {
         "kind": "OBJECT",
@@ -2117,29 +2047,29 @@ const introspection = {
               "kind": "NON_NULL",
               "ofType": {
                 "kind": "OBJECT",
-                "name": "CategoryType",
-                "ofType": null
+                "name": "CategoryType"
               }
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           },
           {
             "name": "clientMutationId",
             "type": {
               "kind": "SCALAR",
-              "name": "String",
-              "ofType": null
+              "name": "String"
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           },
           {
             "name": "meta",
             "type": {
               "kind": "OBJECT",
-              "name": "CategoryMetaType",
-              "ofType": null
+              "name": "CategoryMetaType"
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           }
         ],
         "interfaces": []
@@ -2152,19 +2082,19 @@ const introspection = {
             "name": "category",
             "type": {
               "kind": "OBJECT",
-              "name": "CategoryType",
-              "ofType": null
+              "name": "CategoryType"
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           },
           {
             "name": "clientMutationId",
             "type": {
               "kind": "SCALAR",
-              "name": "String",
-              "ofType": null
+              "name": "String"
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           },
           {
             "name": "mangas",
@@ -2176,13 +2106,13 @@ const introspection = {
                   "kind": "NON_NULL",
                   "ofType": {
                     "kind": "OBJECT",
-                    "name": "MangaType",
-                    "ofType": null
+                    "name": "MangaType"
                   }
                 }
               }
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           }
         ],
         "interfaces": []
@@ -2197,8 +2127,7 @@ const introspection = {
               "kind": "NON_NULL",
               "ofType": {
                 "kind": "SCALAR",
-                "name": "Int",
-                "ofType": null
+                "name": "Int"
               }
             }
           },
@@ -2206,8 +2135,7 @@ const introspection = {
             "name": "clientMutationId",
             "type": {
               "kind": "SCALAR",
-              "name": "String",
-              "ofType": null
+              "name": "String"
             }
           },
           {
@@ -2216,12 +2144,12 @@ const introspection = {
               "kind": "NON_NULL",
               "ofType": {
                 "kind": "SCALAR",
-                "name": "String",
-                "ofType": null
+                "name": "String"
               }
             }
           }
-        ]
+        ],
+        "isOneOf": false
       },
       {
         "kind": "OBJECT",
@@ -2233,29 +2161,29 @@ const introspection = {
               "kind": "NON_NULL",
               "ofType": {
                 "kind": "OBJECT",
-                "name": "ChapterType",
-                "ofType": null
+                "name": "ChapterType"
               }
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           },
           {
             "name": "clientMutationId",
             "type": {
               "kind": "SCALAR",
-              "name": "String",
-              "ofType": null
+              "name": "String"
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           },
           {
             "name": "meta",
             "type": {
               "kind": "OBJECT",
-              "name": "ChapterMetaType",
-              "ofType": null
+              "name": "ChapterMetaType"
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           }
         ],
         "interfaces": []
@@ -2268,8 +2196,7 @@ const introspection = {
             "name": "clientMutationId",
             "type": {
               "kind": "SCALAR",
-              "name": "String",
-              "ofType": null
+              "name": "String"
             }
           },
           {
@@ -2278,12 +2205,12 @@ const introspection = {
               "kind": "NON_NULL",
               "ofType": {
                 "kind": "SCALAR",
-                "name": "Int",
-                "ofType": null
+                "name": "Int"
               }
             }
           }
-        ]
+        ],
+        "isOneOf": false
       },
       {
         "kind": "OBJECT",
@@ -2295,20 +2222,20 @@ const introspection = {
               "kind": "NON_NULL",
               "ofType": {
                 "kind": "OBJECT",
-                "name": "ChapterType",
-                "ofType": null
+                "name": "ChapterType"
               }
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           },
           {
             "name": "clientMutationId",
             "type": {
               "kind": "SCALAR",
-              "name": "String",
-              "ofType": null
+              "name": "String"
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           }
         ],
         "interfaces": []
@@ -2321,8 +2248,7 @@ const introspection = {
             "name": "clientMutationId",
             "type": {
               "kind": "SCALAR",
-              "name": "String",
-              "ofType": null
+              "name": "String"
             }
           },
           {
@@ -2335,14 +2261,14 @@ const introspection = {
                   "kind": "NON_NULL",
                   "ofType": {
                     "kind": "SCALAR",
-                    "name": "Int",
-                    "ofType": null
+                    "name": "Int"
                   }
                 }
               }
             }
           }
-        ]
+        ],
+        "isOneOf": false
       },
       {
         "kind": "OBJECT",
@@ -2358,22 +2284,22 @@ const introspection = {
                   "kind": "NON_NULL",
                   "ofType": {
                     "kind": "OBJECT",
-                    "name": "ChapterType",
-                    "ofType": null
+                    "name": "ChapterType"
                   }
                 }
               }
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           },
           {
             "name": "clientMutationId",
             "type": {
               "kind": "SCALAR",
-              "name": "String",
-              "ofType": null
+              "name": "String"
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           }
         ],
         "interfaces": []
@@ -2386,8 +2312,7 @@ const introspection = {
             "name": "clientMutationId",
             "type": {
               "kind": "SCALAR",
-              "name": "String",
-              "ofType": null
+              "name": "String"
             }
           },
           {
@@ -2396,12 +2321,12 @@ const introspection = {
               "kind": "NON_NULL",
               "ofType": {
                 "kind": "SCALAR",
-                "name": "String",
-                "ofType": null
+                "name": "String"
               }
             }
           }
-        ]
+        ],
+        "isOneOf": false
       },
       {
         "kind": "OBJECT",
@@ -2411,19 +2336,19 @@ const introspection = {
             "name": "clientMutationId",
             "type": {
               "kind": "SCALAR",
-              "name": "String",
-              "ofType": null
+              "name": "String"
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           },
           {
             "name": "meta",
             "type": {
               "kind": "OBJECT",
-              "name": "GlobalMetaType",
-              "ofType": null
+              "name": "GlobalMetaType"
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           }
         ],
         "interfaces": []
@@ -2436,8 +2361,7 @@ const introspection = {
             "name": "clientMutationId",
             "type": {
               "kind": "SCALAR",
-              "name": "String",
-              "ofType": null
+              "name": "String"
             }
           },
           {
@@ -2446,8 +2370,7 @@ const introspection = {
               "kind": "NON_NULL",
               "ofType": {
                 "kind": "SCALAR",
-                "name": "String",
-                "ofType": null
+                "name": "String"
               }
             }
           },
@@ -2457,12 +2380,12 @@ const introspection = {
               "kind": "NON_NULL",
               "ofType": {
                 "kind": "SCALAR",
-                "name": "Int",
-                "ofType": null
+                "name": "Int"
               }
             }
           }
-        ]
+        ],
+        "isOneOf": false
       },
       {
         "kind": "OBJECT",
@@ -2472,10 +2395,10 @@ const introspection = {
             "name": "clientMutationId",
             "type": {
               "kind": "SCALAR",
-              "name": "String",
-              "ofType": null
+              "name": "String"
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           },
           {
             "name": "manga",
@@ -2483,20 +2406,20 @@ const introspection = {
               "kind": "NON_NULL",
               "ofType": {
                 "kind": "OBJECT",
-                "name": "MangaType",
-                "ofType": null
+                "name": "MangaType"
               }
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           },
           {
             "name": "meta",
             "type": {
               "kind": "OBJECT",
-              "name": "MangaMetaType",
-              "ofType": null
+              "name": "MangaMetaType"
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           }
         ],
         "interfaces": []
@@ -2509,8 +2432,7 @@ const introspection = {
             "name": "clientMutationId",
             "type": {
               "kind": "SCALAR",
-              "name": "String",
-              "ofType": null
+              "name": "String"
             }
           },
           {
@@ -2519,8 +2441,7 @@ const introspection = {
               "kind": "NON_NULL",
               "ofType": {
                 "kind": "SCALAR",
-                "name": "String",
-                "ofType": null
+                "name": "String"
               }
             }
           },
@@ -2530,12 +2451,12 @@ const introspection = {
               "kind": "NON_NULL",
               "ofType": {
                 "kind": "SCALAR",
-                "name": "LongString",
-                "ofType": null
+                "name": "LongString"
               }
             }
           }
-        ]
+        ],
+        "isOneOf": false
       },
       {
         "kind": "OBJECT",
@@ -2545,28 +2466,28 @@ const introspection = {
             "name": "clientMutationId",
             "type": {
               "kind": "SCALAR",
-              "name": "String",
-              "ofType": null
+              "name": "String"
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           },
           {
             "name": "meta",
             "type": {
               "kind": "OBJECT",
-              "name": "SourceMetaType",
-              "ofType": null
+              "name": "SourceMetaType"
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           },
           {
             "name": "source",
             "type": {
               "kind": "OBJECT",
-              "name": "SourceType",
-              "ofType": null
+              "name": "SourceType"
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           }
         ],
         "interfaces": []
@@ -2579,8 +2500,7 @@ const introspection = {
             "name": "clientMutationId",
             "type": {
               "kind": "SCALAR",
-              "name": "String",
-              "ofType": null
+              "name": "String"
             }
           },
           {
@@ -2589,12 +2509,12 @@ const introspection = {
               "kind": "NON_NULL",
               "ofType": {
                 "kind": "SCALAR",
-                "name": "Int",
-                "ofType": null
+                "name": "Int"
               }
             }
           }
-        ]
+        ],
+        "isOneOf": false
       },
       {
         "kind": "OBJECT",
@@ -2604,10 +2524,10 @@ const introspection = {
             "name": "clientMutationId",
             "type": {
               "kind": "SCALAR",
-              "name": "String",
-              "ofType": null
+              "name": "String"
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           },
           {
             "name": "downloadStatus",
@@ -2615,11 +2535,11 @@ const introspection = {
               "kind": "NON_NULL",
               "ofType": {
                 "kind": "OBJECT",
-                "name": "DownloadStatus",
-                "ofType": null
+                "name": "DownloadStatus"
               }
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           }
         ],
         "interfaces": []
@@ -2632,8 +2552,7 @@ const introspection = {
             "name": "clientMutationId",
             "type": {
               "kind": "SCALAR",
-              "name": "String",
-              "ofType": null
+              "name": "String"
             }
           },
           {
@@ -2646,14 +2565,14 @@ const introspection = {
                   "kind": "NON_NULL",
                   "ofType": {
                     "kind": "SCALAR",
-                    "name": "Int",
-                    "ofType": null
+                    "name": "Int"
                   }
                 }
               }
             }
           }
-        ]
+        ],
+        "isOneOf": false
       },
       {
         "kind": "OBJECT",
@@ -2663,10 +2582,10 @@ const introspection = {
             "name": "clientMutationId",
             "type": {
               "kind": "SCALAR",
-              "name": "String",
-              "ofType": null
+              "name": "String"
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           },
           {
             "name": "downloadStatus",
@@ -2674,11 +2593,11 @@ const introspection = {
               "kind": "NON_NULL",
               "ofType": {
                 "kind": "OBJECT",
-                "name": "DownloadStatus",
-                "ofType": null
+                "name": "DownloadStatus"
               }
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           }
         ],
         "interfaces": []
@@ -2691,32 +2610,28 @@ const introspection = {
             "name": "distinctFrom",
             "type": {
               "kind": "SCALAR",
-              "name": "Float",
-              "ofType": null
+              "name": "Float"
             }
           },
           {
             "name": "equalTo",
             "type": {
               "kind": "SCALAR",
-              "name": "Float",
-              "ofType": null
+              "name": "Float"
             }
           },
           {
             "name": "greaterThan",
             "type": {
               "kind": "SCALAR",
-              "name": "Float",
-              "ofType": null
+              "name": "Float"
             }
           },
           {
             "name": "greaterThanOrEqualTo",
             "type": {
               "kind": "SCALAR",
-              "name": "Float",
-              "ofType": null
+              "name": "Float"
             }
           },
           {
@@ -2727,8 +2642,7 @@ const introspection = {
                 "kind": "NON_NULL",
                 "ofType": {
                   "kind": "SCALAR",
-                  "name": "Float",
-                  "ofType": null
+                  "name": "Float"
                 }
               }
             }
@@ -2737,40 +2651,35 @@ const introspection = {
             "name": "isNull",
             "type": {
               "kind": "SCALAR",
-              "name": "Boolean",
-              "ofType": null
+              "name": "Boolean"
             }
           },
           {
             "name": "lessThan",
             "type": {
               "kind": "SCALAR",
-              "name": "Float",
-              "ofType": null
+              "name": "Float"
             }
           },
           {
             "name": "lessThanOrEqualTo",
             "type": {
               "kind": "SCALAR",
-              "name": "Float",
-              "ofType": null
+              "name": "Float"
             }
           },
           {
             "name": "notDistinctFrom",
             "type": {
               "kind": "SCALAR",
-              "name": "Float",
-              "ofType": null
+              "name": "Float"
             }
           },
           {
             "name": "notEqualTo",
             "type": {
               "kind": "SCALAR",
-              "name": "Float",
-              "ofType": null
+              "name": "Float"
             }
           },
           {
@@ -2781,13 +2690,13 @@ const introspection = {
                 "kind": "NON_NULL",
                 "ofType": {
                   "kind": "SCALAR",
-                  "name": "Float",
-                  "ofType": null
+                  "name": "Float"
                 }
               }
             }
           }
-        ]
+        ],
+        "isOneOf": false
       },
       {
         "kind": "OBJECT",
@@ -2799,11 +2708,11 @@ const introspection = {
               "kind": "NON_NULL",
               "ofType": {
                 "kind": "SCALAR",
-                "name": "Cursor",
-                "ofType": null
+                "name": "Cursor"
               }
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           },
           {
             "name": "node",
@@ -2811,29 +2720,17 @@ const introspection = {
               "kind": "NON_NULL",
               "ofType": {
                 "kind": "OBJECT",
-                "name": "DownloadType",
-                "ofType": null
+                "name": "DownloadType"
               }
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           }
         ],
         "interfaces": [
           {
             "kind": "INTERFACE",
             "name": "Edge"
-          }
-        ]
-      },
-      {
-        "kind": "ENUM",
-        "name": "DownloaderState",
-        "enumValues": [
-          {
-            "name": "STARTED"
-          },
-          {
-            "name": "STOPPED"
           }
         ]
       },
@@ -2851,13 +2748,13 @@ const introspection = {
                   "kind": "NON_NULL",
                   "ofType": {
                     "kind": "OBJECT",
-                    "name": "DownloadEdge",
-                    "ofType": null
+                    "name": "DownloadEdge"
                   }
                 }
               }
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           },
           {
             "name": "nodes",
@@ -2869,13 +2766,13 @@ const introspection = {
                   "kind": "NON_NULL",
                   "ofType": {
                     "kind": "OBJECT",
-                    "name": "DownloadType",
-                    "ofType": null
+                    "name": "DownloadType"
                   }
                 }
               }
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           },
           {
             "name": "pageInfo",
@@ -2883,11 +2780,11 @@ const introspection = {
               "kind": "NON_NULL",
               "ofType": {
                 "kind": "OBJECT",
-                "name": "PageInfo",
-                "ofType": null
+                "name": "PageInfo"
               }
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           },
           {
             "name": "totalCount",
@@ -2895,11 +2792,11 @@ const introspection = {
               "kind": "NON_NULL",
               "ofType": {
                 "kind": "SCALAR",
-                "name": "Int",
-                "ofType": null
+                "name": "Int"
               }
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           }
         ],
         "interfaces": [
@@ -2914,16 +2811,20 @@ const introspection = {
         "name": "DownloadState",
         "enumValues": [
           {
-            "name": "QUEUED"
+            "name": "QUEUED",
+            "isDeprecated": false
           },
           {
-            "name": "DOWNLOADING"
+            "name": "DOWNLOADING",
+            "isDeprecated": false
           },
           {
-            "name": "FINISHED"
+            "name": "FINISHED",
+            "isDeprecated": false
           },
           {
-            "name": "ERROR"
+            "name": "ERROR",
+            "isDeprecated": false
           }
         ]
       },
@@ -2941,13 +2842,13 @@ const introspection = {
                   "kind": "NON_NULL",
                   "ofType": {
                     "kind": "OBJECT",
-                    "name": "DownloadType",
-                    "ofType": null
+                    "name": "DownloadType"
                   }
                 }
               }
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           },
           {
             "name": "state",
@@ -2955,11 +2856,11 @@ const introspection = {
               "kind": "NON_NULL",
               "ofType": {
                 "kind": "ENUM",
-                "name": "DownloaderState",
-                "ofType": null
+                "name": "DownloaderState"
               }
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           }
         ],
         "interfaces": []
@@ -2969,52 +2870,16 @@ const introspection = {
         "name": "DownloadType",
         "fields": [
           {
-            "name": "progress",
-            "type": {
-              "kind": "NON_NULL",
-              "ofType": {
-                "kind": "SCALAR",
-                "name": "Float",
-                "ofType": null
-              }
-            },
-            "args": []
-          },
-          {
-            "name": "state",
-            "type": {
-              "kind": "NON_NULL",
-              "ofType": {
-                "kind": "ENUM",
-                "name": "DownloadState",
-                "ofType": null
-              }
-            },
-            "args": []
-          },
-          {
-            "name": "tries",
-            "type": {
-              "kind": "NON_NULL",
-              "ofType": {
-                "kind": "SCALAR",
-                "name": "Int",
-                "ofType": null
-              }
-            },
-            "args": []
-          },
-          {
             "name": "chapter",
             "type": {
               "kind": "NON_NULL",
               "ofType": {
                 "kind": "OBJECT",
-                "name": "ChapterType",
-                "ofType": null
+                "name": "ChapterType"
               }
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           },
           {
             "name": "manga",
@@ -3022,14 +2887,64 @@ const introspection = {
               "kind": "NON_NULL",
               "ofType": {
                 "kind": "OBJECT",
-                "name": "MangaType",
-                "ofType": null
+                "name": "MangaType"
               }
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
+          },
+          {
+            "name": "progress",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "Float"
+              }
+            },
+            "args": [],
+            "isDeprecated": false
+          },
+          {
+            "name": "state",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "ENUM",
+                "name": "DownloadState"
+              }
+            },
+            "args": [],
+            "isDeprecated": false
+          },
+          {
+            "name": "tries",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "Int"
+              }
+            },
+            "args": [],
+            "isDeprecated": false
           }
         ],
         "interfaces": []
+      },
+      {
+        "kind": "ENUM",
+        "name": "DownloaderState",
+        "enumValues": [
+          {
+            "name": "STARTED",
+            "isDeprecated": false
+          },
+          {
+            "name": "STOPPED",
+            "isDeprecated": false
+          }
+        ]
       },
       {
         "kind": "INTERFACE",
@@ -3041,11 +2956,11 @@ const introspection = {
               "kind": "NON_NULL",
               "ofType": {
                 "kind": "SCALAR",
-                "name": "Cursor",
-                "ofType": null
+                "name": "Cursor"
               }
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           },
           {
             "name": "node",
@@ -3053,11 +2968,11 @@ const introspection = {
               "kind": "NON_NULL",
               "ofType": {
                 "kind": "UNION",
-                "name": "Node",
-                "ofType": null
+                "name": "Node"
               }
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           }
         ],
         "interfaces": [],
@@ -3092,11 +3007,11 @@ const introspection = {
           },
           {
             "kind": "OBJECT",
-            "name": "TrackerEdge"
+            "name": "TrackRecordEdge"
           },
           {
             "kind": "OBJECT",
-            "name": "TrackRecordEdge"
+            "name": "TrackerEdge"
           }
         ]
       },
@@ -3108,37 +3023,37 @@ const introspection = {
             "name": "currentValue",
             "type": {
               "kind": "SCALAR",
-              "name": "String",
-              "ofType": null
+              "name": "String"
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           },
           {
             "name": "default",
             "type": {
               "kind": "SCALAR",
-              "name": "String",
-              "ofType": null
+              "name": "String"
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           },
           {
             "name": "dialogMessage",
             "type": {
               "kind": "SCALAR",
-              "name": "String",
-              "ofType": null
+              "name": "String"
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           },
           {
             "name": "dialogTitle",
             "type": {
               "kind": "SCALAR",
-              "name": "String",
-              "ofType": null
+              "name": "String"
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           },
           {
             "name": "key",
@@ -3146,38 +3061,38 @@ const introspection = {
               "kind": "NON_NULL",
               "ofType": {
                 "kind": "SCALAR",
-                "name": "String",
-                "ofType": null
+                "name": "String"
               }
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           },
           {
             "name": "summary",
             "type": {
               "kind": "SCALAR",
-              "name": "String",
-              "ofType": null
+              "name": "String"
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           },
           {
             "name": "text",
             "type": {
               "kind": "SCALAR",
-              "name": "String",
-              "ofType": null
+              "name": "String"
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           },
           {
             "name": "title",
             "type": {
               "kind": "SCALAR",
-              "name": "String",
-              "ofType": null
+              "name": "String"
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           },
           {
             "name": "visible",
@@ -3185,11 +3100,11 @@ const introspection = {
               "kind": "NON_NULL",
               "ofType": {
                 "kind": "SCALAR",
-                "name": "Boolean",
-                "ofType": null
+                "name": "Boolean"
               }
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           }
         ],
         "interfaces": []
@@ -3202,8 +3117,7 @@ const introspection = {
             "name": "clientMutationId",
             "type": {
               "kind": "SCALAR",
-              "name": "String",
-              "ofType": null
+              "name": "String"
             }
           },
           {
@@ -3212,12 +3126,12 @@ const introspection = {
               "kind": "NON_NULL",
               "ofType": {
                 "kind": "SCALAR",
-                "name": "Int",
-                "ofType": null
+                "name": "Int"
               }
             }
           }
-        ]
+        ],
+        "isOneOf": false
       },
       {
         "kind": "OBJECT",
@@ -3227,10 +3141,10 @@ const introspection = {
             "name": "clientMutationId",
             "type": {
               "kind": "SCALAR",
-              "name": "String",
-              "ofType": null
+              "name": "String"
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           },
           {
             "name": "downloadStatus",
@@ -3238,11 +3152,11 @@ const introspection = {
               "kind": "NON_NULL",
               "ofType": {
                 "kind": "OBJECT",
-                "name": "DownloadStatus",
-                "ofType": null
+                "name": "DownloadStatus"
               }
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           }
         ],
         "interfaces": []
@@ -3255,8 +3169,7 @@ const introspection = {
             "name": "clientMutationId",
             "type": {
               "kind": "SCALAR",
-              "name": "String",
-              "ofType": null
+              "name": "String"
             }
           },
           {
@@ -3269,14 +3182,14 @@ const introspection = {
                   "kind": "NON_NULL",
                   "ofType": {
                     "kind": "SCALAR",
-                    "name": "Int",
-                    "ofType": null
+                    "name": "Int"
                   }
                 }
               }
             }
           }
-        ]
+        ],
+        "isOneOf": false
       },
       {
         "kind": "OBJECT",
@@ -3286,10 +3199,10 @@ const introspection = {
             "name": "clientMutationId",
             "type": {
               "kind": "SCALAR",
-              "name": "String",
-              "ofType": null
+              "name": "String"
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           },
           {
             "name": "downloadStatus",
@@ -3297,11 +3210,11 @@ const introspection = {
               "kind": "NON_NULL",
               "ofType": {
                 "kind": "OBJECT",
-                "name": "DownloadStatus",
-                "ofType": null
+                "name": "DownloadStatus"
               }
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           }
         ],
         "interfaces": []
@@ -3314,99 +3227,88 @@ const introspection = {
             "name": "apkName",
             "type": {
               "kind": "SCALAR",
-              "name": "String",
-              "ofType": null
+              "name": "String"
             }
           },
           {
             "name": "hasUpdate",
             "type": {
               "kind": "SCALAR",
-              "name": "Boolean",
-              "ofType": null
+              "name": "Boolean"
             }
           },
           {
             "name": "iconUrl",
             "type": {
               "kind": "SCALAR",
-              "name": "String",
-              "ofType": null
+              "name": "String"
             }
           },
           {
             "name": "isInstalled",
             "type": {
               "kind": "SCALAR",
-              "name": "Boolean",
-              "ofType": null
+              "name": "Boolean"
             }
           },
           {
             "name": "isNsfw",
             "type": {
               "kind": "SCALAR",
-              "name": "Boolean",
-              "ofType": null
+              "name": "Boolean"
             }
           },
           {
             "name": "isObsolete",
             "type": {
               "kind": "SCALAR",
-              "name": "Boolean",
-              "ofType": null
+              "name": "Boolean"
             }
           },
           {
             "name": "lang",
             "type": {
               "kind": "SCALAR",
-              "name": "String",
-              "ofType": null
+              "name": "String"
             }
           },
           {
             "name": "name",
             "type": {
               "kind": "SCALAR",
-              "name": "String",
-              "ofType": null
+              "name": "String"
             }
           },
           {
             "name": "pkgName",
             "type": {
               "kind": "SCALAR",
-              "name": "String",
-              "ofType": null
+              "name": "String"
             }
           },
           {
             "name": "repo",
             "type": {
               "kind": "SCALAR",
-              "name": "String",
-              "ofType": null
+              "name": "String"
             }
           },
           {
             "name": "versionCode",
             "type": {
               "kind": "SCALAR",
-              "name": "Int",
-              "ofType": null
+              "name": "Int"
             }
           },
           {
             "name": "versionName",
             "type": {
               "kind": "SCALAR",
-              "name": "String",
-              "ofType": null
+              "name": "String"
             }
           }
-        ]
+        ],
+        "isOneOf": false
       },
       {
         "kind": "OBJECT",
@@ -3418,11 +3320,11 @@ const introspection = {
               "kind": "NON_NULL",
               "ofType": {
                 "kind": "SCALAR",
-                "name": "Cursor",
-                "ofType": null
+                "name": "Cursor"
               }
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           },
           {
             "name": "node",
@@ -3430,11 +3332,11 @@ const introspection = {
               "kind": "NON_NULL",
               "ofType": {
                 "kind": "OBJECT",
-                "name": "ExtensionType",
-                "ofType": null
+                "name": "ExtensionType"
               }
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           }
         ],
         "interfaces": [
@@ -3456,8 +3358,7 @@ const introspection = {
                 "kind": "NON_NULL",
                 "ofType": {
                   "kind": "INPUT_OBJECT",
-                  "name": "ExtensionFilterInput",
-                  "ofType": null
+                  "name": "ExtensionFilterInput"
                 }
               }
             }
@@ -3466,72 +3367,63 @@ const introspection = {
             "name": "apkName",
             "type": {
               "kind": "INPUT_OBJECT",
-              "name": "StringFilterInput",
-              "ofType": null
+              "name": "StringFilterInput"
             }
           },
           {
             "name": "hasUpdate",
             "type": {
               "kind": "INPUT_OBJECT",
-              "name": "BooleanFilterInput",
-              "ofType": null
+              "name": "BooleanFilterInput"
             }
           },
           {
             "name": "iconUrl",
             "type": {
               "kind": "INPUT_OBJECT",
-              "name": "StringFilterInput",
-              "ofType": null
+              "name": "StringFilterInput"
             }
           },
           {
             "name": "isInstalled",
             "type": {
               "kind": "INPUT_OBJECT",
-              "name": "BooleanFilterInput",
-              "ofType": null
+              "name": "BooleanFilterInput"
             }
           },
           {
             "name": "isNsfw",
             "type": {
               "kind": "INPUT_OBJECT",
-              "name": "BooleanFilterInput",
-              "ofType": null
+              "name": "BooleanFilterInput"
             }
           },
           {
             "name": "isObsolete",
             "type": {
               "kind": "INPUT_OBJECT",
-              "name": "BooleanFilterInput",
-              "ofType": null
+              "name": "BooleanFilterInput"
             }
           },
           {
             "name": "lang",
             "type": {
               "kind": "INPUT_OBJECT",
-              "name": "StringFilterInput",
-              "ofType": null
+              "name": "StringFilterInput"
             }
           },
           {
             "name": "name",
             "type": {
               "kind": "INPUT_OBJECT",
-              "name": "StringFilterInput",
-              "ofType": null
+              "name": "StringFilterInput"
             }
           },
           {
             "name": "not",
             "type": {
               "kind": "INPUT_OBJECT",
-              "name": "ExtensionFilterInput",
-              "ofType": null
+              "name": "ExtensionFilterInput"
             }
           },
           {
@@ -3542,8 +3434,7 @@ const introspection = {
                 "kind": "NON_NULL",
                 "ofType": {
                   "kind": "INPUT_OBJECT",
-                  "name": "ExtensionFilterInput",
-                  "ofType": null
+                  "name": "ExtensionFilterInput"
                 }
               }
             }
@@ -3552,35 +3443,32 @@ const introspection = {
             "name": "pkgName",
             "type": {
               "kind": "INPUT_OBJECT",
-              "name": "StringFilterInput",
-              "ofType": null
+              "name": "StringFilterInput"
             }
           },
           {
             "name": "repo",
             "type": {
               "kind": "INPUT_OBJECT",
-              "name": "StringFilterInput",
-              "ofType": null
+              "name": "StringFilterInput"
             }
           },
           {
             "name": "versionCode",
             "type": {
               "kind": "INPUT_OBJECT",
-              "name": "IntFilterInput",
-              "ofType": null
+              "name": "IntFilterInput"
             }
           },
           {
             "name": "versionName",
             "type": {
               "kind": "INPUT_OBJECT",
-              "name": "StringFilterInput",
-              "ofType": null
+              "name": "StringFilterInput"
             }
           }
-        ]
+        ],
+        "isOneOf": false
       },
       {
         "kind": "OBJECT",
@@ -3596,13 +3484,13 @@ const introspection = {
                   "kind": "NON_NULL",
                   "ofType": {
                     "kind": "OBJECT",
-                    "name": "ExtensionEdge",
-                    "ofType": null
+                    "name": "ExtensionEdge"
                   }
                 }
               }
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           },
           {
             "name": "nodes",
@@ -3614,13 +3502,13 @@ const introspection = {
                   "kind": "NON_NULL",
                   "ofType": {
                     "kind": "OBJECT",
-                    "name": "ExtensionType",
-                    "ofType": null
+                    "name": "ExtensionType"
                   }
                 }
               }
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           },
           {
             "name": "pageInfo",
@@ -3628,11 +3516,11 @@ const introspection = {
               "kind": "NON_NULL",
               "ofType": {
                 "kind": "OBJECT",
-                "name": "PageInfo",
-                "ofType": null
+                "name": "PageInfo"
               }
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           },
           {
             "name": "totalCount",
@@ -3640,11 +3528,11 @@ const introspection = {
               "kind": "NON_NULL",
               "ofType": {
                 "kind": "SCALAR",
-                "name": "Int",
-                "ofType": null
+                "name": "Int"
               }
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           }
         ],
         "interfaces": [
@@ -3659,13 +3547,16 @@ const introspection = {
         "name": "ExtensionOrderBy",
         "enumValues": [
           {
-            "name": "PKG_NAME"
+            "name": "PKG_NAME",
+            "isDeprecated": false
           },
           {
-            "name": "NAME"
+            "name": "NAME",
+            "isDeprecated": false
           },
           {
-            "name": "APK_NAME"
+            "name": "APK_NAME",
+            "isDeprecated": false
           }
         ]
       },
@@ -3679,11 +3570,11 @@ const introspection = {
               "kind": "NON_NULL",
               "ofType": {
                 "kind": "SCALAR",
-                "name": "String",
-                "ofType": null
+                "name": "String"
               }
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           },
           {
             "name": "hasUpdate",
@@ -3691,11 +3582,11 @@ const introspection = {
               "kind": "NON_NULL",
               "ofType": {
                 "kind": "SCALAR",
-                "name": "Boolean",
-                "ofType": null
+                "name": "Boolean"
               }
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           },
           {
             "name": "iconUrl",
@@ -3703,11 +3594,11 @@ const introspection = {
               "kind": "NON_NULL",
               "ofType": {
                 "kind": "SCALAR",
-                "name": "String",
-                "ofType": null
+                "name": "String"
               }
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           },
           {
             "name": "isInstalled",
@@ -3715,11 +3606,11 @@ const introspection = {
               "kind": "NON_NULL",
               "ofType": {
                 "kind": "SCALAR",
-                "name": "Boolean",
-                "ofType": null
+                "name": "Boolean"
               }
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           },
           {
             "name": "isNsfw",
@@ -3727,11 +3618,11 @@ const introspection = {
               "kind": "NON_NULL",
               "ofType": {
                 "kind": "SCALAR",
-                "name": "Boolean",
-                "ofType": null
+                "name": "Boolean"
               }
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           },
           {
             "name": "isObsolete",
@@ -3739,11 +3630,11 @@ const introspection = {
               "kind": "NON_NULL",
               "ofType": {
                 "kind": "SCALAR",
-                "name": "Boolean",
-                "ofType": null
+                "name": "Boolean"
               }
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           },
           {
             "name": "lang",
@@ -3751,11 +3642,11 @@ const introspection = {
               "kind": "NON_NULL",
               "ofType": {
                 "kind": "SCALAR",
-                "name": "String",
-                "ofType": null
+                "name": "String"
               }
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           },
           {
             "name": "name",
@@ -3763,11 +3654,11 @@ const introspection = {
               "kind": "NON_NULL",
               "ofType": {
                 "kind": "SCALAR",
-                "name": "String",
-                "ofType": null
+                "name": "String"
               }
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           },
           {
             "name": "pkgName",
@@ -3775,44 +3666,20 @@ const introspection = {
               "kind": "NON_NULL",
               "ofType": {
                 "kind": "SCALAR",
-                "name": "String",
-                "ofType": null
+                "name": "String"
               }
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           },
           {
             "name": "repo",
             "type": {
               "kind": "SCALAR",
-              "name": "String",
-              "ofType": null
+              "name": "String"
             },
-            "args": []
-          },
-          {
-            "name": "versionCode",
-            "type": {
-              "kind": "NON_NULL",
-              "ofType": {
-                "kind": "SCALAR",
-                "name": "Int",
-                "ofType": null
-              }
-            },
-            "args": []
-          },
-          {
-            "name": "versionName",
-            "type": {
-              "kind": "NON_NULL",
-              "ofType": {
-                "kind": "SCALAR",
-                "name": "String",
-                "ofType": null
-              }
-            },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           },
           {
             "name": "source",
@@ -3820,11 +3687,35 @@ const introspection = {
               "kind": "NON_NULL",
               "ofType": {
                 "kind": "OBJECT",
-                "name": "SourceNodeList",
-                "ofType": null
+                "name": "SourceNodeList"
               }
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
+          },
+          {
+            "name": "versionCode",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "Int"
+              }
+            },
+            "args": [],
+            "isDeprecated": false
+          },
+          {
+            "name": "versionName",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "String"
+              }
+            },
+            "args": [],
+            "isDeprecated": false
           }
         ],
         "interfaces": []
@@ -3839,8 +3730,7 @@ const introspection = {
               "kind": "NON_NULL",
               "ofType": {
                 "kind": "SCALAR",
-                "name": "Int",
-                "ofType": null
+                "name": "Int"
               }
             }
           },
@@ -3848,11 +3738,11 @@ const introspection = {
             "name": "clientMutationId",
             "type": {
               "kind": "SCALAR",
-              "name": "String",
-              "ofType": null
+              "name": "String"
             }
           }
-        ]
+        ],
+        "isOneOf": false
       },
       {
         "kind": "OBJECT",
@@ -3864,20 +3754,20 @@ const introspection = {
               "kind": "NON_NULL",
               "ofType": {
                 "kind": "OBJECT",
-                "name": "ChapterType",
-                "ofType": null
+                "name": "ChapterType"
               }
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           },
           {
             "name": "clientMutationId",
             "type": {
               "kind": "SCALAR",
-              "name": "String",
-              "ofType": null
+              "name": "String"
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           },
           {
             "name": "pages",
@@ -3889,13 +3779,13 @@ const introspection = {
                   "kind": "NON_NULL",
                   "ofType": {
                     "kind": "SCALAR",
-                    "name": "String",
-                    "ofType": null
+                    "name": "String"
                   }
                 }
               }
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           }
         ],
         "interfaces": []
@@ -3908,8 +3798,7 @@ const introspection = {
             "name": "clientMutationId",
             "type": {
               "kind": "SCALAR",
-              "name": "String",
-              "ofType": null
+              "name": "String"
             }
           },
           {
@@ -3918,12 +3807,12 @@ const introspection = {
               "kind": "NON_NULL",
               "ofType": {
                 "kind": "SCALAR",
-                "name": "Int",
-                "ofType": null
+                "name": "Int"
               }
             }
           }
-        ]
+        ],
+        "isOneOf": false
       },
       {
         "kind": "OBJECT",
@@ -3939,22 +3828,22 @@ const introspection = {
                   "kind": "NON_NULL",
                   "ofType": {
                     "kind": "OBJECT",
-                    "name": "ChapterType",
-                    "ofType": null
+                    "name": "ChapterType"
                   }
                 }
               }
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           },
           {
             "name": "clientMutationId",
             "type": {
               "kind": "SCALAR",
-              "name": "String",
-              "ofType": null
+              "name": "String"
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           }
         ],
         "interfaces": []
@@ -3967,11 +3856,11 @@ const introspection = {
             "name": "clientMutationId",
             "type": {
               "kind": "SCALAR",
-              "name": "String",
-              "ofType": null
+              "name": "String"
             }
           }
-        ]
+        ],
+        "isOneOf": false
       },
       {
         "kind": "OBJECT",
@@ -3981,10 +3870,10 @@ const introspection = {
             "name": "clientMutationId",
             "type": {
               "kind": "SCALAR",
-              "name": "String",
-              "ofType": null
+              "name": "String"
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           },
           {
             "name": "extensions",
@@ -3996,13 +3885,13 @@ const introspection = {
                   "kind": "NON_NULL",
                   "ofType": {
                     "kind": "OBJECT",
-                    "name": "ExtensionType",
-                    "ofType": null
+                    "name": "ExtensionType"
                   }
                 }
               }
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           }
         ],
         "interfaces": []
@@ -4015,8 +3904,7 @@ const introspection = {
             "name": "clientMutationId",
             "type": {
               "kind": "SCALAR",
-              "name": "String",
-              "ofType": null
+              "name": "String"
             }
           },
           {
@@ -4025,12 +3913,12 @@ const introspection = {
               "kind": "NON_NULL",
               "ofType": {
                 "kind": "SCALAR",
-                "name": "Int",
-                "ofType": null
+                "name": "Int"
               }
             }
           }
-        ]
+        ],
+        "isOneOf": false
       },
       {
         "kind": "OBJECT",
@@ -4040,10 +3928,10 @@ const introspection = {
             "name": "clientMutationId",
             "type": {
               "kind": "SCALAR",
-              "name": "String",
-              "ofType": null
+              "name": "String"
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           },
           {
             "name": "manga",
@@ -4051,11 +3939,11 @@ const introspection = {
               "kind": "NON_NULL",
               "ofType": {
                 "kind": "OBJECT",
-                "name": "MangaType",
-                "ofType": null
+                "name": "MangaType"
               }
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           }
         ],
         "interfaces": []
@@ -4068,8 +3956,7 @@ const introspection = {
             "name": "clientMutationId",
             "type": {
               "kind": "SCALAR",
-              "name": "String",
-              "ofType": null
+              "name": "String"
             }
           },
           {
@@ -4080,8 +3967,7 @@ const introspection = {
                 "kind": "NON_NULL",
                 "ofType": {
                   "kind": "INPUT_OBJECT",
-                  "name": "FilterChangeInput",
-                  "ofType": null
+                  "name": "FilterChangeInput"
                 }
               }
             }
@@ -4092,8 +3978,7 @@ const introspection = {
               "kind": "NON_NULL",
               "ofType": {
                 "kind": "SCALAR",
-                "name": "Int",
-                "ofType": null
+                "name": "Int"
               }
             }
           },
@@ -4101,8 +3986,7 @@ const introspection = {
             "name": "query",
             "type": {
               "kind": "SCALAR",
-              "name": "String",
-              "ofType": null
+              "name": "String"
             }
           },
           {
@@ -4111,8 +3995,7 @@ const introspection = {
               "kind": "NON_NULL",
               "ofType": {
                 "kind": "SCALAR",
-                "name": "LongString",
-                "ofType": null
+                "name": "LongString"
               }
             }
           },
@@ -4122,12 +4005,12 @@ const introspection = {
               "kind": "NON_NULL",
               "ofType": {
                 "kind": "ENUM",
-                "name": "FetchSourceMangaType",
-                "ofType": null
+                "name": "FetchSourceMangaType"
               }
             }
           }
-        ]
+        ],
+        "isOneOf": false
       },
       {
         "kind": "OBJECT",
@@ -4137,10 +4020,10 @@ const introspection = {
             "name": "clientMutationId",
             "type": {
               "kind": "SCALAR",
-              "name": "String",
-              "ofType": null
+              "name": "String"
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           },
           {
             "name": "hasNextPage",
@@ -4148,11 +4031,11 @@ const introspection = {
               "kind": "NON_NULL",
               "ofType": {
                 "kind": "SCALAR",
-                "name": "Boolean",
-                "ofType": null
+                "name": "Boolean"
               }
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           },
           {
             "name": "mangas",
@@ -4164,13 +4047,13 @@ const introspection = {
                   "kind": "NON_NULL",
                   "ofType": {
                     "kind": "OBJECT",
-                    "name": "MangaType",
-                    "ofType": null
+                    "name": "MangaType"
                   }
                 }
               }
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           }
         ],
         "interfaces": []
@@ -4180,13 +4063,16 @@ const introspection = {
         "name": "FetchSourceMangaType",
         "enumValues": [
           {
-            "name": "SEARCH"
+            "name": "SEARCH",
+            "isDeprecated": false
           },
           {
-            "name": "POPULAR"
+            "name": "POPULAR",
+            "isDeprecated": false
           },
           {
-            "name": "LATEST"
+            "name": "LATEST",
+            "isDeprecated": false
           }
         ]
       },
@@ -4198,8 +4084,7 @@ const introspection = {
             "name": "clientMutationId",
             "type": {
               "kind": "SCALAR",
-              "name": "String",
-              "ofType": null
+              "name": "String"
             }
           },
           {
@@ -4208,12 +4093,12 @@ const introspection = {
               "kind": "NON_NULL",
               "ofType": {
                 "kind": "SCALAR",
-                "name": "Int",
-                "ofType": null
+                "name": "Int"
               }
             }
           }
-        ]
+        ],
+        "isOneOf": false
       },
       {
         "kind": "OBJECT",
@@ -4223,10 +4108,10 @@ const introspection = {
             "name": "clientMutationId",
             "type": {
               "kind": "SCALAR",
-              "name": "String",
-              "ofType": null
+              "name": "String"
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           },
           {
             "name": "trackRecord",
@@ -4234,11 +4119,11 @@ const introspection = {
               "kind": "NON_NULL",
               "ofType": {
                 "kind": "OBJECT",
-                "name": "TrackRecordType",
-                "ofType": null
+                "name": "TrackRecordType"
               }
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           }
         ],
         "interfaces": []
@@ -4289,16 +4174,14 @@ const introspection = {
             "name": "checkBoxState",
             "type": {
               "kind": "SCALAR",
-              "name": "Boolean",
-              "ofType": null
+              "name": "Boolean"
             }
           },
           {
             "name": "groupChange",
             "type": {
               "kind": "INPUT_OBJECT",
-              "name": "FilterChangeInput",
-              "ofType": null
+              "name": "FilterChangeInput"
             }
           },
           {
@@ -4307,8 +4190,7 @@ const introspection = {
               "kind": "NON_NULL",
               "ofType": {
                 "kind": "SCALAR",
-                "name": "Int",
-                "ofType": null
+                "name": "Int"
               }
             }
           },
@@ -4316,35 +4198,36 @@ const introspection = {
             "name": "selectState",
             "type": {
               "kind": "SCALAR",
-              "name": "Int",
-              "ofType": null
+              "name": "Int"
             }
           },
           {
             "name": "sortState",
             "type": {
               "kind": "INPUT_OBJECT",
-              "name": "SortSelectionInput",
-              "ofType": null
+              "name": "SortSelectionInput"
             }
           },
           {
             "name": "textState",
             "type": {
               "kind": "SCALAR",
-              "name": "String",
-              "ofType": null
+              "name": "String"
             }
           },
           {
             "name": "triState",
             "type": {
               "kind": "ENUM",
-              "name": "TriState",
-              "ofType": null
+              "name": "TriState"
             }
           }
-        ]
+        ],
+        "isOneOf": false
+      },
+      {
+        "kind": "SCALAR",
+        "name": "Float"
       },
       {
         "kind": "INPUT_OBJECT",
@@ -4354,32 +4237,28 @@ const introspection = {
             "name": "distinctFrom",
             "type": {
               "kind": "SCALAR",
-              "name": "Float",
-              "ofType": null
+              "name": "Float"
             }
           },
           {
             "name": "equalTo",
             "type": {
               "kind": "SCALAR",
-              "name": "Float",
-              "ofType": null
+              "name": "Float"
             }
           },
           {
             "name": "greaterThan",
             "type": {
               "kind": "SCALAR",
-              "name": "Float",
-              "ofType": null
+              "name": "Float"
             }
           },
           {
             "name": "greaterThanOrEqualTo",
             "type": {
               "kind": "SCALAR",
-              "name": "Float",
-              "ofType": null
+              "name": "Float"
             }
           },
           {
@@ -4390,8 +4269,7 @@ const introspection = {
                 "kind": "NON_NULL",
                 "ofType": {
                   "kind": "SCALAR",
-                  "name": "Float",
-                  "ofType": null
+                  "name": "Float"
                 }
               }
             }
@@ -4400,40 +4278,35 @@ const introspection = {
             "name": "isNull",
             "type": {
               "kind": "SCALAR",
-              "name": "Boolean",
-              "ofType": null
+              "name": "Boolean"
             }
           },
           {
             "name": "lessThan",
             "type": {
               "kind": "SCALAR",
-              "name": "Float",
-              "ofType": null
+              "name": "Float"
             }
           },
           {
             "name": "lessThanOrEqualTo",
             "type": {
               "kind": "SCALAR",
-              "name": "Float",
-              "ofType": null
+              "name": "Float"
             }
           },
           {
             "name": "notDistinctFrom",
             "type": {
               "kind": "SCALAR",
-              "name": "Float",
-              "ofType": null
+              "name": "Float"
             }
           },
           {
             "name": "notEqualTo",
             "type": {
               "kind": "SCALAR",
-              "name": "Float",
-              "ofType": null
+              "name": "Float"
             }
           },
           {
@@ -4444,13 +4317,13 @@ const introspection = {
                 "kind": "NON_NULL",
                 "ofType": {
                   "kind": "SCALAR",
-                  "name": "Float",
-                  "ofType": null
+                  "name": "Float"
                 }
               }
             }
           }
-        ]
+        ],
+        "isOneOf": false
       },
       {
         "kind": "OBJECT",
@@ -4466,13 +4339,13 @@ const introspection = {
                   "kind": "NON_NULL",
                   "ofType": {
                     "kind": "OBJECT",
-                    "name": "MetaEdge",
-                    "ofType": null
+                    "name": "MetaEdge"
                   }
                 }
               }
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           },
           {
             "name": "nodes",
@@ -4484,13 +4357,13 @@ const introspection = {
                   "kind": "NON_NULL",
                   "ofType": {
                     "kind": "OBJECT",
-                    "name": "GlobalMetaType",
-                    "ofType": null
+                    "name": "GlobalMetaType"
                   }
                 }
               }
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           },
           {
             "name": "pageInfo",
@@ -4498,11 +4371,11 @@ const introspection = {
               "kind": "NON_NULL",
               "ofType": {
                 "kind": "OBJECT",
-                "name": "PageInfo",
-                "ofType": null
+                "name": "PageInfo"
               }
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           },
           {
             "name": "totalCount",
@@ -4510,11 +4383,11 @@ const introspection = {
               "kind": "NON_NULL",
               "ofType": {
                 "kind": "SCALAR",
-                "name": "Int",
-                "ofType": null
+                "name": "Int"
               }
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           }
         ],
         "interfaces": [
@@ -4534,11 +4407,11 @@ const introspection = {
               "kind": "NON_NULL",
               "ofType": {
                 "kind": "SCALAR",
-                "name": "String",
-                "ofType": null
+                "name": "String"
               }
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           },
           {
             "name": "value",
@@ -4546,11 +4419,11 @@ const introspection = {
               "kind": "NON_NULL",
               "ofType": {
                 "kind": "SCALAR",
-                "name": "String",
-                "ofType": null
+                "name": "String"
               }
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           }
         ],
         "interfaces": [
@@ -4570,8 +4443,7 @@ const introspection = {
               "kind": "NON_NULL",
               "ofType": {
                 "kind": "SCALAR",
-                "name": "String",
-                "ofType": null
+                "name": "String"
               }
             }
           },
@@ -4581,12 +4453,12 @@ const introspection = {
               "kind": "NON_NULL",
               "ofType": {
                 "kind": "SCALAR",
-                "name": "String",
-                "ofType": null
+                "name": "String"
               }
             }
           }
-        ]
+        ],
+        "isOneOf": false
       },
       {
         "kind": "OBJECT",
@@ -4602,13 +4474,13 @@ const introspection = {
                   "kind": "NON_NULL",
                   "ofType": {
                     "kind": "UNION",
-                    "name": "Filter",
-                    "ofType": null
+                    "name": "Filter"
                   }
                 }
               }
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           },
           {
             "name": "name",
@@ -4616,11 +4488,11 @@ const introspection = {
               "kind": "NON_NULL",
               "ofType": {
                 "kind": "SCALAR",
-                "name": "String",
-                "ofType": null
+                "name": "String"
               }
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           }
         ],
         "interfaces": []
@@ -4635,11 +4507,11 @@ const introspection = {
               "kind": "NON_NULL",
               "ofType": {
                 "kind": "SCALAR",
-                "name": "String",
-                "ofType": null
+                "name": "String"
               }
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           }
         ],
         "interfaces": []
@@ -4649,13 +4521,16 @@ const introspection = {
         "name": "IncludeOrExclude",
         "enumValues": [
           {
-            "name": "EXCLUDE"
+            "name": "EXCLUDE",
+            "isDeprecated": false
           },
           {
-            "name": "INCLUDE"
+            "name": "INCLUDE",
+            "isDeprecated": false
           },
           {
-            "name": "UNSET"
+            "name": "UNSET",
+            "isDeprecated": false
           }
         ]
       },
@@ -4667,8 +4542,7 @@ const introspection = {
             "name": "clientMutationId",
             "type": {
               "kind": "SCALAR",
-              "name": "String",
-              "ofType": null
+              "name": "String"
             }
           },
           {
@@ -4677,12 +4551,12 @@ const introspection = {
               "kind": "NON_NULL",
               "ofType": {
                 "kind": "SCALAR",
-                "name": "Upload",
-                "ofType": null
+                "name": "Upload"
               }
             }
           }
-        ]
+        ],
+        "isOneOf": false
       },
       {
         "kind": "OBJECT",
@@ -4692,10 +4566,10 @@ const introspection = {
             "name": "clientMutationId",
             "type": {
               "kind": "SCALAR",
-              "name": "String",
-              "ofType": null
+              "name": "String"
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           },
           {
             "name": "extension",
@@ -4703,14 +4577,18 @@ const introspection = {
               "kind": "NON_NULL",
               "ofType": {
                 "kind": "OBJECT",
-                "name": "ExtensionType",
-                "ofType": null
+                "name": "ExtensionType"
               }
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           }
         ],
         "interfaces": []
+      },
+      {
+        "kind": "SCALAR",
+        "name": "Int"
       },
       {
         "kind": "INPUT_OBJECT",
@@ -4720,32 +4598,28 @@ const introspection = {
             "name": "distinctFrom",
             "type": {
               "kind": "SCALAR",
-              "name": "Int",
-              "ofType": null
+              "name": "Int"
             }
           },
           {
             "name": "equalTo",
             "type": {
               "kind": "SCALAR",
-              "name": "Int",
-              "ofType": null
+              "name": "Int"
             }
           },
           {
             "name": "greaterThan",
             "type": {
               "kind": "SCALAR",
-              "name": "Int",
-              "ofType": null
+              "name": "Int"
             }
           },
           {
             "name": "greaterThanOrEqualTo",
             "type": {
               "kind": "SCALAR",
-              "name": "Int",
-              "ofType": null
+              "name": "Int"
             }
           },
           {
@@ -4756,8 +4630,7 @@ const introspection = {
                 "kind": "NON_NULL",
                 "ofType": {
                   "kind": "SCALAR",
-                  "name": "Int",
-                  "ofType": null
+                  "name": "Int"
                 }
               }
             }
@@ -4766,40 +4639,35 @@ const introspection = {
             "name": "isNull",
             "type": {
               "kind": "SCALAR",
-              "name": "Boolean",
-              "ofType": null
+              "name": "Boolean"
             }
           },
           {
             "name": "lessThan",
             "type": {
               "kind": "SCALAR",
-              "name": "Int",
-              "ofType": null
+              "name": "Int"
             }
           },
           {
             "name": "lessThanOrEqualTo",
             "type": {
               "kind": "SCALAR",
-              "name": "Int",
-              "ofType": null
+              "name": "Int"
             }
           },
           {
             "name": "notDistinctFrom",
             "type": {
               "kind": "SCALAR",
-              "name": "Int",
-              "ofType": null
+              "name": "Int"
             }
           },
           {
             "name": "notEqualTo",
             "type": {
               "kind": "SCALAR",
-              "name": "Int",
-              "ofType": null
+              "name": "Int"
             }
           },
           {
@@ -4810,13 +4678,13 @@ const introspection = {
                 "kind": "NON_NULL",
                 "ofType": {
                   "kind": "SCALAR",
-                  "name": "Int",
-                  "ofType": null
+                  "name": "Int"
                 }
               }
             }
           }
-        ]
+        ],
+        "isOneOf": false
       },
       {
         "kind": "OBJECT",
@@ -4828,11 +4696,11 @@ const introspection = {
               "kind": "NON_NULL",
               "ofType": {
                 "kind": "SCALAR",
-                "name": "LongString",
-                "ofType": null
+                "name": "LongString"
               }
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           }
         ],
         "interfaces": []
@@ -4845,19 +4713,19 @@ const introspection = {
             "name": "currentValue",
             "type": {
               "kind": "SCALAR",
-              "name": "String",
-              "ofType": null
+              "name": "String"
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           },
           {
             "name": "default",
             "type": {
               "kind": "SCALAR",
-              "name": "String",
-              "ofType": null
+              "name": "String"
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           },
           {
             "name": "entries",
@@ -4869,13 +4737,13 @@ const introspection = {
                   "kind": "NON_NULL",
                   "ofType": {
                     "kind": "SCALAR",
-                    "name": "String",
-                    "ofType": null
+                    "name": "String"
                   }
                 }
               }
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           },
           {
             "name": "entryValues",
@@ -4887,13 +4755,13 @@ const introspection = {
                   "kind": "NON_NULL",
                   "ofType": {
                     "kind": "SCALAR",
-                    "name": "String",
-                    "ofType": null
+                    "name": "String"
                   }
                 }
               }
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           },
           {
             "name": "key",
@@ -4901,29 +4769,29 @@ const introspection = {
               "kind": "NON_NULL",
               "ofType": {
                 "kind": "SCALAR",
-                "name": "String",
-                "ofType": null
+                "name": "String"
               }
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           },
           {
             "name": "summary",
             "type": {
               "kind": "SCALAR",
-              "name": "String",
-              "ofType": null
+              "name": "String"
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           },
           {
             "name": "title",
             "type": {
               "kind": "SCALAR",
-              "name": "String",
-              "ofType": null
+              "name": "String"
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           },
           {
             "name": "visible",
@@ -4931,11 +4799,11 @@ const introspection = {
               "kind": "NON_NULL",
               "ofType": {
                 "kind": "SCALAR",
-                "name": "Boolean",
-                "ofType": null
+                "name": "Boolean"
               }
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           }
         ],
         "interfaces": []
@@ -4948,8 +4816,7 @@ const introspection = {
             "name": "clientMutationId",
             "type": {
               "kind": "SCALAR",
-              "name": "String",
-              "ofType": null
+              "name": "String"
             }
           },
           {
@@ -4958,8 +4825,7 @@ const introspection = {
               "kind": "NON_NULL",
               "ofType": {
                 "kind": "SCALAR",
-                "name": "String",
-                "ofType": null
+                "name": "String"
               }
             }
           },
@@ -4969,8 +4835,7 @@ const introspection = {
               "kind": "NON_NULL",
               "ofType": {
                 "kind": "SCALAR",
-                "name": "Int",
-                "ofType": null
+                "name": "Int"
               }
             }
           },
@@ -4980,12 +4845,12 @@ const introspection = {
               "kind": "NON_NULL",
               "ofType": {
                 "kind": "SCALAR",
-                "name": "String",
-                "ofType": null
+                "name": "String"
               }
             }
           }
-        ]
+        ],
+        "isOneOf": false
       },
       {
         "kind": "OBJECT",
@@ -4995,10 +4860,10 @@ const introspection = {
             "name": "clientMutationId",
             "type": {
               "kind": "SCALAR",
-              "name": "String",
-              "ofType": null
+              "name": "String"
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           },
           {
             "name": "isLoggedIn",
@@ -5006,11 +4871,11 @@ const introspection = {
               "kind": "NON_NULL",
               "ofType": {
                 "kind": "SCALAR",
-                "name": "Boolean",
-                "ofType": null
+                "name": "Boolean"
               }
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           },
           {
             "name": "tracker",
@@ -5018,11 +4883,11 @@ const introspection = {
               "kind": "NON_NULL",
               "ofType": {
                 "kind": "OBJECT",
-                "name": "TrackerType",
-                "ofType": null
+                "name": "TrackerType"
               }
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           }
         ],
         "interfaces": []
@@ -5037,8 +4902,7 @@ const introspection = {
               "kind": "NON_NULL",
               "ofType": {
                 "kind": "SCALAR",
-                "name": "String",
-                "ofType": null
+                "name": "String"
               }
             }
           },
@@ -5046,8 +4910,7 @@ const introspection = {
             "name": "clientMutationId",
             "type": {
               "kind": "SCALAR",
-              "name": "String",
-              "ofType": null
+              "name": "String"
             }
           },
           {
@@ -5056,12 +4919,12 @@ const introspection = {
               "kind": "NON_NULL",
               "ofType": {
                 "kind": "SCALAR",
-                "name": "Int",
-                "ofType": null
+                "name": "Int"
               }
             }
           }
-        ]
+        ],
+        "isOneOf": false
       },
       {
         "kind": "OBJECT",
@@ -5071,10 +4934,10 @@ const introspection = {
             "name": "clientMutationId",
             "type": {
               "kind": "SCALAR",
-              "name": "String",
-              "ofType": null
+              "name": "String"
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           },
           {
             "name": "isLoggedIn",
@@ -5082,11 +4945,11 @@ const introspection = {
               "kind": "NON_NULL",
               "ofType": {
                 "kind": "SCALAR",
-                "name": "Boolean",
-                "ofType": null
+                "name": "Boolean"
               }
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           },
           {
             "name": "tracker",
@@ -5094,11 +4957,11 @@ const introspection = {
               "kind": "NON_NULL",
               "ofType": {
                 "kind": "OBJECT",
-                "name": "TrackerType",
-                "ofType": null
+                "name": "TrackerType"
               }
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           }
         ],
         "interfaces": []
@@ -5111,8 +4974,7 @@ const introspection = {
             "name": "clientMutationId",
             "type": {
               "kind": "SCALAR",
-              "name": "String",
-              "ofType": null
+              "name": "String"
             }
           },
           {
@@ -5121,12 +4983,12 @@ const introspection = {
               "kind": "NON_NULL",
               "ofType": {
                 "kind": "SCALAR",
-                "name": "Int",
-                "ofType": null
+                "name": "Int"
               }
             }
           }
-        ]
+        ],
+        "isOneOf": false
       },
       {
         "kind": "OBJECT",
@@ -5136,10 +4998,10 @@ const introspection = {
             "name": "clientMutationId",
             "type": {
               "kind": "SCALAR",
-              "name": "String",
-              "ofType": null
+              "name": "String"
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           },
           {
             "name": "isLoggedIn",
@@ -5147,11 +5009,11 @@ const introspection = {
               "kind": "NON_NULL",
               "ofType": {
                 "kind": "SCALAR",
-                "name": "Boolean",
-                "ofType": null
+                "name": "Boolean"
               }
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           },
           {
             "name": "tracker",
@@ -5159,11 +5021,11 @@ const introspection = {
               "kind": "NON_NULL",
               "ofType": {
                 "kind": "OBJECT",
-                "name": "TrackerType",
-                "ofType": null
+                "name": "TrackerType"
               }
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           }
         ],
         "interfaces": []
@@ -5176,32 +5038,28 @@ const introspection = {
             "name": "distinctFrom",
             "type": {
               "kind": "SCALAR",
-              "name": "LongString",
-              "ofType": null
+              "name": "LongString"
             }
           },
           {
             "name": "equalTo",
             "type": {
               "kind": "SCALAR",
-              "name": "LongString",
-              "ofType": null
+              "name": "LongString"
             }
           },
           {
             "name": "greaterThan",
             "type": {
               "kind": "SCALAR",
-              "name": "LongString",
-              "ofType": null
+              "name": "LongString"
             }
           },
           {
             "name": "greaterThanOrEqualTo",
             "type": {
               "kind": "SCALAR",
-              "name": "LongString",
-              "ofType": null
+              "name": "LongString"
             }
           },
           {
@@ -5212,8 +5070,7 @@ const introspection = {
                 "kind": "NON_NULL",
                 "ofType": {
                   "kind": "SCALAR",
-                  "name": "LongString",
-                  "ofType": null
+                  "name": "LongString"
                 }
               }
             }
@@ -5222,40 +5079,35 @@ const introspection = {
             "name": "isNull",
             "type": {
               "kind": "SCALAR",
-              "name": "Boolean",
-              "ofType": null
+              "name": "Boolean"
             }
           },
           {
             "name": "lessThan",
             "type": {
               "kind": "SCALAR",
-              "name": "LongString",
-              "ofType": null
+              "name": "LongString"
             }
           },
           {
             "name": "lessThanOrEqualTo",
             "type": {
               "kind": "SCALAR",
-              "name": "LongString",
-              "ofType": null
+              "name": "LongString"
             }
           },
           {
             "name": "notDistinctFrom",
             "type": {
               "kind": "SCALAR",
-              "name": "LongString",
-              "ofType": null
+              "name": "LongString"
             }
           },
           {
             "name": "notEqualTo",
             "type": {
               "kind": "SCALAR",
-              "name": "LongString",
-              "ofType": null
+              "name": "LongString"
             }
           },
           {
@@ -5266,13 +5118,13 @@ const introspection = {
                 "kind": "NON_NULL",
                 "ofType": {
                   "kind": "SCALAR",
-                  "name": "LongString",
-                  "ofType": null
+                  "name": "LongString"
                 }
               }
             }
           }
-        ]
+        ],
+        "isOneOf": false
       },
       {
         "kind": "SCALAR",
@@ -5286,16 +5138,14 @@ const introspection = {
             "name": "artist",
             "type": {
               "kind": "SCALAR",
-              "name": "String",
-              "ofType": null
+              "name": "String"
             }
           },
           {
             "name": "author",
             "type": {
               "kind": "SCALAR",
-              "name": "String",
-              "ofType": null
+              "name": "String"
             }
           },
           {
@@ -5306,8 +5156,7 @@ const introspection = {
                 "kind": "NON_NULL",
                 "ofType": {
                   "kind": "SCALAR",
-                  "name": "Int",
-                  "ofType": null
+                  "name": "Int"
                 }
               }
             }
@@ -5316,16 +5165,14 @@ const introspection = {
             "name": "chaptersLastFetchedAt",
             "type": {
               "kind": "SCALAR",
-              "name": "LongString",
-              "ofType": null
+              "name": "LongString"
             }
           },
           {
             "name": "description",
             "type": {
               "kind": "SCALAR",
-              "name": "String",
-              "ofType": null
+              "name": "String"
             }
           },
           {
@@ -5336,8 +5183,7 @@ const introspection = {
                 "kind": "NON_NULL",
                 "ofType": {
                   "kind": "SCALAR",
-                  "name": "String",
-                  "ofType": null
+                  "name": "String"
                 }
               }
             }
@@ -5346,91 +5192,81 @@ const introspection = {
             "name": "id",
             "type": {
               "kind": "SCALAR",
-              "name": "Int",
-              "ofType": null
+              "name": "Int"
             }
           },
           {
             "name": "inLibrary",
             "type": {
               "kind": "SCALAR",
-              "name": "Boolean",
-              "ofType": null
+              "name": "Boolean"
             }
           },
           {
             "name": "inLibraryAt",
             "type": {
               "kind": "SCALAR",
-              "name": "LongString",
-              "ofType": null
+              "name": "LongString"
             }
           },
           {
             "name": "initialized",
             "type": {
               "kind": "SCALAR",
-              "name": "Boolean",
-              "ofType": null
+              "name": "Boolean"
             }
           },
           {
             "name": "lastFetchedAt",
             "type": {
               "kind": "SCALAR",
-              "name": "LongString",
-              "ofType": null
+              "name": "LongString"
             }
           },
           {
             "name": "realUrl",
             "type": {
               "kind": "SCALAR",
-              "name": "String",
-              "ofType": null
+              "name": "String"
             }
           },
           {
             "name": "sourceId",
             "type": {
               "kind": "SCALAR",
-              "name": "LongString",
-              "ofType": null
+              "name": "LongString"
             }
           },
           {
             "name": "status",
             "type": {
               "kind": "ENUM",
-              "name": "MangaStatus",
-              "ofType": null
+              "name": "MangaStatus"
             }
           },
           {
             "name": "thumbnailUrl",
             "type": {
               "kind": "SCALAR",
-              "name": "String",
-              "ofType": null
+              "name": "String"
             }
           },
           {
             "name": "title",
             "type": {
               "kind": "SCALAR",
-              "name": "String",
-              "ofType": null
+              "name": "String"
             }
           },
           {
             "name": "url",
             "type": {
               "kind": "SCALAR",
-              "name": "String",
-              "ofType": null
+              "name": "String"
             }
           }
-        ]
+        ],
+        "isOneOf": false
       },
       {
         "kind": "OBJECT",
@@ -5442,11 +5278,11 @@ const introspection = {
               "kind": "NON_NULL",
               "ofType": {
                 "kind": "SCALAR",
-                "name": "Cursor",
-                "ofType": null
+                "name": "Cursor"
               }
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           },
           {
             "name": "node",
@@ -5454,11 +5290,11 @@ const introspection = {
               "kind": "NON_NULL",
               "ofType": {
                 "kind": "OBJECT",
-                "name": "MangaType",
-                "ofType": null
+                "name": "MangaType"
               }
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           }
         ],
         "interfaces": [
@@ -5480,8 +5316,7 @@ const introspection = {
                 "kind": "NON_NULL",
                 "ofType": {
                   "kind": "INPUT_OBJECT",
-                  "name": "MangaFilterInput",
-                  "ofType": null
+                  "name": "MangaFilterInput"
                 }
               }
             }
@@ -5490,96 +5325,84 @@ const introspection = {
             "name": "artist",
             "type": {
               "kind": "INPUT_OBJECT",
-              "name": "StringFilterInput",
-              "ofType": null
+              "name": "StringFilterInput"
             }
           },
           {
             "name": "author",
             "type": {
               "kind": "INPUT_OBJECT",
-              "name": "StringFilterInput",
-              "ofType": null
+              "name": "StringFilterInput"
             }
           },
           {
             "name": "categoryId",
             "type": {
               "kind": "INPUT_OBJECT",
-              "name": "IntFilterInput",
-              "ofType": null
+              "name": "IntFilterInput"
             }
           },
           {
             "name": "chaptersLastFetchedAt",
             "type": {
               "kind": "INPUT_OBJECT",
-              "name": "LongFilterInput",
-              "ofType": null
+              "name": "LongFilterInput"
             }
           },
           {
             "name": "description",
             "type": {
               "kind": "INPUT_OBJECT",
-              "name": "StringFilterInput",
-              "ofType": null
+              "name": "StringFilterInput"
             }
           },
           {
             "name": "genre",
             "type": {
               "kind": "INPUT_OBJECT",
-              "name": "StringFilterInput",
-              "ofType": null
+              "name": "StringFilterInput"
             }
           },
           {
             "name": "id",
             "type": {
               "kind": "INPUT_OBJECT",
-              "name": "IntFilterInput",
-              "ofType": null
+              "name": "IntFilterInput"
             }
           },
           {
             "name": "inLibrary",
             "type": {
               "kind": "INPUT_OBJECT",
-              "name": "BooleanFilterInput",
-              "ofType": null
+              "name": "BooleanFilterInput"
             }
           },
           {
             "name": "inLibraryAt",
             "type": {
               "kind": "INPUT_OBJECT",
-              "name": "LongFilterInput",
-              "ofType": null
+              "name": "LongFilterInput"
             }
           },
           {
             "name": "initialized",
             "type": {
               "kind": "INPUT_OBJECT",
-              "name": "BooleanFilterInput",
-              "ofType": null
+              "name": "BooleanFilterInput"
             }
           },
           {
             "name": "lastFetchedAt",
             "type": {
               "kind": "INPUT_OBJECT",
-              "name": "LongFilterInput",
-              "ofType": null
+              "name": "LongFilterInput"
             }
           },
           {
             "name": "not",
             "type": {
               "kind": "INPUT_OBJECT",
-              "name": "MangaFilterInput",
-              "ofType": null
+              "name": "MangaFilterInput"
             }
           },
           {
@@ -5590,8 +5413,7 @@ const introspection = {
                 "kind": "NON_NULL",
                 "ofType": {
                   "kind": "INPUT_OBJECT",
-                  "name": "MangaFilterInput",
-                  "ofType": null
+                  "name": "MangaFilterInput"
                 }
               }
             }
@@ -5600,51 +5422,46 @@ const introspection = {
             "name": "realUrl",
             "type": {
               "kind": "INPUT_OBJECT",
-              "name": "StringFilterInput",
-              "ofType": null
+              "name": "StringFilterInput"
             }
           },
           {
             "name": "sourceId",
             "type": {
               "kind": "INPUT_OBJECT",
-              "name": "LongFilterInput",
-              "ofType": null
+              "name": "LongFilterInput"
             }
           },
           {
             "name": "status",
             "type": {
               "kind": "INPUT_OBJECT",
-              "name": "MangaStatusFilterInput",
-              "ofType": null
+              "name": "MangaStatusFilterInput"
             }
           },
           {
             "name": "thumbnailUrl",
             "type": {
               "kind": "INPUT_OBJECT",
-              "name": "StringFilterInput",
-              "ofType": null
+              "name": "StringFilterInput"
             }
           },
           {
             "name": "title",
             "type": {
               "kind": "INPUT_OBJECT",
-              "name": "StringFilterInput",
-              "ofType": null
+              "name": "StringFilterInput"
             }
           },
           {
             "name": "url",
             "type": {
               "kind": "INPUT_OBJECT",
-              "name": "StringFilterInput",
-              "ofType": null
+              "name": "StringFilterInput"
             }
           }
-        ]
+        ],
+        "isOneOf": false
       },
       {
         "kind": "OBJECT",
@@ -5656,35 +5473,11 @@ const introspection = {
               "kind": "NON_NULL",
               "ofType": {
                 "kind": "SCALAR",
-                "name": "String",
-                "ofType": null
+                "name": "String"
               }
             },
-            "args": []
-          },
-          {
-            "name": "mangaId",
-            "type": {
-              "kind": "NON_NULL",
-              "ofType": {
-                "kind": "SCALAR",
-                "name": "Int",
-                "ofType": null
-              }
-            },
-            "args": []
-          },
-          {
-            "name": "value",
-            "type": {
-              "kind": "NON_NULL",
-              "ofType": {
-                "kind": "SCALAR",
-                "name": "String",
-                "ofType": null
-              }
-            },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           },
           {
             "name": "manga",
@@ -5692,11 +5485,35 @@ const introspection = {
               "kind": "NON_NULL",
               "ofType": {
                 "kind": "OBJECT",
-                "name": "MangaType",
-                "ofType": null
+                "name": "MangaType"
               }
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
+          },
+          {
+            "name": "mangaId",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "Int"
+              }
+            },
+            "args": [],
+            "isDeprecated": false
+          },
+          {
+            "name": "value",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "String"
+              }
+            },
+            "args": [],
+            "isDeprecated": false
           }
         ],
         "interfaces": [
@@ -5716,8 +5533,7 @@ const introspection = {
               "kind": "NON_NULL",
               "ofType": {
                 "kind": "SCALAR",
-                "name": "String",
-                "ofType": null
+                "name": "String"
               }
             }
           },
@@ -5727,8 +5543,7 @@ const introspection = {
               "kind": "NON_NULL",
               "ofType": {
                 "kind": "SCALAR",
-                "name": "Int",
-                "ofType": null
+                "name": "Int"
               }
             }
           },
@@ -5738,12 +5553,12 @@ const introspection = {
               "kind": "NON_NULL",
               "ofType": {
                 "kind": "SCALAR",
-                "name": "String",
-                "ofType": null
+                "name": "String"
               }
             }
           }
-        ]
+        ],
+        "isOneOf": false
       },
       {
         "kind": "OBJECT",
@@ -5759,13 +5574,13 @@ const introspection = {
                   "kind": "NON_NULL",
                   "ofType": {
                     "kind": "OBJECT",
-                    "name": "MangaEdge",
-                    "ofType": null
+                    "name": "MangaEdge"
                   }
                 }
               }
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           },
           {
             "name": "nodes",
@@ -5777,13 +5592,13 @@ const introspection = {
                   "kind": "NON_NULL",
                   "ofType": {
                     "kind": "OBJECT",
-                    "name": "MangaType",
-                    "ofType": null
+                    "name": "MangaType"
                   }
                 }
               }
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           },
           {
             "name": "pageInfo",
@@ -5791,11 +5606,11 @@ const introspection = {
               "kind": "NON_NULL",
               "ofType": {
                 "kind": "OBJECT",
-                "name": "PageInfo",
-                "ofType": null
+                "name": "PageInfo"
               }
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           },
           {
             "name": "totalCount",
@@ -5803,11 +5618,11 @@ const introspection = {
               "kind": "NON_NULL",
               "ofType": {
                 "kind": "SCALAR",
-                "name": "Int",
-                "ofType": null
+                "name": "Int"
               }
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           }
         ],
         "interfaces": [
@@ -5822,16 +5637,20 @@ const introspection = {
         "name": "MangaOrderBy",
         "enumValues": [
           {
-            "name": "ID"
+            "name": "ID",
+            "isDeprecated": false
           },
           {
-            "name": "TITLE"
+            "name": "TITLE",
+            "isDeprecated": false
           },
           {
-            "name": "IN_LIBRARY_AT"
+            "name": "IN_LIBRARY_AT",
+            "isDeprecated": false
           },
           {
-            "name": "LAST_FETCHED_AT"
+            "name": "LAST_FETCHED_AT",
+            "isDeprecated": false
           }
         ]
       },
@@ -5840,25 +5659,32 @@ const introspection = {
         "name": "MangaStatus",
         "enumValues": [
           {
-            "name": "UNKNOWN"
+            "name": "UNKNOWN",
+            "isDeprecated": false
           },
           {
-            "name": "ONGOING"
+            "name": "ONGOING",
+            "isDeprecated": false
           },
           {
-            "name": "COMPLETED"
+            "name": "COMPLETED",
+            "isDeprecated": false
           },
           {
-            "name": "LICENSED"
+            "name": "LICENSED",
+            "isDeprecated": false
           },
           {
-            "name": "PUBLISHING_FINISHED"
+            "name": "PUBLISHING_FINISHED",
+            "isDeprecated": false
           },
           {
-            "name": "CANCELLED"
+            "name": "CANCELLED",
+            "isDeprecated": false
           },
           {
-            "name": "ON_HIATUS"
+            "name": "ON_HIATUS",
+            "isDeprecated": false
           }
         ]
       },
@@ -5870,32 +5696,28 @@ const introspection = {
             "name": "distinctFrom",
             "type": {
               "kind": "ENUM",
-              "name": "MangaStatus",
-              "ofType": null
+              "name": "MangaStatus"
             }
           },
           {
             "name": "equalTo",
             "type": {
               "kind": "ENUM",
-              "name": "MangaStatus",
-              "ofType": null
+              "name": "MangaStatus"
             }
           },
           {
             "name": "greaterThan",
             "type": {
               "kind": "ENUM",
-              "name": "MangaStatus",
-              "ofType": null
+              "name": "MangaStatus"
             }
           },
           {
             "name": "greaterThanOrEqualTo",
             "type": {
               "kind": "ENUM",
-              "name": "MangaStatus",
-              "ofType": null
+              "name": "MangaStatus"
             }
           },
           {
@@ -5906,8 +5728,7 @@ const introspection = {
                 "kind": "NON_NULL",
                 "ofType": {
                   "kind": "ENUM",
-                  "name": "MangaStatus",
-                  "ofType": null
+                  "name": "MangaStatus"
                 }
               }
             }
@@ -5916,40 +5737,35 @@ const introspection = {
             "name": "isNull",
             "type": {
               "kind": "SCALAR",
-              "name": "Boolean",
-              "ofType": null
+              "name": "Boolean"
             }
           },
           {
             "name": "lessThan",
             "type": {
               "kind": "ENUM",
-              "name": "MangaStatus",
-              "ofType": null
+              "name": "MangaStatus"
             }
           },
           {
             "name": "lessThanOrEqualTo",
             "type": {
               "kind": "ENUM",
-              "name": "MangaStatus",
-              "ofType": null
+              "name": "MangaStatus"
             }
           },
           {
             "name": "notDistinctFrom",
             "type": {
               "kind": "ENUM",
-              "name": "MangaStatus",
-              "ofType": null
+              "name": "MangaStatus"
             }
           },
           {
             "name": "notEqualTo",
             "type": {
               "kind": "ENUM",
-              "name": "MangaStatus",
-              "ofType": null
+              "name": "MangaStatus"
             }
           },
           {
@@ -5960,53 +5776,128 @@ const introspection = {
                 "kind": "NON_NULL",
                 "ofType": {
                   "kind": "ENUM",
-                  "name": "MangaStatus",
-                  "ofType": null
+                  "name": "MangaStatus"
                 }
               }
             }
           }
-        ]
+        ],
+        "isOneOf": false
       },
       {
         "kind": "OBJECT",
         "name": "MangaType",
         "fields": [
           {
+            "name": "age",
+            "type": {
+              "kind": "SCALAR",
+              "name": "LongString"
+            },
+            "args": [],
+            "isDeprecated": false
+          },
+          {
             "name": "artist",
             "type": {
               "kind": "SCALAR",
-              "name": "String",
-              "ofType": null
+              "name": "String"
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           },
           {
             "name": "author",
             "type": {
               "kind": "SCALAR",
-              "name": "String",
-              "ofType": null
+              "name": "String"
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
+          },
+          {
+            "name": "bookmarkCount",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "Int"
+              }
+            },
+            "args": [],
+            "isDeprecated": false
+          },
+          {
+            "name": "categories",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "OBJECT",
+                "name": "CategoryNodeList"
+              }
+            },
+            "args": [],
+            "isDeprecated": false
+          },
+          {
+            "name": "chapters",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "OBJECT",
+                "name": "ChapterNodeList"
+              }
+            },
+            "args": [],
+            "isDeprecated": false
+          },
+          {
+            "name": "chaptersAge",
+            "type": {
+              "kind": "SCALAR",
+              "name": "LongString"
+            },
+            "args": [],
+            "isDeprecated": false
           },
           {
             "name": "chaptersLastFetchedAt",
             "type": {
               "kind": "SCALAR",
-              "name": "LongString",
-              "ofType": null
+              "name": "LongString"
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           },
           {
             "name": "description",
             "type": {
               "kind": "SCALAR",
-              "name": "String",
-              "ofType": null
+              "name": "String"
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
+          },
+          {
+            "name": "downloadCount",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "Int"
+              }
+            },
+            "args": [],
+            "isDeprecated": false
+          },
+          {
+            "name": "firstUnreadChapter",
+            "type": {
+              "kind": "OBJECT",
+              "name": "ChapterType"
+            },
+            "args": [],
+            "isDeprecated": false
           },
           {
             "name": "genre",
@@ -6018,13 +5909,13 @@ const introspection = {
                   "kind": "NON_NULL",
                   "ofType": {
                     "kind": "SCALAR",
-                    "name": "String",
-                    "ofType": null
+                    "name": "String"
                   }
                 }
               }
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           },
           {
             "name": "id",
@@ -6032,11 +5923,11 @@ const introspection = {
               "kind": "NON_NULL",
               "ofType": {
                 "kind": "SCALAR",
-                "name": "Int",
-                "ofType": null
+                "name": "Int"
               }
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           },
           {
             "name": "inLibrary",
@@ -6044,11 +5935,11 @@ const introspection = {
               "kind": "NON_NULL",
               "ofType": {
                 "kind": "SCALAR",
-                "name": "Boolean",
-                "ofType": null
+                "name": "Boolean"
               }
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           },
           {
             "name": "inLibraryAt",
@@ -6056,11 +5947,11 @@ const introspection = {
               "kind": "NON_NULL",
               "ofType": {
                 "kind": "SCALAR",
-                "name": "LongString",
-                "ofType": null
+                "name": "LongString"
               }
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           },
           {
             "name": "initialized",
@@ -6068,218 +5959,56 @@ const introspection = {
               "kind": "NON_NULL",
               "ofType": {
                 "kind": "SCALAR",
-                "name": "Boolean",
-                "ofType": null
+                "name": "Boolean"
               }
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           },
           {
             "name": "lastFetchedAt",
             "type": {
               "kind": "SCALAR",
-              "name": "LongString",
-              "ofType": null
+              "name": "LongString"
             },
-            "args": []
-          },
-          {
-            "name": "realUrl",
-            "type": {
-              "kind": "SCALAR",
-              "name": "String",
-              "ofType": null
-            },
-            "args": []
-          },
-          {
-            "name": "sourceId",
-            "type": {
-              "kind": "NON_NULL",
-              "ofType": {
-                "kind": "SCALAR",
-                "name": "LongString",
-                "ofType": null
-              }
-            },
-            "args": []
-          },
-          {
-            "name": "status",
-            "type": {
-              "kind": "NON_NULL",
-              "ofType": {
-                "kind": "ENUM",
-                "name": "MangaStatus",
-                "ofType": null
-              }
-            },
-            "args": []
-          },
-          {
-            "name": "thumbnailUrl",
-            "type": {
-              "kind": "SCALAR",
-              "name": "String",
-              "ofType": null
-            },
-            "args": []
-          },
-          {
-            "name": "thumbnailUrlLastFetched",
-            "type": {
-              "kind": "SCALAR",
-              "name": "LongString",
-              "ofType": null
-            },
-            "args": []
-          },
-          {
-            "name": "title",
-            "type": {
-              "kind": "NON_NULL",
-              "ofType": {
-                "kind": "SCALAR",
-                "name": "String",
-                "ofType": null
-              }
-            },
-            "args": []
-          },
-          {
-            "name": "updateStrategy",
-            "type": {
-              "kind": "NON_NULL",
-              "ofType": {
-                "kind": "ENUM",
-                "name": "UpdateStrategy",
-                "ofType": null
-              }
-            },
-            "args": []
-          },
-          {
-            "name": "url",
-            "type": {
-              "kind": "NON_NULL",
-              "ofType": {
-                "kind": "SCALAR",
-                "name": "String",
-                "ofType": null
-              }
-            },
-            "args": []
-          },
-          {
-            "name": "age",
-            "type": {
-              "kind": "SCALAR",
-              "name": "LongString",
-              "ofType": null
-            },
-            "args": []
-          },
-          {
-            "name": "bookmarkCount",
-            "type": {
-              "kind": "NON_NULL",
-              "ofType": {
-                "kind": "SCALAR",
-                "name": "Int",
-                "ofType": null
-              }
-            },
-            "args": []
-          },
-          {
-            "name": "categories",
-            "type": {
-              "kind": "NON_NULL",
-              "ofType": {
-                "kind": "OBJECT",
-                "name": "CategoryNodeList",
-                "ofType": null
-              }
-            },
-            "args": []
-          },
-          {
-            "name": "chapters",
-            "type": {
-              "kind": "NON_NULL",
-              "ofType": {
-                "kind": "OBJECT",
-                "name": "ChapterNodeList",
-                "ofType": null
-              }
-            },
-            "args": []
-          },
-          {
-            "name": "chaptersAge",
-            "type": {
-              "kind": "SCALAR",
-              "name": "LongString",
-              "ofType": null
-            },
-            "args": []
-          },
-          {
-            "name": "downloadCount",
-            "type": {
-              "kind": "NON_NULL",
-              "ofType": {
-                "kind": "SCALAR",
-                "name": "Int",
-                "ofType": null
-              }
-            },
-            "args": []
-          },
-          {
-            "name": "firstUnreadChapter",
-            "type": {
-              "kind": "OBJECT",
-              "name": "ChapterType",
-              "ofType": null
-            },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           },
           {
             "name": "lastReadChapter",
             "type": {
               "kind": "OBJECT",
-              "name": "ChapterType",
-              "ofType": null
+              "name": "ChapterType"
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           },
           {
             "name": "latestFetchedChapter",
             "type": {
               "kind": "OBJECT",
-              "name": "ChapterType",
-              "ofType": null
+              "name": "ChapterType"
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           },
           {
             "name": "latestReadChapter",
             "type": {
               "kind": "OBJECT",
-              "name": "ChapterType",
-              "ofType": null
+              "name": "ChapterType"
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           },
           {
             "name": "latestUploadedChapter",
             "type": {
               "kind": "OBJECT",
-              "name": "ChapterType",
-              "ofType": null
+              "name": "ChapterType"
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           },
           {
             "name": "meta",
@@ -6291,22 +6020,85 @@ const introspection = {
                   "kind": "NON_NULL",
                   "ofType": {
                     "kind": "OBJECT",
-                    "name": "MangaMetaType",
-                    "ofType": null
+                    "name": "MangaMetaType"
                   }
                 }
               }
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
+          },
+          {
+            "name": "realUrl",
+            "type": {
+              "kind": "SCALAR",
+              "name": "String"
+            },
+            "args": [],
+            "isDeprecated": false
           },
           {
             "name": "source",
             "type": {
               "kind": "OBJECT",
-              "name": "SourceType",
-              "ofType": null
+              "name": "SourceType"
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
+          },
+          {
+            "name": "sourceId",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "LongString"
+              }
+            },
+            "args": [],
+            "isDeprecated": false
+          },
+          {
+            "name": "status",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "ENUM",
+                "name": "MangaStatus"
+              }
+            },
+            "args": [],
+            "isDeprecated": false
+          },
+          {
+            "name": "thumbnailUrl",
+            "type": {
+              "kind": "SCALAR",
+              "name": "String"
+            },
+            "args": [],
+            "isDeprecated": false
+          },
+          {
+            "name": "thumbnailUrlLastFetched",
+            "type": {
+              "kind": "SCALAR",
+              "name": "LongString"
+            },
+            "args": [],
+            "isDeprecated": false
+          },
+          {
+            "name": "title",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "String"
+              }
+            },
+            "args": [],
+            "isDeprecated": false
           },
           {
             "name": "trackRecords",
@@ -6314,11 +6106,11 @@ const introspection = {
               "kind": "NON_NULL",
               "ofType": {
                 "kind": "OBJECT",
-                "name": "TrackRecordNodeList",
-                "ofType": null
+                "name": "TrackRecordNodeList"
               }
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           },
           {
             "name": "unreadCount",
@@ -6326,11 +6118,35 @@ const introspection = {
               "kind": "NON_NULL",
               "ofType": {
                 "kind": "SCALAR",
-                "name": "Int",
-                "ofType": null
+                "name": "Int"
               }
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
+          },
+          {
+            "name": "updateStrategy",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "ENUM",
+                "name": "UpdateStrategy"
+              }
+            },
+            "args": [],
+            "isDeprecated": false
+          },
+          {
+            "name": "url",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "String"
+              }
+            },
+            "args": [],
+            "isDeprecated": false
           }
         ],
         "interfaces": []
@@ -6343,19 +6159,18 @@ const introspection = {
             "name": "key",
             "type": {
               "kind": "SCALAR",
-              "name": "String",
-              "ofType": null
+              "name": "String"
             }
           },
           {
             "name": "value",
             "type": {
               "kind": "SCALAR",
-              "name": "String",
-              "ofType": null
+              "name": "String"
             }
           }
-        ]
+        ],
+        "isOneOf": false
       },
       {
         "kind": "OBJECT",
@@ -6367,11 +6182,11 @@ const introspection = {
               "kind": "NON_NULL",
               "ofType": {
                 "kind": "SCALAR",
-                "name": "Cursor",
-                "ofType": null
+                "name": "Cursor"
               }
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           },
           {
             "name": "node",
@@ -6379,11 +6194,11 @@ const introspection = {
               "kind": "NON_NULL",
               "ofType": {
                 "kind": "OBJECT",
-                "name": "GlobalMetaType",
-                "ofType": null
+                "name": "GlobalMetaType"
               }
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           }
         ],
         "interfaces": [
@@ -6405,8 +6220,7 @@ const introspection = {
                 "kind": "NON_NULL",
                 "ofType": {
                   "kind": "INPUT_OBJECT",
-                  "name": "MetaFilterInput",
-                  "ofType": null
+                  "name": "MetaFilterInput"
                 }
               }
             }
@@ -6415,16 +6229,14 @@ const introspection = {
             "name": "key",
             "type": {
               "kind": "INPUT_OBJECT",
-              "name": "StringFilterInput",
-              "ofType": null
+              "name": "StringFilterInput"
             }
           },
           {
             "name": "not",
             "type": {
               "kind": "INPUT_OBJECT",
-              "name": "MetaFilterInput",
-              "ofType": null
+              "name": "MetaFilterInput"
             }
           },
           {
@@ -6435,8 +6247,7 @@ const introspection = {
                 "kind": "NON_NULL",
                 "ofType": {
                   "kind": "INPUT_OBJECT",
-                  "name": "MetaFilterInput",
-                  "ofType": null
+                  "name": "MetaFilterInput"
                 }
               }
             }
@@ -6445,21 +6256,23 @@ const introspection = {
             "name": "value",
             "type": {
               "kind": "INPUT_OBJECT",
-              "name": "StringFilterInput",
-              "ofType": null
+              "name": "StringFilterInput"
             }
           }
-        ]
+        ],
+        "isOneOf": false
       },
       {
         "kind": "ENUM",
         "name": "MetaOrderBy",
         "enumValues": [
           {
-            "name": "KEY"
+            "name": "KEY",
+            "isDeprecated": false
           },
           {
-            "name": "VALUE"
+            "name": "VALUE",
+            "isDeprecated": false
           }
         ]
       },
@@ -6473,11 +6286,11 @@ const introspection = {
               "kind": "NON_NULL",
               "ofType": {
                 "kind": "SCALAR",
-                "name": "String",
-                "ofType": null
+                "name": "String"
               }
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           },
           {
             "name": "value",
@@ -6485,11 +6298,11 @@ const introspection = {
               "kind": "NON_NULL",
               "ofType": {
                 "kind": "SCALAR",
-                "name": "String",
-                "ofType": null
+                "name": "String"
               }
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           }
         ],
         "interfaces": [],
@@ -6528,12 +6341,12 @@ const introspection = {
                 "kind": "NON_NULL",
                 "ofType": {
                   "kind": "SCALAR",
-                  "name": "String",
-                  "ofType": null
+                  "name": "String"
                 }
               }
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           },
           {
             "name": "default",
@@ -6543,30 +6356,30 @@ const introspection = {
                 "kind": "NON_NULL",
                 "ofType": {
                   "kind": "SCALAR",
-                  "name": "String",
-                  "ofType": null
+                  "name": "String"
                 }
               }
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           },
           {
             "name": "dialogMessage",
             "type": {
               "kind": "SCALAR",
-              "name": "String",
-              "ofType": null
+              "name": "String"
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           },
           {
             "name": "dialogTitle",
             "type": {
               "kind": "SCALAR",
-              "name": "String",
-              "ofType": null
+              "name": "String"
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           },
           {
             "name": "entries",
@@ -6578,13 +6391,13 @@ const introspection = {
                   "kind": "NON_NULL",
                   "ofType": {
                     "kind": "SCALAR",
-                    "name": "String",
-                    "ofType": null
+                    "name": "String"
                   }
                 }
               }
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           },
           {
             "name": "entryValues",
@@ -6596,13 +6409,13 @@ const introspection = {
                   "kind": "NON_NULL",
                   "ofType": {
                     "kind": "SCALAR",
-                    "name": "String",
-                    "ofType": null
+                    "name": "String"
                   }
                 }
               }
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           },
           {
             "name": "key",
@@ -6610,29 +6423,29 @@ const introspection = {
               "kind": "NON_NULL",
               "ofType": {
                 "kind": "SCALAR",
-                "name": "String",
-                "ofType": null
+                "name": "String"
               }
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           },
           {
             "name": "summary",
             "type": {
               "kind": "SCALAR",
-              "name": "String",
-              "ofType": null
+              "name": "String"
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           },
           {
             "name": "title",
             "type": {
               "kind": "SCALAR",
-              "name": "String",
-              "ofType": null
+              "name": "String"
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           },
           {
             "name": "visible",
@@ -6640,11 +6453,11 @@ const introspection = {
               "kind": "NON_NULL",
               "ofType": {
                 "kind": "SCALAR",
-                "name": "Boolean",
-                "ofType": null
+                "name": "Boolean"
               }
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           }
         ],
         "interfaces": []
@@ -6654,34 +6467,12 @@ const introspection = {
         "name": "Mutation",
         "fields": [
           {
-            "name": "createBackup",
+            "name": "bindTrack",
             "type": {
               "kind": "NON_NULL",
               "ofType": {
                 "kind": "OBJECT",
-                "name": "CreateBackupPayload",
-                "ofType": null
-              }
-            },
-            "args": [
-              {
-                "name": "input",
-                "type": {
-                  "kind": "INPUT_OBJECT",
-                  "name": "CreateBackupInput",
-                  "ofType": null
-                }
-              }
-            ]
-          },
-          {
-            "name": "restoreBackup",
-            "type": {
-              "kind": "NON_NULL",
-              "ofType": {
-                "kind": "OBJECT",
-                "name": "RestoreBackupPayload",
-                "ofType": null
+                "name": "BindTrackPayload"
               }
             },
             "args": [
@@ -6691,708 +6482,12 @@ const introspection = {
                   "kind": "NON_NULL",
                   "ofType": {
                     "kind": "INPUT_OBJECT",
-                    "name": "RestoreBackupInput",
-                    "ofType": null
+                    "name": "BindTrackInput"
                   }
                 }
               }
-            ]
-          },
-          {
-            "name": "createCategory",
-            "type": {
-              "kind": "NON_NULL",
-              "ofType": {
-                "kind": "OBJECT",
-                "name": "CreateCategoryPayload",
-                "ofType": null
-              }
-            },
-            "args": [
-              {
-                "name": "input",
-                "type": {
-                  "kind": "NON_NULL",
-                  "ofType": {
-                    "kind": "INPUT_OBJECT",
-                    "name": "CreateCategoryInput",
-                    "ofType": null
-                  }
-                }
-              }
-            ]
-          },
-          {
-            "name": "deleteCategory",
-            "type": {
-              "kind": "NON_NULL",
-              "ofType": {
-                "kind": "OBJECT",
-                "name": "DeleteCategoryPayload",
-                "ofType": null
-              }
-            },
-            "args": [
-              {
-                "name": "input",
-                "type": {
-                  "kind": "NON_NULL",
-                  "ofType": {
-                    "kind": "INPUT_OBJECT",
-                    "name": "DeleteCategoryInput",
-                    "ofType": null
-                  }
-                }
-              }
-            ]
-          },
-          {
-            "name": "deleteCategoryMeta",
-            "type": {
-              "kind": "NON_NULL",
-              "ofType": {
-                "kind": "OBJECT",
-                "name": "DeleteCategoryMetaPayload",
-                "ofType": null
-              }
-            },
-            "args": [
-              {
-                "name": "input",
-                "type": {
-                  "kind": "NON_NULL",
-                  "ofType": {
-                    "kind": "INPUT_OBJECT",
-                    "name": "DeleteCategoryMetaInput",
-                    "ofType": null
-                  }
-                }
-              }
-            ]
-          },
-          {
-            "name": "setCategoryMeta",
-            "type": {
-              "kind": "NON_NULL",
-              "ofType": {
-                "kind": "OBJECT",
-                "name": "SetCategoryMetaPayload",
-                "ofType": null
-              }
-            },
-            "args": [
-              {
-                "name": "input",
-                "type": {
-                  "kind": "NON_NULL",
-                  "ofType": {
-                    "kind": "INPUT_OBJECT",
-                    "name": "SetCategoryMetaInput",
-                    "ofType": null
-                  }
-                }
-              }
-            ]
-          },
-          {
-            "name": "updateCategories",
-            "type": {
-              "kind": "NON_NULL",
-              "ofType": {
-                "kind": "OBJECT",
-                "name": "UpdateCategoriesPayload",
-                "ofType": null
-              }
-            },
-            "args": [
-              {
-                "name": "input",
-                "type": {
-                  "kind": "NON_NULL",
-                  "ofType": {
-                    "kind": "INPUT_OBJECT",
-                    "name": "UpdateCategoriesInput",
-                    "ofType": null
-                  }
-                }
-              }
-            ]
-          },
-          {
-            "name": "updateCategory",
-            "type": {
-              "kind": "NON_NULL",
-              "ofType": {
-                "kind": "OBJECT",
-                "name": "UpdateCategoryPayload",
-                "ofType": null
-              }
-            },
-            "args": [
-              {
-                "name": "input",
-                "type": {
-                  "kind": "NON_NULL",
-                  "ofType": {
-                    "kind": "INPUT_OBJECT",
-                    "name": "UpdateCategoryInput",
-                    "ofType": null
-                  }
-                }
-              }
-            ]
-          },
-          {
-            "name": "updateCategoryOrder",
-            "type": {
-              "kind": "NON_NULL",
-              "ofType": {
-                "kind": "OBJECT",
-                "name": "UpdateCategoryOrderPayload",
-                "ofType": null
-              }
-            },
-            "args": [
-              {
-                "name": "input",
-                "type": {
-                  "kind": "NON_NULL",
-                  "ofType": {
-                    "kind": "INPUT_OBJECT",
-                    "name": "UpdateCategoryOrderInput",
-                    "ofType": null
-                  }
-                }
-              }
-            ]
-          },
-          {
-            "name": "updateMangaCategories",
-            "type": {
-              "kind": "NON_NULL",
-              "ofType": {
-                "kind": "OBJECT",
-                "name": "UpdateMangaCategoriesPayload",
-                "ofType": null
-              }
-            },
-            "args": [
-              {
-                "name": "input",
-                "type": {
-                  "kind": "NON_NULL",
-                  "ofType": {
-                    "kind": "INPUT_OBJECT",
-                    "name": "UpdateMangaCategoriesInput",
-                    "ofType": null
-                  }
-                }
-              }
-            ]
-          },
-          {
-            "name": "updateMangasCategories",
-            "type": {
-              "kind": "NON_NULL",
-              "ofType": {
-                "kind": "OBJECT",
-                "name": "UpdateMangasCategoriesPayload",
-                "ofType": null
-              }
-            },
-            "args": [
-              {
-                "name": "input",
-                "type": {
-                  "kind": "NON_NULL",
-                  "ofType": {
-                    "kind": "INPUT_OBJECT",
-                    "name": "UpdateMangasCategoriesInput",
-                    "ofType": null
-                  }
-                }
-              }
-            ]
-          },
-          {
-            "name": "deleteChapterMeta",
-            "type": {
-              "kind": "NON_NULL",
-              "ofType": {
-                "kind": "OBJECT",
-                "name": "DeleteChapterMetaPayload",
-                "ofType": null
-              }
-            },
-            "args": [
-              {
-                "name": "input",
-                "type": {
-                  "kind": "NON_NULL",
-                  "ofType": {
-                    "kind": "INPUT_OBJECT",
-                    "name": "DeleteChapterMetaInput",
-                    "ofType": null
-                  }
-                }
-              }
-            ]
-          },
-          {
-            "name": "fetchChapterPages",
-            "type": {
-              "kind": "NON_NULL",
-              "ofType": {
-                "kind": "OBJECT",
-                "name": "FetchChapterPagesPayload",
-                "ofType": null
-              }
-            },
-            "args": [
-              {
-                "name": "input",
-                "type": {
-                  "kind": "NON_NULL",
-                  "ofType": {
-                    "kind": "INPUT_OBJECT",
-                    "name": "FetchChapterPagesInput",
-                    "ofType": null
-                  }
-                }
-              }
-            ]
-          },
-          {
-            "name": "fetchChapters",
-            "type": {
-              "kind": "NON_NULL",
-              "ofType": {
-                "kind": "OBJECT",
-                "name": "FetchChaptersPayload",
-                "ofType": null
-              }
-            },
-            "args": [
-              {
-                "name": "input",
-                "type": {
-                  "kind": "NON_NULL",
-                  "ofType": {
-                    "kind": "INPUT_OBJECT",
-                    "name": "FetchChaptersInput",
-                    "ofType": null
-                  }
-                }
-              }
-            ]
-          },
-          {
-            "name": "setChapterMeta",
-            "type": {
-              "kind": "NON_NULL",
-              "ofType": {
-                "kind": "OBJECT",
-                "name": "SetChapterMetaPayload",
-                "ofType": null
-              }
-            },
-            "args": [
-              {
-                "name": "input",
-                "type": {
-                  "kind": "NON_NULL",
-                  "ofType": {
-                    "kind": "INPUT_OBJECT",
-                    "name": "SetChapterMetaInput",
-                    "ofType": null
-                  }
-                }
-              }
-            ]
-          },
-          {
-            "name": "updateChapter",
-            "type": {
-              "kind": "NON_NULL",
-              "ofType": {
-                "kind": "OBJECT",
-                "name": "UpdateChapterPayload",
-                "ofType": null
-              }
-            },
-            "args": [
-              {
-                "name": "input",
-                "type": {
-                  "kind": "NON_NULL",
-                  "ofType": {
-                    "kind": "INPUT_OBJECT",
-                    "name": "UpdateChapterInput",
-                    "ofType": null
-                  }
-                }
-              }
-            ]
-          },
-          {
-            "name": "updateChapters",
-            "type": {
-              "kind": "NON_NULL",
-              "ofType": {
-                "kind": "OBJECT",
-                "name": "UpdateChaptersPayload",
-                "ofType": null
-              }
-            },
-            "args": [
-              {
-                "name": "input",
-                "type": {
-                  "kind": "NON_NULL",
-                  "ofType": {
-                    "kind": "INPUT_OBJECT",
-                    "name": "UpdateChaptersInput",
-                    "ofType": null
-                  }
-                }
-              }
-            ]
-          },
-          {
-            "name": "clearDownloader",
-            "type": {
-              "kind": "NON_NULL",
-              "ofType": {
-                "kind": "OBJECT",
-                "name": "ClearDownloaderPayload",
-                "ofType": null
-              }
-            },
-            "args": [
-              {
-                "name": "input",
-                "type": {
-                  "kind": "NON_NULL",
-                  "ofType": {
-                    "kind": "INPUT_OBJECT",
-                    "name": "ClearDownloaderInput",
-                    "ofType": null
-                  }
-                }
-              }
-            ]
-          },
-          {
-            "name": "deleteDownloadedChapter",
-            "type": {
-              "kind": "NON_NULL",
-              "ofType": {
-                "kind": "OBJECT",
-                "name": "DeleteDownloadedChapterPayload",
-                "ofType": null
-              }
-            },
-            "args": [
-              {
-                "name": "input",
-                "type": {
-                  "kind": "NON_NULL",
-                  "ofType": {
-                    "kind": "INPUT_OBJECT",
-                    "name": "DeleteDownloadedChapterInput",
-                    "ofType": null
-                  }
-                }
-              }
-            ]
-          },
-          {
-            "name": "deleteDownloadedChapters",
-            "type": {
-              "kind": "NON_NULL",
-              "ofType": {
-                "kind": "OBJECT",
-                "name": "DeleteDownloadedChaptersPayload",
-                "ofType": null
-              }
-            },
-            "args": [
-              {
-                "name": "input",
-                "type": {
-                  "kind": "NON_NULL",
-                  "ofType": {
-                    "kind": "INPUT_OBJECT",
-                    "name": "DeleteDownloadedChaptersInput",
-                    "ofType": null
-                  }
-                }
-              }
-            ]
-          },
-          {
-            "name": "dequeueChapterDownload",
-            "type": {
-              "kind": "NON_NULL",
-              "ofType": {
-                "kind": "OBJECT",
-                "name": "DequeueChapterDownloadPayload",
-                "ofType": null
-              }
-            },
-            "args": [
-              {
-                "name": "input",
-                "type": {
-                  "kind": "NON_NULL",
-                  "ofType": {
-                    "kind": "INPUT_OBJECT",
-                    "name": "DequeueChapterDownloadInput",
-                    "ofType": null
-                  }
-                }
-              }
-            ]
-          },
-          {
-            "name": "dequeueChapterDownloads",
-            "type": {
-              "kind": "NON_NULL",
-              "ofType": {
-                "kind": "OBJECT",
-                "name": "DequeueChapterDownloadsPayload",
-                "ofType": null
-              }
-            },
-            "args": [
-              {
-                "name": "input",
-                "type": {
-                  "kind": "NON_NULL",
-                  "ofType": {
-                    "kind": "INPUT_OBJECT",
-                    "name": "DequeueChapterDownloadsInput",
-                    "ofType": null
-                  }
-                }
-              }
-            ]
-          },
-          {
-            "name": "enqueueChapterDownload",
-            "type": {
-              "kind": "NON_NULL",
-              "ofType": {
-                "kind": "OBJECT",
-                "name": "EnqueueChapterDownloadPayload",
-                "ofType": null
-              }
-            },
-            "args": [
-              {
-                "name": "input",
-                "type": {
-                  "kind": "NON_NULL",
-                  "ofType": {
-                    "kind": "INPUT_OBJECT",
-                    "name": "EnqueueChapterDownloadInput",
-                    "ofType": null
-                  }
-                }
-              }
-            ]
-          },
-          {
-            "name": "enqueueChapterDownloads",
-            "type": {
-              "kind": "NON_NULL",
-              "ofType": {
-                "kind": "OBJECT",
-                "name": "EnqueueChapterDownloadsPayload",
-                "ofType": null
-              }
-            },
-            "args": [
-              {
-                "name": "input",
-                "type": {
-                  "kind": "NON_NULL",
-                  "ofType": {
-                    "kind": "INPUT_OBJECT",
-                    "name": "EnqueueChapterDownloadsInput",
-                    "ofType": null
-                  }
-                }
-              }
-            ]
-          },
-          {
-            "name": "reorderChapterDownload",
-            "type": {
-              "kind": "NON_NULL",
-              "ofType": {
-                "kind": "OBJECT",
-                "name": "ReorderChapterDownloadPayload",
-                "ofType": null
-              }
-            },
-            "args": [
-              {
-                "name": "input",
-                "type": {
-                  "kind": "NON_NULL",
-                  "ofType": {
-                    "kind": "INPUT_OBJECT",
-                    "name": "ReorderChapterDownloadInput",
-                    "ofType": null
-                  }
-                }
-              }
-            ]
-          },
-          {
-            "name": "startDownloader",
-            "type": {
-              "kind": "NON_NULL",
-              "ofType": {
-                "kind": "OBJECT",
-                "name": "StartDownloaderPayload",
-                "ofType": null
-              }
-            },
-            "args": [
-              {
-                "name": "input",
-                "type": {
-                  "kind": "NON_NULL",
-                  "ofType": {
-                    "kind": "INPUT_OBJECT",
-                    "name": "StartDownloaderInput",
-                    "ofType": null
-                  }
-                }
-              }
-            ]
-          },
-          {
-            "name": "stopDownloader",
-            "type": {
-              "kind": "NON_NULL",
-              "ofType": {
-                "kind": "OBJECT",
-                "name": "StopDownloaderPayload",
-                "ofType": null
-              }
-            },
-            "args": [
-              {
-                "name": "input",
-                "type": {
-                  "kind": "NON_NULL",
-                  "ofType": {
-                    "kind": "INPUT_OBJECT",
-                    "name": "StopDownloaderInput",
-                    "ofType": null
-                  }
-                }
-              }
-            ]
-          },
-          {
-            "name": "fetchExtensions",
-            "type": {
-              "kind": "NON_NULL",
-              "ofType": {
-                "kind": "OBJECT",
-                "name": "FetchExtensionsPayload",
-                "ofType": null
-              }
-            },
-            "args": [
-              {
-                "name": "input",
-                "type": {
-                  "kind": "NON_NULL",
-                  "ofType": {
-                    "kind": "INPUT_OBJECT",
-                    "name": "FetchExtensionsInput",
-                    "ofType": null
-                  }
-                }
-              }
-            ]
-          },
-          {
-            "name": "installExternalExtension",
-            "type": {
-              "kind": "NON_NULL",
-              "ofType": {
-                "kind": "OBJECT",
-                "name": "InstallExternalExtensionPayload",
-                "ofType": null
-              }
-            },
-            "args": [
-              {
-                "name": "input",
-                "type": {
-                  "kind": "NON_NULL",
-                  "ofType": {
-                    "kind": "INPUT_OBJECT",
-                    "name": "InstallExternalExtensionInput",
-                    "ofType": null
-                  }
-                }
-              }
-            ]
-          },
-          {
-            "name": "updateExtension",
-            "type": {
-              "kind": "NON_NULL",
-              "ofType": {
-                "kind": "OBJECT",
-                "name": "UpdateExtensionPayload",
-                "ofType": null
-              }
-            },
-            "args": [
-              {
-                "name": "input",
-                "type": {
-                  "kind": "NON_NULL",
-                  "ofType": {
-                    "kind": "INPUT_OBJECT",
-                    "name": "UpdateExtensionInput",
-                    "ofType": null
-                  }
-                }
-              }
-            ]
-          },
-          {
-            "name": "updateExtensions",
-            "type": {
-              "kind": "NON_NULL",
-              "ofType": {
-                "kind": "OBJECT",
-                "name": "UpdateExtensionsPayload",
-                "ofType": null
-              }
-            },
-            "args": [
-              {
-                "name": "input",
-                "type": {
-                  "kind": "NON_NULL",
-                  "ofType": {
-                    "kind": "INPUT_OBJECT",
-                    "name": "UpdateExtensionsInput",
-                    "ofType": null
-                  }
-                }
-              }
-            ]
+            ],
+            "isDeprecated": false
           },
           {
             "name": "clearCachedImages",
@@ -7400,8 +6495,7 @@ const introspection = {
               "kind": "NON_NULL",
               "ofType": {
                 "kind": "OBJECT",
-                "name": "ClearCachedImagesPayload",
-                "ofType": null
+                "name": "ClearCachedImagesPayload"
               }
             },
             "args": [
@@ -7411,33 +6505,20 @@ const introspection = {
                   "kind": "NON_NULL",
                   "ofType": {
                     "kind": "INPUT_OBJECT",
-                    "name": "ClearCachedImagesInput",
-                    "ofType": null
+                    "name": "ClearCachedImagesInput"
                   }
                 }
               }
-            ]
+            ],
+            "isDeprecated": false
           },
           {
-            "name": "resetWebUIUpdateStatus",
+            "name": "clearDownloader",
             "type": {
               "kind": "NON_NULL",
               "ofType": {
                 "kind": "OBJECT",
-                "name": "WebUIUpdateStatus",
-                "ofType": null
-              }
-            },
-            "args": []
-          },
-          {
-            "name": "updateWebUI",
-            "type": {
-              "kind": "NON_NULL",
-              "ofType": {
-                "kind": "OBJECT",
-                "name": "WebUIUpdatePayload",
-                "ofType": null
+                "name": "ClearDownloaderPayload"
               }
             },
             "args": [
@@ -7447,21 +6528,40 @@ const introspection = {
                   "kind": "NON_NULL",
                   "ofType": {
                     "kind": "INPUT_OBJECT",
-                    "name": "WebUIUpdateInput",
-                    "ofType": null
+                    "name": "ClearDownloaderInput"
                   }
                 }
               }
-            ]
+            ],
+            "isDeprecated": false
           },
           {
-            "name": "deleteMangaMeta",
+            "name": "createBackup",
             "type": {
               "kind": "NON_NULL",
               "ofType": {
                 "kind": "OBJECT",
-                "name": "DeleteMangaMetaPayload",
-                "ofType": null
+                "name": "CreateBackupPayload"
+              }
+            },
+            "args": [
+              {
+                "name": "input",
+                "type": {
+                  "kind": "INPUT_OBJECT",
+                  "name": "CreateBackupInput"
+                }
+              }
+            ],
+            "isDeprecated": false
+          },
+          {
+            "name": "createCategory",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "OBJECT",
+                "name": "CreateCategoryPayload"
               }
             },
             "args": [
@@ -7471,21 +6571,20 @@ const introspection = {
                   "kind": "NON_NULL",
                   "ofType": {
                     "kind": "INPUT_OBJECT",
-                    "name": "DeleteMangaMetaInput",
-                    "ofType": null
+                    "name": "CreateCategoryInput"
                   }
                 }
               }
-            ]
+            ],
+            "isDeprecated": false
           },
           {
-            "name": "fetchManga",
+            "name": "deleteCategory",
             "type": {
               "kind": "NON_NULL",
               "ofType": {
                 "kind": "OBJECT",
-                "name": "FetchMangaPayload",
-                "ofType": null
+                "name": "DeleteCategoryPayload"
               }
             },
             "args": [
@@ -7495,21 +6594,20 @@ const introspection = {
                   "kind": "NON_NULL",
                   "ofType": {
                     "kind": "INPUT_OBJECT",
-                    "name": "FetchMangaInput",
-                    "ofType": null
+                    "name": "DeleteCategoryInput"
                   }
                 }
               }
-            ]
+            ],
+            "isDeprecated": false
           },
           {
-            "name": "setMangaMeta",
+            "name": "deleteCategoryMeta",
             "type": {
               "kind": "NON_NULL",
               "ofType": {
                 "kind": "OBJECT",
-                "name": "SetMangaMetaPayload",
-                "ofType": null
+                "name": "DeleteCategoryMetaPayload"
               }
             },
             "args": [
@@ -7519,21 +6617,20 @@ const introspection = {
                   "kind": "NON_NULL",
                   "ofType": {
                     "kind": "INPUT_OBJECT",
-                    "name": "SetMangaMetaInput",
-                    "ofType": null
+                    "name": "DeleteCategoryMetaInput"
                   }
                 }
               }
-            ]
+            ],
+            "isDeprecated": false
           },
           {
-            "name": "updateManga",
+            "name": "deleteChapterMeta",
             "type": {
               "kind": "NON_NULL",
               "ofType": {
                 "kind": "OBJECT",
-                "name": "UpdateMangaPayload",
-                "ofType": null
+                "name": "DeleteChapterMetaPayload"
               }
             },
             "args": [
@@ -7543,21 +6640,20 @@ const introspection = {
                   "kind": "NON_NULL",
                   "ofType": {
                     "kind": "INPUT_OBJECT",
-                    "name": "UpdateMangaInput",
-                    "ofType": null
+                    "name": "DeleteChapterMetaInput"
                   }
                 }
               }
-            ]
+            ],
+            "isDeprecated": false
           },
           {
-            "name": "updateMangas",
+            "name": "deleteDownloadedChapter",
             "type": {
               "kind": "NON_NULL",
               "ofType": {
                 "kind": "OBJECT",
-                "name": "UpdateMangasPayload",
-                "ofType": null
+                "name": "DeleteDownloadedChapterPayload"
               }
             },
             "args": [
@@ -7567,12 +6663,35 @@ const introspection = {
                   "kind": "NON_NULL",
                   "ofType": {
                     "kind": "INPUT_OBJECT",
-                    "name": "UpdateMangasInput",
-                    "ofType": null
+                    "name": "DeleteDownloadedChapterInput"
                   }
                 }
               }
-            ]
+            ],
+            "isDeprecated": false
+          },
+          {
+            "name": "deleteDownloadedChapters",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "OBJECT",
+                "name": "DeleteDownloadedChaptersPayload"
+              }
+            },
+            "args": [
+              {
+                "name": "input",
+                "type": {
+                  "kind": "NON_NULL",
+                  "ofType": {
+                    "kind": "INPUT_OBJECT",
+                    "name": "DeleteDownloadedChaptersInput"
+                  }
+                }
+              }
+            ],
+            "isDeprecated": false
           },
           {
             "name": "deleteGlobalMeta",
@@ -7580,8 +6699,7 @@ const introspection = {
               "kind": "NON_NULL",
               "ofType": {
                 "kind": "OBJECT",
-                "name": "DeleteGlobalMetaPayload",
-                "ofType": null
+                "name": "DeleteGlobalMetaPayload"
               }
             },
             "args": [
@@ -7591,21 +6709,20 @@ const introspection = {
                   "kind": "NON_NULL",
                   "ofType": {
                     "kind": "INPUT_OBJECT",
-                    "name": "DeleteGlobalMetaInput",
-                    "ofType": null
+                    "name": "DeleteGlobalMetaInput"
                   }
                 }
               }
-            ]
+            ],
+            "isDeprecated": false
           },
           {
-            "name": "setGlobalMeta",
+            "name": "deleteMangaMeta",
             "type": {
               "kind": "NON_NULL",
               "ofType": {
                 "kind": "OBJECT",
-                "name": "SetGlobalMetaPayload",
-                "ofType": null
+                "name": "DeleteMangaMetaPayload"
               }
             },
             "args": [
@@ -7615,60 +6732,12 @@ const introspection = {
                   "kind": "NON_NULL",
                   "ofType": {
                     "kind": "INPUT_OBJECT",
-                    "name": "SetGlobalMetaInput",
-                    "ofType": null
+                    "name": "DeleteMangaMetaInput"
                   }
                 }
               }
-            ]
-          },
-          {
-            "name": "resetSettings",
-            "type": {
-              "kind": "NON_NULL",
-              "ofType": {
-                "kind": "OBJECT",
-                "name": "ResetSettingsPayload",
-                "ofType": null
-              }
-            },
-            "args": [
-              {
-                "name": "input",
-                "type": {
-                  "kind": "NON_NULL",
-                  "ofType": {
-                    "kind": "INPUT_OBJECT",
-                    "name": "ResetSettingsInput",
-                    "ofType": null
-                  }
-                }
-              }
-            ]
-          },
-          {
-            "name": "setSettings",
-            "type": {
-              "kind": "NON_NULL",
-              "ofType": {
-                "kind": "OBJECT",
-                "name": "SetSettingsPayload",
-                "ofType": null
-              }
-            },
-            "args": [
-              {
-                "name": "input",
-                "type": {
-                  "kind": "NON_NULL",
-                  "ofType": {
-                    "kind": "INPUT_OBJECT",
-                    "name": "SetSettingsInput",
-                    "ofType": null
-                  }
-                }
-              }
-            ]
+            ],
+            "isDeprecated": false
           },
           {
             "name": "deleteSourceMeta",
@@ -7676,8 +6745,7 @@ const introspection = {
               "kind": "NON_NULL",
               "ofType": {
                 "kind": "OBJECT",
-                "name": "DeleteSourceMetaPayload",
-                "ofType": null
+                "name": "DeleteSourceMetaPayload"
               }
             },
             "args": [
@@ -7687,12 +6755,196 @@ const introspection = {
                   "kind": "NON_NULL",
                   "ofType": {
                     "kind": "INPUT_OBJECT",
-                    "name": "DeleteSourceMetaInput",
-                    "ofType": null
+                    "name": "DeleteSourceMetaInput"
                   }
                 }
               }
-            ]
+            ],
+            "isDeprecated": false
+          },
+          {
+            "name": "dequeueChapterDownload",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "OBJECT",
+                "name": "DequeueChapterDownloadPayload"
+              }
+            },
+            "args": [
+              {
+                "name": "input",
+                "type": {
+                  "kind": "NON_NULL",
+                  "ofType": {
+                    "kind": "INPUT_OBJECT",
+                    "name": "DequeueChapterDownloadInput"
+                  }
+                }
+              }
+            ],
+            "isDeprecated": false
+          },
+          {
+            "name": "dequeueChapterDownloads",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "OBJECT",
+                "name": "DequeueChapterDownloadsPayload"
+              }
+            },
+            "args": [
+              {
+                "name": "input",
+                "type": {
+                  "kind": "NON_NULL",
+                  "ofType": {
+                    "kind": "INPUT_OBJECT",
+                    "name": "DequeueChapterDownloadsInput"
+                  }
+                }
+              }
+            ],
+            "isDeprecated": false
+          },
+          {
+            "name": "enqueueChapterDownload",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "OBJECT",
+                "name": "EnqueueChapterDownloadPayload"
+              }
+            },
+            "args": [
+              {
+                "name": "input",
+                "type": {
+                  "kind": "NON_NULL",
+                  "ofType": {
+                    "kind": "INPUT_OBJECT",
+                    "name": "EnqueueChapterDownloadInput"
+                  }
+                }
+              }
+            ],
+            "isDeprecated": false
+          },
+          {
+            "name": "enqueueChapterDownloads",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "OBJECT",
+                "name": "EnqueueChapterDownloadsPayload"
+              }
+            },
+            "args": [
+              {
+                "name": "input",
+                "type": {
+                  "kind": "NON_NULL",
+                  "ofType": {
+                    "kind": "INPUT_OBJECT",
+                    "name": "EnqueueChapterDownloadsInput"
+                  }
+                }
+              }
+            ],
+            "isDeprecated": false
+          },
+          {
+            "name": "fetchChapterPages",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "OBJECT",
+                "name": "FetchChapterPagesPayload"
+              }
+            },
+            "args": [
+              {
+                "name": "input",
+                "type": {
+                  "kind": "NON_NULL",
+                  "ofType": {
+                    "kind": "INPUT_OBJECT",
+                    "name": "FetchChapterPagesInput"
+                  }
+                }
+              }
+            ],
+            "isDeprecated": false
+          },
+          {
+            "name": "fetchChapters",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "OBJECT",
+                "name": "FetchChaptersPayload"
+              }
+            },
+            "args": [
+              {
+                "name": "input",
+                "type": {
+                  "kind": "NON_NULL",
+                  "ofType": {
+                    "kind": "INPUT_OBJECT",
+                    "name": "FetchChaptersInput"
+                  }
+                }
+              }
+            ],
+            "isDeprecated": false
+          },
+          {
+            "name": "fetchExtensions",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "OBJECT",
+                "name": "FetchExtensionsPayload"
+              }
+            },
+            "args": [
+              {
+                "name": "input",
+                "type": {
+                  "kind": "NON_NULL",
+                  "ofType": {
+                    "kind": "INPUT_OBJECT",
+                    "name": "FetchExtensionsInput"
+                  }
+                }
+              }
+            ],
+            "isDeprecated": false
+          },
+          {
+            "name": "fetchManga",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "OBJECT",
+                "name": "FetchMangaPayload"
+              }
+            },
+            "args": [
+              {
+                "name": "input",
+                "type": {
+                  "kind": "NON_NULL",
+                  "ofType": {
+                    "kind": "INPUT_OBJECT",
+                    "name": "FetchMangaInput"
+                  }
+                }
+              }
+            ],
+            "isDeprecated": false
           },
           {
             "name": "fetchSourceManga",
@@ -7700,8 +6952,7 @@ const introspection = {
               "kind": "NON_NULL",
               "ofType": {
                 "kind": "OBJECT",
-                "name": "FetchSourceMangaPayload",
-                "ofType": null
+                "name": "FetchSourceMangaPayload"
               }
             },
             "args": [
@@ -7711,84 +6962,12 @@ const introspection = {
                   "kind": "NON_NULL",
                   "ofType": {
                     "kind": "INPUT_OBJECT",
-                    "name": "FetchSourceMangaInput",
-                    "ofType": null
+                    "name": "FetchSourceMangaInput"
                   }
                 }
               }
-            ]
-          },
-          {
-            "name": "setSourceMeta",
-            "type": {
-              "kind": "NON_NULL",
-              "ofType": {
-                "kind": "OBJECT",
-                "name": "SetSourceMetaPayload",
-                "ofType": null
-              }
-            },
-            "args": [
-              {
-                "name": "input",
-                "type": {
-                  "kind": "NON_NULL",
-                  "ofType": {
-                    "kind": "INPUT_OBJECT",
-                    "name": "SetSourceMetaInput",
-                    "ofType": null
-                  }
-                }
-              }
-            ]
-          },
-          {
-            "name": "updateSourcePreference",
-            "type": {
-              "kind": "NON_NULL",
-              "ofType": {
-                "kind": "OBJECT",
-                "name": "UpdateSourcePreferencePayload",
-                "ofType": null
-              }
-            },
-            "args": [
-              {
-                "name": "input",
-                "type": {
-                  "kind": "NON_NULL",
-                  "ofType": {
-                    "kind": "INPUT_OBJECT",
-                    "name": "UpdateSourcePreferenceInput",
-                    "ofType": null
-                  }
-                }
-              }
-            ]
-          },
-          {
-            "name": "bindTrack",
-            "type": {
-              "kind": "NON_NULL",
-              "ofType": {
-                "kind": "OBJECT",
-                "name": "BindTrackPayload",
-                "ofType": null
-              }
-            },
-            "args": [
-              {
-                "name": "input",
-                "type": {
-                  "kind": "NON_NULL",
-                  "ofType": {
-                    "kind": "INPUT_OBJECT",
-                    "name": "BindTrackInput",
-                    "ofType": null
-                  }
-                }
-              }
-            ]
+            ],
+            "isDeprecated": false
           },
           {
             "name": "fetchTrack",
@@ -7796,8 +6975,7 @@ const introspection = {
               "kind": "NON_NULL",
               "ofType": {
                 "kind": "OBJECT",
-                "name": "FetchTrackPayload",
-                "ofType": null
+                "name": "FetchTrackPayload"
               }
             },
             "args": [
@@ -7807,12 +6985,35 @@ const introspection = {
                   "kind": "NON_NULL",
                   "ofType": {
                     "kind": "INPUT_OBJECT",
-                    "name": "FetchTrackInput",
-                    "ofType": null
+                    "name": "FetchTrackInput"
                   }
                 }
               }
-            ]
+            ],
+            "isDeprecated": false
+          },
+          {
+            "name": "installExternalExtension",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "OBJECT",
+                "name": "InstallExternalExtensionPayload"
+              }
+            },
+            "args": [
+              {
+                "name": "input",
+                "type": {
+                  "kind": "NON_NULL",
+                  "ofType": {
+                    "kind": "INPUT_OBJECT",
+                    "name": "InstallExternalExtensionInput"
+                  }
+                }
+              }
+            ],
+            "isDeprecated": false
           },
           {
             "name": "loginTrackerCredentials",
@@ -7820,8 +7021,7 @@ const introspection = {
               "kind": "NON_NULL",
               "ofType": {
                 "kind": "OBJECT",
-                "name": "LoginTrackerCredentialsPayload",
-                "ofType": null
+                "name": "LoginTrackerCredentialsPayload"
               }
             },
             "args": [
@@ -7831,12 +7031,12 @@ const introspection = {
                   "kind": "NON_NULL",
                   "ofType": {
                     "kind": "INPUT_OBJECT",
-                    "name": "LoginTrackerCredentialsInput",
-                    "ofType": null
+                    "name": "LoginTrackerCredentialsInput"
                   }
                 }
               }
-            ]
+            ],
+            "isDeprecated": false
           },
           {
             "name": "loginTrackerOAuth",
@@ -7844,8 +7044,7 @@ const introspection = {
               "kind": "NON_NULL",
               "ofType": {
                 "kind": "OBJECT",
-                "name": "LoginTrackerOAuthPayload",
-                "ofType": null
+                "name": "LoginTrackerOAuthPayload"
               }
             },
             "args": [
@@ -7855,12 +7054,12 @@ const introspection = {
                   "kind": "NON_NULL",
                   "ofType": {
                     "kind": "INPUT_OBJECT",
-                    "name": "LoginTrackerOAuthInput",
-                    "ofType": null
+                    "name": "LoginTrackerOAuthInput"
                   }
                 }
               }
-            ]
+            ],
+            "isDeprecated": false
           },
           {
             "name": "logoutTracker",
@@ -7868,8 +7067,7 @@ const introspection = {
               "kind": "NON_NULL",
               "ofType": {
                 "kind": "OBJECT",
-                "name": "LogoutTrackerPayload",
-                "ofType": null
+                "name": "LogoutTrackerPayload"
               }
             },
             "args": [
@@ -7879,12 +7077,277 @@ const introspection = {
                   "kind": "NON_NULL",
                   "ofType": {
                     "kind": "INPUT_OBJECT",
-                    "name": "LogoutTrackerInput",
-                    "ofType": null
+                    "name": "LogoutTrackerInput"
                   }
                 }
               }
-            ]
+            ],
+            "isDeprecated": false
+          },
+          {
+            "name": "reorderChapterDownload",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "OBJECT",
+                "name": "ReorderChapterDownloadPayload"
+              }
+            },
+            "args": [
+              {
+                "name": "input",
+                "type": {
+                  "kind": "NON_NULL",
+                  "ofType": {
+                    "kind": "INPUT_OBJECT",
+                    "name": "ReorderChapterDownloadInput"
+                  }
+                }
+              }
+            ],
+            "isDeprecated": false
+          },
+          {
+            "name": "resetSettings",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "OBJECT",
+                "name": "ResetSettingsPayload"
+              }
+            },
+            "args": [
+              {
+                "name": "input",
+                "type": {
+                  "kind": "NON_NULL",
+                  "ofType": {
+                    "kind": "INPUT_OBJECT",
+                    "name": "ResetSettingsInput"
+                  }
+                }
+              }
+            ],
+            "isDeprecated": false
+          },
+          {
+            "name": "resetWebUIUpdateStatus",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "OBJECT",
+                "name": "WebUIUpdateStatus"
+              }
+            },
+            "args": [],
+            "isDeprecated": false
+          },
+          {
+            "name": "restoreBackup",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "OBJECT",
+                "name": "RestoreBackupPayload"
+              }
+            },
+            "args": [
+              {
+                "name": "input",
+                "type": {
+                  "kind": "NON_NULL",
+                  "ofType": {
+                    "kind": "INPUT_OBJECT",
+                    "name": "RestoreBackupInput"
+                  }
+                }
+              }
+            ],
+            "isDeprecated": false
+          },
+          {
+            "name": "setCategoryMeta",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "OBJECT",
+                "name": "SetCategoryMetaPayload"
+              }
+            },
+            "args": [
+              {
+                "name": "input",
+                "type": {
+                  "kind": "NON_NULL",
+                  "ofType": {
+                    "kind": "INPUT_OBJECT",
+                    "name": "SetCategoryMetaInput"
+                  }
+                }
+              }
+            ],
+            "isDeprecated": false
+          },
+          {
+            "name": "setChapterMeta",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "OBJECT",
+                "name": "SetChapterMetaPayload"
+              }
+            },
+            "args": [
+              {
+                "name": "input",
+                "type": {
+                  "kind": "NON_NULL",
+                  "ofType": {
+                    "kind": "INPUT_OBJECT",
+                    "name": "SetChapterMetaInput"
+                  }
+                }
+              }
+            ],
+            "isDeprecated": false
+          },
+          {
+            "name": "setGlobalMeta",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "OBJECT",
+                "name": "SetGlobalMetaPayload"
+              }
+            },
+            "args": [
+              {
+                "name": "input",
+                "type": {
+                  "kind": "NON_NULL",
+                  "ofType": {
+                    "kind": "INPUT_OBJECT",
+                    "name": "SetGlobalMetaInput"
+                  }
+                }
+              }
+            ],
+            "isDeprecated": false
+          },
+          {
+            "name": "setMangaMeta",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "OBJECT",
+                "name": "SetMangaMetaPayload"
+              }
+            },
+            "args": [
+              {
+                "name": "input",
+                "type": {
+                  "kind": "NON_NULL",
+                  "ofType": {
+                    "kind": "INPUT_OBJECT",
+                    "name": "SetMangaMetaInput"
+                  }
+                }
+              }
+            ],
+            "isDeprecated": false
+          },
+          {
+            "name": "setSettings",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "OBJECT",
+                "name": "SetSettingsPayload"
+              }
+            },
+            "args": [
+              {
+                "name": "input",
+                "type": {
+                  "kind": "NON_NULL",
+                  "ofType": {
+                    "kind": "INPUT_OBJECT",
+                    "name": "SetSettingsInput"
+                  }
+                }
+              }
+            ],
+            "isDeprecated": false
+          },
+          {
+            "name": "setSourceMeta",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "OBJECT",
+                "name": "SetSourceMetaPayload"
+              }
+            },
+            "args": [
+              {
+                "name": "input",
+                "type": {
+                  "kind": "NON_NULL",
+                  "ofType": {
+                    "kind": "INPUT_OBJECT",
+                    "name": "SetSourceMetaInput"
+                  }
+                }
+              }
+            ],
+            "isDeprecated": false
+          },
+          {
+            "name": "startDownloader",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "OBJECT",
+                "name": "StartDownloaderPayload"
+              }
+            },
+            "args": [
+              {
+                "name": "input",
+                "type": {
+                  "kind": "NON_NULL",
+                  "ofType": {
+                    "kind": "INPUT_OBJECT",
+                    "name": "StartDownloaderInput"
+                  }
+                }
+              }
+            ],
+            "isDeprecated": false
+          },
+          {
+            "name": "stopDownloader",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "OBJECT",
+                "name": "StopDownloaderPayload"
+              }
+            },
+            "args": [
+              {
+                "name": "input",
+                "type": {
+                  "kind": "NON_NULL",
+                  "ofType": {
+                    "kind": "INPUT_OBJECT",
+                    "name": "StopDownloaderInput"
+                  }
+                }
+              }
+            ],
+            "isDeprecated": false
           },
           {
             "name": "trackProgress",
@@ -7892,8 +7355,7 @@ const introspection = {
               "kind": "NON_NULL",
               "ofType": {
                 "kind": "OBJECT",
-                "name": "TrackProgressPayload",
-                "ofType": null
+                "name": "TrackProgressPayload"
               }
             },
             "args": [
@@ -7903,12 +7365,12 @@ const introspection = {
                   "kind": "NON_NULL",
                   "ofType": {
                     "kind": "INPUT_OBJECT",
-                    "name": "TrackProgressInput",
-                    "ofType": null
+                    "name": "TrackProgressInput"
                   }
                 }
               }
-            ]
+            ],
+            "isDeprecated": false
           },
           {
             "name": "unbindTrack",
@@ -7916,8 +7378,7 @@ const introspection = {
               "kind": "NON_NULL",
               "ofType": {
                 "kind": "OBJECT",
-                "name": "UnbindTrackPayload",
-                "ofType": null
+                "name": "UnbindTrackPayload"
               }
             },
             "args": [
@@ -7927,21 +7388,20 @@ const introspection = {
                   "kind": "NON_NULL",
                   "ofType": {
                     "kind": "INPUT_OBJECT",
-                    "name": "UnbindTrackInput",
-                    "ofType": null
+                    "name": "UnbindTrackInput"
                   }
                 }
               }
-            ]
+            ],
+            "isDeprecated": false
           },
           {
-            "name": "updateTrack",
+            "name": "updateCategories",
             "type": {
               "kind": "NON_NULL",
               "ofType": {
                 "kind": "OBJECT",
-                "name": "UpdateTrackPayload",
-                "ofType": null
+                "name": "UpdateCategoriesPayload"
               }
             },
             "args": [
@@ -7951,12 +7411,35 @@ const introspection = {
                   "kind": "NON_NULL",
                   "ofType": {
                     "kind": "INPUT_OBJECT",
-                    "name": "UpdateTrackInput",
-                    "ofType": null
+                    "name": "UpdateCategoriesInput"
                   }
                 }
               }
-            ]
+            ],
+            "isDeprecated": false
+          },
+          {
+            "name": "updateCategory",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "OBJECT",
+                "name": "UpdateCategoryPayload"
+              }
+            },
+            "args": [
+              {
+                "name": "input",
+                "type": {
+                  "kind": "NON_NULL",
+                  "ofType": {
+                    "kind": "INPUT_OBJECT",
+                    "name": "UpdateCategoryInput"
+                  }
+                }
+              }
+            ],
+            "isDeprecated": false
           },
           {
             "name": "updateCategoryManga",
@@ -7964,8 +7447,7 @@ const introspection = {
               "kind": "NON_NULL",
               "ofType": {
                 "kind": "OBJECT",
-                "name": "UpdateCategoryMangaPayload",
-                "ofType": null
+                "name": "UpdateCategoryMangaPayload"
               }
             },
             "args": [
@@ -7975,12 +7457,127 @@ const introspection = {
                   "kind": "NON_NULL",
                   "ofType": {
                     "kind": "INPUT_OBJECT",
-                    "name": "UpdateCategoryMangaInput",
-                    "ofType": null
+                    "name": "UpdateCategoryMangaInput"
                   }
                 }
               }
-            ]
+            ],
+            "isDeprecated": false
+          },
+          {
+            "name": "updateCategoryOrder",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "OBJECT",
+                "name": "UpdateCategoryOrderPayload"
+              }
+            },
+            "args": [
+              {
+                "name": "input",
+                "type": {
+                  "kind": "NON_NULL",
+                  "ofType": {
+                    "kind": "INPUT_OBJECT",
+                    "name": "UpdateCategoryOrderInput"
+                  }
+                }
+              }
+            ],
+            "isDeprecated": false
+          },
+          {
+            "name": "updateChapter",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "OBJECT",
+                "name": "UpdateChapterPayload"
+              }
+            },
+            "args": [
+              {
+                "name": "input",
+                "type": {
+                  "kind": "NON_NULL",
+                  "ofType": {
+                    "kind": "INPUT_OBJECT",
+                    "name": "UpdateChapterInput"
+                  }
+                }
+              }
+            ],
+            "isDeprecated": false
+          },
+          {
+            "name": "updateChapters",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "OBJECT",
+                "name": "UpdateChaptersPayload"
+              }
+            },
+            "args": [
+              {
+                "name": "input",
+                "type": {
+                  "kind": "NON_NULL",
+                  "ofType": {
+                    "kind": "INPUT_OBJECT",
+                    "name": "UpdateChaptersInput"
+                  }
+                }
+              }
+            ],
+            "isDeprecated": false
+          },
+          {
+            "name": "updateExtension",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "OBJECT",
+                "name": "UpdateExtensionPayload"
+              }
+            },
+            "args": [
+              {
+                "name": "input",
+                "type": {
+                  "kind": "NON_NULL",
+                  "ofType": {
+                    "kind": "INPUT_OBJECT",
+                    "name": "UpdateExtensionInput"
+                  }
+                }
+              }
+            ],
+            "isDeprecated": false
+          },
+          {
+            "name": "updateExtensions",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "OBJECT",
+                "name": "UpdateExtensionsPayload"
+              }
+            },
+            "args": [
+              {
+                "name": "input",
+                "type": {
+                  "kind": "NON_NULL",
+                  "ofType": {
+                    "kind": "INPUT_OBJECT",
+                    "name": "UpdateExtensionsInput"
+                  }
+                }
+              }
+            ],
+            "isDeprecated": false
           },
           {
             "name": "updateLibraryManga",
@@ -7988,8 +7585,7 @@ const introspection = {
               "kind": "NON_NULL",
               "ofType": {
                 "kind": "OBJECT",
-                "name": "UpdateLibraryMangaPayload",
-                "ofType": null
+                "name": "UpdateLibraryMangaPayload"
               }
             },
             "args": [
@@ -7999,12 +7595,127 @@ const introspection = {
                   "kind": "NON_NULL",
                   "ofType": {
                     "kind": "INPUT_OBJECT",
-                    "name": "UpdateLibraryMangaInput",
-                    "ofType": null
+                    "name": "UpdateLibraryMangaInput"
                   }
                 }
               }
-            ]
+            ],
+            "isDeprecated": false
+          },
+          {
+            "name": "updateManga",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "OBJECT",
+                "name": "UpdateMangaPayload"
+              }
+            },
+            "args": [
+              {
+                "name": "input",
+                "type": {
+                  "kind": "NON_NULL",
+                  "ofType": {
+                    "kind": "INPUT_OBJECT",
+                    "name": "UpdateMangaInput"
+                  }
+                }
+              }
+            ],
+            "isDeprecated": false
+          },
+          {
+            "name": "updateMangaCategories",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "OBJECT",
+                "name": "UpdateMangaCategoriesPayload"
+              }
+            },
+            "args": [
+              {
+                "name": "input",
+                "type": {
+                  "kind": "NON_NULL",
+                  "ofType": {
+                    "kind": "INPUT_OBJECT",
+                    "name": "UpdateMangaCategoriesInput"
+                  }
+                }
+              }
+            ],
+            "isDeprecated": false
+          },
+          {
+            "name": "updateMangas",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "OBJECT",
+                "name": "UpdateMangasPayload"
+              }
+            },
+            "args": [
+              {
+                "name": "input",
+                "type": {
+                  "kind": "NON_NULL",
+                  "ofType": {
+                    "kind": "INPUT_OBJECT",
+                    "name": "UpdateMangasInput"
+                  }
+                }
+              }
+            ],
+            "isDeprecated": false
+          },
+          {
+            "name": "updateMangasCategories",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "OBJECT",
+                "name": "UpdateMangasCategoriesPayload"
+              }
+            },
+            "args": [
+              {
+                "name": "input",
+                "type": {
+                  "kind": "NON_NULL",
+                  "ofType": {
+                    "kind": "INPUT_OBJECT",
+                    "name": "UpdateMangasCategoriesInput"
+                  }
+                }
+              }
+            ],
+            "isDeprecated": false
+          },
+          {
+            "name": "updateSourcePreference",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "OBJECT",
+                "name": "UpdateSourcePreferencePayload"
+              }
+            },
+            "args": [
+              {
+                "name": "input",
+                "type": {
+                  "kind": "NON_NULL",
+                  "ofType": {
+                    "kind": "INPUT_OBJECT",
+                    "name": "UpdateSourcePreferenceInput"
+                  }
+                }
+              }
+            ],
+            "isDeprecated": false
           },
           {
             "name": "updateStop",
@@ -8012,8 +7723,7 @@ const introspection = {
               "kind": "NON_NULL",
               "ofType": {
                 "kind": "OBJECT",
-                "name": "UpdateStopPayload",
-                "ofType": null
+                "name": "UpdateStopPayload"
               }
             },
             "args": [
@@ -8023,12 +7733,58 @@ const introspection = {
                   "kind": "NON_NULL",
                   "ofType": {
                     "kind": "INPUT_OBJECT",
-                    "name": "UpdateStopInput",
-                    "ofType": null
+                    "name": "UpdateStopInput"
                   }
                 }
               }
-            ]
+            ],
+            "isDeprecated": false
+          },
+          {
+            "name": "updateTrack",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "OBJECT",
+                "name": "UpdateTrackPayload"
+              }
+            },
+            "args": [
+              {
+                "name": "input",
+                "type": {
+                  "kind": "NON_NULL",
+                  "ofType": {
+                    "kind": "INPUT_OBJECT",
+                    "name": "UpdateTrackInput"
+                  }
+                }
+              }
+            ],
+            "isDeprecated": false
+          },
+          {
+            "name": "updateWebUI",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "OBJECT",
+                "name": "WebUIUpdatePayload"
+              }
+            },
+            "args": [
+              {
+                "name": "input",
+                "type": {
+                  "kind": "NON_NULL",
+                  "ofType": {
+                    "kind": "INPUT_OBJECT",
+                    "name": "WebUIUpdateInput"
+                  }
+                }
+              }
+            ],
+            "isDeprecated": false
           }
         ],
         "interfaces": []
@@ -8113,13 +7869,13 @@ const introspection = {
                   "kind": "NON_NULL",
                   "ofType": {
                     "kind": "INTERFACE",
-                    "name": "Edge",
-                    "ofType": null
+                    "name": "Edge"
                   }
                 }
               }
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           },
           {
             "name": "nodes",
@@ -8131,13 +7887,13 @@ const introspection = {
                   "kind": "NON_NULL",
                   "ofType": {
                     "kind": "UNION",
-                    "name": "Node",
-                    "ofType": null
+                    "name": "Node"
                   }
                 }
               }
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           },
           {
             "name": "pageInfo",
@@ -8145,11 +7901,11 @@ const introspection = {
               "kind": "NON_NULL",
               "ofType": {
                 "kind": "OBJECT",
-                "name": "PageInfo",
-                "ofType": null
+                "name": "PageInfo"
               }
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           },
           {
             "name": "totalCount",
@@ -8157,11 +7913,11 @@ const introspection = {
               "kind": "NON_NULL",
               "ofType": {
                 "kind": "SCALAR",
-                "name": "Int",
-                "ofType": null
+                "name": "Int"
               }
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           }
         ],
         "interfaces": [],
@@ -8196,11 +7952,11 @@ const introspection = {
           },
           {
             "kind": "OBJECT",
-            "name": "TrackerNodeList"
+            "name": "TrackRecordNodeList"
           },
           {
             "kind": "OBJECT",
-            "name": "TrackRecordNodeList"
+            "name": "TrackerNodeList"
           }
         ]
       },
@@ -8212,10 +7968,10 @@ const introspection = {
             "name": "endCursor",
             "type": {
               "kind": "SCALAR",
-              "name": "Cursor",
-              "ofType": null
+              "name": "Cursor"
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           },
           {
             "name": "hasNextPage",
@@ -8223,11 +7979,11 @@ const introspection = {
               "kind": "NON_NULL",
               "ofType": {
                 "kind": "SCALAR",
-                "name": "Boolean",
-                "ofType": null
+                "name": "Boolean"
               }
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           },
           {
             "name": "hasPreviousPage",
@@ -8235,20 +7991,20 @@ const introspection = {
               "kind": "NON_NULL",
               "ofType": {
                 "kind": "SCALAR",
-                "name": "Boolean",
-                "ofType": null
+                "name": "Boolean"
               }
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           },
           {
             "name": "startCursor",
             "type": {
               "kind": "SCALAR",
-              "name": "Cursor",
-              "ofType": null
+              "name": "Cursor"
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           }
         ],
         "interfaces": []
@@ -8261,163 +8017,172 @@ const introspection = {
             "name": "autoDownloadAheadLimit",
             "type": {
               "kind": "SCALAR",
-              "name": "Int",
-              "ofType": null
+              "name": "Int"
             },
-            "args": []
+            "args": [],
+            "isDeprecated": true
+          },
+          {
+            "name": "autoDownloadIgnoreReUploads",
+            "type": {
+              "kind": "SCALAR",
+              "name": "Boolean"
+            },
+            "args": [],
+            "isDeprecated": false
           },
           {
             "name": "autoDownloadNewChapters",
             "type": {
               "kind": "SCALAR",
-              "name": "Boolean",
-              "ofType": null
+              "name": "Boolean"
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           },
           {
             "name": "autoDownloadNewChaptersLimit",
             "type": {
               "kind": "SCALAR",
-              "name": "Int",
-              "ofType": null
+              "name": "Int"
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           },
           {
             "name": "backupInterval",
             "type": {
               "kind": "SCALAR",
-              "name": "Int",
-              "ofType": null
+              "name": "Int"
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           },
           {
             "name": "backupPath",
             "type": {
               "kind": "SCALAR",
-              "name": "String",
-              "ofType": null
+              "name": "String"
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           },
           {
             "name": "backupTTL",
             "type": {
               "kind": "SCALAR",
-              "name": "Int",
-              "ofType": null
+              "name": "Int"
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           },
           {
             "name": "backupTime",
             "type": {
               "kind": "SCALAR",
-              "name": "String",
-              "ofType": null
+              "name": "String"
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           },
           {
             "name": "basicAuthEnabled",
             "type": {
               "kind": "SCALAR",
-              "name": "Boolean",
-              "ofType": null
+              "name": "Boolean"
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           },
           {
             "name": "basicAuthPassword",
             "type": {
               "kind": "SCALAR",
-              "name": "String",
-              "ofType": null
+              "name": "String"
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           },
           {
             "name": "basicAuthUsername",
             "type": {
               "kind": "SCALAR",
-              "name": "String",
-              "ofType": null
+              "name": "String"
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           },
           {
             "name": "debugLogsEnabled",
             "type": {
               "kind": "SCALAR",
-              "name": "Boolean",
-              "ofType": null
+              "name": "Boolean"
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           },
           {
             "name": "downloadAsCbz",
             "type": {
               "kind": "SCALAR",
-              "name": "Boolean",
-              "ofType": null
+              "name": "Boolean"
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           },
           {
             "name": "downloadsPath",
             "type": {
               "kind": "SCALAR",
-              "name": "String",
-              "ofType": null
+              "name": "String"
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           },
           {
             "name": "electronPath",
             "type": {
               "kind": "SCALAR",
-              "name": "String",
-              "ofType": null
+              "name": "String"
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           },
           {
             "name": "excludeCompleted",
             "type": {
               "kind": "SCALAR",
-              "name": "Boolean",
-              "ofType": null
+              "name": "Boolean"
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           },
           {
             "name": "excludeEntryWithUnreadChapters",
             "type": {
               "kind": "SCALAR",
-              "name": "Boolean",
-              "ofType": null
+              "name": "Boolean"
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           },
           {
             "name": "excludeNotStarted",
             "type": {
               "kind": "SCALAR",
-              "name": "Boolean",
-              "ofType": null
+              "name": "Boolean"
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           },
           {
             "name": "excludeUnreadChapters",
             "type": {
               "kind": "SCALAR",
-              "name": "Boolean",
-              "ofType": null
+              "name": "Boolean"
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           },
           {
             "name": "extensionRepos",
@@ -8427,228 +8192,228 @@ const introspection = {
                 "kind": "NON_NULL",
                 "ofType": {
                   "kind": "SCALAR",
-                  "name": "String",
-                  "ofType": null
+                  "name": "String"
                 }
               }
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           },
           {
             "name": "flareSolverrEnabled",
             "type": {
               "kind": "SCALAR",
-              "name": "Boolean",
-              "ofType": null
+              "name": "Boolean"
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           },
           {
             "name": "flareSolverrSessionName",
             "type": {
               "kind": "SCALAR",
-              "name": "String",
-              "ofType": null
+              "name": "String"
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           },
           {
             "name": "flareSolverrSessionTtl",
             "type": {
               "kind": "SCALAR",
-              "name": "Int",
-              "ofType": null
+              "name": "Int"
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           },
           {
             "name": "flareSolverrTimeout",
             "type": {
               "kind": "SCALAR",
-              "name": "Int",
-              "ofType": null
+              "name": "Int"
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           },
           {
             "name": "flareSolverrUrl",
             "type": {
               "kind": "SCALAR",
-              "name": "String",
-              "ofType": null
+              "name": "String"
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           },
           {
             "name": "globalUpdateInterval",
             "type": {
               "kind": "SCALAR",
-              "name": "Float",
-              "ofType": null
+              "name": "Float"
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           },
           {
             "name": "gqlDebugLogsEnabled",
             "type": {
               "kind": "SCALAR",
-              "name": "Boolean",
-              "ofType": null
+              "name": "Boolean"
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           },
           {
             "name": "initialOpenInBrowserEnabled",
             "type": {
               "kind": "SCALAR",
-              "name": "Boolean",
-              "ofType": null
+              "name": "Boolean"
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           },
           {
             "name": "ip",
             "type": {
               "kind": "SCALAR",
-              "name": "String",
-              "ofType": null
+              "name": "String"
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           },
           {
             "name": "localSourcePath",
             "type": {
               "kind": "SCALAR",
-              "name": "String",
-              "ofType": null
+              "name": "String"
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           },
           {
             "name": "maxSourcesInParallel",
             "type": {
               "kind": "SCALAR",
-              "name": "Int",
-              "ofType": null
+              "name": "Int"
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           },
           {
             "name": "port",
             "type": {
               "kind": "SCALAR",
-              "name": "Int",
-              "ofType": null
+              "name": "Int"
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           },
           {
             "name": "socksProxyEnabled",
             "type": {
               "kind": "SCALAR",
-              "name": "Boolean",
-              "ofType": null
+              "name": "Boolean"
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           },
           {
             "name": "socksProxyHost",
             "type": {
               "kind": "SCALAR",
-              "name": "String",
-              "ofType": null
+              "name": "String"
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           },
           {
             "name": "socksProxyPassword",
             "type": {
               "kind": "SCALAR",
-              "name": "String",
-              "ofType": null
+              "name": "String"
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           },
           {
             "name": "socksProxyPort",
             "type": {
               "kind": "SCALAR",
-              "name": "String",
-              "ofType": null
+              "name": "String"
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           },
           {
             "name": "socksProxyUsername",
             "type": {
               "kind": "SCALAR",
-              "name": "String",
-              "ofType": null
+              "name": "String"
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           },
           {
             "name": "socksProxyVersion",
             "type": {
               "kind": "SCALAR",
-              "name": "Int",
-              "ofType": null
+              "name": "Int"
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           },
           {
             "name": "systemTrayEnabled",
             "type": {
               "kind": "SCALAR",
-              "name": "Boolean",
-              "ofType": null
+              "name": "Boolean"
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           },
           {
             "name": "updateMangas",
             "type": {
               "kind": "SCALAR",
-              "name": "Boolean",
-              "ofType": null
+              "name": "Boolean"
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           },
           {
             "name": "webUIChannel",
             "type": {
               "kind": "ENUM",
-              "name": "WebUIChannel",
-              "ofType": null
+              "name": "WebUIChannel"
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           },
           {
             "name": "webUIFlavor",
             "type": {
               "kind": "ENUM",
-              "name": "WebUIFlavor",
-              "ofType": null
+              "name": "WebUIFlavor"
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           },
           {
             "name": "webUIInterface",
             "type": {
               "kind": "ENUM",
-              "name": "WebUIInterface",
-              "ofType": null
+              "name": "WebUIInterface"
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           },
           {
             "name": "webUIUpdateCheckInterval",
             "type": {
               "kind": "SCALAR",
-              "name": "Float",
-              "ofType": null
+              "name": "Float"
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           }
         ],
         "interfaces": [
@@ -8663,139 +8428,129 @@ const introspection = {
         "name": "PartialSettingsTypeInput",
         "inputFields": [
           {
+            "name": "autoDownloadIgnoreReUploads",
+            "type": {
+              "kind": "SCALAR",
+              "name": "Boolean"
+            }
+          },
+          {
             "name": "autoDownloadNewChapters",
             "type": {
               "kind": "SCALAR",
-              "name": "Boolean",
-              "ofType": null
+              "name": "Boolean"
             }
           },
           {
             "name": "autoDownloadNewChaptersLimit",
             "type": {
               "kind": "SCALAR",
-              "name": "Int",
-              "ofType": null
+              "name": "Int"
             }
           },
           {
             "name": "backupInterval",
             "type": {
               "kind": "SCALAR",
-              "name": "Int",
-              "ofType": null
+              "name": "Int"
             }
           },
           {
             "name": "backupPath",
             "type": {
               "kind": "SCALAR",
-              "name": "String",
-              "ofType": null
+              "name": "String"
             }
           },
           {
             "name": "backupTTL",
             "type": {
               "kind": "SCALAR",
-              "name": "Int",
-              "ofType": null
+              "name": "Int"
             }
           },
           {
             "name": "backupTime",
             "type": {
               "kind": "SCALAR",
-              "name": "String",
-              "ofType": null
+              "name": "String"
             }
           },
           {
             "name": "basicAuthEnabled",
             "type": {
               "kind": "SCALAR",
-              "name": "Boolean",
-              "ofType": null
+              "name": "Boolean"
             }
           },
           {
             "name": "basicAuthPassword",
             "type": {
               "kind": "SCALAR",
-              "name": "String",
-              "ofType": null
+              "name": "String"
             }
           },
           {
             "name": "basicAuthUsername",
             "type": {
               "kind": "SCALAR",
-              "name": "String",
-              "ofType": null
+              "name": "String"
             }
           },
           {
             "name": "debugLogsEnabled",
             "type": {
               "kind": "SCALAR",
-              "name": "Boolean",
-              "ofType": null
+              "name": "Boolean"
             }
           },
           {
             "name": "downloadAsCbz",
             "type": {
               "kind": "SCALAR",
-              "name": "Boolean",
-              "ofType": null
+              "name": "Boolean"
             }
           },
           {
             "name": "downloadsPath",
             "type": {
               "kind": "SCALAR",
-              "name": "String",
-              "ofType": null
+              "name": "String"
             }
           },
           {
             "name": "electronPath",
             "type": {
               "kind": "SCALAR",
-              "name": "String",
-              "ofType": null
+              "name": "String"
             }
           },
           {
             "name": "excludeCompleted",
             "type": {
               "kind": "SCALAR",
-              "name": "Boolean",
-              "ofType": null
+              "name": "Boolean"
             }
           },
           {
             "name": "excludeEntryWithUnreadChapters",
             "type": {
               "kind": "SCALAR",
-              "name": "Boolean",
-              "ofType": null
+              "name": "Boolean"
             }
           },
           {
             "name": "excludeNotStarted",
             "type": {
               "kind": "SCALAR",
-              "name": "Boolean",
-              "ofType": null
+              "name": "Boolean"
             }
           },
           {
             "name": "excludeUnreadChapters",
             "type": {
               "kind": "SCALAR",
-              "name": "Boolean",
-              "ofType": null
+              "name": "Boolean"
             }
           },
           {
@@ -8806,8 +8561,7 @@ const introspection = {
                 "kind": "NON_NULL",
                 "ofType": {
                   "kind": "SCALAR",
-                  "name": "String",
-                  "ofType": null
+                  "name": "String"
                 }
               }
             }
@@ -8816,195 +8570,172 @@ const introspection = {
             "name": "flareSolverrEnabled",
             "type": {
               "kind": "SCALAR",
-              "name": "Boolean",
-              "ofType": null
+              "name": "Boolean"
             }
           },
           {
             "name": "flareSolverrSessionName",
             "type": {
               "kind": "SCALAR",
-              "name": "String",
-              "ofType": null
+              "name": "String"
             }
           },
           {
             "name": "flareSolverrSessionTtl",
             "type": {
               "kind": "SCALAR",
-              "name": "Int",
-              "ofType": null
+              "name": "Int"
             }
           },
           {
             "name": "flareSolverrTimeout",
             "type": {
               "kind": "SCALAR",
-              "name": "Int",
-              "ofType": null
+              "name": "Int"
             }
           },
           {
             "name": "flareSolverrUrl",
             "type": {
               "kind": "SCALAR",
-              "name": "String",
-              "ofType": null
+              "name": "String"
             }
           },
           {
             "name": "globalUpdateInterval",
             "type": {
               "kind": "SCALAR",
-              "name": "Float",
-              "ofType": null
+              "name": "Float"
             }
           },
           {
             "name": "gqlDebugLogsEnabled",
             "type": {
               "kind": "SCALAR",
-              "name": "Boolean",
-              "ofType": null
+              "name": "Boolean"
             }
           },
           {
             "name": "initialOpenInBrowserEnabled",
             "type": {
               "kind": "SCALAR",
-              "name": "Boolean",
-              "ofType": null
+              "name": "Boolean"
             }
           },
           {
             "name": "ip",
             "type": {
               "kind": "SCALAR",
-              "name": "String",
-              "ofType": null
+              "name": "String"
             }
           },
           {
             "name": "localSourcePath",
             "type": {
               "kind": "SCALAR",
-              "name": "String",
-              "ofType": null
+              "name": "String"
             }
           },
           {
             "name": "maxSourcesInParallel",
             "type": {
               "kind": "SCALAR",
-              "name": "Int",
-              "ofType": null
+              "name": "Int"
             }
           },
           {
             "name": "port",
             "type": {
               "kind": "SCALAR",
-              "name": "Int",
-              "ofType": null
+              "name": "Int"
             }
           },
           {
             "name": "socksProxyEnabled",
             "type": {
               "kind": "SCALAR",
-              "name": "Boolean",
-              "ofType": null
+              "name": "Boolean"
             }
           },
           {
             "name": "socksProxyHost",
             "type": {
               "kind": "SCALAR",
-              "name": "String",
-              "ofType": null
+              "name": "String"
             }
           },
           {
             "name": "socksProxyPassword",
             "type": {
               "kind": "SCALAR",
-              "name": "String",
-              "ofType": null
+              "name": "String"
             }
           },
           {
             "name": "socksProxyPort",
             "type": {
               "kind": "SCALAR",
-              "name": "String",
-              "ofType": null
+              "name": "String"
             }
           },
           {
             "name": "socksProxyUsername",
             "type": {
               "kind": "SCALAR",
-              "name": "String",
-              "ofType": null
+              "name": "String"
             }
           },
           {
             "name": "socksProxyVersion",
             "type": {
               "kind": "SCALAR",
-              "name": "Int",
-              "ofType": null
+              "name": "Int"
             }
           },
           {
             "name": "systemTrayEnabled",
             "type": {
               "kind": "SCALAR",
-              "name": "Boolean",
-              "ofType": null
+              "name": "Boolean"
             }
           },
           {
             "name": "updateMangas",
             "type": {
               "kind": "SCALAR",
-              "name": "Boolean",
-              "ofType": null
+              "name": "Boolean"
             }
           },
           {
             "name": "webUIChannel",
             "type": {
               "kind": "ENUM",
-              "name": "WebUIChannel",
-              "ofType": null
+              "name": "WebUIChannel"
             }
           },
           {
             "name": "webUIFlavor",
             "type": {
               "kind": "ENUM",
-              "name": "WebUIFlavor",
-              "ofType": null
+              "name": "WebUIFlavor"
             }
           },
           {
             "name": "webUIInterface",
             "type": {
               "kind": "ENUM",
-              "name": "WebUIInterface",
-              "ofType": null
+              "name": "WebUIInterface"
             }
           },
           {
             "name": "webUIUpdateCheckInterval",
             "type": {
               "kind": "SCALAR",
-              "name": "Float",
-              "ofType": null
+              "name": "Float"
             }
           }
-        ]
+        ],
+        "isOneOf": false
       },
       {
         "kind": "UNION",
@@ -9037,400 +8768,16 @@ const introspection = {
         "name": "Query",
         "fields": [
           {
-            "name": "restoreStatus",
-            "type": {
-              "kind": "OBJECT",
-              "name": "BackupRestoreStatus",
-              "ofType": null
-            },
-            "args": [
-              {
-                "name": "id",
-                "type": {
-                  "kind": "NON_NULL",
-                  "ofType": {
-                    "kind": "SCALAR",
-                    "name": "String",
-                    "ofType": null
-                  }
-                }
-              }
-            ]
-          },
-          {
-            "name": "validateBackup",
-            "type": {
-              "kind": "NON_NULL",
-              "ofType": {
-                "kind": "OBJECT",
-                "name": "ValidateBackupResult",
-                "ofType": null
-              }
-            },
-            "args": [
-              {
-                "name": "input",
-                "type": {
-                  "kind": "NON_NULL",
-                  "ofType": {
-                    "kind": "INPUT_OBJECT",
-                    "name": "ValidateBackupInput",
-                    "ofType": null
-                  }
-                }
-              }
-            ]
-          },
-          {
-            "name": "categories",
-            "type": {
-              "kind": "NON_NULL",
-              "ofType": {
-                "kind": "OBJECT",
-                "name": "CategoryNodeList",
-                "ofType": null
-              }
-            },
-            "args": [
-              {
-                "name": "condition",
-                "type": {
-                  "kind": "INPUT_OBJECT",
-                  "name": "CategoryConditionInput",
-                  "ofType": null
-                }
-              },
-              {
-                "name": "filter",
-                "type": {
-                  "kind": "INPUT_OBJECT",
-                  "name": "CategoryFilterInput",
-                  "ofType": null
-                }
-              },
-              {
-                "name": "orderBy",
-                "type": {
-                  "kind": "ENUM",
-                  "name": "CategoryOrderBy",
-                  "ofType": null
-                }
-              },
-              {
-                "name": "orderByType",
-                "type": {
-                  "kind": "ENUM",
-                  "name": "SortOrder",
-                  "ofType": null
-                }
-              },
-              {
-                "name": "before",
-                "type": {
-                  "kind": "SCALAR",
-                  "name": "Cursor",
-                  "ofType": null
-                }
-              },
-              {
-                "name": "after",
-                "type": {
-                  "kind": "SCALAR",
-                  "name": "Cursor",
-                  "ofType": null
-                }
-              },
-              {
-                "name": "first",
-                "type": {
-                  "kind": "SCALAR",
-                  "name": "Int",
-                  "ofType": null
-                }
-              },
-              {
-                "name": "last",
-                "type": {
-                  "kind": "SCALAR",
-                  "name": "Int",
-                  "ofType": null
-                }
-              },
-              {
-                "name": "offset",
-                "type": {
-                  "kind": "SCALAR",
-                  "name": "Int",
-                  "ofType": null
-                }
-              }
-            ]
-          },
-          {
-            "name": "category",
-            "type": {
-              "kind": "NON_NULL",
-              "ofType": {
-                "kind": "OBJECT",
-                "name": "CategoryType",
-                "ofType": null
-              }
-            },
-            "args": [
-              {
-                "name": "id",
-                "type": {
-                  "kind": "NON_NULL",
-                  "ofType": {
-                    "kind": "SCALAR",
-                    "name": "Int",
-                    "ofType": null
-                  }
-                }
-              }
-            ]
-          },
-          {
-            "name": "chapter",
-            "type": {
-              "kind": "NON_NULL",
-              "ofType": {
-                "kind": "OBJECT",
-                "name": "ChapterType",
-                "ofType": null
-              }
-            },
-            "args": [
-              {
-                "name": "id",
-                "type": {
-                  "kind": "NON_NULL",
-                  "ofType": {
-                    "kind": "SCALAR",
-                    "name": "Int",
-                    "ofType": null
-                  }
-                }
-              }
-            ]
-          },
-          {
-            "name": "chapters",
-            "type": {
-              "kind": "NON_NULL",
-              "ofType": {
-                "kind": "OBJECT",
-                "name": "ChapterNodeList",
-                "ofType": null
-              }
-            },
-            "args": [
-              {
-                "name": "condition",
-                "type": {
-                  "kind": "INPUT_OBJECT",
-                  "name": "ChapterConditionInput",
-                  "ofType": null
-                }
-              },
-              {
-                "name": "filter",
-                "type": {
-                  "kind": "INPUT_OBJECT",
-                  "name": "ChapterFilterInput",
-                  "ofType": null
-                }
-              },
-              {
-                "name": "orderBy",
-                "type": {
-                  "kind": "ENUM",
-                  "name": "ChapterOrderBy",
-                  "ofType": null
-                }
-              },
-              {
-                "name": "orderByType",
-                "type": {
-                  "kind": "ENUM",
-                  "name": "SortOrder",
-                  "ofType": null
-                }
-              },
-              {
-                "name": "before",
-                "type": {
-                  "kind": "SCALAR",
-                  "name": "Cursor",
-                  "ofType": null
-                }
-              },
-              {
-                "name": "after",
-                "type": {
-                  "kind": "SCALAR",
-                  "name": "Cursor",
-                  "ofType": null
-                }
-              },
-              {
-                "name": "first",
-                "type": {
-                  "kind": "SCALAR",
-                  "name": "Int",
-                  "ofType": null
-                }
-              },
-              {
-                "name": "last",
-                "type": {
-                  "kind": "SCALAR",
-                  "name": "Int",
-                  "ofType": null
-                }
-              },
-              {
-                "name": "offset",
-                "type": {
-                  "kind": "SCALAR",
-                  "name": "Int",
-                  "ofType": null
-                }
-              }
-            ]
-          },
-          {
-            "name": "downloadStatus",
-            "type": {
-              "kind": "NON_NULL",
-              "ofType": {
-                "kind": "OBJECT",
-                "name": "DownloadStatus",
-                "ofType": null
-              }
-            },
-            "args": []
-          },
-          {
-            "name": "extension",
-            "type": {
-              "kind": "NON_NULL",
-              "ofType": {
-                "kind": "OBJECT",
-                "name": "ExtensionType",
-                "ofType": null
-              }
-            },
-            "args": [
-              {
-                "name": "pkgName",
-                "type": {
-                  "kind": "NON_NULL",
-                  "ofType": {
-                    "kind": "SCALAR",
-                    "name": "String",
-                    "ofType": null
-                  }
-                }
-              }
-            ]
-          },
-          {
-            "name": "extensions",
-            "type": {
-              "kind": "NON_NULL",
-              "ofType": {
-                "kind": "OBJECT",
-                "name": "ExtensionNodeList",
-                "ofType": null
-              }
-            },
-            "args": [
-              {
-                "name": "condition",
-                "type": {
-                  "kind": "INPUT_OBJECT",
-                  "name": "ExtensionConditionInput",
-                  "ofType": null
-                }
-              },
-              {
-                "name": "filter",
-                "type": {
-                  "kind": "INPUT_OBJECT",
-                  "name": "ExtensionFilterInput",
-                  "ofType": null
-                }
-              },
-              {
-                "name": "orderBy",
-                "type": {
-                  "kind": "ENUM",
-                  "name": "ExtensionOrderBy",
-                  "ofType": null
-                }
-              },
-              {
-                "name": "orderByType",
-                "type": {
-                  "kind": "ENUM",
-                  "name": "SortOrder",
-                  "ofType": null
-                }
-              },
-              {
-                "name": "before",
-                "type": {
-                  "kind": "SCALAR",
-                  "name": "Cursor",
-                  "ofType": null
-                }
-              },
-              {
-                "name": "after",
-                "type": {
-                  "kind": "SCALAR",
-                  "name": "Cursor",
-                  "ofType": null
-                }
-              },
-              {
-                "name": "first",
-                "type": {
-                  "kind": "SCALAR",
-                  "name": "Int",
-                  "ofType": null
-                }
-              },
-              {
-                "name": "last",
-                "type": {
-                  "kind": "SCALAR",
-                  "name": "Int",
-                  "ofType": null
-                }
-              },
-              {
-                "name": "offset",
-                "type": {
-                  "kind": "SCALAR",
-                  "name": "Int",
-                  "ofType": null
-                }
-              }
-            ]
-          },
-          {
             "name": "aboutServer",
             "type": {
               "kind": "NON_NULL",
               "ofType": {
                 "kind": "OBJECT",
-                "name": "AboutServerPayload",
-                "ofType": null
+                "name": "AboutServerPayload"
               }
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           },
           {
             "name": "aboutWebUI",
@@ -9438,11 +8785,209 @@ const introspection = {
               "kind": "NON_NULL",
               "ofType": {
                 "kind": "OBJECT",
-                "name": "AboutWebUI",
-                "ofType": null
+                "name": "AboutWebUI"
               }
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
+          },
+          {
+            "name": "categories",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "OBJECT",
+                "name": "CategoryNodeList"
+              }
+            },
+            "args": [
+              {
+                "name": "after",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Cursor"
+                }
+              },
+              {
+                "name": "before",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Cursor"
+                }
+              },
+              {
+                "name": "condition",
+                "type": {
+                  "kind": "INPUT_OBJECT",
+                  "name": "CategoryConditionInput"
+                }
+              },
+              {
+                "name": "filter",
+                "type": {
+                  "kind": "INPUT_OBJECT",
+                  "name": "CategoryFilterInput"
+                }
+              },
+              {
+                "name": "first",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Int"
+                }
+              },
+              {
+                "name": "last",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Int"
+                }
+              },
+              {
+                "name": "offset",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Int"
+                }
+              },
+              {
+                "name": "orderBy",
+                "type": {
+                  "kind": "ENUM",
+                  "name": "CategoryOrderBy"
+                }
+              },
+              {
+                "name": "orderByType",
+                "type": {
+                  "kind": "ENUM",
+                  "name": "SortOrder"
+                }
+              }
+            ],
+            "isDeprecated": false
+          },
+          {
+            "name": "category",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "OBJECT",
+                "name": "CategoryType"
+              }
+            },
+            "args": [
+              {
+                "name": "id",
+                "type": {
+                  "kind": "NON_NULL",
+                  "ofType": {
+                    "kind": "SCALAR",
+                    "name": "Int"
+                  }
+                }
+              }
+            ],
+            "isDeprecated": false
+          },
+          {
+            "name": "chapter",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "OBJECT",
+                "name": "ChapterType"
+              }
+            },
+            "args": [
+              {
+                "name": "id",
+                "type": {
+                  "kind": "NON_NULL",
+                  "ofType": {
+                    "kind": "SCALAR",
+                    "name": "Int"
+                  }
+                }
+              }
+            ],
+            "isDeprecated": false
+          },
+          {
+            "name": "chapters",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "OBJECT",
+                "name": "ChapterNodeList"
+              }
+            },
+            "args": [
+              {
+                "name": "after",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Cursor"
+                }
+              },
+              {
+                "name": "before",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Cursor"
+                }
+              },
+              {
+                "name": "condition",
+                "type": {
+                  "kind": "INPUT_OBJECT",
+                  "name": "ChapterConditionInput"
+                }
+              },
+              {
+                "name": "filter",
+                "type": {
+                  "kind": "INPUT_OBJECT",
+                  "name": "ChapterFilterInput"
+                }
+              },
+              {
+                "name": "first",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Int"
+                }
+              },
+              {
+                "name": "last",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Int"
+                }
+              },
+              {
+                "name": "offset",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Int"
+                }
+              },
+              {
+                "name": "orderBy",
+                "type": {
+                  "kind": "ENUM",
+                  "name": "ChapterOrderBy"
+                }
+              },
+              {
+                "name": "orderByType",
+                "type": {
+                  "kind": "ENUM",
+                  "name": "SortOrder"
+                }
+              }
+            ],
+            "isDeprecated": false
           },
           {
             "name": "checkForServerUpdates",
@@ -9454,13 +8999,13 @@ const introspection = {
                   "kind": "NON_NULL",
                   "ofType": {
                     "kind": "OBJECT",
-                    "name": "CheckForServerUpdatesPayload",
-                    "ofType": null
+                    "name": "CheckForServerUpdatesPayload"
                   }
                 }
               }
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           },
           {
             "name": "checkForWebUIUpdate",
@@ -9468,11 +9013,122 @@ const introspection = {
               "kind": "NON_NULL",
               "ofType": {
                 "kind": "OBJECT",
-                "name": "WebUIUpdateCheck",
-                "ofType": null
+                "name": "WebUIUpdateCheck"
               }
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
+          },
+          {
+            "name": "downloadStatus",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "OBJECT",
+                "name": "DownloadStatus"
+              }
+            },
+            "args": [],
+            "isDeprecated": false
+          },
+          {
+            "name": "extension",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "OBJECT",
+                "name": "ExtensionType"
+              }
+            },
+            "args": [
+              {
+                "name": "pkgName",
+                "type": {
+                  "kind": "NON_NULL",
+                  "ofType": {
+                    "kind": "SCALAR",
+                    "name": "String"
+                  }
+                }
+              }
+            ],
+            "isDeprecated": false
+          },
+          {
+            "name": "extensions",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "OBJECT",
+                "name": "ExtensionNodeList"
+              }
+            },
+            "args": [
+              {
+                "name": "after",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Cursor"
+                }
+              },
+              {
+                "name": "before",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Cursor"
+                }
+              },
+              {
+                "name": "condition",
+                "type": {
+                  "kind": "INPUT_OBJECT",
+                  "name": "ExtensionConditionInput"
+                }
+              },
+              {
+                "name": "filter",
+                "type": {
+                  "kind": "INPUT_OBJECT",
+                  "name": "ExtensionFilterInput"
+                }
+              },
+              {
+                "name": "first",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Int"
+                }
+              },
+              {
+                "name": "last",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Int"
+                }
+              },
+              {
+                "name": "offset",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Int"
+                }
+              },
+              {
+                "name": "orderBy",
+                "type": {
+                  "kind": "ENUM",
+                  "name": "ExtensionOrderBy"
+                }
+              },
+              {
+                "name": "orderByType",
+                "type": {
+                  "kind": "ENUM",
+                  "name": "SortOrder"
+                }
+              }
+            ],
+            "isDeprecated": false
           },
           {
             "name": "getWebUIUpdateStatus",
@@ -9480,11 +9136,23 @@ const introspection = {
               "kind": "NON_NULL",
               "ofType": {
                 "kind": "OBJECT",
-                "name": "WebUIUpdateStatus",
-                "ofType": null
+                "name": "WebUIUpdateStatus"
               }
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
+          },
+          {
+            "name": "lastUpdateTimestamp",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "OBJECT",
+                "name": "LastUpdateTimestampPayload"
+              }
+            },
+            "args": [],
+            "isDeprecated": false
           },
           {
             "name": "manga",
@@ -9492,8 +9160,7 @@ const introspection = {
               "kind": "NON_NULL",
               "ofType": {
                 "kind": "OBJECT",
-                "name": "MangaType",
-                "ofType": null
+                "name": "MangaType"
               }
             },
             "args": [
@@ -9503,12 +9170,12 @@ const introspection = {
                   "kind": "NON_NULL",
                   "ofType": {
                     "kind": "SCALAR",
-                    "name": "Int",
-                    "ofType": null
+                    "name": "Int"
                   }
                 }
               }
-            ]
+            ],
+            "isDeprecated": false
           },
           {
             "name": "mangas",
@@ -9516,84 +9183,75 @@ const introspection = {
               "kind": "NON_NULL",
               "ofType": {
                 "kind": "OBJECT",
-                "name": "MangaNodeList",
-                "ofType": null
+                "name": "MangaNodeList"
               }
             },
             "args": [
               {
-                "name": "condition",
+                "name": "after",
                 "type": {
-                  "kind": "INPUT_OBJECT",
-                  "name": "MangaConditionInput",
-                  "ofType": null
-                }
-              },
-              {
-                "name": "filter",
-                "type": {
-                  "kind": "INPUT_OBJECT",
-                  "name": "MangaFilterInput",
-                  "ofType": null
-                }
-              },
-              {
-                "name": "orderBy",
-                "type": {
-                  "kind": "ENUM",
-                  "name": "MangaOrderBy",
-                  "ofType": null
-                }
-              },
-              {
-                "name": "orderByType",
-                "type": {
-                  "kind": "ENUM",
-                  "name": "SortOrder",
-                  "ofType": null
+                  "kind": "SCALAR",
+                  "name": "Cursor"
                 }
               },
               {
                 "name": "before",
                 "type": {
                   "kind": "SCALAR",
-                  "name": "Cursor",
-                  "ofType": null
+                  "name": "Cursor"
                 }
               },
               {
-                "name": "after",
+                "name": "condition",
                 "type": {
-                  "kind": "SCALAR",
-                  "name": "Cursor",
-                  "ofType": null
+                  "kind": "INPUT_OBJECT",
+                  "name": "MangaConditionInput"
+                }
+              },
+              {
+                "name": "filter",
+                "type": {
+                  "kind": "INPUT_OBJECT",
+                  "name": "MangaFilterInput"
                 }
               },
               {
                 "name": "first",
                 "type": {
                   "kind": "SCALAR",
-                  "name": "Int",
-                  "ofType": null
+                  "name": "Int"
                 }
               },
               {
                 "name": "last",
                 "type": {
                   "kind": "SCALAR",
-                  "name": "Int",
-                  "ofType": null
+                  "name": "Int"
                 }
               },
               {
                 "name": "offset",
                 "type": {
                   "kind": "SCALAR",
-                  "name": "Int",
-                  "ofType": null
+                  "name": "Int"
+                }
+              },
+              {
+                "name": "orderBy",
+                "type": {
+                  "kind": "ENUM",
+                  "name": "MangaOrderBy"
+                }
+              },
+              {
+                "name": "orderByType",
+                "type": {
+                  "kind": "ENUM",
+                  "name": "SortOrder"
                 }
               }
-            ]
+            ],
+            "isDeprecated": false
           },
           {
             "name": "meta",
@@ -9601,8 +9259,7 @@ const introspection = {
               "kind": "NON_NULL",
               "ofType": {
                 "kind": "OBJECT",
-                "name": "GlobalMetaType",
-                "ofType": null
+                "name": "GlobalMetaType"
               }
             },
             "args": [
@@ -9612,12 +9269,12 @@ const introspection = {
                   "kind": "NON_NULL",
                   "ofType": {
                     "kind": "SCALAR",
-                    "name": "String",
-                    "ofType": null
+                    "name": "String"
                   }
                 }
               }
-            ]
+            ],
+            "isDeprecated": false
           },
           {
             "name": "metas",
@@ -9625,106 +9282,81 @@ const introspection = {
               "kind": "NON_NULL",
               "ofType": {
                 "kind": "OBJECT",
-                "name": "GlobalMetaNodeList",
-                "ofType": null
+                "name": "GlobalMetaNodeList"
               }
             },
             "args": [
               {
-                "name": "condition",
+                "name": "after",
                 "type": {
-                  "kind": "INPUT_OBJECT",
-                  "name": "MetaConditionInput",
-                  "ofType": null
-                }
-              },
-              {
-                "name": "filter",
-                "type": {
-                  "kind": "INPUT_OBJECT",
-                  "name": "MetaFilterInput",
-                  "ofType": null
-                }
-              },
-              {
-                "name": "orderBy",
-                "type": {
-                  "kind": "ENUM",
-                  "name": "MetaOrderBy",
-                  "ofType": null
-                }
-              },
-              {
-                "name": "orderByType",
-                "type": {
-                  "kind": "ENUM",
-                  "name": "SortOrder",
-                  "ofType": null
+                  "kind": "SCALAR",
+                  "name": "Cursor"
                 }
               },
               {
                 "name": "before",
                 "type": {
                   "kind": "SCALAR",
-                  "name": "Cursor",
-                  "ofType": null
+                  "name": "Cursor"
                 }
               },
               {
-                "name": "after",
+                "name": "condition",
                 "type": {
-                  "kind": "SCALAR",
-                  "name": "Cursor",
-                  "ofType": null
+                  "kind": "INPUT_OBJECT",
+                  "name": "MetaConditionInput"
+                }
+              },
+              {
+                "name": "filter",
+                "type": {
+                  "kind": "INPUT_OBJECT",
+                  "name": "MetaFilterInput"
                 }
               },
               {
                 "name": "first",
                 "type": {
                   "kind": "SCALAR",
-                  "name": "Int",
-                  "ofType": null
+                  "name": "Int"
                 }
               },
               {
                 "name": "last",
                 "type": {
                   "kind": "SCALAR",
-                  "name": "Int",
-                  "ofType": null
+                  "name": "Int"
                 }
               },
               {
                 "name": "offset",
                 "type": {
                   "kind": "SCALAR",
-                  "name": "Int",
-                  "ofType": null
+                  "name": "Int"
+                }
+              },
+              {
+                "name": "orderBy",
+                "type": {
+                  "kind": "ENUM",
+                  "name": "MetaOrderBy"
+                }
+              },
+              {
+                "name": "orderByType",
+                "type": {
+                  "kind": "ENUM",
+                  "name": "SortOrder"
                 }
               }
-            ]
+            ],
+            "isDeprecated": false
           },
           {
-            "name": "settings",
+            "name": "restoreStatus",
             "type": {
-              "kind": "NON_NULL",
-              "ofType": {
-                "kind": "OBJECT",
-                "name": "SettingsType",
-                "ofType": null
-              }
-            },
-            "args": []
-          },
-          {
-            "name": "source",
-            "type": {
-              "kind": "NON_NULL",
-              "ofType": {
-                "kind": "OBJECT",
-                "name": "SourceType",
-                "ofType": null
-              }
+              "kind": "OBJECT",
+              "name": "BackupRestoreStatus"
             },
             "args": [
               {
@@ -9733,97 +9365,12 @@ const introspection = {
                   "kind": "NON_NULL",
                   "ofType": {
                     "kind": "SCALAR",
-                    "name": "LongString",
-                    "ofType": null
+                    "name": "String"
                   }
                 }
               }
-            ]
-          },
-          {
-            "name": "sources",
-            "type": {
-              "kind": "NON_NULL",
-              "ofType": {
-                "kind": "OBJECT",
-                "name": "SourceNodeList",
-                "ofType": null
-              }
-            },
-            "args": [
-              {
-                "name": "condition",
-                "type": {
-                  "kind": "INPUT_OBJECT",
-                  "name": "SourceConditionInput",
-                  "ofType": null
-                }
-              },
-              {
-                "name": "filter",
-                "type": {
-                  "kind": "INPUT_OBJECT",
-                  "name": "SourceFilterInput",
-                  "ofType": null
-                }
-              },
-              {
-                "name": "orderBy",
-                "type": {
-                  "kind": "ENUM",
-                  "name": "SourceOrderBy",
-                  "ofType": null
-                }
-              },
-              {
-                "name": "orderByType",
-                "type": {
-                  "kind": "ENUM",
-                  "name": "SortOrder",
-                  "ofType": null
-                }
-              },
-              {
-                "name": "before",
-                "type": {
-                  "kind": "SCALAR",
-                  "name": "Cursor",
-                  "ofType": null
-                }
-              },
-              {
-                "name": "after",
-                "type": {
-                  "kind": "SCALAR",
-                  "name": "Cursor",
-                  "ofType": null
-                }
-              },
-              {
-                "name": "first",
-                "type": {
-                  "kind": "SCALAR",
-                  "name": "Int",
-                  "ofType": null
-                }
-              },
-              {
-                "name": "last",
-                "type": {
-                  "kind": "SCALAR",
-                  "name": "Int",
-                  "ofType": null
-                }
-              },
-              {
-                "name": "offset",
-                "type": {
-                  "kind": "SCALAR",
-                  "name": "Int",
-                  "ofType": null
-                }
-              }
-            ]
+            ],
+            "isDeprecated": false
           },
           {
             "name": "searchTracker",
@@ -9831,8 +9378,7 @@ const introspection = {
               "kind": "NON_NULL",
               "ofType": {
                 "kind": "OBJECT",
-                "name": "SearchTrackerPayload",
-                "ofType": null
+                "name": "SearchTrackerPayload"
               }
             },
             "args": [
@@ -9842,12 +9388,123 @@ const introspection = {
                   "kind": "NON_NULL",
                   "ofType": {
                     "kind": "INPUT_OBJECT",
-                    "name": "SearchTrackerInput",
-                    "ofType": null
+                    "name": "SearchTrackerInput"
                   }
                 }
               }
-            ]
+            ],
+            "isDeprecated": false
+          },
+          {
+            "name": "settings",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "OBJECT",
+                "name": "SettingsType"
+              }
+            },
+            "args": [],
+            "isDeprecated": false
+          },
+          {
+            "name": "source",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "OBJECT",
+                "name": "SourceType"
+              }
+            },
+            "args": [
+              {
+                "name": "id",
+                "type": {
+                  "kind": "NON_NULL",
+                  "ofType": {
+                    "kind": "SCALAR",
+                    "name": "LongString"
+                  }
+                }
+              }
+            ],
+            "isDeprecated": false
+          },
+          {
+            "name": "sources",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "OBJECT",
+                "name": "SourceNodeList"
+              }
+            },
+            "args": [
+              {
+                "name": "after",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Cursor"
+                }
+              },
+              {
+                "name": "before",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Cursor"
+                }
+              },
+              {
+                "name": "condition",
+                "type": {
+                  "kind": "INPUT_OBJECT",
+                  "name": "SourceConditionInput"
+                }
+              },
+              {
+                "name": "filter",
+                "type": {
+                  "kind": "INPUT_OBJECT",
+                  "name": "SourceFilterInput"
+                }
+              },
+              {
+                "name": "first",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Int"
+                }
+              },
+              {
+                "name": "last",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Int"
+                }
+              },
+              {
+                "name": "offset",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Int"
+                }
+              },
+              {
+                "name": "orderBy",
+                "type": {
+                  "kind": "ENUM",
+                  "name": "SourceOrderBy"
+                }
+              },
+              {
+                "name": "orderByType",
+                "type": {
+                  "kind": "ENUM",
+                  "name": "SortOrder"
+                }
+              }
+            ],
+            "isDeprecated": false
           },
           {
             "name": "trackRecord",
@@ -9855,8 +9512,7 @@ const introspection = {
               "kind": "NON_NULL",
               "ofType": {
                 "kind": "OBJECT",
-                "name": "TrackRecordType",
-                "ofType": null
+                "name": "TrackRecordType"
               }
             },
             "args": [
@@ -9866,12 +9522,12 @@ const introspection = {
                   "kind": "NON_NULL",
                   "ofType": {
                     "kind": "SCALAR",
-                    "name": "Int",
-                    "ofType": null
+                    "name": "Int"
                   }
                 }
               }
-            ]
+            ],
+            "isDeprecated": false
           },
           {
             "name": "trackRecords",
@@ -9879,84 +9535,75 @@ const introspection = {
               "kind": "NON_NULL",
               "ofType": {
                 "kind": "OBJECT",
-                "name": "TrackRecordNodeList",
-                "ofType": null
+                "name": "TrackRecordNodeList"
               }
             },
             "args": [
               {
-                "name": "condition",
+                "name": "after",
                 "type": {
-                  "kind": "INPUT_OBJECT",
-                  "name": "TrackRecordConditionInput",
-                  "ofType": null
-                }
-              },
-              {
-                "name": "filter",
-                "type": {
-                  "kind": "INPUT_OBJECT",
-                  "name": "TrackRecordFilterInput",
-                  "ofType": null
-                }
-              },
-              {
-                "name": "orderBy",
-                "type": {
-                  "kind": "ENUM",
-                  "name": "TrackRecordOrderBy",
-                  "ofType": null
-                }
-              },
-              {
-                "name": "orderByType",
-                "type": {
-                  "kind": "ENUM",
-                  "name": "SortOrder",
-                  "ofType": null
+                  "kind": "SCALAR",
+                  "name": "Cursor"
                 }
               },
               {
                 "name": "before",
                 "type": {
                   "kind": "SCALAR",
-                  "name": "Cursor",
-                  "ofType": null
+                  "name": "Cursor"
                 }
               },
               {
-                "name": "after",
+                "name": "condition",
                 "type": {
-                  "kind": "SCALAR",
-                  "name": "Cursor",
-                  "ofType": null
+                  "kind": "INPUT_OBJECT",
+                  "name": "TrackRecordConditionInput"
+                }
+              },
+              {
+                "name": "filter",
+                "type": {
+                  "kind": "INPUT_OBJECT",
+                  "name": "TrackRecordFilterInput"
                 }
               },
               {
                 "name": "first",
                 "type": {
                   "kind": "SCALAR",
-                  "name": "Int",
-                  "ofType": null
+                  "name": "Int"
                 }
               },
               {
                 "name": "last",
                 "type": {
                   "kind": "SCALAR",
-                  "name": "Int",
-                  "ofType": null
+                  "name": "Int"
                 }
               },
               {
                 "name": "offset",
                 "type": {
                   "kind": "SCALAR",
-                  "name": "Int",
-                  "ofType": null
+                  "name": "Int"
+                }
+              },
+              {
+                "name": "orderBy",
+                "type": {
+                  "kind": "ENUM",
+                  "name": "TrackRecordOrderBy"
+                }
+              },
+              {
+                "name": "orderByType",
+                "type": {
+                  "kind": "ENUM",
+                  "name": "SortOrder"
                 }
               }
-            ]
+            ],
+            "isDeprecated": false
           },
           {
             "name": "tracker",
@@ -9964,8 +9611,7 @@ const introspection = {
               "kind": "NON_NULL",
               "ofType": {
                 "kind": "OBJECT",
-                "name": "TrackerType",
-                "ofType": null
+                "name": "TrackerType"
               }
             },
             "args": [
@@ -9975,12 +9621,12 @@ const introspection = {
                   "kind": "NON_NULL",
                   "ofType": {
                     "kind": "SCALAR",
-                    "name": "Int",
-                    "ofType": null
+                    "name": "Int"
                   }
                 }
               }
-            ]
+            ],
+            "isDeprecated": false
           },
           {
             "name": "trackers",
@@ -9988,88 +9634,68 @@ const introspection = {
               "kind": "NON_NULL",
               "ofType": {
                 "kind": "OBJECT",
-                "name": "TrackerNodeList",
-                "ofType": null
+                "name": "TrackerNodeList"
               }
             },
             "args": [
               {
-                "name": "condition",
+                "name": "after",
                 "type": {
-                  "kind": "INPUT_OBJECT",
-                  "name": "TrackerConditionInput",
-                  "ofType": null
-                }
-              },
-              {
-                "name": "orderBy",
-                "type": {
-                  "kind": "ENUM",
-                  "name": "TrackerOrderBy",
-                  "ofType": null
-                }
-              },
-              {
-                "name": "orderByType",
-                "type": {
-                  "kind": "ENUM",
-                  "name": "SortOrder",
-                  "ofType": null
+                  "kind": "SCALAR",
+                  "name": "Cursor"
                 }
               },
               {
                 "name": "before",
                 "type": {
                   "kind": "SCALAR",
-                  "name": "Cursor",
-                  "ofType": null
+                  "name": "Cursor"
                 }
               },
               {
-                "name": "after",
+                "name": "condition",
                 "type": {
-                  "kind": "SCALAR",
-                  "name": "Cursor",
-                  "ofType": null
+                  "kind": "INPUT_OBJECT",
+                  "name": "TrackerConditionInput"
                 }
               },
               {
                 "name": "first",
                 "type": {
                   "kind": "SCALAR",
-                  "name": "Int",
-                  "ofType": null
+                  "name": "Int"
                 }
               },
               {
                 "name": "last",
                 "type": {
                   "kind": "SCALAR",
-                  "name": "Int",
-                  "ofType": null
+                  "name": "Int"
                 }
               },
               {
                 "name": "offset",
                 "type": {
                   "kind": "SCALAR",
-                  "name": "Int",
-                  "ofType": null
+                  "name": "Int"
+                }
+              },
+              {
+                "name": "orderBy",
+                "type": {
+                  "kind": "ENUM",
+                  "name": "TrackerOrderBy"
+                }
+              },
+              {
+                "name": "orderByType",
+                "type": {
+                  "kind": "ENUM",
+                  "name": "SortOrder"
                 }
               }
-            ]
-          },
-          {
-            "name": "lastUpdateTimestamp",
-            "type": {
-              "kind": "NON_NULL",
-              "ofType": {
-                "kind": "OBJECT",
-                "name": "LastUpdateTimestampPayload",
-                "ofType": null
-              }
-            },
-            "args": []
+            ],
+            "isDeprecated": false
           },
           {
             "name": "updateStatus",
@@ -10077,11 +9703,34 @@ const introspection = {
               "kind": "NON_NULL",
               "ofType": {
                 "kind": "OBJECT",
-                "name": "UpdateStatus",
-                "ofType": null
+                "name": "UpdateStatus"
               }
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
+          },
+          {
+            "name": "validateBackup",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "OBJECT",
+                "name": "ValidateBackupResult"
+              }
+            },
+            "args": [
+              {
+                "name": "input",
+                "type": {
+                  "kind": "NON_NULL",
+                  "ofType": {
+                    "kind": "INPUT_OBJECT",
+                    "name": "ValidateBackupInput"
+                  }
+                }
+              }
+            ],
+            "isDeprecated": false
           }
         ],
         "interfaces": []
@@ -10096,8 +9745,7 @@ const introspection = {
               "kind": "NON_NULL",
               "ofType": {
                 "kind": "SCALAR",
-                "name": "Int",
-                "ofType": null
+                "name": "Int"
               }
             }
           },
@@ -10105,8 +9753,7 @@ const introspection = {
             "name": "clientMutationId",
             "type": {
               "kind": "SCALAR",
-              "name": "String",
-              "ofType": null
+              "name": "String"
             }
           },
           {
@@ -10115,12 +9762,12 @@ const introspection = {
               "kind": "NON_NULL",
               "ofType": {
                 "kind": "SCALAR",
-                "name": "Int",
-                "ofType": null
+                "name": "Int"
               }
             }
           }
-        ]
+        ],
+        "isOneOf": false
       },
       {
         "kind": "OBJECT",
@@ -10130,10 +9777,10 @@ const introspection = {
             "name": "clientMutationId",
             "type": {
               "kind": "SCALAR",
-              "name": "String",
-              "ofType": null
+              "name": "String"
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           },
           {
             "name": "downloadStatus",
@@ -10141,11 +9788,11 @@ const introspection = {
               "kind": "NON_NULL",
               "ofType": {
                 "kind": "OBJECT",
-                "name": "DownloadStatus",
-                "ofType": null
+                "name": "DownloadStatus"
               }
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           }
         ],
         "interfaces": []
@@ -10158,11 +9805,11 @@ const introspection = {
             "name": "clientMutationId",
             "type": {
               "kind": "SCALAR",
-              "name": "String",
-              "ofType": null
+              "name": "String"
             }
           }
-        ]
+        ],
+        "isOneOf": false
       },
       {
         "kind": "OBJECT",
@@ -10172,10 +9819,10 @@ const introspection = {
             "name": "clientMutationId",
             "type": {
               "kind": "SCALAR",
-              "name": "String",
-              "ofType": null
+              "name": "String"
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           },
           {
             "name": "settings",
@@ -10183,11 +9830,11 @@ const introspection = {
               "kind": "NON_NULL",
               "ofType": {
                 "kind": "OBJECT",
-                "name": "SettingsType",
-                "ofType": null
+                "name": "SettingsType"
               }
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           }
         ],
         "interfaces": []
@@ -10202,8 +9849,7 @@ const introspection = {
               "kind": "NON_NULL",
               "ofType": {
                 "kind": "SCALAR",
-                "name": "Upload",
-                "ofType": null
+                "name": "Upload"
               }
             }
           },
@@ -10211,11 +9857,11 @@ const introspection = {
             "name": "clientMutationId",
             "type": {
               "kind": "SCALAR",
-              "name": "String",
-              "ofType": null
+              "name": "String"
             }
           }
-        ]
+        ],
+        "isOneOf": false
       },
       {
         "kind": "OBJECT",
@@ -10225,10 +9871,10 @@ const introspection = {
             "name": "clientMutationId",
             "type": {
               "kind": "SCALAR",
-              "name": "String",
-              "ofType": null
+              "name": "String"
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           },
           {
             "name": "id",
@@ -10236,20 +9882,20 @@ const introspection = {
               "kind": "NON_NULL",
               "ofType": {
                 "kind": "SCALAR",
-                "name": "String",
-                "ofType": null
+                "name": "String"
               }
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           },
           {
             "name": "status",
             "type": {
               "kind": "OBJECT",
-              "name": "BackupRestoreStatus",
-              "ofType": null
+              "name": "BackupRestoreStatus"
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           }
         ],
         "interfaces": []
@@ -10264,8 +9910,7 @@ const introspection = {
               "kind": "NON_NULL",
               "ofType": {
                 "kind": "SCALAR",
-                "name": "String",
-                "ofType": null
+                "name": "String"
               }
             }
           },
@@ -10275,12 +9920,12 @@ const introspection = {
               "kind": "NON_NULL",
               "ofType": {
                 "kind": "SCALAR",
-                "name": "Int",
-                "ofType": null
+                "name": "Int"
               }
             }
           }
-        ]
+        ],
+        "isOneOf": false
       },
       {
         "kind": "OBJECT",
@@ -10296,13 +9941,13 @@ const introspection = {
                   "kind": "NON_NULL",
                   "ofType": {
                     "kind": "OBJECT",
-                    "name": "TrackSearchType",
-                    "ofType": null
+                    "name": "TrackSearchType"
                   }
                 }
               }
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           }
         ],
         "interfaces": []
@@ -10317,11 +9962,11 @@ const introspection = {
               "kind": "NON_NULL",
               "ofType": {
                 "kind": "SCALAR",
-                "name": "Int",
-                "ofType": null
+                "name": "Int"
               }
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           },
           {
             "name": "name",
@@ -10329,11 +9974,11 @@ const introspection = {
               "kind": "NON_NULL",
               "ofType": {
                 "kind": "SCALAR",
-                "name": "String",
-                "ofType": null
+                "name": "String"
               }
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           },
           {
             "name": "values",
@@ -10345,13 +9990,13 @@ const introspection = {
                   "kind": "NON_NULL",
                   "ofType": {
                     "kind": "SCALAR",
-                    "name": "String",
-                    "ofType": null
+                    "name": "String"
                   }
                 }
               }
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           }
         ],
         "interfaces": []
@@ -10366,11 +10011,11 @@ const introspection = {
               "kind": "NON_NULL",
               "ofType": {
                 "kind": "SCALAR",
-                "name": "String",
-                "ofType": null
+                "name": "String"
               }
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           }
         ],
         "interfaces": []
@@ -10383,8 +10028,7 @@ const introspection = {
             "name": "clientMutationId",
             "type": {
               "kind": "SCALAR",
-              "name": "String",
-              "ofType": null
+              "name": "String"
             }
           },
           {
@@ -10393,12 +10037,12 @@ const introspection = {
               "kind": "NON_NULL",
               "ofType": {
                 "kind": "INPUT_OBJECT",
-                "name": "CategoryMetaTypeInput",
-                "ofType": null
+                "name": "CategoryMetaTypeInput"
               }
             }
           }
-        ]
+        ],
+        "isOneOf": false
       },
       {
         "kind": "OBJECT",
@@ -10408,10 +10052,10 @@ const introspection = {
             "name": "clientMutationId",
             "type": {
               "kind": "SCALAR",
-              "name": "String",
-              "ofType": null
+              "name": "String"
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           },
           {
             "name": "meta",
@@ -10419,11 +10063,11 @@ const introspection = {
               "kind": "NON_NULL",
               "ofType": {
                 "kind": "OBJECT",
-                "name": "CategoryMetaType",
-                "ofType": null
+                "name": "CategoryMetaType"
               }
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           }
         ],
         "interfaces": []
@@ -10436,8 +10080,7 @@ const introspection = {
             "name": "clientMutationId",
             "type": {
               "kind": "SCALAR",
-              "name": "String",
-              "ofType": null
+              "name": "String"
             }
           },
           {
@@ -10446,12 +10089,12 @@ const introspection = {
               "kind": "NON_NULL",
               "ofType": {
                 "kind": "INPUT_OBJECT",
-                "name": "ChapterMetaTypeInput",
-                "ofType": null
+                "name": "ChapterMetaTypeInput"
               }
             }
           }
-        ]
+        ],
+        "isOneOf": false
       },
       {
         "kind": "OBJECT",
@@ -10461,10 +10104,10 @@ const introspection = {
             "name": "clientMutationId",
             "type": {
               "kind": "SCALAR",
-              "name": "String",
-              "ofType": null
+              "name": "String"
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           },
           {
             "name": "meta",
@@ -10472,11 +10115,11 @@ const introspection = {
               "kind": "NON_NULL",
               "ofType": {
                 "kind": "OBJECT",
-                "name": "ChapterMetaType",
-                "ofType": null
+                "name": "ChapterMetaType"
               }
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           }
         ],
         "interfaces": []
@@ -10489,8 +10132,7 @@ const introspection = {
             "name": "clientMutationId",
             "type": {
               "kind": "SCALAR",
-              "name": "String",
-              "ofType": null
+              "name": "String"
             }
           },
           {
@@ -10499,12 +10141,12 @@ const introspection = {
               "kind": "NON_NULL",
               "ofType": {
                 "kind": "INPUT_OBJECT",
-                "name": "GlobalMetaTypeInput",
-                "ofType": null
+                "name": "GlobalMetaTypeInput"
               }
             }
           }
-        ]
+        ],
+        "isOneOf": false
       },
       {
         "kind": "OBJECT",
@@ -10514,10 +10156,10 @@ const introspection = {
             "name": "clientMutationId",
             "type": {
               "kind": "SCALAR",
-              "name": "String",
-              "ofType": null
+              "name": "String"
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           },
           {
             "name": "meta",
@@ -10525,11 +10167,11 @@ const introspection = {
               "kind": "NON_NULL",
               "ofType": {
                 "kind": "OBJECT",
-                "name": "GlobalMetaType",
-                "ofType": null
+                "name": "GlobalMetaType"
               }
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           }
         ],
         "interfaces": []
@@ -10542,8 +10184,7 @@ const introspection = {
             "name": "clientMutationId",
             "type": {
               "kind": "SCALAR",
-              "name": "String",
-              "ofType": null
+              "name": "String"
             }
           },
           {
@@ -10552,12 +10193,12 @@ const introspection = {
               "kind": "NON_NULL",
               "ofType": {
                 "kind": "INPUT_OBJECT",
-                "name": "MangaMetaTypeInput",
-                "ofType": null
+                "name": "MangaMetaTypeInput"
               }
             }
           }
-        ]
+        ],
+        "isOneOf": false
       },
       {
         "kind": "OBJECT",
@@ -10567,10 +10208,10 @@ const introspection = {
             "name": "clientMutationId",
             "type": {
               "kind": "SCALAR",
-              "name": "String",
-              "ofType": null
+              "name": "String"
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           },
           {
             "name": "meta",
@@ -10578,11 +10219,11 @@ const introspection = {
               "kind": "NON_NULL",
               "ofType": {
                 "kind": "OBJECT",
-                "name": "MangaMetaType",
-                "ofType": null
+                "name": "MangaMetaType"
               }
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           }
         ],
         "interfaces": []
@@ -10595,8 +10236,7 @@ const introspection = {
             "name": "clientMutationId",
             "type": {
               "kind": "SCALAR",
-              "name": "String",
-              "ofType": null
+              "name": "String"
             }
           },
           {
@@ -10605,12 +10245,12 @@ const introspection = {
               "kind": "NON_NULL",
               "ofType": {
                 "kind": "INPUT_OBJECT",
-                "name": "PartialSettingsTypeInput",
-                "ofType": null
+                "name": "PartialSettingsTypeInput"
               }
             }
           }
-        ]
+        ],
+        "isOneOf": false
       },
       {
         "kind": "OBJECT",
@@ -10620,10 +10260,10 @@ const introspection = {
             "name": "clientMutationId",
             "type": {
               "kind": "SCALAR",
-              "name": "String",
-              "ofType": null
+              "name": "String"
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           },
           {
             "name": "settings",
@@ -10631,11 +10271,11 @@ const introspection = {
               "kind": "NON_NULL",
               "ofType": {
                 "kind": "OBJECT",
-                "name": "SettingsType",
-                "ofType": null
+                "name": "SettingsType"
               }
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           }
         ],
         "interfaces": []
@@ -10648,8 +10288,7 @@ const introspection = {
             "name": "clientMutationId",
             "type": {
               "kind": "SCALAR",
-              "name": "String",
-              "ofType": null
+              "name": "String"
             }
           },
           {
@@ -10658,12 +10297,12 @@ const introspection = {
               "kind": "NON_NULL",
               "ofType": {
                 "kind": "INPUT_OBJECT",
-                "name": "SourceMetaTypeInput",
-                "ofType": null
+                "name": "SourceMetaTypeInput"
               }
             }
           }
-        ]
+        ],
+        "isOneOf": false
       },
       {
         "kind": "OBJECT",
@@ -10673,10 +10312,10 @@ const introspection = {
             "name": "clientMutationId",
             "type": {
               "kind": "SCALAR",
-              "name": "String",
-              "ofType": null
+              "name": "String"
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           },
           {
             "name": "meta",
@@ -10684,11 +10323,11 @@ const introspection = {
               "kind": "NON_NULL",
               "ofType": {
                 "kind": "OBJECT",
-                "name": "SourceMetaType",
-                "ofType": null
+                "name": "SourceMetaType"
               }
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           }
         ],
         "interfaces": []
@@ -10701,163 +10340,172 @@ const introspection = {
             "name": "autoDownloadAheadLimit",
             "type": {
               "kind": "SCALAR",
-              "name": "Int",
-              "ofType": null
+              "name": "Int"
             },
-            "args": []
+            "args": [],
+            "isDeprecated": true
+          },
+          {
+            "name": "autoDownloadIgnoreReUploads",
+            "type": {
+              "kind": "SCALAR",
+              "name": "Boolean"
+            },
+            "args": [],
+            "isDeprecated": false
           },
           {
             "name": "autoDownloadNewChapters",
             "type": {
               "kind": "SCALAR",
-              "name": "Boolean",
-              "ofType": null
+              "name": "Boolean"
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           },
           {
             "name": "autoDownloadNewChaptersLimit",
             "type": {
               "kind": "SCALAR",
-              "name": "Int",
-              "ofType": null
+              "name": "Int"
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           },
           {
             "name": "backupInterval",
             "type": {
               "kind": "SCALAR",
-              "name": "Int",
-              "ofType": null
+              "name": "Int"
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           },
           {
             "name": "backupPath",
             "type": {
               "kind": "SCALAR",
-              "name": "String",
-              "ofType": null
+              "name": "String"
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           },
           {
             "name": "backupTTL",
             "type": {
               "kind": "SCALAR",
-              "name": "Int",
-              "ofType": null
+              "name": "Int"
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           },
           {
             "name": "backupTime",
             "type": {
               "kind": "SCALAR",
-              "name": "String",
-              "ofType": null
+              "name": "String"
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           },
           {
             "name": "basicAuthEnabled",
             "type": {
               "kind": "SCALAR",
-              "name": "Boolean",
-              "ofType": null
+              "name": "Boolean"
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           },
           {
             "name": "basicAuthPassword",
             "type": {
               "kind": "SCALAR",
-              "name": "String",
-              "ofType": null
+              "name": "String"
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           },
           {
             "name": "basicAuthUsername",
             "type": {
               "kind": "SCALAR",
-              "name": "String",
-              "ofType": null
+              "name": "String"
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           },
           {
             "name": "debugLogsEnabled",
             "type": {
               "kind": "SCALAR",
-              "name": "Boolean",
-              "ofType": null
+              "name": "Boolean"
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           },
           {
             "name": "downloadAsCbz",
             "type": {
               "kind": "SCALAR",
-              "name": "Boolean",
-              "ofType": null
+              "name": "Boolean"
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           },
           {
             "name": "downloadsPath",
             "type": {
               "kind": "SCALAR",
-              "name": "String",
-              "ofType": null
+              "name": "String"
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           },
           {
             "name": "electronPath",
             "type": {
               "kind": "SCALAR",
-              "name": "String",
-              "ofType": null
+              "name": "String"
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           },
           {
             "name": "excludeCompleted",
             "type": {
               "kind": "SCALAR",
-              "name": "Boolean",
-              "ofType": null
+              "name": "Boolean"
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           },
           {
             "name": "excludeEntryWithUnreadChapters",
             "type": {
               "kind": "SCALAR",
-              "name": "Boolean",
-              "ofType": null
+              "name": "Boolean"
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           },
           {
             "name": "excludeNotStarted",
             "type": {
               "kind": "SCALAR",
-              "name": "Boolean",
-              "ofType": null
+              "name": "Boolean"
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           },
           {
             "name": "excludeUnreadChapters",
             "type": {
               "kind": "SCALAR",
-              "name": "Boolean",
-              "ofType": null
+              "name": "Boolean"
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           },
           {
             "name": "extensionRepos",
@@ -10867,228 +10515,228 @@ const introspection = {
                 "kind": "NON_NULL",
                 "ofType": {
                   "kind": "SCALAR",
-                  "name": "String",
-                  "ofType": null
+                  "name": "String"
                 }
               }
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           },
           {
             "name": "flareSolverrEnabled",
             "type": {
               "kind": "SCALAR",
-              "name": "Boolean",
-              "ofType": null
+              "name": "Boolean"
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           },
           {
             "name": "flareSolverrSessionName",
             "type": {
               "kind": "SCALAR",
-              "name": "String",
-              "ofType": null
+              "name": "String"
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           },
           {
             "name": "flareSolverrSessionTtl",
             "type": {
               "kind": "SCALAR",
-              "name": "Int",
-              "ofType": null
+              "name": "Int"
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           },
           {
             "name": "flareSolverrTimeout",
             "type": {
               "kind": "SCALAR",
-              "name": "Int",
-              "ofType": null
+              "name": "Int"
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           },
           {
             "name": "flareSolverrUrl",
             "type": {
               "kind": "SCALAR",
-              "name": "String",
-              "ofType": null
+              "name": "String"
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           },
           {
             "name": "globalUpdateInterval",
             "type": {
               "kind": "SCALAR",
-              "name": "Float",
-              "ofType": null
+              "name": "Float"
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           },
           {
             "name": "gqlDebugLogsEnabled",
             "type": {
               "kind": "SCALAR",
-              "name": "Boolean",
-              "ofType": null
+              "name": "Boolean"
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           },
           {
             "name": "initialOpenInBrowserEnabled",
             "type": {
               "kind": "SCALAR",
-              "name": "Boolean",
-              "ofType": null
+              "name": "Boolean"
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           },
           {
             "name": "ip",
             "type": {
               "kind": "SCALAR",
-              "name": "String",
-              "ofType": null
+              "name": "String"
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           },
           {
             "name": "localSourcePath",
             "type": {
               "kind": "SCALAR",
-              "name": "String",
-              "ofType": null
+              "name": "String"
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           },
           {
             "name": "maxSourcesInParallel",
             "type": {
               "kind": "SCALAR",
-              "name": "Int",
-              "ofType": null
+              "name": "Int"
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           },
           {
             "name": "port",
             "type": {
               "kind": "SCALAR",
-              "name": "Int",
-              "ofType": null
+              "name": "Int"
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           },
           {
             "name": "socksProxyEnabled",
             "type": {
               "kind": "SCALAR",
-              "name": "Boolean",
-              "ofType": null
+              "name": "Boolean"
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           },
           {
             "name": "socksProxyHost",
             "type": {
               "kind": "SCALAR",
-              "name": "String",
-              "ofType": null
+              "name": "String"
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           },
           {
             "name": "socksProxyPassword",
             "type": {
               "kind": "SCALAR",
-              "name": "String",
-              "ofType": null
+              "name": "String"
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           },
           {
             "name": "socksProxyPort",
             "type": {
               "kind": "SCALAR",
-              "name": "String",
-              "ofType": null
+              "name": "String"
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           },
           {
             "name": "socksProxyUsername",
             "type": {
               "kind": "SCALAR",
-              "name": "String",
-              "ofType": null
+              "name": "String"
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           },
           {
             "name": "socksProxyVersion",
             "type": {
               "kind": "SCALAR",
-              "name": "Int",
-              "ofType": null
+              "name": "Int"
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           },
           {
             "name": "systemTrayEnabled",
             "type": {
               "kind": "SCALAR",
-              "name": "Boolean",
-              "ofType": null
+              "name": "Boolean"
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           },
           {
             "name": "updateMangas",
             "type": {
               "kind": "SCALAR",
-              "name": "Boolean",
-              "ofType": null
+              "name": "Boolean"
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           },
           {
             "name": "webUIChannel",
             "type": {
               "kind": "ENUM",
-              "name": "WebUIChannel",
-              "ofType": null
+              "name": "WebUIChannel"
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           },
           {
             "name": "webUIFlavor",
             "type": {
               "kind": "ENUM",
-              "name": "WebUIFlavor",
-              "ofType": null
+              "name": "WebUIFlavor"
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           },
           {
             "name": "webUIInterface",
             "type": {
               "kind": "ENUM",
-              "name": "WebUIInterface",
-              "ofType": null
+              "name": "WebUIInterface"
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           },
           {
             "name": "webUIUpdateCheckInterval",
             "type": {
               "kind": "SCALAR",
-              "name": "Float",
-              "ofType": null
+              "name": "Float"
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           }
         ],
         "interfaces": [],
@@ -11113,11 +10761,20 @@ const introspection = {
               "kind": "NON_NULL",
               "ofType": {
                 "kind": "SCALAR",
-                "name": "Int",
-                "ofType": null
+                "name": "Int"
               }
             },
-            "args": []
+            "args": [],
+            "isDeprecated": true
+          },
+          {
+            "name": "autoDownloadIgnoreReUploads",
+            "type": {
+              "kind": "SCALAR",
+              "name": "Boolean"
+            },
+            "args": [],
+            "isDeprecated": false
           },
           {
             "name": "autoDownloadNewChapters",
@@ -11125,11 +10782,11 @@ const introspection = {
               "kind": "NON_NULL",
               "ofType": {
                 "kind": "SCALAR",
-                "name": "Boolean",
-                "ofType": null
+                "name": "Boolean"
               }
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           },
           {
             "name": "autoDownloadNewChaptersLimit",
@@ -11137,11 +10794,11 @@ const introspection = {
               "kind": "NON_NULL",
               "ofType": {
                 "kind": "SCALAR",
-                "name": "Int",
-                "ofType": null
+                "name": "Int"
               }
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           },
           {
             "name": "backupInterval",
@@ -11149,11 +10806,11 @@ const introspection = {
               "kind": "NON_NULL",
               "ofType": {
                 "kind": "SCALAR",
-                "name": "Int",
-                "ofType": null
+                "name": "Int"
               }
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           },
           {
             "name": "backupPath",
@@ -11161,11 +10818,11 @@ const introspection = {
               "kind": "NON_NULL",
               "ofType": {
                 "kind": "SCALAR",
-                "name": "String",
-                "ofType": null
+                "name": "String"
               }
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           },
           {
             "name": "backupTTL",
@@ -11173,11 +10830,11 @@ const introspection = {
               "kind": "NON_NULL",
               "ofType": {
                 "kind": "SCALAR",
-                "name": "Int",
-                "ofType": null
+                "name": "Int"
               }
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           },
           {
             "name": "backupTime",
@@ -11185,11 +10842,11 @@ const introspection = {
               "kind": "NON_NULL",
               "ofType": {
                 "kind": "SCALAR",
-                "name": "String",
-                "ofType": null
+                "name": "String"
               }
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           },
           {
             "name": "basicAuthEnabled",
@@ -11197,11 +10854,11 @@ const introspection = {
               "kind": "NON_NULL",
               "ofType": {
                 "kind": "SCALAR",
-                "name": "Boolean",
-                "ofType": null
+                "name": "Boolean"
               }
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           },
           {
             "name": "basicAuthPassword",
@@ -11209,11 +10866,11 @@ const introspection = {
               "kind": "NON_NULL",
               "ofType": {
                 "kind": "SCALAR",
-                "name": "String",
-                "ofType": null
+                "name": "String"
               }
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           },
           {
             "name": "basicAuthUsername",
@@ -11221,11 +10878,11 @@ const introspection = {
               "kind": "NON_NULL",
               "ofType": {
                 "kind": "SCALAR",
-                "name": "String",
-                "ofType": null
+                "name": "String"
               }
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           },
           {
             "name": "debugLogsEnabled",
@@ -11233,11 +10890,11 @@ const introspection = {
               "kind": "NON_NULL",
               "ofType": {
                 "kind": "SCALAR",
-                "name": "Boolean",
-                "ofType": null
+                "name": "Boolean"
               }
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           },
           {
             "name": "downloadAsCbz",
@@ -11245,11 +10902,11 @@ const introspection = {
               "kind": "NON_NULL",
               "ofType": {
                 "kind": "SCALAR",
-                "name": "Boolean",
-                "ofType": null
+                "name": "Boolean"
               }
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           },
           {
             "name": "downloadsPath",
@@ -11257,11 +10914,11 @@ const introspection = {
               "kind": "NON_NULL",
               "ofType": {
                 "kind": "SCALAR",
-                "name": "String",
-                "ofType": null
+                "name": "String"
               }
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           },
           {
             "name": "electronPath",
@@ -11269,11 +10926,11 @@ const introspection = {
               "kind": "NON_NULL",
               "ofType": {
                 "kind": "SCALAR",
-                "name": "String",
-                "ofType": null
+                "name": "String"
               }
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           },
           {
             "name": "excludeCompleted",
@@ -11281,11 +10938,11 @@ const introspection = {
               "kind": "NON_NULL",
               "ofType": {
                 "kind": "SCALAR",
-                "name": "Boolean",
-                "ofType": null
+                "name": "Boolean"
               }
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           },
           {
             "name": "excludeEntryWithUnreadChapters",
@@ -11293,11 +10950,11 @@ const introspection = {
               "kind": "NON_NULL",
               "ofType": {
                 "kind": "SCALAR",
-                "name": "Boolean",
-                "ofType": null
+                "name": "Boolean"
               }
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           },
           {
             "name": "excludeNotStarted",
@@ -11305,11 +10962,11 @@ const introspection = {
               "kind": "NON_NULL",
               "ofType": {
                 "kind": "SCALAR",
-                "name": "Boolean",
-                "ofType": null
+                "name": "Boolean"
               }
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           },
           {
             "name": "excludeUnreadChapters",
@@ -11317,11 +10974,11 @@ const introspection = {
               "kind": "NON_NULL",
               "ofType": {
                 "kind": "SCALAR",
-                "name": "Boolean",
-                "ofType": null
+                "name": "Boolean"
               }
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           },
           {
             "name": "extensionRepos",
@@ -11333,13 +10990,13 @@ const introspection = {
                   "kind": "NON_NULL",
                   "ofType": {
                     "kind": "SCALAR",
-                    "name": "String",
-                    "ofType": null
+                    "name": "String"
                   }
                 }
               }
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           },
           {
             "name": "flareSolverrEnabled",
@@ -11347,11 +11004,11 @@ const introspection = {
               "kind": "NON_NULL",
               "ofType": {
                 "kind": "SCALAR",
-                "name": "Boolean",
-                "ofType": null
+                "name": "Boolean"
               }
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           },
           {
             "name": "flareSolverrSessionName",
@@ -11359,11 +11016,11 @@ const introspection = {
               "kind": "NON_NULL",
               "ofType": {
                 "kind": "SCALAR",
-                "name": "String",
-                "ofType": null
+                "name": "String"
               }
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           },
           {
             "name": "flareSolverrSessionTtl",
@@ -11371,11 +11028,11 @@ const introspection = {
               "kind": "NON_NULL",
               "ofType": {
                 "kind": "SCALAR",
-                "name": "Int",
-                "ofType": null
+                "name": "Int"
               }
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           },
           {
             "name": "flareSolverrTimeout",
@@ -11383,11 +11040,11 @@ const introspection = {
               "kind": "NON_NULL",
               "ofType": {
                 "kind": "SCALAR",
-                "name": "Int",
-                "ofType": null
+                "name": "Int"
               }
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           },
           {
             "name": "flareSolverrUrl",
@@ -11395,11 +11052,11 @@ const introspection = {
               "kind": "NON_NULL",
               "ofType": {
                 "kind": "SCALAR",
-                "name": "String",
-                "ofType": null
+                "name": "String"
               }
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           },
           {
             "name": "globalUpdateInterval",
@@ -11407,11 +11064,11 @@ const introspection = {
               "kind": "NON_NULL",
               "ofType": {
                 "kind": "SCALAR",
-                "name": "Float",
-                "ofType": null
+                "name": "Float"
               }
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           },
           {
             "name": "gqlDebugLogsEnabled",
@@ -11419,11 +11076,11 @@ const introspection = {
               "kind": "NON_NULL",
               "ofType": {
                 "kind": "SCALAR",
-                "name": "Boolean",
-                "ofType": null
+                "name": "Boolean"
               }
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           },
           {
             "name": "initialOpenInBrowserEnabled",
@@ -11431,11 +11088,11 @@ const introspection = {
               "kind": "NON_NULL",
               "ofType": {
                 "kind": "SCALAR",
-                "name": "Boolean",
-                "ofType": null
+                "name": "Boolean"
               }
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           },
           {
             "name": "ip",
@@ -11443,11 +11100,11 @@ const introspection = {
               "kind": "NON_NULL",
               "ofType": {
                 "kind": "SCALAR",
-                "name": "String",
-                "ofType": null
+                "name": "String"
               }
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           },
           {
             "name": "localSourcePath",
@@ -11455,11 +11112,11 @@ const introspection = {
               "kind": "NON_NULL",
               "ofType": {
                 "kind": "SCALAR",
-                "name": "String",
-                "ofType": null
+                "name": "String"
               }
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           },
           {
             "name": "maxSourcesInParallel",
@@ -11467,11 +11124,11 @@ const introspection = {
               "kind": "NON_NULL",
               "ofType": {
                 "kind": "SCALAR",
-                "name": "Int",
-                "ofType": null
+                "name": "Int"
               }
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           },
           {
             "name": "port",
@@ -11479,11 +11136,11 @@ const introspection = {
               "kind": "NON_NULL",
               "ofType": {
                 "kind": "SCALAR",
-                "name": "Int",
-                "ofType": null
+                "name": "Int"
               }
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           },
           {
             "name": "socksProxyEnabled",
@@ -11491,11 +11148,11 @@ const introspection = {
               "kind": "NON_NULL",
               "ofType": {
                 "kind": "SCALAR",
-                "name": "Boolean",
-                "ofType": null
+                "name": "Boolean"
               }
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           },
           {
             "name": "socksProxyHost",
@@ -11503,11 +11160,11 @@ const introspection = {
               "kind": "NON_NULL",
               "ofType": {
                 "kind": "SCALAR",
-                "name": "String",
-                "ofType": null
+                "name": "String"
               }
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           },
           {
             "name": "socksProxyPassword",
@@ -11515,11 +11172,11 @@ const introspection = {
               "kind": "NON_NULL",
               "ofType": {
                 "kind": "SCALAR",
-                "name": "String",
-                "ofType": null
+                "name": "String"
               }
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           },
           {
             "name": "socksProxyPort",
@@ -11527,11 +11184,11 @@ const introspection = {
               "kind": "NON_NULL",
               "ofType": {
                 "kind": "SCALAR",
-                "name": "String",
-                "ofType": null
+                "name": "String"
               }
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           },
           {
             "name": "socksProxyUsername",
@@ -11539,11 +11196,11 @@ const introspection = {
               "kind": "NON_NULL",
               "ofType": {
                 "kind": "SCALAR",
-                "name": "String",
-                "ofType": null
+                "name": "String"
               }
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           },
           {
             "name": "socksProxyVersion",
@@ -11551,11 +11208,11 @@ const introspection = {
               "kind": "NON_NULL",
               "ofType": {
                 "kind": "SCALAR",
-                "name": "Int",
-                "ofType": null
+                "name": "Int"
               }
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           },
           {
             "name": "systemTrayEnabled",
@@ -11563,11 +11220,11 @@ const introspection = {
               "kind": "NON_NULL",
               "ofType": {
                 "kind": "SCALAR",
-                "name": "Boolean",
-                "ofType": null
+                "name": "Boolean"
               }
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           },
           {
             "name": "updateMangas",
@@ -11575,11 +11232,11 @@ const introspection = {
               "kind": "NON_NULL",
               "ofType": {
                 "kind": "SCALAR",
-                "name": "Boolean",
-                "ofType": null
+                "name": "Boolean"
               }
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           },
           {
             "name": "webUIChannel",
@@ -11587,11 +11244,11 @@ const introspection = {
               "kind": "NON_NULL",
               "ofType": {
                 "kind": "ENUM",
-                "name": "WebUIChannel",
-                "ofType": null
+                "name": "WebUIChannel"
               }
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           },
           {
             "name": "webUIFlavor",
@@ -11599,11 +11256,11 @@ const introspection = {
               "kind": "NON_NULL",
               "ofType": {
                 "kind": "ENUM",
-                "name": "WebUIFlavor",
-                "ofType": null
+                "name": "WebUIFlavor"
               }
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           },
           {
             "name": "webUIInterface",
@@ -11611,11 +11268,11 @@ const introspection = {
               "kind": "NON_NULL",
               "ofType": {
                 "kind": "ENUM",
-                "name": "WebUIInterface",
-                "ofType": null
+                "name": "WebUIInterface"
               }
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           },
           {
             "name": "webUIUpdateCheckInterval",
@@ -11623,11 +11280,11 @@ const introspection = {
               "kind": "NON_NULL",
               "ofType": {
                 "kind": "SCALAR",
-                "name": "Float",
-                "ofType": null
+                "name": "Float"
               }
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           }
         ],
         "interfaces": [
@@ -11645,10 +11302,10 @@ const introspection = {
             "name": "default",
             "type": {
               "kind": "OBJECT",
-              "name": "SortSelection",
-              "ofType": null
+              "name": "SortSelection"
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           },
           {
             "name": "name",
@@ -11656,11 +11313,11 @@ const introspection = {
               "kind": "NON_NULL",
               "ofType": {
                 "kind": "SCALAR",
-                "name": "String",
-                "ofType": null
+                "name": "String"
               }
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           },
           {
             "name": "values",
@@ -11672,13 +11329,13 @@ const introspection = {
                   "kind": "NON_NULL",
                   "ofType": {
                     "kind": "SCALAR",
-                    "name": "String",
-                    "ofType": null
+                    "name": "String"
                   }
                 }
               }
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           }
         ],
         "interfaces": []
@@ -11688,22 +11345,28 @@ const introspection = {
         "name": "SortOrder",
         "enumValues": [
           {
-            "name": "ASC"
+            "name": "ASC",
+            "isDeprecated": false
           },
           {
-            "name": "DESC"
+            "name": "DESC",
+            "isDeprecated": false
           },
           {
-            "name": "ASC_NULLS_FIRST"
+            "name": "ASC_NULLS_FIRST",
+            "isDeprecated": false
           },
           {
-            "name": "DESC_NULLS_FIRST"
+            "name": "DESC_NULLS_FIRST",
+            "isDeprecated": false
           },
           {
-            "name": "ASC_NULLS_LAST"
+            "name": "ASC_NULLS_LAST",
+            "isDeprecated": false
           },
           {
-            "name": "DESC_NULLS_LAST"
+            "name": "DESC_NULLS_LAST",
+            "isDeprecated": false
           }
         ]
       },
@@ -11717,11 +11380,11 @@ const introspection = {
               "kind": "NON_NULL",
               "ofType": {
                 "kind": "SCALAR",
-                "name": "Boolean",
-                "ofType": null
+                "name": "Boolean"
               }
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           },
           {
             "name": "index",
@@ -11729,11 +11392,11 @@ const introspection = {
               "kind": "NON_NULL",
               "ofType": {
                 "kind": "SCALAR",
-                "name": "Int",
-                "ofType": null
+                "name": "Int"
               }
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           }
         ],
         "interfaces": []
@@ -11748,8 +11411,7 @@ const introspection = {
               "kind": "NON_NULL",
               "ofType": {
                 "kind": "SCALAR",
-                "name": "Boolean",
-                "ofType": null
+                "name": "Boolean"
               }
             }
           },
@@ -11759,12 +11421,12 @@ const introspection = {
               "kind": "NON_NULL",
               "ofType": {
                 "kind": "SCALAR",
-                "name": "Int",
-                "ofType": null
+                "name": "Int"
               }
             }
           }
-        ]
+        ],
+        "isOneOf": false
       },
       {
         "kind": "INPUT_OBJECT",
@@ -11774,35 +11436,32 @@ const introspection = {
             "name": "id",
             "type": {
               "kind": "SCALAR",
-              "name": "LongString",
-              "ofType": null
+              "name": "LongString"
             }
           },
           {
             "name": "isNsfw",
             "type": {
               "kind": "SCALAR",
-              "name": "Boolean",
-              "ofType": null
+              "name": "Boolean"
             }
           },
           {
             "name": "lang",
             "type": {
               "kind": "SCALAR",
-              "name": "String",
-              "ofType": null
+              "name": "String"
             }
           },
           {
             "name": "name",
             "type": {
               "kind": "SCALAR",
-              "name": "String",
-              "ofType": null
+              "name": "String"
             }
           }
-        ]
+        ],
+        "isOneOf": false
       },
       {
         "kind": "OBJECT",
@@ -11814,11 +11473,11 @@ const introspection = {
               "kind": "NON_NULL",
               "ofType": {
                 "kind": "SCALAR",
-                "name": "Cursor",
-                "ofType": null
+                "name": "Cursor"
               }
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           },
           {
             "name": "node",
@@ -11826,11 +11485,11 @@ const introspection = {
               "kind": "NON_NULL",
               "ofType": {
                 "kind": "OBJECT",
-                "name": "SourceType",
-                "ofType": null
+                "name": "SourceType"
               }
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           }
         ],
         "interfaces": [
@@ -11852,8 +11511,7 @@ const introspection = {
                 "kind": "NON_NULL",
                 "ofType": {
                   "kind": "INPUT_OBJECT",
-                  "name": "SourceFilterInput",
-                  "ofType": null
+                  "name": "SourceFilterInput"
                 }
               }
             }
@@ -11862,40 +11520,35 @@ const introspection = {
             "name": "id",
             "type": {
               "kind": "INPUT_OBJECT",
-              "name": "LongFilterInput",
-              "ofType": null
+              "name": "LongFilterInput"
             }
           },
           {
             "name": "isNsfw",
             "type": {
               "kind": "INPUT_OBJECT",
-              "name": "BooleanFilterInput",
-              "ofType": null
+              "name": "BooleanFilterInput"
             }
           },
           {
             "name": "lang",
             "type": {
               "kind": "INPUT_OBJECT",
-              "name": "StringFilterInput",
-              "ofType": null
+              "name": "StringFilterInput"
             }
           },
           {
             "name": "name",
             "type": {
               "kind": "INPUT_OBJECT",
-              "name": "StringFilterInput",
-              "ofType": null
+              "name": "StringFilterInput"
             }
           },
           {
             "name": "not",
             "type": {
               "kind": "INPUT_OBJECT",
-              "name": "SourceFilterInput",
-              "ofType": null
+              "name": "SourceFilterInput"
             }
           },
           {
@@ -11906,13 +11559,13 @@ const introspection = {
                 "kind": "NON_NULL",
                 "ofType": {
                   "kind": "INPUT_OBJECT",
-                  "name": "SourceFilterInput",
-                  "ofType": null
+                  "name": "SourceFilterInput"
                 }
               }
             }
           }
-        ]
+        ],
+        "isOneOf": false
       },
       {
         "kind": "OBJECT",
@@ -11924,35 +11577,11 @@ const introspection = {
               "kind": "NON_NULL",
               "ofType": {
                 "kind": "SCALAR",
-                "name": "String",
-                "ofType": null
+                "name": "String"
               }
             },
-            "args": []
-          },
-          {
-            "name": "sourceId",
-            "type": {
-              "kind": "NON_NULL",
-              "ofType": {
-                "kind": "SCALAR",
-                "name": "LongString",
-                "ofType": null
-              }
-            },
-            "args": []
-          },
-          {
-            "name": "value",
-            "type": {
-              "kind": "NON_NULL",
-              "ofType": {
-                "kind": "SCALAR",
-                "name": "String",
-                "ofType": null
-              }
-            },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           },
           {
             "name": "source",
@@ -11960,11 +11589,35 @@ const introspection = {
               "kind": "NON_NULL",
               "ofType": {
                 "kind": "OBJECT",
-                "name": "SourceType",
-                "ofType": null
+                "name": "SourceType"
               }
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
+          },
+          {
+            "name": "sourceId",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "LongString"
+              }
+            },
+            "args": [],
+            "isDeprecated": false
+          },
+          {
+            "name": "value",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "String"
+              }
+            },
+            "args": [],
+            "isDeprecated": false
           }
         ],
         "interfaces": [
@@ -11984,8 +11637,7 @@ const introspection = {
               "kind": "NON_NULL",
               "ofType": {
                 "kind": "SCALAR",
-                "name": "String",
-                "ofType": null
+                "name": "String"
               }
             }
           },
@@ -11995,8 +11647,7 @@ const introspection = {
               "kind": "NON_NULL",
               "ofType": {
                 "kind": "SCALAR",
-                "name": "LongString",
-                "ofType": null
+                "name": "LongString"
               }
             }
           },
@@ -12006,12 +11657,12 @@ const introspection = {
               "kind": "NON_NULL",
               "ofType": {
                 "kind": "SCALAR",
-                "name": "String",
-                "ofType": null
+                "name": "String"
               }
             }
           }
-        ]
+        ],
+        "isOneOf": false
       },
       {
         "kind": "OBJECT",
@@ -12027,13 +11678,13 @@ const introspection = {
                   "kind": "NON_NULL",
                   "ofType": {
                     "kind": "OBJECT",
-                    "name": "SourceEdge",
-                    "ofType": null
+                    "name": "SourceEdge"
                   }
                 }
               }
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           },
           {
             "name": "nodes",
@@ -12045,13 +11696,13 @@ const introspection = {
                   "kind": "NON_NULL",
                   "ofType": {
                     "kind": "OBJECT",
-                    "name": "SourceType",
-                    "ofType": null
+                    "name": "SourceType"
                   }
                 }
               }
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           },
           {
             "name": "pageInfo",
@@ -12059,11 +11710,11 @@ const introspection = {
               "kind": "NON_NULL",
               "ofType": {
                 "kind": "OBJECT",
-                "name": "PageInfo",
-                "ofType": null
+                "name": "PageInfo"
               }
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           },
           {
             "name": "totalCount",
@@ -12071,11 +11722,11 @@ const introspection = {
               "kind": "NON_NULL",
               "ofType": {
                 "kind": "SCALAR",
-                "name": "Int",
-                "ofType": null
+                "name": "Int"
               }
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           }
         ],
         "interfaces": [
@@ -12090,13 +11741,16 @@ const introspection = {
         "name": "SourceOrderBy",
         "enumValues": [
           {
-            "name": "ID"
+            "name": "ID",
+            "isDeprecated": false
           },
           {
-            "name": "NAME"
+            "name": "NAME",
+            "isDeprecated": false
           },
           {
-            "name": "LANG"
+            "name": "LANG",
+            "isDeprecated": false
           }
         ]
       },
@@ -12108,24 +11762,21 @@ const introspection = {
             "name": "checkBoxState",
             "type": {
               "kind": "SCALAR",
-              "name": "Boolean",
-              "ofType": null
+              "name": "Boolean"
             }
           },
           {
             "name": "editTextState",
             "type": {
               "kind": "SCALAR",
-              "name": "String",
-              "ofType": null
+              "name": "String"
             }
           },
           {
             "name": "listState",
             "type": {
               "kind": "SCALAR",
-              "name": "String",
-              "ofType": null
+              "name": "String"
             }
           },
           {
@@ -12136,8 +11787,7 @@ const introspection = {
                 "kind": "NON_NULL",
                 "ofType": {
                   "kind": "SCALAR",
-                  "name": "String",
-                  "ofType": null
+                  "name": "String"
                 }
               }
             }
@@ -12148,8 +11798,7 @@ const introspection = {
               "kind": "NON_NULL",
               "ofType": {
                 "kind": "SCALAR",
-                "name": "Int",
-                "ofType": null
+                "name": "Int"
               }
             }
           },
@@ -12157,11 +11806,11 @@ const introspection = {
             "name": "switchState",
             "type": {
               "kind": "SCALAR",
-              "name": "Boolean",
-              "ofType": null
+              "name": "Boolean"
             }
           }
-        ]
+        ],
+        "isOneOf": false
       },
       {
         "kind": "OBJECT",
@@ -12173,95 +11822,11 @@ const introspection = {
               "kind": "NON_NULL",
               "ofType": {
                 "kind": "SCALAR",
-                "name": "String",
-                "ofType": null
+                "name": "String"
               }
             },
-            "args": []
-          },
-          {
-            "name": "iconUrl",
-            "type": {
-              "kind": "NON_NULL",
-              "ofType": {
-                "kind": "SCALAR",
-                "name": "String",
-                "ofType": null
-              }
-            },
-            "args": []
-          },
-          {
-            "name": "id",
-            "type": {
-              "kind": "NON_NULL",
-              "ofType": {
-                "kind": "SCALAR",
-                "name": "LongString",
-                "ofType": null
-              }
-            },
-            "args": []
-          },
-          {
-            "name": "isConfigurable",
-            "type": {
-              "kind": "NON_NULL",
-              "ofType": {
-                "kind": "SCALAR",
-                "name": "Boolean",
-                "ofType": null
-              }
-            },
-            "args": []
-          },
-          {
-            "name": "isNsfw",
-            "type": {
-              "kind": "NON_NULL",
-              "ofType": {
-                "kind": "SCALAR",
-                "name": "Boolean",
-                "ofType": null
-              }
-            },
-            "args": []
-          },
-          {
-            "name": "lang",
-            "type": {
-              "kind": "NON_NULL",
-              "ofType": {
-                "kind": "SCALAR",
-                "name": "String",
-                "ofType": null
-              }
-            },
-            "args": []
-          },
-          {
-            "name": "name",
-            "type": {
-              "kind": "NON_NULL",
-              "ofType": {
-                "kind": "SCALAR",
-                "name": "String",
-                "ofType": null
-              }
-            },
-            "args": []
-          },
-          {
-            "name": "supportsLatest",
-            "type": {
-              "kind": "NON_NULL",
-              "ofType": {
-                "kind": "SCALAR",
-                "name": "Boolean",
-                "ofType": null
-              }
-            },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           },
           {
             "name": "extension",
@@ -12269,11 +11834,11 @@ const introspection = {
               "kind": "NON_NULL",
               "ofType": {
                 "kind": "OBJECT",
-                "name": "ExtensionType",
-                "ofType": null
+                "name": "ExtensionType"
               }
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           },
           {
             "name": "filters",
@@ -12285,13 +11850,73 @@ const introspection = {
                   "kind": "NON_NULL",
                   "ofType": {
                     "kind": "UNION",
-                    "name": "Filter",
-                    "ofType": null
+                    "name": "Filter"
                   }
                 }
               }
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
+          },
+          {
+            "name": "iconUrl",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "String"
+              }
+            },
+            "args": [],
+            "isDeprecated": false
+          },
+          {
+            "name": "id",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "LongString"
+              }
+            },
+            "args": [],
+            "isDeprecated": false
+          },
+          {
+            "name": "isConfigurable",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "Boolean"
+              }
+            },
+            "args": [],
+            "isDeprecated": false
+          },
+          {
+            "name": "isNsfw",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "Boolean"
+              }
+            },
+            "args": [],
+            "isDeprecated": false
+          },
+          {
+            "name": "lang",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "String"
+              }
+            },
+            "args": [],
+            "isDeprecated": false
           },
           {
             "name": "manga",
@@ -12299,11 +11924,11 @@ const introspection = {
               "kind": "NON_NULL",
               "ofType": {
                 "kind": "OBJECT",
-                "name": "MangaNodeList",
-                "ofType": null
+                "name": "MangaNodeList"
               }
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           },
           {
             "name": "meta",
@@ -12315,13 +11940,25 @@ const introspection = {
                   "kind": "NON_NULL",
                   "ofType": {
                     "kind": "OBJECT",
-                    "name": "SourceMetaType",
-                    "ofType": null
+                    "name": "SourceMetaType"
                   }
                 }
               }
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
+          },
+          {
+            "name": "name",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "String"
+              }
+            },
+            "args": [],
+            "isDeprecated": false
           },
           {
             "name": "preferences",
@@ -12333,13 +11970,25 @@ const introspection = {
                   "kind": "NON_NULL",
                   "ofType": {
                     "kind": "UNION",
-                    "name": "Preference",
-                    "ofType": null
+                    "name": "Preference"
                   }
                 }
               }
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
+          },
+          {
+            "name": "supportsLatest",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "Boolean"
+              }
+            },
+            "args": [],
+            "isDeprecated": false
           }
         ],
         "interfaces": []
@@ -12352,11 +12001,11 @@ const introspection = {
             "name": "clientMutationId",
             "type": {
               "kind": "SCALAR",
-              "name": "String",
-              "ofType": null
+              "name": "String"
             }
           }
-        ]
+        ],
+        "isOneOf": false
       },
       {
         "kind": "OBJECT",
@@ -12366,10 +12015,10 @@ const introspection = {
             "name": "clientMutationId",
             "type": {
               "kind": "SCALAR",
-              "name": "String",
-              "ofType": null
+              "name": "String"
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           },
           {
             "name": "downloadStatus",
@@ -12377,11 +12026,11 @@ const introspection = {
               "kind": "NON_NULL",
               "ofType": {
                 "kind": "OBJECT",
-                "name": "DownloadStatus",
-                "ofType": null
+                "name": "DownloadStatus"
               }
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           }
         ],
         "interfaces": []
@@ -12394,11 +12043,11 @@ const introspection = {
             "name": "clientMutationId",
             "type": {
               "kind": "SCALAR",
-              "name": "String",
-              "ofType": null
+              "name": "String"
             }
           }
-        ]
+        ],
+        "isOneOf": false
       },
       {
         "kind": "OBJECT",
@@ -12408,10 +12057,10 @@ const introspection = {
             "name": "clientMutationId",
             "type": {
               "kind": "SCALAR",
-              "name": "String",
-              "ofType": null
+              "name": "String"
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           },
           {
             "name": "downloadStatus",
@@ -12419,14 +12068,18 @@ const introspection = {
               "kind": "NON_NULL",
               "ofType": {
                 "kind": "OBJECT",
-                "name": "DownloadStatus",
-                "ofType": null
+                "name": "DownloadStatus"
               }
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           }
         ],
         "interfaces": []
+      },
+      {
+        "kind": "SCALAR",
+        "name": "String"
       },
       {
         "kind": "INPUT_OBJECT",
@@ -12436,72 +12089,63 @@ const introspection = {
             "name": "distinctFrom",
             "type": {
               "kind": "SCALAR",
-              "name": "String",
-              "ofType": null
+              "name": "String"
             }
           },
           {
             "name": "distinctFromInsensitive",
             "type": {
               "kind": "SCALAR",
-              "name": "String",
-              "ofType": null
+              "name": "String"
             }
           },
           {
             "name": "endsWith",
             "type": {
               "kind": "SCALAR",
-              "name": "String",
-              "ofType": null
+              "name": "String"
             }
           },
           {
             "name": "endsWithInsensitive",
             "type": {
               "kind": "SCALAR",
-              "name": "String",
-              "ofType": null
+              "name": "String"
             }
           },
           {
             "name": "equalTo",
             "type": {
               "kind": "SCALAR",
-              "name": "String",
-              "ofType": null
+              "name": "String"
             }
           },
           {
             "name": "greaterThan",
             "type": {
               "kind": "SCALAR",
-              "name": "String",
-              "ofType": null
+              "name": "String"
             }
           },
           {
             "name": "greaterThanInsensitive",
             "type": {
               "kind": "SCALAR",
-              "name": "String",
-              "ofType": null
+              "name": "String"
             }
           },
           {
             "name": "greaterThanOrEqualTo",
             "type": {
               "kind": "SCALAR",
-              "name": "String",
-              "ofType": null
+              "name": "String"
             }
           },
           {
             "name": "greaterThanOrEqualToInsensitive",
             "type": {
               "kind": "SCALAR",
-              "name": "String",
-              "ofType": null
+              "name": "String"
             }
           },
           {
@@ -12512,8 +12156,7 @@ const introspection = {
                 "kind": "NON_NULL",
                 "ofType": {
                   "kind": "SCALAR",
-                  "name": "String",
-                  "ofType": null
+                  "name": "String"
                 }
               }
             }
@@ -12526,8 +12169,7 @@ const introspection = {
                 "kind": "NON_NULL",
                 "ofType": {
                   "kind": "SCALAR",
-                  "name": "String",
-                  "ofType": null
+                  "name": "String"
                 }
               }
             }
@@ -12536,112 +12178,98 @@ const introspection = {
             "name": "includes",
             "type": {
               "kind": "SCALAR",
-              "name": "String",
-              "ofType": null
+              "name": "String"
             }
           },
           {
             "name": "includesInsensitive",
             "type": {
               "kind": "SCALAR",
-              "name": "String",
-              "ofType": null
+              "name": "String"
             }
           },
           {
             "name": "isNull",
             "type": {
               "kind": "SCALAR",
-              "name": "Boolean",
-              "ofType": null
+              "name": "Boolean"
             }
           },
           {
             "name": "lessThan",
             "type": {
               "kind": "SCALAR",
-              "name": "String",
-              "ofType": null
+              "name": "String"
             }
           },
           {
             "name": "lessThanInsensitive",
             "type": {
               "kind": "SCALAR",
-              "name": "String",
-              "ofType": null
+              "name": "String"
             }
           },
           {
             "name": "lessThanOrEqualTo",
             "type": {
               "kind": "SCALAR",
-              "name": "String",
-              "ofType": null
+              "name": "String"
             }
           },
           {
             "name": "lessThanOrEqualToInsensitive",
             "type": {
               "kind": "SCALAR",
-              "name": "String",
-              "ofType": null
+              "name": "String"
             }
           },
           {
             "name": "like",
             "type": {
               "kind": "SCALAR",
-              "name": "String",
-              "ofType": null
+              "name": "String"
             }
           },
           {
             "name": "likeInsensitive",
             "type": {
               "kind": "SCALAR",
-              "name": "String",
-              "ofType": null
+              "name": "String"
             }
           },
           {
             "name": "notDistinctFrom",
             "type": {
               "kind": "SCALAR",
-              "name": "String",
-              "ofType": null
+              "name": "String"
             }
           },
           {
             "name": "notDistinctFromInsensitive",
             "type": {
               "kind": "SCALAR",
-              "name": "String",
-              "ofType": null
+              "name": "String"
             }
           },
           {
             "name": "notEndsWith",
             "type": {
               "kind": "SCALAR",
-              "name": "String",
-              "ofType": null
+              "name": "String"
             }
           },
           {
             "name": "notEndsWithInsensitive",
             "type": {
               "kind": "SCALAR",
-              "name": "String",
-              "ofType": null
+              "name": "String"
             }
           },
           {
             "name": "notEqualTo",
             "type": {
               "kind": "SCALAR",
-              "name": "String",
-              "ofType": null
+              "name": "String"
             }
           },
           {
@@ -12652,8 +12280,7 @@ const introspection = {
                 "kind": "NON_NULL",
                 "ofType": {
                   "kind": "SCALAR",
-                  "name": "String",
-                  "ofType": null
+                  "name": "String"
                 }
               }
             }
@@ -12666,8 +12293,7 @@ const introspection = {
                 "kind": "NON_NULL",
                 "ofType": {
                   "kind": "SCALAR",
-                  "name": "String",
-                  "ofType": null
+                  "name": "String"
                 }
               }
             }
@@ -12676,67 +12302,60 @@ const introspection = {
             "name": "notIncludes",
             "type": {
               "kind": "SCALAR",
-              "name": "String",
-              "ofType": null
+              "name": "String"
             }
           },
           {
             "name": "notIncludesInsensitive",
             "type": {
               "kind": "SCALAR",
-              "name": "String",
-              "ofType": null
+              "name": "String"
             }
           },
           {
             "name": "notLike",
             "type": {
               "kind": "SCALAR",
-              "name": "String",
-              "ofType": null
+              "name": "String"
             }
           },
           {
             "name": "notLikeInsensitive",
             "type": {
               "kind": "SCALAR",
-              "name": "String",
-              "ofType": null
+              "name": "String"
             }
           },
           {
             "name": "notStartsWith",
             "type": {
               "kind": "SCALAR",
-              "name": "String",
-              "ofType": null
+              "name": "String"
             }
           },
           {
             "name": "notStartsWithInsensitive",
             "type": {
               "kind": "SCALAR",
-              "name": "String",
-              "ofType": null
+              "name": "String"
             }
           },
           {
             "name": "startsWith",
             "type": {
               "kind": "SCALAR",
-              "name": "String",
-              "ofType": null
+              "name": "String"
             }
           },
           {
             "name": "startsWithInsensitive",
             "type": {
               "kind": "SCALAR",
-              "name": "String",
-              "ofType": null
+              "name": "String"
             }
           }
-        ]
+        ],
+        "isOneOf": false
       },
       {
         "kind": "OBJECT",
@@ -12748,23 +12367,11 @@ const introspection = {
               "kind": "NON_NULL",
               "ofType": {
                 "kind": "OBJECT",
-                "name": "DownloadStatus",
-                "ofType": null
+                "name": "DownloadStatus"
               }
             },
-            "args": []
-          },
-          {
-            "name": "webUIUpdateStatusChange",
-            "type": {
-              "kind": "NON_NULL",
-              "ofType": {
-                "kind": "OBJECT",
-                "name": "WebUIUpdateStatus",
-                "ofType": null
-              }
-            },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           },
           {
             "name": "updateStatusChanged",
@@ -12772,11 +12379,23 @@ const introspection = {
               "kind": "NON_NULL",
               "ofType": {
                 "kind": "OBJECT",
-                "name": "UpdateStatus",
-                "ofType": null
+                "name": "UpdateStatus"
               }
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
+          },
+          {
+            "name": "webUIUpdateStatusChange",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "OBJECT",
+                "name": "WebUIUpdateStatus"
+              }
+            },
+            "args": [],
+            "isDeprecated": false
           }
         ],
         "interfaces": []
@@ -12789,10 +12408,10 @@ const introspection = {
             "name": "currentValue",
             "type": {
               "kind": "SCALAR",
-              "name": "Boolean",
-              "ofType": null
+              "name": "Boolean"
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           },
           {
             "name": "default",
@@ -12800,11 +12419,11 @@ const introspection = {
               "kind": "NON_NULL",
               "ofType": {
                 "kind": "SCALAR",
-                "name": "Boolean",
-                "ofType": null
+                "name": "Boolean"
               }
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           },
           {
             "name": "key",
@@ -12812,20 +12431,20 @@ const introspection = {
               "kind": "NON_NULL",
               "ofType": {
                 "kind": "SCALAR",
-                "name": "String",
-                "ofType": null
+                "name": "String"
               }
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           },
           {
             "name": "summary",
             "type": {
               "kind": "SCALAR",
-              "name": "String",
-              "ofType": null
+              "name": "String"
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           },
           {
             "name": "title",
@@ -12833,11 +12452,11 @@ const introspection = {
               "kind": "NON_NULL",
               "ofType": {
                 "kind": "SCALAR",
-                "name": "String",
-                "ofType": null
+                "name": "String"
               }
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           },
           {
             "name": "visible",
@@ -12845,11 +12464,11 @@ const introspection = {
               "kind": "NON_NULL",
               "ofType": {
                 "kind": "SCALAR",
-                "name": "Boolean",
-                "ofType": null
+                "name": "Boolean"
               }
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           }
         ],
         "interfaces": []
@@ -12864,11 +12483,11 @@ const introspection = {
               "kind": "NON_NULL",
               "ofType": {
                 "kind": "SCALAR",
-                "name": "String",
-                "ofType": null
+                "name": "String"
               }
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           },
           {
             "name": "name",
@@ -12876,11 +12495,830 @@ const introspection = {
               "kind": "NON_NULL",
               "ofType": {
                 "kind": "SCALAR",
-                "name": "String",
-                "ofType": null
+                "name": "String"
               }
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
+          }
+        ],
+        "interfaces": []
+      },
+      {
+        "kind": "INPUT_OBJECT",
+        "name": "TrackProgressInput",
+        "inputFields": [
+          {
+            "name": "clientMutationId",
+            "type": {
+              "kind": "SCALAR",
+              "name": "String"
+            }
+          },
+          {
+            "name": "mangaId",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "Int"
+              }
+            }
+          }
+        ],
+        "isOneOf": false
+      },
+      {
+        "kind": "OBJECT",
+        "name": "TrackProgressPayload",
+        "fields": [
+          {
+            "name": "clientMutationId",
+            "type": {
+              "kind": "SCALAR",
+              "name": "String"
+            },
+            "args": [],
+            "isDeprecated": false
+          },
+          {
+            "name": "trackRecords",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "LIST",
+                "ofType": {
+                  "kind": "NON_NULL",
+                  "ofType": {
+                    "kind": "OBJECT",
+                    "name": "TrackRecordType"
+                  }
+                }
+              }
+            },
+            "args": [],
+            "isDeprecated": false
+          }
+        ],
+        "interfaces": []
+      },
+      {
+        "kind": "INPUT_OBJECT",
+        "name": "TrackRecordConditionInput",
+        "inputFields": [
+          {
+            "name": "finishDate",
+            "type": {
+              "kind": "SCALAR",
+              "name": "LongString"
+            }
+          },
+          {
+            "name": "id",
+            "type": {
+              "kind": "SCALAR",
+              "name": "Int"
+            }
+          },
+          {
+            "name": "lastChapterRead",
+            "type": {
+              "kind": "SCALAR",
+              "name": "Float"
+            }
+          },
+          {
+            "name": "libraryId",
+            "type": {
+              "kind": "SCALAR",
+              "name": "LongString"
+            }
+          },
+          {
+            "name": "mangaId",
+            "type": {
+              "kind": "SCALAR",
+              "name": "Int"
+            }
+          },
+          {
+            "name": "remoteId",
+            "type": {
+              "kind": "SCALAR",
+              "name": "LongString"
+            }
+          },
+          {
+            "name": "remoteUrl",
+            "type": {
+              "kind": "SCALAR",
+              "name": "String"
+            }
+          },
+          {
+            "name": "score",
+            "type": {
+              "kind": "SCALAR",
+              "name": "Float"
+            }
+          },
+          {
+            "name": "startDate",
+            "type": {
+              "kind": "SCALAR",
+              "name": "LongString"
+            }
+          },
+          {
+            "name": "status",
+            "type": {
+              "kind": "SCALAR",
+              "name": "Int"
+            }
+          },
+          {
+            "name": "title",
+            "type": {
+              "kind": "SCALAR",
+              "name": "String"
+            }
+          },
+          {
+            "name": "totalChapters",
+            "type": {
+              "kind": "SCALAR",
+              "name": "Int"
+            }
+          },
+          {
+            "name": "trackerId",
+            "type": {
+              "kind": "SCALAR",
+              "name": "Int"
+            }
+          }
+        ],
+        "isOneOf": false
+      },
+      {
+        "kind": "OBJECT",
+        "name": "TrackRecordEdge",
+        "fields": [
+          {
+            "name": "cursor",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "Cursor"
+              }
+            },
+            "args": [],
+            "isDeprecated": false
+          },
+          {
+            "name": "node",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "OBJECT",
+                "name": "TrackRecordType"
+              }
+            },
+            "args": [],
+            "isDeprecated": false
+          }
+        ],
+        "interfaces": [
+          {
+            "kind": "INTERFACE",
+            "name": "Edge"
+          }
+        ]
+      },
+      {
+        "kind": "INPUT_OBJECT",
+        "name": "TrackRecordFilterInput",
+        "inputFields": [
+          {
+            "name": "and",
+            "type": {
+              "kind": "LIST",
+              "ofType": {
+                "kind": "NON_NULL",
+                "ofType": {
+                  "kind": "INPUT_OBJECT",
+                  "name": "TrackRecordFilterInput"
+                }
+              }
+            }
+          },
+          {
+            "name": "finishDate",
+            "type": {
+              "kind": "INPUT_OBJECT",
+              "name": "LongFilterInput"
+            }
+          },
+          {
+            "name": "id",
+            "type": {
+              "kind": "INPUT_OBJECT",
+              "name": "IntFilterInput"
+            }
+          },
+          {
+            "name": "lastChapterRead",
+            "type": {
+              "kind": "INPUT_OBJECT",
+              "name": "DoubleFilterInput"
+            }
+          },
+          {
+            "name": "libraryId",
+            "type": {
+              "kind": "INPUT_OBJECT",
+              "name": "LongFilterInput"
+            }
+          },
+          {
+            "name": "mangaId",
+            "type": {
+              "kind": "INPUT_OBJECT",
+              "name": "IntFilterInput"
+            }
+          },
+          {
+            "name": "not",
+            "type": {
+              "kind": "INPUT_OBJECT",
+              "name": "TrackRecordFilterInput"
+            }
+          },
+          {
+            "name": "or",
+            "type": {
+              "kind": "LIST",
+              "ofType": {
+                "kind": "NON_NULL",
+                "ofType": {
+                  "kind": "INPUT_OBJECT",
+                  "name": "TrackRecordFilterInput"
+                }
+              }
+            }
+          },
+          {
+            "name": "remoteId",
+            "type": {
+              "kind": "INPUT_OBJECT",
+              "name": "LongFilterInput"
+            }
+          },
+          {
+            "name": "remoteUrl",
+            "type": {
+              "kind": "INPUT_OBJECT",
+              "name": "StringFilterInput"
+            }
+          },
+          {
+            "name": "score",
+            "type": {
+              "kind": "INPUT_OBJECT",
+              "name": "DoubleFilterInput"
+            }
+          },
+          {
+            "name": "startDate",
+            "type": {
+              "kind": "INPUT_OBJECT",
+              "name": "LongFilterInput"
+            }
+          },
+          {
+            "name": "status",
+            "type": {
+              "kind": "INPUT_OBJECT",
+              "name": "IntFilterInput"
+            }
+          },
+          {
+            "name": "title",
+            "type": {
+              "kind": "INPUT_OBJECT",
+              "name": "StringFilterInput"
+            }
+          },
+          {
+            "name": "totalChapters",
+            "type": {
+              "kind": "INPUT_OBJECT",
+              "name": "IntFilterInput"
+            }
+          },
+          {
+            "name": "trackerId",
+            "type": {
+              "kind": "INPUT_OBJECT",
+              "name": "IntFilterInput"
+            }
+          }
+        ],
+        "isOneOf": false
+      },
+      {
+        "kind": "OBJECT",
+        "name": "TrackRecordNodeList",
+        "fields": [
+          {
+            "name": "edges",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "LIST",
+                "ofType": {
+                  "kind": "NON_NULL",
+                  "ofType": {
+                    "kind": "OBJECT",
+                    "name": "TrackRecordEdge"
+                  }
+                }
+              }
+            },
+            "args": [],
+            "isDeprecated": false
+          },
+          {
+            "name": "nodes",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "LIST",
+                "ofType": {
+                  "kind": "NON_NULL",
+                  "ofType": {
+                    "kind": "OBJECT",
+                    "name": "TrackRecordType"
+                  }
+                }
+              }
+            },
+            "args": [],
+            "isDeprecated": false
+          },
+          {
+            "name": "pageInfo",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "OBJECT",
+                "name": "PageInfo"
+              }
+            },
+            "args": [],
+            "isDeprecated": false
+          },
+          {
+            "name": "totalCount",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "Int"
+              }
+            },
+            "args": [],
+            "isDeprecated": false
+          }
+        ],
+        "interfaces": [
+          {
+            "kind": "INTERFACE",
+            "name": "NodeList"
+          }
+        ]
+      },
+      {
+        "kind": "ENUM",
+        "name": "TrackRecordOrderBy",
+        "enumValues": [
+          {
+            "name": "ID",
+            "isDeprecated": false
+          },
+          {
+            "name": "MANGA_ID",
+            "isDeprecated": false
+          },
+          {
+            "name": "TRACKER_ID",
+            "isDeprecated": false
+          },
+          {
+            "name": "REMOTE_ID",
+            "isDeprecated": false
+          },
+          {
+            "name": "TITLE",
+            "isDeprecated": false
+          },
+          {
+            "name": "LAST_CHAPTER_READ",
+            "isDeprecated": false
+          },
+          {
+            "name": "TOTAL_CHAPTERS",
+            "isDeprecated": false
+          },
+          {
+            "name": "SCORE",
+            "isDeprecated": false
+          },
+          {
+            "name": "START_DATE",
+            "isDeprecated": false
+          },
+          {
+            "name": "FINISH_DATE",
+            "isDeprecated": false
+          }
+        ]
+      },
+      {
+        "kind": "OBJECT",
+        "name": "TrackRecordType",
+        "fields": [
+          {
+            "name": "displayScore",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "String"
+              }
+            },
+            "args": [],
+            "isDeprecated": false
+          },
+          {
+            "name": "finishDate",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "LongString"
+              }
+            },
+            "args": [],
+            "isDeprecated": false
+          },
+          {
+            "name": "id",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "Int"
+              }
+            },
+            "args": [],
+            "isDeprecated": false
+          },
+          {
+            "name": "lastChapterRead",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "Float"
+              }
+            },
+            "args": [],
+            "isDeprecated": false
+          },
+          {
+            "name": "libraryId",
+            "type": {
+              "kind": "SCALAR",
+              "name": "LongString"
+            },
+            "args": [],
+            "isDeprecated": false
+          },
+          {
+            "name": "manga",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "OBJECT",
+                "name": "MangaType"
+              }
+            },
+            "args": [],
+            "isDeprecated": false
+          },
+          {
+            "name": "mangaId",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "Int"
+              }
+            },
+            "args": [],
+            "isDeprecated": false
+          },
+          {
+            "name": "remoteId",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "LongString"
+              }
+            },
+            "args": [],
+            "isDeprecated": false
+          },
+          {
+            "name": "remoteUrl",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "String"
+              }
+            },
+            "args": [],
+            "isDeprecated": false
+          },
+          {
+            "name": "score",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "Float"
+              }
+            },
+            "args": [],
+            "isDeprecated": false
+          },
+          {
+            "name": "startDate",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "LongString"
+              }
+            },
+            "args": [],
+            "isDeprecated": false
+          },
+          {
+            "name": "status",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "Int"
+              }
+            },
+            "args": [],
+            "isDeprecated": false
+          },
+          {
+            "name": "title",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "String"
+              }
+            },
+            "args": [],
+            "isDeprecated": false
+          },
+          {
+            "name": "totalChapters",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "Int"
+              }
+            },
+            "args": [],
+            "isDeprecated": false
+          },
+          {
+            "name": "tracker",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "OBJECT",
+                "name": "TrackerType"
+              }
+            },
+            "args": [],
+            "isDeprecated": false
+          },
+          {
+            "name": "trackerId",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "Int"
+              }
+            },
+            "args": [],
+            "isDeprecated": false
+          }
+        ],
+        "interfaces": []
+      },
+      {
+        "kind": "OBJECT",
+        "name": "TrackSearchType",
+        "fields": [
+          {
+            "name": "coverUrl",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "String"
+              }
+            },
+            "args": [],
+            "isDeprecated": false
+          },
+          {
+            "name": "id",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "Int"
+              }
+            },
+            "args": [],
+            "isDeprecated": false
+          },
+          {
+            "name": "publishingStatus",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "String"
+              }
+            },
+            "args": [],
+            "isDeprecated": false
+          },
+          {
+            "name": "publishingType",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "String"
+              }
+            },
+            "args": [],
+            "isDeprecated": false
+          },
+          {
+            "name": "remoteId",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "LongString"
+              }
+            },
+            "args": [],
+            "isDeprecated": false
+          },
+          {
+            "name": "startDate",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "String"
+              }
+            },
+            "args": [],
+            "isDeprecated": false
+          },
+          {
+            "name": "summary",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "String"
+              }
+            },
+            "args": [],
+            "isDeprecated": false
+          },
+          {
+            "name": "title",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "String"
+              }
+            },
+            "args": [],
+            "isDeprecated": false
+          },
+          {
+            "name": "totalChapters",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "Int"
+              }
+            },
+            "args": [],
+            "isDeprecated": false
+          },
+          {
+            "name": "tracker",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "OBJECT",
+                "name": "TrackerType"
+              }
+            },
+            "args": [],
+            "isDeprecated": false
+          },
+          {
+            "name": "trackerId",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "Int"
+              }
+            },
+            "args": [],
+            "isDeprecated": false
+          },
+          {
+            "name": "trackingUrl",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "String"
+              }
+            },
+            "args": [],
+            "isDeprecated": false
+          }
+        ],
+        "interfaces": []
+      },
+      {
+        "kind": "OBJECT",
+        "name": "TrackStatusType",
+        "fields": [
+          {
+            "name": "name",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "String"
+              }
+            },
+            "args": [],
+            "isDeprecated": false
+          },
+          {
+            "name": "value",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "Int"
+              }
+            },
+            "args": [],
+            "isDeprecated": false
           }
         ],
         "interfaces": []
@@ -12893,35 +13331,32 @@ const introspection = {
             "name": "icon",
             "type": {
               "kind": "SCALAR",
-              "name": "String",
-              "ofType": null
+              "name": "String"
             }
           },
           {
             "name": "id",
             "type": {
               "kind": "SCALAR",
-              "name": "Int",
-              "ofType": null
+              "name": "Int"
             }
           },
           {
             "name": "isLoggedIn",
             "type": {
               "kind": "SCALAR",
-              "name": "Boolean",
-              "ofType": null
+              "name": "Boolean"
             }
           },
           {
             "name": "name",
             "type": {
               "kind": "SCALAR",
-              "name": "String",
-              "ofType": null
+              "name": "String"
             }
           }
-        ]
+        ],
+        "isOneOf": false
       },
       {
         "kind": "OBJECT",
@@ -12933,11 +13368,11 @@ const introspection = {
               "kind": "NON_NULL",
               "ofType": {
                 "kind": "SCALAR",
-                "name": "Cursor",
-                "ofType": null
+                "name": "Cursor"
               }
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           },
           {
             "name": "node",
@@ -12945,11 +13380,11 @@ const introspection = {
               "kind": "NON_NULL",
               "ofType": {
                 "kind": "OBJECT",
-                "name": "TrackerType",
-                "ofType": null
+                "name": "TrackerType"
               }
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           }
         ],
         "interfaces": [
@@ -12973,13 +13408,13 @@ const introspection = {
                   "kind": "NON_NULL",
                   "ofType": {
                     "kind": "OBJECT",
-                    "name": "TrackerEdge",
-                    "ofType": null
+                    "name": "TrackerEdge"
                   }
                 }
               }
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           },
           {
             "name": "nodes",
@@ -12991,13 +13426,13 @@ const introspection = {
                   "kind": "NON_NULL",
                   "ofType": {
                     "kind": "OBJECT",
-                    "name": "TrackerType",
-                    "ofType": null
+                    "name": "TrackerType"
                   }
                 }
               }
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           },
           {
             "name": "pageInfo",
@@ -13005,11 +13440,11 @@ const introspection = {
               "kind": "NON_NULL",
               "ofType": {
                 "kind": "OBJECT",
-                "name": "PageInfo",
-                "ofType": null
+                "name": "PageInfo"
               }
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           },
           {
             "name": "totalCount",
@@ -13017,11 +13452,11 @@ const introspection = {
               "kind": "NON_NULL",
               "ofType": {
                 "kind": "SCALAR",
-                "name": "Int",
-                "ofType": null
+                "name": "Int"
               }
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           }
         ],
         "interfaces": [
@@ -13036,13 +13471,16 @@ const introspection = {
         "name": "TrackerOrderBy",
         "enumValues": [
           {
-            "name": "ID"
+            "name": "ID",
+            "isDeprecated": false
           },
           {
-            "name": "NAME"
+            "name": "NAME",
+            "isDeprecated": false
           },
           {
-            "name": "IS_LOGGED_IN"
+            "name": "IS_LOGGED_IN",
+            "isDeprecated": false
           }
         ]
       },
@@ -13054,10 +13492,10 @@ const introspection = {
             "name": "authUrl",
             "type": {
               "kind": "SCALAR",
-              "name": "String",
-              "ofType": null
+              "name": "String"
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           },
           {
             "name": "icon",
@@ -13065,11 +13503,11 @@ const introspection = {
               "kind": "NON_NULL",
               "ofType": {
                 "kind": "SCALAR",
-                "name": "String",
-                "ofType": null
+                "name": "String"
               }
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           },
           {
             "name": "id",
@@ -13077,11 +13515,11 @@ const introspection = {
               "kind": "NON_NULL",
               "ofType": {
                 "kind": "SCALAR",
-                "name": "Int",
-                "ofType": null
+                "name": "Int"
               }
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           },
           {
             "name": "isLoggedIn",
@@ -13089,32 +13527,11 @@ const introspection = {
               "kind": "NON_NULL",
               "ofType": {
                 "kind": "SCALAR",
-                "name": "Boolean",
-                "ofType": null
+                "name": "Boolean"
               }
             },
-            "args": []
-          },
-          {
-            "name": "name",
-            "type": {
-              "kind": "NON_NULL",
-              "ofType": {
-                "kind": "SCALAR",
-                "name": "String",
-                "ofType": null
-              }
-            },
-            "args": []
-          },
-          {
-            "name": "supportsTrackDeletion",
-            "type": {
-              "kind": "SCALAR",
-              "name": "Boolean",
-              "ofType": null
-            },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           },
           {
             "name": "isTokenExpired",
@@ -13122,11 +13539,23 @@ const introspection = {
               "kind": "NON_NULL",
               "ofType": {
                 "kind": "SCALAR",
-                "name": "Boolean",
-                "ofType": null
+                "name": "Boolean"
               }
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
+          },
+          {
+            "name": "name",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "String"
+              }
+            },
+            "args": [],
+            "isDeprecated": false
           },
           {
             "name": "scores",
@@ -13138,13 +13567,13 @@ const introspection = {
                   "kind": "NON_NULL",
                   "ofType": {
                     "kind": "SCALAR",
-                    "name": "String",
-                    "ofType": null
+                    "name": "String"
                   }
                 }
               }
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           },
           {
             "name": "statuses",
@@ -13156,13 +13585,22 @@ const introspection = {
                   "kind": "NON_NULL",
                   "ofType": {
                     "kind": "OBJECT",
-                    "name": "TrackStatusType",
-                    "ofType": null
+                    "name": "TrackStatusType"
                   }
                 }
               }
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
+          },
+          {
+            "name": "supportsTrackDeletion",
+            "type": {
+              "kind": "SCALAR",
+              "name": "Boolean"
+            },
+            "args": [],
+            "isDeprecated": false
           },
           {
             "name": "trackRecords",
@@ -13170,848 +13608,11 @@ const introspection = {
               "kind": "NON_NULL",
               "ofType": {
                 "kind": "OBJECT",
-                "name": "TrackRecordNodeList",
-                "ofType": null
+                "name": "TrackRecordNodeList"
               }
             },
-            "args": []
-          }
-        ],
-        "interfaces": []
-      },
-      {
-        "kind": "INPUT_OBJECT",
-        "name": "TrackProgressInput",
-        "inputFields": [
-          {
-            "name": "clientMutationId",
-            "type": {
-              "kind": "SCALAR",
-              "name": "String",
-              "ofType": null
-            }
-          },
-          {
-            "name": "mangaId",
-            "type": {
-              "kind": "NON_NULL",
-              "ofType": {
-                "kind": "SCALAR",
-                "name": "Int",
-                "ofType": null
-              }
-            }
-          }
-        ]
-      },
-      {
-        "kind": "OBJECT",
-        "name": "TrackProgressPayload",
-        "fields": [
-          {
-            "name": "clientMutationId",
-            "type": {
-              "kind": "SCALAR",
-              "name": "String",
-              "ofType": null
-            },
-            "args": []
-          },
-          {
-            "name": "trackRecords",
-            "type": {
-              "kind": "NON_NULL",
-              "ofType": {
-                "kind": "LIST",
-                "ofType": {
-                  "kind": "NON_NULL",
-                  "ofType": {
-                    "kind": "OBJECT",
-                    "name": "TrackRecordType",
-                    "ofType": null
-                  }
-                }
-              }
-            },
-            "args": []
-          }
-        ],
-        "interfaces": []
-      },
-      {
-        "kind": "INPUT_OBJECT",
-        "name": "TrackRecordConditionInput",
-        "inputFields": [
-          {
-            "name": "finishDate",
-            "type": {
-              "kind": "SCALAR",
-              "name": "LongString",
-              "ofType": null
-            }
-          },
-          {
-            "name": "id",
-            "type": {
-              "kind": "SCALAR",
-              "name": "Int",
-              "ofType": null
-            }
-          },
-          {
-            "name": "lastChapterRead",
-            "type": {
-              "kind": "SCALAR",
-              "name": "Float",
-              "ofType": null
-            }
-          },
-          {
-            "name": "libraryId",
-            "type": {
-              "kind": "SCALAR",
-              "name": "LongString",
-              "ofType": null
-            }
-          },
-          {
-            "name": "mangaId",
-            "type": {
-              "kind": "SCALAR",
-              "name": "Int",
-              "ofType": null
-            }
-          },
-          {
-            "name": "remoteId",
-            "type": {
-              "kind": "SCALAR",
-              "name": "LongString",
-              "ofType": null
-            }
-          },
-          {
-            "name": "remoteUrl",
-            "type": {
-              "kind": "SCALAR",
-              "name": "String",
-              "ofType": null
-            }
-          },
-          {
-            "name": "score",
-            "type": {
-              "kind": "SCALAR",
-              "name": "Float",
-              "ofType": null
-            }
-          },
-          {
-            "name": "startDate",
-            "type": {
-              "kind": "SCALAR",
-              "name": "LongString",
-              "ofType": null
-            }
-          },
-          {
-            "name": "status",
-            "type": {
-              "kind": "SCALAR",
-              "name": "Int",
-              "ofType": null
-            }
-          },
-          {
-            "name": "title",
-            "type": {
-              "kind": "SCALAR",
-              "name": "String",
-              "ofType": null
-            }
-          },
-          {
-            "name": "totalChapters",
-            "type": {
-              "kind": "SCALAR",
-              "name": "Int",
-              "ofType": null
-            }
-          },
-          {
-            "name": "trackerId",
-            "type": {
-              "kind": "SCALAR",
-              "name": "Int",
-              "ofType": null
-            }
-          }
-        ]
-      },
-      {
-        "kind": "OBJECT",
-        "name": "TrackRecordEdge",
-        "fields": [
-          {
-            "name": "cursor",
-            "type": {
-              "kind": "NON_NULL",
-              "ofType": {
-                "kind": "SCALAR",
-                "name": "Cursor",
-                "ofType": null
-              }
-            },
-            "args": []
-          },
-          {
-            "name": "node",
-            "type": {
-              "kind": "NON_NULL",
-              "ofType": {
-                "kind": "OBJECT",
-                "name": "TrackRecordType",
-                "ofType": null
-              }
-            },
-            "args": []
-          }
-        ],
-        "interfaces": [
-          {
-            "kind": "INTERFACE",
-            "name": "Edge"
-          }
-        ]
-      },
-      {
-        "kind": "INPUT_OBJECT",
-        "name": "TrackRecordFilterInput",
-        "inputFields": [
-          {
-            "name": "and",
-            "type": {
-              "kind": "LIST",
-              "ofType": {
-                "kind": "NON_NULL",
-                "ofType": {
-                  "kind": "INPUT_OBJECT",
-                  "name": "TrackRecordFilterInput",
-                  "ofType": null
-                }
-              }
-            }
-          },
-          {
-            "name": "finishDate",
-            "type": {
-              "kind": "INPUT_OBJECT",
-              "name": "LongFilterInput",
-              "ofType": null
-            }
-          },
-          {
-            "name": "id",
-            "type": {
-              "kind": "INPUT_OBJECT",
-              "name": "IntFilterInput",
-              "ofType": null
-            }
-          },
-          {
-            "name": "lastChapterRead",
-            "type": {
-              "kind": "INPUT_OBJECT",
-              "name": "DoubleFilterInput",
-              "ofType": null
-            }
-          },
-          {
-            "name": "libraryId",
-            "type": {
-              "kind": "INPUT_OBJECT",
-              "name": "LongFilterInput",
-              "ofType": null
-            }
-          },
-          {
-            "name": "mangaId",
-            "type": {
-              "kind": "INPUT_OBJECT",
-              "name": "IntFilterInput",
-              "ofType": null
-            }
-          },
-          {
-            "name": "not",
-            "type": {
-              "kind": "INPUT_OBJECT",
-              "name": "TrackRecordFilterInput",
-              "ofType": null
-            }
-          },
-          {
-            "name": "or",
-            "type": {
-              "kind": "LIST",
-              "ofType": {
-                "kind": "NON_NULL",
-                "ofType": {
-                  "kind": "INPUT_OBJECT",
-                  "name": "TrackRecordFilterInput",
-                  "ofType": null
-                }
-              }
-            }
-          },
-          {
-            "name": "remoteId",
-            "type": {
-              "kind": "INPUT_OBJECT",
-              "name": "LongFilterInput",
-              "ofType": null
-            }
-          },
-          {
-            "name": "remoteUrl",
-            "type": {
-              "kind": "INPUT_OBJECT",
-              "name": "StringFilterInput",
-              "ofType": null
-            }
-          },
-          {
-            "name": "score",
-            "type": {
-              "kind": "INPUT_OBJECT",
-              "name": "DoubleFilterInput",
-              "ofType": null
-            }
-          },
-          {
-            "name": "startDate",
-            "type": {
-              "kind": "INPUT_OBJECT",
-              "name": "LongFilterInput",
-              "ofType": null
-            }
-          },
-          {
-            "name": "status",
-            "type": {
-              "kind": "INPUT_OBJECT",
-              "name": "IntFilterInput",
-              "ofType": null
-            }
-          },
-          {
-            "name": "title",
-            "type": {
-              "kind": "INPUT_OBJECT",
-              "name": "StringFilterInput",
-              "ofType": null
-            }
-          },
-          {
-            "name": "totalChapters",
-            "type": {
-              "kind": "INPUT_OBJECT",
-              "name": "IntFilterInput",
-              "ofType": null
-            }
-          },
-          {
-            "name": "trackerId",
-            "type": {
-              "kind": "INPUT_OBJECT",
-              "name": "IntFilterInput",
-              "ofType": null
-            }
-          }
-        ]
-      },
-      {
-        "kind": "OBJECT",
-        "name": "TrackRecordNodeList",
-        "fields": [
-          {
-            "name": "edges",
-            "type": {
-              "kind": "NON_NULL",
-              "ofType": {
-                "kind": "LIST",
-                "ofType": {
-                  "kind": "NON_NULL",
-                  "ofType": {
-                    "kind": "OBJECT",
-                    "name": "TrackRecordEdge",
-                    "ofType": null
-                  }
-                }
-              }
-            },
-            "args": []
-          },
-          {
-            "name": "nodes",
-            "type": {
-              "kind": "NON_NULL",
-              "ofType": {
-                "kind": "LIST",
-                "ofType": {
-                  "kind": "NON_NULL",
-                  "ofType": {
-                    "kind": "OBJECT",
-                    "name": "TrackRecordType",
-                    "ofType": null
-                  }
-                }
-              }
-            },
-            "args": []
-          },
-          {
-            "name": "pageInfo",
-            "type": {
-              "kind": "NON_NULL",
-              "ofType": {
-                "kind": "OBJECT",
-                "name": "PageInfo",
-                "ofType": null
-              }
-            },
-            "args": []
-          },
-          {
-            "name": "totalCount",
-            "type": {
-              "kind": "NON_NULL",
-              "ofType": {
-                "kind": "SCALAR",
-                "name": "Int",
-                "ofType": null
-              }
-            },
-            "args": []
-          }
-        ],
-        "interfaces": [
-          {
-            "kind": "INTERFACE",
-            "name": "NodeList"
-          }
-        ]
-      },
-      {
-        "kind": "ENUM",
-        "name": "TrackRecordOrderBy",
-        "enumValues": [
-          {
-            "name": "ID"
-          },
-          {
-            "name": "MANGA_ID"
-          },
-          {
-            "name": "TRACKER_ID"
-          },
-          {
-            "name": "REMOTE_ID"
-          },
-          {
-            "name": "TITLE"
-          },
-          {
-            "name": "LAST_CHAPTER_READ"
-          },
-          {
-            "name": "TOTAL_CHAPTERS"
-          },
-          {
-            "name": "SCORE"
-          },
-          {
-            "name": "START_DATE"
-          },
-          {
-            "name": "FINISH_DATE"
-          }
-        ]
-      },
-      {
-        "kind": "OBJECT",
-        "name": "TrackRecordType",
-        "fields": [
-          {
-            "name": "finishDate",
-            "type": {
-              "kind": "NON_NULL",
-              "ofType": {
-                "kind": "SCALAR",
-                "name": "LongString",
-                "ofType": null
-              }
-            },
-            "args": []
-          },
-          {
-            "name": "id",
-            "type": {
-              "kind": "NON_NULL",
-              "ofType": {
-                "kind": "SCALAR",
-                "name": "Int",
-                "ofType": null
-              }
-            },
-            "args": []
-          },
-          {
-            "name": "lastChapterRead",
-            "type": {
-              "kind": "NON_NULL",
-              "ofType": {
-                "kind": "SCALAR",
-                "name": "Float",
-                "ofType": null
-              }
-            },
-            "args": []
-          },
-          {
-            "name": "libraryId",
-            "type": {
-              "kind": "SCALAR",
-              "name": "LongString",
-              "ofType": null
-            },
-            "args": []
-          },
-          {
-            "name": "mangaId",
-            "type": {
-              "kind": "NON_NULL",
-              "ofType": {
-                "kind": "SCALAR",
-                "name": "Int",
-                "ofType": null
-              }
-            },
-            "args": []
-          },
-          {
-            "name": "remoteId",
-            "type": {
-              "kind": "NON_NULL",
-              "ofType": {
-                "kind": "SCALAR",
-                "name": "LongString",
-                "ofType": null
-              }
-            },
-            "args": []
-          },
-          {
-            "name": "remoteUrl",
-            "type": {
-              "kind": "NON_NULL",
-              "ofType": {
-                "kind": "SCALAR",
-                "name": "String",
-                "ofType": null
-              }
-            },
-            "args": []
-          },
-          {
-            "name": "score",
-            "type": {
-              "kind": "NON_NULL",
-              "ofType": {
-                "kind": "SCALAR",
-                "name": "Float",
-                "ofType": null
-              }
-            },
-            "args": []
-          },
-          {
-            "name": "startDate",
-            "type": {
-              "kind": "NON_NULL",
-              "ofType": {
-                "kind": "SCALAR",
-                "name": "LongString",
-                "ofType": null
-              }
-            },
-            "args": []
-          },
-          {
-            "name": "status",
-            "type": {
-              "kind": "NON_NULL",
-              "ofType": {
-                "kind": "SCALAR",
-                "name": "Int",
-                "ofType": null
-              }
-            },
-            "args": []
-          },
-          {
-            "name": "title",
-            "type": {
-              "kind": "NON_NULL",
-              "ofType": {
-                "kind": "SCALAR",
-                "name": "String",
-                "ofType": null
-              }
-            },
-            "args": []
-          },
-          {
-            "name": "totalChapters",
-            "type": {
-              "kind": "NON_NULL",
-              "ofType": {
-                "kind": "SCALAR",
-                "name": "Int",
-                "ofType": null
-              }
-            },
-            "args": []
-          },
-          {
-            "name": "trackerId",
-            "type": {
-              "kind": "NON_NULL",
-              "ofType": {
-                "kind": "SCALAR",
-                "name": "Int",
-                "ofType": null
-              }
-            },
-            "args": []
-          },
-          {
-            "name": "displayScore",
-            "type": {
-              "kind": "NON_NULL",
-              "ofType": {
-                "kind": "SCALAR",
-                "name": "String",
-                "ofType": null
-              }
-            },
-            "args": []
-          },
-          {
-            "name": "manga",
-            "type": {
-              "kind": "NON_NULL",
-              "ofType": {
-                "kind": "OBJECT",
-                "name": "MangaType",
-                "ofType": null
-              }
-            },
-            "args": []
-          },
-          {
-            "name": "tracker",
-            "type": {
-              "kind": "NON_NULL",
-              "ofType": {
-                "kind": "OBJECT",
-                "name": "TrackerType",
-                "ofType": null
-              }
-            },
-            "args": []
-          }
-        ],
-        "interfaces": []
-      },
-      {
-        "kind": "OBJECT",
-        "name": "TrackSearchType",
-        "fields": [
-          {
-            "name": "coverUrl",
-            "type": {
-              "kind": "NON_NULL",
-              "ofType": {
-                "kind": "SCALAR",
-                "name": "String",
-                "ofType": null
-              }
-            },
-            "args": []
-          },
-          {
-            "name": "id",
-            "type": {
-              "kind": "NON_NULL",
-              "ofType": {
-                "kind": "SCALAR",
-                "name": "Int",
-                "ofType": null
-              }
-            },
-            "args": []
-          },
-          {
-            "name": "publishingStatus",
-            "type": {
-              "kind": "NON_NULL",
-              "ofType": {
-                "kind": "SCALAR",
-                "name": "String",
-                "ofType": null
-              }
-            },
-            "args": []
-          },
-          {
-            "name": "publishingType",
-            "type": {
-              "kind": "NON_NULL",
-              "ofType": {
-                "kind": "SCALAR",
-                "name": "String",
-                "ofType": null
-              }
-            },
-            "args": []
-          },
-          {
-            "name": "remoteId",
-            "type": {
-              "kind": "NON_NULL",
-              "ofType": {
-                "kind": "SCALAR",
-                "name": "LongString",
-                "ofType": null
-              }
-            },
-            "args": []
-          },
-          {
-            "name": "startDate",
-            "type": {
-              "kind": "NON_NULL",
-              "ofType": {
-                "kind": "SCALAR",
-                "name": "String",
-                "ofType": null
-              }
-            },
-            "args": []
-          },
-          {
-            "name": "summary",
-            "type": {
-              "kind": "NON_NULL",
-              "ofType": {
-                "kind": "SCALAR",
-                "name": "String",
-                "ofType": null
-              }
-            },
-            "args": []
-          },
-          {
-            "name": "title",
-            "type": {
-              "kind": "NON_NULL",
-              "ofType": {
-                "kind": "SCALAR",
-                "name": "String",
-                "ofType": null
-              }
-            },
-            "args": []
-          },
-          {
-            "name": "totalChapters",
-            "type": {
-              "kind": "NON_NULL",
-              "ofType": {
-                "kind": "SCALAR",
-                "name": "Int",
-                "ofType": null
-              }
-            },
-            "args": []
-          },
-          {
-            "name": "trackerId",
-            "type": {
-              "kind": "NON_NULL",
-              "ofType": {
-                "kind": "SCALAR",
-                "name": "Int",
-                "ofType": null
-              }
-            },
-            "args": []
-          },
-          {
-            "name": "trackingUrl",
-            "type": {
-              "kind": "NON_NULL",
-              "ofType": {
-                "kind": "SCALAR",
-                "name": "String",
-                "ofType": null
-              }
-            },
-            "args": []
-          },
-          {
-            "name": "tracker",
-            "type": {
-              "kind": "NON_NULL",
-              "ofType": {
-                "kind": "OBJECT",
-                "name": "TrackerType",
-                "ofType": null
-              }
-            },
-            "args": []
-          }
-        ],
-        "interfaces": []
-      },
-      {
-        "kind": "OBJECT",
-        "name": "TrackStatusType",
-        "fields": [
-          {
-            "name": "name",
-            "type": {
-              "kind": "NON_NULL",
-              "ofType": {
-                "kind": "SCALAR",
-                "name": "String",
-                "ofType": null
-              }
-            },
-            "args": []
-          },
-          {
-            "name": "value",
-            "type": {
-              "kind": "NON_NULL",
-              "ofType": {
-                "kind": "SCALAR",
-                "name": "Int",
-                "ofType": null
-              }
-            },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           }
         ],
         "interfaces": []
@@ -14021,13 +13622,16 @@ const introspection = {
         "name": "TriState",
         "enumValues": [
           {
-            "name": "IGNORE"
+            "name": "IGNORE",
+            "isDeprecated": false
           },
           {
-            "name": "INCLUDE"
+            "name": "INCLUDE",
+            "isDeprecated": false
           },
           {
-            "name": "EXCLUDE"
+            "name": "EXCLUDE",
+            "isDeprecated": false
           }
         ]
       },
@@ -14041,11 +13645,11 @@ const introspection = {
               "kind": "NON_NULL",
               "ofType": {
                 "kind": "ENUM",
-                "name": "TriState",
-                "ofType": null
+                "name": "TriState"
               }
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           },
           {
             "name": "name",
@@ -14053,11 +13657,11 @@ const introspection = {
               "kind": "NON_NULL",
               "ofType": {
                 "kind": "SCALAR",
-                "name": "String",
-                "ofType": null
+                "name": "String"
               }
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           }
         ],
         "interfaces": []
@@ -14070,16 +13674,14 @@ const introspection = {
             "name": "clientMutationId",
             "type": {
               "kind": "SCALAR",
-              "name": "String",
-              "ofType": null
+              "name": "String"
             }
           },
           {
             "name": "deleteRemoteTrack",
             "type": {
               "kind": "SCALAR",
-              "name": "Boolean",
-              "ofType": null
+              "name": "Boolean"
             }
           },
           {
@@ -14088,12 +13690,12 @@ const introspection = {
               "kind": "NON_NULL",
               "ofType": {
                 "kind": "SCALAR",
-                "name": "Int",
-                "ofType": null
+                "name": "Int"
               }
             }
           }
-        ]
+        ],
+        "isOneOf": false
       },
       {
         "kind": "OBJECT",
@@ -14103,19 +13705,19 @@ const introspection = {
             "name": "clientMutationId",
             "type": {
               "kind": "SCALAR",
-              "name": "String",
-              "ofType": null
+              "name": "String"
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           },
           {
             "name": "trackRecord",
             "type": {
               "kind": "OBJECT",
-              "name": "TrackRecordType",
-              "ofType": null
+              "name": "TrackRecordType"
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           }
         ],
         "interfaces": []
@@ -14128,8 +13730,7 @@ const introspection = {
             "name": "clientMutationId",
             "type": {
               "kind": "SCALAR",
-              "name": "String",
-              "ofType": null
+              "name": "String"
             }
           },
           {
@@ -14142,8 +13743,7 @@ const introspection = {
                   "kind": "NON_NULL",
                   "ofType": {
                     "kind": "SCALAR",
-                    "name": "Int",
-                    "ofType": null
+                    "name": "Int"
                   }
                 }
               }
@@ -14155,12 +13755,12 @@ const introspection = {
               "kind": "NON_NULL",
               "ofType": {
                 "kind": "INPUT_OBJECT",
-                "name": "UpdateCategoryPatchInput",
-                "ofType": null
+                "name": "UpdateCategoryPatchInput"
               }
             }
           }
-        ]
+        ],
+        "isOneOf": false
       },
       {
         "kind": "OBJECT",
@@ -14176,22 +13776,22 @@ const introspection = {
                   "kind": "NON_NULL",
                   "ofType": {
                     "kind": "OBJECT",
-                    "name": "CategoryType",
-                    "ofType": null
+                    "name": "CategoryType"
                   }
                 }
               }
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           },
           {
             "name": "clientMutationId",
             "type": {
               "kind": "SCALAR",
-              "name": "String",
-              "ofType": null
+              "name": "String"
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           }
         ],
         "interfaces": []
@@ -14204,8 +13804,7 @@ const introspection = {
             "name": "clientMutationId",
             "type": {
               "kind": "SCALAR",
-              "name": "String",
-              "ofType": null
+              "name": "String"
             }
           },
           {
@@ -14214,8 +13813,7 @@ const introspection = {
               "kind": "NON_NULL",
               "ofType": {
                 "kind": "SCALAR",
-                "name": "Int",
-                "ofType": null
+                "name": "Int"
               }
             }
           },
@@ -14225,12 +13823,12 @@ const introspection = {
               "kind": "NON_NULL",
               "ofType": {
                 "kind": "INPUT_OBJECT",
-                "name": "UpdateCategoryPatchInput",
-                "ofType": null
+                "name": "UpdateCategoryPatchInput"
               }
             }
           }
-        ]
+        ],
+        "isOneOf": false
       },
       {
         "kind": "INPUT_OBJECT",
@@ -14246,8 +13844,7 @@ const introspection = {
                   "kind": "NON_NULL",
                   "ofType": {
                     "kind": "SCALAR",
-                    "name": "Int",
-                    "ofType": null
+                    "name": "Int"
                   }
                 }
               }
@@ -14257,11 +13854,11 @@ const introspection = {
             "name": "clientMutationId",
             "type": {
               "kind": "SCALAR",
-              "name": "String",
-              "ofType": null
+              "name": "String"
             }
           }
-        ]
+        ],
+        "isOneOf": false
       },
       {
         "kind": "OBJECT",
@@ -14271,10 +13868,10 @@ const introspection = {
             "name": "clientMutationId",
             "type": {
               "kind": "SCALAR",
-              "name": "String",
-              "ofType": null
+              "name": "String"
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           },
           {
             "name": "updateStatus",
@@ -14282,11 +13879,11 @@ const introspection = {
               "kind": "NON_NULL",
               "ofType": {
                 "kind": "OBJECT",
-                "name": "UpdateStatus",
-                "ofType": null
+                "name": "UpdateStatus"
               }
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           }
         ],
         "interfaces": []
@@ -14299,8 +13896,7 @@ const introspection = {
             "name": "clientMutationId",
             "type": {
               "kind": "SCALAR",
-              "name": "String",
-              "ofType": null
+              "name": "String"
             }
           },
           {
@@ -14309,8 +13905,7 @@ const introspection = {
               "kind": "NON_NULL",
               "ofType": {
                 "kind": "SCALAR",
-                "name": "Int",
-                "ofType": null
+                "name": "Int"
               }
             }
           },
@@ -14320,12 +13915,12 @@ const introspection = {
               "kind": "NON_NULL",
               "ofType": {
                 "kind": "SCALAR",
-                "name": "Int",
-                "ofType": null
+                "name": "Int"
               }
             }
           }
-        ]
+        ],
+        "isOneOf": false
       },
       {
         "kind": "OBJECT",
@@ -14341,22 +13936,22 @@ const introspection = {
                   "kind": "NON_NULL",
                   "ofType": {
                     "kind": "OBJECT",
-                    "name": "CategoryType",
-                    "ofType": null
+                    "name": "CategoryType"
                   }
                 }
               }
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           },
           {
             "name": "clientMutationId",
             "type": {
               "kind": "SCALAR",
-              "name": "String",
-              "ofType": null
+              "name": "String"
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           }
         ],
         "interfaces": []
@@ -14369,35 +13964,32 @@ const introspection = {
             "name": "default",
             "type": {
               "kind": "SCALAR",
-              "name": "Boolean",
-              "ofType": null
+              "name": "Boolean"
             }
           },
           {
             "name": "includeInDownload",
             "type": {
               "kind": "ENUM",
-              "name": "IncludeOrExclude",
-              "ofType": null
+              "name": "IncludeOrExclude"
             }
           },
           {
             "name": "includeInUpdate",
             "type": {
               "kind": "ENUM",
-              "name": "IncludeOrExclude",
-              "ofType": null
+              "name": "IncludeOrExclude"
             }
           },
           {
             "name": "name",
             "type": {
               "kind": "SCALAR",
-              "name": "String",
-              "ofType": null
+              "name": "String"
             }
           }
-        ]
+        ],
+        "isOneOf": false
       },
       {
         "kind": "OBJECT",
@@ -14409,20 +14001,20 @@ const introspection = {
               "kind": "NON_NULL",
               "ofType": {
                 "kind": "OBJECT",
-                "name": "CategoryType",
-                "ofType": null
+                "name": "CategoryType"
               }
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           },
           {
             "name": "clientMutationId",
             "type": {
               "kind": "SCALAR",
-              "name": "String",
-              "ofType": null
+              "name": "String"
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           }
         ],
         "interfaces": []
@@ -14435,8 +14027,7 @@ const introspection = {
             "name": "clientMutationId",
             "type": {
               "kind": "SCALAR",
-              "name": "String",
-              "ofType": null
+              "name": "String"
             }
           },
           {
@@ -14445,8 +14036,7 @@ const introspection = {
               "kind": "NON_NULL",
               "ofType": {
                 "kind": "SCALAR",
-                "name": "Int",
-                "ofType": null
+                "name": "Int"
               }
             }
           },
@@ -14456,12 +14046,12 @@ const introspection = {
               "kind": "NON_NULL",
               "ofType": {
                 "kind": "INPUT_OBJECT",
-                "name": "UpdateChapterPatchInput",
-                "ofType": null
+                "name": "UpdateChapterPatchInput"
               }
             }
           }
-        ]
+        ],
+        "isOneOf": false
       },
       {
         "kind": "INPUT_OBJECT",
@@ -14471,27 +14061,25 @@ const introspection = {
             "name": "isBookmarked",
             "type": {
               "kind": "SCALAR",
-              "name": "Boolean",
-              "ofType": null
+              "name": "Boolean"
             }
           },
           {
             "name": "isRead",
             "type": {
               "kind": "SCALAR",
-              "name": "Boolean",
-              "ofType": null
+              "name": "Boolean"
             }
           },
           {
             "name": "lastPageRead",
             "type": {
               "kind": "SCALAR",
-              "name": "Int",
-              "ofType": null
+              "name": "Int"
             }
           }
-        ]
+        ],
+        "isOneOf": false
       },
       {
         "kind": "OBJECT",
@@ -14503,20 +14091,20 @@ const introspection = {
               "kind": "NON_NULL",
               "ofType": {
                 "kind": "OBJECT",
-                "name": "ChapterType",
-                "ofType": null
+                "name": "ChapterType"
               }
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           },
           {
             "name": "clientMutationId",
             "type": {
               "kind": "SCALAR",
-              "name": "String",
-              "ofType": null
+              "name": "String"
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           }
         ],
         "interfaces": []
@@ -14529,8 +14117,7 @@ const introspection = {
             "name": "clientMutationId",
             "type": {
               "kind": "SCALAR",
-              "name": "String",
-              "ofType": null
+              "name": "String"
             }
           },
           {
@@ -14543,8 +14130,7 @@ const introspection = {
                   "kind": "NON_NULL",
                   "ofType": {
                     "kind": "SCALAR",
-                    "name": "Int",
-                    "ofType": null
+                    "name": "Int"
                   }
                 }
               }
@@ -14556,12 +14142,12 @@ const introspection = {
               "kind": "NON_NULL",
               "ofType": {
                 "kind": "INPUT_OBJECT",
-                "name": "UpdateChapterPatchInput",
-                "ofType": null
+                "name": "UpdateChapterPatchInput"
               }
             }
           }
-        ]
+        ],
+        "isOneOf": false
       },
       {
         "kind": "OBJECT",
@@ -14577,22 +14163,22 @@ const introspection = {
                   "kind": "NON_NULL",
                   "ofType": {
                     "kind": "OBJECT",
-                    "name": "ChapterType",
-                    "ofType": null
+                    "name": "ChapterType"
                   }
                 }
               }
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           },
           {
             "name": "clientMutationId",
             "type": {
               "kind": "SCALAR",
-              "name": "String",
-              "ofType": null
+              "name": "String"
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           }
         ],
         "interfaces": []
@@ -14605,8 +14191,7 @@ const introspection = {
             "name": "clientMutationId",
             "type": {
               "kind": "SCALAR",
-              "name": "String",
-              "ofType": null
+              "name": "String"
             }
           },
           {
@@ -14615,8 +14200,7 @@ const introspection = {
               "kind": "NON_NULL",
               "ofType": {
                 "kind": "SCALAR",
-                "name": "String",
-                "ofType": null
+                "name": "String"
               }
             }
           },
@@ -14626,12 +14210,12 @@ const introspection = {
               "kind": "NON_NULL",
               "ofType": {
                 "kind": "INPUT_OBJECT",
-                "name": "UpdateExtensionPatchInput",
-                "ofType": null
+                "name": "UpdateExtensionPatchInput"
               }
             }
           }
-        ]
+        ],
+        "isOneOf": false
       },
       {
         "kind": "INPUT_OBJECT",
@@ -14641,27 +14225,25 @@ const introspection = {
             "name": "install",
             "type": {
               "kind": "SCALAR",
-              "name": "Boolean",
-              "ofType": null
+              "name": "Boolean"
             }
           },
           {
             "name": "uninstall",
             "type": {
               "kind": "SCALAR",
-              "name": "Boolean",
-              "ofType": null
+              "name": "Boolean"
             }
           },
           {
             "name": "update",
             "type": {
               "kind": "SCALAR",
-              "name": "Boolean",
-              "ofType": null
+              "name": "Boolean"
             }
           }
-        ]
+        ],
+        "isOneOf": false
       },
       {
         "kind": "OBJECT",
@@ -14671,19 +14253,19 @@ const introspection = {
             "name": "clientMutationId",
             "type": {
               "kind": "SCALAR",
-              "name": "String",
-              "ofType": null
+              "name": "String"
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           },
           {
             "name": "extension",
             "type": {
               "kind": "OBJECT",
-              "name": "ExtensionType",
-              "ofType": null
+              "name": "ExtensionType"
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           }
         ],
         "interfaces": []
@@ -14696,8 +14278,7 @@ const introspection = {
             "name": "clientMutationId",
             "type": {
               "kind": "SCALAR",
-              "name": "String",
-              "ofType": null
+              "name": "String"
             }
           },
           {
@@ -14710,8 +14291,7 @@ const introspection = {
                   "kind": "NON_NULL",
                   "ofType": {
                     "kind": "SCALAR",
-                    "name": "String",
-                    "ofType": null
+                    "name": "String"
                   }
                 }
               }
@@ -14723,12 +14303,12 @@ const introspection = {
               "kind": "NON_NULL",
               "ofType": {
                 "kind": "INPUT_OBJECT",
-                "name": "UpdateExtensionPatchInput",
-                "ofType": null
+                "name": "UpdateExtensionPatchInput"
               }
             }
           }
-        ]
+        ],
+        "isOneOf": false
       },
       {
         "kind": "OBJECT",
@@ -14738,10 +14318,10 @@ const introspection = {
             "name": "clientMutationId",
             "type": {
               "kind": "SCALAR",
-              "name": "String",
-              "ofType": null
+              "name": "String"
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           },
           {
             "name": "extensions",
@@ -14753,13 +14333,13 @@ const introspection = {
                   "kind": "NON_NULL",
                   "ofType": {
                     "kind": "OBJECT",
-                    "name": "ExtensionType",
-                    "ofType": null
+                    "name": "ExtensionType"
                   }
                 }
               }
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           }
         ],
         "interfaces": []
@@ -14772,11 +14352,11 @@ const introspection = {
             "name": "clientMutationId",
             "type": {
               "kind": "SCALAR",
-              "name": "String",
-              "ofType": null
+              "name": "String"
             }
           }
-        ]
+        ],
+        "isOneOf": false
       },
       {
         "kind": "OBJECT",
@@ -14786,10 +14366,10 @@ const introspection = {
             "name": "clientMutationId",
             "type": {
               "kind": "SCALAR",
-              "name": "String",
-              "ofType": null
+              "name": "String"
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           },
           {
             "name": "updateStatus",
@@ -14797,11 +14377,11 @@ const introspection = {
               "kind": "NON_NULL",
               "ofType": {
                 "kind": "OBJECT",
-                "name": "UpdateStatus",
-                "ofType": null
+                "name": "UpdateStatus"
               }
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           }
         ],
         "interfaces": []
@@ -14814,8 +14394,7 @@ const introspection = {
             "name": "clientMutationId",
             "type": {
               "kind": "SCALAR",
-              "name": "String",
-              "ofType": null
+              "name": "String"
             }
           },
           {
@@ -14824,8 +14403,7 @@ const introspection = {
               "kind": "NON_NULL",
               "ofType": {
                 "kind": "SCALAR",
-                "name": "Int",
-                "ofType": null
+                "name": "Int"
               }
             }
           },
@@ -14835,12 +14413,12 @@ const introspection = {
               "kind": "NON_NULL",
               "ofType": {
                 "kind": "INPUT_OBJECT",
-                "name": "UpdateMangaCategoriesPatchInput",
-                "ofType": null
+                "name": "UpdateMangaCategoriesPatchInput"
               }
             }
           }
-        ]
+        ],
+        "isOneOf": false
       },
       {
         "kind": "INPUT_OBJECT",
@@ -14854,8 +14432,7 @@ const introspection = {
                 "kind": "NON_NULL",
                 "ofType": {
                   "kind": "SCALAR",
-                  "name": "Int",
-                  "ofType": null
+                  "name": "Int"
                 }
               }
             }
@@ -14864,8 +14441,7 @@ const introspection = {
             "name": "clearCategories",
             "type": {
               "kind": "SCALAR",
-              "name": "Boolean",
-              "ofType": null
+              "name": "Boolean"
             }
           },
           {
@@ -14876,13 +14452,13 @@ const introspection = {
                 "kind": "NON_NULL",
                 "ofType": {
                   "kind": "SCALAR",
-                  "name": "Int",
-                  "ofType": null
+                  "name": "Int"
                 }
               }
             }
           }
-        ]
+        ],
+        "isOneOf": false
       },
       {
         "kind": "OBJECT",
@@ -14892,10 +14468,10 @@ const introspection = {
             "name": "clientMutationId",
             "type": {
               "kind": "SCALAR",
-              "name": "String",
-              "ofType": null
+              "name": "String"
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           },
           {
             "name": "manga",
@@ -14903,11 +14479,11 @@ const introspection = {
               "kind": "NON_NULL",
               "ofType": {
                 "kind": "OBJECT",
-                "name": "MangaType",
-                "ofType": null
+                "name": "MangaType"
               }
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           }
         ],
         "interfaces": []
@@ -14920,8 +14496,7 @@ const introspection = {
             "name": "clientMutationId",
             "type": {
               "kind": "SCALAR",
-              "name": "String",
-              "ofType": null
+              "name": "String"
             }
           },
           {
@@ -14930,8 +14505,7 @@ const introspection = {
               "kind": "NON_NULL",
               "ofType": {
                 "kind": "SCALAR",
-                "name": "Int",
-                "ofType": null
+                "name": "Int"
               }
             }
           },
@@ -14941,12 +14515,12 @@ const introspection = {
               "kind": "NON_NULL",
               "ofType": {
                 "kind": "INPUT_OBJECT",
-                "name": "UpdateMangaPatchInput",
-                "ofType": null
+                "name": "UpdateMangaPatchInput"
               }
             }
           }
-        ]
+        ],
+        "isOneOf": false
       },
       {
         "kind": "INPUT_OBJECT",
@@ -14956,11 +14530,11 @@ const introspection = {
             "name": "inLibrary",
             "type": {
               "kind": "SCALAR",
-              "name": "Boolean",
-              "ofType": null
+              "name": "Boolean"
             }
           }
-        ]
+        ],
+        "isOneOf": false
       },
       {
         "kind": "OBJECT",
@@ -14970,10 +14544,10 @@ const introspection = {
             "name": "clientMutationId",
             "type": {
               "kind": "SCALAR",
-              "name": "String",
-              "ofType": null
+              "name": "String"
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           },
           {
             "name": "manga",
@@ -14981,11 +14555,11 @@ const introspection = {
               "kind": "NON_NULL",
               "ofType": {
                 "kind": "OBJECT",
-                "name": "MangaType",
-                "ofType": null
+                "name": "MangaType"
               }
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           }
         ],
         "interfaces": []
@@ -14998,8 +14572,7 @@ const introspection = {
             "name": "clientMutationId",
             "type": {
               "kind": "SCALAR",
-              "name": "String",
-              "ofType": null
+              "name": "String"
             }
           },
           {
@@ -15012,8 +14585,7 @@ const introspection = {
                   "kind": "NON_NULL",
                   "ofType": {
                     "kind": "SCALAR",
-                    "name": "Int",
-                    "ofType": null
+                    "name": "Int"
                   }
                 }
               }
@@ -15025,12 +14597,12 @@ const introspection = {
               "kind": "NON_NULL",
               "ofType": {
                 "kind": "INPUT_OBJECT",
-                "name": "UpdateMangaCategoriesPatchInput",
-                "ofType": null
+                "name": "UpdateMangaCategoriesPatchInput"
               }
             }
           }
-        ]
+        ],
+        "isOneOf": false
       },
       {
         "kind": "OBJECT",
@@ -15040,10 +14612,10 @@ const introspection = {
             "name": "clientMutationId",
             "type": {
               "kind": "SCALAR",
-              "name": "String",
-              "ofType": null
+              "name": "String"
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           },
           {
             "name": "mangas",
@@ -15055,13 +14627,13 @@ const introspection = {
                   "kind": "NON_NULL",
                   "ofType": {
                     "kind": "OBJECT",
-                    "name": "MangaType",
-                    "ofType": null
+                    "name": "MangaType"
                   }
                 }
               }
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           }
         ],
         "interfaces": []
@@ -15074,8 +14646,7 @@ const introspection = {
             "name": "clientMutationId",
             "type": {
               "kind": "SCALAR",
-              "name": "String",
-              "ofType": null
+              "name": "String"
             }
           },
           {
@@ -15088,8 +14659,7 @@ const introspection = {
                   "kind": "NON_NULL",
                   "ofType": {
                     "kind": "SCALAR",
-                    "name": "Int",
-                    "ofType": null
+                    "name": "Int"
                   }
                 }
               }
@@ -15101,12 +14671,12 @@ const introspection = {
               "kind": "NON_NULL",
               "ofType": {
                 "kind": "INPUT_OBJECT",
-                "name": "UpdateMangaPatchInput",
-                "ofType": null
+                "name": "UpdateMangaPatchInput"
               }
             }
           }
-        ]
+        ],
+        "isOneOf": false
       },
       {
         "kind": "OBJECT",
@@ -15116,10 +14686,10 @@ const introspection = {
             "name": "clientMutationId",
             "type": {
               "kind": "SCALAR",
-              "name": "String",
-              "ofType": null
+              "name": "String"
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           },
           {
             "name": "mangas",
@@ -15131,13 +14701,13 @@ const introspection = {
                   "kind": "NON_NULL",
                   "ofType": {
                     "kind": "OBJECT",
-                    "name": "MangaType",
-                    "ofType": null
+                    "name": "MangaType"
                   }
                 }
               }
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           }
         ],
         "interfaces": []
@@ -15152,8 +14722,7 @@ const introspection = {
               "kind": "NON_NULL",
               "ofType": {
                 "kind": "INPUT_OBJECT",
-                "name": "SourcePreferenceChangeInput",
-                "ofType": null
+                "name": "SourcePreferenceChangeInput"
               }
             }
           },
@@ -15161,8 +14730,7 @@ const introspection = {
             "name": "clientMutationId",
             "type": {
               "kind": "SCALAR",
-              "name": "String",
-              "ofType": null
+              "name": "String"
             }
           },
           {
@@ -15171,12 +14739,12 @@ const introspection = {
               "kind": "NON_NULL",
               "ofType": {
                 "kind": "SCALAR",
-                "name": "LongString",
-                "ofType": null
+                "name": "LongString"
               }
             }
           }
-        ]
+        ],
+        "isOneOf": false
       },
       {
         "kind": "OBJECT",
@@ -15186,10 +14754,10 @@ const introspection = {
             "name": "clientMutationId",
             "type": {
               "kind": "SCALAR",
-              "name": "String",
-              "ofType": null
+              "name": "String"
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           },
           {
             "name": "preferences",
@@ -15201,13 +14769,13 @@ const introspection = {
                   "kind": "NON_NULL",
                   "ofType": {
                     "kind": "UNION",
-                    "name": "Preference",
-                    "ofType": null
+                    "name": "Preference"
                   }
                 }
               }
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           },
           {
             "name": "source",
@@ -15215,11 +14783,11 @@ const introspection = {
               "kind": "NON_NULL",
               "ofType": {
                 "kind": "OBJECT",
-                "name": "SourceType",
-                "ofType": null
+                "name": "SourceType"
               }
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           }
         ],
         "interfaces": []
@@ -15229,16 +14797,20 @@ const introspection = {
         "name": "UpdateState",
         "enumValues": [
           {
-            "name": "IDLE"
+            "name": "IDLE",
+            "isDeprecated": false
           },
           {
-            "name": "DOWNLOADING"
+            "name": "DOWNLOADING",
+            "isDeprecated": false
           },
           {
-            "name": "FINISHED"
+            "name": "FINISHED",
+            "isDeprecated": false
           },
           {
-            "name": "ERROR"
+            "name": "ERROR",
+            "isDeprecated": false
           }
         ]
       },
@@ -15252,11 +14824,11 @@ const introspection = {
               "kind": "NON_NULL",
               "ofType": {
                 "kind": "OBJECT",
-                "name": "UpdateStatusType",
-                "ofType": null
+                "name": "UpdateStatusType"
               }
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           },
           {
             "name": "failedJobs",
@@ -15264,11 +14836,11 @@ const introspection = {
               "kind": "NON_NULL",
               "ofType": {
                 "kind": "OBJECT",
-                "name": "UpdateStatusType",
-                "ofType": null
+                "name": "UpdateStatusType"
               }
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           },
           {
             "name": "isRunning",
@@ -15276,11 +14848,11 @@ const introspection = {
               "kind": "NON_NULL",
               "ofType": {
                 "kind": "SCALAR",
-                "name": "Boolean",
-                "ofType": null
+                "name": "Boolean"
               }
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           },
           {
             "name": "pendingJobs",
@@ -15288,11 +14860,11 @@ const introspection = {
               "kind": "NON_NULL",
               "ofType": {
                 "kind": "OBJECT",
-                "name": "UpdateStatusType",
-                "ofType": null
+                "name": "UpdateStatusType"
               }
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           },
           {
             "name": "runningJobs",
@@ -15300,11 +14872,11 @@ const introspection = {
               "kind": "NON_NULL",
               "ofType": {
                 "kind": "OBJECT",
-                "name": "UpdateStatusType",
-                "ofType": null
+                "name": "UpdateStatusType"
               }
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           },
           {
             "name": "skippedCategories",
@@ -15312,11 +14884,11 @@ const introspection = {
               "kind": "NON_NULL",
               "ofType": {
                 "kind": "OBJECT",
-                "name": "UpdateStatusCategoryType",
-                "ofType": null
+                "name": "UpdateStatusCategoryType"
               }
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           },
           {
             "name": "skippedJobs",
@@ -15324,11 +14896,11 @@ const introspection = {
               "kind": "NON_NULL",
               "ofType": {
                 "kind": "OBJECT",
-                "name": "UpdateStatusType",
-                "ofType": null
+                "name": "UpdateStatusType"
               }
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           },
           {
             "name": "updatingCategories",
@@ -15336,11 +14908,11 @@ const introspection = {
               "kind": "NON_NULL",
               "ofType": {
                 "kind": "OBJECT",
-                "name": "UpdateStatusCategoryType",
-                "ofType": null
+                "name": "UpdateStatusCategoryType"
               }
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           }
         ],
         "interfaces": []
@@ -15355,11 +14927,11 @@ const introspection = {
               "kind": "NON_NULL",
               "ofType": {
                 "kind": "OBJECT",
-                "name": "CategoryNodeList",
-                "ofType": null
+                "name": "CategoryNodeList"
               }
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           }
         ],
         "interfaces": []
@@ -15374,11 +14946,11 @@ const introspection = {
               "kind": "NON_NULL",
               "ofType": {
                 "kind": "OBJECT",
-                "name": "MangaNodeList",
-                "ofType": null
+                "name": "MangaNodeList"
               }
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           }
         ],
         "interfaces": []
@@ -15391,11 +14963,11 @@ const introspection = {
             "name": "clientMutationId",
             "type": {
               "kind": "SCALAR",
-              "name": "String",
-              "ofType": null
+              "name": "String"
             }
           }
-        ]
+        ],
+        "isOneOf": false
       },
       {
         "kind": "OBJECT",
@@ -15405,10 +14977,10 @@ const introspection = {
             "name": "clientMutationId",
             "type": {
               "kind": "SCALAR",
-              "name": "String",
-              "ofType": null
+              "name": "String"
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           }
         ],
         "interfaces": []
@@ -15418,10 +14990,12 @@ const introspection = {
         "name": "UpdateStrategy",
         "enumValues": [
           {
-            "name": "ALWAYS_UPDATE"
+            "name": "ALWAYS_UPDATE",
+            "isDeprecated": false
           },
           {
-            "name": "ONLY_FETCH_ONCE"
+            "name": "ONLY_FETCH_ONCE",
+            "isDeprecated": false
           }
         ]
       },
@@ -15433,24 +15007,21 @@ const introspection = {
             "name": "clientMutationId",
             "type": {
               "kind": "SCALAR",
-              "name": "String",
-              "ofType": null
+              "name": "String"
             }
           },
           {
             "name": "finishDate",
             "type": {
               "kind": "SCALAR",
-              "name": "LongString",
-              "ofType": null
+              "name": "LongString"
             }
           },
           {
             "name": "lastChapterRead",
             "type": {
               "kind": "SCALAR",
-              "name": "Float",
-              "ofType": null
+              "name": "Float"
             }
           },
           {
@@ -15459,8 +15030,7 @@ const introspection = {
               "kind": "NON_NULL",
               "ofType": {
                 "kind": "SCALAR",
-                "name": "Int",
-                "ofType": null
+                "name": "Int"
               }
             }
           },
@@ -15468,27 +15038,25 @@ const introspection = {
             "name": "scoreString",
             "type": {
               "kind": "SCALAR",
-              "name": "String",
-              "ofType": null
+              "name": "String"
             }
           },
           {
             "name": "startDate",
             "type": {
               "kind": "SCALAR",
-              "name": "LongString",
-              "ofType": null
+              "name": "LongString"
             }
           },
           {
             "name": "status",
             "type": {
               "kind": "SCALAR",
-              "name": "Int",
-              "ofType": null
+              "name": "Int"
             }
           }
-        ]
+        ],
+        "isOneOf": false
       },
       {
         "kind": "OBJECT",
@@ -15498,19 +15066,19 @@ const introspection = {
             "name": "clientMutationId",
             "type": {
               "kind": "SCALAR",
-              "name": "String",
-              "ofType": null
+              "name": "String"
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           },
           {
             "name": "trackRecord",
             "type": {
               "kind": "OBJECT",
-              "name": "TrackRecordType",
-              "ofType": null
+              "name": "TrackRecordType"
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           }
         ],
         "interfaces": []
@@ -15529,12 +15097,12 @@ const introspection = {
               "kind": "NON_NULL",
               "ofType": {
                 "kind": "SCALAR",
-                "name": "Upload",
-                "ofType": null
+                "name": "Upload"
               }
             }
           }
-        ]
+        ],
+        "isOneOf": false
       },
       {
         "kind": "OBJECT",
@@ -15550,13 +15118,31 @@ const introspection = {
                   "kind": "NON_NULL",
                   "ofType": {
                     "kind": "OBJECT",
-                    "name": "ValidateBackupSource",
-                    "ofType": null
+                    "name": "ValidateBackupSource"
                   }
                 }
               }
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
+          },
+          {
+            "name": "missingTrackers",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "LIST",
+                "ofType": {
+                  "kind": "NON_NULL",
+                  "ofType": {
+                    "kind": "OBJECT",
+                    "name": "ValidateBackupTracker"
+                  }
+                }
+              }
+            },
+            "args": [],
+            "isDeprecated": false
           }
         ],
         "interfaces": []
@@ -15571,11 +15157,11 @@ const introspection = {
               "kind": "NON_NULL",
               "ofType": {
                 "kind": "SCALAR",
-                "name": "LongString",
-                "ofType": null
+                "name": "LongString"
               }
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           },
           {
             "name": "name",
@@ -15583,11 +15169,30 @@ const introspection = {
               "kind": "NON_NULL",
               "ofType": {
                 "kind": "SCALAR",
-                "name": "String",
-                "ofType": null
+                "name": "String"
               }
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
+          }
+        ],
+        "interfaces": []
+      },
+      {
+        "kind": "OBJECT",
+        "name": "ValidateBackupTracker",
+        "fields": [
+          {
+            "name": "name",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "String"
+              }
+            },
+            "args": [],
+            "isDeprecated": false
           }
         ],
         "interfaces": []
@@ -15597,13 +15202,16 @@ const introspection = {
         "name": "WebUIChannel",
         "enumValues": [
           {
-            "name": "BUNDLED"
+            "name": "BUNDLED",
+            "isDeprecated": false
           },
           {
-            "name": "STABLE"
+            "name": "STABLE",
+            "isDeprecated": false
           },
           {
-            "name": "PREVIEW"
+            "name": "PREVIEW",
+            "isDeprecated": false
           }
         ]
       },
@@ -15612,13 +15220,16 @@ const introspection = {
         "name": "WebUIFlavor",
         "enumValues": [
           {
-            "name": "WEBUI"
+            "name": "WEBUI",
+            "isDeprecated": false
           },
           {
-            "name": "VUI"
+            "name": "VUI",
+            "isDeprecated": false
           },
           {
-            "name": "CUSTOM"
+            "name": "CUSTOM",
+            "isDeprecated": false
           }
         ]
       },
@@ -15627,10 +15238,12 @@ const introspection = {
         "name": "WebUIInterface",
         "enumValues": [
           {
-            "name": "BROWSER"
+            "name": "BROWSER",
+            "isDeprecated": false
           },
           {
-            "name": "ELECTRON"
+            "name": "ELECTRON",
+            "isDeprecated": false
           }
         ]
       },
@@ -15644,11 +15257,11 @@ const introspection = {
               "kind": "NON_NULL",
               "ofType": {
                 "kind": "SCALAR",
-                "name": "String",
-                "ofType": null
+                "name": "String"
               }
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           },
           {
             "name": "tag",
@@ -15656,11 +15269,11 @@ const introspection = {
               "kind": "NON_NULL",
               "ofType": {
                 "kind": "SCALAR",
-                "name": "String",
-                "ofType": null
+                "name": "String"
               }
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           },
           {
             "name": "updateAvailable",
@@ -15668,11 +15281,11 @@ const introspection = {
               "kind": "NON_NULL",
               "ofType": {
                 "kind": "SCALAR",
-                "name": "Boolean",
-                "ofType": null
+                "name": "Boolean"
               }
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           }
         ],
         "interfaces": []
@@ -15687,11 +15300,11 @@ const introspection = {
               "kind": "NON_NULL",
               "ofType": {
                 "kind": "SCALAR",
-                "name": "String",
-                "ofType": null
+                "name": "String"
               }
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           },
           {
             "name": "tag",
@@ -15699,11 +15312,11 @@ const introspection = {
               "kind": "NON_NULL",
               "ofType": {
                 "kind": "SCALAR",
-                "name": "String",
-                "ofType": null
+                "name": "String"
               }
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           }
         ],
         "interfaces": []
@@ -15716,11 +15329,11 @@ const introspection = {
             "name": "clientMutationId",
             "type": {
               "kind": "SCALAR",
-              "name": "String",
-              "ofType": null
+              "name": "String"
             }
           }
-        ]
+        ],
+        "isOneOf": false
       },
       {
         "kind": "OBJECT",
@@ -15730,10 +15343,10 @@ const introspection = {
             "name": "clientMutationId",
             "type": {
               "kind": "SCALAR",
-              "name": "String",
-              "ofType": null
+              "name": "String"
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           },
           {
             "name": "updateStatus",
@@ -15741,11 +15354,11 @@ const introspection = {
               "kind": "NON_NULL",
               "ofType": {
                 "kind": "OBJECT",
-                "name": "WebUIUpdateStatus",
-                "ofType": null
+                "name": "WebUIUpdateStatus"
               }
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           }
         ],
         "interfaces": []
@@ -15760,11 +15373,11 @@ const introspection = {
               "kind": "NON_NULL",
               "ofType": {
                 "kind": "OBJECT",
-                "name": "WebUIUpdateInfo",
-                "ofType": null
+                "name": "WebUIUpdateInfo"
               }
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           },
           {
             "name": "progress",
@@ -15772,11 +15385,11 @@ const introspection = {
               "kind": "NON_NULL",
               "ofType": {
                 "kind": "SCALAR",
-                "name": "Int",
-                "ofType": null
+                "name": "Int"
               }
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           },
           {
             "name": "state",
@@ -15784,11 +15397,11 @@ const introspection = {
               "kind": "NON_NULL",
               "ofType": {
                 "kind": "ENUM",
-                "name": "UpdateState",
-                "ofType": null
+                "name": "UpdateState"
               }
             },
-            "args": []
+            "args": [],
+            "isDeprecated": false
           }
         ],
         "interfaces": []
