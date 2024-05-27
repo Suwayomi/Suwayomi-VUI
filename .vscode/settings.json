@@ -124,7 +124,7 @@
 	"cSpell.words": ["iconify", "localsourcelang", "Suwayomi", "tipclass"],
 	"cSpell.ignoreRegExpList": ["\\s*import (.+\n?)+ from '.*';"],
 	"typescript.tsdk": "node_modules/typescript/lib",
-  	"typescript.enablePromptUseWorkspaceTsdk": true,
+	"typescript.enablePromptUseWorkspaceTsdk": true,
 	"codeium.enableCodeLens": true,
 	"codeium.enableExplainProblem": false,
 	"codeium.enableInComments": false,
