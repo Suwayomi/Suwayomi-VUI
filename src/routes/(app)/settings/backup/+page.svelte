@@ -150,7 +150,7 @@ ${e.data?.validateBackup.missingSources.map((ele) => ele.name).join(',')}
 	<div class="card w-full">
 		<FileDropzone
 			on:change={validateRestore}
-			accept=".proto.gz,.tachibk"
+			accept=".tachibk,.proto.gz"
 			name="files"
 			bind:files
 			padding="p-[14px]"
