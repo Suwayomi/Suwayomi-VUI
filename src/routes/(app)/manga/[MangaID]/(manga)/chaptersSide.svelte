@@ -392,7 +392,7 @@
 											: parseInt(chapter.fetchedAt) * 1000
 									).toLocaleDateString()}{chapter.isDownloaded
 										? ' • Downloaded'
-										: ''}
+										: ''}{chapter.scanlator ? ` • ${chapter.scanlator}` : ''}
 								</div>
 							</div>
 
