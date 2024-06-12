@@ -19,11 +19,12 @@
 	import Text from './components/text.svelte';
 	import Toggle from './components/toggle.svelte';
 	import { getModalStore } from '@skeletonlabs/skeleton';
-	import { serverSettings } from '$lib/gql/Queries';
+	import { categoryMangaNotInLibrary, serverSettings } from '$lib/gql/Queries';
 	import {
 		updateWebUI,
 		type setServerSettings,
-		runUpdateLibraryManga
+		runUpdateLibraryManga,
+		updateMangasCategories
 	} from '$lib/gql/Mutations';
 	import { type VariablesOf } from '$lib/gql/graphql';
 	import {
@@ -31,6 +32,7 @@
 		webUIUpdateStatusChange
 	} from '$lib/gql/Subscriptions';
 	import UpdateStatusInfoModal from './components/updateStatusInfoModal.svelte';
+	import IconWrapper from '$lib/components/IconWrapper.svelte';
 	const modalStore = getModalStore();
 
 	AppBarData('Server Settings');
@@ -177,6 +179,26 @@
 			}
 		});
 	}
+	let removingNoCategoriesManga = false;
+
+	async function removeCategoryFromMangaNotInLibrary() {
+		removingNoCategoriesManga = true;
+		const MangasWithCategory = await client
+			.query(categoryMangaNotInLibrary, {}, { requestPolicy: 'network-only' })
+			.toPromise();
+
+		if (MangasWithCategory.data?.mangas.nodes?.length) {
+			await client
+				.mutation(updateMangasCategories, {
+					id: MangasWithCategory.data.mangas.nodes.map((manga) => manga.id),
+					addTo: [],
+					clear: true
+				})
+				.toPromise();
+		}
+
+		removingNoCategoriesManga = false;
+	}
 </script>
 
 {#if $settingsData.error}
@@ -188,6 +210,25 @@
 {:else if $settingsData.data}
 	{@const settings = $settingsData.data.settings}
 	<div class="[&>*]:px-4">
+		<!-- remove category from Manga Not In Library -->
+		<button
+			class="flex h-16 w-full cursor-pointer justify-between text-left hover:variant-glass-surface"
+			on:click={removeCategoryFromMangaNotInLibrary}
+		>
+			<div>
+				Clear database
+				<div class="text-sm opacity-50">
+					Remove non library mangas from categories
+				</div>
+			</div>
+			{#if removingNoCategoriesManga}
+				<IconWrapper
+					name="mdi:refresh"
+					class="aspect-square h-full w-auto animate-spin"
+				/>
+			{/if}
+		</button>
+
 		<!-- autoDownloadNewChapters -->
 		<Toggle
 			title="Auto Download New Chapters"

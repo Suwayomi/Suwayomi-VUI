@@ -479,3 +479,19 @@ export const serverSettings = graphql(
 	`,
 	[]
 );
+
+export const categoryMangaNotInLibrary = graphql(
+	`
+		query categoryMangaNotInLibrary {
+			mangas(
+				condition: { inLibrary: false }
+				filter: { categoryId: { isNull: false } }
+			) {
+				nodes {
+					id
+				}
+			}
+		}
+	`,
+	[]
+);

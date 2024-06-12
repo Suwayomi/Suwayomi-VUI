@@ -168,6 +168,7 @@
 					class="h1 line-clamp-2 select-none md:h3 lg:h2 xl:h1 hover:cursor-pointer xl:leading-[4rem]"
 					use:longPress
 					on:longPress={LongHandler}
+					title="long press to copy title"
 				>
 					{mangaFrag.title}
 				</h1>
