@@ -5,8 +5,10 @@
 	},
 	{
 		"tag": "v1.1.0",
-		"uiVersion": "r985",
-		"serverVersion": "r1502"
+		"uiVersion": "PREVIEW",
+		"serverVersion": "r1502",
+		"comment": "the server version is between 1.0.0 and 1.1.0 release",
+		"comment2": "because its the preview version that implemented the breaking changes"
 	},
 	{
 		"tag": "v1.0.0",
