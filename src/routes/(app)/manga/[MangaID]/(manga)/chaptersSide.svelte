@@ -180,6 +180,7 @@
 	function handelFilter() {
 		modalStore.trigger({
 			type: 'component',
+			backdropClasses: '!p-0',
 			component: { ref: ChaptersFilterModal, props: { MangaID } }
 		});
 	}

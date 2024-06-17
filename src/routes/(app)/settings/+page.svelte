@@ -36,7 +36,8 @@
 	on:click={() =>
 		modalStore.trigger({
 			type: 'component',
-			component: { ref: BackupModal }
+			component: { ref: BackupModal },
+			backdropClasses: '!p-0'
 		})}
 	class="flex h-16 w-full cursor-pointer items-center text-left hover:variant-glass-surface"
 >
@@ -47,7 +48,8 @@
 	on:click={() =>
 		modalStore.trigger({
 			type: 'component',
-			component: { ref: ReaderDefaultsModal }
+			component: { ref: ReaderDefaultsModal },
+			backdropClasses: '!p-0'
 		})}
 	class="flex h-16 w-full cursor-pointer items-center text-left hover:variant-glass-surface"
 >
@@ -61,7 +63,8 @@
 	on:click={() =>
 		modalStore.trigger({
 			type: 'component',
-			component: { ref: LibrarySettings }
+			component: { ref: LibrarySettings },
+			backdropClasses: '!p-0'
 		})}
 	class="flex h-16 w-full cursor-pointer items-center text-left hover:variant-glass-surface"
 >
@@ -72,7 +75,8 @@
 	on:click={() =>
 		modalStore.trigger({
 			type: 'component',
-			component: { ref: MangaSettingsModal }
+			component: { ref: MangaSettingsModal },
+			backdropClasses: '!p-0'
 		})}
 	class="flex h-16 w-full cursor-pointer items-center text-left hover:variant-glass-surface"
 >
@@ -127,7 +131,8 @@
 	on:click={() =>
 		modalStore.trigger({
 			type: 'component',
-			component: { ref: TrackingModal }
+			component: { ref: TrackingModal },
+			backdropClasses: '!p-0'
 		})}
 	class="flex h-16 w-full cursor-pointer items-center text-left hover:variant-glass-surface"
 >
@@ -145,6 +150,7 @@
 	on:click={() =>
 		modalStore.trigger({
 			type: 'component',
+			backdropClasses: '!p-0',
 			component: { ref: CacheSettingsModal }
 		})}
 	class="flex h-16 w-full cursor-pointer items-center text-left hover:variant-glass-surface"

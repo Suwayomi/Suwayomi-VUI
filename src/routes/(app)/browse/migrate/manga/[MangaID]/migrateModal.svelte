@@ -24,6 +24,7 @@
 	import { type ResultOf } from '$lib/gql/graphql';
 	import type { SvelteComponent } from 'svelte';
 	import { ErrorHelp } from '$lib/util';
+	import ModalTemplate from '$lib/components/ModalTemplate.svelte';
 
 	const modalStore = getModalStore();
 	export let parent: SvelteComponent;
@@ -160,68 +161,67 @@
 </script>
 
 {#if $modalStore[0]}
-	<div class="card w-modal max-h-screen space-y-4 rounded-lg p-0 shadow-xl">
-		<h1 class="h3 pl-4 pt-4">Select data to include</h1>
-		<div class="border-y border-surface-700 pl-4">
-			<div class="grid max-h-96 grid-cols-1 gap-1 overflow-y-auto pr-4">
-				<Slide
-					class="p-1 pl-2 outline-0 hover:variant-glass-surface"
-					bind:checked={doChapters}
-				>
-					Chapters
-				</Slide>
-				<Slide
-					class="p-1 pl-2 outline-0 hover:variant-glass-surface"
-					bind:checked={doCategories}
-				>
-					Categories
-				</Slide>
-				<Slide
-					class="p-1 pl-2 outline-0 hover:variant-glass-surface"
-					bind:checked={doTracking}
-				>
-					Tracking
-				</Slide>
-				{#if manga.downloadCount > 0}
-					<Slide
-						class="p-1 pl-2 outline-0 hover:variant-glass-surface"
-						bind:checked={deleteDownloaded}
-					>
-						Delete old Downloaded chapters
-					</Slide>
-				{/if}
-			</div>
-		</div>
-		<div class="flex justify-between p-4">
-			<a
-				class="variant-filled-surface btn hover:variant-glass-surface"
-				target="_blank"
-				href="/manga/{id}"
+	<ModalTemplate title="Select data to include">
+		<svelte:fragment>
+			<Slide
+				class="p-1 pl-2 outline-0 hover:variant-glass-surface"
+				bind:checked={doChapters}
 			>
-				show entry
-			</a>
-			<div>
-				<button
-					on:click={CopyManga}
-					class="variant-filled-surface btn hover:variant-glass-surface"
+				Chapters
+			</Slide>
+			<Slide
+				class="p-1 pl-2 outline-0 hover:variant-glass-surface"
+				bind:checked={doCategories}
+			>
+				Categories
+			</Slide>
+			<Slide
+				class="p-1 pl-2 outline-0 hover:variant-glass-surface"
+				bind:checked={doTracking}
+			>
+				Tracking
+			</Slide>
+			{#if manga.downloadCount > 0}
+				<Slide
+					class="p-1 pl-2 outline-0 hover:variant-glass-surface"
+					bind:checked={deleteDownloaded}
 				>
-					{#if CopyLoading}
-						Copying<ProgressRadial class="ml-1 aspect-square h-4 w-auto" />
-					{:else}
-						Copy
-					{/if}
-				</button>
-				<button
-					on:click={MigrateManga}
+					Delete old Downloaded chapters
+				</Slide>
+			{/if}
+		</svelte:fragment>
+		<svelte:fragment slot="footer">
+			<div class="flex justify-between px-4 pb-4">
+				<a
 					class="variant-filled-surface btn hover:variant-glass-surface"
+					target="_blank"
+					href="/manga/{id}"
 				>
-					{#if MigrateLoading}
-						Migrating<ProgressRadial class="ml-1 aspect-square h-4 w-auto" />
-					{:else}
-						Migrate
-					{/if}
-				</button>
+					show entry
+				</a>
+				<div>
+					<button
+						on:click={CopyManga}
+						class="variant-filled-surface btn hover:variant-glass-surface"
+					>
+						{#if CopyLoading}
+							Copying<ProgressRadial class="ml-1 aspect-square h-4 w-auto" />
+						{:else}
+							Copy
+						{/if}
+					</button>
+					<button
+						on:click={MigrateManga}
+						class="variant-filled-surface btn hover:variant-glass-surface"
+					>
+						{#if MigrateLoading}
+							Migrating<ProgressRadial class="ml-1 aspect-square h-4 w-auto" />
+						{:else}
+							Migrate
+						{/if}
+					</button>
+				</div>
 			</div>
-		</div>
-	</div>
+		</svelte:fragment>
+	</ModalTemplate>
 {/if}

@@ -24,6 +24,8 @@
 	import { createBackup, restoreBackup } from '$lib/gql/Mutations';
 	import { restoreStatus, validateBackup } from '$lib/gql/Queries';
 	import type { ResultOf } from '$lib/gql/graphql';
+	import ModalTemplate from '$lib/components/ModalTemplate.svelte';
+
 	const toastStore = getToastStore();
 	const modalStore = getModalStore();
 	let MakingBackup = false;
@@ -133,56 +135,50 @@ ${e.data?.validateBackup.missingSources.map((ele) => ele.name).join(',')}
 </script>
 
 {#if $modalStore[0]}
-	<div class="card w-modal max-h-screen space-y-4 rounded-lg p-0 shadow-xl">
-		<h1 class="h3 pl-4 pt-4">Backups</h1>
-		<div class="border-y border-surface-700">
-			<div class="grid max-h-96 grid-cols-1 gap-1 overflow-y-auto">
-				<div class="mt-1 w-full">
-					<button
-						class="block h-[76px] w-full px-4 py-2 text-left hover:variant-glass-surface"
-						on:click={MakeBacup}
-					>
-						<div class="text-xl">Create backup</div>
-						<div class="opacity-80">
-							<span class="flex-none"
-								>Back up library as a Tachiyomi backup</span
-							>
-						</div>
-						{#if MakingBackup}
-							<ProgressBar />
-						{/if}
-					</button>
-				</div>
-				<div class="card mb-1 h-48 w-full">
-					<FileDropzone
-						class="h-full"
-						on:change={validateRestore}
-						accept=".proto.gz"
-						name="files"
-						bind:files
-					>
-						<div slot="message">
-							<div>Restore backup</div>
-							<div>Upload a file or drag and drop</div>
-						</div>
-					</FileDropzone>
-					{#if $restoreStat?.data?.restoreStatus?.state}
-						<div
-							class="p-4"
-							title="{$restoreStat.data.restoreStatus.state
-								.toLowerCase()
-								.replaceAll('_', ' ')}&#013;{$restoreStat.data.restoreStatus
-								.mangaProgress}/{$restoreStat.data.restoreStatus.totalManga}"
-						>
-							<ProgressBar
-								value={$restoreStat.data.restoreStatus.mangaProgress}
-								max={$restoreStat.data.restoreStatus.totalManga}
-							/>
-						</div>
+	<ModalTemplate title="Backups">
+		<svelte:fragment>
+			<div class="mt-1 w-full">
+				<button
+					class="block h-[76px] w-full px-4 py-2 text-left hover:variant-glass-surface"
+					on:click={MakeBacup}
+				>
+					<div class="text-xl">Create backup</div>
+					<div class="opacity-80">
+						<span class="flex-none">Back up library as a Tachiyomi backup</span>
+					</div>
+					{#if MakingBackup}
+						<ProgressBar />
 					{/if}
-				</div>
+				</button>
 			</div>
-		</div>
-		<div class="p-4" />
-	</div>
+			<div class="card mb-1 h-48 w-full">
+				<FileDropzone
+					class="h-full"
+					on:change={validateRestore}
+					accept=".proto.gz"
+					name="files"
+					bind:files
+				>
+					<div slot="message">
+						<div>Restore backup</div>
+						<div>Upload a file or drag and drop</div>
+					</div>
+				</FileDropzone>
+				{#if $restoreStat?.data?.restoreStatus?.state}
+					<div
+						class="p-4"
+						title="{$restoreStat.data.restoreStatus.state
+							.toLowerCase()
+							.replaceAll('_', ' ')}&#013;{$restoreStat.data.restoreStatus
+							.mangaProgress}/{$restoreStat.data.restoreStatus.totalManga}"
+					>
+						<ProgressBar
+							value={$restoreStat.data.restoreStatus.mangaProgress}
+							max={$restoreStat.data.restoreStatus.totalManga}
+						/>
+					</div>
+				{/if}
+			</div>
+		</svelte:fragment>
+	</ModalTemplate>
 {/if}

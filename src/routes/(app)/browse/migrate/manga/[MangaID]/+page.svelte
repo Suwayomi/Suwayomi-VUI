@@ -32,6 +32,7 @@
 	function OpenModal(id: number) {
 		modalStore.trigger({
 			type: 'component',
+			backdropClasses: '!p-0',
 			component: {
 				ref: MigrateModal,
 				props: {

@@ -44,6 +44,7 @@
 		e.stopPropagation();
 		modalStore.trigger({
 			type: 'component',
+			backdropClasses: '!p-0',
 			component: {
 				ref: CategoriesEditModal,
 				props: { cat }
@@ -139,6 +140,7 @@
 		e.stopPropagation();
 		modalStore.trigger({
 			type: 'component',
+			backdropClasses: '!p-0',
 			component: {
 				ref: CategoriesNewModal
 			}

@@ -33,19 +33,43 @@
 	const query = queryParam('q', ssp.string(), { pushHistory: false });
 
 	let value = '';
-	let items: {
-		img?: string;
-		icon?: string;
-		str?: string;
+
+	type helpItem = {
+		str: string;
+		firstLine: string;
+	};
+	type categoryItem = {
+		icon: string;
+		url: string;
+		firstLineBoldText: string;
+	};
+	type mangaItem = {
+		img: string;
+		url: string;
+		firstLine: string;
+		secondLineBoldText: string;
+	};
+	type chapterItem = {
+		img: string;
+		url: string;
+		firstLine: string;
+		secondLineBoldText: string;
+	};
+
+	type sourceItem = {
+		img: string;
+		url: string;
+		firstLineBoldText: string;
 		firstLine?: string;
-		firstLineBoldText?: string;
-		secondLine?: string;
-		secondLineBoldText?: string;
-		url?: string;
-	}[] = [];
+		secondLine: string;
+	};
+
+	type item = helpItem | categoryItem | mangaItem | chapterItem | sourceItem;
+
+	let items: item[] = [];
 	let inputElement: boolean;
 
-	const help: typeof items = [
+	const help: item[] = [
 		{
 			str: '@S',
 			firstLine: "Go to Source 'S'"
@@ -187,7 +211,7 @@
 
 	function handelKey(event: KeyboardEvent) {
 		if (event.key === 'Enter') {
-			if (items[0].url) {
+			if ('url' in items[0]) {
 				goto(items[0].url);
 			} else if (!['#', '@'].includes(value[0])) {
 				if (
@@ -232,6 +256,40 @@
 			previous.focus();
 			return;
 		}
+		if (event.key === 'ArrowRight') {
+			let selectEnd = inputEl?.selectionEnd;
+			if (selectEnd === value.length) {
+				let SelectedItem: item;
+				if (inputElement) {
+					SelectedItem = items[0];
+				} else {
+					const tabElements = [...document.querySelectorAll('.tabindex')] as (
+						| HTMLInputElement
+						| HTMLAnchorElement
+					)[];
+					const index = tabElements.findIndex(
+						(e) => e === document.activeElement
+					);
+					SelectedItem = items[index];
+				}
+				if ('str' in SelectedItem) {
+					if (!value.includes(SelectedItem.str)) {
+						value += SelectedItem.str;
+					}
+				} else if ('firstLineBoldText' in SelectedItem) {
+					if (!value.includes(SelectedItem.firstLineBoldText)) {
+						value += SelectedItem.firstLineBoldText;
+					}
+				} else if (!value.includes(SelectedItem.firstLine)) {
+					value += SelectedItem.firstLine;
+				}
+				(
+					document.querySelector('.tabindex') as
+						| HTMLInputElement
+						| HTMLAnchorElement
+				).focus();
+			}
+		}
 	}
 
 	$: if (catId !== undefined)
@@ -248,59 +306,71 @@
 	} else {
 		window.removeEventListener('keydown', handelArrows);
 	}
+
+	let inputEl: HTMLInputElement | undefined = undefined;
 </script>
 
 {#if $modalStore[0]}
-	<div class="w-modal">
+	<div class="w-modal flex max-h-dvh flex-col">
 		<input
 			on:focus={() => (inputElement = true)}
 			on:blur={() => (inputElement = false)}
 			bind:value
+			bind:this={inputEl}
 			on:keydown={handelKey}
 			class="tabindex input rounded-2xl"
 			type="text"
 		/>
-		<div tabindex="-1" class="card mt-1 max-h-96 overflow-y-auto rounded-2xl">
+		<div tabindex="-1" class="card mt-1 max-h-full overflow-y-auto rounded-2xl">
 			{#each items as item, index}
 				<a
 					tabindex={index !== 0 ? 0 : -1}
 					on:click={() => {
-						if (item.url) parent.onClose();
+						if ('url' in item) parent.onClose();
 					}}
-					href={item.url}
-					class="{index !== 0 &&
-						'tabindex'} flex flex-nowrap p-2 outline-0 hover:variant-glass
-					focus:variant-glass-primary first:rounded-t-2xl
-					last:rounded-b-2xl {inputElement && 'first:variant-glass-primary'}"
+					href={'url' in item ? item.url : undefined}
+					class="
+					{index !== 0 && 'tabindex '}
+					flex flex-nowrap justify-start p-2 outline-0 hover:variant-glass
+					focus:variant-glass-primary first:rounded-t-2xl last:rounded-b-2xl
+					{inputElement && index === 0 && 'variant-glass-primary'}"
 				>
-					<div class="pr-4">
-						{#if item.img}
+					<div class="mr-4">
+						{#if 'img' in item}
 							<Image
-								class="aspect-square max-h-12"
-								height="h-full"
+								class="aspect-square "
+								height="h-12"
 								width="w-auto"
 								src={item.img}
 								alt="img"
 							/>
-						{:else if item.icon}
+						{:else if 'icon' in item}
 							<IconWrapper class="aspect-square h-full" name={item.icon} />
-						{:else if item.str}
+						{:else}
 							<div class="flex h-full items-center">
 								{item.str}
 							</div>
 						{/if}
 					</div>
 					<div class="flex flex-col justify-center">
-						{#if item.firstLine || item.firstLineBoldText}
+						{#if 'firstLine' in item || 'firstLineBoldText' in item}
 							<div class="line-clamp-1">
-								<span class="text-sm">{item.firstLine ?? ''}</span>
-								<span class="font-bold">{item.firstLineBoldText ?? ''}</span>
+								<span class="text-sm">
+									{'firstLine' in item ? item.firstLine : ''}
+								</span>
+								<span class="font-bold">
+									{'firstLineBoldText' in item ? item.firstLineBoldText : ''}
+								</span>
 							</div>
 						{/if}
-						{#if item.secondLine || item.secondLineBoldText}
+						{#if 'secondLine' in item || 'secondLineBoldText' in item}
 							<div class="line-clamp-1">
-								<span class="text-md opacity-70">{item.secondLine ?? ''}</span>
-								<span class="font-bold">{item.secondLineBoldText ?? ''}</span>
+								<span class="text-md opacity-70">
+									{'secondLine' in item ? item.secondLine : ''}
+								</span>
+								<span class="font-bold">
+									{'secondLineBoldText' in item ? item.secondLineBoldText : ''}
+								</span>
 							</div>
 						{/if}
 					</div>

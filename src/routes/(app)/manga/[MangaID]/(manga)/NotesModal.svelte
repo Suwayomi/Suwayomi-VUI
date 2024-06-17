@@ -9,14 +9,14 @@
 <script lang="ts">
 	import { getModalStore } from '@skeletonlabs/skeleton';
 	import type { MangaMeta } from '$lib/simpleStores';
+	import ModalTemplate from '$lib/components/ModalTemplate.svelte';
 	const modalStore = getModalStore();
 
 	export let mangaMeta: ReturnType<typeof MangaMeta>;
 </script>
 
 {#if $modalStore[0]}
-	<div class="card w-modal max-h-screen space-y-4 rounded-lg p-4 shadow-xl">
-		Notes:
+	<ModalTemplate title="Notes">
 		<div>
 			<textarea
 				class="textarea h-40 w-full"
@@ -24,5 +24,5 @@
 				value={$mangaMeta.notes ?? ''}
 			/>
 		</div>
-	</div>
+	</ModalTemplate>
 {/if}

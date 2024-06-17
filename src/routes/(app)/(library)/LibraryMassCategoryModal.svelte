@@ -16,7 +16,7 @@
 	import { getCategories } from '$lib/gql/Queries';
 	import { type ResultOf } from '$lib/gql/graphql';
 	import { CategoryTypeFragment } from '$lib/gql/Fragments';
-
+	import ModalTemplate from '$lib/components/ModalTemplate.svelte';
 	const client = getContextClient();
 	const modalStore = getModalStore();
 
@@ -61,17 +61,16 @@
 </script>
 
 {#if $modalStore[0]}
-	<div class="card w-modal space-y-4 rounded-lg py-4 shadow-xl">
-		{#if $categories.fetching}
-			loading...
-		{:else if $categories.error}
-			<div class="whitespace-pre-wrap">
-				Error loading categories: {JSON.stringify($categories.error, null, 4)}
-			</div>
-		{:else if $categories.data}
-			{@const nodes = $categories.data.categories.nodes}
-			<h2 class="pl-4 text-xl">Set categories</h2>
-			<div class="border-b border-t border-surface-700 p-4">
+	<ModalTemplate title="Set Categories">
+		<svelte:fragment>
+			{#if $categories.fetching}
+				loading...
+			{:else if $categories.error}
+				<div class="whitespace-pre-wrap">
+					Error loading categories: {JSON.stringify($categories.error, null, 4)}
+				</div>
+			{:else if $categories.data}
+				{@const nodes = $categories.data.categories.nodes}
 				{#each nodes
 					.filter((e) => e.id !== 0)
 					.sort((a, b) => (a.order > b.order ? 1 : -1)) as category}
@@ -89,11 +88,17 @@
 						</TriStateSlide>
 					</div>
 				{/each}
+			{/if}
+		</svelte:fragment>
+		<svelte:fragment slot="footer">
+			<div class="flex items-center justify-end px-4 pb-4">
+				<button
+					on:click={handelSubmit}
+					class="variant-filled btn float-right mr-4"
+				>
+					Submit
+				</button>
 			</div>
-			<button
-				on:click={handelSubmit}
-				class="variant-filled btn float-right mr-4">Submit</button
-			>
-		{/if}
-	</div>
+		</svelte:fragment>
+	</ModalTemplate>
 {/if}

@@ -17,13 +17,14 @@
 	import EditTextPreference from './preferences/EditTextPreference.svelte';
 	import { getContextClient, queryStore } from '@urql/svelte';
 	import { getSource } from '$lib/gql/Queries';
+	import ModalTemplate from '$lib/components/ModalTemplate.svelte';
 
 	export let data: LayoutData;
 	export let clearAll: () => void;
 
 	const modalStore = getModalStore();
 	const client = getContextClient();
-	const sause = queryStore({
+	const sauce = queryStore({
 		client,
 		query: getSource,
 		variables: { id: data.sourceID }
@@ -31,28 +32,22 @@
 	onDestroy(clearAll);
 </script>
 
-{#if $modalStore[0] && $sause.data?.source?.isConfigurable}
-	<div
-		class="card w-modal max-h-screen space-y-4 overflow-y-auto rounded-lg p-0 shadow-xl"
-	>
-		<h1 class="h3 border-b border-surface-500 p-4">Preferences</h1>
-		<div class="max-h-96 overflow-y-auto pb-4 pl-4">
-			{#each $sause.data.source.preferences as pref, index}
-				<div>
-					{#if pref.__typename === 'CheckBoxPreference'}
-						<CheckBoxPreference {pref} {index} id={data.sourceID} />
-					{:else if pref.__typename === 'ListPreference'}
-						<ListPreference {pref} {index} id={data.sourceID} />
-					{:else if pref.__typename === 'SwitchPreference'}
-						<SwitchPreference {pref} {index} id={data.sourceID} />
-					{:else if pref.__typename === 'MultiSelectListPreference'}
-						<MultiSelectListPreference {pref} {index} id={data.sourceID} />
-					{:else if pref.__typename === 'EditTextPreference'}
-						<EditTextPreference {pref} {index} id={data.sourceID} />
-					{/if}
-				</div>
-			{/each}
-		</div>
-		<div />
-	</div>
+{#if $modalStore[0] && $sauce.data?.source?.isConfigurable}
+	<ModalTemplate title="Preferences">
+		{#each $sauce.data.source.preferences as pref, index}
+			<div>
+				{#if pref.__typename === 'CheckBoxPreference'}
+					<CheckBoxPreference {pref} {index} id={data.sourceID} />
+				{:else if pref.__typename === 'ListPreference'}
+					<ListPreference {pref} {index} id={data.sourceID} />
+				{:else if pref.__typename === 'SwitchPreference'}
+					<SwitchPreference {pref} {index} id={data.sourceID} />
+				{:else if pref.__typename === 'MultiSelectListPreference'}
+					<MultiSelectListPreference {pref} {index} id={data.sourceID} />
+				{:else if pref.__typename === 'EditTextPreference'}
+					<EditTextPreference {pref} {index} id={data.sourceID} />
+				{/if}
+			</div>
+		{/each}
+	</ModalTemplate>
 {/if}

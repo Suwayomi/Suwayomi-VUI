@@ -14,6 +14,7 @@
 	import type { CategoryTypeFragment } from '$lib/gql/Fragments';
 	import { getContextClient } from '@urql/svelte';
 	import { updateCategory } from '$lib/gql/Mutations';
+	import ModalTemplate from '$lib/components/ModalTemplate.svelte';
 	const modalStore = getModalStore();
 	export let parent: SvelteComponent;
 
@@ -40,46 +41,45 @@
 </script>
 
 {#if $modalStore[0]}
-	<div
-		class="card w-modal max-h-screen space-y-4 rounded-lg p-0 py-4 shadow-xl"
-	>
-		<h1 class="h3 pl-4">Edit category</h1>
-		<div class="border-y border-surface-700 px-4">
-			<div class="grid max-h-96 grid-cols-1 gap-1 overflow-y-auto">
-				<label class="label">
-					<span class="pl-2">Category name</span>
-					<input class="input" type="text" bind:value={catinput} />
-				</label>
-				<Slide
-					labelClass="ml-2"
-					bind:checked={Defaul}
-					disabled={cat.id == 0}
-					class="w-full p-1 hover:variant-glass-surface focus:outline-0"
-				>
-					<div class="w-full">
-						Default category when adding new manga to the library
-					</div>
-				</Slide>
-				<Slide
-					labelClass="ml-2"
-					bind:checked={includeInUpdate}
-					class="w-full p-1 hover:variant-glass-surface focus:outline-0"
-				>
-					<div class="w-full">Include category in automatic updates</div>
-				</Slide>
-				<Slide
-					labelClass="ml-2"
-					bind:checked={includeInDownload}
-					class="w-full p-1 hover:variant-glass-surface focus:outline-0"
-				>
-					<div class="w-full">
-						Include category in downloads from automatic updates
-					</div>
-				</Slide>
+	<ModalTemplate title="Edit category">
+		<svelte:fragment>
+			<label class="label">
+				<span class="pl-2">Category name</span>
+				<input class="input" type="text" bind:value={catinput} />
+			</label>
+			<Slide
+				labelClass="ml-2"
+				bind:checked={Defaul}
+				disabled={cat.id == 0}
+				class="w-full p-1 hover:variant-glass-surface focus:outline-0"
+			>
+				<div class="w-full">
+					Default category when adding new manga to the library
+				</div>
+			</Slide>
+			<Slide
+				labelClass="ml-2"
+				bind:checked={includeInUpdate}
+				class="w-full p-1 hover:variant-glass-surface focus:outline-0"
+			>
+				<div class="w-full">Include category in automatic updates</div>
+			</Slide>
+			<Slide
+				labelClass="ml-2"
+				bind:checked={includeInDownload}
+				class="w-full p-1 hover:variant-glass-surface focus:outline-0"
+			>
+				<div class="w-full">
+					Include category in downloads from automatic updates
+				</div>
+			</Slide>
+		</svelte:fragment>
+		<svelte:fragment slot="footer">
+			<div class="flex w-full justify-end pb-4 pr-2">
+				<button on:click={submitChange} class="variant-filled btn">
+					Submit
+				</button>
 			</div>
-		</div>
-		<div class="flex w-full justify-end pr-2">
-			<button on:click={submitChange} class="variant-filled btn">Submit</button>
-		</div>
-	</div>
+		</svelte:fragment>
+	</ModalTemplate>
 {/if}

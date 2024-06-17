@@ -60,6 +60,7 @@
 			if (!$modalStore.find((e) => e.meta?.id === 'QuickSearchModal'))
 				modalStore.trigger({
 					type: 'component',
+					backdropClasses: '!p-0',
 					component: { ref: QuickSearchModal },
 					position: 'items-start',
 					meta: { id: 'QuickSearchModal' }

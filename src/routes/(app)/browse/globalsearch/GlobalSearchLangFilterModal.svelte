@@ -38,63 +38,61 @@
 </script>
 
 {#if $modalStore[0]}
-	<div class="card w-modal space-y-4 rounded-lg p-0 shadow-xl">
-		<TabGroup
-			justify="justify-center"
-			flex="flex"
-			class="bg-surface-100-800-token w-full select-none rounded-t-lg focus:outline-0"
-			rounded="rounded-t-lg"
-			active="border-b-2 variant-glass-primary"
-			regionList="variant-soft-surface focus:outline-0"
-			regionPanel="focus:outline-0"
-		>
-			<Tab bind:group={$tabSet} name="tab1" value={0}>Languages</Tab>
-			<Tab bind:group={$tabSet} name="tab2" value={1}>Sources</Tab>
-			<!-- Tab Panels --->
-			<svelte:fragment slot="panel">
-				{#if $tabSet === 0}
-					<div class="grid max-h-96 grid-cols-1 gap-1 overflow-y-auto pr-4">
-						{#each langs as lang}
-							<Slide
-								class="p-1 pl-2 outline-0 hover:variant-glass-surface"
-								on:changeE={(e) => {
-									if (e.detail) {
-										$langFilter.add(lang);
-										$langFilter = $langFilter;
-										return;
-									}
-									$langFilter.delete(lang);
+	<TabGroup
+		justify="justify-center"
+		flex="flex"
+		class="card bg-surface-100-800-token w-modal flex max-h-dvh w-full select-none flex-col space-y-4 rounded-lg rounded-t-lg p-0 shadow-xl focus:outline-0"
+		rounded="rounded-t-lg"
+		active="border-b-2 variant-glass-primary"
+		regionList="variant-soft-surface focus:outline-0 shrink-0"
+		regionPanel="focus:outline-0 max-h-full overflow-y-auto"
+	>
+		<Tab bind:group={$tabSet} name="tab1" value={0}>Languages</Tab>
+		<Tab bind:group={$tabSet} name="tab2" value={1}>Sources</Tab>
+		<!-- Tab Panels --->
+		<svelte:fragment slot="panel">
+			{#if $tabSet === 0}
+				<div class="grid grid-cols-1 gap-1 pr-4">
+					{#each langs as lang}
+						<Slide
+							class="p-1 pl-2 outline-0 hover:variant-glass-surface"
+							on:changeE={(e) => {
+								if (e.detail) {
+									$langFilter.add(lang);
 									$langFilter = $langFilter;
-								}}
-								checked={$langFilter.has(lang)}
-							>
-								{FindLangName(lang)}
-							</Slide>
-						{/each}
-					</div>
-				{:else if $tabSet === 1 && LangFilteredSources}
-					<div class="grid max-h-96 grid-cols-1 gap-1 overflow-y-auto pr-4">
-						{#each LangFilteredSources as sourc}
-							{@const source = sourc}
-							<Slide
-								class="p-1 pl-2 outline-0 hover:variant-glass-surface"
-								on:changeE={(e) => {
-									if (e.detail) {
-										$SpecificSourceFilter.add(source.id);
-										$SpecificSourceFilter = $SpecificSourceFilter;
-										return;
-									}
-									$SpecificSourceFilter.delete(source.id);
+									return;
+								}
+								$langFilter.delete(lang);
+								$langFilter = $langFilter;
+							}}
+							checked={$langFilter.has(lang)}
+						>
+							{FindLangName(lang)}
+						</Slide>
+					{/each}
+				</div>
+			{:else if $tabSet === 1 && LangFilteredSources}
+				<div class="grid grid-cols-1 gap-1 pr-4">
+					{#each LangFilteredSources as sourc}
+						{@const source = sourc}
+						<Slide
+							class="p-1 pl-2 outline-0 hover:variant-glass-surface"
+							on:changeE={(e) => {
+								if (e.detail) {
+									$SpecificSourceFilter.add(source.id);
 									$SpecificSourceFilter = $SpecificSourceFilter;
-								}}
-								checked={$SpecificSourceFilter.has(source.id)}
-							>
-								{source.displayName}
-							</Slide>
-						{/each}
-					</div>
-				{/if}
-			</svelte:fragment>
-		</TabGroup>
-	</div>
+									return;
+								}
+								$SpecificSourceFilter.delete(source.id);
+								$SpecificSourceFilter = $SpecificSourceFilter;
+							}}
+							checked={$SpecificSourceFilter.has(source.id)}
+						>
+							{source.displayName}
+						</Slide>
+					{/each}
+				</div>
+			{/if}
+		</svelte:fragment>
+	</TabGroup>
 {/if}
