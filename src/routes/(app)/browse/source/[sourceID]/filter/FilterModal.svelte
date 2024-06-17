@@ -24,14 +24,16 @@
 	import type { fetchSourceManga } from '$lib/gql/Mutations';
 	import { getContextClient, queryStore } from '@urql/svelte';
 	import { getSource } from '$lib/gql/Queries';
-	export let parent: SvelteComponent;
+	import ModalTemplate from '$lib/components/ModalTemplate.svelte';
 
-	const modalStore = getModalStore();
+	export let parent: SvelteComponent;
 	export let data: LayoutData;
 	export let submit: (
 		filterss: VariablesOf<typeof fetchSourceManga>['filters'],
 		queryy: string
 	) => void;
+
+	const modalStore = getModalStore();
 	const sause = queryStore({
 		client: getContextClient(),
 		query: getSource,
@@ -58,17 +60,19 @@
 </script>
 
 {#if $modalStore[0]}
-	<div class="card w-modal rounded-lg p-0 shadow-xl">
-		<div class="mx-4 mt-4">
-			<input
-				bind:value={query}
-				class="input"
-				title="Search"
-				type="text"
-				placeholder="Search"
-			/>
-		</div>
-		<div class="max-h-96 overflow-y-auto">
+	<ModalTemplate>
+		<svelte:fragment slot="title">
+			<div class="mx-4 mt-4">
+				<input
+					bind:value={query}
+					class="input"
+					title="Search"
+					type="text"
+					placeholder="Search"
+				/>
+			</div>
+		</svelte:fragment>
+		<svelte:fragment>
 			{#if $sause.data?.source?.filters}
 				{#each $sause.data.source.filters as filter, index}
 					<div class="mx-4 mt-4">
@@ -94,12 +98,16 @@
 					</div>
 				{/each}
 			{/if}
-		</div>
-		<div class="m-4 flex items-center justify-between">
-			<button class="variant-filled-warning btn" on:click={reset}>Reset</button>
-			<button class="variant-filled-primary btn" on:click={Search}
-				>Search</button
-			>
-		</div>
-	</div>
+		</svelte:fragment>
+		<svelte:fragment slot="footer">
+			<div class="flex items-center justify-between px-4 pb-4">
+				<button class="variant-filled-warning btn" on:click={reset}>
+					Reset
+				</button>
+				<button class="variant-filled-primary btn" on:click={Search}>
+					Search
+				</button>
+			</div>
+		</svelte:fragment>
+	</ModalTemplate>
 {/if}

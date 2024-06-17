@@ -32,7 +32,7 @@
 		placement="bottom"
 		tip="Refresh Manga"
 		tipclass="z-20"
-		name="mdi:refresh"
+		name="mdi:autorenew"
 		hover={loading ? '' : 'hover:variant-glass-surface'}
 		class="text-surface-700 dark:text-surface-300 {loading && 'animate-spin'}"
 		on:click={refreshManga}
@@ -54,7 +54,8 @@
 						props: {
 							manga: manga
 						}
-					}
+					},
+					backdropClasses: '!p-0'
 				})}
 		/>
 	{/if}

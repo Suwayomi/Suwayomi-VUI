@@ -195,4 +195,4 @@ export const paths = {
 type tmp = keyof typeof paths;
 export type PathLayout = (typeof paths)[tmp];
 export type Paths = (typeof paths)[tmp][keyof PathLayout];
-export type Tpath = (typeof paths)[tmp][keyof PathLayout][keyof Paths];
+export type TPath = (typeof paths)[tmp][keyof PathLayout][keyof Paths];

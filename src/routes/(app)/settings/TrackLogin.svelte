@@ -11,6 +11,7 @@
 	import { getModalStore } from '@skeletonlabs/skeleton';
 	import { getContextClient } from '@urql/svelte';
 	import type { ResultOf } from '$lib/gql/graphql';
+	import ModalTemplate from '$lib/components/ModalTemplate.svelte';
 
 	const client = getContextClient();
 	const modalStore = getModalStore();
@@ -41,10 +42,7 @@
 </script>
 
 {#if $modalStore[0]}
-	<div class="card w-modal space-y-4 rounded-lg p-0 py-4 shadow-xl">
-		<span class="h3 block border-b border-surface-700 pl-4 font-bold">
-			{tracker.name} Login
-		</span>
+	<ModalTemplate title="Login to {tracker.name}">
 		{#if tracker.isLoggedIn}
 			<button
 				class="block w-full p-2 text-center text-xl font-semibold hover:variant-ghost-surface"
@@ -81,5 +79,5 @@
 				</button>
 			</div>
 		{/if}
-	</div>
+	</ModalTemplate>
 {/if}

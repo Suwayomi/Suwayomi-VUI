@@ -21,6 +21,7 @@
 	on:click={() => {
 		modalStore.trigger({
 			type: 'component',
+			backdropClasses: '!p-0',
 			component: { ref: LangFilterModal, props: { langs, langFilter } }
 		});
 	}}

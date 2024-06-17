@@ -8,6 +8,7 @@
 <script lang="ts">
 	import { setSettings } from '$lib/util';
 	import { getModalStore } from '@skeletonlabs/skeleton';
+	import ModalTemplate from '$lib/components/ModalTemplate.svelte';
 
 	export let repos: string[];
 
@@ -16,12 +17,9 @@
 </script>
 
 {#if $modalStore[0]}
-	<div class="card w-modal max-h-screen space-y-4 rounded-lg p-0 shadow-xl">
-		<h1 class="h3 pl-4 pt-4">Extension Repos</h1>
-		<div class="border-y border-surface-700">
-			<div
-				class="grid max-h-96 grid-cols-1 gap-1 space-y-1 overflow-y-auto p-1"
-			>
+	<ModalTemplate title="Extension Repos">
+		<svelte:fragment>
+			<div class="space-y-2 py-4">
 				<div class="flex flex-nowrap items-center justify-between space-x-1">
 					<input
 						type="text"
@@ -57,7 +55,6 @@
 					{/each}
 				</div>
 			</div>
-		</div>
-		<div class="p-4" />
-	</div>
+		</svelte:fragment>
+	</ModalTemplate>
 {/if}

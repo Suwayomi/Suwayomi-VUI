@@ -169,16 +169,27 @@
 	function manuallyLibraryRunUpdate() {
 		if (!$update.data?.updateStatusChanged.isRunning) {
 			client.mutation(runUpdateLibraryManga, {}).toPromise();
-			return;
 		}
 		modalStore.trigger({
 			type: 'component',
+			backdropClasses: '!p-0',
 			component: {
 				ref: UpdateStatusInfoModal,
 				props: { update }
 			}
 		});
 	}
+	function globalUpdateInfo() {
+		modalStore.trigger({
+			type: 'component',
+			backdropClasses: '!p-0',
+			component: {
+				ref: UpdateStatusInfoModal,
+				props: { update }
+			}
+		});
+	}
+
 	let removingNoCategoriesManga = false;
 
 	async function removeCategoryFromMangaNotInLibrary() {
@@ -212,7 +223,7 @@
 	<div class="[&>*]:px-4">
 		<!-- remove category from Manga Not In Library -->
 		<button
-			class="flex h-16 w-full cursor-pointer justify-between text-left hover:variant-glass-surface"
+			class="flex h-16 w-full cursor-pointer items-center justify-between text-left hover:variant-glass-surface"
 			on:click={removeCategoryFromMangaNotInLibrary}
 		>
 			<div>
@@ -223,7 +234,7 @@
 			</div>
 			{#if removingNoCategoriesManga}
 				<IconWrapper
-					name="mdi:refresh"
+					name="mdi:autorenew"
 					class="aspect-square h-full w-auto animate-spin"
 				/>
 			{/if}
@@ -351,6 +362,7 @@
 			on:click={() => {
 				modalStore.trigger({
 					type: 'component',
+					backdropClasses: '!p-0',
 					component: {
 						ref: ExtensionReposModal,
 						props: { repos: extensionRepos }
@@ -407,18 +419,31 @@
 		/>
 		<!-- manually run global update -->
 		<button
-			class="flex h-16 w-full cursor-pointer items-center text-left hover:variant-glass-surface"
+			class="flex h-16 w-full items-center justify-between text-left
+			{$update.data?.updateStatusChanged.isRunning
+				? ''
+				: 'cursor-pointer hover:variant-glass-surface'}"
 			on:click={manuallyLibraryRunUpdate}
 			title={!$update.data?.updateStatusChanged.isRunning
 				? 'click to run Global update now'
-				: 'click to see more info in the currently running update'}
+				: 'click below to see more info in the currently running update'}
+			disabled={$update.data?.updateStatusChanged.isRunning}
 		>
-			{#if !$update.data?.updateStatusChanged.isRunning}
-				Run Global Update now
-			{:else}
-				Running update info
-			{/if}
+			Run Global Update now
+			<IconWrapper
+				name="mdi:autorenew"
+				class="aspect-square h-5/6 w-auto
+				{$update.data?.updateStatusChanged.isRunning ? 'animate-spin' : ''}"
+			/>
 		</button>
+		<!-- Global update info -->
+		<button
+			class="flex h-16 w-full cursor-pointer items-center text-left hover:variant-glass-surface"
+			on:click={globalUpdateInfo}
+		>
+			Global update info
+		</button>
+
 		<!-- gqlDebugLogsEnabled -->
 		<Toggle
 			title="GQL Debug Logs"

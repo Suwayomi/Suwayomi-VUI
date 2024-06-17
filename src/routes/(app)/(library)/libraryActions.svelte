@@ -36,6 +36,7 @@
 	function handelFilter() {
 		modalStore.trigger({
 			type: 'component',
+			backdropClasses: '!p-0',
 			component: { ref: LibraryFilterModal }
 		});
 	}
@@ -74,6 +75,7 @@
 	function handelCategory() {
 		modalStore.trigger({
 			type: 'component',
+			backdropClasses: '!p-0',
 			component: {
 				ref: LibraryMassCategoryModal
 			}

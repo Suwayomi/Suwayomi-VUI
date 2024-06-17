@@ -221,6 +221,7 @@
 						on:click={() => {
 							modalStore.trigger({
 								type: 'component',
+								backdropClasses: '!p-0',
 								component: { ref: TrackingModal, props: { manga } }
 							});
 						}}
@@ -256,6 +257,7 @@
 				on:click={() => {
 					modalStore.trigger({
 						type: 'component',
+						backdropClasses: '!p-0',
 						component: { ref: NotesModal, props: { mangaMeta } }
 					});
 				}}

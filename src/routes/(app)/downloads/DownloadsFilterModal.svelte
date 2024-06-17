@@ -10,6 +10,7 @@
 	import Slide from '$lib/components/Slide.svelte';
 	import { getModalStore } from '@skeletonlabs/skeleton';
 	import { filter, FilterT, type Filter } from './downloadsStores';
+	import ModalTemplate from '$lib/components/ModalTemplate.svelte';
 
 	const modalStore = getModalStore();
 
@@ -24,7 +25,7 @@
 </script>
 
 {#if $modalStore[0]}
-	<div class="card w-modal space-y-4 rounded-lg p-4 shadow-xl">
+	<ModalTemplate title="Filter Downloads">
 		{#each FilterT as value}
 			<Slide
 				class="w-full outline-0"
@@ -34,5 +35,5 @@
 				checked={!$filter.has(value)}>{value}</Slide
 			>
 		{/each}
-	</div>
+	</ModalTemplate>
 {/if}

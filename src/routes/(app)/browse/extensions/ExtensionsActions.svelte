@@ -51,7 +51,7 @@
 		on:click={handelRefresh}
 		tipclass="z-20"
 		tip="refresh extensions list"
-		name="mdi:refresh"
+		name="mdi:autorenew"
 		hover={loading ? '' : 'hover:variant-glass-surface'}
 		class={loading && 'animate-spin'}
 	/>

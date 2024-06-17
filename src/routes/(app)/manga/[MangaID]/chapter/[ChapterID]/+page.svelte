@@ -19,7 +19,7 @@
 	import { onMount } from 'svelte';
 	import type { PageData } from './$types';
 	import { ViewNav, chapterTitle, mangaTitle } from './chapterStores';
-	import { paths, type PathLayout, type Paths, type Tpath } from './paths';
+	import { paths, type PathLayout, type Paths, type TPath } from './paths';
 	import {
 		getContextClient,
 		queryStore,
@@ -58,9 +58,9 @@
 		};
 	});
 
-	let topchapter: number;
+	let topChapter: number;
 	onMount(() => {
-		topchapter = data.ChapterID;
+		topChapter = data.ChapterID;
 	});
 
 	$: currentChapterID = data.ChapterID;
@@ -100,20 +100,20 @@
 	let preload:
 		| Promise<OperationResult<ResultOf<typeof fetchChapterPages>>>
 		| undefined = undefined;
-	let preloadingid: number | undefined = undefined;
+	let preLoadingId: number | undefined = undefined;
 	$: nextid = getChapterAfterID(currentChapterID, $manga)?.id;
 	$: if (
 		nextid !== undefined &&
 		$mangaMeta.preLoadNextChapter &&
-		nextid !== preloadingid
+		nextid !== preLoadingId
 	) {
-		preloadingid = nextid;
+		preLoadingId = nextid;
 		preload = client
 			.mutation(fetchChapterPages, { chapterId: nextid })
 			.toPromise();
 	}
-	$: updatepages(pages);
-	async function updatepages(
+	$: updatePages(pages);
+	async function updatePages(
 		pages: Promise<OperationResult<ResultOf<typeof fetchChapterPages>>>
 	) {
 		chapterLoading = true;
@@ -203,19 +203,19 @@
 			keyEvent.preventDefault();
 			keyEvent.stopPropagation();
 			if (keyEvent.shiftKey) {
-				gobackChapter();
+				goBackChapter();
 				scrollBy(-0.8);
-			} else doscroll();
+			} else doScroll();
 			return;
 		}
 		if (keyEvent.code === 'ArrowRight') {
 			keyEvent.preventDefault();
 			keyEvent.stopPropagation();
-			doscroll();
+			doScroll();
 			return;
 		}
 		if (keyEvent.code === 'ArrowLeft') {
-			gobackChapter();
+			goBackChapter();
 			keyEvent.preventDefault();
 			keyEvent.stopPropagation();
 			scrollBy(-0.8);
@@ -229,7 +229,7 @@
 			return;
 		}
 		if (keyEvent.code === 'ArrowUp') {
-			gobackChapter();
+			goBackChapter();
 			keyEvent.preventDefault();
 			keyEvent.stopPropagation();
 			scrollBy(-0.4);
@@ -246,18 +246,18 @@
 		}
 	}
 
-	let gobackChapterLoading = false;
+	let goBackChapterLoading = false;
 
-	async function gobackChapter() {
-		if (gobackChapterLoading) return;
-		gobackChapterLoading = true;
+	async function goBackChapter() {
+		if (goBackChapterLoading) return;
+		goBackChapterLoading = true;
 		if (!pageElement) {
 			pageElement = document.querySelector('#page') as HTMLDivElement;
 		}
 		if (pageElement.scrollTop === 0) {
-			const tmp = getChapterBeforeID(topchapter);
+			const tmp = getChapterBeforeID(topChapter);
 			if (tmp) {
-				const tttmp = client
+				const TTTmp = client
 					.mutation('fetchChapterPages', {
 						chapterId: tmp.id
 					})
@@ -268,27 +268,27 @@
 				};
 				await ErrorHelp(
 					`failed to load chapter ${obj.chapterID}`,
-					tttmp,
+					TTTmp,
 					(e) => {
 						if (!e.data) return;
 						obj.pages = e.data.fetchChapterPages.pages;
 						all = [obj, ...all];
 					}
 				);
-				const topimg = document.querySelector(`#c1p0`);
-				if (topimg)
+				const topImg = document.querySelector(`#c1p0`);
+				if (topImg)
 					pageElement?.scrollTo({
-						top: pageElement.scrollTop + topimg.getBoundingClientRect().y + 1,
+						top: pageElement.scrollTop + topImg.getBoundingClientRect().y + 1,
 						behavior: 'instant'
 					});
-				topchapter = tmp.id;
+				topChapter = tmp.id;
 			} else {
 				toastStore.trigger({
 					message: "You can't go back, you are already at the first chapter"
 				});
 			}
 		}
-		gobackChapterLoading = false;
+		goBackChapterLoading = false;
 	}
 
 	function handleClick(e: MouseEvent) {
@@ -296,7 +296,7 @@
 			pageElement = document.querySelector('#page') as HTMLDivElement;
 		}
 		if (pointInPoly([e.x, e.y], polyToPOLLY(path.forward))) {
-			doscroll();
+			doScroll();
 		} else if (pointInPoly([e.x, e.y], polyToPOLLY(path.back))) {
 			scrollBy(-0.8);
 		} else if (path.menu && pointInPoly([e.x, e.y], polyToPOLLY(path.menu))) {
@@ -342,7 +342,7 @@
 	}
 
 	function polyToPOLLY(
-		polly: Tpath | undefined
+		polly: TPath | undefined
 	): [number, number][] | undefined {
 		if (polly === undefined) {
 			return undefined;
@@ -355,12 +355,17 @@
 		});
 	}
 
-	function doscroll() {
-		if (!lowestIntersetc || !pageElement) {
+	function doScroll() {
+		if (
+			!lowestIntersect ||
+			!pageElement ||
+			lowestIntersect.getBoundingClientRect().y + 1 === 0
+		) {
 			scrollBy(0.8);
 			return;
 		}
-		scrollBy(0, lowestIntersetc.getBoundingClientRect().y + 1);
+
+		scrollBy(0, lowestIntersect.getBoundingClientRect().y + 1);
 	}
 
 	function scrollBy(decimal: number, addition = 0) {
@@ -430,7 +435,7 @@
 		});
 	}
 
-	$: lowestIntersetc = document.querySelector(
+	$: lowestIntersect = document.querySelector(
 		visiblePages.reduce(
 			(a, c) => {
 				if (c.chapterIndex >= a.chapterIndex && c.pageIndex > a.pageIndex) {
@@ -449,20 +454,20 @@
 	$: $manga.data?.manga,
 		AppBarData(`${$manga.data?.manga?.title} ${$chapterTitle}` || 'Manga');
 	type tmp = (typeof path)[keyof typeof path];
-	type ttmp = keyof typeof path;
+	type TTmp = keyof typeof path;
 
-	$: currpath = Object.fromEntries(
-		(Object.entries(path) as [ttmp, tmp][]).map((dat): [ttmp, string] => {
+	$: currPath = Object.fromEntries(
+		(Object.entries(path) as [TTmp, tmp][]).map((dat): [TTmp, string] => {
 			if (path === undefined) {
-				return [dat[0], ''] as [ttmp, string];
+				return [dat[0], ''] as [TTmp, string];
 			}
 			return [
 				dat[0],
 				`clip-path: polygon(${dat[1]
 					.map((point) => {
 						return point
-							.map((persent) => {
-								return persent === 0 ? persent.toString() : `${persent}%`;
+							.map((percent) => {
+								return percent === 0 ? percent.toString() : `${percent}%`;
 							})
 							.join(' ');
 					})
@@ -471,7 +476,7 @@
       left: 0;
       right: 0;
 			`
-			] as [ttmp, string];
+			] as [TTmp, string];
 		})
 	);
 
@@ -499,10 +504,10 @@
 >
 	{#if $ViewNav}
 		<div class="pointer-events-none">
-			<div class="fixed z-10 bg-blue-500/50" style={currpath.forward} />
-			<div class="fixed z-10 bg-red-500/50" style={currpath.back} />
-			{#if currpath.menu}
-				<div class="fixed z-10 bg-green-500/50" style={currpath.menu} />
+			<div class="fixed z-10 bg-blue-500/50" style={currPath.forward} />
+			<div class="fixed z-10 bg-red-500/50" style={currPath.back} />
+			{#if currPath.menu}
+				<div class="fixed z-10 bg-green-500/50" style={currPath.menu} />
 			{/if}
 		</div>
 	{/if}
@@ -523,7 +528,7 @@
 				{#if ($mangaMeta.ReaderMode === Mode.RTL || $mangaMeta.ReaderMode === Mode.LTR) && $mangaMeta.Offset}
 					<div />
 				{/if}
-				{#each chapter.pages as page, pageindex (page)}
+				{#each chapter.pages as page, pageIndex (page)}
 					<div
 						class="h-auto w-auto
 							{$mangaMeta.Margins && $mangaMeta.ReaderMode === Mode.Vertical && 'mb-4'}
@@ -546,9 +551,9 @@
 							on:intersect={(e) => {
 								PageIntersect(
 									e,
-									`#c${index}p${pageindex}`,
+									`#c${index}p${pageIndex}`,
 									index,
-									pageindex,
+									pageIndex,
 									chapter.pages.length,
 									chapter.chapterID
 								);
@@ -558,7 +563,7 @@
 							top={$mangaMeta.Margins ? 16 : 0}
 						/>
 						<div
-							id="c{index}p{pageindex}"
+							id="c{index}p{pageIndex}"
 							class="{$mangaMeta.Scale &&
 							$mangaMeta.ReaderMode !== Mode.Vertical
 								? 'h-full max-h-screen'
@@ -582,7 +587,7 @@
 									{$mangaMeta.Scale && $mangaMeta.ReaderMode === Mode.single ? 'max-w-full' : ''}"
 								rounded=" rounded-none"
 								LoadingHeight="h-screen"
-								Loadingwidth="w-screen"
+								LoadingWidth="w-screen"
 							/>
 						</div>
 					</div>
@@ -634,9 +639,9 @@
 	{/if}
 
 	{#if preload}
-		{#await preload then preloa}
-			{#if preloa.data}
-				{#each preloa.data.fetchChapterPages.pages as value}
+		{#await preload then preloaded}
+			{#if preloaded.data}
+				{#each preloaded.data.fetchChapterPages.pages as value}
 					<img src={value} alt="img" class="h-0 w-0" />
 				{/each}
 			{/if}

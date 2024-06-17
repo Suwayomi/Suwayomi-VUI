@@ -18,6 +18,7 @@
 	import { getModalStore } from '@skeletonlabs/skeleton';
 	import { getContextClient, queryStore } from '@urql/svelte';
 	import { type ResultOf } from '$lib/gql/graphql';
+	import ModalTemplate from '$lib/components/ModalTemplate.svelte';
 
 	export let manga: ResultOf<typeof getManga>['manga'] | undefined;
 	const client = getContextClient();
@@ -66,29 +67,28 @@
 </script>
 
 {#if $modalStore[0] && categories && MangaCategories}
-	<div
-		class="card w-modal max-h-screen space-y-4 rounded-lg p-0 py-4 shadow-xl"
-	>
-		<h1 class="h3 pl-4">Set categories</h1>
-		<div class="border-y border-surface-700 pl-4">
-			<div class="grid max-h-96 grid-cols-1 gap-1 overflow-y-auto">
-				{#each categories as Category}
-					<TriStateSlide
-						triState={false}
-						checked={MangaCategories.includes(Category.id)}
-						on:changeE={(e) => {
-							handelClicked(Category, e.detail);
-						}}
-						class="p-1 pl-2 outline-0 hover:variant-glass-surface"
-						labelClass="w-full"
-					>
-						{Category.name}
-					</TriStateSlide>
-				{/each}
+	<ModalTemplate title="Set categories">
+		<svelte:fragment>
+			{#each categories as Category}
+				<TriStateSlide
+					triState={false}
+					checked={MangaCategories.includes(Category.id)}
+					on:changeE={(e) => {
+						handelClicked(Category, e.detail);
+					}}
+					class="p-1 pl-2 outline-0 hover:variant-glass-surface"
+					labelClass="w-full"
+				>
+					{Category.name}
+				</TriStateSlide>
+			{/each}
+		</svelte:fragment>
+		<svelte:fragment slot="footer">
+			<div class="flex items-center justify-end px-4 pb-4">
+				<button on:click={handelSubmit} class="variant-filled btn">
+					Submit
+				</button>
 			</div>
-		</div>
-		<button on:click={handelSubmit} class="variant-filled btn float-right mr-4"
-			>Submit</button
-		>
-	</div>
+		</svelte:fragment>
+	</ModalTemplate>
 {/if}
