@@ -8,7 +8,7 @@
 <script lang="ts">
 	import type { TrackerTypeFragment } from '$lib/gql/Fragments';
 	import { loginTrackerCredentials, logoutTracker } from '$lib/gql/Mutations';
-	import { Modal, getModalStore } from '@skeletonlabs/skeleton';
+	import { getModalStore } from '@skeletonlabs/skeleton';
 	import { getContextClient } from '@urql/svelte';
 	import type { ResultOf } from '$lib/gql/graphql';
 	import ModalTemplate from '$lib/components/ModalTemplate.svelte';
