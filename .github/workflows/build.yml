@@ -184,7 +184,7 @@ jobs:
       - name: Load and push image
         run: |
           for f in *.tar; do
-              cat $f | docker load
+              cat $f | docker load -i
           done
           docker push -a ghcr.io/${{ needs.RepoName.outputs.value }}
           docker push -a ${{ needs.RepoName.outputs.value }}
