@@ -137,14 +137,14 @@ jobs:
         uses: docker/setup-qemu-action@v3
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
-      - name: Build and push Docker image
+      - name: Build  Docker image
         uses: docker/build-push-action@v5
         with:
           platforms: linux/amd64, linux/arm/v6, linux/arm/v7, linux/arm64, linux/386, linux/ppc64le, linux/s390x
           context: .
           build-args: version=${{ needs.GenTag.outputs.value }}
           push: false
-          outputs: type=docker,dest=/tmp/${{ matrix.theme }}.tar
+          outputs: type=oci,dest=/tmp/${{ matrix.theme }}.tar
           tags: |
             ghcr.io/${{ needs.RepoName.outputs.value }}:latest${{ matrix.theme }},
             ghcr.io/${{ needs.RepoName.outputs.value }}:${{ needs.GenTag.outputs.value }}${{ matrix.theme }},
