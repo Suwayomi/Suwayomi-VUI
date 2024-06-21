@@ -120,11 +120,6 @@ jobs:
         with:
           sparse-checkout: |
             Dockerfile
-      - name: get Build files
-        uses: actions/download-artifact@v4
-        with:
-          name: build-files-${{ needs.GenTag.outputs.value }}-${{ matrix.theme }}
-          path: ./
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v3
       - name: Set up Docker Buildx
