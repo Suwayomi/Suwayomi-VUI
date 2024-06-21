@@ -179,6 +179,8 @@ jobs:
           registry: ghcr.io
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
+      - name: ls data
+        run: ls
       - name: Load and push image
         run: |
           for f in *.tar; do
