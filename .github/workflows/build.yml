@@ -22,6 +22,18 @@ defaults:
   run:
     shell: bash
 jobs:
+  RepoName:
+    runs-on: ubuntu-latest
+    outputs:
+      value: ${{ steps.RepoName.outputs.lowercase }}
+    steps:
+      - name: Get Repo Name
+        id: RepoName
+        uses: ASzc/change-string-case-action@v6
+        with:
+          string: ${{ github.repository_owner }}/${{ github.event.repository.name }}
+      - name: Set Repo Name
+        run: echo "REPO_NAME=${{ steps.RepoName.outputs.lowercase }}" >> $GITHUB_OUTPUT
   ComputeThemes:
     runs-on: ubuntu-latest
     outputs:
@@ -100,6 +112,7 @@ jobs:
       - build
       - GenTag
       - ComputeThemes
+      - RepoName
     runs-on: ubuntu-latest
     steps:
       - name: get Build files
@@ -133,10 +146,10 @@ jobs:
           push: false
           outputs: type=docker,dest=/tmp/${{ matrix.theme }}.tar
           tags: |
-            ghcr.io/${{ github.repository_owner }}/${{ github.event.repository.name }}:latest${{ matrix.theme }},
-            ghcr.io/${{ github.repository_owner }}/${{ github.event.repository.name }}:${{ needs.GenTag.outputs.value }}${{ matrix.theme }},
-            ${{ github.repository_owner }}/${{ github.event.repository.name }}:latest${{ matrix.theme }},
-            ${{ github.repository_owner }}/${{ github.event.repository.name }}:${{ needs.GenTag.outputs.value }}${{ matrix.theme }},
+            ghcr.io/${{ needs.RepoName.outputs.value }}:latest${{ matrix.theme }},
+            ghcr.io/${{ needs.RepoName.outputs.value }}:${{ needs.GenTag.outputs.value }}${{ matrix.theme }},
+            ${{ needs.RepoName.outputs.value }}:latest${{ matrix.theme }},
+            ${{ needs.RepoName.outputs.value }}:${{ needs.GenTag.outputs.value }}${{ matrix.theme }},
       - uses: actions/upload-artifact@v4
         with:
           name: build-files-${{ needs.GenTag.outputs.value }}-${{ matrix.theme }}
@@ -147,6 +160,7 @@ jobs:
       - build
       - GenTag
       - dockerBuilds
+      - RepoName
     runs-on: ubuntu-latest
     steps:
       - name: get Build files
@@ -166,10 +180,10 @@ jobs:
           registry: ghcr.io
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
-      - name: Load ad push image
+      - name: Load and push image
         run: |
           for f in *.tar; do
               cat $f | docker load
           done
-          docker push -a ghcr.io/${{ github.repository_owner }}/${{ github.event.repository.name }}
-          docker push -a ${{ github.repository_owner }}/${{ github.event.repository.name }}
+          docker push -a ghcr.io/${{ needs.RepoName.outputs.value }}
+          docker push -a ${{ needs.RepoName.outputs.value }}
