@@ -144,21 +144,21 @@ jobs:
           context: .
           build-args: version=${{ needs.GenTag.outputs.value }}
           push: false
-          outputs: type=oci,oci-mediatypes=true,dest=/tmp/${{ matrix.theme }}.tar
+          outputs: type=oci,oci-mediatypes=true,dest=/outs/${{ matrix.theme }}.tar
           tags: |
             ghcr.io/${{ needs.RepoName.outputs.value }}:latest${{ matrix.theme }},
             ghcr.io/${{ needs.RepoName.outputs.value }}:${{ needs.GenTag.outputs.value }}${{ matrix.theme }},
             ${{ needs.RepoName.outputs.value }}:latest${{ matrix.theme }},
             ${{ needs.RepoName.outputs.value }}:${{ needs.GenTag.outputs.value }}${{ matrix.theme }},
-      - name: ls tmp
+      - name: ls outs
         run: |
-          cd /tmp
+          cd /outs
           ls
       - uses: actions/upload-artifact@v4
         with:
           name: build-files-${{ matrix.theme }}
           path: |
-            /tmp/${{ matrix.theme }}.tar
+            /outs/${{ matrix.theme }}.tar
   docker:
     needs:
       - GenTag
@@ -187,6 +187,8 @@ jobs:
         run: ls
       - name: Load and push image
         run: |
-          ls -1 *.tar | xargs --no-run-if-empty -L 1 docker load -i
+          for i in *.tar; do
+            docker load -i $i
+          done
           docker push -a ghcr.io/${{ needs.RepoName.outputs.value }}
           docker push -a ${{ needs.RepoName.outputs.value }}
