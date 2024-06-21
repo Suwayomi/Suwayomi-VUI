@@ -10,7 +10,8 @@
 name: Build
 
 env:
-  THEMES: '["wintry", "","skeleton", "crimson", "gold-nouveau", "hamlindigo", "modern", "rocket", "sahara", "seafoam", "vintage"]'
+  # THEMES: '["wintry", "","skeleton", "crimson", "gold-nouveau", "hamlindigo", "modern", "rocket", "sahara", "seafoam", "vintage"]'
+  THEMES: '["wintry"]'
 
 on:
   workflow_dispatch:
