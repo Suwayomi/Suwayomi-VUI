@@ -87,7 +87,7 @@ jobs:
   dockerBuilds:
     strategy:
       matrix:
-        theme: ${{ fromJSON( env.THEMES ) }}
+        theme: ${{ fromJSON( vars.THEMES ) }}
     needs:
       - build
       - GenTag
