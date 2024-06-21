@@ -56,108 +56,108 @@ jobs:
           genTag="r$(git rev-list HEAD --count)"
           echo "$genTag"
           echo "value=$genTag" >> $GITHUB_OUTPUT
-        # build:
-        #   needs: GenTag
-        #   runs-on: ubuntu-latest
-        #   steps:
-        #     - name: Check out Git repository
-        #       uses: actions/checkout@v4
-        #     - name: Use bun 1.1.0
-        #       uses: oven-sh/setup-bun@v1
-        #       with:
-        #         bun-version: latest
-        #     - name: Install bun dependencies
-        #       run: bun i
-        #     - run: bun run build
-        #     - run: echo "${{ needs.GenTag.outputs.value }}" > ./build/revision
-        #     - run: sed -i "s@BUILD_VERSION_PLACEHOLDER@${{ needs.GenTag.outputs.value }}@" ./build/index.html
-        #     - run: bun run build-md5
-        #     - uses: actions/upload-artifact@v4
-        #       with:
-        #         name: build-files
-        #         path: |
-        #           ./build/
-        #           ./buildZip/md5sum
-        #         retention-days: 1
-        # web:
-        #   needs:
-        #     - build
-        #     - GenTag
-        #   runs-on: ubuntu-latest
-        #   steps:
-        #     - name: get Build files
-        #       uses: actions/download-artifact@v4
-        #       with:
-        #         name: build-files
-        #         path: ./
-        #     - name: Generate zip
-        #       working-directory: ./build
-        #       run: zip -r  Suwayomi-VUI-Web-${{ needs.GenTag.outputs.value }}.zip ./*
-        #     - name: Release
-        #       uses: softprops/action-gh-release@v1
-        #       with:
-        #         files: |
-        #           ./build/Suwayomi-VUI-Web-${{ needs.GenTag.outputs.value }}.zip
-        #           ./buildZip/md5sum
-        #         name: ${{ needs.GenTag.outputs.value }}
-        #         tag_name: ${{ needs.GenTag.outputs.value }}
-        #         body: ''
-        #         draft: false
-        #         prerelease: false
-        # dockerBuilds:
-        #   strategy:
-        #     matrix:
-        #       theme: ${{ fromJSON(needs.ComputeThemes.outputs.value) }}
-        #   needs:
-        #     - build
-        #     - GenTag
-        #     - ComputeThemes
-        #     - RepoName
-        #   runs-on: ubuntu-latest
-        #   steps:
-        #     - name: Check out Dockerfile
-        #       uses: actions/checkout@v4
-        #       with:
-        #         sparse-checkout: Dockerfile
-        #     - name: get Build files
-        #       uses: actions/download-artifact@v4
-        #       with:
-        #         name: build-files
-        #         path: ./
-        #     - name: Replace theme in the HTML files to generate differant theme builds
-        #       if: ${{ matrix.theme != '' }}
-        #       uses: richardrigutins/replace-in-files@v2
-        #       with:
-        #         files: '**/*.html'
-        #         search-text: data-theme='skeleton'
-        #         replacement-text: data-theme='${{ matrix.theme }}'
-        #         encoding: utf8
-        #     - name: Set up QEMU
-        #       uses: docker/setup-qemu-action@v3
-        #     - name: Set up Docker Buildx
-        #       uses: docker/setup-buildx-action@v3
-        #     - name: Build Docker image
-        #       uses: docker/build-push-action@v5
-        #       with:
-        #         platforms: linux/amd64, linux/arm/v6, linux/arm/v7, linux/arm64, linux/386, linux/ppc64le, linux/s390x
-        #         context: .
-        #         build-args: version=${{ needs.GenTag.outputs.value }}
-        #         push: false
-        #         outputs: type=oci,dest=/tmp/${{ matrix.theme }}.tar
-        #         tags: |
-        #           ghcr.io/${{ needs.RepoName.outputs.value }}:latest${{ matrix.theme }},
-        #           ghcr.io/${{ needs.RepoName.outputs.value }}:${{ needs.GenTag.outputs.value }}${{ matrix.theme }},
-        #           ${{ needs.RepoName.outputs.value }}:latest${{ matrix.theme }},
-        #           ${{ needs.RepoName.outputs.value }}:${{ needs.GenTag.outputs.value }}${{ matrix.theme }},
-        #     - uses: actions/upload-artifact@v4
-        # with:
-        #   name: build-files-${{ matrix.theme }}
-        #   path: |
-        #     /tmp/${{ matrix.theme }}.tar
+  build:
+    needs: GenTag
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out Git repository
+        uses: actions/checkout@v4
+      - name: Use bun 1.1.0
+        uses: oven-sh/setup-bun@v1
+        with:
+          bun-version: latest
+      - name: Install bun dependencies
+        run: bun i
+      - run: bun run build
+      - run: echo "${{ needs.GenTag.outputs.value }}" > ./build/revision
+      - run: sed -i "s@BUILD_VERSION_PLACEHOLDER@${{ needs.GenTag.outputs.value }}@" ./build/index.html
+      - run: bun run build-md5
+      - uses: actions/upload-artifact@v4
+        with:
+          name: build-files
+          path: |
+            ./build/
+            ./buildZip/md5sum
+          retention-days: 1
+  web:
+    needs:
+      - build
+      - GenTag
+    runs-on: ubuntu-latest
+    steps:
+      - name: get Build files
+        uses: actions/download-artifact@v4
+        with:
+          name: build-files
+          path: ./
+      - name: Generate zip
+        working-directory: ./build
+        run: zip -r  Suwayomi-VUI-Web-${{ needs.GenTag.outputs.value }}.zip ./*
+      - name: Release
+        uses: softprops/action-gh-release@v1
+        with:
+          files: |
+            ./build/Suwayomi-VUI-Web-${{ needs.GenTag.outputs.value }}.zip
+            ./buildZip/md5sum
+          name: ${{ needs.GenTag.outputs.value }}
+          tag_name: ${{ needs.GenTag.outputs.value }}
+          body: ''
+          draft: false
+          prerelease: false
+  dockerBuilds:
+    strategy:
+      matrix:
+        theme: ${{ fromJSON(needs.ComputeThemes.outputs.value) }}
+    needs:
+      - build
+      - GenTag
+      - ComputeThemes
+      - RepoName
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out Dockerfile
+        uses: actions/checkout@v4
+        with:
+          sparse-checkout: Dockerfile
+      - name: get Build files
+        uses: actions/download-artifact@v4
+        with:
+          name: build-files
+          path: ./
+      - name: Replace theme in the HTML files to generate differant theme builds
+        if: ${{ matrix.theme != '' }}
+        uses: richardrigutins/replace-in-files@v2
+        with:
+          files: '**/*.html'
+          search-text: data-theme='skeleton'
+          replacement-text: data-theme='${{ matrix.theme }}'
+          encoding: utf8
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+      - name: Build Docker image
+        uses: docker/build-push-action@v5
+        with:
+          platforms: linux/amd64, linux/arm/v6, linux/arm/v7, linux/arm64, linux/386, linux/ppc64le, linux/s390x
+          context: .
+          build-args: version=${{ needs.GenTag.outputs.value }}
+          push: false
+          outputs: type=oci,dest=/tmp/${{ matrix.theme }}.tar
+          tags: |
+            ghcr.io/${{ needs.RepoName.outputs.value }}:latest${{ matrix.theme }},
+            ghcr.io/${{ needs.RepoName.outputs.value }}:${{ needs.GenTag.outputs.value }}${{ matrix.theme }},
+            ${{ needs.RepoName.outputs.value }}:latest${{ matrix.theme }},
+            ${{ needs.RepoName.outputs.value }}:${{ needs.GenTag.outputs.value }}${{ matrix.theme }},
+      - uses: actions/upload-artifact@v4
+        with:
+          name: build-files-${{ matrix.theme }}
+          path: |
+            /tmp/${{ matrix.theme }}.tar
   docker:
     needs:
       - GenTag
-      # - dockerBuilds
+      - dockerBuilds
       - RepoName
     runs-on: ubuntu-latest
     steps:
@@ -178,7 +178,6 @@ jobs:
           registry: ghcr.io
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
-      - run: touch test.tar
       - name: ls data
         run: ls
       - name: Load and push image
