@@ -50,10 +50,6 @@ import { Meta } from '$lib/simpleStores';
 import { introspection } from '../../graphql-env';
 // import type { downloadChanged } from './Subscriptions';
 
-const wsClient = createWSClient({
-	url: window.location.origin.replace(/^http/, 'ws') + '/api/graphql'
-});
-
 export const client = new Client({
 	url: '/api/graphql',
 	exchanges: [
@@ -245,8 +241,17 @@ export const client = new Client({
 				const input = { ...request, query: request.query || '' };
 				return {
 					subscribe(sink) {
-						const unsubscribe = wsClient.subscribe(input, sink);
-						return { unsubscribe };
+						if (typeof window !== 'undefined') {
+							const wsClient = createWSClient({
+								url:
+									window.location.origin.replace(/^http/, 'ws') + '/api/graphql'
+							});
+							const unsubscribe = wsClient.subscribe(input, sink);
+							return {
+								unsubscribe
+							};
+						}
+						return { unsubscribe: () => {} };
 					}
 				};
 			}

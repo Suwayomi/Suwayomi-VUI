@@ -16,7 +16,7 @@
 </script>
 
 {#if $about.fetching}
-	{#if window.version}
+	{#if typeof window !== 'undefined' && window.version}
 		<div class="py-2 pl-4">
 			<div class="text-xl">client version</div>
 			<div class="opacity-80">
@@ -43,7 +43,7 @@
 				{$about.data.aboutServer.buildType}
 			</div>
 		</div>
-		{#if window.version}
+		{#if typeof window !== 'undefined' && window.version}
 			<div class="py-2 pl-4">
 				<div class="text-xl">client version</div>
 				<div class="opacity-80">

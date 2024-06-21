@@ -39,7 +39,11 @@
 	storePopup.set({ computePosition, autoUpdate, flip, shift, offset, arrow });
 	initializeStores();
 
-	$: $Meta, themeFunc();
+	onMount(() => {
+		Meta.subscribe(() => {
+			themeFunc();
+		});
+	});
 	function themeFunc() {
 		document.body.dataset.theme = $Meta.theme;
 		if ($Meta.dark && !document.documentElement.classList.contains('dark')) {
