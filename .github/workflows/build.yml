@@ -10,7 +10,7 @@
 name: Build
 
 env:
-  THEMES: '["wintry", "","skeleton", "crimson", "gold-nouveau", "hamlindigo", "modern", "rocket", "sahara", "seafoam", "vintage"]'
+  THEMES: '["Default", "skeleton", "wintry", "crimson", "gold-nouveau", "hamlindigo", "modern", "rocket", "sahara", "seafoam", "vintage"]'
   # THEMES: '["wintry"]'
 
 on:
@@ -161,6 +161,15 @@ jobs:
         with:
           step: wait
           id: ${{ matrix.theme }}
+      - name: theme
+        id: theme
+        run: |
+          if [[ ${{ matrix.theme }} != 'Default' ]]; then
+            echo "value=" >> $GITHUB_OUTPUT
+          else
+            echo "value=${{ matrix.theme }}" >> $GITHUB_OUTPUT
+          fi
+
       - name: Build Docker image
         uses: docker/build-push-action@v5
         with:
@@ -169,10 +178,10 @@ jobs:
           build-args: version=${{ needs.GenTag.outputs.value }}
           push: true
           tags: |
-            ghcr.io/${{ needs.RepoName.outputs.value }}:latest${{ matrix.theme }},
-            ghcr.io/${{ needs.RepoName.outputs.value }}:${{ needs.GenTag.outputs.value }}${{ matrix.theme }},
-            ${{ needs.RepoName.outputs.value }}:latest${{ matrix.theme }},
-            ${{ needs.RepoName.outputs.value }}:${{ needs.GenTag.outputs.value }}${{ matrix.theme }},
+            ghcr.io/${{ needs.RepoName.outputs.value }}:latest${{ steps.theme.outputs.value }},
+            ghcr.io/${{ needs.RepoName.outputs.value }}:${{ needs.GenTag.outputs.value }}${{ steps.theme.outputs.value }},
+            ${{ needs.RepoName.outputs.value }}:latest${{ steps.theme.outputs.value }},
+            ${{ needs.RepoName.outputs.value }}:${{ needs.GenTag.outputs.value }}${{ steps.theme.outputs.value }},
       - name: Continue matrix lock
         uses: rakles/matrix-lock@v1.0.0
         with:
