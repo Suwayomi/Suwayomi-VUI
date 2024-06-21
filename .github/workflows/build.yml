@@ -120,6 +120,8 @@ jobs:
         with:
           name: build-files-${{ needs.GenTag.outputs.value }}
           path: ./
+      - name: log ls
+        run: ls
       - name: Replace theme in the HTML files to generate differant theme builds
         if: ${{ matrix.theme != '' }}
         uses: richardrigutins/replace-in-files@v2
