@@ -174,7 +174,7 @@
 		{JSON.stringify($cats.error, null, 4)}
 	</div>
 {:else if $cats.data?.categories.nodes}
-	{#each $cats.data.categories.nodes.toSorted( (a, b) => (a.order > b.order ? 1 : -1) ) as cat}
+	{#each [...$cats.data.categories.nodes].sort( (a, b) => (a.order > b.order ? 1 : -1) ) as cat}
 		<button
 			on:click={(e) => edit(e, cat)}
 			class="flex h-16 w-full cursor-pointer items-center p-2 text-left hover:variant-glass-surface"
