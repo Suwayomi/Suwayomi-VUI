@@ -21,5 +21,4 @@ $1=="nameserver" && $2!~/^((25[0-5]|(2[0-4]|1[0-9]|[1-9]|)[0-9])\.?){4}$/{
 sed -i "s@resolverPLACEHOLDER@$TMP2@" /etc/nginx/conf.d/default.conf
 sed -i "s@PLACEHOLDER@$TMP@" /etc/nginx/conf.d/default.conf
 
-TMPTHEME=$(echo "$theme" | sed "skeleton")
-find . -name '*.html' -exec sed -i -e "s/data-theme='skeleton'/data-theme='$TMPTHEME'/g" {} \;
+find . -name '*.html' -exec sed -i -e "s/data-theme='skeleton'/data-theme='${theme:=skeleton}/g" {} \;
