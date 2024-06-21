@@ -144,7 +144,7 @@ jobs:
           context: .
           build-args: version=${{ needs.GenTag.outputs.value }}
           push: false
-          outputs: type=docker,oci-mediatypes=true,dest=/tmp/${{ matrix.theme }}.tar
+          outputs: type=image,oci-mediatypes=true,dest=/tmp/${{ matrix.theme }}.tar
           tags: |
             ghcr.io/${{ needs.RepoName.outputs.value }}:latest${{ matrix.theme }},
             ghcr.io/${{ needs.RepoName.outputs.value }}:${{ needs.GenTag.outputs.value }}${{ matrix.theme }},
