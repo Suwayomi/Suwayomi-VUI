@@ -183,8 +183,6 @@ jobs:
         run: ls
       - name: Load and push image
         run: |
-          for f in *.tar; do
-              cat $f | docker load -i
-          done
+          ls -1 *.tar | xargs --no-run-if-empty -L 1 docker load -i
           docker push -a ghcr.io/${{ needs.RepoName.outputs.value }}
           docker push -a ${{ needs.RepoName.outputs.value }}
