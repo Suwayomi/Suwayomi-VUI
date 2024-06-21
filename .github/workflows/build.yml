@@ -150,10 +150,10 @@ jobs:
         #           ${{ needs.RepoName.outputs.value }}:latest${{ matrix.theme }},
         #           ${{ needs.RepoName.outputs.value }}:${{ needs.GenTag.outputs.value }}${{ matrix.theme }},
         #     - uses: actions/upload-artifact@v4
-        with:
-          name: build-files-${{ matrix.theme }}
-          path: |
-            /tmp/${{ matrix.theme }}.tar
+        # with:
+        #   name: build-files-${{ matrix.theme }}
+        #   path: |
+        #     /tmp/${{ matrix.theme }}.tar
   docker:
     needs:
       - GenTag
