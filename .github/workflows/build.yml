@@ -186,9 +186,10 @@ jobs:
       - name: ls data
         run: ls
       - name: Load and push image
+        # for i in *.tar; do
+        #   docker load -i $i
+        # done
         run: |
-          for i in *.tar; do
-            docker load -i $i
-          done
+          docker load -i ./wintry.tar
           docker push -a ghcr.io/${{ needs.RepoName.outputs.value }}
           docker push -a ${{ needs.RepoName.outputs.value }}
