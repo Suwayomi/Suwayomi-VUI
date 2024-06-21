@@ -12,6 +12,8 @@ name: check
 on:
   pull_request:
     branches: ['main', 'Release']
+    paths-ignore:
+      - '**/README.md'
 
 jobs:
   run-check:
@@ -26,3 +28,15 @@ jobs:
         run: bun i
       - name: Run check
         run: bun run check
+  run-build-check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Use bun 1.0.10
+        uses: oven-sh/setup-bun@v1
+        with:
+          bun-version: latest
+      - name: Install bun dependencies
+        run: bun i
+      - name: Run build
+        run: bun run build
