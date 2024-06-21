@@ -22,6 +22,10 @@ defaults:
   run:
     shell: bash
 jobs:
+  ComputeThemes:
+    runs-on: ubuntu-latest
+    outputs:
+      value: ${{ env.THEMES }}
   GenTag:
     outputs:
       value: ${{steps.GenTagName.outputs.value}}
@@ -87,10 +91,11 @@ jobs:
   dockerBuilds:
     strategy:
       matrix:
-        theme: ${{ fromJSON( vars.THEMES ) }}
+        theme: ${{ fromJSON(needs.ComputeThemes.outputs.value) }}
     needs:
       - build
       - GenTag
+      - ComputeThemes
     runs-on: ubuntu-latest
     steps:
       - name: get Build files
