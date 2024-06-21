@@ -36,16 +36,16 @@
 		</AppBar>
 	</svelte:fragment>
 	<svelte:fragment slot="sidebarLeft">
-		<MediaQuery query="(min-width: {screens.md})" let:matches>
-			{#if matches}
+		<MediaQuery query="(max-width: {screens.md})" let:matches>
+			{#if !matches}
 				<MainAppRail />
 			{/if}
 		</MediaQuery>
 	</svelte:fragment>
 	<slot />
 	<svelte:fragment slot="footer">
-		<MediaQuery query="(min-width: {screens.md})" let:matches>
-			{#if !matches}
+		<MediaQuery query="(max-width: {screens.md})" let:matches>
+			{#if matches}
 				<MobileAppNavigation />
 			{/if}
 		</MediaQuery>
