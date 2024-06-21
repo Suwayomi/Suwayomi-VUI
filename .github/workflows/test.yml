@@ -1,0 +1,13 @@
+name: test
+
+env:
+  THEMES: '["wintry", "","skeleton", "crimson", "gold-nouveau", "hamlindigo", "modern", "rocket", "sahara", "seafoam", "vintage"]'
+
+on:
+  workflow_dispatch:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo '${{ vars.THEMES }}'
