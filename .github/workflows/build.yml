@@ -10,7 +10,7 @@
 name: Build
 
 env:
-  THEMES: '["Default", "skeleton", "wintry", "crimson", "gold-nouveau", "hamlindigo", "modern", "rocket", "sahara", "seafoam", "vintage"]'
+  THEMES: '["Default", "wintry", "crimson", "gold-nouveau", "hamlindigo", "modern", "rocket", "sahara", "seafoam", "vintage", "skeleton"]'
   # THEMES: '["wintry"]'
 
 on:
@@ -107,7 +107,7 @@ jobs:
           prerelease: false
   docker:
     strategy:
-      # max-parallel: 1
+      max-parallel: 1
       matrix:
         theme: ${{ fromJSON(needs.ComputeThemes.outputs.value) }}
     needs:
@@ -121,13 +121,6 @@ jobs:
         uses: actions/checkout@v4
         with:
           sparse-checkout: Dockerfile
-      - name: Initialize matrix lock
-        if: ${{ matrix.theme == fromJson(env.THEMES)[0] }}
-        uses: rakles/matrix-lock@v1.0.0
-        with:
-          step: init
-          order: ${{ join(fromJson(env.THEMES), ',') }}
-
       - name: get Build files
         uses: actions/download-artifact@v4
         with:
@@ -156,11 +149,6 @@ jobs:
           registry: ghcr.io
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
-      - name: Wait for matrix lock
-        uses: rakles/matrix-lock@v1.0.0
-        with:
-          step: wait
-          id: ${{ matrix.theme }}
       - name: theme
         id: theme
         run: |
@@ -169,7 +157,6 @@ jobs:
           else
             echo "value=${{ matrix.theme }}" >> $GITHUB_OUTPUT
           fi
-
       - name: Build Docker image
         uses: docker/build-push-action@v5
         with:
@@ -182,8 +169,3 @@ jobs:
             ghcr.io/${{ needs.RepoName.outputs.value }}:${{ needs.GenTag.outputs.value }}${{ steps.theme.outputs.value }},
             ${{ needs.RepoName.outputs.value }}:latest${{ steps.theme.outputs.value }},
             ${{ needs.RepoName.outputs.value }}:${{ needs.GenTag.outputs.value }}${{ steps.theme.outputs.value }},
-      - name: Continue matrix lock
-        uses: rakles/matrix-lock@v1.0.0
-        with:
-          step: continue
-          id: ${{ matrix.theme }}
