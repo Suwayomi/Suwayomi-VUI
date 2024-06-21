@@ -153,9 +153,9 @@ jobs:
         id: theme
         run: |
           if [[ ${{ matrix.theme }} != 'Default' ]]; then
-            echo "value=" >> $GITHUB_OUTPUT
-          else
             echo "value=${{ matrix.theme }}" >> $GITHUB_OUTPUT
+          else
+            echo "value=" >> $GITHUB_OUTPUT
           fi
       - name: Build Docker image
         uses: docker/build-push-action@v5
