@@ -10,8 +10,8 @@
 name: Build
 
 env:
-  # THEMES: '["wintry", "","skeleton", "crimson", "gold-nouveau", "hamlindigo", "modern", "rocket", "sahara", "seafoam", "vintage"]'
-  THEMES: '["wintry"]'
+  THEMES: '["wintry", "","skeleton", "crimson", "gold-nouveau", "hamlindigo", "modern", "rocket", "sahara", "seafoam", "vintage"]'
+  # THEMES: '["wintry"]'
 
 on:
   workflow_dispatch:
@@ -107,7 +107,7 @@ jobs:
           prerelease: false
   docker:
     strategy:
-      max-parallel: 1
+      # max-parallel: 1
       matrix:
         theme: ${{ fromJSON(needs.ComputeThemes.outputs.value) }}
     needs:
@@ -149,6 +149,18 @@ jobs:
           registry: ghcr.io
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
+      - name: Initialize matrix lock
+        if: ${{ matrix.theme != fromJson(env.THEMES)[0] }}
+        uses: rakles/matrix-lock@v1.0.0
+        with:
+          step: init
+          order: ${{ join(fromJson(env.THEMES), ',') }}
+
+      - name: Wait for matrix lock
+        uses: rakles/matrix-lock@v1.0.0
+        with:
+          step: wait
+          id: ${{ matrix.theme }}
       - name: Build Docker image
         uses: docker/build-push-action@v5
         with:
@@ -161,3 +173,8 @@ jobs:
             ghcr.io/${{ needs.RepoName.outputs.value }}:${{ needs.GenTag.outputs.value }}${{ matrix.theme }},
             ${{ needs.RepoName.outputs.value }}:latest${{ matrix.theme }},
             ${{ needs.RepoName.outputs.value }}:${{ needs.GenTag.outputs.value }}${{ matrix.theme }},
+      - name: Continue matrix lock
+        uses: rakles/matrix-lock@v1.0.0
+        with:
+          step: continue
+          id: ${{ matrix.theme }}
