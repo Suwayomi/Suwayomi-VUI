@@ -69,7 +69,10 @@ jobs:
         run: bun i
       - run: bun run build
       - run: echo "${{ needs.GenTag.outputs.value }}" > ./build/revision
-      - run: sed -i "s@BUILD_VERSION_PLACEHOLDER@${{ needs.GenTag.outputs.value }}@" ./build/index.html
+      - name: Set Build version
+        run: |
+          cd ./build
+          find . -name '*.html' -exec sed -i -e "s@BUILD_VERSION_PLACEHOLDER@${{ needs.GenTag.outputs.value }}@"  {} \;
       - run: bun run build-md5
       - uses: actions/upload-artifact@v4
         with:
