@@ -115,6 +115,11 @@ jobs:
       - RepoName
     runs-on: ubuntu-latest
     steps:
+      - name: Check out Dockerfile
+        uses: actions/checkout@v4
+        with:
+          sparse-checkout: |
+            Dockerfile
       - name: get Build files
         uses: actions/download-artifact@v4
         with:
@@ -130,13 +135,6 @@ jobs:
           search-text: data-theme='skeleton'
           replacement-text: data-theme='${{ matrix.theme }}'
           encoding: utf8
-      - name: log ls
-        run: ls
-      - name: Check out Dockerfile
-        uses: actions/checkout@v4
-        with:
-          sparse-checkout: |
-            Dockerfile
       - name: log ls
         run: ls
       - name: Set up QEMU
