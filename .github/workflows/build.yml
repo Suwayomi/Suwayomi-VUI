@@ -144,21 +144,21 @@ jobs:
           context: .
           build-args: version=${{ needs.GenTag.outputs.value }}
           push: false
-          outputs: type=oci,oci-mediatypes=true,dest=/outs/${{ matrix.theme }}.tar
+          outputs: type=oci,oci-mediatypes=true,dest=/tmp/${{ matrix.theme }}.tar
           tags: |
             ghcr.io/${{ needs.RepoName.outputs.value }}:latest${{ matrix.theme }},
             ghcr.io/${{ needs.RepoName.outputs.value }}:${{ needs.GenTag.outputs.value }}${{ matrix.theme }},
             ${{ needs.RepoName.outputs.value }}:latest${{ matrix.theme }},
             ${{ needs.RepoName.outputs.value }}:${{ needs.GenTag.outputs.value }}${{ matrix.theme }},
-      - name: ls outs
+      - name: ls tmp
         run: |
-          cd /outs
+          cd /tmp
           ls
       - uses: actions/upload-artifact@v4
         with:
           name: build-files-${{ matrix.theme }}
           path: |
-            /outs/${{ matrix.theme }}.tar
+            /tmp/${{ matrix.theme }}.tar
   docker:
     needs:
       - GenTag
