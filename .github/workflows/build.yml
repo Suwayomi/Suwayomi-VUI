@@ -13,6 +13,7 @@ env:
   THEMES: '["wintry", "","skeleton", "crimson", "gold-nouveau", "hamlindigo", "modern", "rocket", "sahara", "seafoam", "vintage"]'
 
 on:
+  workflow_dispatch:
   push:
     branches: ['Release']
     paths-ignore:
