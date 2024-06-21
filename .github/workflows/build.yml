@@ -124,8 +124,6 @@ jobs:
         with:
           name: build-files
           path: ./
-      - name: log ls
-        run: ls
       - name: Replace theme in the HTML files to generate differant theme builds
         if: ${{ matrix.theme != '' }}
         uses: richardrigutins/replace-in-files@v2
@@ -134,16 +132,10 @@ jobs:
           search-text: data-theme='skeleton'
           replacement-text: data-theme='${{ matrix.theme }}'
           encoding: utf8
-      - name: log ls
-        run: ls
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v3
-      - name: log ls
-        run: ls
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
-      - name: log ls
-        run: ls
       - name: Build Docker image
         uses: docker/build-push-action@v5
         with:
@@ -173,7 +165,7 @@ jobs:
       - name: get Build files
         uses: actions/download-artifact@v4
         with:
-          name: build-files-*
+          pattern: build-files-*
           path: ./
           merge-multiple: true
       - name: Login to Docker Hub
