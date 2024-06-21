@@ -22,4 +22,4 @@ sed -i "s@resolverPLACEHOLDER@$TMP2@" /etc/nginx/conf.d/default.conf
 sed -i "s@PLACEHOLDER@$TMP@" /etc/nginx/conf.d/default.conf
 
 TMPTHEME=$(echo "$theme" | sed "skeleton")
-find . -type f -name '*.html' -print0 | xargs -0 sed -i "" "s@data-theme='skeleton'@data-theme='$TMPTHEME'@"
+find . -name '*.html' -exec sed -i -e "s/data-theme='skeleton'/data-theme='$TMPTHEME'/g" {} \;
