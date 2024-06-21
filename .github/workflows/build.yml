@@ -105,8 +105,9 @@ jobs:
           body: ''
           draft: false
           prerelease: false
-  dockerBuilds:
+  docker:
     strategy:
+      max-parallel: 1
       matrix:
         theme: ${{ fromJSON(needs.ComputeThemes.outputs.value) }}
     needs:
@@ -137,41 +138,6 @@ jobs:
         uses: docker/setup-qemu-action@v3
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
-      - name: Build Docker image
-        uses: docker/build-push-action@v5
-        with:
-          platforms: linux/amd64, linux/arm/v6, linux/arm/v7, linux/arm64, linux/386, linux/ppc64le, linux/s390x
-          context: .
-          build-args: version=${{ needs.GenTag.outputs.value }}
-          push: false
-          outputs: type=oci,oci-mediatypes=true,dest=/tmp/${{ matrix.theme }}.tar
-          tags: |
-            ghcr.io/${{ needs.RepoName.outputs.value }}:latest${{ matrix.theme }},
-            ghcr.io/${{ needs.RepoName.outputs.value }}:${{ needs.GenTag.outputs.value }}${{ matrix.theme }},
-            ${{ needs.RepoName.outputs.value }}:latest${{ matrix.theme }},
-            ${{ needs.RepoName.outputs.value }}:${{ needs.GenTag.outputs.value }}${{ matrix.theme }},
-      - name: ls tmp
-        run: |
-          cd /tmp
-          ls
-      - uses: actions/upload-artifact@v4
-        with:
-          name: build-files-${{ matrix.theme }}
-          path: |
-            /tmp/${{ matrix.theme }}.tar
-  docker:
-    needs:
-      - GenTag
-      - dockerBuilds
-      - RepoName
-    runs-on: ubuntu-latest
-    steps:
-      - name: get Build files
-        uses: actions/download-artifact@v4
-        with:
-          pattern: build-files-*
-          path: ./
-          merge-multiple: true
       - name: Login to Docker Hub
         uses: docker/login-action@v3
         with:
@@ -183,13 +149,15 @@ jobs:
           registry: ghcr.io
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
-      - name: ls data
-        run: ls
-      - name: Load and push image
-        # for i in *.tar; do
-        #   docker load -i $i
-        # done
-        run: |
-          docker load -i ./wintry.tar
-          docker push -a ghcr.io/${{ needs.RepoName.outputs.value }}
-          docker push -a ${{ needs.RepoName.outputs.value }}
+      - name: Build Docker image
+        uses: docker/build-push-action@v5
+        with:
+          platforms: linux/amd64, linux/arm/v6, linux/arm/v7, linux/arm64, linux/386, linux/ppc64le, linux/s390x
+          context: .
+          build-args: version=${{ needs.GenTag.outputs.value }}
+          push: true
+          tags: |
+            ghcr.io/${{ needs.RepoName.outputs.value }}:latest${{ matrix.theme }},
+            ghcr.io/${{ needs.RepoName.outputs.value }}:${{ needs.GenTag.outputs.value }}${{ matrix.theme }},
+            ${{ needs.RepoName.outputs.value }}:latest${{ matrix.theme }},
+            ${{ needs.RepoName.outputs.value }}:${{ needs.GenTag.outputs.value }}${{ matrix.theme }},
