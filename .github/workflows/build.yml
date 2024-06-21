@@ -9,19 +9,17 @@
 
 name: Build
 
-env:
-  THEMES: '["Default", "wintry", "crimson", "gold-nouveau", "hamlindigo", "modern", "rocket", "sahara", "seafoam", "vintage", "skeleton"]'
-  # THEMES: '["wintry"]'
-
 on:
   workflow_dispatch:
   push:
     branches: ['Release']
     paths-ignore:
       - '**/README.md'
+
 defaults:
   run:
     shell: bash
+
 jobs:
   RepoName:
     runs-on: ubuntu-latest
@@ -106,10 +104,6 @@ jobs:
           draft: false
           prerelease: false
   docker:
-    strategy:
-      max-parallel: 1
-      matrix:
-        theme: ${{ fromJSON(needs.ComputeThemes.outputs.value) }}
     needs:
       - build
       - GenTag
@@ -126,14 +120,6 @@ jobs:
         with:
           name: build-files
           path: ./
-      - name: Replace theme in the HTML files to generate differant theme builds
-        if: ${{ matrix.theme != '' }}
-        uses: richardrigutins/replace-in-files@v2
-        with:
-          files: '**/*.html'
-          search-text: data-theme='skeleton'
-          replacement-text: data-theme='${{ matrix.theme }}'
-          encoding: utf8
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v3
       - name: Set up Docker Buildx
@@ -149,14 +135,6 @@ jobs:
           registry: ghcr.io
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
-      - name: theme
-        id: theme
-        run: |
-          if [[ ${{ matrix.theme }} != 'Default' ]]; then
-            echo "value=${{ matrix.theme }}" >> $GITHUB_OUTPUT
-          else
-            echo "value=" >> $GITHUB_OUTPUT
-          fi
       - name: Build Docker image
         uses: docker/build-push-action@v5
         with:
@@ -165,7 +143,7 @@ jobs:
           build-args: version=${{ needs.GenTag.outputs.value }}
           push: true
           tags: |
-            ghcr.io/${{ needs.RepoName.outputs.value }}:latest${{ steps.theme.outputs.value }},
-            ghcr.io/${{ needs.RepoName.outputs.value }}:${{ needs.GenTag.outputs.value }}${{ steps.theme.outputs.value }},
-            ${{ needs.RepoName.outputs.value }}:latest${{ steps.theme.outputs.value }},
-            ${{ needs.RepoName.outputs.value }}:${{ needs.GenTag.outputs.value }}${{ steps.theme.outputs.value }},
+            ghcr.io/${{ needs.RepoName.outputs.value }}:latest,
+            ghcr.io/${{ needs.RepoName.outputs.value }}:${{ needs.GenTag.outputs.value }},
+            ${{ needs.RepoName.outputs.value }}:latest,
+            ${{ needs.RepoName.outputs.value }}:${{ needs.GenTag.outputs.value }},
