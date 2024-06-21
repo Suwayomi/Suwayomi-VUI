@@ -74,7 +74,7 @@ jobs:
       - run: bun run build-md5
       - uses: actions/upload-artifact@v4
         with:
-          name: build-files-${{ needs.GenTag.outputs.value }}
+          name: build-files
           path: |
             ./build/
             ./buildZip/md5sum
@@ -88,7 +88,7 @@ jobs:
       - name: get Build files
         uses: actions/download-artifact@v4
         with:
-          name: build-files-${{ needs.GenTag.outputs.value }}
+          name: build-files
           path: ./
       - name: Generate zip
         working-directory: ./build
@@ -118,7 +118,7 @@ jobs:
       - name: get Build files
         uses: actions/download-artifact@v4
         with:
-          name: build-files-${{ needs.GenTag.outputs.value }}
+          name: build-files
           path: ./
       - name: log ls
         run: ls
@@ -130,16 +130,24 @@ jobs:
           search-text: data-theme='skeleton'
           replacement-text: data-theme='${{ matrix.theme }}'
           encoding: utf8
+      - name: log ls
+        run: ls
       - name: Check out Dockerfile
         uses: actions/checkout@v4
         with:
           sparse-checkout: |
             Dockerfile
+      - name: log ls
+        run: ls
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v3
+      - name: log ls
+        run: ls
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
-      - name: Build  Docker image
+      - name: log ls
+        run: ls
+      - name: Build Docker image
         uses: docker/build-push-action@v5
         with:
           platforms: linux/amd64, linux/arm/v6, linux/arm/v7, linux/arm64, linux/386, linux/ppc64le, linux/s390x
@@ -154,7 +162,7 @@ jobs:
             ${{ needs.RepoName.outputs.value }}:${{ needs.GenTag.outputs.value }}${{ matrix.theme }},
       - uses: actions/upload-artifact@v4
         with:
-          name: build-files-${{ needs.GenTag.outputs.value }}-${{ matrix.theme }}
+          name: build-files-${{ matrix.theme }}
           path: |
             /tmp/${{ matrix.theme }}.tar
   docker:
@@ -168,7 +176,7 @@ jobs:
       - name: get Build files
         uses: actions/download-artifact@v4
         with:
-          name: build-files-${{ needs.GenTag.outputs.value }}-*
+          name: build-files-*
           path: ./
           merge-multiple: true
       - name: Login to Docker Hub
