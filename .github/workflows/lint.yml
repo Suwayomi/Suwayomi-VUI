@@ -14,6 +14,8 @@ on:
     branches: ['main', 'Release']
     paths-ignore:
       - '**/README.md'
+      - '.github/workflows/**.yml'
+      - '**/default.conf'
 
 jobs:
   run-linters:
