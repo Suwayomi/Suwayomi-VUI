@@ -99,18 +99,20 @@
 		return true;
 	});
 
-	$: sortedChapters = filteredChapters?.toSorted((a, b) => {
-		let tmp = true;
-		if ($mangaMeta.ChapterSort === ChapterSort.Source) {
-			tmp = a.sourceOrder > b.sourceOrder;
-		} else if ($mangaMeta.ChapterSort === ChapterSort['Fetched Date']) {
-			tmp = a.fetchedAt > b.fetchedAt;
-		} else {
-			tmp = a.uploadDate > b.uploadDate;
-		}
-		if ($mangaMeta.ChapterAsc) tmp = !tmp;
-		return tmp ? -1 : 1;
-	});
+	$: sortedChapters = filteredChapters
+		? [...filteredChapters].sort((a, b) => {
+				let tmp = true;
+				if ($mangaMeta.ChapterSort === ChapterSort.Source) {
+					tmp = a.sourceOrder > b.sourceOrder;
+				} else if ($mangaMeta.ChapterSort === ChapterSort['Fetched Date']) {
+					tmp = a.fetchedAt > b.fetchedAt;
+				} else {
+					tmp = a.uploadDate > b.uploadDate;
+				}
+				if ($mangaMeta.ChapterAsc) tmp = !tmp;
+				return tmp ? -1 : 1;
+			})
+		: undefined;
 
 	$: sortedChapters, updateselected();
 	function updateselected() {
@@ -517,7 +519,7 @@
 			<a
 				href="/manga/{mangaFrag?.id}/chapter/{sortedChapters
 					.filter((e) => !e.isRead)
-					.toSorted((a, b) => (a.sourceOrder > b.sourceOrder ? 1 : -1))[0].id}"
+					.sort((a, b) => (a.sourceOrder > b.sourceOrder ? 1 : -1))[0].id}"
 				class="variant-filled-primary btn fixed hover:variant-glass-primary {matches
 					? 'bottom-2'
 					: 'bottom-[4.5rem]'} right-16 z-10"

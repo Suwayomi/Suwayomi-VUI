@@ -55,8 +55,8 @@
 		requestPolicy: 'cache-first'
 	});
 
-	$: orderedCategories = ($categories.data?.categories?.nodes ?? [])
-		.toSorted((a, b) => {
+	$: orderedCategories = [...($categories.data?.categories?.nodes ?? [])]
+		.sort((a, b) => {
 			return a.order > b.order ? 1 : -1;
 		})
 		.filter((e) => e.mangas.totalCount);
@@ -124,37 +124,39 @@
 		return true;
 	});
 
-	$: sortedMangas = filteredMangas?.toSorted((a, b) => {
-		let tru = true;
-		switch ($Meta.Sort) {
-			case sort.ID:
-				tru = a.id > b.id;
-				break;
-			case sort.Unread:
-				tru = a.unreadCount > b.unreadCount;
-				break;
-			case sort.Alphabetical:
-				tru = a.title > b.title;
-				break;
-			case sort['Latest Read']:
-				tru =
-					parseInt(a.lastReadChapter?.lastReadAt ?? '0') >
-					parseInt(b.lastReadChapter?.lastReadAt ?? '0');
-				break;
-			case sort['Latest Fetched']:
-				tru =
-					parseInt(a.latestFetchedChapter?.fetchedAt ?? '0') >
-					parseInt(b.latestFetchedChapter?.fetchedAt ?? '0');
-				break;
-			case sort['Latest Uploaded']:
-				tru =
-					parseInt(a.latestUploadedChapter?.uploadDate ?? '0') >
-					parseInt(b.latestUploadedChapter?.uploadDate ?? '0');
-		}
+	$: sortedMangas = filteredMangas
+		? [...filteredMangas].sort((a, b) => {
+				let tru = true;
+				switch ($Meta.Sort) {
+					case sort.ID:
+						tru = a.id > b.id;
+						break;
+					case sort.Unread:
+						tru = a.unreadCount > b.unreadCount;
+						break;
+					case sort.Alphabetical:
+						tru = a.title > b.title;
+						break;
+					case sort['Latest Read']:
+						tru =
+							parseInt(a.lastReadChapter?.lastReadAt ?? '0') >
+							parseInt(b.lastReadChapter?.lastReadAt ?? '0');
+						break;
+					case sort['Latest Fetched']:
+						tru =
+							parseInt(a.latestFetchedChapter?.fetchedAt ?? '0') >
+							parseInt(b.latestFetchedChapter?.fetchedAt ?? '0');
+						break;
+					case sort['Latest Uploaded']:
+						tru =
+							parseInt(a.latestUploadedChapter?.uploadDate ?? '0') >
+							parseInt(b.latestUploadedChapter?.uploadDate ?? '0');
+				}
 
-		if ($Meta.Asc) tru = !tru;
-		return tru ? -1 : 1;
-	});
+				if ($Meta.Asc) tru = !tru;
+				return tru ? -1 : 1;
+			})
+		: undefined;
 
 	function selectAll() {
 		HelpSelectAll(selectMode, selected, sortedMangas);
