@@ -78,6 +78,7 @@ jobs:
           path: |
             ./build/
             ./buildZip/md5sum
+          retention-days: 1
   web:
     needs:
       - build
