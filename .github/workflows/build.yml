@@ -26,6 +26,10 @@ jobs:
     runs-on: ubuntu-latest
     outputs:
       value: ${{ env.THEMES }}
+    steps:
+      - name: Compute Themes
+        run: |
+          echo "value=$THEMES" >> $GITHUB_OUTPUT
   GenTag:
     outputs:
       value: ${{steps.GenTagName.outputs.value}}
