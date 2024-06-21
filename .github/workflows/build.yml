@@ -77,6 +77,20 @@ jobs:
           draft: false
           prerelease: false
   docker:
+    strategy:
+      matrix:
+        theme:
+          - 'crimson'
+          - 'gold-nouveau'
+          - 'hamlindigo'
+          - 'modern'
+          - 'rocket'
+          - 'sahara'
+          - 'seafoam'
+          - 'skeleton'
+          - 'vintage'
+          - 'wintry'
+          - ''
     needs:
       - build
       - GenTag
@@ -92,6 +106,14 @@ jobs:
         with:
           name: build-files-${{ needs.GenTag.outputs.value }}
           path: ./
+      - name: Replace theme in the HTML files to generate differant theme builds
+        if: ${{ matrix.theme != '' }}
+        uses: richardrigutins/replace-in-files@v2
+        with:
+          files: '**/*.html'
+          search-text: data-theme='skeleton'
+          replacement-text: data-theme='${{ matrix.theme }}'
+          encoding: utf8
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v3
       - name: Set up Docker Buildx
@@ -119,7 +141,7 @@ jobs:
           build-args: version=${{ needs.GenTag.outputs.value }}
           push: true
           tags: |
-            ghcr.io/${{ steps.string.outputs.lowercase }}:latest,
-            ghcr.io/${{ steps.string.outputs.lowercase }}:${{ needs.GenTag.outputs.value }},
-            ${{ steps.string.outputs.lowercase }}:latest,
+            ghcr.io/${{ steps.string.outputs.lowercase }}:latest${{ matrix.theme }},
+            ghcr.io/${{ steps.string.outputs.lowercase }}:${{ needs.GenTag.outputs.value }}${{ matrix.theme }},
+            ${{ steps.string.outputs.lowercase }}:latest${{ matrix.theme }},
             ${{ steps.string.outputs.lowercase }}:${{ needs.GenTag.outputs.value }},
