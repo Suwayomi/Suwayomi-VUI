@@ -78,6 +78,7 @@ jobs:
           prerelease: false
   docker:
     strategy:
+      max-parallel: 1
       matrix:
         theme:
           - 'crimson'
