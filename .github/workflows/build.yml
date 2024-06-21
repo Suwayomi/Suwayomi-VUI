@@ -178,6 +178,7 @@ jobs:
           registry: ghcr.io
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
+      - run: touch test.tar
       - name: ls data
         run: ls
       - name: Load and push image
