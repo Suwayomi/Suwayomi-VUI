@@ -118,7 +118,7 @@
 	$: $category, $categories, value, doCategory();
 	$: $sources, value, doSource();
 
-	function doCategory() {
+	async function doCategory() {
 		if (value.startsWith('#')) {
 			const parsed = value.slice(1).split(/[/:]/);
 			const categorySearch: string | undefined = parsed[0];
@@ -132,16 +132,41 @@
 				| undefined = undefined;
 			let includeChapters: ResultOf<typeof ChapterTypeFragment>[] | undefined =
 				undefined;
-			if (mangaSearch && includeCategory?.[0]) {
+			if (mangaSearch !== undefined && includeCategory?.[0]) {
 				catId = includeCategory[0].id;
-				includeMangas = $category?.data?.category?.mangas.nodes.filter((e) =>
-					e.title.toLowerCase().includes(mangaSearch.toLowerCase())
-				);
-				if (chapterNameSearch && includeMangas?.[0]) {
+				includeMangas = await new Promise((resolve) => {
+					window.requestAnimationFrame(() => {
+						let unSub = () => {};
+						unSub = category.subscribe((ee) => {
+							if (ee?.data?.category?.mangas?.nodes) {
+								unSub();
+								resolve(
+									ee.data.category.mangas.nodes.filter((e) =>
+										e.title.toLowerCase().includes(mangaSearch.toLowerCase())
+									)
+								);
+							}
+						});
+					});
+				});
+
+				if (chapterNameSearch !== undefined && includeMangas?.[0]) {
 					mangaId = includeMangas[0].id;
-					includeChapters = $manga?.data?.manga?.chapters.nodes?.filter((e) =>
-						e.name.toLowerCase().includes(chapterNameSearch.toLowerCase())
-					);
+					includeChapters = await new Promise((resolve) => {
+						let unSub = () => {};
+						unSub = manga.subscribe((ee) => {
+							if (ee?.data?.manga?.chapters?.nodes) {
+								unSub();
+								resolve(
+									ee.data.manga.chapters.nodes.filter((e) =>
+										e.name
+											.toLowerCase()
+											.includes(chapterNameSearch.toLowerCase())
+									)
+								);
+							}
+						});
+					});
 				}
 			}
 
@@ -255,40 +280,6 @@
 			const previous = tabElements[previousIndex];
 			previous.focus();
 			return;
-		}
-		if (event.key === 'ArrowRight') {
-			let selectEnd = inputEl?.selectionEnd;
-			if (selectEnd === value.length) {
-				let SelectedItem: item;
-				if (inputElement) {
-					SelectedItem = items[0];
-				} else {
-					const tabElements = [...document.querySelectorAll('.tabindex')] as (
-						| HTMLInputElement
-						| HTMLAnchorElement
-					)[];
-					const index = tabElements.findIndex(
-						(e) => e === document.activeElement
-					);
-					SelectedItem = items[index];
-				}
-				if ('str' in SelectedItem) {
-					if (!value.includes(SelectedItem.str)) {
-						value += SelectedItem.str;
-					}
-				} else if ('firstLineBoldText' in SelectedItem) {
-					if (!value.includes(SelectedItem.firstLineBoldText)) {
-						value += SelectedItem.firstLineBoldText;
-					}
-				} else if (!value.includes(SelectedItem.firstLine)) {
-					value += SelectedItem.firstLine;
-				}
-				(
-					document.querySelector('.tabindex') as
-						| HTMLInputElement
-						| HTMLAnchorElement
-				).focus();
-			}
 		}
 	}
 
