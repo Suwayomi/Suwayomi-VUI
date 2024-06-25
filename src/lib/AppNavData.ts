@@ -30,6 +30,14 @@ export const AppNavData = [
 		}
 	},
 	{
+		href: '/history',
+		title: 'History',
+		icon: 'mdi:history',
+		match: (page: string) => {
+			return page.includes('/history');
+		}
+	},
+	{
 		href: '/downloads',
 		title: 'Downloads',
 		icon: 'mdi:download',
@@ -43,6 +51,21 @@ export const AppNavData = [
 		icon: 'mdi:cog',
 		match: (page: string) => {
 			return page.includes('/settings');
+		}
+	}
+];
+
+export const SmallAppNavData = [
+	AppNavData[0],
+	AppNavData[1],
+	AppNavData[2],
+	AppNavData[3],
+	{
+		href: '/more',
+		title: 'More',
+		icon: 'mdi:dots-horizontal',
+		match: (page: string) => {
+			return page.includes('/more');
 		}
 	}
 ];

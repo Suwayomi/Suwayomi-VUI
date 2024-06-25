@@ -137,5 +137,6 @@
 	"codeium.enableInComments": false,
 	"codeium.enableSearch": true,
 	"tailwind-fold.unfoldIfLineSelected": true,
-	"tailwind-fold.foldLengthThreshold": 5
+	"tailwind-fold.foldLengthThreshold": 80,
+	"tailwind-fold.unfoldedTextOpacity": 1
 }

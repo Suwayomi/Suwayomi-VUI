@@ -10,7 +10,9 @@
 	import { page } from '$app/stores';
 	import { TabGroup, TabAnchor } from '@skeletonlabs/skeleton';
 	import IconWrapper from './IconWrapper.svelte';
-	import { AppNavData } from '../AppNavData';
+	import { AppNavData, SmallAppNavData } from '../AppNavData';
+	import { screens } from '$lib/screens';
+	import MediaQuery from './MediaQuery.svelte';
 </script>
 
 <TabGroup
@@ -23,19 +25,22 @@
 	class="bg-surface-100-800-token w-full"
 	regionList=" h-16"
 >
-	{#each AppNavData as Loc}
-		<TabAnchor
-			href={Loc.href}
-			selected={Loc.match($page.url.pathname)}
-			class="h-full [&>.tab-interface]:h-full [&>div>.tab-label]:h-full"
-		>
-			<div class="flex h-full w-full flex-col items-center">
-				<IconWrapper
-					name={Loc.icon}
-					class="aspect-square max-h-full w-full grow"
-				/>
-				<span class="text-sm">{Loc.title}</span>
-			</div>
-		</TabAnchor>
-	{/each}
+	<MediaQuery query="(max-width: {screens.sm})" let:matches>
+		{@const Nav = matches ? SmallAppNavData : AppNavData}
+		{#each Nav as Loc}
+			<TabAnchor
+				href={Loc.href}
+				selected={Loc.match($page.url.pathname)}
+				class="h-full [&>.tab-interface]:h-full [&>div>.tab-label]:h-full"
+			>
+				<div class="flex h-full w-full flex-col items-center">
+					<IconWrapper
+						name={Loc.icon}
+						class="aspect-square max-h-full w-full grow"
+					/>
+					<span class="text-sm">{Loc.title}</span>
+				</div>
+			</TabAnchor>
+		{/each}
+	</MediaQuery>
 </TabGroup>

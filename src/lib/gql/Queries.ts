@@ -495,3 +495,32 @@ export const categoryMangaNotInLibrary = graphql(
 	`,
 	[]
 );
+
+export const History = graphql(`
+	query History($offset: Int = 0) {
+		chapters(
+			condition: { isRead: true }
+			orderByType: DESC
+			orderBy: LAST_READ_AT
+			first: 100
+			offset: $offset
+		) {
+			totalCount
+			nodes {
+				id
+				name
+				lastReadAt
+				isDownloaded
+				isBookmarked
+				manga {
+					thumbnailUrl
+					id
+					title
+				}
+			}
+			pageInfo {
+				hasNextPage
+			}
+		}
+	}
+`);
