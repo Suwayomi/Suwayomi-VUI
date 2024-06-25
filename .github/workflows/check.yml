@@ -22,7 +22,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Use bun 1.0.10
+      - name: Use bun latest
         uses: oven-sh/setup-bun@v1
         with:
           bun-version: latest
@@ -34,7 +34,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Use bun 1.0.10
+      - name: Use bun latest
         uses: oven-sh/setup-bun@v1
         with:
           bun-version: latest

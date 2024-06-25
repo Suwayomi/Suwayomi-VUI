@@ -12,7 +12,7 @@
 	import { History } from '$lib/gql/Queries';
 	import { writable } from 'svelte/store';
 	import type { ResultOf } from '$lib/gql/graphql';
-	import { formatDate, gridValues, HelpDoSelect } from '$lib/util';
+	import { formatDate, gridValues } from '$lib/util';
 	import MangaCard from '$lib/components/MangaCard.svelte';
 	import IntersectionObserver from '$lib/components/IntersectionObserver.svelte';
 	import IconWrapper from '$lib/components/IconWrapper.svelte';

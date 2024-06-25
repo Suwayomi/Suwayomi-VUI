@@ -31,7 +31,7 @@ services:
       # if you plan on proxying it externally then this is unnecessary
       - theme=skeleton
       # defaults to skeleton
-      # is for the SSR to stop off first loads 
+      # is for the SSR to stop off first loads
       # any of the themes avalabe in VUI
       # skeleton, wintry, crimson, gold-nouveau, hamlindigo, modern, rocket, sahara, seafoam, vintage
     restart: unless-stopped
