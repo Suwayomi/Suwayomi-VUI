@@ -9,18 +9,38 @@
 
 name: Build
 
-env:
-  THEMES: "['', 'wintry', 'skeleton', 'crimson', 'gold-nouveau', 'hamlindigo', 'modern', 'rocket', 'sahara', 'seafoam', 'vintage']"
-
 on:
+  workflow_dispatch:
   push:
     branches: ['Release']
     paths-ignore:
       - '**/README.md'
+
 defaults:
   run:
     shell: bash
+
 jobs:
+  RepoName:
+    runs-on: ubuntu-latest
+    outputs:
+      value: ${{ steps.RepoName.outputs.lowercase }}
+    steps:
+      - name: Get Repo Name
+        id: RepoName
+        uses: ASzc/change-string-case-action@v6
+        with:
+          string: ${{ github.repository_owner }}/${{ github.event.repository.name }}
+      - name: Set Repo Name
+        run: echo "REPO_NAME=${{ steps.RepoName.outputs.lowercase }}" >> $GITHUB_OUTPUT
+  ComputeThemes:
+    runs-on: ubuntu-latest
+    outputs:
+      value: ${{ env.THEMES }}
+    steps:
+      - name: Compute Themes
+        run: |
+          echo "value=$THEMES" >> $GITHUB_OUTPUT
   GenTag:
     outputs:
       value: ${{steps.GenTagName.outputs.value}}
@@ -41,7 +61,7 @@ jobs:
     steps:
       - name: Check out Git repository
         uses: actions/checkout@v4
-      - name: Use bun 1.1.0
+      - name: Use bun latest
         uses: oven-sh/setup-bun@v1
         with:
           bun-version: latest
@@ -49,11 +69,14 @@ jobs:
         run: bun i
       - run: bun run build
       - run: echo "${{ needs.GenTag.outputs.value }}" > ./build/revision
-      - run: sed -i "s@BUILD_VERSION_PLACEHOLDER@${{ needs.GenTag.outputs.value }}@" ./build/index.html
+      - name: Set Build version
+        run: |
+          cd ./build
+          find . -name '*.html' -exec sed -i -e "s@BUILD_VERSION_PLACEHOLDER@${{ needs.GenTag.outputs.value }}@"  {} \;
       - run: bun run build-md5
       - uses: actions/upload-artifact@v4
         with:
-          name: build-files-${{ needs.GenTag.outputs.value }}
+          name: build-files
           path: |
             ./build/
             ./buildZip/md5sum
@@ -67,7 +90,7 @@ jobs:
       - name: get Build files
         uses: actions/download-artifact@v4
         with:
-          name: build-files-${{ needs.GenTag.outputs.value }}
+          name: build-files
           path: ./
       - name: Generate zip
         working-directory: ./build
@@ -83,73 +106,27 @@ jobs:
           body: ''
           draft: false
           prerelease: false
-  dockerBuilds:
-    strategy:
-      matrix:
-        theme: ${{ fromJSON(github.env.THEMES) }}
+  docker:
     needs:
       - build
       - GenTag
+      - ComputeThemes
+      - RepoName
     runs-on: ubuntu-latest
     steps:
-      - name: get Build files
-        uses: actions/download-artifact@v4
-        with:
-          name: build-files-${{ needs.GenTag.outputs.value }}
-          path: ./
-      - name: Replace theme in the HTML files to generate differant theme builds
-        if: ${{ matrix.theme != '' }}
-        uses: richardrigutins/replace-in-files@v2
-        with:
-          files: '**/*.html'
-          search-text: data-theme='skeleton'
-          replacement-text: data-theme='${{ matrix.theme }}'
-          encoding: utf8
       - name: Check out Dockerfile
         uses: actions/checkout@v4
         with:
-          sparse-checkout: |
-            Dockerfile
+          sparse-checkout: Dockerfile
       - name: get Build files
         uses: actions/download-artifact@v4
         with:
-          name: build-files-${{ needs.GenTag.outputs.value }}-${{ matrix.theme }}
+          name: build-files
           path: ./
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v3
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
-      - name: Build and push Docker image
-        uses: docker/build-push-action@v5
-        with:
-          platforms: linux/amd64, linux/arm/v6, linux/arm/v7, linux/arm64, linux/386, linux/ppc64le, linux/s390x
-          context: .
-          build-args: version=${{ needs.GenTag.outputs.value }}
-          push: false
-          outputs: type=docker,dest=/tmp/${{ matrix.theme }}.tar
-          tags: |
-            ghcr.io/${{ github.repository_owner }}/${{ github.event.repository.name }}:latest${{ matrix.theme }},
-            ghcr.io/${{ github.repository_owner }}/${{ github.event.repository.name }}:${{ needs.GenTag.outputs.value }}${{ matrix.theme }},
-            ${{ github.repository_owner }}/${{ github.event.repository.name }}:latest${{ matrix.theme }},
-            ${{ github.repository_owner }}/${{ github.event.repository.name }}:${{ needs.GenTag.outputs.value }}${{ matrix.theme }},
-      - uses: actions/upload-artifact@v4
-        with:
-          name: build-files-${{ needs.GenTag.outputs.value }}-${{ matrix.theme }}
-          path: |
-            /tmp/${{ matrix.theme }}.tar
-  docker:
-    needs:
-      - build
-      - GenTag
-      - dockerBuilds
-    runs-on: ubuntu-latest
-    steps:
-      - name: get Build files
-        uses: actions/download-artifact@v4
-        with:
-          name: build-files-${{ needs.GenTag.outputs.value }}-*
-          path: ./
-          merge-multiple: true
       - name: Login to Docker Hub
         uses: docker/login-action@v3
         with:
@@ -161,10 +138,15 @@ jobs:
           registry: ghcr.io
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
-      - name: Load ad push image
-        run: |
-          for f in *.tar; do
-              cat $f | docker load
-          done
-          docker push -a ghcr.io/${{ github.repository_owner }}/${{ github.event.repository.name }}
-          docker push -a ${{ github.repository_owner }}/${{ github.event.repository.name }}
+      - name: Build Docker image
+        uses: docker/build-push-action@v5
+        with:
+          platforms: linux/amd64, linux/arm/v6, linux/arm/v7, linux/arm64, linux/386, linux/ppc64le, linux/s390x
+          context: .
+          build-args: version=${{ needs.GenTag.outputs.value }}
+          push: true
+          tags: |
+            ghcr.io/${{ needs.RepoName.outputs.value }}:latest,
+            ghcr.io/${{ needs.RepoName.outputs.value }}:${{ needs.GenTag.outputs.value }},
+            ${{ needs.RepoName.outputs.value }}:latest,
+            ${{ needs.RepoName.outputs.value }}:${{ needs.GenTag.outputs.value }},

@@ -8,6 +8,15 @@ services:
       - suwayomi=http://suwayomi:4567
       # will proxy the suwayomi server to the UI
       # if you plan on proxying it externally then this is unnecessary
+      - theme=skeleton
+      # is for the SSR to stop off first loads
+      # defaults to skeleton
+      # any of the themes avalabe in VUI
+      # skeleton, wintry, crimson, gold-nouveau, hamlindigo, modern, rocket, sahara, seafoam, vintage
+      - light=false
+      # is for the SSR to stop off first loads
+      # defaults to false
+      # true will turn on the light mode
     restart: unless-stopped
 
   vui3-dev:
