@@ -31,7 +31,7 @@
 		type OperationResultStore,
 		type Pausable
 	} from '@urql/svelte';
-	import { getSingleChapter, type getManga } from '$lib/gql/Queries';
+	import { getSingleChapter, getManga } from '$lib/gql/Queries';
 	import { type ResultOf } from '$lib/gql/graphql';
 	import { downloadsOnChapters } from '$lib/gql/Subscriptions';
 	import {
@@ -61,14 +61,23 @@
 	}
 
 	function checkinNeedRefresh() {
-		lastDownloads?.downloadChanged.queue
-			.filter((e) =>
-				$manga?.data?.manga.chapters.nodes.find((ee) => ee.id === e.chapter.id)
-			)
-			.forEach((element) => {
+		let filtered = lastDownloads?.downloadChanged.queue.filter(
+			(e) =>
+				!$downloads?.data?.downloadChanged.queue.find(
+					(ee) => ee.chapter.id === e.chapter.id
+				)
+		);
+		console.log(filtered);
+		if ((filtered?.length ?? 0) > 2) {
+			client
+				.query(getManga, { id: MangaID }, { requestPolicy: 'network-only' })
+				.toPromise();
+		} else {
+			filtered?.forEach((element) => {
 				const existingDownload = $downloads?.data?.downloadChanged.queue.find(
 					(e) => e.chapter.id === element.chapter.id
 				);
+				console.log(element.chapter, existingDownload);
 				if (!existingDownload) {
 					client
 						.query(
@@ -79,6 +88,7 @@
 						.toPromise();
 				}
 			});
+		}
 	}
 
 	$: chaptersInfo = $manga?.data?.manga?.chapters.nodes;

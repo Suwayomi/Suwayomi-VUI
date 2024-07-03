@@ -17,11 +17,30 @@
 	import { enumKeys } from '$lib/util';
 	import TriStateSlide from '$lib/components/TriStateSlide.svelte';
 	import ModalTemplate from '$lib/components/ModalTemplate.svelte';
+	import Slide from '$lib/components/Slide.svelte';
 	const modalStore = getModalStore();
 </script>
 
 {#if $modalStore[0]}
 	<ModalTemplate title="Manga Settings Defaults">
+		<Slide
+			bind:checked={$Meta.DownloadAllChaptersOnAddToLibrary}
+			class="my-1 p-1 pl-2 hover:variant-glass-surface focus:outline-0"
+		>
+			Download all chapters when add manga to library
+		</Slide>
+		<Slide
+			bind:checked={$Meta.DeleteAllChaptersOnRemoveFromLibrary}
+			class="my-1 p-1 pl-2 hover:variant-glass-surface focus:outline-0"
+		>
+			Delete all chapters when remove manga from library
+		</Slide>
+		<Slide
+			bind:checked={$Meta.RemoveChaptersFromDownloadQueueOnRemoveFromLibrary}
+			class="my-1 p-1 pl-2 hover:variant-glass-surface focus:outline-0"
+		>
+			Remove chapters from download queue when remove manga from library
+		</Slide>
 		<h2 class="h4 mb-1 border-b border-surface-700">Filters</h2>
 		<TriStateSlide
 			bind:state={$Meta.mangaMetaDefaults.ChapterUnread}
