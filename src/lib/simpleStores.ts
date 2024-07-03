@@ -105,7 +105,10 @@ const trueDefaults = {
 		password: '',
 		Authorization: ''
 	},
-	libraryCategoryTotalCounts: false
+	libraryCategoryTotalCounts: false,
+	DownloadAllChaptersOnAddToLibrary: false,
+	DeleteAllChaptersOnRemoveFromLibrary: false,
+	RemoveChaptersFromDownloadQueueOnRemoveFromLibrary: false
 };
 
 type globalMeta = typeof trueDefaults;

@@ -21,8 +21,13 @@
 		type Pausable
 	} from '@urql/svelte';
 	import { type ResultOf } from '$lib/gql/graphql';
-	import { updateMangas } from '$lib/gql/Mutations';
-	import type { MangaMeta } from '$lib/simpleStores';
+	import {
+		deleteDownloadedChapters,
+		dequeueChapterDownloads,
+		enqueueChapterDownloads,
+		updateMangas
+	} from '$lib/gql/Mutations';
+	import { type MangaMeta, Meta } from '$lib/simpleStores';
 	import NotesModal from './NotesModal.svelte';
 	import { getToastStore } from '$lib/components/Toast/stores';
 	import { longPress } from '$lib/press';
@@ -35,8 +40,40 @@
 	export let MangaID: number;
 	export let mangaMeta: ReturnType<typeof MangaMeta>;
 
-	async function libtoggle() {
-		await client
+	function libToggle() {
+		if (
+			$Meta.DownloadAllChaptersOnAddToLibrary &&
+			!$manga.data?.manga?.inLibrary
+		) {
+			client
+				.mutation(enqueueChapterDownloads, {
+					ids: $manga.data?.manga?.chapters.nodes?.map((e) => e.id) ?? []
+				})
+				.toPromise();
+		}
+		if (
+			$manga.data?.manga?.inLibrary &&
+			$Meta.DeleteAllChaptersOnRemoveFromLibrary
+		) {
+			client
+				.mutation(deleteDownloadedChapters, {
+					ids: $manga.data?.manga?.chapters.nodes?.map((e) => e.id) ?? []
+				})
+				.toPromise();
+		}
+
+		if (
+			$manga.data?.manga?.inLibrary &&
+			$Meta.RemoveChaptersFromDownloadQueueOnRemoveFromLibrary
+		) {
+			client
+				.mutation(dequeueChapterDownloads, {
+					ids: $manga.data?.manga?.chapters.nodes?.map((e) => e.id) ?? []
+				})
+				.toPromise();
+		}
+
+		client
 			.mutation(updateMangas, {
 				ids: [MangaID],
 				inLibrary: !$manga.data?.manga?.inLibrary
@@ -183,7 +220,7 @@
 		<MediaQuery query="(min-width: {screens.sm})" let:matches>
 			<div class="grid grid-cols-2 gap-1">
 				<button
-					on:click={libtoggle}
+					on:click={libToggle}
 					class="variant-soft btn flex h-12 items-center px-2 sm:px-5"
 				>
 					<IconWrapper
