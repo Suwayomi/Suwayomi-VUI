@@ -67,7 +67,6 @@
 					(ee) => ee.chapter.id === e.chapter.id
 				)
 		);
-		console.log(filtered);
 		if ((filtered?.length ?? 0) > 2) {
 			client
 				.query(getManga, { id: MangaID }, { requestPolicy: 'network-only' })
@@ -77,7 +76,6 @@
 				const existingDownload = $downloads?.data?.downloadChanged.queue.find(
 					(e) => e.chapter.id === element.chapter.id
 				);
-				console.log(element.chapter, existingDownload);
 				if (!existingDownload) {
 					client
 						.query(
