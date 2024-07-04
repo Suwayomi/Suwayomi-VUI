@@ -33,14 +33,6 @@ jobs:
           string: ${{ github.repository_owner }}/${{ github.event.repository.name }}
       - name: Set Repo Name
         run: echo "REPO_NAME=${{ steps.RepoName.outputs.lowercase }}" >> $GITHUB_OUTPUT
-  ComputeThemes:
-    runs-on: ubuntu-latest
-    outputs:
-      value: ${{ env.THEMES }}
-    steps:
-      - name: Compute Themes
-        run: |
-          echo "value=$THEMES" >> $GITHUB_OUTPUT
   GenTag:
     outputs:
       value: ${{steps.GenTagName.outputs.value}}
@@ -110,7 +102,6 @@ jobs:
     needs:
       - build
       - GenTag
-      - ComputeThemes
       - RepoName
     runs-on: ubuntu-latest
     steps:

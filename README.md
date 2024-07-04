@@ -8,6 +8,10 @@ Robonau's Svelte + skeleton suwayomi UI
 
 # How To Use:
 
+## Suwayomi Server Integrated
+
+when running the Suwayomi server you can change the WebUI Flavor to VUI, it will then replace the Default WebUI with VUI.
+
 ## Web Server files
 
 The Suwayomi-VUI-Web.zip file in the release is for hosting the ui though `server.webUIFlavor = "Custom"` config and replacing the contents of the webUI folder in the Suwayomi data directory
