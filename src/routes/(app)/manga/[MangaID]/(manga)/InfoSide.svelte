@@ -279,7 +279,7 @@
 		<section class="w-full text-xs xs:text-sm md:text-base">
 			<p>{mangaFrag.description}</p>
 		</section>
-		<div class="space-x-2">
+		<div class="flex w-full flex-wrap gap-2">
 			{#each mangaFrag?.genre as genre}
 				{#if genre}
 					<div class="variant-outline-primary badge">{genre}</div>
