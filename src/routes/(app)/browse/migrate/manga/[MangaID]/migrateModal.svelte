@@ -12,6 +12,7 @@
 	import {
 		bindTrack,
 		deleteDownloadedChapters,
+		enqueueChapterDownloads,
 		fetchChaptersMigration,
 		unbindTrack,
 		updateChapters,
@@ -20,7 +21,7 @@
 	} from '$lib/gql/Mutations';
 	import { getManga } from '$lib/gql/Queries';
 	import { ProgressRadial, getModalStore } from '@skeletonlabs/skeleton';
-	import { getContextClient } from '@urql/svelte';
+	import { getContextClient, type OperationResult } from '@urql/svelte';
 	import { type ResultOf } from '$lib/gql/graphql';
 	import type { SvelteComponent } from 'svelte';
 	import { ErrorHelp } from '$lib/util';
@@ -36,6 +37,7 @@
 	let doCategories = true;
 	let doTracking = true;
 	let deleteDownloaded = manga.downloadCount > 0 ? true : false;
+	let DownloadNew = true;
 
 	let MigrateLoading = false;
 	let CopyLoading = false;
@@ -71,38 +73,52 @@
 			.mutation(updateMangas, { ids: [id], inLibrary: true })
 			.toPromise();
 		const ToDo: Promise<void>[] = [];
-		if (doChapters) {
-			ToDo.push(CopyMangaChapters());
+
+		if (doCategories) ToDo.push(CopyMangaCategories());
+		if (doTracking) ToDo.push(CopyMangaTracking());
+		if (deleteDownloaded) ToDo.push(deleteDownloadedMangas());
+
+		if (!doChapters && !DownloadNew) {
+			await Promise.all(ToDo);
+			return;
 		}
-		if (doCategories) {
-			ToDo.push(CopyMangaCategories());
-		}
-		if (doTracking) {
-			ToDo.push(CopyMangaTracking());
-		}
-		if (deleteDownloaded) {
-			ToDo.push(deleteDownloadedMangas());
-		}
+
+		const newChapters = await client
+			.mutation(fetchChaptersMigration, { id })
+			.toPromise();
+
+		if (doChapters) ToDo.push(CopyMangaChapters(newChapters));
+		if (DownloadNew) ToDo.push(DownloadNewChapters(newChapters));
 		await Promise.all(ToDo);
 	}
 
-	async function deleteDownloadedMangas() {
-		const ids = manga.chapters.nodes.map((e) => e.id);
+	async function DownloadNewChapters(
+		newChapters: OperationResult<ResultOf<typeof fetchChaptersMigration>>
+	) {
 		await ErrorHelp(
-			'failed to delete Downloaded chapters',
+			'failed to download new chapters',
 			client
-				.mutation(deleteDownloadedChapters, {
-					ids
+				.mutation(enqueueChapterDownloads, {
+					ids: newChapters.data?.fetchChapters.chapters.map((e) => e.id) ?? []
 				})
 				.toPromise()
 		);
 	}
 
-	async function CopyMangaChapters() {
-		const newChapters = await client
-			.mutation(fetchChaptersMigration, { id })
-			.toPromise();
-		// const newChapters = await fetchChaptersMigration({ variables: { id } });
+	async function deleteDownloadedMangas() {
+		await ErrorHelp(
+			'failed to delete Downloaded chapters',
+			client
+				.mutation(deleteDownloadedChapters, {
+					ids: manga.chapters.nodes.map((e) => e.id)
+				})
+				.toPromise()
+		);
+	}
+
+	async function CopyMangaChapters(
+		newChapters: OperationResult<ResultOf<typeof fetchChaptersMigration>>
+	) {
 		const CurrMappedToNew = manga.chapters.nodes.map((current) => {
 			if (!newChapters.data) return undefined;
 			const tmp = newChapters.data.fetchChapters.chapters.findIndex(
@@ -189,6 +205,12 @@
 					Delete old Downloaded chapters
 				</Slide>
 			{/if}
+			<Slide
+				class="p-1 pl-2 outline-0 hover:variant-glass-surface"
+				bind:checked={DownloadNew}
+			>
+				Downloaded all new chapters
+			</Slide>
 		</svelte:fragment>
 		<svelte:fragment slot="footer">
 			<div class="flex justify-between px-4 pb-4">
