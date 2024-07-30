@@ -438,7 +438,10 @@
 	$: lowestIntersect = document.querySelector(
 		visiblePages.reduce(
 			(a, c) => {
-				if (c.chapterIndex >= a.chapterIndex && c.pageIndex > a.pageIndex) {
+				if (
+					c.chapterIndex > a.chapterIndex ||
+					(c.chapterIndex === a.chapterIndex && c.pageIndex > a.pageIndex)
+				) {
 					return c;
 				}
 				return a;
