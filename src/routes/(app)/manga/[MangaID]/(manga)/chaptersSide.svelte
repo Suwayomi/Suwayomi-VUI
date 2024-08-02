@@ -234,6 +234,15 @@
 			behavior: 'smooth'
 		});
 	}
+
+	$: chapterNumbers = sortedChapters?.map((e) => e.chapterNumber);
+	$: checkArray = Array.from(
+		Array(chapterNumbers?.reduce((a, c) => Math.max(a, c)) ?? 0),
+		(_, index) => index + 1
+	);
+	$: missingChapters = checkArray?.filter(
+		(e) => chapterNumbers?.find((n) => n >= e && n < e + 1) === undefined
+	);
 </script>
 
 {#if !$manga || $manga.fetching}
@@ -274,9 +283,19 @@
 	>
 		<div class="sticky top-0 z-10 h-10 xs:h-14">
 			<div class="card variant-glass flex h-full items-center space-x-1 p-0">
-				<span class="line-clamp-1 w-full pl-2 text-2xl font-medium md:text-3xl">
-					{sortedChapters.length} Chapters
-				</span>
+				<div class="flex w-full items-center">
+					<span class="line-clamp-1 pl-2 text-2xl font-medium md:text-3xl">
+						{sortedChapters.length} Chapters
+					</span>
+					{#if $mangaMeta.showMissingChapters && missingChapters?.length}
+						<span
+							class="line-clamp-1 h-full pl-2 text-2xl font-medium md:text-xl"
+							title={missingChapters.join('\n')}
+						>
+							Missing {missingChapters.length} Chapters
+						</span>
+					{/if}
+				</div>
 				<MediaQuery
 					query="(min-width: {screens.lg}),(min-width: {screens.sm}) and (max-width: {screens.md})"
 					let:matches

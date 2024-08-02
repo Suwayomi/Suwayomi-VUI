@@ -136,6 +136,19 @@
 						<button
 							class="flex w-full items-center justify-between rounded-full p-1 pl-2 hover:variant-glass-surface focus:outline-0"
 							on:click|preventDefault|stopPropagation={() =>
+								($mangaMeta.showMissingChapters =
+									!$mangaMeta.showMissingChapters)}
+						>
+							<span>Show Missing Chapters</span>
+							<SlideToggle
+								name="slide"
+								class="focus:outline-0"
+								bind:checked={$mangaMeta.showMissingChapters}
+							/>
+						</button>
+						<button
+							class="flex w-full items-center justify-between rounded-full p-1 pl-2 hover:variant-glass-surface focus:outline-0"
+							on:click|preventDefault|stopPropagation={() =>
 								($mangaMeta.ChapterFetchUpload =
 									!$mangaMeta.ChapterFetchUpload)}
 						>

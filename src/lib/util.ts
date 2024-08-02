@@ -260,16 +260,6 @@ export function groupBy<T extends object, K extends string>(
 	return Array.from(map);
 }
 
-export function getObjectKeys<T extends object>(obj: T): (keyof T)[] {
-	return Object.keys(obj) as (keyof T)[];
-}
-
-export function getObjectEntries<T extends object>(
-	obj: T
-): [keyof T, T[keyof T]][] {
-	return Object.entries(obj) as [keyof T, T[keyof T]][];
-}
-
 export function setSettings(
 	settings: VariablesOf<typeof setServerSettings>['settings']
 ) {

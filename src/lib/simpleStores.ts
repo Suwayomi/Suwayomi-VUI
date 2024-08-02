@@ -18,7 +18,14 @@ import {
 import { getManga, metas } from './gql/Queries';
 import { client } from './gql/graphqlClient';
 import type { presetConst } from './presets';
-import { getObjectEntries, getObjectKeys, type TriState } from './util';
+import type { TriState } from './util';
+
+function getObjectEntries<T extends object>(obj: T): [keyof T, T[keyof T]][] {
+	return Object.entries(obj) as [keyof T, T[keyof T]][];
+}
+function getObjectKeys<T extends object>(obj: T): (keyof T)[] {
+	return Object.keys(obj) as (keyof T)[];
+}
 
 export const toastStore = writable<ToastStore | null>(null);
 
@@ -66,7 +73,8 @@ const mangaMetaDefaults = {
 	preLoadNextChapter: true,
 	mobileFullScreenOnChapterPage: true,
 	doPageIndicator: false,
-	notes: ''
+	notes: '',
+	showMissingChapters: false
 };
 type mangaMeta = typeof mangaMetaDefaults;
 
@@ -112,30 +120,6 @@ const trueDefaults = {
 };
 
 type globalMeta = typeof trueDefaults;
-
-// function GlobalMetaUpdater(cache: ApolloCache<unknown>, key: string, value: string) {
-// 	const metasData = structuredClone(
-// 		cache.readQuery<MetasQuery>({
-// 			query: MetasDoc
-// 		})
-// 	);
-// 	if (!metasData) return;
-// 	const filteredNodes = metasData.metas.nodes.filter((e) => e.key !== key);
-// 	const updatedNode = {
-// 		key,
-// 		value
-// 	};
-
-// 	const updatedMetas = {
-// 		...metas,
-// 		nodes: [...filteredNodes, updatedNode]
-// 	};
-
-// 	cache.writeQuery({
-// 		query: MetasDoc,
-// 		data: { metas: updatedMetas }
-// 	});
-// }
 
 function GlobalMeta() {
 	const Meta = queryStore({
@@ -263,6 +247,13 @@ export function MangaMeta(id: number) {
 					});
 
 					const variables = { key: cacheKey, value: jsonValue, id };
+					if (get(Meta).mangaMetaDefaults[key] === undefined) {
+						await Meta.update((old) => {
+							const tmp = old;
+							tmp.mangaMetaDefaults[key] = mangaMetaDefaults[key] as never;
+							return tmp;
+						});
+					}
 					if (val !== get(Meta).mangaMetaDefaults[key]) {
 						await client.mutation(setMangaMeta, variables);
 					} else if (cachedValue !== undefined) {
