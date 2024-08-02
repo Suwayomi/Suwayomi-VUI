@@ -237,7 +237,7 @@
 
 	$: chapterNumbers = sortedChapters?.map((e) => e.chapterNumber);
 	$: checkArray = Array.from(
-		Array(chapterNumbers?.reduce((a, c) => Math.max(a, c)) ?? 0),
+		Array(Math.floor(chapterNumbers?.reduce((a, c) => Math.max(a, c)) ?? 0)),
 		(_, index) => index + 1
 	);
 	$: missingChapters = checkArray?.filter(
