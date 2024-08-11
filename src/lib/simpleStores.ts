@@ -84,7 +84,8 @@ export enum sort {
 	ID = 'ID',
 	'Latest Read' = 'Latest Read',
 	'Latest Fetched' = 'Latest Fetched',
-	'Latest Uploaded' = 'Latest Uploaded'
+	'Latest Uploaded' = 'Latest Uploaded',
+	Random = 'Random'
 }
 
 export enum display {

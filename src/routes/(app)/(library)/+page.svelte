@@ -124,38 +124,57 @@
 		return true;
 	});
 
-	$: sortedMangas = filteredMangas
-		? [...filteredMangas].sort((a, b) => {
-				let tru = true;
-				switch ($Meta.Sort) {
-					case sort.ID:
-						tru = a.id > b.id;
-						break;
-					case sort.Unread:
-						tru = a.unreadCount > b.unreadCount;
-						break;
-					case sort.Alphabetical:
-						tru = a.title > b.title;
-						break;
-					case sort['Latest Read']:
-						tru =
-							parseInt(a.lastReadChapter?.lastReadAt ?? '0') >
-							parseInt(b.lastReadChapter?.lastReadAt ?? '0');
-						break;
-					case sort['Latest Fetched']:
-						tru =
-							parseInt(a.latestFetchedChapter?.fetchedAt ?? '0') >
-							parseInt(b.latestFetchedChapter?.fetchedAt ?? '0');
-						break;
-					case sort['Latest Uploaded']:
-						tru =
-							parseInt(a.latestUploadedChapter?.uploadDate ?? '0') >
-							parseInt(b.latestUploadedChapter?.uploadDate ?? '0');
-				}
+	function shuffle<T>(array: T[]) {
+		var tmp,
+			current,
+			top = array.length;
 
-				if ($Meta.Asc) tru = !tru;
-				return tru ? -1 : 1;
-			})
+		if (top)
+			while (--top) {
+				current = Math.floor(Math.random() * (top + 1));
+				tmp = array[current];
+				array[current] = array[top];
+				array[top] = tmp;
+			}
+
+		return array;
+	}
+
+	$: sortedMangas = filteredMangas
+		? $Meta.Sort === sort.Random
+			? shuffle([...filteredMangas])
+			: [...filteredMangas].sort((a, b) => {
+					let tru = true;
+					switch ($Meta.Sort) {
+						case sort.ID:
+							tru = a.id > b.id;
+							break;
+						case sort.Unread:
+							tru = a.unreadCount > b.unreadCount;
+							break;
+						case sort.Alphabetical:
+							tru = a.title > b.title;
+							break;
+						case sort['Latest Read']:
+							tru =
+								parseInt(a.lastReadChapter?.lastReadAt ?? '0') >
+								parseInt(b.lastReadChapter?.lastReadAt ?? '0');
+							break;
+						case sort['Latest Fetched']:
+							tru =
+								parseInt(a.latestFetchedChapter?.fetchedAt ?? '0') >
+								parseInt(b.latestFetchedChapter?.fetchedAt ?? '0');
+							break;
+						case sort['Latest Uploaded']:
+							tru =
+								parseInt(a.latestUploadedChapter?.uploadDate ?? '0') >
+								parseInt(b.latestUploadedChapter?.uploadDate ?? '0');
+							break;
+					}
+
+					if ($Meta.Asc) tru = !tru;
+					return tru ? -1 : 1;
+				})
 		: undefined;
 
 	function selectAll() {
