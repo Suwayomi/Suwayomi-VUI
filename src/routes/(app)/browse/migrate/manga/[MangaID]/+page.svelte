@@ -27,7 +27,14 @@
 		variables: { id: data.MangaID }
 	});
 
-	$: $query = $manga.data?.manga?.title || null;
+	const unSub = manga.subscribe(onSub);
+
+	function onSub(mangaNow: typeof $manga) {
+		if (mangaNow?.data?.manga?.title) {
+			$query = mangaNow?.data?.manga?.title;
+			unSub();
+		}
+	}
 
 	function OpenModal(id: number) {
 		modalStore.trigger({
