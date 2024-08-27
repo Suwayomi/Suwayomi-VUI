@@ -32,7 +32,9 @@
 	function onSub(mangaNow: typeof $manga) {
 		if (mangaNow?.data?.manga?.title) {
 			$query = mangaNow?.data?.manga?.title;
-			unSub();
+			setTimeout(() => {
+				unSub();
+			}, 1);
 		}
 	}
 
