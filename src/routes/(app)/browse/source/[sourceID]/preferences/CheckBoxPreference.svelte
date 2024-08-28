@@ -10,7 +10,7 @@
 	import Slide from '$lib/components/Slide.svelte';
 	import { updateSourcePreference } from '$lib/gql/Mutations';
 	import type { getSource } from '$lib/gql/Queries';
-	import { getContextClient, queryStore } from '@urql/svelte';
+	import { getContextClient } from '@urql/svelte';
 	import type { ResultOf } from '$lib/gql/graphql';
 
 	export let pref: Extract<
@@ -24,15 +24,13 @@
 	let checked = pref.CheckBoxCheckBoxCurrentValue ?? pref.CheckBoxDefault;
 	const client = getContextClient();
 	function handelcheck(state: CustomEvent<boolean>) {
-		queryStore({
-			client,
-			query: updateSourcePreference,
-			variables: {
+		client
+			.mutation(updateSourcePreference, {
 				source: id,
 				checkBoxState: state.detail,
 				position: index
-			}
-		});
+			})
+			.toPromise();
 	}
 </script>
 
