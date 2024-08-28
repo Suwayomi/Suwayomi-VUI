@@ -23,15 +23,13 @@
 	let selected = pref.ListCurrentValue ?? pref.ListDefault;
 	const client = getContextClient();
 	function handelchange() {
-		queryStore({
-			client,
-			query: updateSourcePreference,
-			variables: {
+		client
+			.mutation(updateSourcePreference, {
 				source: id,
 				listState: selected,
 				position: index
-			}
-		});
+			})
+			.toPromise();
 	}
 </script>
 

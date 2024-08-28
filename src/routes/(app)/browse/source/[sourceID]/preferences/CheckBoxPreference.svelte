@@ -24,15 +24,13 @@
 	let checked = pref.CheckBoxCheckBoxCurrentValue ?? pref.CheckBoxDefault;
 	const client = getContextClient();
 	function handelcheck(state: CustomEvent<boolean>) {
-		queryStore({
-			client,
-			query: updateSourcePreference,
-			variables: {
+		client
+			.mutation(updateSourcePreference, {
 				source: id,
 				checkBoxState: state.detail,
 				position: index
-			}
-		});
+			})
+			.toPromise();
 	}
 </script>
 

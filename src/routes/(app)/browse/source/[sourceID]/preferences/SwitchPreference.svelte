@@ -24,15 +24,13 @@
 	let checked = pref.SwitchCurrentValue ?? pref.SwitchDefault;
 	const client = getContextClient();
 	function handelcheck(state: CustomEvent<boolean>) {
-		queryStore({
-			client,
-			query: updateSourcePreference,
-			variables: {
+		client
+			.mutation(updateSourcePreference, {
 				source: id,
 				switchState: state.detail,
 				position: index
-			}
-		});
+			})
+			.toPromise();
 	}
 </script>
 

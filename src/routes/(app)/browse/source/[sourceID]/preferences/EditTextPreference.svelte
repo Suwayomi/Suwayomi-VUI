@@ -23,15 +23,13 @@
 	let value = pref.EditTextCurrentValue ?? pref.EditTextDefault;
 	const client = getContextClient();
 	function handelChange() {
-		queryStore({
-			client,
-			query: updateSourcePreference,
-			variables: {
+		client
+			.mutation(updateSourcePreference, {
 				source: id,
 				editTextState: value,
 				position: index
-			}
-		});
+			})
+			.toPromise();
 	}
 </script>
 

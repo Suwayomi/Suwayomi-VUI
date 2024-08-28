@@ -25,15 +25,13 @@
 		pref.MultiSelectListCurrentValue ?? pref.MultiSelectListDefault;
 	const client = getContextClient();
 	function handelchange() {
-		queryStore({
-			client,
-			query: updateSourcePreference,
-			variables: {
+		client
+			.mutation(updateSourcePreference, {
 				source: id,
 				multiSelectState: selected,
 				position: index
-			}
-		});
+			})
+			.toPromise();
 	}
 </script>
 
