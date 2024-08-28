@@ -9,7 +9,7 @@
 <script lang="ts">
 	import { updateSourcePreference } from '$lib/gql/Mutations';
 	import type { getSource } from '$lib/gql/Queries';
-	import { getContextClient, queryStore } from '@urql/svelte';
+	import { getContextClient } from '@urql/svelte';
 	import type { ResultOf } from '$lib/gql/graphql';
 
 	export let pref: Extract<
