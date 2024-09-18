@@ -176,9 +176,7 @@
 
 		if (
 			parsedQuery !== null &&
-			specificSearch(ele, parsedQuery.slice(1) as ANO[]).findIndex(
-				(e) => e === false
-			) !== -1
+			specificSearch(ele, parsedQuery).findIndex((e) => e === false) !== -1
 		)
 			return false;
 
