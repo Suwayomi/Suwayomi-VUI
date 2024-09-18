@@ -48,9 +48,7 @@
 </script>
 
 <div
-	class="max-w-[16rem]
-			overflow-hidden
-			transition-all duration-500 ease-in-out
+	class="relative max-w-[16rem] overflow-hidden transition-all duration-500 ease-in-out
 			{searchElementHidden ? 'max-w-[0rem] opacity-0 sm:max-w-[1rem]' : ''}"
 >
 	<input
@@ -63,6 +61,7 @@
 		on:change={handelChange}
 		on:keydown={handelEscapeInput}
 	/>
+	<slot />
 </div>
 <TooltipIconButton
 	on:click={handelSearch}

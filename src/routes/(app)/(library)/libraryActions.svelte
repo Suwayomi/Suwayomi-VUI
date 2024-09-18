@@ -25,6 +25,8 @@
 	import { getContextClient } from '@urql/svelte';
 	import { ConditionalChaptersOfGivenManga } from '$lib/gql/Queries';
 	import { enqueueChapterDownloads, updateMangas } from '$lib/gql/Mutations';
+	import Tooltip from '$lib/components/Tooltip.svelte';
+	import LibrarySearchHelp from './LibrarySearchHelp.svelte';
 
 	const client = getContextClient();
 
@@ -121,6 +123,15 @@
 			client.mutation(enqueueChapterDownloads, { ids }).toPromise()
 		);
 	}
+	function handelHelp() {
+		modalStore.trigger({
+			type: 'component',
+			backdropClasses: '!p-0',
+			component: {
+				ref: LibrarySearchHelp
+			}
+		});
+	}
 </script>
 
 <div class="flex h-full max-w-full">
@@ -192,7 +203,21 @@
 		name="mdi:{$selectMode ? 'select-multiple' : 'flip-to-front'}"
 		tip="Select Mode"
 	/>
-	<Search />
+	<Search>
+		<Tooltip
+			tip="Help"
+			class="absolute right-0 top-1/2 -translate-y-1/2"
+			tipclass="z-70"
+			placement="left"
+		>
+			<button
+				on:click={handelHelp}
+				class="variant-ghost-primary btn z-[60] w-0 p-3 leading-[0] opacity-20 hover:opacity-100"
+			>
+				?
+			</button>
+		</Tooltip>
+	</Search>
 	<TooltipIconButton
 		on:click={handelFilter}
 		name="mdi:filter"
