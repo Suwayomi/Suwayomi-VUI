@@ -17,9 +17,14 @@
 	import { selected, selectMode, type MangaType } from './LibraryStores';
 	import { onMount } from 'svelte';
 	import { AppBarData } from '$lib/MountTitleAction';
-	import { gridValues, HelpDoSelect, HelpSelectAll } from '$lib/util';
+	import {
+		errortoast,
+		gridValues,
+		HelpDoSelect,
+		HelpSelectAll
+	} from '$lib/util';
 	import IconWrapper from '$lib/components/IconWrapper.svelte';
-
+	import { parseQuery, type ANO, type parsedQueryType } from './queryParse';
 	import { getCategories, getCategory } from '$lib/gql/Queries';
 	import { getContextClient, queryStore } from '@urql/svelte';
 
@@ -48,6 +53,61 @@
 
 	const query = queryParam('q', ssp.string(), { pushHistory: false });
 	const tab = queryParam('tab', ssp.number(), { pushHistory: false });
+
+	$: [err, parsedQuery] = parseQuery($query);
+	$: if (err !== null) {
+		errortoast('Invalid Query', err);
+	}
+
+	$: validateParsedQuery(parsedQuery);
+
+	function validateParsedQuery(query: parsedQueryType) {
+		if (query === null) return;
+		if (query.length === 0) return;
+		if (query.length < 2) return;
+
+		const anos = query.slice(1) as ANO[];
+
+		validateANOs(anos);
+	}
+	function validateANOs(anos: ANO[]) {
+		anos.forEach((e) => {
+			switch (e.type) {
+				case 'and':
+				case 'not':
+					return validateToBaseData(e.base, e.value.replaceAll('_', ' '));
+				case 'or':
+					return validateANOs(e.value);
+			}
+		});
+	}
+
+	function validateToBaseData(base: string, compare: string) {
+		switch (base) {
+			case 't':
+			case 'title':
+			case 'd':
+			case 'description':
+			case 'g':
+			case 'genre':
+			case 'a':
+			case 'artist':
+			case 'au':
+			case 'author':
+			case 's':
+			case 'source':
+			case 'st':
+			case 'status':
+			case '|':
+				return;
+			default:
+				errortoast(
+					'Invalid Base',
+					`base: ${base} in string ${base}:${compare}`
+				);
+		}
+	}
+
 	$: mangas = queryStore({
 		client,
 		query: getCategory,
@@ -96,11 +156,11 @@
 		if (!ele.inLibrary) return false;
 		if ($Meta.ignoreFiltersWhenSearching) {
 			if (
-				$query !== '' &&
-				$query !== null &&
-				ele.title.toLowerCase().includes($query.toLowerCase())
-			)
+				parsedQuery !== null &&
+				specificSearch(ele, parsedQuery).findIndex((e) => e === false) === -1
+			) {
 				return true;
+			}
 		}
 
 		if ($Meta.Downloaded === 1 && ele.downloadCount === 0) return false;
@@ -115,14 +175,91 @@
 			return false;
 
 		if (
-			$query !== '' &&
-			$query !== null &&
-			!ele.title.toLowerCase().includes($query.toLowerCase())
+			parsedQuery !== null &&
+			specificSearch(ele, parsedQuery.slice(1) as ANO[]).findIndex(
+				(e) => e === false
+			) !== -1
 		)
 			return false;
 
 		return true;
 	});
+
+	function OrSearch(manga: MangaType, query: ANO[]): boolean {
+		const ind = query.findIndex((e) => e.value === '|');
+		if (ind === -1)
+			return specificSearch(manga, query).findIndex((e) => e === false) === -1;
+		const before = query.slice(0, ind);
+		const after = query.slice(ind + 1);
+		return (
+			specificSearch(manga, before).findIndex((e) => e === false) === -1 ||
+			OrSearch(manga, after)
+		);
+	}
+
+	function specificSearch(manga: MangaType, query: ANO[]): boolean[] {
+		const comparason = query.flatMap((e) => {
+			switch (e.type) {
+				case 'and':
+					return compareToBaseData(manga, e.base, e.value.replaceAll('_', ' '));
+				case 'not':
+					return !compareToBaseData(
+						manga,
+						e.base,
+						e.value.replaceAll('_', ' ')
+					);
+				case 'or':
+					return OrSearch(manga, e.value);
+			}
+		});
+		return comparason; //-1 === comparason.findIndex((e) => e === false);
+	}
+
+	function compareToBaseData(
+		manga: MangaType,
+		base: string,
+		compare: string
+	): boolean {
+		// base strings: title, description, genre, artist, author, source
+		switch (base) {
+			case 't':
+			case 'title':
+				return manga.title.toLowerCase().includes(compare.toLowerCase());
+			case 'd':
+			case 'description':
+				return (
+					manga.description?.toLowerCase().includes(compare.toLowerCase()) ??
+					false
+				);
+			case 'g':
+			case 'genre':
+				return manga.genre.some((e) =>
+					e.toLowerCase().includes(compare.toLowerCase())
+				);
+			case 'a':
+			case 'artist':
+				return (
+					manga.artist?.toLowerCase().includes(compare.toLowerCase()) ?? false
+				);
+			case 'au':
+			case 'author':
+				return (
+					manga.author?.toLowerCase().includes(compare.toLowerCase()) ?? false
+				);
+			case 's':
+			case 'source':
+				return (
+					manga.source?.displayName
+						?.toLowerCase()
+						.includes(compare.toLowerCase()) ?? false
+				);
+			case 'st':
+			case 'status':
+				return manga.status.toLowerCase().includes(compare.toLowerCase());
+			default:
+				return true;
+		}
+	}
 
 	function shuffle<T>(array: T[]) {
 		var tmp,
@@ -229,7 +366,7 @@
 		<svelte:fragment slot="panel">
 			{#if $mangas.fetching}
 				<div class="yoy m-2 grid gap-2 {gridValues}">
-					{#each new Array(orderedCategories.find((e) => e.id === $tab ?? 0)?.mangas.totalCount ?? 10) as _}
+					{#each new Array(orderedCategories.find((e) => e.id === $tab)?.mangas.totalCount ?? 10) as _}
 						<div class="aspect-cover w-full">
 							<div
 								class="placeholder h-full animate-pulse

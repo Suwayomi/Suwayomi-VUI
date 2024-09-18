@@ -54,13 +54,22 @@ export const getCategory = graphql(
 							lastReadAt
 							id
 						}
+						chapters {
+							totalCount
+						}
+						artist
+						author
+						description
+						genre
+						status
+						source {
+							displayName
+							id
+						}
 						trackRecords {
 							nodes {
 								...TrackRecordTypeFragment
 							}
-						}
-						chapters {
-							totalCount
 						}
 					}
 				}
