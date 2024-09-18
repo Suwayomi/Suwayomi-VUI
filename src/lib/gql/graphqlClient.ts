@@ -400,6 +400,12 @@ function updateMangaCategoriesUpdater(
 			lastReadChapter: dat.manga.lastReadChapter,
 			latestUploadedChapter: dat.manga.latestUploadedChapter,
 			trackRecords: dat.manga.trackRecords,
+			source: dat.manga.source,
+			status: dat.manga.status,
+			genre: dat.manga.genre,
+			description: dat.manga.description,
+			author: dat.manga.author,
+			artist: dat.manga.artist,
 			chapters: dat.manga.chapters ?? {
 				totalCount: 0
 			}

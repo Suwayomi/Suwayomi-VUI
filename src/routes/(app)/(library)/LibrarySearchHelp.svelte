@@ -12,6 +12,7 @@
 
 <ModalTemplate title="Library Specific Search Help">
 	<p class="whitespace-pre-wrap">
+		<!-- eslint-disable-next-line svelte/no-at-html-tags -->
 		{@html `<h2>Basic Info:</h2>specific search is based on the style of searching that booru sites often support
 
 regular title search and specific search is separated by an "@"
