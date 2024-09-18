@@ -19,7 +19,11 @@ regular title search and specific search is separated by an "@"
 
 specific search does not respect Escape Characters.
 you can't use "@" in search at all
-you cant use "{", "}" or ":" in the specific search
+you cant use "{", "}", "_" or ":" in the specific search
+
+you must replace " " with "_" in the specific search
+so "space monster" would be "space_monster"
+it will still search for "space monster" 
 
 <h2>Searching:</h2>
 @ title:isekai title:life
