@@ -487,9 +487,9 @@
 	);
 
 	onMount(() => {
-		window.addEventListener('keydown', handelKeypress, true);
+		document.addEventListener('keydown', handelKeypress, true);
 		return () => {
-			window.removeEventListener('keydown', handelKeypress, true);
+			document.removeEventListener('keydown', handelKeypress, true);
 		};
 	});
 
