@@ -200,12 +200,18 @@
 			return;
 		}
 		if (keyEvent.code === 'Space') {
+			console.log(keyEvent);
 			keyEvent.preventDefault();
 			keyEvent.stopPropagation();
 			if (keyEvent.shiftKey) {
+				console.log('space+shift goBackChapter');
 				goBackChapter();
+				console.log('space+shift scrolling up');
 				scrollBy(-0.8);
-			} else doScroll();
+			} else {
+				console.log('space scrolling down');
+				doScroll();
+			}
 			return;
 		}
 		if (keyEvent.code === 'ArrowRight') {
