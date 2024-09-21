@@ -204,12 +204,9 @@
 			keyEvent.preventDefault();
 			keyEvent.stopPropagation();
 			if (keyEvent.shiftKey) {
-				console.log('space+shift goBackChapter');
 				goBackChapter();
-				console.log('space+shift scrolling up');
 				scrollBy(-0.8);
 			} else {
-				console.log('space scrolling down');
 				doScroll();
 			}
 			return;
