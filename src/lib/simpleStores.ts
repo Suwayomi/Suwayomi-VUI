@@ -74,7 +74,8 @@ const mangaMetaDefaults = {
 	mobileFullScreenOnChapterPage: true,
 	doPageIndicator: false,
 	notes: '',
-	showMissingChapters: false
+	showMissingChapters: false,
+	groupPartials: [] as string[]
 };
 type mangaMeta = typeof mangaMetaDefaults;
 

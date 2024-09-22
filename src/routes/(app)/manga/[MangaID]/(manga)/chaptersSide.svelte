@@ -40,6 +40,7 @@
 		trackProgress,
 		updateChapters
 	} from '$lib/gql/Mutations';
+	import { filterChapters } from '../util';
 
 	export let manga: OperationResultStore<ResultOf<typeof getManga>> & Pausable;
 	export let MangaID: number;
@@ -91,21 +92,7 @@
 
 	$: chaptersInfo = $manga?.data?.manga?.chapters.nodes;
 
-	$: filteredChapters = chaptersInfo?.filter((chapter) => {
-		if ($mangaMeta.ChapterUnread === 1 && chapter.isRead) return false;
-		if ($mangaMeta.ChapterUnread === 2 && !chapter.isRead) return false;
-
-		if ($mangaMeta.ChapterDownloaded === 1 && !chapter.isDownloaded)
-			return false;
-		if ($mangaMeta.ChapterDownloaded === 2 && chapter.isDownloaded)
-			return false;
-
-		if ($mangaMeta.ChapterBookmarked === 1 && !chapter.isBookmarked)
-			return false;
-		if ($mangaMeta.ChapterBookmarked === 2 && chapter.isBookmarked)
-			return false;
-		return true;
-	});
+	$: filteredChapters = chaptersInfo?.filter(filterChapters(mangaMeta));
 
 	$: sortedChapters = filteredChapters
 		? [...filteredChapters].sort((a, b) => {

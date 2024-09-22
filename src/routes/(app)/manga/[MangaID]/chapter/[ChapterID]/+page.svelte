@@ -19,6 +19,7 @@
 	import { onMount } from 'svelte';
 	import type { PageData } from './$types';
 	import { ViewNav, chapterTitle, mangaTitle } from './chapterStores';
+	import { filterChapters } from '../../util';
 	import { paths, type PathLayout, type Paths, type TPath } from './paths';
 	import {
 		getContextClient,
@@ -33,9 +34,17 @@
 		updateChapter
 	} from '$lib/gql/Mutations';
 	import { ChapterTypeFragment } from '$lib/gql/Fragments';
+	import { queryParam, ssp } from 'sveltekit-search-params';
 
 	export let data: PageData;
 	let mangaMeta = MangaMeta(data.MangaID);
+
+	let pagenav = queryParam('pagenav', ssp.boolean(), { pushHistory: false });
+
+	$: if ($pagenav) {
+		$pagenav = null;
+		all = [];
+	}
 
 	onMount(() => {
 		if (
@@ -135,10 +144,14 @@
 		if (next) currentChapterID = next.id;
 	}
 
+	$: filteredChapters = $manga.data?.manga?.chapters.nodes?.filter(
+		filterChapters(mangaMeta, true)
+	);
+
 	function getChapterOfID(
 		currentID: number
 	): ResultOf<typeof ChapterTypeFragment> | undefined {
-		return $manga.data?.manga?.chapters.nodes?.find((e) => e.id === currentID);
+		return filteredChapters?.find((e) => e.id === currentID);
 	}
 
 	function getChapterAfterID(
@@ -146,8 +159,16 @@
 		_: unknown = undefined
 	): ResultOf<typeof ChapterTypeFragment> | undefined {
 		const currentChapter = getChapterOfID(currentID);
-		return $manga.data?.manga?.chapters.nodes?.find((e) =>
-			currentChapter ? e.sourceOrder === currentChapter.sourceOrder + 1 : false
+		if (!currentChapter) return undefined;
+		return filteredChapters?.reduce(
+			(acc, e) => {
+				if (e.sourceOrder > currentChapter.sourceOrder) {
+					if (!acc) acc = e;
+					if (e.sourceOrder < acc.sourceOrder) acc = e;
+				}
+				return acc;
+			},
+			undefined as ResultOf<typeof ChapterTypeFragment> | undefined
 		);
 	}
 
@@ -155,8 +176,16 @@
 		currentID: number
 	): ResultOf<typeof ChapterTypeFragment> | undefined {
 		const currentChapter = getChapterOfID(currentID);
-		return $manga.data?.manga?.chapters.nodes?.find((e) =>
-			currentChapter ? e.sourceOrder === currentChapter.sourceOrder - 1 : false
+		if (!currentChapter) return undefined;
+		return filteredChapters?.reduce(
+			(acc, e) => {
+				if (e.sourceOrder < currentChapter.sourceOrder) {
+					if (!acc) acc = e;
+					if (e.sourceOrder > acc.sourceOrder) acc = e;
+				}
+				return acc;
+			},
+			undefined as ResultOf<typeof ChapterTypeFragment> | undefined
 		);
 	}
 
@@ -200,7 +229,6 @@
 			return;
 		}
 		if (keyEvent.code === 'Space') {
-			console.log(keyEvent);
 			keyEvent.preventDefault();
 			keyEvent.stopPropagation();
 			if (keyEvent.shiftKey) {
@@ -427,8 +455,7 @@
 
 	$: $mangaTitle = $manga.data?.manga?.title ?? '';
 	$: $chapterTitle =
-		$manga.data?.manga?.chapters.nodes?.find((e) => e.id === currentChapterID)
-			?.name ?? '';
+		filteredChapters?.find((e) => e.id === currentChapterID)?.name ?? '';
 	$: currentChapterID, got();
 
 	function got() {
