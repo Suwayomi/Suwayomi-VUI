@@ -20,6 +20,7 @@
 	} from '@skeletonlabs/skeleton';
 	import { ChapterSort, ChapterTitle, MangaMeta } from '$lib/simpleStores';
 	import { enumKeys } from '$lib/util';
+	import Tooltip from '$lib/components/Tooltip.svelte';
 	const modalStore = getModalStore();
 	let tabSet = localStorageStore('libraryModalTabs', 0);
 	export let MangaID: number;
@@ -103,6 +104,26 @@
 						>
 							<span>Bookmarked</span>
 						</TriStateSlide>
+						<Tooltip tip="Comma seperated list">
+							<label
+								class="label flex w-full items-center justify-between rounded-full p-1 pl-2 hover:variant-glass-surface focus:outline-0"
+							>
+								<span class="pr-2">Groups</span>
+								<input
+									on:change={(e) => {
+										$mangaMeta.groupPartials = e.currentTarget.value
+											.split(',')
+											.map((a) => a.trim())
+											.filter((a) => a.length > 0);
+										e.currentTarget.value = $mangaMeta.groupPartials.join(',');
+									}}
+									value={$mangaMeta.groupPartials.join(',')}
+									class="input w-1/2"
+									type="text"
+									placeholder="asura,dex,..."
+								/>
+							</label>
+						</Tooltip>
 					{:else if $tabSet === 1}
 						<TriStateSlide
 							triState={false}

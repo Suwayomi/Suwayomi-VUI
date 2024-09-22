@@ -10,19 +10,22 @@
 	import IconButton from '$lib/components/IconButton.svelte';
 	import { getDrawerStore, AppShell } from '@skeletonlabs/skeleton';
 	import type { LayoutData } from './$types';
+	import { writable } from 'svelte/store';
 
 	export let data: LayoutData;
 
 	const drawerStore = getDrawerStore();
+	const dataStore = writable(data);
+
+	$: dataStore.set(data);
+
 	function draw() {
 		if ($drawerStore.open) drawerStore.close();
 		else {
 			drawerStore.open({
 				id: 'ChapterMenu',
 				width: 'w-[280px] md:w-[480px]',
-				meta: {
-					id: data.MangaID
-				}
+				meta: dataStore
 			});
 		}
 	}

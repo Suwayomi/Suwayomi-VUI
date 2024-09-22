@@ -12,11 +12,33 @@
 	import { enumKeys } from '$lib/util';
 	import { getDrawerStore } from '@skeletonlabs/skeleton';
 	import { ViewNav, chapterTitle, mangaTitle } from './chapterStores';
-	import { Layout, MangaMeta, Mode } from '$lib/simpleStores';
+	import { ChapterTitle, Layout, MangaMeta, Mode } from '$lib/simpleStores';
 	import { onMount } from 'svelte';
+	import { getContextClient, queryStore } from '@urql/svelte';
+	import { getManga } from '$lib/gql/Queries';
+	import { filterChapters } from '../../util';
+	import type { Writable } from 'svelte/store';
+	import IntersectionObserver from '$lib/components/IntersectionObserver.svelte';
+	import { onNavigate } from '$app/navigation';
 	const drawerStore = getDrawerStore();
-	const mangaMeta = MangaMeta($drawerStore.meta.id);
+
+	$: data = $drawerStore.meta as Writable<{
+		MangaID: number;
+		ChapterID: number;
+	}>;
+
+	$: mangaMeta = MangaMeta($data?.MangaID);
+
 	onMount(() => {
+		let elem = document.querySelector(`#chapter-${$data.ChapterID}`)!;
+		elem = elem.previousElementSibling ?? elem;
+		const to = elem?.getBoundingClientRect();
+		chapterSideElement?.scrollTo({
+			top:
+				chapterSideElement.scrollTop -
+				chapterSideElement.getBoundingClientRect().top +
+				(to?.top ?? 0)
+		});
 		if (
 			/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
 				navigator.userAgent
@@ -36,9 +58,30 @@
 			}
 		};
 	});
+
+	const client = getContextClient();
+	$: manga = queryStore({
+		client,
+		query: getManga,
+		variables: { id: $data?.MangaID }
+	});
+
+	$: filteredChapters = $manga.data?.manga.chapters.nodes
+		.sort((a, b) => {
+			return b.sourceOrder - a.sourceOrder;
+		})
+		.filter(filterChapters(mangaMeta, true));
+	let chapterSideElement: HTMLDivElement | undefined;
+
+	onNavigate((e) => {
+		const match = e.to?.url.pathname.match(/\/manga\/(\d+)\/chapter\/(\d+)/);
+		if (!match) {
+			drawerStore.close();
+		}
+	});
 </script>
 
-{#if mangaMeta}
+{#if $mangaMeta}
 	<div class="flex flex-col p-4">
 		<div class="mb-4 flex justify-end border-b border-surface-500 pb-4">
 			<IconButton
@@ -100,6 +143,62 @@
 					{/each}
 				</select>
 			</label>
+		</div>
+		<div class="ml-3">
+			<div
+				bind:this={chapterSideElement}
+				id="chapterSideElement"
+				class="max-h-60 w-full overflow-y-auto"
+			>
+				{#each filteredChapters ?? [] as chapter}
+					<IntersectionObserver
+						let:intersecting
+						class="relative h-20"
+						root={chapterSideElement}
+						top={400}
+						bottom={400}
+						id="chapter-{chapter.id}"
+					>
+						{#if intersecting}
+							<a
+								data-sveltekit-replacestate
+								href="./{chapter.id}?pagenav"
+								class="h-20"
+							>
+								<div
+									class="w-full space-y-0 p-1
+							{chapter.id === $data?.ChapterID && 'variant-ghost'}
+							{chapter.isRead && 'opacity-50'}"
+								>
+									<div class="line-clamp-1 w-full text-xl md:text-2xl">
+										{$mangaMeta.ChapterTitle === ChapterTitle['Source Title']
+											? chapter.name
+											: `Chapter ${chapter.chapterNumber}`}
+									</div>
+									<div
+										class="line-clamp-1 w-full text-sm font-light md:text-base"
+										title="Fetched Date: {new Date(
+											parseInt(chapter.fetchedAt) * 1000
+										).toLocaleString()}&#013;Upload Date: {new Date(
+											parseInt(chapter.uploadDate)
+										).toLocaleString()}"
+									>
+										{new Date(
+											$mangaMeta.ChapterFetchUpload
+												? parseInt(chapter.uploadDate)
+												: parseInt(chapter.fetchedAt) * 1000
+										).toLocaleDateString()}{chapter.isDownloaded
+											? ' • Downloaded'
+											: ''}{chapter.scanlator ? ` • ${chapter.scanlator}` : ''}
+									</div>
+								</div>
+							</a>
+						{/if}
+					</IntersectionObserver>
+				{:else}
+					No chapters found
+				{/each}
+			</div>
 		</div>
 	</div>
 {/if}

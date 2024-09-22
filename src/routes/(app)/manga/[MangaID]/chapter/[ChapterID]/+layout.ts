@@ -7,6 +7,9 @@
 import { error } from '@sveltejs/kit';
 import type { LayoutLoad } from './$types';
 
+export const ssr = false;
+export const prerender = false;
+
 export const load: LayoutLoad = ({ params }) => {
 	const MangaID = parseInt(params.MangaID);
 	const ChapterID = parseInt(params.ChapterID);
