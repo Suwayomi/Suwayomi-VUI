@@ -99,7 +99,7 @@
 	let pages: Promise<OperationResult<ResultOf<typeof fetchChapterPages>>>;
 	$: currentChapterID, loadNew();
 	function loadNew() {
-		if (preload) pages = preload;
+		if (preload && !pagenav) pages = preload;
 		else
 			pages = client
 				.mutation(fetchChapterPages, { chapterId: currentChapterID })
@@ -545,6 +545,10 @@
 		</div>
 	{/if}
 	{#each all as chapter, index (chapter.chapterID)}
+		<div class="flex w-full justify-end">
+			{chapter.chapterID}
+			{chapter.pages[0]}
+		</div>
 		<div>
 			<div
 				class="
