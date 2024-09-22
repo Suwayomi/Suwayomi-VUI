@@ -99,7 +99,7 @@
 	let pages: Promise<OperationResult<ResultOf<typeof fetchChapterPages>>>;
 	$: currentChapterID, loadNew();
 	function loadNew() {
-		if (preload) pages = preload;
+		if (preload && !pagenav) pages = preload;
 		else
 			pages = client
 				.mutation(fetchChapterPages, { chapterId: currentChapterID })
@@ -133,8 +133,17 @@
 		await ErrorHelp(`failed to load chapter ${obj.chapterID}`, pages, (e) => {
 			if (!e.data) return;
 			obj.pages = e.data.fetchChapterPages.pages;
+			// if ($pagenav) {
+			// 	$pagenav = null;
+			// 	console.log(currentChapterID, data.ChapterID);
+			// 	preload = undefined;
+			// 	preLoadingId = undefined;
+			// 	all = [];
+			// 	console.log('reset all');
+			// }
 			all.push(obj);
 			all = all;
+			console.log('added chapter ' + obj.chapterID + ' ' + obj.pages[0]);
 		});
 		chapterLoading = false;
 	}
@@ -303,7 +312,16 @@
 					(e) => {
 						if (!e.data) return;
 						obj.pages = e.data.fetchChapterPages.pages;
+						// if ($pagenav) {
+						// 	$pagenav = null;
+						// 	console.log(currentChapterID, data.ChapterID);
+						// 	preload = undefined;
+						// 	preLoadingId = undefined;
+						// 	all = [];
+						// 	console.log('reset all');
+						// }
 						all = [obj, ...all];
+						console.log('added chapter ' + obj.chapterID + ' ' + obj.pages[0]);
 					}
 				);
 				const topImg = document.querySelector(`#c1p0`);
@@ -545,6 +563,10 @@
 		</div>
 	{/if}
 	{#each all as chapter, index (chapter.chapterID)}
+		<div class="flex w-full justify-end">
+			{chapter.chapterID}
+			{chapter.pages[0]}
+		</div>
 		<div>
 			<div
 				class="
