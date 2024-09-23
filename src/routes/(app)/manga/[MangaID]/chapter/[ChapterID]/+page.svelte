@@ -18,7 +18,12 @@
 	import { getDrawerStore } from '@skeletonlabs/skeleton';
 	import { onMount } from 'svelte';
 	import type { PageData } from './$types';
-	import { ViewNav, chapterTitle, mangaTitle } from './chapterStores';
+	import {
+		ViewNav,
+		chapterTitle,
+		makeToggleDrawer,
+		mangaTitle
+	} from './chapterStores';
 	import { filterChapters } from '../../util';
 	import { paths, type PathLayout, type Paths, type TPath } from './paths';
 	import {
@@ -35,6 +40,7 @@
 	} from '$lib/gql/Mutations';
 	import { ChapterTypeFragment } from '$lib/gql/Fragments';
 	import { queryParam, ssp } from 'sveltekit-search-params';
+	import { writable } from 'svelte/store';
 
 	export let data: PageData;
 	let mangaMeta = MangaMeta(data.MangaID);
@@ -208,6 +214,10 @@
 		}
 	}
 
+	const dataStore = writable(data);
+	$: dataStore.set(data);
+	const Toggledraw = makeToggleDrawer(drawerStore, dataStore);
+
 	async function handelKeypress(keyEvent: KeyboardEvent) {
 		if (!pageElement) {
 			pageElement = document.querySelector('#page') as HTMLDivElement;
@@ -215,17 +225,7 @@
 		if (keyEvent.code === 'Escape') {
 			keyEvent.preventDefault();
 			keyEvent.stopPropagation();
-			if ($drawerStore.open) {
-				drawerStore.close();
-				return;
-			}
-			drawerStore.open({
-				id: 'ChapterMenu',
-				width: 'w-[280px] md:w-[480px]',
-				meta: {
-					id: data.MangaID
-				}
-			});
+			Toggledraw();
 			return;
 		}
 		if (keyEvent.code === 'Space') {
@@ -331,13 +331,7 @@
 		} else if (pointInPoly([e.x, e.y], polyToPOLLY(path.back))) {
 			scrollBy(-0.8);
 		} else if (path.menu && pointInPoly([e.x, e.y], polyToPOLLY(path.menu))) {
-			drawerStore.open({
-				id: 'ChapterMenu',
-				width: 'w-[280px] md:w-[480px]',
-				meta: {
-					id: data.MangaID
-				}
-			});
+			Toggledraw();
 		}
 	}
 
