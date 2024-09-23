@@ -545,10 +545,6 @@
 		</div>
 	{/if}
 	{#each all as chapter, index (chapter.chapterID)}
-		<div class="flex w-full justify-end">
-			{chapter.chapterID}
-			{chapter.pages[0]}
-		</div>
 		<div>
 			<div
 				class="
