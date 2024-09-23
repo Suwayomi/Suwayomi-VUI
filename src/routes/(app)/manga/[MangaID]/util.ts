@@ -15,10 +15,11 @@ export function filterChapters(
 	return (
 		chapter: ResultOf<typeof getManga>['manga']['chapters']['nodes'][number]
 	) => {
-		if (get(mangaMeta).groupPartials.length > 0) {
+		const groupPartials = get(mangaMeta).groupPartials;
+		if (groupPartials && groupPartials.length > 0) {
 			if (
-				!get(mangaMeta)
-					.groupPartials.map((group) => {
+				!groupPartials
+					.map((group) => {
 						return chapter.scanlator
 							?.toLowerCase()
 							.includes(group.toLowerCase());

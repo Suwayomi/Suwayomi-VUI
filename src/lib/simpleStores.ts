@@ -75,7 +75,7 @@ const mangaMetaDefaults = {
 	doPageIndicator: false,
 	notes: '',
 	showMissingChapters: false,
-	groupPartials: [] as string[]
+	groupPartials: [] as string[] | undefined
 };
 type mangaMeta = typeof mangaMetaDefaults;
 
