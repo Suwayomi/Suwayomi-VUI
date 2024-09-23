@@ -115,9 +115,10 @@
 											.split(',')
 											.map((a) => a.trim())
 											.filter((a) => a.length > 0);
-										e.currentTarget.value = $mangaMeta.groupPartials.join(',');
+										e.currentTarget.value =
+											$mangaMeta.groupPartials?.join(',') ?? '';
 									}}
-									value={$mangaMeta.groupPartials.join(',')}
+									value={$mangaMeta.groupPartials?.join(',') ?? ''}
 									class="input w-1/2"
 									type="text"
 									placeholder="asura,dex,..."
