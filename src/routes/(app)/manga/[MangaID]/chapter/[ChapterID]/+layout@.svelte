@@ -10,7 +10,7 @@
 	import IconButton from '$lib/components/IconButton.svelte';
 	import { getDrawerStore, AppShell } from '@skeletonlabs/skeleton';
 	import type { LayoutData } from './$types';
-	import { get, writable, type Writable } from 'svelte/store';
+	import { writable } from 'svelte/store';
 	import { makeToggleDrawer } from './chapterStores';
 
 	export let data: LayoutData;
