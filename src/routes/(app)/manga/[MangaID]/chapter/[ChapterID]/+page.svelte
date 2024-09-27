@@ -99,7 +99,9 @@
 	}[] = [];
 	let all: {
 		chapterID: number;
-		pages: ResultOf<typeof fetchChapterPages>['fetchChapterPages']['pages']; //FetchChapterPagesMutation['fetchChapterPages']['pages'];
+		pages: NonNullable<
+			ResultOf<typeof fetchChapterPages>['fetchChapterPages']
+		>['pages'];
 	}[] = [];
 
 	let pages: Promise<OperationResult<ResultOf<typeof fetchChapterPages>>>;
@@ -137,7 +139,7 @@
 			pages: []
 		};
 		await ErrorHelp(`failed to load chapter ${obj.chapterID}`, pages, (e) => {
-			if (!e.data) return;
+			if (!e.data?.fetchChapterPages) return;
 			obj.pages = e.data.fetchChapterPages.pages;
 			all.push(obj);
 			all = all;
@@ -289,7 +291,7 @@
 			const tmp = getChapterBeforeID(topChapter);
 			if (tmp) {
 				const TTTmp = client
-					.mutation('fetchChapterPages', {
+					.mutation(fetchChapterPages, {
 						chapterId: tmp.id
 					})
 					.toPromise();
@@ -301,7 +303,7 @@
 					`failed to load chapter ${obj.chapterID}`,
 					TTTmp,
 					(e) => {
-						if (!e.data) return;
+						if (!e.data?.fetchChapterPages) return;
 						obj.pages = e.data.fetchChapterPages.pages;
 						all = [obj, ...all];
 					}
@@ -667,7 +669,7 @@
 
 	{#if preload}
 		{#await preload then preloaded}
-			{#if preloaded.data}
+			{#if preloaded.data?.fetchChapterPages}
 				{#each preloaded.data.fetchChapterPages.pages as value}
 					<img src={value} alt="img" class="h-0 w-0" />
 				{/each}

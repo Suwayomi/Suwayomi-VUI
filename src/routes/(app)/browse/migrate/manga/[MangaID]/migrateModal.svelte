@@ -99,7 +99,7 @@
 			'failed to download new chapters',
 			client
 				.mutation(enqueueChapterDownloads, {
-					ids: newChapters.data?.fetchChapters.chapters.map((e) => e.id) ?? []
+					ids: newChapters.data?.fetchChapters?.chapters.map((e) => e.id) ?? []
 				})
 				.toPromise()
 		);
@@ -120,7 +120,7 @@
 		newChapters: OperationResult<ResultOf<typeof fetchChaptersMigration>>
 	) {
 		const CurrMappedToNew = manga.chapters.nodes.map((current) => {
-			if (!newChapters.data) return undefined;
+			if (!newChapters.data?.fetchChapters) return undefined;
 			const tmp = newChapters.data.fetchChapters.chapters.findIndex(
 				(e) => e.chapterNumber === current.chapterNumber
 			);

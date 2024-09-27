@@ -313,6 +313,32 @@ const introspection = {
             }
           },
           {
+            "name": "distinctFromAll",
+            "type": {
+              "kind": "LIST",
+              "ofType": {
+                "kind": "NON_NULL",
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "Boolean"
+                }
+              }
+            }
+          },
+          {
+            "name": "distinctFromAny",
+            "type": {
+              "kind": "LIST",
+              "ofType": {
+                "kind": "NON_NULL",
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "Boolean"
+                }
+              }
+            }
+          },
+          {
             "name": "equalTo",
             "type": {
               "kind": "SCALAR",
@@ -379,6 +405,32 @@ const introspection = {
             "type": {
               "kind": "SCALAR",
               "name": "Boolean"
+            }
+          },
+          {
+            "name": "notEqualToAll",
+            "type": {
+              "kind": "LIST",
+              "ofType": {
+                "kind": "NON_NULL",
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "Boolean"
+                }
+              }
+            }
+          },
+          {
+            "name": "notEqualToAny",
+            "type": {
+              "kind": "LIST",
+              "ofType": {
+                "kind": "NON_NULL",
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "Boolean"
+                }
+              }
             }
           },
           {
@@ -722,6 +774,30 @@ const introspection = {
             "isDeprecated": false
           }
         ]
+      },
+      {
+        "kind": "INPUT_OBJECT",
+        "name": "CategoryOrderInput",
+        "inputFields": [
+          {
+            "name": "by",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "ENUM",
+                "name": "CategoryOrderBy"
+              }
+            }
+          },
+          {
+            "name": "byType",
+            "type": {
+              "kind": "ENUM",
+              "name": "SortOrder"
+            }
+          }
+        ],
+        "isOneOf": false
       },
       {
         "kind": "OBJECT",
@@ -1348,6 +1424,30 @@ const introspection = {
             "isDeprecated": false
           }
         ]
+      },
+      {
+        "kind": "INPUT_OBJECT",
+        "name": "ChapterOrderInput",
+        "inputFields": [
+          {
+            "name": "by",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "ENUM",
+                "name": "ChapterOrderBy"
+              }
+            }
+          },
+          {
+            "name": "byType",
+            "type": {
+              "kind": "ENUM",
+              "name": "SortOrder"
+            }
+          }
+        ],
+        "isOneOf": false
       },
       {
         "kind": "OBJECT",
@@ -2614,6 +2714,32 @@ const introspection = {
             }
           },
           {
+            "name": "distinctFromAll",
+            "type": {
+              "kind": "LIST",
+              "ofType": {
+                "kind": "NON_NULL",
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "Float"
+                }
+              }
+            }
+          },
+          {
+            "name": "distinctFromAny",
+            "type": {
+              "kind": "LIST",
+              "ofType": {
+                "kind": "NON_NULL",
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "Float"
+                }
+              }
+            }
+          },
+          {
             "name": "equalTo",
             "type": {
               "kind": "SCALAR",
@@ -2680,6 +2806,32 @@ const introspection = {
             "type": {
               "kind": "SCALAR",
               "name": "Float"
+            }
+          },
+          {
+            "name": "notEqualToAll",
+            "type": {
+              "kind": "LIST",
+              "ofType": {
+                "kind": "NON_NULL",
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "Float"
+                }
+              }
+            }
+          },
+          {
+            "name": "notEqualToAny",
+            "type": {
+              "kind": "LIST",
+              "ofType": {
+                "kind": "NON_NULL",
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "Float"
+                }
+              }
             }
           },
           {
@@ -3561,6 +3713,30 @@ const introspection = {
         ]
       },
       {
+        "kind": "INPUT_OBJECT",
+        "name": "ExtensionOrderInput",
+        "inputFields": [
+          {
+            "name": "by",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "ENUM",
+                "name": "ExtensionOrderBy"
+              }
+            }
+          },
+          {
+            "name": "byType",
+            "type": {
+              "kind": "ENUM",
+              "name": "SortOrder"
+            }
+          }
+        ],
+        "isOneOf": false
+      },
+      {
         "kind": "OBJECT",
         "name": "ExtensionType",
         "fields": [
@@ -4241,6 +4417,32 @@ const introspection = {
             }
           },
           {
+            "name": "distinctFromAll",
+            "type": {
+              "kind": "LIST",
+              "ofType": {
+                "kind": "NON_NULL",
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "Float"
+                }
+              }
+            }
+          },
+          {
+            "name": "distinctFromAny",
+            "type": {
+              "kind": "LIST",
+              "ofType": {
+                "kind": "NON_NULL",
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "Float"
+                }
+              }
+            }
+          },
+          {
             "name": "equalTo",
             "type": {
               "kind": "SCALAR",
@@ -4307,6 +4509,32 @@ const introspection = {
             "type": {
               "kind": "SCALAR",
               "name": "Float"
+            }
+          },
+          {
+            "name": "notEqualToAll",
+            "type": {
+              "kind": "LIST",
+              "ofType": {
+                "kind": "NON_NULL",
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "Float"
+                }
+              }
+            }
+          },
+          {
+            "name": "notEqualToAny",
+            "type": {
+              "kind": "LIST",
+              "ofType": {
+                "kind": "NON_NULL",
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "Float"
+                }
+              }
             }
           },
           {
@@ -4602,6 +4830,32 @@ const introspection = {
             }
           },
           {
+            "name": "distinctFromAll",
+            "type": {
+              "kind": "LIST",
+              "ofType": {
+                "kind": "NON_NULL",
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "Int"
+                }
+              }
+            }
+          },
+          {
+            "name": "distinctFromAny",
+            "type": {
+              "kind": "LIST",
+              "ofType": {
+                "kind": "NON_NULL",
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "Int"
+                }
+              }
+            }
+          },
+          {
             "name": "equalTo",
             "type": {
               "kind": "SCALAR",
@@ -4668,6 +4922,32 @@ const introspection = {
             "type": {
               "kind": "SCALAR",
               "name": "Int"
+            }
+          },
+          {
+            "name": "notEqualToAll",
+            "type": {
+              "kind": "LIST",
+              "ofType": {
+                "kind": "NON_NULL",
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "Int"
+                }
+              }
+            }
+          },
+          {
+            "name": "notEqualToAny",
+            "type": {
+              "kind": "LIST",
+              "ofType": {
+                "kind": "NON_NULL",
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "Int"
+                }
+              }
             }
           },
           {
@@ -5042,6 +5322,32 @@ const introspection = {
             }
           },
           {
+            "name": "distinctFromAll",
+            "type": {
+              "kind": "LIST",
+              "ofType": {
+                "kind": "NON_NULL",
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "LongString"
+                }
+              }
+            }
+          },
+          {
+            "name": "distinctFromAny",
+            "type": {
+              "kind": "LIST",
+              "ofType": {
+                "kind": "NON_NULL",
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "LongString"
+                }
+              }
+            }
+          },
+          {
             "name": "equalTo",
             "type": {
               "kind": "SCALAR",
@@ -5108,6 +5414,32 @@ const introspection = {
             "type": {
               "kind": "SCALAR",
               "name": "LongString"
+            }
+          },
+          {
+            "name": "notEqualToAll",
+            "type": {
+              "kind": "LIST",
+              "ofType": {
+                "kind": "NON_NULL",
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "LongString"
+                }
+              }
+            }
+          },
+          {
+            "name": "notEqualToAny",
+            "type": {
+              "kind": "LIST",
+              "ofType": {
+                "kind": "NON_NULL",
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "LongString"
+                }
+              }
             }
           },
           {
@@ -5655,6 +5987,30 @@ const introspection = {
         ]
       },
       {
+        "kind": "INPUT_OBJECT",
+        "name": "MangaOrderInput",
+        "inputFields": [
+          {
+            "name": "by",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "ENUM",
+                "name": "MangaOrderBy"
+              }
+            }
+          },
+          {
+            "name": "byType",
+            "type": {
+              "kind": "ENUM",
+              "name": "SortOrder"
+            }
+          }
+        ],
+        "isOneOf": false
+      },
+      {
         "kind": "ENUM",
         "name": "MangaStatus",
         "enumValues": [
@@ -5697,6 +6053,32 @@ const introspection = {
             "type": {
               "kind": "ENUM",
               "name": "MangaStatus"
+            }
+          },
+          {
+            "name": "distinctFromAll",
+            "type": {
+              "kind": "LIST",
+              "ofType": {
+                "kind": "NON_NULL",
+                "ofType": {
+                  "kind": "ENUM",
+                  "name": "MangaStatus"
+                }
+              }
+            }
+          },
+          {
+            "name": "distinctFromAny",
+            "type": {
+              "kind": "LIST",
+              "ofType": {
+                "kind": "NON_NULL",
+                "ofType": {
+                  "kind": "ENUM",
+                  "name": "MangaStatus"
+                }
+              }
             }
           },
           {
@@ -5766,6 +6148,32 @@ const introspection = {
             "type": {
               "kind": "ENUM",
               "name": "MangaStatus"
+            }
+          },
+          {
+            "name": "notEqualToAll",
+            "type": {
+              "kind": "LIST",
+              "ofType": {
+                "kind": "NON_NULL",
+                "ofType": {
+                  "kind": "ENUM",
+                  "name": "MangaStatus"
+                }
+              }
+            }
+          },
+          {
+            "name": "notEqualToAny",
+            "type": {
+              "kind": "LIST",
+              "ofType": {
+                "kind": "NON_NULL",
+                "ofType": {
+                  "kind": "ENUM",
+                  "name": "MangaStatus"
+                }
+              }
             }
           },
           {
@@ -5912,6 +6320,18 @@ const introspection = {
                     "name": "String"
                   }
                 }
+              }
+            },
+            "args": [],
+            "isDeprecated": false
+          },
+          {
+            "name": "hasDuplicateChapters",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "Boolean"
               }
             },
             "args": [],
@@ -6277,6 +6697,30 @@ const introspection = {
         ]
       },
       {
+        "kind": "INPUT_OBJECT",
+        "name": "MetaOrderInput",
+        "inputFields": [
+          {
+            "name": "by",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "ENUM",
+                "name": "MetaOrderBy"
+              }
+            }
+          },
+          {
+            "name": "byType",
+            "type": {
+              "kind": "ENUM",
+              "name": "SortOrder"
+            }
+          }
+        ],
+        "isOneOf": false
+      },
+      {
         "kind": "INTERFACE",
         "name": "MetaType",
         "fields": [
@@ -6515,11 +6959,8 @@ const introspection = {
           {
             "name": "clearDownloader",
             "type": {
-              "kind": "NON_NULL",
-              "ofType": {
-                "kind": "OBJECT",
-                "name": "ClearDownloaderPayload"
-              }
+              "kind": "OBJECT",
+              "name": "ClearDownloaderPayload"
             },
             "args": [
               {
@@ -6558,11 +6999,8 @@ const introspection = {
           {
             "name": "createCategory",
             "type": {
-              "kind": "NON_NULL",
-              "ofType": {
-                "kind": "OBJECT",
-                "name": "CreateCategoryPayload"
-              }
+              "kind": "OBJECT",
+              "name": "CreateCategoryPayload"
             },
             "args": [
               {
@@ -6581,11 +7019,8 @@ const introspection = {
           {
             "name": "deleteCategory",
             "type": {
-              "kind": "NON_NULL",
-              "ofType": {
-                "kind": "OBJECT",
-                "name": "DeleteCategoryPayload"
-              }
+              "kind": "OBJECT",
+              "name": "DeleteCategoryPayload"
             },
             "args": [
               {
@@ -6604,11 +7039,8 @@ const introspection = {
           {
             "name": "deleteCategoryMeta",
             "type": {
-              "kind": "NON_NULL",
-              "ofType": {
-                "kind": "OBJECT",
-                "name": "DeleteCategoryMetaPayload"
-              }
+              "kind": "OBJECT",
+              "name": "DeleteCategoryMetaPayload"
             },
             "args": [
               {
@@ -6627,11 +7059,8 @@ const introspection = {
           {
             "name": "deleteChapterMeta",
             "type": {
-              "kind": "NON_NULL",
-              "ofType": {
-                "kind": "OBJECT",
-                "name": "DeleteChapterMetaPayload"
-              }
+              "kind": "OBJECT",
+              "name": "DeleteChapterMetaPayload"
             },
             "args": [
               {
@@ -6650,11 +7079,8 @@ const introspection = {
           {
             "name": "deleteDownloadedChapter",
             "type": {
-              "kind": "NON_NULL",
-              "ofType": {
-                "kind": "OBJECT",
-                "name": "DeleteDownloadedChapterPayload"
-              }
+              "kind": "OBJECT",
+              "name": "DeleteDownloadedChapterPayload"
             },
             "args": [
               {
@@ -6673,11 +7099,8 @@ const introspection = {
           {
             "name": "deleteDownloadedChapters",
             "type": {
-              "kind": "NON_NULL",
-              "ofType": {
-                "kind": "OBJECT",
-                "name": "DeleteDownloadedChaptersPayload"
-              }
+              "kind": "OBJECT",
+              "name": "DeleteDownloadedChaptersPayload"
             },
             "args": [
               {
@@ -6696,11 +7119,8 @@ const introspection = {
           {
             "name": "deleteGlobalMeta",
             "type": {
-              "kind": "NON_NULL",
-              "ofType": {
-                "kind": "OBJECT",
-                "name": "DeleteGlobalMetaPayload"
-              }
+              "kind": "OBJECT",
+              "name": "DeleteGlobalMetaPayload"
             },
             "args": [
               {
@@ -6719,11 +7139,8 @@ const introspection = {
           {
             "name": "deleteMangaMeta",
             "type": {
-              "kind": "NON_NULL",
-              "ofType": {
-                "kind": "OBJECT",
-                "name": "DeleteMangaMetaPayload"
-              }
+              "kind": "OBJECT",
+              "name": "DeleteMangaMetaPayload"
             },
             "args": [
               {
@@ -6742,11 +7159,8 @@ const introspection = {
           {
             "name": "deleteSourceMeta",
             "type": {
-              "kind": "NON_NULL",
-              "ofType": {
-                "kind": "OBJECT",
-                "name": "DeleteSourceMetaPayload"
-              }
+              "kind": "OBJECT",
+              "name": "DeleteSourceMetaPayload"
             },
             "args": [
               {
@@ -6765,11 +7179,8 @@ const introspection = {
           {
             "name": "dequeueChapterDownload",
             "type": {
-              "kind": "NON_NULL",
-              "ofType": {
-                "kind": "OBJECT",
-                "name": "DequeueChapterDownloadPayload"
-              }
+              "kind": "OBJECT",
+              "name": "DequeueChapterDownloadPayload"
             },
             "args": [
               {
@@ -6788,11 +7199,8 @@ const introspection = {
           {
             "name": "dequeueChapterDownloads",
             "type": {
-              "kind": "NON_NULL",
-              "ofType": {
-                "kind": "OBJECT",
-                "name": "DequeueChapterDownloadsPayload"
-              }
+              "kind": "OBJECT",
+              "name": "DequeueChapterDownloadsPayload"
             },
             "args": [
               {
@@ -6811,11 +7219,8 @@ const introspection = {
           {
             "name": "enqueueChapterDownload",
             "type": {
-              "kind": "NON_NULL",
-              "ofType": {
-                "kind": "OBJECT",
-                "name": "EnqueueChapterDownloadPayload"
-              }
+              "kind": "OBJECT",
+              "name": "EnqueueChapterDownloadPayload"
             },
             "args": [
               {
@@ -6834,11 +7239,8 @@ const introspection = {
           {
             "name": "enqueueChapterDownloads",
             "type": {
-              "kind": "NON_NULL",
-              "ofType": {
-                "kind": "OBJECT",
-                "name": "EnqueueChapterDownloadsPayload"
-              }
+              "kind": "OBJECT",
+              "name": "EnqueueChapterDownloadsPayload"
             },
             "args": [
               {
@@ -6857,11 +7259,8 @@ const introspection = {
           {
             "name": "fetchChapterPages",
             "type": {
-              "kind": "NON_NULL",
-              "ofType": {
-                "kind": "OBJECT",
-                "name": "FetchChapterPagesPayload"
-              }
+              "kind": "OBJECT",
+              "name": "FetchChapterPagesPayload"
             },
             "args": [
               {
@@ -6880,11 +7279,8 @@ const introspection = {
           {
             "name": "fetchChapters",
             "type": {
-              "kind": "NON_NULL",
-              "ofType": {
-                "kind": "OBJECT",
-                "name": "FetchChaptersPayload"
-              }
+              "kind": "OBJECT",
+              "name": "FetchChaptersPayload"
             },
             "args": [
               {
@@ -6903,11 +7299,8 @@ const introspection = {
           {
             "name": "fetchExtensions",
             "type": {
-              "kind": "NON_NULL",
-              "ofType": {
-                "kind": "OBJECT",
-                "name": "FetchExtensionsPayload"
-              }
+              "kind": "OBJECT",
+              "name": "FetchExtensionsPayload"
             },
             "args": [
               {
@@ -6926,11 +7319,8 @@ const introspection = {
           {
             "name": "fetchManga",
             "type": {
-              "kind": "NON_NULL",
-              "ofType": {
-                "kind": "OBJECT",
-                "name": "FetchMangaPayload"
-              }
+              "kind": "OBJECT",
+              "name": "FetchMangaPayload"
             },
             "args": [
               {
@@ -6949,11 +7339,8 @@ const introspection = {
           {
             "name": "fetchSourceManga",
             "type": {
-              "kind": "NON_NULL",
-              "ofType": {
-                "kind": "OBJECT",
-                "name": "FetchSourceMangaPayload"
-              }
+              "kind": "OBJECT",
+              "name": "FetchSourceMangaPayload"
             },
             "args": [
               {
@@ -6995,11 +7382,8 @@ const introspection = {
           {
             "name": "installExternalExtension",
             "type": {
-              "kind": "NON_NULL",
-              "ofType": {
-                "kind": "OBJECT",
-                "name": "InstallExternalExtensionPayload"
-              }
+              "kind": "OBJECT",
+              "name": "InstallExternalExtensionPayload"
             },
             "args": [
               {
@@ -7087,11 +7471,8 @@ const introspection = {
           {
             "name": "reorderChapterDownload",
             "type": {
-              "kind": "NON_NULL",
-              "ofType": {
-                "kind": "OBJECT",
-                "name": "ReorderChapterDownloadPayload"
-              }
+              "kind": "OBJECT",
+              "name": "ReorderChapterDownloadPayload"
             },
             "args": [
               {
@@ -7133,11 +7514,8 @@ const introspection = {
           {
             "name": "resetWebUIUpdateStatus",
             "type": {
-              "kind": "NON_NULL",
-              "ofType": {
-                "kind": "OBJECT",
-                "name": "WebUIUpdateStatus"
-              }
+              "kind": "OBJECT",
+              "name": "WebUIUpdateStatus"
             },
             "args": [],
             "isDeprecated": false
@@ -7168,11 +7546,8 @@ const introspection = {
           {
             "name": "setCategoryMeta",
             "type": {
-              "kind": "NON_NULL",
-              "ofType": {
-                "kind": "OBJECT",
-                "name": "SetCategoryMetaPayload"
-              }
+              "kind": "OBJECT",
+              "name": "SetCategoryMetaPayload"
             },
             "args": [
               {
@@ -7191,11 +7566,8 @@ const introspection = {
           {
             "name": "setChapterMeta",
             "type": {
-              "kind": "NON_NULL",
-              "ofType": {
-                "kind": "OBJECT",
-                "name": "SetChapterMetaPayload"
-              }
+              "kind": "OBJECT",
+              "name": "SetChapterMetaPayload"
             },
             "args": [
               {
@@ -7214,11 +7586,8 @@ const introspection = {
           {
             "name": "setGlobalMeta",
             "type": {
-              "kind": "NON_NULL",
-              "ofType": {
-                "kind": "OBJECT",
-                "name": "SetGlobalMetaPayload"
-              }
+              "kind": "OBJECT",
+              "name": "SetGlobalMetaPayload"
             },
             "args": [
               {
@@ -7237,11 +7606,8 @@ const introspection = {
           {
             "name": "setMangaMeta",
             "type": {
-              "kind": "NON_NULL",
-              "ofType": {
-                "kind": "OBJECT",
-                "name": "SetMangaMetaPayload"
-              }
+              "kind": "OBJECT",
+              "name": "SetMangaMetaPayload"
             },
             "args": [
               {
@@ -7283,11 +7649,8 @@ const introspection = {
           {
             "name": "setSourceMeta",
             "type": {
-              "kind": "NON_NULL",
-              "ofType": {
-                "kind": "OBJECT",
-                "name": "SetSourceMetaPayload"
-              }
+              "kind": "OBJECT",
+              "name": "SetSourceMetaPayload"
             },
             "args": [
               {
@@ -7306,11 +7669,8 @@ const introspection = {
           {
             "name": "startDownloader",
             "type": {
-              "kind": "NON_NULL",
-              "ofType": {
-                "kind": "OBJECT",
-                "name": "StartDownloaderPayload"
-              }
+              "kind": "OBJECT",
+              "name": "StartDownloaderPayload"
             },
             "args": [
               {
@@ -7329,11 +7689,8 @@ const introspection = {
           {
             "name": "stopDownloader",
             "type": {
-              "kind": "NON_NULL",
-              "ofType": {
-                "kind": "OBJECT",
-                "name": "StopDownloaderPayload"
-              }
+              "kind": "OBJECT",
+              "name": "StopDownloaderPayload"
             },
             "args": [
               {
@@ -7352,11 +7709,8 @@ const introspection = {
           {
             "name": "trackProgress",
             "type": {
-              "kind": "NON_NULL",
-              "ofType": {
-                "kind": "OBJECT",
-                "name": "TrackProgressPayload"
-              }
+              "kind": "OBJECT",
+              "name": "TrackProgressPayload"
             },
             "args": [
               {
@@ -7398,11 +7752,8 @@ const introspection = {
           {
             "name": "updateCategories",
             "type": {
-              "kind": "NON_NULL",
-              "ofType": {
-                "kind": "OBJECT",
-                "name": "UpdateCategoriesPayload"
-              }
+              "kind": "OBJECT",
+              "name": "UpdateCategoriesPayload"
             },
             "args": [
               {
@@ -7421,11 +7772,8 @@ const introspection = {
           {
             "name": "updateCategory",
             "type": {
-              "kind": "NON_NULL",
-              "ofType": {
-                "kind": "OBJECT",
-                "name": "UpdateCategoryPayload"
-              }
+              "kind": "OBJECT",
+              "name": "UpdateCategoryPayload"
             },
             "args": [
               {
@@ -7444,11 +7792,8 @@ const introspection = {
           {
             "name": "updateCategoryManga",
             "type": {
-              "kind": "NON_NULL",
-              "ofType": {
-                "kind": "OBJECT",
-                "name": "UpdateCategoryMangaPayload"
-              }
+              "kind": "OBJECT",
+              "name": "UpdateCategoryMangaPayload"
             },
             "args": [
               {
@@ -7467,11 +7812,8 @@ const introspection = {
           {
             "name": "updateCategoryOrder",
             "type": {
-              "kind": "NON_NULL",
-              "ofType": {
-                "kind": "OBJECT",
-                "name": "UpdateCategoryOrderPayload"
-              }
+              "kind": "OBJECT",
+              "name": "UpdateCategoryOrderPayload"
             },
             "args": [
               {
@@ -7490,11 +7832,8 @@ const introspection = {
           {
             "name": "updateChapter",
             "type": {
-              "kind": "NON_NULL",
-              "ofType": {
-                "kind": "OBJECT",
-                "name": "UpdateChapterPayload"
-              }
+              "kind": "OBJECT",
+              "name": "UpdateChapterPayload"
             },
             "args": [
               {
@@ -7513,11 +7852,8 @@ const introspection = {
           {
             "name": "updateChapters",
             "type": {
-              "kind": "NON_NULL",
-              "ofType": {
-                "kind": "OBJECT",
-                "name": "UpdateChaptersPayload"
-              }
+              "kind": "OBJECT",
+              "name": "UpdateChaptersPayload"
             },
             "args": [
               {
@@ -7536,11 +7872,8 @@ const introspection = {
           {
             "name": "updateExtension",
             "type": {
-              "kind": "NON_NULL",
-              "ofType": {
-                "kind": "OBJECT",
-                "name": "UpdateExtensionPayload"
-              }
+              "kind": "OBJECT",
+              "name": "UpdateExtensionPayload"
             },
             "args": [
               {
@@ -7559,11 +7892,8 @@ const introspection = {
           {
             "name": "updateExtensions",
             "type": {
-              "kind": "NON_NULL",
-              "ofType": {
-                "kind": "OBJECT",
-                "name": "UpdateExtensionsPayload"
-              }
+              "kind": "OBJECT",
+              "name": "UpdateExtensionsPayload"
             },
             "args": [
               {
@@ -7582,11 +7912,8 @@ const introspection = {
           {
             "name": "updateLibraryManga",
             "type": {
-              "kind": "NON_NULL",
-              "ofType": {
-                "kind": "OBJECT",
-                "name": "UpdateLibraryMangaPayload"
-              }
+              "kind": "OBJECT",
+              "name": "UpdateLibraryMangaPayload"
             },
             "args": [
               {
@@ -7605,11 +7932,8 @@ const introspection = {
           {
             "name": "updateManga",
             "type": {
-              "kind": "NON_NULL",
-              "ofType": {
-                "kind": "OBJECT",
-                "name": "UpdateMangaPayload"
-              }
+              "kind": "OBJECT",
+              "name": "UpdateMangaPayload"
             },
             "args": [
               {
@@ -7628,11 +7952,8 @@ const introspection = {
           {
             "name": "updateMangaCategories",
             "type": {
-              "kind": "NON_NULL",
-              "ofType": {
-                "kind": "OBJECT",
-                "name": "UpdateMangaCategoriesPayload"
-              }
+              "kind": "OBJECT",
+              "name": "UpdateMangaCategoriesPayload"
             },
             "args": [
               {
@@ -7651,11 +7972,8 @@ const introspection = {
           {
             "name": "updateMangas",
             "type": {
-              "kind": "NON_NULL",
-              "ofType": {
-                "kind": "OBJECT",
-                "name": "UpdateMangasPayload"
-              }
+              "kind": "OBJECT",
+              "name": "UpdateMangasPayload"
             },
             "args": [
               {
@@ -7674,11 +7992,8 @@ const introspection = {
           {
             "name": "updateMangasCategories",
             "type": {
-              "kind": "NON_NULL",
-              "ofType": {
-                "kind": "OBJECT",
-                "name": "UpdateMangasCategoriesPayload"
-              }
+              "kind": "OBJECT",
+              "name": "UpdateMangasCategoriesPayload"
             },
             "args": [
               {
@@ -7697,11 +8012,8 @@ const introspection = {
           {
             "name": "updateSourcePreference",
             "type": {
-              "kind": "NON_NULL",
-              "ofType": {
-                "kind": "OBJECT",
-                "name": "UpdateSourcePreferencePayload"
-              }
+              "kind": "OBJECT",
+              "name": "UpdateSourcePreferencePayload"
             },
             "args": [
               {
@@ -7766,11 +8078,8 @@ const introspection = {
           {
             "name": "updateWebUI",
             "type": {
-              "kind": "NON_NULL",
-              "ofType": {
-                "kind": "OBJECT",
-                "name": "WebUIUpdatePayload"
-              }
+              "kind": "OBJECT",
+              "name": "WebUIUpdatePayload"
             },
             "args": [
               {
@@ -8200,6 +8509,15 @@ const introspection = {
             "isDeprecated": false
           },
           {
+            "name": "flareSolverrAsResponseFallback",
+            "type": {
+              "kind": "SCALAR",
+              "name": "Boolean"
+            },
+            "args": [],
+            "isDeprecated": false
+          },
+          {
             "name": "flareSolverrEnabled",
             "type": {
               "kind": "SCALAR",
@@ -8282,6 +8600,33 @@ const introspection = {
           },
           {
             "name": "localSourcePath",
+            "type": {
+              "kind": "SCALAR",
+              "name": "String"
+            },
+            "args": [],
+            "isDeprecated": false
+          },
+          {
+            "name": "maxLogFileSize",
+            "type": {
+              "kind": "SCALAR",
+              "name": "String"
+            },
+            "args": [],
+            "isDeprecated": false
+          },
+          {
+            "name": "maxLogFiles",
+            "type": {
+              "kind": "SCALAR",
+              "name": "Int"
+            },
+            "args": [],
+            "isDeprecated": false
+          },
+          {
+            "name": "maxLogFolderSize",
             "type": {
               "kind": "SCALAR",
               "name": "String"
@@ -8567,6 +8912,13 @@ const introspection = {
             }
           },
           {
+            "name": "flareSolverrAsResponseFallback",
+            "type": {
+              "kind": "SCALAR",
+              "name": "Boolean"
+            }
+          },
+          {
             "name": "flareSolverrEnabled",
             "type": {
               "kind": "SCALAR",
@@ -8631,6 +8983,27 @@ const introspection = {
           },
           {
             "name": "localSourcePath",
+            "type": {
+              "kind": "SCALAR",
+              "name": "String"
+            }
+          },
+          {
+            "name": "maxLogFileSize",
+            "type": {
+              "kind": "SCALAR",
+              "name": "String"
+            }
+          },
+          {
+            "name": "maxLogFiles",
+            "type": {
+              "kind": "SCALAR",
+              "name": "Int"
+            }
+          },
+          {
+            "name": "maxLogFolderSize",
             "type": {
               "kind": "SCALAR",
               "name": "String"
@@ -8851,6 +9224,19 @@ const introspection = {
                 }
               },
               {
+                "name": "order",
+                "type": {
+                  "kind": "LIST",
+                  "ofType": {
+                    "kind": "NON_NULL",
+                    "ofType": {
+                      "kind": "INPUT_OBJECT",
+                      "name": "CategoryOrderInput"
+                    }
+                  }
+                }
+              },
+              {
                 "name": "orderBy",
                 "type": {
                   "kind": "ENUM",
@@ -8970,6 +9356,19 @@ const introspection = {
                 "type": {
                   "kind": "SCALAR",
                   "name": "Int"
+                }
+              },
+              {
+                "name": "order",
+                "type": {
+                  "kind": "LIST",
+                  "ofType": {
+                    "kind": "NON_NULL",
+                    "ofType": {
+                      "kind": "INPUT_OBJECT",
+                      "name": "ChapterOrderInput"
+                    }
+                  }
                 }
               },
               {
@@ -9114,6 +9513,19 @@ const introspection = {
                 }
               },
               {
+                "name": "order",
+                "type": {
+                  "kind": "LIST",
+                  "ofType": {
+                    "kind": "NON_NULL",
+                    "ofType": {
+                      "kind": "INPUT_OBJECT",
+                      "name": "ExtensionOrderInput"
+                    }
+                  }
+                }
+              },
+              {
                 "name": "orderBy",
                 "type": {
                   "kind": "ENUM",
@@ -9237,6 +9649,19 @@ const introspection = {
                 }
               },
               {
+                "name": "order",
+                "type": {
+                  "kind": "LIST",
+                  "ofType": {
+                    "kind": "NON_NULL",
+                    "ofType": {
+                      "kind": "INPUT_OBJECT",
+                      "name": "MangaOrderInput"
+                    }
+                  }
+                }
+              },
+              {
                 "name": "orderBy",
                 "type": {
                   "kind": "ENUM",
@@ -9333,6 +9758,19 @@ const introspection = {
                 "type": {
                   "kind": "SCALAR",
                   "name": "Int"
+                }
+              },
+              {
+                "name": "order",
+                "type": {
+                  "kind": "LIST",
+                  "ofType": {
+                    "kind": "NON_NULL",
+                    "ofType": {
+                      "kind": "INPUT_OBJECT",
+                      "name": "MetaOrderInput"
+                    }
+                  }
                 }
               },
               {
@@ -9490,6 +9928,19 @@ const introspection = {
                 }
               },
               {
+                "name": "order",
+                "type": {
+                  "kind": "LIST",
+                  "ofType": {
+                    "kind": "NON_NULL",
+                    "ofType": {
+                      "kind": "INPUT_OBJECT",
+                      "name": "SourceOrderInput"
+                    }
+                  }
+                }
+              },
+              {
                 "name": "orderBy",
                 "type": {
                   "kind": "ENUM",
@@ -9589,6 +10040,19 @@ const introspection = {
                 }
               },
               {
+                "name": "order",
+                "type": {
+                  "kind": "LIST",
+                  "ofType": {
+                    "kind": "NON_NULL",
+                    "ofType": {
+                      "kind": "INPUT_OBJECT",
+                      "name": "TrackRecordOrderInput"
+                    }
+                  }
+                }
+              },
+              {
                 "name": "orderBy",
                 "type": {
                   "kind": "ENUM",
@@ -9678,6 +10142,19 @@ const introspection = {
                 "type": {
                   "kind": "SCALAR",
                   "name": "Int"
+                }
+              },
+              {
+                "name": "order",
+                "type": {
+                  "kind": "LIST",
+                  "ofType": {
+                    "kind": "NON_NULL",
+                    "ofType": {
+                      "kind": "INPUT_OBJECT",
+                      "name": "TrackerOrderInput"
+                    }
+                  }
                 }
               },
               {
@@ -10523,6 +11000,15 @@ const introspection = {
             "isDeprecated": false
           },
           {
+            "name": "flareSolverrAsResponseFallback",
+            "type": {
+              "kind": "SCALAR",
+              "name": "Boolean"
+            },
+            "args": [],
+            "isDeprecated": false
+          },
+          {
             "name": "flareSolverrEnabled",
             "type": {
               "kind": "SCALAR",
@@ -10605,6 +11091,33 @@ const introspection = {
           },
           {
             "name": "localSourcePath",
+            "type": {
+              "kind": "SCALAR",
+              "name": "String"
+            },
+            "args": [],
+            "isDeprecated": false
+          },
+          {
+            "name": "maxLogFileSize",
+            "type": {
+              "kind": "SCALAR",
+              "name": "String"
+            },
+            "args": [],
+            "isDeprecated": false
+          },
+          {
+            "name": "maxLogFiles",
+            "type": {
+              "kind": "SCALAR",
+              "name": "Int"
+            },
+            "args": [],
+            "isDeprecated": false
+          },
+          {
+            "name": "maxLogFolderSize",
             "type": {
               "kind": "SCALAR",
               "name": "String"
@@ -10999,6 +11512,18 @@ const introspection = {
             "isDeprecated": false
           },
           {
+            "name": "flareSolverrAsResponseFallback",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "Boolean"
+              }
+            },
+            "args": [],
+            "isDeprecated": false
+          },
+          {
             "name": "flareSolverrEnabled",
             "type": {
               "kind": "NON_NULL",
@@ -11108,6 +11633,42 @@ const introspection = {
           },
           {
             "name": "localSourcePath",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "String"
+              }
+            },
+            "args": [],
+            "isDeprecated": false
+          },
+          {
+            "name": "maxLogFileSize",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "String"
+              }
+            },
+            "args": [],
+            "isDeprecated": false
+          },
+          {
+            "name": "maxLogFiles",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "Int"
+              }
+            },
+            "args": [],
+            "isDeprecated": false
+          },
+          {
+            "name": "maxLogFolderSize",
             "type": {
               "kind": "NON_NULL",
               "ofType": {
@@ -11756,6 +12317,30 @@ const introspection = {
       },
       {
         "kind": "INPUT_OBJECT",
+        "name": "SourceOrderInput",
+        "inputFields": [
+          {
+            "name": "by",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "ENUM",
+                "name": "SourceOrderBy"
+              }
+            }
+          },
+          {
+            "name": "byType",
+            "type": {
+              "kind": "ENUM",
+              "name": "SortOrder"
+            }
+          }
+        ],
+        "isOneOf": false
+      },
+      {
+        "kind": "INPUT_OBJECT",
         "name": "SourcePreferenceChangeInput",
         "inputFields": [
           {
@@ -12093,10 +12678,62 @@ const introspection = {
             }
           },
           {
+            "name": "distinctFromAll",
+            "type": {
+              "kind": "LIST",
+              "ofType": {
+                "kind": "NON_NULL",
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String"
+                }
+              }
+            }
+          },
+          {
+            "name": "distinctFromAny",
+            "type": {
+              "kind": "LIST",
+              "ofType": {
+                "kind": "NON_NULL",
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String"
+                }
+              }
+            }
+          },
+          {
             "name": "distinctFromInsensitive",
             "type": {
               "kind": "SCALAR",
               "name": "String"
+            }
+          },
+          {
+            "name": "distinctFromInsensitiveAll",
+            "type": {
+              "kind": "LIST",
+              "ofType": {
+                "kind": "NON_NULL",
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String"
+                }
+              }
+            }
+          },
+          {
+            "name": "distinctFromInsensitiveAny",
+            "type": {
+              "kind": "LIST",
+              "ofType": {
+                "kind": "NON_NULL",
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String"
+                }
+              }
             }
           },
           {
@@ -12107,10 +12744,62 @@ const introspection = {
             }
           },
           {
+            "name": "endsWithAll",
+            "type": {
+              "kind": "LIST",
+              "ofType": {
+                "kind": "NON_NULL",
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String"
+                }
+              }
+            }
+          },
+          {
+            "name": "endsWithAny",
+            "type": {
+              "kind": "LIST",
+              "ofType": {
+                "kind": "NON_NULL",
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String"
+                }
+              }
+            }
+          },
+          {
             "name": "endsWithInsensitive",
             "type": {
               "kind": "SCALAR",
               "name": "String"
+            }
+          },
+          {
+            "name": "endsWithInsensitiveAll",
+            "type": {
+              "kind": "LIST",
+              "ofType": {
+                "kind": "NON_NULL",
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String"
+                }
+              }
+            }
+          },
+          {
+            "name": "endsWithInsensitiveAny",
+            "type": {
+              "kind": "LIST",
+              "ofType": {
+                "kind": "NON_NULL",
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String"
+                }
+              }
             }
           },
           {
@@ -12182,10 +12871,62 @@ const introspection = {
             }
           },
           {
+            "name": "includesAll",
+            "type": {
+              "kind": "LIST",
+              "ofType": {
+                "kind": "NON_NULL",
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String"
+                }
+              }
+            }
+          },
+          {
+            "name": "includesAny",
+            "type": {
+              "kind": "LIST",
+              "ofType": {
+                "kind": "NON_NULL",
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String"
+                }
+              }
+            }
+          },
+          {
             "name": "includesInsensitive",
             "type": {
               "kind": "SCALAR",
               "name": "String"
+            }
+          },
+          {
+            "name": "includesInsensitiveAll",
+            "type": {
+              "kind": "LIST",
+              "ofType": {
+                "kind": "NON_NULL",
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String"
+                }
+              }
+            }
+          },
+          {
+            "name": "includesInsensitiveAny",
+            "type": {
+              "kind": "LIST",
+              "ofType": {
+                "kind": "NON_NULL",
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String"
+                }
+              }
             }
           },
           {
@@ -12231,10 +12972,62 @@ const introspection = {
             }
           },
           {
+            "name": "likeAll",
+            "type": {
+              "kind": "LIST",
+              "ofType": {
+                "kind": "NON_NULL",
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String"
+                }
+              }
+            }
+          },
+          {
+            "name": "likeAny",
+            "type": {
+              "kind": "LIST",
+              "ofType": {
+                "kind": "NON_NULL",
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String"
+                }
+              }
+            }
+          },
+          {
             "name": "likeInsensitive",
             "type": {
               "kind": "SCALAR",
               "name": "String"
+            }
+          },
+          {
+            "name": "likeInsensitiveAll",
+            "type": {
+              "kind": "LIST",
+              "ofType": {
+                "kind": "NON_NULL",
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String"
+                }
+              }
+            }
+          },
+          {
+            "name": "likeInsensitiveAny",
+            "type": {
+              "kind": "LIST",
+              "ofType": {
+                "kind": "NON_NULL",
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String"
+                }
+              }
             }
           },
           {
@@ -12259,6 +13052,32 @@ const introspection = {
             }
           },
           {
+            "name": "notEndsWithAll",
+            "type": {
+              "kind": "LIST",
+              "ofType": {
+                "kind": "NON_NULL",
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String"
+                }
+              }
+            }
+          },
+          {
+            "name": "notEndsWithAny",
+            "type": {
+              "kind": "LIST",
+              "ofType": {
+                "kind": "NON_NULL",
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String"
+                }
+              }
+            }
+          },
+          {
             "name": "notEndsWithInsensitive",
             "type": {
               "kind": "SCALAR",
@@ -12266,10 +13085,62 @@ const introspection = {
             }
           },
           {
+            "name": "notEndsWithInsensitiveAll",
+            "type": {
+              "kind": "LIST",
+              "ofType": {
+                "kind": "NON_NULL",
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String"
+                }
+              }
+            }
+          },
+          {
+            "name": "notEndsWithInsensitiveAny",
+            "type": {
+              "kind": "LIST",
+              "ofType": {
+                "kind": "NON_NULL",
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String"
+                }
+              }
+            }
+          },
+          {
             "name": "notEqualTo",
             "type": {
               "kind": "SCALAR",
               "name": "String"
+            }
+          },
+          {
+            "name": "notEqualToAll",
+            "type": {
+              "kind": "LIST",
+              "ofType": {
+                "kind": "NON_NULL",
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String"
+                }
+              }
+            }
+          },
+          {
+            "name": "notEqualToAny",
+            "type": {
+              "kind": "LIST",
+              "ofType": {
+                "kind": "NON_NULL",
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String"
+                }
+              }
             }
           },
           {
@@ -12306,10 +13177,62 @@ const introspection = {
             }
           },
           {
+            "name": "notIncludesAll",
+            "type": {
+              "kind": "LIST",
+              "ofType": {
+                "kind": "NON_NULL",
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String"
+                }
+              }
+            }
+          },
+          {
+            "name": "notIncludesAny",
+            "type": {
+              "kind": "LIST",
+              "ofType": {
+                "kind": "NON_NULL",
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String"
+                }
+              }
+            }
+          },
+          {
             "name": "notIncludesInsensitive",
             "type": {
               "kind": "SCALAR",
               "name": "String"
+            }
+          },
+          {
+            "name": "notIncludesInsensitiveAll",
+            "type": {
+              "kind": "LIST",
+              "ofType": {
+                "kind": "NON_NULL",
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String"
+                }
+              }
+            }
+          },
+          {
+            "name": "notIncludesInsensitiveAny",
+            "type": {
+              "kind": "LIST",
+              "ofType": {
+                "kind": "NON_NULL",
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String"
+                }
+              }
             }
           },
           {
@@ -12320,10 +13243,62 @@ const introspection = {
             }
           },
           {
+            "name": "notLikeAll",
+            "type": {
+              "kind": "LIST",
+              "ofType": {
+                "kind": "NON_NULL",
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String"
+                }
+              }
+            }
+          },
+          {
+            "name": "notLikeAny",
+            "type": {
+              "kind": "LIST",
+              "ofType": {
+                "kind": "NON_NULL",
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String"
+                }
+              }
+            }
+          },
+          {
             "name": "notLikeInsensitive",
             "type": {
               "kind": "SCALAR",
               "name": "String"
+            }
+          },
+          {
+            "name": "notLikeInsensitiveAll",
+            "type": {
+              "kind": "LIST",
+              "ofType": {
+                "kind": "NON_NULL",
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String"
+                }
+              }
+            }
+          },
+          {
+            "name": "notLikeInsensitiveAny",
+            "type": {
+              "kind": "LIST",
+              "ofType": {
+                "kind": "NON_NULL",
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String"
+                }
+              }
             }
           },
           {
@@ -12334,10 +13309,62 @@ const introspection = {
             }
           },
           {
+            "name": "notStartsWithAll",
+            "type": {
+              "kind": "LIST",
+              "ofType": {
+                "kind": "NON_NULL",
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String"
+                }
+              }
+            }
+          },
+          {
+            "name": "notStartsWithAny",
+            "type": {
+              "kind": "LIST",
+              "ofType": {
+                "kind": "NON_NULL",
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String"
+                }
+              }
+            }
+          },
+          {
             "name": "notStartsWithInsensitive",
             "type": {
               "kind": "SCALAR",
               "name": "String"
+            }
+          },
+          {
+            "name": "notStartsWithInsensitiveAll",
+            "type": {
+              "kind": "LIST",
+              "ofType": {
+                "kind": "NON_NULL",
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String"
+                }
+              }
+            }
+          },
+          {
+            "name": "notStartsWithInsensitiveAny",
+            "type": {
+              "kind": "LIST",
+              "ofType": {
+                "kind": "NON_NULL",
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String"
+                }
+              }
             }
           },
           {
@@ -12348,10 +13375,62 @@ const introspection = {
             }
           },
           {
+            "name": "startsWithAll",
+            "type": {
+              "kind": "LIST",
+              "ofType": {
+                "kind": "NON_NULL",
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String"
+                }
+              }
+            }
+          },
+          {
+            "name": "startsWithAny",
+            "type": {
+              "kind": "LIST",
+              "ofType": {
+                "kind": "NON_NULL",
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String"
+                }
+              }
+            }
+          },
+          {
             "name": "startsWithInsensitive",
             "type": {
               "kind": "SCALAR",
               "name": "String"
+            }
+          },
+          {
+            "name": "startsWithInsensitiveAll",
+            "type": {
+              "kind": "LIST",
+              "ofType": {
+                "kind": "NON_NULL",
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String"
+                }
+              }
+            }
+          },
+          {
+            "name": "startsWithInsensitiveAny",
+            "type": {
+              "kind": "LIST",
+              "ofType": {
+                "kind": "NON_NULL",
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String"
+                }
+              }
             }
           }
         ],
@@ -12946,6 +14025,30 @@ const introspection = {
         ]
       },
       {
+        "kind": "INPUT_OBJECT",
+        "name": "TrackRecordOrderInput",
+        "inputFields": [
+          {
+            "name": "by",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "ENUM",
+                "name": "TrackRecordOrderBy"
+              }
+            }
+          },
+          {
+            "name": "byType",
+            "type": {
+              "kind": "ENUM",
+              "name": "SortOrder"
+            }
+          }
+        ],
+        "isOneOf": false
+      },
+      {
         "kind": "OBJECT",
         "name": "TrackRecordType",
         "fields": [
@@ -13483,6 +14586,30 @@ const introspection = {
             "isDeprecated": false
           }
         ]
+      },
+      {
+        "kind": "INPUT_OBJECT",
+        "name": "TrackerOrderInput",
+        "inputFields": [
+          {
+            "name": "by",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "ENUM",
+                "name": "TrackerOrderBy"
+              }
+            }
+          },
+          {
+            "name": "byType",
+            "type": {
+              "kind": "ENUM",
+              "name": "SortOrder"
+            }
+          }
+        ],
+        "isOneOf": false
       },
       {
         "kind": "OBJECT",

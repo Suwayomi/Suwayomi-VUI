@@ -37,10 +37,11 @@
 
 	let page = 1;
 	let isLoading = true;
-	let all: ResultOf<typeof fetchSourceManga>['fetchSourceManga'] = {
-		hasNextPage: true,
-		mangas: []
-	};
+	let all: NonNullable<ResultOf<typeof fetchSourceManga>['fetchSourceManga']> =
+		{
+			hasNextPage: true,
+			mangas: []
+		};
 	let mainerror: string = '';
 
 	$: query, filters, clearAll();
@@ -73,7 +74,7 @@
 		try {
 			if ($source.error)
 				throw new Error(JSON.stringify($source.error, null, 4));
-			if (!$source.data) throw '';
+			if (!$source.data?.fetchSourceManga) throw 'no fetchSourceManga data';
 			all.hasNextPage = $source.data.fetchSourceManga.hasNextPage;
 			all.mangas.push(...$source.data.fetchSourceManga.mangas);
 			all = all;

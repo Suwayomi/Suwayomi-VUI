@@ -13,9 +13,9 @@
 	import type { fetchSourceManga } from '$lib/gql/Mutations';
 	import type { ResultOf } from '$lib/gql/graphql';
 
-	export let mangas: ResultOf<
-		typeof fetchSourceManga
-	>['fetchSourceManga']['mangas'];
+	export let mangas: NonNullable<
+		ResultOf<typeof fetchSourceManga>['fetchSourceManga']
+	>['mangas'];
 	export let gridnumber: number;
 	export let OpenModal: ((id: number) => void) | undefined = undefined;
 

@@ -116,7 +116,7 @@
 						let response = await getMangasFromSource(souc.id, Query);
 						if (Query === $query) {
 							alterableRaw[id].Loading = false;
-							alterableRaw[id].mangas = response.data?.fetchSourceManga.mangas;
+							alterableRaw[id].mangas = response.data?.fetchSourceManga?.mangas;
 						}
 					} catch (error) {
 						console.error(error);
@@ -141,7 +141,9 @@
 
 	type sourceNode = ResultOf<typeof getSources>['sources']['nodes'][number];
 	type sourceWithManga = sourceNode & {
-		mangas?: ResultOf<typeof fetchSourceManga>['fetchSourceManga']['mangas'];
+		mangas?: NonNullable<
+			ResultOf<typeof fetchSourceManga>['fetchSourceManga']
+		>['mangas'];
 		Loading?: boolean;
 		error?: unknown;
 	};
