@@ -7,8 +7,6 @@
 -->
 
 <script lang="ts">
-	import { run } from 'svelte/legacy';
-
 	import IconWrapper from './IconWrapper.svelte';
 
 	// Types

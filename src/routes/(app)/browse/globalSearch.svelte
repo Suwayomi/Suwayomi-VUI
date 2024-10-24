@@ -7,8 +7,6 @@
 -->
 
 <script lang="ts">
-	import { run } from 'svelte/legacy';
-
 	import GlobalSearchActions from './globalsearch/GlobalSearchActions.svelte';
 	import PQueue from 'p-queue';
 	import { queryParam, ssp } from 'sveltekit-search-params';

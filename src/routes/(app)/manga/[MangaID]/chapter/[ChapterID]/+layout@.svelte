@@ -7,8 +7,6 @@
 -->
 
 <script lang="ts">
-	import { run } from 'svelte/legacy';
-
 	import IconButton from '$lib/components/IconButton.svelte';
 	import { getDrawerStore, AppShell } from '@skeletonlabs/skeleton';
 	import type { LayoutData } from './$types';
