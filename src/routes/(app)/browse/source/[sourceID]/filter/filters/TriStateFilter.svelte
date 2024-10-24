@@ -7,22 +7,30 @@
 -->
 
 <script lang="ts">
+	import { run } from 'svelte/legacy';
+
 	import TriStateSlide from '$lib/components/TriStateSlide.svelte';
 	import type { TriState } from '$lib/util';
 	import type { getSource } from '$lib/gql/Queries';
 	import type { ResultOf, VariablesOf } from '$lib/gql/graphql';
 	import type { fetchSourceManga } from '$lib/gql/Mutations';
-	export let filter: Extract<
-		ResultOf<typeof getSource>['source']['filters'][0],
-		{ __typename: 'TriStateFilter' | undefined }
-	>;
+	import { untrack } from 'svelte';
 
-	export let filters: VariablesOf<typeof fetchSourceManga>['filters'];
-	export let index: number;
+	interface Props {
+		filter: Extract<
+			ResultOf<typeof getSource>['source']['filters'][0],
+			{ __typename: 'TriStateFilter' | undefined }
+		>;
+		filters: VariablesOf<typeof fetchSourceManga>['filters'];
+		index: number;
+	}
+
+	let { filter, filters = $bindable(), index }: Props = $props();
 
 	const tmpp = filters?.find((e) => e.position === index)?.triState;
-	let state: TriState =
-		TriToonetwothree(tmpp) ?? TriToonetwothree(filter.TriStateDefault);
+	let state: TriState = $state(
+		TriToonetwothree(tmpp) ?? TriToonetwothree(filter.TriStateDefault)
+	);
 
 	function TriToonetwothree(tri: (typeof filter)['TriStateDefault']): TriState;
 	function TriToonetwothree(
@@ -53,16 +61,21 @@
 		}
 	}
 
-	$: if (state !== TriToonetwothree(filter.TriStateDefault)) {
-		filters = filters?.filter((e) => e.position !== index) ?? [];
-		filters.push({
-			position: index,
-			triState: OneTwoThreetoTri(state)
+	$effect(() => {
+		const _ = [state, filter];
+		untrack(() => {
+			if (state !== TriToonetwothree(filter.TriStateDefault)) {
+				filters = filters?.filter((e) => e.position !== index) ?? [];
+				filters.push({
+					position: index,
+					triState: OneTwoThreetoTri(state)
+				});
+				filters = filters;
+			} else {
+				filters = filters?.filter((e) => e.position !== index);
+			}
 		});
-		filters = filters;
-	} else {
-		filters = filters?.filter((e) => e.position !== index);
-	}
+	});
 </script>
 
 <TriStateSlide

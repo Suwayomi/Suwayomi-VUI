@@ -8,30 +8,17 @@
 
 <script lang="ts">
 	import type { CssClasses } from '@skeletonlabs/skeleton';
-	import { createEventDispatcher, onDestroy } from 'svelte';
+	import { onDestroy } from 'svelte';
 
-	export let src: string | null | undefined = '';
-	export let alt: string = '';
-	export let title: string | undefined = undefined;
-
-	type Event = {
-		failed: void;
-	};
-	const dispatch = createEventDispatcher<Event>();
-
-	enum state {
+	// eslint-disable-next-line svelte/valid-compile
+	enum Estate {
 		loading = 'loading',
 		error = 'error',
 		loaded = 'loaded'
 	}
 
-	let State = state.loading;
-	if (src === '') State = state.error;
-	let img: HTMLImageElement | undefined;
-
-	$: if (typeof src !== 'string') {
-		error();
-	}
+	let LState = $state(Estate.loading);
+	let img: HTMLImageElement | undefined = $state();
 
 	function load(
 		// eslint-disable-next-line no-undef
@@ -40,11 +27,11 @@
 		}
 	) {
 		e.currentTarget.classList.remove('hidden');
-		State = state.loaded;
+		LState = Estate.loaded;
 	}
 	function error() {
-		State = state.error;
-		dispatch('failed');
+		LState = Estate.error;
+		onfailed();
 	}
 
 	onDestroy(() => {
@@ -53,37 +40,70 @@
 		}
 	});
 
-	export let width: CssClasses = 'w-full';
-	export let height: CssClasses = 'h-full';
-	export let fit: CssClasses = 'object-cover';
-	export let aspect: CssClasses = '';
-	export let rounded: CssClasses = 'rounded-lg';
-	export let LoadingHeight: CssClasses = '';
-	export let LoadingWidth: CssClasses = '';
-	export let draggable = true;
-	export let reload_button = false;
+	interface Props {
+		src?: string | null | undefined;
+		alt?: string;
+		title?: string | undefined;
+		width?: CssClasses;
+		height?: CssClasses;
+		fit?: CssClasses;
+		aspect?: CssClasses;
+		rounded?: CssClasses;
+		LoadingHeight?: CssClasses;
+		LoadingWidth?: CssClasses;
+		draggable?: boolean;
+		reload_button?: boolean;
+		class?: CssClasses;
+		onfailed?: () => void;
+	}
+
+	let {
+		src = '',
+		alt = '',
+		title = undefined,
+		width = 'w-full',
+		height = 'h-full',
+		fit = 'object-cover',
+		aspect = '',
+		rounded = 'rounded-lg',
+		LoadingHeight = '',
+		LoadingWidth = '',
+		draggable = true,
+		reload_button = false,
+		class: classname,
+		onfailed = () => {}
+	}: Props = $props();
+	$effect(() => {
+		if (typeof src !== 'string') {
+			error();
+		}
+	});
+	$effect(() => {
+		if (src === '') LState = Estate.error;
+	});
 </script>
 
 <div
 	class="relative {aspect}
-		{State === state.loading && LoadingWidth.length ? LoadingWidth : width}
-		{State === state.loading && LoadingHeight.length ? LoadingHeight : height}
-		{$$props.class}"
+		{LState === Estate.loading && LoadingWidth.length ? LoadingWidth : width}
+		{LState === Estate.loading && LoadingHeight.length ? LoadingHeight : height}
+		{classname}"
 >
-	{#if State === state.error}
+	{#if LState === Estate.error}
 		<div
 			class="card flex items-center justify-center {rounded} {aspect}
 			{LoadingWidth.length ? LoadingWidth : width}
 			{LoadingHeight.length ? LoadingHeight : height}
-			{$$props.class}"
+			{classname}"
 		>
 			<div class="flex flex-col space-y-2">
 				<div>Failed.</div>
 				{#if reload_button}
 					<button
 						class="variant-filled-surface btn"
-						on:click|capture|stopPropagation={() => {
-							State = state.loading;
+						onclickcapture={(e) => {
+							e.stopPropagation();
+							LState = Estate.loading;
 							if (!img) return;
 							img.src = '';
 							window.requestAnimationFrame(() => {
@@ -97,20 +117,20 @@
 				{/if}
 			</div>
 		</div>
-	{:else if State === state.loading}
+	{:else if LState === Estate.loading}
 		<div
 			class="placeholder absolute bottom-0 left-0 right-0 top-0 animate-pulse {rounded} {aspect}
 			{LoadingWidth.length ? LoadingWidth : width}
 			{LoadingHeight.length ? LoadingHeight : height}
-			 {$$props.class}"
-		/>
+			 {classname}"
+		></div>
 	{/if}
-	{#if State !== state.error}
+	{#if LState !== Estate.error}
 		<img
 			bind:this={img}
-			on:load={load}
-			on:error={error}
-			class="{aspect} {width} {height} {fit} {rounded} {$$props.class}"
+			onload={load}
+			onerror={error}
+			class="{aspect} {width} {height} {fit} {rounded} {classname}"
 			{title}
 			{src}
 			{alt}

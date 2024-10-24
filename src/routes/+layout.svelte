@@ -34,6 +34,11 @@
 	import { onMount } from 'svelte';
 	import ChapterDrawer from './(app)/manga/[MangaID]/chapter/[ChapterID]/chapterDrawer.svelte';
 	import QuickSearchModal from './QuickSearchModal.svelte';
+	interface Props {
+		children?: import('svelte').Snippet;
+	}
+
+	let { children }: Props = $props();
 	setContextClient(client);
 
 	storePopup.set({ computePosition, autoUpdate, flip, shift, offset, arrow });
@@ -120,4 +125,4 @@
 </Drawer>
 <Toast />
 <Modal />
-<slot />
+{@render children?.()}

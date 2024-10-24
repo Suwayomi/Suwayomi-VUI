@@ -72,9 +72,9 @@ const mangaMetaDefaults = {
 	NavLayout: Layout.L,
 	preLoadNextChapter: true,
 	mobileFullScreenOnChapterPage: true,
-	doPageIndicator: false,
-	notes: '',
-	showMissingChapters: false,
+	doPageIndicator: false as boolean | undefined,
+	notes: '' as string | undefined,
+	showMissingChapters: false as boolean | undefined,
 	groupPartials: [] as string[] | undefined
 };
 type mangaMeta = typeof mangaMetaDefaults;
@@ -202,6 +202,16 @@ function GlobalMeta() {
 
 export const Meta = GlobalMeta();
 
+getObjectKeys(mangaMetaDefaults).forEach((key) => {
+	if (get(Meta).mangaMetaDefaults[key] === undefined) {
+		Meta.update((old) => {
+			const tmp = old;
+			tmp.mangaMetaDefaults[key] = mangaMetaDefaults[key] as never;
+			return tmp;
+		});
+	}
+});
+
 export function MangaMeta(id: number) {
 	const MMeta = queryStore({
 		client,
@@ -249,13 +259,6 @@ export function MangaMeta(id: number) {
 					});
 
 					const variables = { key: cacheKey, value: jsonValue, id };
-					if (get(Meta).mangaMetaDefaults[key] === undefined) {
-						await Meta.update((old) => {
-							const tmp = old;
-							tmp.mangaMetaDefaults[key] = mangaMetaDefaults[key] as never;
-							return tmp;
-						});
-					}
 					if (val !== get(Meta).mangaMetaDefaults[key]) {
 						await client.mutation(setMangaMeta, variables);
 					} else if (cachedValue !== undefined) {

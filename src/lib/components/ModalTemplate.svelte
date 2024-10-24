@@ -7,24 +7,31 @@
 -->
 
 <script lang="ts">
-	export let title = '';
+	interface Props {
+		titleText?: string;
+		title?: import('svelte').Snippet;
+		children?: import('svelte').Snippet;
+		footer?: import('svelte').Snippet;
+	}
+
+	let { titleText = '', title, children, footer }: Props = $props();
 </script>
 
 <div
 	class="card w-modal flex max-h-dvh flex-col space-y-4 rounded-lg p-0 shadow-xl"
 >
-	<slot name="title">
+	{#if title}{@render title()}{:else}
 		<h1 class="h3 pl-4 pt-4">
-			{title}
+			{titleText}
 		</h1>
-	</slot>
+	{/if}
 
 	<div
 		class="grid max-h-full grid-cols-1 gap-1 overflow-y-auto border-y border-surface-700 px-4"
 	>
-		<slot />
+		{@render children?.()}
 	</div>
-	<slot name="footer">
-		<div class="p-4" />
-	</slot>
+	{#if footer}{@render footer()}{:else}
+		<div class="p-4"></div>
+	{/if}
 </div>

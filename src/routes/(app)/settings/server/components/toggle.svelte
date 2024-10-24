@@ -6,21 +6,21 @@
  file, You can obtain one at http://mozilla.org/MPL/2.0/.
 -->
 <script lang="ts">
-	// your script goes here
-	export let checked: boolean;
-	export let title: string;
 	import Slide from '$lib/components/Slide.svelte';
-	import { createEventDispatcher } from 'svelte';
-	type Event = {
-		change: void;
-	};
-	const dispatch = createEventDispatcher<Event>();
+	interface Props {
+		// your script goes here
+		checked: boolean;
+		title: string;
+		onchange: () => void;
+	}
+
+	let { checked = $bindable(), title, onchange = () => {} }: Props = $props();
 </script>
 
 <button
-	on:click={() => {
+	onclick={() => {
 		checked = !checked;
-		dispatch('change');
+		onchange();
 	}}
 	class="flex h-16 w-full cursor-pointer items-center text-left hover:variant-glass-surface"
 >

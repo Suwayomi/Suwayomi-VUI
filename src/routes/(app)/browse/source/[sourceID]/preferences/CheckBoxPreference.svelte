@@ -13,21 +13,24 @@
 	import { getContextClient } from '@urql/svelte';
 	import type { ResultOf } from '$lib/gql/graphql';
 
-	export let pref: Extract<
-		ResultOf<typeof getSource>['source']['preferences'][0],
-		{ __typename: 'CheckBoxPreference' | undefined }
-	>;
+	interface Props {
+		pref: Extract<
+			ResultOf<typeof getSource>['source']['preferences'][0],
+			{ __typename: 'CheckBoxPreference' | undefined }
+		>;
+		index: number;
+		id: string;
+	}
 
-	export let index: number;
-	export let id: string;
+	let { pref, index, id }: Props = $props();
 
 	let checked = pref.CheckBoxCheckBoxCurrentValue ?? pref.CheckBoxDefault;
 	const client = getContextClient();
-	function handelcheck(state: CustomEvent<boolean>) {
+	function handelcheck(state: boolean) {
 		client
 			.mutation(updateSourcePreference, {
 				source: id,
-				checkBoxState: state.detail,
+				checkBoxState: state,
 				position: index
 			})
 			.toPromise();
@@ -35,7 +38,7 @@
 </script>
 
 <Slide
-	on:changeE={handelcheck}
+	onchange={handelcheck}
 	{checked}
 	class="my-1 w-full px-3 py-1 hover:variant-glass-surface"
 	labelClass="w-full ml-1"

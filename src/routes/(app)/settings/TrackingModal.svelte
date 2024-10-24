@@ -52,7 +52,7 @@
 </script>
 
 {#if $modalStore[0]}
-	<ModalTemplate title="Tracking">
+	<ModalTemplate titleText="Tracking">
 		<div class="pl-4">
 			{#if $Trackers.error}
 				<div class="white-space-pre-wrap">
@@ -63,10 +63,10 @@
 					<div class="flex w-full p-1 pl-4 text-left">
 						<div
 							class="placeholder mr-1 aspect-square h-full w-1/5 animate-pulse rounded-xl"
-						/>
+						></div>
 						<div class="h-full w-full space-y-2">
-							<div class="placeholder h-6 w-full animate-pulse" />
-							<div class="placeholder h-4 w-2/3" />
+							<div class="placeholder h-6 w-full animate-pulse"></div>
+							<div class="placeholder h-4 w-2/3"></div>
 						</div>
 					</div>
 				{/each}
@@ -74,7 +74,7 @@
 				{#each $Trackers.data.trackers.nodes as tracker}
 					<button
 						class="block w-full hover:variant-ghost-surface"
-						on:click={() => {
+						onclick={() => {
 							clickedTracker(tracker);
 						}}
 					>

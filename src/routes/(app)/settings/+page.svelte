@@ -33,7 +33,7 @@
 	<div class="w-full">Categories</div>
 </a>
 <button
-	on:click={() =>
+	onclick={() =>
 		modalStore.trigger({
 			type: 'component',
 			component: { ref: BackupModal },
@@ -45,7 +45,7 @@
 	<div class="w-full">Backup</div>
 </button>
 <button
-	on:click={() =>
+	onclick={() =>
 		modalStore.trigger({
 			type: 'component',
 			component: { ref: ReaderDefaultsModal },
@@ -60,7 +60,7 @@
 	<div class="w-full">Default Reader Settings</div>
 </button>
 <button
-	on:click={() =>
+	onclick={() =>
 		modalStore.trigger({
 			type: 'component',
 			component: { ref: LibrarySettings },
@@ -72,7 +72,7 @@
 	<div class="w-full">Library Settings</div>
 </button>
 <button
-	on:click={() =>
+	onclick={() =>
 		modalStore.trigger({
 			type: 'component',
 			component: { ref: MangaSettingsModal },
@@ -95,8 +95,11 @@
 	</select>
 </label>
 <button
-	on:click|preventDefault|stopPropagation|capture={() =>
-		($Meta.dark = !$Meta.dark)}
+	onclickcapture={(e) => {
+		e.stopPropagation();
+		e.preventDefault();
+		$Meta.dark = !$Meta.dark;
+	}}
 	class="flex h-16 w-full cursor-pointer items-center text-left hover:variant-glass-surface"
 >
 	<IconWrapper class="h-full w-auto p-2" name="mdi:theme-light-dark" />
@@ -115,7 +118,7 @@
 	</select>
 </label>
 <button
-	on:click={() => {
+	onclick={() => {
 		$Meta.nsfw = !$Meta.nsfw;
 	}}
 	class="flex h-16 w-full cursor-pointer items-center text-left hover:variant-glass-surface"
@@ -128,7 +131,7 @@
 	/>
 </button>
 <button
-	on:click={() =>
+	onclick={() =>
 		modalStore.trigger({
 			type: 'component',
 			component: { ref: TrackingModal },
@@ -147,7 +150,7 @@
 	<div class="w-full">About</div>
 </a>
 <button
-	on:click={() =>
+	onclick={() =>
 		modalStore.trigger({
 			type: 'component',
 			backdropClasses: '!p-0',

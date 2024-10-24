@@ -39,11 +39,11 @@
 </script>
 
 {#if $modalStore[0]}
-	<ModalTemplate title="Cache Settings">
+	<ModalTemplate titleText="Cache Settings">
 		<div class="mt-1 w-full">
 			<button
 				class="flex h-[76px] w-full py-2 text-left hover:variant-glass-surface"
-				on:click={clearCache}
+				onclick={clearCache}
 			>
 				<IconWrapper class="h-full w-auto p-2" name="mdi:delete" />
 				<div>
@@ -57,7 +57,7 @@
 			</button>
 			<button
 				class="flex h-[76px] w-full py-2 text-left hover:variant-glass-surface"
-				on:click={clearCachedImgs}
+				onclick={clearCachedImgs}
 			>
 				<IconWrapper
 					class="h-full w-auto p-2"
@@ -75,7 +75,7 @@
 			</button>
 			<button
 				class="flex h-[76px] w-full py-2 text-left hover:variant-glass-surface"
-				on:click={() => client.mutation(clearCachedImages, {}).toPromise()}
+				onclick={() => client.mutation(clearCachedImages, {}).toPromise()}
 			>
 				<IconWrapper
 					class="h-full w-auto p-2"

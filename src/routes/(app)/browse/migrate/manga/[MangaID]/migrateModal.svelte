@@ -28,19 +28,23 @@
 	import ModalTemplate from '$lib/components/ModalTemplate.svelte';
 
 	const modalStore = getModalStore();
-	export let parent: SvelteComponent;
-	export let id: number;
-	export let manga: ResultOf<typeof getManga>['manga'];
+	interface Props {
+		parent: SvelteComponent;
+		id: number;
+		manga: ResultOf<typeof getManga>['manga'];
+	}
+
+	let { parent, id, manga }: Props = $props();
 
 	const client = getContextClient();
-	let doChapters = true;
-	let doCategories = true;
-	let doTracking = true;
-	let deleteDownloaded = manga.downloadCount > 0 ? true : false;
-	let DownloadNew = true;
+	let doChapters = $state(true);
+	let doCategories = $state(true);
+	let doTracking = $state(true);
+	let deleteDownloaded = $state(manga.downloadCount > 0 ? true : false);
+	let DownloadNew = $state(true);
 
-	let MigrateLoading = false;
-	let CopyLoading = false;
+	let MigrateLoading = $state(false);
+	let CopyLoading = $state(false);
 
 	async function MigrateManga() {
 		MigrateLoading = true;
@@ -99,7 +103,7 @@
 			'failed to download new chapters',
 			client
 				.mutation(enqueueChapterDownloads, {
-					ids: newChapters.data?.fetchChapters.chapters.map((e) => e.id) ?? []
+					ids: newChapters.data?.fetchChapters?.chapters.map((e) => e.id) ?? []
 				})
 				.toPromise()
 		);
@@ -120,7 +124,7 @@
 		newChapters: OperationResult<ResultOf<typeof fetchChaptersMigration>>
 	) {
 		const CurrMappedToNew = manga.chapters.nodes.map((current) => {
-			if (!newChapters.data) return undefined;
+			if (!newChapters.data?.fetchChapters) return undefined;
 			const tmp = newChapters.data.fetchChapters.chapters.findIndex(
 				(e) => e.chapterNumber === current.chapterNumber
 			);
@@ -177,8 +181,8 @@
 </script>
 
 {#if $modalStore[0]}
-	<ModalTemplate title="Select data to include">
-		<svelte:fragment>
+	<ModalTemplate titleText="Select data to include">
+		{#snippet children()}
 			<Slide
 				class="p-1 pl-2 outline-0 hover:variant-glass-surface"
 				bind:checked={doChapters}
@@ -211,8 +215,8 @@
 			>
 				Downloaded all new chapters
 			</Slide>
-		</svelte:fragment>
-		<svelte:fragment slot="footer">
+		{/snippet}
+		{#snippet footer()}
 			<div class="flex justify-between px-4 pb-4">
 				<a
 					class="variant-filled-surface btn hover:variant-glass-surface"
@@ -223,7 +227,7 @@
 				</a>
 				<div>
 					<button
-						on:click={CopyManga}
+						onclick={CopyManga}
 						class="variant-filled-surface btn hover:variant-glass-surface"
 					>
 						{#if CopyLoading}
@@ -233,7 +237,7 @@
 						{/if}
 					</button>
 					<button
-						on:click={MigrateManga}
+						onclick={MigrateManga}
 						class="variant-filled-surface btn hover:variant-glass-surface"
 					>
 						{#if MigrateLoading}
@@ -244,6 +248,6 @@
 					</button>
 				</div>
 			</div>
-		</svelte:fragment>
+		{/snippet}
 	</ModalTemplate>
 {/if}

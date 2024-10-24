@@ -12,32 +12,46 @@
 	 * License, v. 2.0. If a copy of the MPL was not distributed with this
 	 * file, You can obtain one at https://mozilla.org/MPL/2.0/.
 	 */
-	import { afterUpdate, onDestroy } from 'svelte';
-	import { createEventDispatcher } from 'svelte';
-	const dispatch = createEventDispatcher<{
-		intersect: boolean;
-		elem: { isInt: boolean; elem: HTMLDivElement };
-	}>();
+	import { onDestroy } from 'svelte';
 
-	export let root = undefined as Element | Document | undefined;
-	export let top = 0;
-	export let bottom = 0;
-	export let left = 0;
-	export let right = 0;
+	interface Props {
+		root?: Element | Document | undefined;
+		top?: number;
+		bottom?: number;
+		left?: number;
+		right?: number;
+		children?: import('svelte').Snippet<[{ intersecting: boolean }]>;
+		[key: string]: unknown;
+		onintersect?: (e: boolean) => void;
+		onelem?: (e: { isInt: boolean; elem: HTMLDivElement | undefined }) => void;
+	}
 
-	let intersecting = false;
+	let {
+		root = undefined,
+		top = 0,
+		bottom = 0,
+		left = 0,
+		right = 0,
+		children,
+		onintersect = () => {},
+		onelem = () => {},
+		...restProps
+	}: Props = $props();
 
-	let container: HTMLDivElement;
+	let intersecting = $state(false);
+
+	let container: HTMLDivElement | undefined = $state();
 
 	let observer: IntersectionObserver | undefined;
 
-	afterUpdate(() => {
+	$effect(() => {
+		if (!container) return;
 		observer?.unobserve(container);
 		observer = new IntersectionObserver(
 			(entries) => {
 				intersecting = entries[entries.length - 1].isIntersecting;
-				dispatch('intersect', intersecting);
-				dispatch('elem', { isInt: intersecting, elem: container });
+				onintersect(intersecting);
+				onelem({ isInt: intersecting, elem: container });
 			},
 			{
 				root: root,
@@ -49,10 +63,10 @@
 	});
 
 	onDestroy(() => {
-		observer?.unobserve(container);
+		observer?.disconnect();
 	});
 </script>
 
-<div bind:this={container} {...$$props}>
-	<slot {intersecting} />
+<div bind:this={container} {...restProps}>
+	{@render children?.({ intersecting })}
 </div>

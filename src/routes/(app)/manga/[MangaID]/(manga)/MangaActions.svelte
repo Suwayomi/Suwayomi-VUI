@@ -13,12 +13,16 @@
 	import { type ResultOf } from '$lib/gql/graphql';
 	import type { getManga } from '$lib/gql/Queries';
 
-	export let manga: ResultOf<typeof getManga>['manga'] | undefined;
-	export let fetchChapters: () => Promise<void>;
+	interface Props {
+		manga: ResultOf<typeof getManga>['manga'] | undefined;
+		fetchChapters: () => Promise<void>;
+	}
+
+	let { manga, fetchChapters }: Props = $props();
 
 	const modalStore = getModalStore();
 
-	let loading = false;
+	let loading = $state(false);
 
 	async function refreshManga() {
 		loading = true;
@@ -35,7 +39,7 @@
 		name="mdi:autorenew"
 		hover={loading ? '' : 'hover:variant-glass-surface'}
 		class="text-surface-700 dark:text-surface-300 {loading && 'animate-spin'}"
-		on:click={refreshManga}
+		onclick={refreshManga}
 	/>
 
 	{#if manga?.inLibrary}
@@ -46,7 +50,7 @@
 			offset={{ crossAxis: -68 }}
 			name="mdi:tag"
 			tipclass="z-20"
-			on:click={() =>
+			onclick={() =>
 				modalStore.trigger({
 					type: 'component',
 					component: {

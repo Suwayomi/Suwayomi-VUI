@@ -53,61 +53,67 @@
 		query: webUIUpdateStatusChange
 	});
 
-	let autoDownloadNewChapters = true;
-	let autoDownloadIgnoreReUploads = false;
-	let autoDownloadNewChaptersLimit = 0;
-	let backupInterval = 1;
-	let backupPath = '';
-	let backupTTL = 183;
-	let backupTime = '00 =00';
-	let basicAuthEnabled = false;
-	let basicAuthPassword = '';
-	let basicAuthUsername = '';
-	let debugLogsEnabled = true;
-	let downloadAsCbz = true;
-	let downloadsPath = '';
-	let electronPath = '';
-	let excludeCompleted = true;
-	let excludeEntryWithUnreadChapters = false;
-	let excludeNotStarted = false;
-	let extensionRepos = [] as string[];
-	let excludeUnreadChapters = false;
-	let flareSolverrEnabled = true;
-	let flareSolverrSessionName = 'suwayomi';
-	let flareSolverrSessionTtl = 15;
-	let flareSolverrTimeout = 60;
-	let flareSolverrUrl = '';
-	let globalUpdateInterval = 6;
-	let gqlDebugLogsEnabled = false;
-	let initialOpenInBrowserEnabled = false;
-	let ip = '0.0.0.0';
-	let localSourcePath = '';
-	let maxSourcesInParallel = 4;
-	let port = 4567;
-	let socksProxyEnabled = false;
-	let socksProxyHost = '';
-	let socksProxyPort = '';
-	let socksProxyPassword = '';
-	let socksProxyUsername = '';
-	let socksProxyVersion = 5;
-	let systemTrayEnabled = false;
-	let updateMangas = false;
-	let webUIChannel = 'STABLE' as NonNullable<
-		NonNullable<
-			VariablesOf<typeof setServerSettings>['settings']
-		>['webUIChannel']
-	>;
-	let webUIFlavor = 'WEBUI' as NonNullable<
-		NonNullable<
-			VariablesOf<typeof setServerSettings>['settings']
-		>['webUIFlavor']
-	>;
-	let webUIInterface = 'BROWSER' as NonNullable<
-		NonNullable<
-			VariablesOf<typeof setServerSettings>['settings']
-		>['webUIInterface']
-	>;
-	let webUIUpdateCheckInterval = 23;
+	let autoDownloadNewChapters = $state(true);
+	let autoDownloadIgnoreReUploads = $state(false);
+	let autoDownloadNewChaptersLimit = $state(0);
+	let backupInterval = $state(1);
+	let backupPath = $state('');
+	let backupTTL = $state(183);
+	let backupTime = $state('00 =00');
+	let basicAuthEnabled = $state(false);
+	let basicAuthPassword = $state('');
+	let basicAuthUsername = $state('');
+	let debugLogsEnabled = $state(true);
+	let downloadAsCbz = $state(true);
+	let downloadsPath = $state('');
+	let electronPath = $state('');
+	let excludeCompleted = $state(true);
+	let excludeEntryWithUnreadChapters = $state(false);
+	let excludeNotStarted = $state(false);
+	let extensionRepos = $state([] as string[]);
+	let excludeUnreadChapters = $state(false);
+	let flareSolverrEnabled = $state(true);
+	let flareSolverrSessionName = $state('suwayomi');
+	let flareSolverrSessionTtl = $state(15);
+	let flareSolverrTimeout = $state(60);
+	let flareSolverrUrl = $state('');
+	let globalUpdateInterval = $state(6);
+	let gqlDebugLogsEnabled = $state(false);
+	let initialOpenInBrowserEnabled = $state(false);
+	let ip = $state('0.0.0.0');
+	let localSourcePath = $state('');
+	let maxSourcesInParallel = $state(4);
+	let port = $state(4567);
+	let socksProxyEnabled = $state(false);
+	let socksProxyHost = $state('');
+	let socksProxyPort = $state('');
+	let socksProxyPassword = $state('');
+	let socksProxyUsername = $state('');
+	let socksProxyVersion = $state(5);
+	let systemTrayEnabled = $state(false);
+	let updateMangas = $state(false);
+	let webUIChannel = $state(
+		'STABLE' as NonNullable<
+			NonNullable<
+				VariablesOf<typeof setServerSettings>['settings']
+			>['webUIChannel']
+		>
+	);
+	let webUIFlavor = $state(
+		'WEBUI' as NonNullable<
+			NonNullable<
+				VariablesOf<typeof setServerSettings>['settings']
+			>['webUIFlavor']
+		>
+	);
+	let webUIInterface = $state(
+		'BROWSER' as NonNullable<
+			NonNullable<
+				VariablesOf<typeof setServerSettings>['settings']
+			>['webUIInterface']
+		>
+	);
+	let webUIUpdateCheckInterval = $state(23);
 
 	settingsData.subscribe((data) => {
 		if (data.data?.settings) {
@@ -190,7 +196,7 @@
 		});
 	}
 
-	let removingNoCategoriesManga = false;
+	let removingNoCategoriesManga = $state(false);
 
 	async function removeCategoryFromMangaNotInLibrary() {
 		removingNoCategoriesManga = true;
@@ -224,7 +230,7 @@
 		<!-- remove category from Manga Not In Library -->
 		<button
 			class="flex h-16 w-full cursor-pointer items-center justify-between text-left hover:variant-glass-surface"
-			on:click={removeCategoryFromMangaNotInLibrary}
+			onclick={removeCategoryFromMangaNotInLibrary}
 		>
 			<div>
 				Clear database
@@ -244,46 +250,46 @@
 		<Toggle
 			title="Auto Download New Chapters"
 			bind:checked={autoDownloadNewChapters}
-			on:change={() => setSettings({ autoDownloadNewChapters })}
+			onchange={() => setSettings({ autoDownloadNewChapters })}
 		/>
 		<!-- autoDownloadIgnoreReUploads -->
 		<Toggle
 			title="Auto Download Ignore Re-Uploads"
 			bind:checked={autoDownloadIgnoreReUploads}
-			on:change={() => setSettings({ autoDownloadIgnoreReUploads })}
+			onchange={() => setSettings({ autoDownloadIgnoreReUploads })}
 		/>
 		<!-- autoDownloadNewChaptersLimit -->
 		<Number
 			title="Auto Download New Chapters Limit"
 			bind:value={autoDownloadNewChaptersLimit}
 			max={999}
-			on:change={() => setSettings({ autoDownloadNewChaptersLimit })}
+			onchange={() => setSettings({ autoDownloadNewChaptersLimit })}
 		/>
 		<!-- backupInterval -->
 		<Number
 			title="Backup Interval (in days)"
 			bind:value={backupInterval}
 			max={14}
-			on:change={() => setSettings({ backupInterval })}
+			onchange={() => setSettings({ backupInterval })}
 		/>
 		<!-- backupPath -->
 		<Text
 			title="Backup Path"
 			bind:value={backupPath}
-			on:change={() => setSettings({ backupPath })}
+			onchange={() => setSettings({ backupPath })}
 		/>
 		<!-- backupTTL -->
 		<Number
 			title="Backup TTL (in days)"
 			value={backupTTL}
 			max={365}
-			on:change={() => setSettings({ backupTTL })}
+			onchange={() => setSettings({ backupTTL })}
 		/>
 		<!-- backupTime -->
 		<Text
 			title="Backup Time"
 			bind:value={backupTime}
-			on:change={() => {
+			onchange={() => {
 				if (/^([01][0-9]|2[0-3]):([0-5][0-9])$/.test(backupTime)) {
 					setSettings({ backupTime });
 					return;
@@ -299,67 +305,67 @@
 		<Toggle
 			title="Basic Auth"
 			bind:checked={basicAuthEnabled}
-			on:change={() => setSettings({ basicAuthEnabled })}
+			onchange={() => setSettings({ basicAuthEnabled })}
 		/>
 		<!-- basicAuthPassword -->
 		<Text
 			title="Basic Auth Password"
 			bind:value={basicAuthPassword}
-			on:change={() => setSettings({ basicAuthPassword })}
+			onchange={() => setSettings({ basicAuthPassword })}
 			type="password"
 		/>
 		<!-- basicAuthUsername -->
 		<Text
 			title="Basic Auth Username"
 			bind:value={basicAuthUsername}
-			on:change={() => setSettings({ basicAuthUsername })}
+			onchange={() => setSettings({ basicAuthUsername })}
 		/>
 		<!-- debugLogsEnabled -->
 		<Toggle
 			title="Debug Logs"
 			bind:checked={debugLogsEnabled}
-			on:change={() => setSettings({ debugLogsEnabled })}
+			onchange={() => setSettings({ debugLogsEnabled })}
 		/>
 		<!-- downloadAsCbz -->
 		<Toggle
 			title="Download as CBZ"
 			bind:checked={downloadAsCbz}
-			on:change={() => setSettings({ downloadAsCbz })}
+			onchange={() => setSettings({ downloadAsCbz })}
 		/>
 		<!-- downloadsPath -->
 		<Text
 			title="Downloads Path"
 			bind:value={downloadsPath}
-			on:change={() => setSettings({ downloadsPath })}
+			onchange={() => setSettings({ downloadsPath })}
 		/>
 		<!-- electronPath -->
 		<Text
 			title="Electron Path"
 			bind:value={electronPath}
-			on:change={() => setSettings({ electronPath })}
+			onchange={() => setSettings({ electronPath })}
 		/>
 		<!-- excludeCompleted -->
 		<Toggle
 			title="Exclude Completed"
 			bind:checked={excludeCompleted}
-			on:change={() => setSettings({ excludeCompleted })}
+			onchange={() => setSettings({ excludeCompleted })}
 		/>
 		<!-- excludeEntryWithUnreadChapters -->
 		<Toggle
 			title="Exclude Entry With Unread Chapters"
 			bind:checked={excludeEntryWithUnreadChapters}
-			on:change={() => setSettings({ excludeEntryWithUnreadChapters })}
+			onchange={() => setSettings({ excludeEntryWithUnreadChapters })}
 		/>
 		<!-- excludeNotStarted -->
 		<Toggle
 			title="Exclude Not Started"
 			bind:checked={excludeNotStarted}
-			on:change={() => setSettings({ excludeNotStarted })}
+			onchange={() => setSettings({ excludeNotStarted })}
 		/>
 		<!-- extensionRepos -->
 		<button
 			class="flex h-16 w-full cursor-pointer items-center text-left hover:variant-glass-surface"
-			on:click={() => {
+			onclick={() => {
 				modalStore.trigger({
 					type: 'component',
 					backdropClasses: '!p-0',
@@ -376,46 +382,46 @@
 		<Toggle
 			title="Exclude Unread Chapters"
 			bind:checked={excludeUnreadChapters}
-			on:change={() => setSettings({ excludeUnreadChapters })}
+			onchange={() => setSettings({ excludeUnreadChapters })}
 		/>
 		<!-- flareSolverrEnabled -->
 		<Toggle
 			title="Flare Solverr"
 			bind:checked={flareSolverrEnabled}
-			on:change={() => setSettings({ flareSolverrEnabled })}
+			onchange={() => setSettings({ flareSolverrEnabled })}
 		/>
 		<!-- flareSolverrSessionName -->
 		<Text
 			title="Flare Solverr Session Name"
 			bind:value={flareSolverrSessionName}
-			on:change={() => setSettings({ flareSolverrSessionName })}
+			onchange={() => setSettings({ flareSolverrSessionName })}
 		/>
 		<!-- flareSolverrSessionTtl -->
 		<Number
 			title="Flare Solverr Session Ttl"
 			value={flareSolverrSessionTtl}
 			max={365}
-			on:change={() => setSettings({ flareSolverrSessionTtl })}
+			onchange={() => setSettings({ flareSolverrSessionTtl })}
 		/>
 		<!-- flareSolverrTimeout -->
 		<Number
 			title="Flare Solverr Timeout"
 			value={flareSolverrTimeout}
 			max={365}
-			on:change={() => setSettings({ flareSolverrTimeout })}
+			onchange={() => setSettings({ flareSolverrTimeout })}
 		/>
 		<!-- flareSolverrUrl -->
 		<Text
 			title="Flare Solverr Url"
 			bind:value={flareSolverrUrl}
-			on:change={() => setSettings({ flareSolverrUrl })}
+			onchange={() => setSettings({ flareSolverrUrl })}
 		/>
 		<!-- globalUpdateInterval -->
 		<Number
 			title="Global Update Interval (in hours)"
 			value={globalUpdateInterval}
 			max={365}
-			on:change={() => setSettings({ globalUpdateInterval })}
+			onchange={() => setSettings({ globalUpdateInterval })}
 		/>
 		<!-- manually run global update -->
 		<button
@@ -423,7 +429,7 @@
 			{$update.data?.updateStatusChanged.isRunning
 				? ''
 				: 'cursor-pointer hover:variant-glass-surface'}"
-			on:click={manuallyLibraryRunUpdate}
+			onclick={manuallyLibraryRunUpdate}
 			title={!$update.data?.updateStatusChanged.isRunning
 				? 'click to run Global update now'
 				: 'click below to see more info in the currently running update'}
@@ -439,7 +445,7 @@
 		<!-- Global update info -->
 		<button
 			class="flex h-16 w-full cursor-pointer items-center text-left hover:variant-glass-surface"
-			on:click={globalUpdateInfo}
+			onclick={globalUpdateInfo}
 		>
 			Global update info
 		</button>
@@ -448,19 +454,19 @@
 		<Toggle
 			title="GQL Debug Logs"
 			bind:checked={gqlDebugLogsEnabled}
-			on:change={() => setSettings({ gqlDebugLogsEnabled })}
+			onchange={() => setSettings({ gqlDebugLogsEnabled })}
 		/>
 		<!-- initialOpenInBrowserEnabled -->
 		<Toggle
 			title="Initial Open In Browser"
 			bind:checked={initialOpenInBrowserEnabled}
-			on:change={() => setSettings({ initialOpenInBrowserEnabled })}
+			onchange={() => setSettings({ initialOpenInBrowserEnabled })}
 		/>
 		<!-- ip -->
 		<Text
 			title="IP"
 			bind:value={ip}
-			on:change={() => {
+			onchange={() => {
 				if (/^((25[0-5]|(2[0-4]|1\d|[1-9]|)\d)\.?\b){4}$/.test(ip)) {
 					setSettings({ ip });
 					return;
@@ -476,21 +482,21 @@
 		<Text
 			title="Local Source Path"
 			bind:value={localSourcePath}
-			on:change={() => setSettings({ localSourcePath })}
+			onchange={() => setSettings({ localSourcePath })}
 		/>
 		<!-- maxSourcesInParallel -->
 		<Number
 			title="Max Sources In Parallel"
 			value={maxSourcesInParallel}
 			max={10}
-			on:change={() => setSettings({ maxSourcesInParallel })}
+			onchange={() => setSettings({ maxSourcesInParallel })}
 		/>
 		<!-- port -->
 		<Number
 			title="Port"
 			value={port}
 			max={65535}
-			on:change={() => {
+			onchange={() => {
 				if (port < 65535 && port > 0) {
 					setSettings({ port });
 					return;
@@ -506,19 +512,19 @@
 		<Toggle
 			title="Socks Proxy"
 			bind:checked={socksProxyEnabled}
-			on:change={() => setSettings({ socksProxyEnabled })}
+			onchange={() => setSettings({ socksProxyEnabled })}
 		/>
 		<!-- socksProxyHost -->
 		<Text
 			title="Socks Proxy Host"
 			bind:value={socksProxyHost}
-			on:change={() => setSettings({ socksProxyHost })}
+			onchange={() => setSettings({ socksProxyHost })}
 		/>
 		<!-- socksProxyPort -->
 		<Text
 			title="Socks Proxy Port"
 			bind:value={socksProxyPort}
-			on:change={() => {
+			onchange={() => {
 				const int = parseInt(socksProxyPort);
 				if (!isNaN(int) && int < 65535 && int > 0) {
 					setSettings({ socksProxyPort });
@@ -535,65 +541,65 @@
 		<Text
 			title="Socks Proxy Password"
 			bind:value={socksProxyPassword}
-			on:change={() => setSettings({ socksProxyPassword })}
+			onchange={() => setSettings({ socksProxyPassword })}
 		/>
 		<!-- socksProxyUsername -->
 		<Text
 			title="Socks Proxy Username"
 			bind:value={socksProxyUsername}
-			on:change={() => setSettings({ socksProxyUsername })}
+			onchange={() => setSettings({ socksProxyUsername })}
 		/>
 		<!-- socksProxyVersion -->
 		<Number
 			title="Socks Proxy Version"
 			value={socksProxyVersion}
 			max={3}
-			on:change={() => setSettings({ socksProxyVersion })}
+			onchange={() => setSettings({ socksProxyVersion })}
 		/>
 		<!-- systemTrayEnabled -->
 		<Toggle
 			title="System Tray"
 			bind:checked={systemTrayEnabled}
-			on:change={() => setSettings({ systemTrayEnabled })}
+			onchange={() => setSettings({ systemTrayEnabled })}
 		/>
 		<!-- updateMangas -->
 		<Toggle
 			title="Update Mangas"
 			bind:checked={updateMangas}
-			on:change={() => setSettings({ updateMangas })}
+			onchange={() => setSettings({ updateMangas })}
 		/>
 		<!-- webUIChannel -->
 		<Select
 			title="Web UI Channel"
 			bind:value={webUIChannel}
 			options={webUIChannels}
-			on:change={() => setSettings({ webUIChannel })}
+			onchange={() => setSettings({ webUIChannel })}
 		/>
 		<!-- webUIFlavor -->
 		<Select
 			title="Web UI Flavor"
 			bind:value={webUIFlavor}
 			options={webUIFlavors}
-			on:change={() => setSettings({ webUIFlavor })}
+			onchange={() => setSettings({ webUIFlavor })}
 		/>
 		<!-- webUIInterface -->
 		<Select
 			title="Web UI Interface"
 			bind:value={webUIInterface}
 			options={webUIInterfaces}
-			on:change={() => setSettings({ webUIInterface })}
+			onchange={() => setSettings({ webUIInterface })}
 		/>
 		<!-- webUIUpdateCheckInterval -->
 		<Number
 			title="Web UI Update Check Interval (in hours)"
 			value={webUIUpdateCheckInterval}
 			max={100}
-			on:change={() => setSettings({ webUIUpdateCheckInterval })}
+			onchange={() => setSettings({ webUIUpdateCheckInterval })}
 		/>
 		<!-- UpdateWebUI -->
 		<button
 			class="h-16 w-full cursor-pointer items-center text-left hover:variant-glass-surface"
-			on:click={() => {
+			onclick={() => {
 				client.mutation(updateWebUI, {}).toPromise();
 			}}
 		>

@@ -15,7 +15,11 @@
 
 	const client = getContextClient();
 	const modalStore = getModalStore();
-	export let tracker: ResultOf<typeof TrackerTypeFragment>;
+	interface Props {
+		tracker: ResultOf<typeof TrackerTypeFragment>;
+	}
+
+	let { tracker }: Props = $props();
 
 	async function logout() {
 		await client.mutation(logoutTracker, { trackerId: tracker.id });
@@ -26,8 +30,8 @@
 		client: 'VUI3'
 	});
 
-	let username = '';
-	let password = '';
+	let username = $state('');
+	let password = $state('');
 
 	async function login() {
 		await client
@@ -42,11 +46,11 @@
 </script>
 
 {#if $modalStore[0]}
-	<ModalTemplate title="Login to {tracker.name}">
+	<ModalTemplate titleText="Login to {tracker.name}">
 		{#if tracker.isLoggedIn}
 			<button
 				class="block w-full p-2 text-center text-xl font-semibold hover:variant-ghost-surface"
-				on:click={() => {
+				onclick={() => {
 					logout();
 					modalStore.close();
 				}}>Logout</button
@@ -56,7 +60,7 @@
 				class="block w-full p-2 text-center text-xl font-semibold hover:variant-ghost-surface"
 				target="_blank"
 				href={`${tracker.authUrl}&state=${urlAdon}`}
-				on:click={modalStore.close}
+				onclick={modalStore.close}
 			>
 				Login
 			</a>
@@ -74,7 +78,7 @@
 					type="password"
 					bind:value={password}
 				/>
-				<button class="variant-filled-surface btn float-right" on:click={login}>
+				<button class="variant-filled-surface btn float-right" onclick={login}>
 					Login
 				</button>
 			</div>

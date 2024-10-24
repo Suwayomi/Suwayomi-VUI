@@ -171,8 +171,8 @@
 						params: { x: animAxis.x, y: animAxis.y, ...transitionOutParams },
 						enabled: transitions
 					}}
-					on:mouseenter={() => onMouseEnter(i)}
-					on:mouseleave={() => onMouseLeave(i)}
+					onmouseenter={() => onMouseEnter(i)}
+					onmouseleave={() => onMouseLeave(i)}
 					role={t.hideDismiss ? 'alert' : 'alertdialog'}
 					aria-live="polite"
 				>
@@ -188,7 +188,7 @@
 								{#if t.action}
 									<button
 										class={t.actionClass ? t.actionClass : buttonAction}
-										on:click={() => onAction(i)}
+										onclick={() => onAction(i)}
 									>
 										<!-- eslint-disable-next-line svelte/no-at-html-tags -->
 										{@html t.action.label}
@@ -196,7 +196,7 @@
 								{#if !t.hideDismiss}<button
 										class={buttonDismiss}
 										aria-label="Dismiss toast"
-										on:click={() => toastStore.close(t.id)}
+										onclick={() => toastStore.close(t.id)}
 										>{buttonDismissLabel}</button
 									>{/if}
 							</div>

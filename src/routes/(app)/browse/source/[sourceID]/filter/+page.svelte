@@ -21,41 +21,52 @@
 
 	const modalStore = getModalStore();
 
-	export let data: LayoutData;
+	interface Props {
+		data: LayoutData;
+	}
+
+	let { data }: Props = $props();
 
 	if ($filtersSause !== data.sourceID) {
 		$filters = [];
 	}
 	$filtersSause = data.sourceID;
 
-	const sause = queryStore({
+	const sause2 = queryStore({
 		client: getContextClient(),
 		query: getSource,
 		variables: { id: data.sourceID }
 	});
+
+	let sause: typeof $sause2 | undefined = $state();
+
+	$effect(() => {
+		sause = structuredClone($sause2);
+	});
+
 	const query = queryParam('q', ssp.string(), { pushHistory: false });
 
-	$: $query, doSearch();
 	function doSearch() {
 		queryfilter.query = $query ?? '';
 	}
 
-	let queryfilter = {
-		query: $query === '' ? undefined : $query ?? undefined,
+	let queryfilter = $state({
+		query: $query === '' ? undefined : ($query ?? undefined),
 		filters: $filters?.length ? $filters : undefined
-	};
+	});
 
 	function submit(
 		filterss: VariablesOf<typeof fetchSourceManga>['filters'],
 		queryy: string
 	) {
 		queryfilter = {
-			query: queryy === '' ? undefined : queryy ?? undefined,
+			query: queryy === '' ? undefined : (queryy ?? undefined),
 			filters: filterss?.length ? filterss : undefined
 		};
-		$query = queryy === '' ? null : queryy ?? null;
+		$query = queryy === '' ? null : (queryy ?? null);
 		$filters = filterss?.length ? filterss : [];
 	}
+	$effect(doSearch);
 </script>
 
 <Grid
@@ -65,9 +76,9 @@
 	type="SEARCH"
 />
 
-{#if $sause.data?.source}
+{#if sause?.data?.source}
 	<button
-		on:click={() => {
+		onclick={() => {
 			modalStore.trigger({
 				type: 'component',
 				backdropClasses: '!p-0',

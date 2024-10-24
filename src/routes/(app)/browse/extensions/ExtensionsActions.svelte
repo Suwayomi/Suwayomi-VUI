@@ -20,8 +20,12 @@
 		fetchExtensions,
 		installExternalExtension
 	} from '$lib/gql/Mutations';
-	export let langs: Set<string>;
-	let loading = false;
+	interface Props {
+		langs: Set<string>;
+	}
+
+	let { langs }: Props = $props();
+	let loading = $state(false);
 
 	const client = getContextClient();
 	async function handelRefresh() {
@@ -34,7 +38,7 @@
 		loading = false;
 	}
 
-	let files: FileList | undefined;
+	let files: FileList | undefined = $state();
 	function onChangeHandler(): void {
 		ErrorHelp(
 			'failed to install external extension',
@@ -48,7 +52,7 @@
 <div class="flex h-full">
 	<Search />
 	<TooltipIconButton
-		on:click={handelRefresh}
+		onclick={handelRefresh}
 		tipclass="z-20"
 		tip="refresh extensions list"
 		name="mdi:autorenew"
@@ -66,7 +70,7 @@
 			button=""
 			name="files2"
 			accept=".apk"
-			on:change={onChangeHandler}
+			onchange={onChangeHandler}
 			bind:files
 		>
 			<IconWrapper

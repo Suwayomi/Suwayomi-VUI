@@ -7,31 +7,44 @@
 -->
 
 <script lang="ts">
+	import { run } from 'svelte/legacy';
+
 	import Slide from '$lib/components/Slide.svelte';
 	import type { fetchSourceManga } from '$lib/gql/Mutations';
 	import type { getSource } from '$lib/gql/Queries';
 	import type { ResultOf, VariablesOf } from '$lib/gql/graphql';
+	import { untrack } from 'svelte';
 
-	export let filter: Extract<
-		ResultOf<typeof getSource>['source']['filters'][0],
-		{ __typename: 'CheckBoxFilter' | undefined }
-	>;
-	export let filters: VariablesOf<typeof fetchSourceManga>['filters'];
-	export let index: number;
-
-	let checked =
-		filters?.find((e) => e.position === index)?.checkBoxState ??
-		filter.CheckBoxDefault;
-	$: if (checked !== filter.CheckBoxDefault) {
-		filters = filters?.filter((e) => e.position !== index) ?? [];
-		filters.push({
-			position: index,
-			checkBoxState: checked
-		});
-		filters = filters;
-	} else {
-		filters = filters?.filter((e) => e.position !== index);
+	interface Props {
+		filter: Extract<
+			ResultOf<typeof getSource>['source']['filters'][0],
+			{ __typename: 'CheckBoxFilter' | undefined }
+		>;
+		filters: VariablesOf<typeof fetchSourceManga>['filters'];
+		index: number;
 	}
+
+	let { filter, filters = $bindable(), index }: Props = $props();
+
+	let checked = $state(
+		filters?.find((e) => e.position === index)?.checkBoxState ??
+			filter.CheckBoxDefault
+	);
+	$effect(() => {
+		const _ = [checked, filter];
+		untrack(() => {
+			if (checked !== filter.CheckBoxDefault) {
+				filters = filters?.filter((e) => e.position !== index) ?? [];
+				filters.push({
+					position: index,
+					checkBoxState: checked
+				});
+				filters = filters;
+			} else {
+				filters = filters?.filter((e) => e.position !== index);
+			}
+		});
+	});
 </script>
 
 <Slide

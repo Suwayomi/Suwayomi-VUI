@@ -17,10 +17,12 @@
 	import type { ResultOf } from 'gql.tada';
 	import ModalTemplate from '$lib/components/ModalTemplate.svelte';
 
-	export let update: OperationResultStore<
-		ResultOf<typeof updateStatusChanged>
-	> &
-		Pausable;
+	interface Props {
+		update: OperationResultStore<ResultOf<typeof updateStatusChanged>> &
+			Pausable;
+	}
+
+	let { update }: Props = $props();
 
 	const modalStore = getModalStore();
 </script>
@@ -28,7 +30,7 @@
 {#if $modalStore[0]}
 	{@const updateStatusChanged = $update.data?.updateStatusChanged}
 	<ModalTemplate
-		title={'Update Info (' +
+		titleText={'Update Info (' +
 			(updateStatusChanged?.isRunning ? 'Running)' : 'Complete)')}
 	>
 		{#if updateStatusChanged}
@@ -36,8 +38,10 @@
 				{#if updateStatusChanged.failedJobs.mangas.totalCount > 0}
 					<AccordionItem>
 						<!-- <svelte:fragment slot="lead">(icon)</svelte:fragment> -->
-						<svelte:fragment slot="summary">Failed Jobs</svelte:fragment>
-						<svelte:fragment slot="content">
+						{#snippet summary()}
+							Failed Jobs
+						{/snippet}
+						{#snippet content()}
 							<ul>
 								{#each updateStatusChanged.failedJobs.mangas.nodes as manga}
 									<a href="/manga/{manga.id}">
@@ -58,14 +62,16 @@
 									</a>
 								{/each}
 							</ul>
-						</svelte:fragment>
+						{/snippet}
 					</AccordionItem>
 				{/if}
 				{#if updateStatusChanged.runningJobs.mangas.totalCount > 0}
 					<AccordionItem>
 						<!-- <svelte:fragment slot="lead">(icon)</svelte:fragment> -->
-						<svelte:fragment slot="summary">Running Jobs</svelte:fragment>
-						<svelte:fragment slot="content">
+						{#snippet summary()}
+							Running Jobs
+						{/snippet}
+						{#snippet content()}
 							<ul>
 								{#each updateStatusChanged.runningJobs.mangas.nodes as manga}
 									<a href="/manga/{manga.id}">
@@ -86,14 +92,16 @@
 									</a>
 								{/each}
 							</ul>
-						</svelte:fragment>
+						{/snippet}
 					</AccordionItem>
 				{/if}
 				{#if updateStatusChanged.completeJobs.mangas.totalCount > 0}
 					<AccordionItem>
 						<!-- <svelte:fragment slot="lead">(icon)</svelte:fragment> -->
-						<svelte:fragment slot="summary">Completed Jobs</svelte:fragment>
-						<svelte:fragment slot="content">
+						{#snippet summary()}
+							Completed Jobs
+						{/snippet}
+						{#snippet content()}
 							<ul>
 								{#each updateStatusChanged.completeJobs.mangas.nodes as manga}
 									<a href="/manga/{manga.id}">
@@ -114,14 +122,16 @@
 									</a>
 								{/each}
 							</ul>
-						</svelte:fragment>
+						{/snippet}
 					</AccordionItem>
 				{/if}
 				{#if updateStatusChanged.pendingJobs.mangas.totalCount > 0}
 					<AccordionItem>
 						<!-- <svelte:fragment slot="lead">(icon)</svelte:fragment> -->
-						<svelte:fragment slot="summary">Pending Jobs</svelte:fragment>
-						<svelte:fragment slot="content">
+						{#snippet summary()}
+							Pending Jobs
+						{/snippet}
+						{#snippet content()}
 							<ul>
 								{#each updateStatusChanged.pendingJobs.mangas.nodes as manga}
 									<a href="/manga/{manga.id}">
@@ -142,7 +152,7 @@
 									</a>
 								{/each}
 							</ul>
-						</svelte:fragment>
+						{/snippet}
 					</AccordionItem>
 				{/if}
 				<!-- ... -->

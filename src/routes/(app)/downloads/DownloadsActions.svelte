@@ -23,8 +23,12 @@
 		stopDownloader
 	} from '$lib/gql/Mutations';
 
-	export let downloads: OperationResultStore<ResultOf<typeof downloadChanged>> &
-		Pausable;
+	interface Props {
+		downloads: OperationResultStore<ResultOf<typeof downloadChanged>> &
+			Pausable;
+	}
+
+	let { downloads }: Props = $props();
 	const modalStore = getModalStore();
 	const client = getContextClient();
 </script>
@@ -32,7 +36,7 @@
 <div class="h-full">
 	<IconButton
 		name="mdi:filter"
-		on:click={() => {
+		onclick={() => {
 			modalStore.trigger({
 				type: 'component',
 				backdropClasses: '!p-0',
@@ -43,7 +47,7 @@
 
 	<IconButton
 		name="mdi:notification-clear-all"
-		on:click={() => {
+		onclick={() => {
 			client.mutation(clearDownloader, {}).toPromise();
 		}}
 	/>
@@ -52,7 +56,7 @@
 		name="mdi:{$downloads?.data?.downloadChanged.state === 'STARTED'
 			? 'pause'
 			: 'play'}"
-		on:click={() => {
+		onclick={() => {
 			if ($downloads?.data?.downloadChanged.state === 'STARTED') {
 				client.mutation(stopDownloader, {}).toPromise();
 				return;

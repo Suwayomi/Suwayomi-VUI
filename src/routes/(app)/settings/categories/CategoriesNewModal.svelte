@@ -15,12 +15,16 @@
 	import ModalTemplate from '$lib/components/ModalTemplate.svelte';
 	const modalStore = getModalStore();
 
-	export let parent: SvelteComponent;
+	interface Props {
+		parent: SvelteComponent;
+	}
 
-	let catinput = '';
-	let Defaul = false;
-	let includeInDownload = true;
-	let includeInUpdate = true;
+	let { parent }: Props = $props();
+
+	let catinput = $state('');
+	let Defaul = $state(false);
+	let includeInDownload = $state(true);
+	let includeInUpdate = $state(true);
 
 	const client = getContextClient();
 	async function submitChange(): Promise<void> {
@@ -37,8 +41,8 @@
 </script>
 
 {#if $modalStore[0]}
-	<ModalTemplate title="New category">
-		<svelte:fragment>
+	<ModalTemplate titleText="New category">
+		{#snippet children()}
 			<label class="label">
 				<span class="pl-2">Category name</span>
 				<input class="input" type="text" bind:value={catinput} />
@@ -68,13 +72,13 @@
 					Include category in downloads from automatic updates
 				</div>
 			</Slide>
-		</svelte:fragment>
-		<svelte:fragment slot="footer">
+		{/snippet}
+		{#snippet footer()}
 			<div class="flex w-full justify-end pb-4 pr-2">
-				<button on:click={submitChange} class="variant-filled btn">
+				<button onclick={submitChange} class="variant-filled btn">
 					Submit
 				</button>
 			</div>
-		</svelte:fragment>
+		{/snippet}
 	</ModalTemplate>
 {/if}

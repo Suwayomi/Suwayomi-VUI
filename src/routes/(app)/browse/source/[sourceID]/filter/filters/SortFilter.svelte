@@ -7,49 +7,65 @@
 -->
 
 <script lang="ts">
+	import { run } from 'svelte/legacy';
+
 	import Slide from '$lib/components/Slide.svelte';
 	import { AccordionItem } from '@skeletonlabs/skeleton';
 
 	import type { getSource } from '$lib/gql/Queries';
 	import type { ResultOf, VariablesOf } from '$lib/gql/graphql';
 	import type { fetchSourceManga } from '$lib/gql/Mutations';
-	export let filter: Extract<
-		ResultOf<typeof getSource>['source']['filters'][0],
-		{ __typename: 'SortFilter' | undefined }
-	>;
-	export let filters: VariablesOf<typeof fetchSourceManga>['filters'];
-	export let index: number;
+	import { untrack } from 'svelte';
+	interface Props {
+		filter: Extract<
+			ResultOf<typeof getSource>['source']['filters'][0],
+			{ __typename: 'SortFilter' | undefined }
+		>;
+		filters: VariablesOf<typeof fetchSourceManga>['filters'];
+		index: number;
+	}
 
-	let selected =
+	let { filter, filters = $bindable(), index }: Props = $props();
+
+	let selected = $state(
 		filters?.find((e) => e.position === index)?.sortState?.index ??
-		filter.SortDefault?.index ??
-		0;
-	let checked =
+			filter.SortDefault?.index ??
+			0
+	);
+	let checked = $state(
 		filters?.find((e) => e.position === index)?.sortState?.ascending ??
-		filter.SortDefault?.ascending ??
-		false;
+			filter.SortDefault?.ascending ??
+			false
+	);
 
-	$: if (
-		selected !== filter.SortDefault?.index ||
-		checked !== filter.SortDefault?.ascending
-	) {
-		filters = filters?.filter((e) => e.position !== index) ?? [];
-		filters.push({
-			position: index,
-			sortState: {
-				ascending: checked,
-				index: selected
+	$effect(() => {
+		const _ = [filter, selected, checked];
+		untrack(() => {
+			if (
+				selected !== filter.SortDefault?.index ||
+				checked !== filter.SortDefault?.ascending
+			) {
+				filters = filters?.filter((e) => e.position !== index) ?? [];
+				filters.push({
+					position: index,
+					sortState: {
+						ascending: checked,
+						index: selected
+					}
+				});
+				filters = filters;
+			} else {
+				filters = filters?.filter((e) => e.position !== index);
 			}
 		});
-		filters = filters;
-	} else {
-		filters = filters?.filter((e) => e.position !== index);
-	}
+	});
 </script>
 
 <AccordionItem>
-	<svelte:fragment slot="summary">{filter.name}</svelte:fragment>
-	<svelte:fragment slot="content">
+	{#snippet summary()}
+		{filter.name}
+	{/snippet}
+	{#snippet content()}
 		<Slide
 			bind:checked
 			class="my-1 w-full p-1 pl-1 hover:variant-glass-surface"
@@ -62,5 +78,5 @@
 				<option value={index}>{value}</option>
 			{/each}
 		</select>
-	</svelte:fragment>
+	{/snippet}
 </AccordionItem>

@@ -7,6 +7,8 @@
 -->
 
 <script lang="ts">
+	import { run } from 'svelte/legacy';
+
 	import { ErrorHelp } from '$lib/util';
 	import {
 		FileDropzone,
@@ -28,7 +30,7 @@
 
 	const toastStore = getToastStore();
 	const modalStore = getModalStore();
-	let MakingBackup = false;
+	let MakingBackup = $state(false);
 	const client = getContextClient();
 	async function MakeBacup() {
 		if (MakingBackup) return;
@@ -43,8 +45,9 @@
 		MakingBackup = false;
 	}
 	AppBarData('Backup');
-	let files: FileList;
+	let files: FileList | undefined = $state();
 	async function validateRestore() {
+		if (!files) return;
 		await ErrorHelp(
 			'failed to validate backup file',
 			client.query(validateBackup, { backup: files[0] }).toPromise(),
@@ -78,27 +81,32 @@ ${e.data?.validateBackup.missingSources.map((ele) => ele.name).join(',')}
 		| (OperationResultStore<ResultOf<typeof restoreStatus>> & Pausable)
 		| undefined;
 
-	let restoreStat: RestoreStatus;
+	let restoreStat: RestoreStatus = $state();
 
-	$: if ($restoreStat?.data?.restoreStatus?.state === 'SUCCESS') {
-		toastStore.trigger({
-			hoverable: true,
-			message: `<h3>you successfully restored the backup</h3>`,
-			background: 'variant-filled-success'
-		});
-		restoreStat = undefined;
-	}
+	$effect(() => {
+		if ($restoreStat?.data?.restoreStatus?.state === 'SUCCESS') {
+			toastStore.trigger({
+				hoverable: true,
+				message: `<h3>you successfully restored the backup</h3>`,
+				background: 'variant-filled-success'
+			});
+			restoreStat = undefined;
+		}
+	});
 
-	$: if ($restoreStat?.data?.restoreStatus?.state === 'FAILURE') {
-		toastStore.trigger({
-			hoverable: true,
-			message: `<h3>The backup failed to restore</h3>`,
-			background: 'variant-filled-error'
-		});
-		restoreStat = undefined;
-	}
+	$effect(() => {
+		if ($restoreStat?.data?.restoreStatus?.state === 'FAILURE') {
+			toastStore.trigger({
+				hoverable: true,
+				message: `<h3>The backup failed to restore</h3>`,
+				background: 'variant-filled-error'
+			});
+			restoreStat = undefined;
+		}
+	});
 
 	function restore() {
+		if (!files) return;
 		ErrorHelp(
 			'failed to start restoring backup',
 			client.mutation(restoreBackup, { backup: files[0] }).toPromise(),
@@ -135,12 +143,12 @@ ${e.data?.validateBackup.missingSources.map((ele) => ele.name).join(',')}
 </script>
 
 {#if $modalStore[0]}
-	<ModalTemplate title="Backups">
-		<svelte:fragment>
+	<ModalTemplate titleText="Backups">
+		{#snippet children()}
 			<div class="mt-1 w-full">
 				<button
 					class="block h-[76px] w-full px-4 py-2 text-left hover:variant-glass-surface"
-					on:click={MakeBacup}
+					onclick={MakeBacup}
 				>
 					<div class="text-xl">Create backup</div>
 					<div class="opacity-80">
@@ -154,15 +162,17 @@ ${e.data?.validateBackup.missingSources.map((ele) => ele.name).join(',')}
 			<div class="card mb-1 h-48 w-full">
 				<FileDropzone
 					class="h-full"
-					on:change={validateRestore}
+					onchange={validateRestore}
 					accept=".proto.gz"
 					name="files"
 					bind:files
 				>
-					<div slot="message">
-						<div>Restore backup</div>
-						<div>Upload a file or drag and drop</div>
-					</div>
+					{#snippet message()}
+						<div>
+							<div>Restore backup</div>
+							<div>Upload a file or drag and drop</div>
+						</div>
+					{/snippet}
 				</FileDropzone>
 				{#if $restoreStat?.data?.restoreStatus?.state}
 					<div
@@ -179,6 +189,6 @@ ${e.data?.validateBackup.missingSources.map((ele) => ele.name).join(',')}
 					</div>
 				{/if}
 			</div>
-		</svelte:fragment>
+		{/snippet}
 	</ModalTemplate>
 {/if}

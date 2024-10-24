@@ -16,14 +16,18 @@
 	import { updateCategory } from '$lib/gql/Mutations';
 	import ModalTemplate from '$lib/components/ModalTemplate.svelte';
 	const modalStore = getModalStore();
-	export let parent: SvelteComponent;
 
-	export let cat: ResultOf<typeof CategoryTypeFragment>;
+	interface Props {
+		parent: SvelteComponent;
+		cat: ResultOf<typeof CategoryTypeFragment>;
+	}
 
-	let catinput = cat.name;
-	let Defaul = cat.default;
-	let includeInDownload = cat.includeInDownload === 'INCLUDE';
-	let includeInUpdate = cat.includeInUpdate === 'INCLUDE';
+	let { parent, cat }: Props = $props();
+
+	let catinput = $state(cat.name);
+	let Defaul = $state(cat.default);
+	let includeInDownload = $state(cat.includeInDownload === 'INCLUDE');
+	let includeInUpdate = $state(cat.includeInUpdate === 'INCLUDE');
 	const client = getContextClient();
 
 	function submitChange(): void {
@@ -41,8 +45,8 @@
 </script>
 
 {#if $modalStore[0]}
-	<ModalTemplate title="Edit category">
-		<svelte:fragment>
+	<ModalTemplate titleText="Edit category">
+		{#snippet children()}
 			<label class="label">
 				<span class="pl-2">Category name</span>
 				<input class="input" type="text" bind:value={catinput} />
@@ -73,13 +77,13 @@
 					Include category in downloads from automatic updates
 				</div>
 			</Slide>
-		</svelte:fragment>
-		<svelte:fragment slot="footer">
+		{/snippet}
+		{#snippet footer()}
 			<div class="flex w-full justify-end pb-4 pr-2">
-				<button on:click={submitChange} class="variant-filled btn">
+				<button onclick={submitChange} class="variant-filled btn">
 					Submit
 				</button>
 			</div>
-		</svelte:fragment>
+		{/snippet}
 	</ModalTemplate>
 {/if}

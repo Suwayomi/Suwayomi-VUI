@@ -13,7 +13,14 @@ export default defineConfig(({ mode }) => {
 				'/api': {
 					target: process.env.suwayomi,
 					changeOrigin: true,
-					ws: true
+					ws: true,
+					configure: (_proxy, options) => {
+						const username = process.env.username;
+						const password = process.env.password;
+						if (username && password) {
+							options.auth = `${username}:${password}`;
+						}
+					}
 				}
 			}
 		},

@@ -9,7 +9,11 @@
 <script lang="ts">
 	import type { LayoutData } from '../$types';
 	import Grid from '../Grid.svelte';
-	export let data: LayoutData;
+	interface Props {
+		data: LayoutData;
+	}
+
+	let { data }: Props = $props();
 </script>
 
 <Grid {data} type="LATEST" />

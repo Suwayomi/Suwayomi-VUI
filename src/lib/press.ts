@@ -7,7 +7,7 @@
 import type { ActionReturn } from 'svelte/action';
 
 interface Attributes {
-	'on:longPress': (e: CustomEvent<boolean>) => void;
+	onlongPress: (e: CustomEvent<boolean>) => void;
 }
 
 export function longPress(

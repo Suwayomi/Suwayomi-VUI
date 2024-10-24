@@ -12,14 +12,29 @@
 
 	let title = 'Toggle light or dark mode.';
 
-	export let bgLight: CssClasses = 'bg-surface-50';
-	export let bgDark: CssClasses = 'bg-surface-900';
-	export let fillLight: CssClasses = 'fill-surface-50';
-	export let fillDark: CssClasses = 'fill-surface-900';
-	export let width: CssClasses = 'w-12';
-	export let height: CssClasses = 'h-6';
-	export let ring: CssClasses = 'ring-[1px] ring-surface-500/30';
-	export let rounded: CssClasses = 'rounded-token';
+	interface Props {
+		bgLight?: CssClasses;
+		bgDark?: CssClasses;
+		fillLight?: CssClasses;
+		fillDark?: CssClasses;
+		width?: CssClasses;
+		height?: CssClasses;
+		ring?: CssClasses;
+		rounded?: CssClasses;
+		class?: CssClasses;
+	}
+
+	let {
+		bgLight = 'bg-surface-50',
+		bgDark = 'bg-surface-900',
+		fillLight = 'fill-surface-50',
+		fillDark = 'fill-surface-900',
+		width = 'w-12',
+		height = 'h-6',
+		ring = 'ring-[1px] ring-surface-500/30',
+		rounded = 'rounded-token',
+		class: className
+	}: Props = $props();
 
 	const cTransition = `transition-all duration-[200ms]`;
 
@@ -29,22 +44,24 @@
 	};
 
 	// State
-	$: trackBg = !$Meta.dark ? bgLight : bgDark;
-	$: thumbBg = !$Meta.dark ? bgDark : bgLight;
-	$: thumbPosition = !$Meta.dark ? 'translate-x-[100%]' : '';
+	let trackBg = $derived(!$Meta.dark ? bgLight : bgDark);
+	let thumbBg = $derived(!$Meta.dark ? bgDark : bgLight);
+	let thumbPosition = $derived(!$Meta.dark ? 'translate-x-[100%]' : '');
 	// Reactive
-	$: classesTrack = `cursor-pointer ${cTransition} ${width} ${height} ${ring} ${rounded} ${trackBg} ${
-		$$props.class ?? ''
-	}`;
-	$: classesThumb = `aspect-square scale-[0.8] flex justify-center items-center ${cTransition} ${height} ${rounded} ${thumbBg} ${thumbPosition}`;
-	$: classesIcon = `w-[70%] aspect-square ${
-		!$Meta.dark ? fillLight : fillDark
-	}`;
+	let classesTrack = $derived(
+		`cursor-pointer ${cTransition} ${width} ${height} ${ring} ${rounded} ${trackBg} ${className ?? ''}`
+	);
+	let classesThumb = $derived(
+		`aspect-square scale-[0.8] flex justify-center items-center ${cTransition} ${height} ${rounded} ${thumbBg} ${thumbPosition}`
+	);
+	let classesIcon = $derived(
+		`w-[70%] aspect-square ${!$Meta.dark ? fillLight : fillDark}`
+	);
 </script>
 
 <button
 	class="lightswitch-track {classesTrack}"
-	on:click={() => ($Meta.dark = !$Meta.dark)}
+	onclick={() => ($Meta.dark = !$Meta.dark)}
 	role="switch"
 	aria-label="Light Switch"
 	aria-checked={!$Meta.dark}

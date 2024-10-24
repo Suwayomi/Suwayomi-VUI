@@ -7,29 +7,42 @@
 -->
 
 <script lang="ts">
+	import { run } from 'svelte/legacy';
+
 	import type { fetchSourceManga } from '$lib/gql/Mutations';
 	import type { getSource } from '$lib/gql/Queries';
 	import type { ResultOf, VariablesOf } from '$lib/gql/graphql';
-	export let filter: Extract<
-		ResultOf<typeof getSource>['source']['filters'][0],
-		{ __typename: 'TextFilter' | undefined }
-	>;
-	export let filters: VariablesOf<typeof fetchSourceManga>['filters'];
-	export let index: number;
-
-	let text =
-		filters?.find((e) => e.position === index)?.textState ?? filter.TextDefault;
-
-	$: if (text !== filter.TextDefault) {
-		filters = filters?.filter((e) => e.position !== index) ?? [];
-		filters.push({
-			position: index,
-			textState: text
-		});
-		filters = filters;
-	} else {
-		filters = filters?.filter((e) => e.position !== index);
+	import { untrack } from 'svelte';
+	interface Props {
+		filter: Extract<
+			ResultOf<typeof getSource>['source']['filters'][0],
+			{ __typename: 'TextFilter' | undefined }
+		>;
+		filters: VariablesOf<typeof fetchSourceManga>['filters'];
+		index: number;
 	}
+
+	let { filter, filters = $bindable(), index }: Props = $props();
+
+	let text = $state(
+		filters?.find((e) => e.position === index)?.textState ?? filter.TextDefault
+	);
+
+	$effect(() => {
+		const _ = [text, filter];
+		untrack(() => {
+			if (text !== filter.TextDefault) {
+				filters = filters?.filter((e) => e.position !== index) ?? [];
+				filters.push({
+					position: index,
+					textState: text
+				});
+				filters = filters;
+			} else {
+				filters = filters?.filter((e) => e.position !== index);
+			}
+		});
+	});
 </script>
 
 <label>

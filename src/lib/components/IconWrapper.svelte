@@ -8,12 +8,14 @@
 
 <script lang="ts">
 	import Icon from '@iconify/svelte';
-	export let name: string;
+	interface Props {
+		name: string;
+		width?: string;
+		height?: string;
+		class?: string;
+	}
+
+	let { width, height, class: className, name }: Props = $props();
 </script>
 
-<Icon
-	icon={name}
-	class="pointer-events-none {$$props.class}"
-	width={$$props.width}
-	height={$$props.height}
-/>
+<Icon icon={name} class="pointer-events-none {className}" {width} {height} />

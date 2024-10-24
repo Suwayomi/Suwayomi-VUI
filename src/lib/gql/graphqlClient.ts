@@ -261,10 +261,10 @@ export const client = new Client({
 
 function trackProgressUpdater(
 	data: ResultOf<typeof trackProgress> | undefined,
-	vars: VariablesOf<typeof trackProgress>,
+	_vars: VariablesOf<typeof trackProgress>,
 	cache: Cache
 ) {
-	if (!data) return;
+	if (!data?.trackProgress) return;
 	data.trackProgress.trackRecords.forEach((record) => {
 		cache.writeFragment(TrackRecordTypeFragment, record, {
 			id: record.id
@@ -322,8 +322,9 @@ function updateMangasUpdater(
 	vars: VariablesOf<typeof updateMangas>,
 	cache: Cache
 ) {
-	if (!data) return;
-	data.updateMangas.mangas.forEach((manga) => {
+	if (!data?.updateMangas) return;
+	const updateMangas = data.updateMangas;
+	updateMangas.mangas.forEach((manga) => {
 		(manga.categories.nodes.length
 			? manga.categories.nodes
 			: [{ id: 0 }]
@@ -341,7 +342,7 @@ function updateMangasUpdater(
 						categoryData.category.mangas.nodes.filter(
 							(m) => !vars.ids.includes(m.id)
 						);
-					categoryData.category.mangas.nodes.push(...data.updateMangas.mangas);
+					categoryData.category.mangas.nodes.push(...updateMangas.mangas);
 					return categoryData;
 				}
 			);
@@ -366,7 +367,7 @@ function updateMangaCategoriesUpdater(
 	vars: VariablesOf<typeof updateMangaCategories>,
 	cache: Cache
 ) {
-	if (!data?.updateMangaCategories.manga.categories.nodes) return;
+	if (!data?.updateMangaCategories?.manga.categories.nodes) return;
 	const nodes = data.updateMangaCategories.manga.categories.nodes;
 	// update this mangas categories
 	try {
@@ -486,14 +487,13 @@ function deleteMangaMetaUpdater(
 	vars: VariablesOf<typeof deleteMangaMeta>,
 	cache: Cache
 ) {
-	if (!data) return;
+	if (!data?.deleteMangaMeta) return;
 	const mangaData = cache.readQuery({
 		query: getManga,
 		variables: { id: vars.id }
 	});
-	if (!mangaData) return;
+	if (!mangaData?.manga) return;
 	const frag = mangaData.manga;
-	if (!frag) return;
 	frag.meta = data.deleteMangaMeta.manga.meta;
 	cache.writeFragment(MangaTypeFragment, frag, {
 		id: frag.id
@@ -505,14 +505,13 @@ function setMangaMetaUpdater(
 	vars: VariablesOf<typeof setMangaMeta>,
 	cache: Cache
 ) {
-	if (!data) return;
+	if (!data?.setMangaMeta) return;
 	const mangaData = cache.readQuery({
 		query: getManga,
 		variables: { id: vars.id }
 	});
-	if (!mangaData) return;
+	if (!mangaData?.manga) return;
 	const frag = mangaData.manga;
-	if (!frag) return;
 	frag.meta = data.setMangaMeta.meta.manga.meta;
 	cache.writeFragment(MangaTypeFragment, frag, {
 		id: frag.id
@@ -543,7 +542,8 @@ function setGlobalMetaUpdater(
 	vars: VariablesOf<typeof setGlobalMeta>,
 	cache: Cache
 ) {
-	if (!data) return;
+	if (!data?.setGlobalMeta) return;
+	const setGlobalMeta = data.setGlobalMeta;
 	cache.updateQuery(
 		{
 			query: metas
@@ -552,7 +552,7 @@ function setGlobalMetaUpdater(
 			if (!metasData) return metasData;
 			metasData.metas.nodes =
 				metasData?.metas.nodes.filter((e) => e.key !== vars.key) ?? [];
-			metasData.metas.nodes.push(data.setGlobalMeta.meta);
+			metasData.metas.nodes.push(setGlobalMeta.meta);
 			return metasData;
 		}
 	);
@@ -576,10 +576,11 @@ function setServerSettingsUpdater(
 
 function createCategoryUpdater(
 	data: ResultOf<typeof createCategory> | undefined,
-	vars: VariablesOf<typeof createCategory>,
+	_vars: VariablesOf<typeof createCategory>,
 	cache: Cache
 ) {
-	if (!data) return;
+	if (!data?.createCategory) return;
+	const createCategory = data.createCategory;
 	cache.updateQuery(
 		{
 			query: getCategories,
@@ -587,7 +588,7 @@ function createCategoryUpdater(
 		},
 		(categories) => {
 			if (!categories) return categories;
-			categories.categories.nodes.push(data.createCategory.category);
+			categories.categories.nodes.push(createCategory.category);
 			return categories;
 		}
 	);
@@ -598,18 +599,19 @@ function fetchMangaChaptersUpdater(
 	vars: VariablesOf<typeof fetchMangaChapters>,
 	cache: Cache
 ) {
-	if (!data) return;
+	if (!data?.fetchChapters) return;
+	const fetchChapters = data.fetchChapters;
 	cache.updateQuery(
 		{
 			query: getManga,
 			variables: { id: vars.id }
 		},
 		(manga) => {
-			if (!manga) {
+			if (!manga?.manga) {
 				return manga;
 			}
-			manga.manga.chapters.nodes = data.fetchChapters.chapters;
-			manga.manga.chapters.totalCount = data.fetchChapters.chapters.length;
+			manga.manga.chapters.nodes = fetchChapters.chapters;
+			manga.manga.chapters.totalCount = fetchChapters.chapters.length;
 			return manga;
 		}
 	);
@@ -620,7 +622,8 @@ function fetchMangaInfoUpdater(
 	vars: VariablesOf<typeof fetchMangaInfo>,
 	cache: Cache
 ) {
-	if (!data) return;
+	if (!data?.fetchManga) return;
+	const fetchManga = data.fetchManga;
 	cache.updateQuery(
 		{
 			query: getManga,
@@ -629,7 +632,7 @@ function fetchMangaInfoUpdater(
 			}
 		},
 		(manga) => {
-			if (!manga)
+			if (!manga?.manga)
 				return {
 					manga: {
 						__typename: 'MangaType',
@@ -638,12 +641,12 @@ function fetchMangaInfoUpdater(
 							nodes: [],
 							totalCount: 0
 						},
-						...data.fetchManga.manga
+						...fetchManga.manga
 					}
 				};
 			manga.manga = {
 				...manga.manga,
-				...data.fetchManga.manga
+				...fetchManga.manga
 			};
 			return manga;
 		}
@@ -711,7 +714,7 @@ function updateExtensionUpdater(
 	vars: VariablesOf<typeof updateExtension>,
 	cache: Cache
 ) {
-	if (!data) return;
+	if (!data?.updateExtension) return;
 	try {
 		updateExtentionsList(cache, data.updateExtension.extension, vars);
 	} catch {}
@@ -725,7 +728,7 @@ function installExternalExtensionUpdater(
 	_: VariablesOf<typeof installExternalExtension>,
 	cache: Cache
 ) {
-	if (!data) return;
+	if (!data?.installExternalExtension) return;
 	try {
 		updateExtentionsList(
 			cache,
@@ -747,7 +750,7 @@ function fetchExtensionsUpdater(
 	_: VariablesOf<typeof fetchExtensions>,
 	cache: Cache
 ) {
-	if (!data) return;
+	if (!data?.fetchExtensions) return;
 	let filteredExtensions = data.fetchExtensions.extensions;
 	if (!get(Meta).nsfw)
 		filteredExtensions = filteredExtensions.filter((e) => !e.isNsfw);
@@ -764,7 +767,7 @@ function updateMangasCategoriesUpdater(
 	variables: VariablesOf<typeof updateMangasCategories>,
 	cache: Cache
 ) {
-	if (!variables.addTo || !data) return;
+	if (!variables.addTo || !data?.updateMangasCategories) return;
 	const mangaIds = data.updateMangasCategories.mangas.map((manga) => manga.id);
 	const defaultCategory = variables.addTo?.length === 0 ? [0] : variables.addTo;
 	mangaIds.forEach((id) => {
@@ -782,7 +785,7 @@ function updateMangasCategoriesUpdater(
 			cache.writeFragment(MangaTypeFragment, manga, {
 				id: manga.id
 			});
-		} catch (error) {}
+		} catch {}
 	});
 
 	const currentCategoryId = parseInt(
@@ -858,13 +861,15 @@ function updateMangasCategoriesUpdater(
 					return oldCategoryData;
 				}
 			);
-		} catch (error) {}
+		} catch {}
 	});
 }
 
 function updateExtentionsList<T extends { pkgName: string }>(
 	cache: Cache,
-	extension: ResultOf<typeof updateExtension>['updateExtension']['extension'],
+	extension: NonNullable<
+		ResultOf<typeof updateExtension>['updateExtension']
+	>['extension'],
 	ext: T
 ) {
 	cache.updateQuery(
@@ -888,7 +893,9 @@ function updateExtentionsList<T extends { pkgName: string }>(
 
 function updateSourcesList<T extends { pkgName: string }>(
 	cache: Cache,
-	extension: ResultOf<typeof updateExtension>['updateExtension']['extension'],
+	extension: NonNullable<
+		ResultOf<typeof updateExtension>['updateExtension']
+	>['extension'],
 	ext: T
 ) {
 	cache.updateQuery(

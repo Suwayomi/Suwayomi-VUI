@@ -9,19 +9,30 @@
 <script lang="ts">
 	import { queryParam, ssp } from 'sveltekit-search-params';
 	import TooltipIconButton from './TooltipIconButton.svelte';
+	interface Props {
+		children?: import('svelte').Snippet;
+	}
 
-	let inputElement: HTMLInputElement;
+	let { children }: Props = $props();
+
+	let inputElement: HTMLInputElement | undefined = $state();
 	// eslint-disable-next-line no-undef
 	let timeoutCancel: NodeJS.Timeout | undefined = undefined;
 	const query = queryParam('q', ssp.string(), { pushHistory: false });
-	$: searchElementHidden = $query === null || $query === '';
-	$: value = $query || '';
+	let searchElementHidden = $state(false);
+	$effect(() => {
+		searchElementHidden = $query === null || $query === '';
+	});
+	let value = $state('');
+	$effect(() => {
+		value = $query || '';
+	});
 
 	function handelSearch() {
 		searchElementHidden = !searchElementHidden;
 		if (!searchElementHidden) {
 			setTimeout(() => {
-				inputElement.focus();
+				inputElement?.focus();
 			}, 500);
 			return;
 		}
@@ -41,7 +52,7 @@
 		}
 	) {
 		if (e.key == 'Escape') {
-			inputElement.blur();
+			inputElement?.blur();
 			handelSearch();
 		}
 	}
@@ -58,13 +69,13 @@
 		type="text"
 		placeholder="input text"
 		bind:value
-		on:change={handelChange}
-		on:keydown={handelEscapeInput}
+		onchange={handelChange}
+		onkeydown={handelEscapeInput}
 	/>
-	<slot />
+	{@render children?.()}
 </div>
 <TooltipIconButton
-	on:click={handelSearch}
+	onclick={handelSearch}
 	name="mdi:{searchElementHidden ? 'search' : 'close'}"
 	tip="Search"
 	tipclass="z-50"

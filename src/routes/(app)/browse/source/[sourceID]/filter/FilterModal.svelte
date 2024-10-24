@@ -18,7 +18,7 @@
 	import { Accordion, getModalStore } from '@skeletonlabs/skeleton';
 	import type { LayoutData } from '../$types';
 	import { filters as filtersStore } from './stores';
-	import type { SvelteComponent } from 'svelte';
+	import { untrack, type SvelteComponent } from 'svelte';
 	import { queryParam, ssp } from 'sveltekit-search-params';
 	import type { VariablesOf } from '$lib/gql/graphql';
 	import type { fetchSourceManga } from '$lib/gql/Mutations';
@@ -26,15 +26,19 @@
 	import { getSource } from '$lib/gql/Queries';
 	import ModalTemplate from '$lib/components/ModalTemplate.svelte';
 
-	export let parent: SvelteComponent;
-	export let data: LayoutData;
-	export let submit: (
-		filterss: VariablesOf<typeof fetchSourceManga>['filters'],
-		queryy: string
-	) => void;
+	interface Props {
+		parent: SvelteComponent;
+		data: LayoutData;
+		submit: (
+			filterss: VariablesOf<typeof fetchSourceManga>['filters'],
+			queryy: string
+		) => void;
+	}
+
+	let { parent, data, submit }: Props = $props();
 
 	const modalStore = getModalStore();
-	const sause = queryStore({
+	const sause2 = queryStore({
 		client: getContextClient(),
 		query: getSource,
 		variables: {
@@ -42,10 +46,23 @@
 		}
 	});
 
+	let sauce = $derived.by(() => {
+		untrack(() => {
+			sause2.pause();
+		});
+		const _ = [$sause2];
+		const tmp = untrack(() => {
+			sause2.resume();
+			return $state.snapshot($sause2).data?.source;
+		});
+		return tmp;
+	});
+
 	const queryy = queryParam('q', ssp.string(), { pushHistory: false });
 
-	let query = $queryy ?? '';
-	let filters: VariablesOf<typeof fetchSourceManga>['filters'] = $filtersStore;
+	let query = $state($queryy ?? '');
+	let filters: VariablesOf<typeof fetchSourceManga>['filters'] =
+		$state($filtersStore);
 
 	function Search() {
 		submit(filters, query);
@@ -61,7 +78,7 @@
 
 {#if $modalStore[0]}
 	<ModalTemplate>
-		<svelte:fragment slot="title">
+		{#snippet title()}
 			<div class="mx-4 mt-4">
 				<input
 					bind:value={query}
@@ -71,10 +88,10 @@
 					placeholder="Search"
 				/>
 			</div>
-		</svelte:fragment>
-		<svelte:fragment>
-			{#if $sause.data?.source?.filters}
-				{#each $sause.data.source.filters as filter, index}
+		{/snippet}
+		{#snippet children()}
+			{#if sauce?.filters}
+				{#each sauce.filters as filter, index}
 					<div class="mx-4 mt-4">
 						<Accordion>
 							{#if filter.__typename === 'CheckBoxFilter'}
@@ -98,16 +115,16 @@
 					</div>
 				{/each}
 			{/if}
-		</svelte:fragment>
-		<svelte:fragment slot="footer">
+		{/snippet}
+		{#snippet footer()}
 			<div class="flex items-center justify-between px-4 pb-4">
-				<button class="variant-filled-warning btn" on:click={reset}>
+				<button class="variant-filled-warning btn" onclick={reset}>
 					Reset
 				</button>
-				<button class="variant-filled-primary btn" on:click={Search}>
+				<button class="variant-filled-primary btn" onclick={Search}>
 					Search
 				</button>
 			</div>
-		</svelte:fragment>
+		{/snippet}
 	</ModalTemplate>
 {/if}

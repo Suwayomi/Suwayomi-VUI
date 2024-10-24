@@ -13,16 +13,20 @@
 	import { getContextClient } from '@urql/svelte';
 	import type { ResultOf } from '$lib/gql/graphql';
 
-	export let pref: Extract<
-		ResultOf<typeof getSource>['source']['preferences'][0],
-		{ __typename: 'MultiSelectListPreference' | undefined }
-	>;
+	interface Props {
+		pref: Extract<
+			ResultOf<typeof getSource>['source']['preferences'][0],
+			{ __typename: 'MultiSelectListPreference' | undefined }
+		>;
+		index: number;
+		id: string;
+	}
 
-	export let index: number;
-	export let id: string;
+	let { pref, index, id }: Props = $props();
 
-	let selected =
-		pref.MultiSelectListCurrentValue ?? pref.MultiSelectListDefault;
+	let selected = $state(
+		pref.MultiSelectListCurrentValue ?? pref.MultiSelectListDefault
+	);
 	const client = getContextClient();
 	function handelchange() {
 		client
@@ -40,7 +44,7 @@
 	<select
 		bind:value={selected}
 		multiple
-		on:change={handelchange}
+		onchange={handelchange}
 		class="select"
 		use:popup={{
 			event: 'focus-blur',
@@ -55,5 +59,5 @@
 </label>
 <div class="card z-50 max-w-sm p-4" data-popup="{id} {index}">
 	<p>{pref.summary}</p>
-	<div class="card arrow z-50" style="border-radius:0" />
+	<div class="card arrow z-50" style="border-radius:0"></div>
 </div>

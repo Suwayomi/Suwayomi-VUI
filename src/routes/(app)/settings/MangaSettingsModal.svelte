@@ -22,7 +22,7 @@
 </script>
 
 {#if $modalStore[0]}
-	<ModalTemplate title="Manga Settings Defaults">
+	<ModalTemplate titleText="Manga Settings Defaults">
 		<Slide
 			bind:checked={$Meta.DownloadAllChaptersOnAddToLibrary}
 			class="my-1 p-1 pl-2 hover:variant-glass-surface focus:outline-0"
@@ -98,9 +98,12 @@
 		<h2 class="h4 mb-1 border-b border-surface-700">Display</h2>
 		<button
 			class="flex w-full items-center justify-between rounded-full p-1 pl-2 hover:variant-glass-surface focus:outline-0"
-			on:click|preventDefault|stopPropagation={() =>
-				($Meta.mangaMetaDefaults.showMissingChapters =
-					!$Meta.mangaMetaDefaults.showMissingChapters)}
+			onclick={(e) => {
+				e.preventDefault();
+				e.stopPropagation();
+				$Meta.mangaMetaDefaults.showMissingChapters =
+					!$Meta.mangaMetaDefaults.showMissingChapters;
+			}}
 		>
 			<span>Show Missing Chapters</span>
 			<SlideToggle
@@ -111,9 +114,12 @@
 		</button>
 		<button
 			class="flex w-full items-center justify-between rounded-full p-1 pl-2 hover:variant-glass-surface focus:outline-0"
-			on:click|preventDefault|stopPropagation={() =>
-				($Meta.mangaMetaDefaults.ChapterFetchUpload =
-					!$Meta.mangaMetaDefaults.ChapterFetchUpload)}
+			onclick={(e) => {
+				e.preventDefault();
+				e.stopPropagation();
+				$Meta.mangaMetaDefaults.ChapterFetchUpload =
+					!$Meta.mangaMetaDefaults.ChapterFetchUpload;
+			}}
 		>
 			<span>FetchDate/UploadDate</span>
 			<SlideToggle

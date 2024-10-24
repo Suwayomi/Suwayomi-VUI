@@ -49,17 +49,10 @@
 		};
 	});
 
-	let lastSelected: MangaType | undefined;
+	let lastSelected: MangaType | undefined = $state();
 
 	const query = queryParam('q', ssp.string(), { pushHistory: false });
 	const tab = queryParam('tab', ssp.number(), { pushHistory: false });
-
-	$: [err, parsedQuery] = parseQuery($query);
-	$: if (err !== null) {
-		errortoast('Invalid Query', err);
-	}
-
-	$: validateParsedQuery(parsedQuery);
 
 	function validateParsedQuery(query: parsedQueryType) {
 		if (query === null) return;
@@ -70,6 +63,7 @@
 
 		validateANOs(anos);
 	}
+
 	function validateANOs(anos: ANO[]) {
 		anos.forEach((e) => {
 			switch (e.type) {
@@ -108,80 +102,9 @@
 		}
 	}
 
-	$: mangas = queryStore({
-		client,
-		query: getCategory,
-		variables: { id: $tab ?? 0 },
-		requestPolicy: 'cache-first'
-	});
-
-	$: orderedCategories = [...($categories.data?.categories?.nodes ?? [])]
-		.sort((a, b) => {
-			return a.order > b.order ? 1 : -1;
-		})
-		.filter((e) => e.mangas.totalCount);
-
-	$: if (
-		orderedCategories.length &&
-		orderedCategories.find((e) => e.id === $tab) === undefined
-	) {
-		window.requestAnimationFrame(() => {
-			$tab = orderedCategories[0]?.id;
-		});
-	}
-
 	function LongHandler() {
 		$selectMode = true;
 	}
-
-	$: if ($selectMode === false) {
-		$selected = [];
-	}
-
-	$: if ($selectMode && Object.keys($selected).length > 0) {
-		Object.keys($selected).forEach((ele) => {
-			if (filteredMangas !== undefined) {
-				const tmp = filteredMangas.findIndex(
-					(elem) => elem.id.toString() === ele
-				);
-				if (tmp === -1) {
-					delete $selected[parseInt(ele)];
-					$selected = $selected;
-				}
-			}
-		});
-	}
-
-	$: filteredMangas = $mangas.data?.category?.mangas.nodes.filter((ele) => {
-		if (!ele.inLibrary) return false;
-		if ($Meta.ignoreFiltersWhenSearching) {
-			if (
-				parsedQuery !== null &&
-				specificSearch(ele, parsedQuery).findIndex((e) => e === false) === -1
-			) {
-				return true;
-			}
-		}
-
-		if ($Meta.Downloaded === 1 && ele.downloadCount === 0) return false;
-		if ($Meta.Downloaded === 2 && ele.downloadCount !== 0) return false;
-
-		if ($Meta.Unread === 1 && ele.unreadCount === 0) return false;
-		if ($Meta.Unread === 2 && ele.unreadCount !== 0) return false;
-
-		if ($Meta.Tracked === 1 && ele.trackRecords.nodes.length === 0)
-			return false;
-		if ($Meta.Tracked === 2 && ele.trackRecords.nodes.length !== 0)
-			return false;
-
-		if (
-			parsedQuery !== null &&
-			specificSearch(ele, parsedQuery).findIndex((e) => e === false) !== -1
-		)
-			return false;
-
-		return true;
-	});
 
 	function OrSearch(manga: MangaType, query: ANO[]): boolean {
 		const ind = query.findIndex((e) => e.value === '|');
@@ -275,53 +198,141 @@
 		return array;
 	}
 
-	$: sortedMangas = filteredMangas
-		? $Meta.Sort === sort.Random
-			? shuffle([...filteredMangas])
-			: [...filteredMangas].sort((a, b) => {
-					let tru = true;
-					switch ($Meta.Sort) {
-						case sort.ID:
-							tru = a.id > b.id;
-							break;
-						case sort.Unread:
-							tru = a.unreadCount > b.unreadCount;
-							break;
-						case sort.Alphabetical:
-							tru = a.title > b.title;
-							break;
-						case sort['Latest Read']:
-							tru =
-								parseInt(a.lastReadChapter?.lastReadAt ?? '0') >
-								parseInt(b.lastReadChapter?.lastReadAt ?? '0');
-							break;
-						case sort['Latest Fetched']:
-							tru =
-								parseInt(a.latestFetchedChapter?.fetchedAt ?? '0') >
-								parseInt(b.latestFetchedChapter?.fetchedAt ?? '0');
-							break;
-						case sort['Latest Uploaded']:
-							tru =
-								parseInt(a.latestUploadedChapter?.uploadDate ?? '0') >
-								parseInt(b.latestUploadedChapter?.uploadDate ?? '0');
-							break;
-					}
-
-					if ($Meta.Asc) tru = !tru;
-					return tru ? -1 : 1;
-				})
-		: undefined;
-
 	function selectAll() {
 		HelpSelectAll(selectMode, selected, sortedMangas);
 	}
+	let [err, parsedQuery] = $derived(parseQuery($query));
+
+	$effect(() => {
+		if (err !== null) {
+			errortoast('Invalid Query', err);
+		}
+	});
+	$effect(() => {
+		validateParsedQuery(parsedQuery);
+	});
+	let orderedCategories = $derived(
+		($categories.data?.categories?.nodes ?? [])
+			.filter((e) => e.mangas.totalCount)
+			.toSorted((a, b) => {
+				return a.order > b.order ? 1 : -1;
+			})
+	);
+	$effect(() => {
+		if (
+			orderedCategories.length &&
+			orderedCategories.find((e) => e.id === $tab) === undefined
+		) {
+			window.requestAnimationFrame(() => {
+				$tab = orderedCategories[0]?.id;
+			});
+		}
+	});
+	let mangas = $derived(
+		queryStore({
+			client,
+			query: getCategory,
+			variables: { id: $tab ?? 0 },
+			requestPolicy: 'cache-first'
+		})
+	);
+	$effect(() => {
+		if ($selectMode === false) {
+			$selected = [];
+		}
+	});
+	let filteredMangas = $derived(
+		$mangas.data?.category?.mangas.nodes.filter((ele) => {
+			if (!ele.inLibrary) return false;
+			if ($Meta.ignoreFiltersWhenSearching) {
+				if (
+					parsedQuery !== null &&
+					specificSearch(ele, parsedQuery).findIndex((e) => e === false) === -1
+				) {
+					return true;
+				}
+			}
+
+			if ($Meta.Downloaded === 1 && ele.downloadCount === 0) return false;
+			if ($Meta.Downloaded === 2 && ele.downloadCount !== 0) return false;
+
+			if ($Meta.Unread === 1 && ele.unreadCount === 0) return false;
+			if ($Meta.Unread === 2 && ele.unreadCount !== 0) return false;
+
+			if ($Meta.Tracked === 1 && ele.trackRecords.nodes.length === 0)
+				return false;
+			if ($Meta.Tracked === 2 && ele.trackRecords.nodes.length !== 0)
+				return false;
+
+			if (
+				parsedQuery !== null &&
+				specificSearch(ele, parsedQuery).findIndex((e) => e === false) !== -1
+			)
+				return false;
+
+			return true;
+		})
+	);
+	$effect(() => {
+		if ($selectMode && Object.keys($selected).length > 0) {
+			Object.keys($selected).forEach((ele) => {
+				if (filteredMangas !== undefined) {
+					const tmp = filteredMangas.findIndex(
+						(elem) => elem.id.toString() === ele
+					);
+					if (tmp === -1) {
+						delete $selected[parseInt(ele)];
+						$selected = $selected;
+					}
+				}
+			});
+		}
+	});
+	let sortedMangas = $derived(
+		filteredMangas
+			? $Meta.Sort === sort.Random
+				? shuffle([...filteredMangas])
+				: [...filteredMangas].sort((a, b) => {
+						let tru = true;
+						switch ($Meta.Sort) {
+							case sort.ID:
+								tru = a.id > b.id;
+								break;
+							case sort.Unread:
+								tru = a.unreadCount > b.unreadCount;
+								break;
+							case sort.Alphabetical:
+								tru = a.title > b.title;
+								break;
+							case sort['Latest Read']:
+								tru =
+									parseInt(a.lastReadChapter?.lastReadAt ?? '0') >
+									parseInt(b.lastReadChapter?.lastReadAt ?? '0');
+								break;
+							case sort['Latest Fetched']:
+								tru =
+									parseInt(a.latestFetchedChapter?.fetchedAt ?? '0') >
+									parseInt(b.latestFetchedChapter?.fetchedAt ?? '0');
+								break;
+							case sort['Latest Uploaded']:
+								tru =
+									parseInt(a.latestUploadedChapter?.uploadDate ?? '0') >
+									parseInt(b.latestUploadedChapter?.uploadDate ?? '0');
+								break;
+						}
+
+						if ($Meta.Asc) tru = !tru;
+						return tru ? -1 : 1;
+					})
+			: undefined
+	);
 </script>
 
 {#if $categories.fetching}
 	<div class="mb-3 flex h-[47px] items-center space-x-4 pl-4">
-		<div class="placeholder w-20 animate-pulse" />
-		<div class="placeholder w-20 animate-pulse" />
-		<div class="placeholder w-20 animate-pulse" />
+		<div class="placeholder w-20 animate-pulse"></div>
+		<div class="placeholder w-20 animate-pulse"></div>
+		<div class="placeholder w-20 animate-pulse"></div>
 	</div>
 	<div class="yoy m-2 grid gap-2 {gridValues}">
 		{#each new Array(30) as _}
@@ -330,11 +341,11 @@
 					class="placeholder h-full animate-pulse
 			{$Meta.Display === display.Compact && 'rounded-lg'}
 			{$Meta.Display === display.Comfortable && 'rounded-none rounded-t-lg'}"
-				/>
+				></div>
 				{#if $Meta.Display === display.Comfortable}
 					<div
 						class="placeholder h-12 animate-pulse rounded-none rounded-b-lg px-2 text-center"
-					/>
+					></div>
 				{/if}
 			</div>
 		{/each}
@@ -348,7 +359,7 @@
 		{#if orderedCategories}
 			{#each orderedCategories as cat}
 				<Tab bind:group={$tab} name={cat.name} value={cat.id}>
-					<svelte:fragment slot="lead">
+					{#snippet lead()}
 						{cat.name}
 						{#if $Meta.libraryCategoryTotalCounts}
 							<span
@@ -357,7 +368,7 @@
 								{cat.mangas.totalCount}
 							</span>
 						{/if}
-					</svelte:fragment>
+					{/snippet}
 				</Tab>
 			{/each}
 		{/if}
@@ -368,13 +379,13 @@
 						<div class="aspect-cover w-full">
 							<div
 								class="placeholder h-full animate-pulse
-								{$Meta.Display === display.Compact && 'rounded-lg'}
-								{$Meta.Display === display.Comfortable && 'rounded-none rounded-t-lg'}"
-							/>
+									{$Meta.Display === display.Compact && 'rounded-lg'}
+									{$Meta.Display === display.Comfortable && 'rounded-none rounded-t-lg'}"
+							></div>
 							{#if $Meta.Display === display.Comfortable}
 								<div
 									class="placeholder h-12 animate-pulse rounded-none rounded-b-lg px-2 text-center"
-								/>
+								></div>
 							{/if}
 						</div>
 					{/each}
@@ -387,82 +398,94 @@
 				<div class="yoy grid {gridValues} m-2 gap-2">
 					{#each sortedMangas as manga (manga.id)}
 						<IntersectionObserver
-							let:intersecting
 							root={document.querySelector('#page') ?? undefined}
 							top={400}
 							bottom={400}
 						>
-							<div class="aspect-cover">
-								{#if intersecting}
-									<a
-										draggable={false}
-										use:longPress
-										on:longPress={() => $selectMode || LongHandler()}
-										href="/manga/{manga.id}"
-										on:click={(e) => {
-											if (e.ctrlKey) return;
-											if ($selectMode) {
-												e.stopPropagation();
-												e.preventDefault();
-												lastSelected = HelpDoSelect(
-													manga,
-													e,
-													lastSelected,
-													sortedMangas,
-													selected
-												);
-											}
-										}}
-										class="h-full cursor-pointer hover:opacity-70"
-										tabindex="-1"
-									>
-										<MangaCard
+							{#snippet children({ intersecting })}
+								<div class="aspect-cover">
+									{#if intersecting}
+										<a
 											draggable={false}
-											thumbnailUrl={manga.thumbnailUrl ?? ''}
-											title={manga.title}
-											class="select-none {$selectMode && 'opacity-80'}"
-											rounded="{$Meta.Display === display.Compact &&
-												'rounded-lg'}
-										{$Meta.Display === display.Comfortable && 'rounded-none rounded-t-lg'}"
+											use:longPress
+											onlongPress={() => $selectMode || LongHandler()}
+											href="/manga/{manga.id}"
+											onclick={(e) => {
+												if (e.ctrlKey) return;
+												if ($selectMode) {
+													e.stopPropagation();
+													e.preventDefault();
+													lastSelected = HelpDoSelect(
+														manga,
+														e,
+														lastSelected,
+														sortedMangas,
+														selected
+													);
+												}
+											}}
+											class="h-full cursor-pointer hover:opacity-70"
+											tabindex="-1"
 										>
-											<div class="absolute left-2 top-2 flex">
-												{#if manga.downloadCount && $Meta.downloadsBadge}
-													<div
-														class="{manga.unreadCount && $Meta.unreadBadge
-															? 'rounded-l'
-															: 'rounded'}
-													variant-filled-primary m-0 px-1 py-0.5"
-													>
-														{manga.downloadCount}
-													</div>
-												{/if}
-												{#if manga.unreadCount && $Meta.unreadBadge}
-													<div
-														class="{manga.downloadCount && $Meta.downloadsBadge
-															? 'rounded-r'
-															: 'rounded'}
-													variant-filled-secondary m-0 px-1 py-0.5"
-													>
-														{manga.unreadCount}
-													</div>
-												{/if}
-											</div>
-											{#if $selectMode}
-												<div
-													class="bg-base-100/75 absolute bottom-0 left-0 right-0 top-0 cursor-pointer"
-												>
-													<IconWrapper
-														name={$selected[manga.id] === undefined
-															? 'fluent:checkbox-unchecked-24-filled'
-															: 'fluent:checkbox-checked-24-filled'}
-														class="absolute right-2 top-2 text-4xl"
-													/>
+											<MangaCard
+												draggable={false}
+												thumbnailUrl={manga.thumbnailUrl ?? ''}
+												title={manga.title}
+												class="select-none {$selectMode && 'opacity-80'}"
+												rounded="{$Meta.Display === display.Compact &&
+													'rounded-lg'}
+												{$Meta.Display === display.Comfortable && 'rounded-none rounded-t-lg'}"
+											>
+												<div class="absolute left-2 top-2 flex">
+													{#if manga.downloadCount && $Meta.downloadsBadge}
+														<div
+															class="{manga.unreadCount && $Meta.unreadBadge
+																? 'rounded-l'
+																: 'rounded'}
+															variant-filled-primary m-0 px-1 py-0.5"
+														>
+															{manga.downloadCount}
+														</div>
+													{/if}
+													{#if manga.unreadCount && $Meta.unreadBadge}
+														<div
+															class="{manga.downloadCount &&
+															$Meta.downloadsBadge
+																? 'rounded-r'
+																: 'rounded'}
+															variant-filled-secondary m-0 px-1 py-0.5"
+														>
+															{manga.unreadCount}
+														</div>
+													{/if}
 												</div>
-											{/if}
-											{#if $Meta.Display === display.Compact}
-												<div
-													class="variant-glass absolute bottom-0 left-0 right-0 rounded-b-olg"
-												>
+												{#if $selectMode}
+													<div
+														class="bg-base-100/75 absolute bottom-0 left-0 right-0 top-0 cursor-pointer"
+													>
+														<IconWrapper
+															name={$selected[manga.id] === undefined
+																? 'fluent:checkbox-unchecked-24-filled'
+																: 'fluent:checkbox-checked-24-filled'}
+															class="absolute right-2 top-2 text-4xl"
+														/>
+													</div>
+												{/if}
+												{#if $Meta.Display === display.Compact}
+													<div
+														class="variant-glass absolute bottom-0 left-0 right-0 rounded-b-olg"
+													>
+														<div
+															class="line-clamp-2 h-12 px-2 text-center"
+															title={manga.title}
+														>
+															{manga.title}
+														</div>
+													</div>
+												{/if}
+											</MangaCard>
+											{#if $Meta.Display === display.Comfortable}
+												<div class="variant-glass-surface rounded-b-lg">
 													<div
 														class="line-clamp-2 h-12 px-2 text-center"
 														title={manga.title}
@@ -471,23 +494,13 @@
 													</div>
 												</div>
 											{/if}
-										</MangaCard>
-										{#if $Meta.Display === display.Comfortable}
-											<div class="variant-glass-surface rounded-b-lg">
-												<div
-													class="line-clamp-2 h-12 px-2 text-center"
-													title={manga.title}
-												>
-													{manga.title}
-												</div>
-											</div>
-										{/if}
-									</a>
+										</a>
+									{/if}
+								</div>
+								{#if !intersecting && $Meta.Display === display.Comfortable}
+									<div class="h-12"></div>
 								{/if}
-							</div>
-							{#if !intersecting && $Meta.Display === display.Comfortable}
-								<div class="h-12" />
-							{/if}
+							{/snippet}
 						</IntersectionObserver>
 					{/each}
 				</div>

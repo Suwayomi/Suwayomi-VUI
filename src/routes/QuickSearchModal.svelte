@@ -7,12 +7,14 @@
 -->
 
 <script lang="ts">
+	import { run } from 'svelte/legacy';
+
 	import Image from '../lib/components/Image.svelte';
 	import { getModalStore } from '@skeletonlabs/skeleton';
 	import IconWrapper from '../lib/components/IconWrapper.svelte';
 	import { FindLangName } from './(app)/browse/languages';
 	import { goto } from '$app/navigation';
-	import type { SvelteComponent } from 'svelte';
+	import { untrack, type SvelteComponent } from 'svelte';
 	import { SourceLangFilter } from './(app)/browse/sources/SourcesStores';
 	import { queryParam, ssp } from 'sveltekit-search-params';
 	import { page } from '$app/stores';
@@ -27,12 +29,16 @@
 	import type { ResultOf } from '$lib/gql/graphql';
 	import { ChapterTypeFragment } from '$lib/gql/Fragments';
 
-	export let parent: SvelteComponent;
+	interface Props {
+		parent: SvelteComponent;
+	}
+
+	let { parent }: Props = $props();
 
 	const modalStore = getModalStore();
 	const query = queryParam('q', ssp.string(), { pushHistory: false });
 
-	let value = '';
+	let value = $state('');
 
 	type helpItem = {
 		str: string;
@@ -66,8 +72,8 @@
 
 	type item = helpItem | categoryItem | mangaItem | chapterItem | sourceItem;
 
-	let items: item[] = [];
-	let inputElement: boolean;
+	let items: item[] = $state([]);
+	let inputElement: boolean = $state(false);
 
 	const help: item[] = [
 		{
@@ -96,9 +102,6 @@
 		}
 	];
 
-	$: if (value === '') {
-		items = help;
-	}
 	const client = getContextClient();
 
 	let sources: OperationResultStore<ResultOf<typeof getSources>> & Pausable;
@@ -108,15 +111,16 @@
 		query: getCategories
 	});
 
-	let catId: undefined | number = undefined;
-	let mangaId: undefined | number = undefined;
+	let catId: undefined | number = $state(undefined);
+	let mangaId: undefined | number = $state(undefined);
 
-	let category: OperationResultStore<ResultOf<typeof getCategory>> & Pausable;
+	let category:
+		| (OperationResultStore<ResultOf<typeof getCategory>> & Pausable)
+		| undefined = $state();
 
-	let manga: OperationResultStore<ResultOf<typeof getManga>> & Pausable;
-
-	$: $category, $categories, value, doCategory();
-	$: $sources, value, doSource();
+	let manga:
+		| (OperationResultStore<ResultOf<typeof getManga>> & Pausable)
+		| undefined = $state();
 
 	async function doCategory() {
 		if (value.startsWith('#')) {
@@ -137,16 +141,17 @@
 				includeMangas = await new Promise((resolve) => {
 					window.requestAnimationFrame(() => {
 						let unSub = () => {};
-						unSub = category.subscribe((ee) => {
-							if (ee?.data?.category?.mangas?.nodes) {
-								unSub();
-								resolve(
-									ee.data.category.mangas.nodes.filter((e) =>
-										e.title.toLowerCase().includes(mangaSearch.toLowerCase())
-									)
-								);
-							}
-						});
+						unSub =
+							category?.subscribe((ee) => {
+								if (ee?.data?.category?.mangas?.nodes) {
+									unSub();
+									resolve(
+										ee.data.category.mangas.nodes.filter((e) =>
+											e.title.toLowerCase().includes(mangaSearch.toLowerCase())
+										)
+									);
+								}
+							}) ?? (() => {});
 					});
 				});
 
@@ -154,18 +159,19 @@
 					mangaId = includeMangas[0].id;
 					includeChapters = await new Promise((resolve) => {
 						let unSub = () => {};
-						unSub = manga.subscribe((ee) => {
-							if (ee?.data?.manga?.chapters?.nodes) {
-								unSub();
-								resolve(
-									ee.data.manga.chapters.nodes.filter((e) =>
-										e.name
-											.toLowerCase()
-											.includes(chapterNameSearch.toLowerCase())
-									)
-								);
-							}
-						});
+						unSub =
+							manga?.subscribe((ee) => {
+								if (ee?.data?.manga?.chapters?.nodes) {
+									unSub();
+									resolve(
+										ee.data.manga.chapters.nodes.filter((e) =>
+											e.name
+												.toLowerCase()
+												.includes(chapterNameSearch.toLowerCase())
+										)
+									);
+								}
+							}) ?? (() => {});
 					});
 				}
 			}
@@ -283,32 +289,59 @@
 		}
 	}
 
-	$: if (catId !== undefined)
-		category = queryStore({
-			client,
-			query: getCategory,
-			variables: { id: catId }
+	let inputEl: HTMLInputElement | undefined = $state(undefined);
+	$effect(() => {
+		if (value === '') {
+			items = help;
+		}
+	});
+	$effect(() => {
+		const _ = [$category, $categories, value];
+		untrack(doCategory);
+	});
+	$effect(() => {
+		const _ = [$sources, value];
+		untrack(doSource);
+	});
+	$effect(() => {
+		if (catId === undefined) return;
+		untrack(() => {
+			if (catId === undefined) return;
+			category = queryStore({
+				client,
+				query: getCategory,
+				variables: { id: catId }
+			});
 		});
-	$: if (mangaId)
-		manga = queryStore({ client, query: getManga, variables: { id: mangaId } });
-
-	$: if ($modalStore[0]) {
-		window.addEventListener('keydown', handelArrows);
-	} else {
-		window.removeEventListener('keydown', handelArrows);
-	}
-
-	let inputEl: HTMLInputElement | undefined = undefined;
+	});
+	$effect(() => {
+		if (!mangaId) return;
+		untrack(() => {
+			if (!mangaId) return;
+			manga = queryStore({
+				client,
+				query: getManga,
+				variables: { id: mangaId }
+			});
+		});
+	});
+	$effect(() => {
+		if ($modalStore[0]) {
+			window.addEventListener('keydown', handelArrows);
+		} else {
+			window.removeEventListener('keydown', handelArrows);
+		}
+	});
 </script>
 
 {#if $modalStore[0]}
 	<div class="w-modal flex max-h-dvh flex-col">
 		<input
-			on:focus={() => (inputElement = true)}
-			on:blur={() => (inputElement = false)}
+			onfocus={() => (inputElement = true)}
+			onblur={() => (inputElement = false)}
 			bind:value
 			bind:this={inputEl}
-			on:keydown={handelKey}
+			onkeydown={handelKey}
 			class="tabindex input rounded-2xl"
 			type="text"
 		/>
@@ -316,7 +349,7 @@
 			{#each items as item, index}
 				<a
 					tabindex={index !== 0 ? 0 : -1}
-					on:click={() => {
+					onclick={() => {
 						if ('url' in item) parent.onClose();
 					}}
 					href={'url' in item ? item.url : undefined}

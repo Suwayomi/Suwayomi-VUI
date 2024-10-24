@@ -6,9 +6,19 @@
  file, You can obtain one at http://mozilla.org/MPL/2.0/.
 -->
 <script lang="ts">
-	export let title: string;
-	export let value: string;
-	export let type: string = 'text';
+	interface Props {
+		title: string;
+		value: string;
+		type?: string;
+		onchange: () => void;
+	}
+
+	let {
+		title,
+		value = $bindable(),
+		type = 'text',
+		onchange = () => {}
+	}: Props = $props();
 </script>
 
 <label
@@ -18,7 +28,7 @@
 	<div class="flex flex-1 flex-nowrap items-center justify-end space-x-2">
 		{#if type === 'password'}
 			<input
-				on:change
+				{onchange}
 				class="input max-w-32 sm:max-w-[36.5rem]"
 				bind:value
 				title="basicAuthPassword"
@@ -26,7 +36,7 @@
 			/>
 		{:else}
 			<input
-				on:change
+				{onchange}
 				class="input max-w-32 sm:max-w-[36.5rem]"
 				bind:value
 				title="basicAuthPassword"

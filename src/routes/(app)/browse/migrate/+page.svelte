@@ -23,8 +23,6 @@
 		query: sourcesMigration
 	});
 
-	$: sources = FigureOutSources($Migration.data);
-
 	type Source = ResultOf<typeof SourceTypeFragment>; //SourcesMigrationQuery['sources']['nodes'][0];
 
 	type sourceWithMangaCount = Source & {
@@ -60,66 +58,65 @@
 		});
 		return tmpSources.filter((e) => e.mangas?.TotalCount);
 	}
+	let sources = $derived(FigureOutSources($Migration.data));
 </script>
 
-<Nav let:scrollingElement>
-	{#if $Migration.fetching}
-		{#each new Array(8) as _}
-			<div class="m-1 h-24">
-				<div class="card variant-ghost flex h-full w-full items-center">
-					<div class="h-full w-auto p-1">
-						<div
-							class="placeholder aspect-square h-full w-auto animate-pulse rounded-lg"
-						/>
-					</div>
-					<div class="flex h-full w-full flex-col justify-center">
-						<div class="placeholder my-2 max-w-[10rem] animate-pulse" />
-					</div>
-					<div class="flex h-full items-center p-1">
-						<div class="variant-filled-primary badge h-6 w-6" />
+<Nav>
+	{#snippet children()}
+		{#if $Migration.fetching}
+			{#each new Array(8) as _}
+				<div class="m-1 h-24">
+					<div class="card variant-ghost flex h-full w-full items-center">
+						<div class="h-full w-auto p-1">
+							<div
+								class="placeholder aspect-square h-full w-auto animate-pulse rounded-lg"
+							></div>
+						</div>
+						<div class="flex h-full w-full flex-col justify-center">
+							<div class="placeholder my-2 max-w-[10rem] animate-pulse"></div>
+						</div>
+						<div class="flex h-full items-center p-1">
+							<div class="variant-filled-primary badge h-6 w-6"></div>
+						</div>
 					</div>
 				</div>
-			</div>
-		{/each}
-	{:else if $Migration.error}
-		<div class="white-space-pre-wrap">
-			{JSON.stringify($Migration.error, null, 4)}
-		</div>
-	{:else if sources}
-		<div>
-			{#each sources as source (source.id)}
-				<IntersectionObserver
-					top={400}
-					bottom={400}
-					root={scrollingElement}
-					let:intersecting
-					class="h-24"
-				>
-					{#if intersecting}
-						<a href="/browse/migrate/source/{source.id}">
-							<div
-								class="card variant-glass m-1 flex h-full items-center hover:variant-glass-primary"
-							>
-								<div class="h-full p-1">
-									<Image
-										src={source.iconUrl}
-										aspect="aspect-square"
-										width="h-auto"
-									/>
-								</div>
-								<div class="w-full">
-									{source.displayName}
-								</div>
-								<div class="m-2">
-									<span class="variant-filled-primary badge"
-										>{source.mangas?.TotalCount}</span
-									>
-								</div>
-							</div>
-						</a>
-					{/if}
-				</IntersectionObserver>
 			{/each}
-		</div>
-	{/if}
+		{:else if $Migration.error}
+			<div class="white-space-pre-wrap">
+				{JSON.stringify($Migration.error, null, 4)}
+			</div>
+		{:else if sources}
+			<div>
+				{#each sources as source (source.id)}
+					<IntersectionObserver top={400} bottom={400} class="h-24">
+						{#snippet children({ intersecting })}
+							{#if intersecting}
+								<a href="/browse/migrate/source/{source.id}">
+									<div
+										class="card variant-glass m-1 flex h-full items-center hover:variant-glass-primary"
+									>
+										<div class="h-full p-1">
+											<Image
+												src={source.iconUrl}
+												aspect="aspect-square"
+												width="h-auto"
+											/>
+										</div>
+										<div class="w-full">
+											{source.displayName}
+										</div>
+										<div class="m-2">
+											<span class="variant-filled-primary badge"
+												>{source.mangas?.TotalCount}</span
+											>
+										</div>
+									</div>
+								</a>
+							{/if}
+						{/snippet}
+					</IntersectionObserver>
+				{/each}
+			</div>
+		{/if}
+	{/snippet}
 </Nav>

@@ -13,19 +13,24 @@
 	import TooltipIconButton from '$lib/components/TooltipIconButton.svelte';
 	import { goto } from '$app/navigation';
 
-	export let langs: Set<string>;
+	interface Props {
+		langs: Set<string>;
+	}
 
-	let inputElement: HTMLInputElement;
+	let { langs }: Props = $props();
+
+	let inputElement: HTMLInputElement | undefined = $state();
 	// eslint-disable-next-line no-undef
 	let timeoutCancel: NodeJS.Timeout | undefined = undefined;
-	$: searchElementHidden = true;
-	$: value = '';
+	let searchElementHidden = $state(true);
+
+	let value = $state('');
 
 	function handelSearch() {
 		searchElementHidden = !searchElementHidden;
 		if (!searchElementHidden) {
 			setTimeout(() => {
-				inputElement.focus();
+				inputElement?.focus();
 			}, 500);
 			return;
 		}
@@ -45,7 +50,7 @@
 		}
 	) {
 		if (e.key == 'Escape') {
-			inputElement.blur();
+			inputElement?.blur();
 			handelSearch();
 		}
 	}
@@ -66,12 +71,12 @@
 			type="text"
 			placeholder="input text"
 			bind:value
-			on:change={handelChange}
-			on:keydown={handelEscapeInput}
+			onchange={handelChange}
+			onkeydown={handelEscapeInput}
 		/>
 	</div>
 	<TooltipIconButton
-		on:click={handelSearch}
+		onclick={handelSearch}
 		name="mdi:{searchElementHidden ? 'earth' : 'close'}"
 		tip="Global Search"
 		tipclass="z-50"

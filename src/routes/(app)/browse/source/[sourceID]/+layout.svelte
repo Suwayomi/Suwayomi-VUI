@@ -13,7 +13,12 @@
 	import NavActions from './NavActions.svelte';
 	import { getSource } from '$lib/gql/Queries';
 
-	export let data: LayoutData;
+	interface Props {
+		data: LayoutData;
+		children?: import('svelte').Snippet;
+	}
+
+	let { data, children }: Props = $props();
 	const client = getContextClient();
 	const sause = queryStore({
 		client,
@@ -21,12 +26,14 @@
 		variables: { id: data.sourceID }
 	});
 
-	$: AppBarData($sause.data?.source?.displayName ?? '', {
-		component: NavActions,
-		props: {
-			supportsLatest: $sause.data?.source?.supportsLatest
-		}
+	$effect(() => {
+		AppBarData($sause.data?.source?.displayName ?? '', {
+			component: NavActions,
+			props: {
+				supportsLatest: $sause.data?.source?.supportsLatest
+			}
+		});
 	});
 </script>
 
-<slot />
+{@render children?.()}

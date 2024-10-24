@@ -12,20 +12,41 @@
 	import Tooltip from './Tooltip.svelte';
 	import type { OffsetOptions, Placement } from '@floating-ui/dom';
 
-	export let tip: string;
-	export let name: string = 'mdi:home';
-	export let tipclass: CssClasses = 'z-50';
-	export let placement: Placement = 'top';
-	export let hover: CssClasses = 'hover:variant-glass-surface';
-	export let offset: OffsetOptions = 0;
+	interface Props {
+		tip: string;
+		name?: string;
+		tipclass?: CssClasses;
+		placement?: Placement;
+		hover?: CssClasses;
+		offset?: OffsetOptions;
+		onclick?: (e: MouseEvent) => void;
+		[key: string]: unknown;
+	}
+
+	let {
+		tip,
+		name = 'mdi:home',
+		tipclass = 'z-50',
+		placement = 'top',
+		hover = 'hover:variant-glass-surface',
+		offset = 0,
+		onclick = () => {},
+		...rest
+	}: Props = $props();
+
+	function parsedRest(rest: Record<string, unknown>) {
+		const { class: _, ...tmp } = rest;
+		return tmp;
+	}
 </script>
 
 <Tooltip
+	{...parsedRest(rest)}
 	{offset}
 	{tipclass}
 	{placement}
 	{tip}
-	class="h-full cursor-pointer {$$props.class}"
+	class="h-full cursor-pointer {rest.class}"
 >
-	<IconButton {name} {hover} on:click />
+	<IconButton {name} {hover} {onclick} />
 </Tooltip>
