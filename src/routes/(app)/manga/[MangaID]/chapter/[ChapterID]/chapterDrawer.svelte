@@ -13,7 +13,7 @@
 	import { getDrawerStore } from '@skeletonlabs/skeleton';
 	import { ViewNav, chapterTitle, mangaTitle } from './chapterStores';
 	import { ChapterTitle, Layout, MangaMeta, Mode } from '$lib/simpleStores';
-	import { onMount } from 'svelte';
+	import { onMount, untrack } from 'svelte';
 	import { getContextClient, queryStore } from '@urql/svelte';
 	import { getManga } from '$lib/gql/Queries';
 	import { filterChapters } from '../../util';
@@ -22,23 +22,30 @@
 	import { onNavigate } from '$app/navigation';
 	const drawerStore = getDrawerStore();
 
-	$: data = $drawerStore.meta as Writable<{
-		MangaID: number;
-		ChapterID: number;
-	}>;
+	let data = $derived(
+		$drawerStore.meta as Writable<{
+			MangaID: number;
+			ChapterID: number;
+		}>
+	);
 
-	$: mangaMeta = MangaMeta($data?.MangaID);
+	let mangaMeta: ReturnType<typeof MangaMeta> = $state(
+		MangaMeta($data?.MangaID)
+	);
+	$effect(() => {
+		mangaMeta = MangaMeta($data?.MangaID);
+	});
 
 	onMount(() => {
-		let elem = document.querySelector(`#chapter-${$data.ChapterID}`)!;
-		elem = elem.previousElementSibling ?? elem;
-		const to = elem?.getBoundingClientRect();
-		chapterSideElement?.scrollTo({
-			top:
-				chapterSideElement.scrollTop -
-				chapterSideElement.getBoundingClientRect().top +
-				(to?.top ?? 0)
-		});
+		// let elem = document.querySelector(`#chapter-${$data.ChapterID}`)!;
+		// elem = elem.previousElementSibling ?? elem;
+		// const to = elem?.getBoundingClientRect();
+		// chapterSideElement?.scrollTo({
+		// 	top:
+		// 		chapterSideElement.scrollTop -
+		// 		chapterSideElement.getBoundingClientRect().top +
+		// 		(to?.top ?? 0)
+		// });
 		if (
 			/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
 				navigator.userAgent
@@ -60,18 +67,32 @@
 	});
 
 	const client = getContextClient();
-	$: manga = queryStore({
+
+	let manga = queryStore({
 		client,
 		query: getManga,
 		variables: { id: $data?.MangaID }
 	});
 
-	$: filteredChapters = $manga.data?.manga.chapters.nodes
-		.sort((a, b) => {
-			return b.sourceOrder - a.sourceOrder;
-		})
-		.filter(filterChapters(mangaMeta, true));
-	let chapterSideElement: HTMLDivElement | undefined;
+	let filteredChapters = $derived.by(() => {
+		untrack(() => {
+			manga.pause();
+		});
+		const _ = [mangaMeta, $manga];
+		const tmp = untrack(() => {
+			return $manga.data?.manga.chapters.nodes
+				.toSorted((a, b) => {
+					return b.sourceOrder - a.sourceOrder;
+				})
+				.filter(filterChapters(mangaMeta, true));
+		});
+		untrack(() => {
+			manga.resume();
+		});
+		return tmp;
+	});
+
+	let chapterSideElement: HTMLDivElement | undefined = $state();
 
 	onNavigate((e) => {
 		const match = e.to?.url.pathname.match(/\/manga\/(\d+)\/chapter\/(\d+)/);
@@ -88,7 +109,7 @@
 				tabindex={999}
 				name="mdi:chevron-left"
 				height="h-16"
-				on:click={() => {
+				onclick={() => {
 					history.back();
 					drawerStore.close();
 				}}
@@ -96,6 +117,7 @@
 		</div>
 		<h1 class="h2 my-2 line-clamp-3 pl-4">{$mangaTitle}</h1>
 		<h2 class="h3 mt-4 border-y border-surface-500 p-4">{$chapterTitle}</h2>
+
 		<div class="my-2 flex flex-col space-y-2">
 			<Slide
 				tabindex={0}
@@ -150,50 +172,53 @@
 				id="chapterSideElement"
 				class="max-h-60 w-full overflow-y-auto"
 			>
-				{#each filteredChapters ?? [] as chapter}
+				{#each $state.snapshot(filteredChapters ?? []) as chapter}
 					<IntersectionObserver
-						let:intersecting
 						class="relative h-20"
 						root={chapterSideElement}
 						top={400}
 						bottom={400}
 						id="chapter-{chapter.id}"
 					>
-						{#if intersecting}
-							<a
-								data-sveltekit-replacestate
-								href="./{chapter.id}?pagenav"
-								class="h-20"
-							>
-								<div
-									class="w-full space-y-0 p-1
-							{chapter.id === $data?.ChapterID && 'variant-ghost'}
-							{chapter.isRead && 'opacity-50'}"
+						{#snippet children({ intersecting })}
+							{#if intersecting}
+								<a
+									data-sveltekit-replacestate
+									href="./{chapter.id}?pagenav"
+									class="h-20"
 								>
-									<div class="line-clamp-1 w-full text-xl md:text-2xl">
-										{$mangaMeta.ChapterTitle === ChapterTitle['Source Title']
-											? chapter.name
-											: `Chapter ${chapter.chapterNumber}`}
-									</div>
 									<div
-										class="line-clamp-1 w-full text-sm font-light md:text-base"
-										title="Fetched Date: {new Date(
-											parseInt(chapter.fetchedAt) * 1000
-										).toLocaleString()}&#013;Upload Date: {new Date(
-											parseInt(chapter.uploadDate)
-										).toLocaleString()}"
+										class="w-full space-y-0 p-1
+										{chapter.id === $data?.ChapterID && 'variant-ghost'}
+										{chapter.isRead && 'opacity-50'}"
 									>
-										{new Date(
-											$mangaMeta.ChapterFetchUpload
-												? parseInt(chapter.uploadDate)
-												: parseInt(chapter.fetchedAt) * 1000
-										).toLocaleDateString()}{chapter.isDownloaded
-											? ' • Downloaded'
-											: ''}{chapter.scanlator ? ` • ${chapter.scanlator}` : ''}
+										<div class="line-clamp-1 w-full text-xl md:text-2xl">
+											{$mangaMeta.ChapterTitle === ChapterTitle['Source Title']
+												? chapter.name
+												: `Chapter ${chapter.chapterNumber}`}
+										</div>
+										<div
+											class="line-clamp-1 w-full text-sm font-light md:text-base"
+											title="Fetched Date: {new Date(
+												parseInt(chapter.fetchedAt) * 1000
+											).toLocaleString()}&#013;Upload Date: {new Date(
+												parseInt(chapter.uploadDate)
+											).toLocaleString()}"
+										>
+											{new Date(
+												$mangaMeta.ChapterFetchUpload
+													? parseInt(chapter.uploadDate)
+													: parseInt(chapter.fetchedAt) * 1000
+											).toLocaleDateString()}{chapter.isDownloaded
+												? ' • Downloaded'
+												: ''}{chapter.scanlator
+												? ` • ${chapter.scanlator}`
+												: ''}
+										</div>
 									</div>
-								</div>
-							</a>
-						{/if}
+								</a>
+							{/if}
+						{/snippet}
 					</IntersectionObserver>
 				{:else}
 					No chapters found

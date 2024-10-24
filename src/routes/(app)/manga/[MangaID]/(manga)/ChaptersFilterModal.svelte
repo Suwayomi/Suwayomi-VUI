@@ -23,7 +23,11 @@
 	import Tooltip from '$lib/components/Tooltip.svelte';
 	const modalStore = getModalStore();
 	let tabSet = localStorageStore('libraryModalTabs', 0);
-	export let MangaID: number;
+	interface Props {
+		MangaID: number;
+	}
+
+	let { MangaID }: Props = $props();
 	const mangaMeta = MangaMeta(MangaID);
 </script>
 
@@ -110,7 +114,7 @@
 							>
 								<span class="pr-2">Groups</span>
 								<input
-									on:change={(e) => {
+									onchange={(e) => {
 										$mangaMeta.groupPartials = e.currentTarget.value
 											.split(',')
 											.map((a) => a.trim())
@@ -157,9 +161,12 @@
 					{:else}
 						<button
 							class="flex w-full items-center justify-between rounded-full p-1 pl-2 hover:variant-glass-surface focus:outline-0"
-							on:click|preventDefault|stopPropagation={() =>
-								($mangaMeta.showMissingChapters =
-									!$mangaMeta.showMissingChapters)}
+							onclick={(e) => {
+								e.stopPropagation();
+								e.preventDefault();
+								$mangaMeta.showMissingChapters =
+									!$mangaMeta.showMissingChapters;
+							}}
 						>
 							<span>Show Missing Chapters</span>
 							<SlideToggle
@@ -170,9 +177,11 @@
 						</button>
 						<button
 							class="flex w-full items-center justify-between rounded-full p-1 pl-2 hover:variant-glass-surface focus:outline-0"
-							on:click|preventDefault|stopPropagation={() =>
-								($mangaMeta.ChapterFetchUpload =
-									!$mangaMeta.ChapterFetchUpload)}
+							onclick={(e) => {
+								e.stopPropagation();
+								e.preventDefault();
+								$mangaMeta.ChapterFetchUpload = !$mangaMeta.ChapterFetchUpload;
+							}}
 						>
 							<span>FetchDate/UploadDate</span>
 							<SlideToggle

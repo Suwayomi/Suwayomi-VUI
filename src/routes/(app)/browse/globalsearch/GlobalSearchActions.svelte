@@ -18,10 +18,12 @@
 	import type { getSources } from '$lib/gql/Queries';
 	import type { ResultOf } from '$lib/gql/graphql';
 
-	export let rawSources:
-		| ResultOf<typeof getSources>['sources']['nodes']
-		| undefined;
-	export let langs: Set<string>;
+	interface Props {
+		rawSources: ResultOf<typeof getSources>['sources']['nodes'] | undefined;
+		langs: Set<string>;
+	}
+
+	let { rawSources, langs }: Props = $props();
 
 	const modalStore = getModalStore();
 </script>
@@ -42,7 +44,7 @@
 		</Tooltip>
 	{/if}
 	<TooltipIconButton
-		on:click={() => {
+		onclick={() => {
 			modalStore.trigger({
 				type: 'component',
 				backdropClasses: '!p-0',

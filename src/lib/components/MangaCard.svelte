@@ -1,3 +1,4 @@
+<!-- @migration-task Error while migrating Svelte code: Unexpected token -->
 <!--
  Copyright (c) 2023 Contributors to the Suwayomi project
  
@@ -12,16 +13,35 @@
 	import { fade } from 'svelte/transition';
 	import Image from './Image.svelte';
 
-	export let thumbnailUrl = '';
-	export let title = '';
-	export let titleA: string | undefined = undefined;
-	export let fit: CssClasses = 'object-cover';
-	export let rounded: CssClasses = 'rounded-lg';
-	export let aspect: CssClasses = '';
-	export let draggable = true;
+	interface Props {
+		thumbnailUrl?: string;
+		title?: string;
+		titleA?: string | undefined;
+		fit?: CssClasses;
+		rounded?: CssClasses;
+		aspect?: CssClasses;
+		draggable?: boolean;
+		children?: import('svelte').Snippet;
+		[key: string]: unknown;
+	}
+
+	let {
+		thumbnailUrl = '',
+		title = '',
+		titleA = undefined,
+		fit = 'object-cover',
+		rounded = 'rounded-lg',
+		aspect = '',
+		draggable = true,
+		children,
+		...rest
+	}: Props = $props();
 </script>
 
-<div class="relative h-full w-full {$$props.class}" in:fade>
+<div
+	class="relative h-full w-full {rest.class as string | undefined ?? ''}"
+	in:fade
+>
 	<Image
 		{draggable}
 		{fit}
@@ -31,5 +51,5 @@
 		title={titleA}
 		{rounded}
 	/>
-	<slot />
+	{@render children?.()}
 </div>

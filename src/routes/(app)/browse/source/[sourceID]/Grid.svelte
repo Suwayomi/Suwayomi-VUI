@@ -19,32 +19,39 @@
 	import { fetchSourceManga } from '$lib/gql/Mutations';
 	import { getContextClient, mutationStore, queryStore } from '@urql/svelte';
 	import { getSource } from '$lib/gql/Queries';
+	import { untrack } from 'svelte';
 
-	export let data: LayoutData;
-	export let type: VariablesOf<typeof fetchSourceManga>['type'];
-	export let query: string | undefined = undefined;
-	export let filters:
-		| VariablesOf<typeof fetchSourceManga>['filters']
-		| undefined = undefined;
+	interface Props {
+		data: LayoutData;
+		type: VariablesOf<typeof fetchSourceManga>['type'];
+		query?: string | undefined;
+		filters?: VariablesOf<typeof fetchSourceManga>['filters'] | undefined;
+	}
+
+	let { data, type, query = undefined, filters = undefined }: Props = $props();
 	const client = getContextClient();
 
-	let sause = queryStore({
+	let sause2 = queryStore({
 		client,
 		query: getSource,
 		variables: { id: data.sourceID }
 	});
+
+	let sause: typeof $sause2 | undefined = $state();
+	$effect(() => {
+		sause = structuredClone($sause2);
+	});
+
 	const modalStore = getModalStore();
 
-	let page = 1;
-	let isLoading = true;
+	let page = $state(1);
+	let isLoading = $state(true);
 	let all: NonNullable<ResultOf<typeof fetchSourceManga>['fetchSourceManga']> =
-		{
+		$state({
 			hasNextPage: true,
 			mangas: []
-		};
-	let mainerror: string = '';
-
-	$: query, filters, clearAll();
+		});
+	let mainerror: string = $state('');
 
 	function clearAll() {
 		all = {
@@ -53,20 +60,6 @@
 		};
 		page = 1;
 	}
-
-	$: source = mutationStore({
-		client,
-		query: fetchSourceManga,
-		variables: {
-			page: page,
-			source: data.sourceID,
-			type,
-			query,
-			filters
-		}
-	});
-
-	$: $source, parseall();
 
 	async function parseall() {
 		if ($source.fetching) return;
@@ -93,11 +86,32 @@
 			isLoading = false;
 		}
 	}
+	$effect(() => {
+		const _ = [query, filters];
+		untrack(clearAll);
+	});
+	let source = $derived(
+		mutationStore({
+			client,
+			query: fetchSourceManga,
+			variables: {
+				page: page,
+				source: data.sourceID,
+				type,
+				query,
+				filters
+			}
+		})
+	);
+	$effect(() => {
+		const _ = [$source];
+		untrack(parseall);
+	});
 </script>
 
-{#if $sause.data?.source?.isConfigurable}
+{#if sause?.data?.source?.isConfigurable}
 	<button
-		on:click={() => {
+		onclick={() => {
 			modalStore.trigger({
 				type: 'component',
 				backdropClasses: '!p-0',
@@ -115,28 +129,46 @@
 	<div class="m-2 grid gap-2 {gridValues}">
 		{#each all.mangas.filter((e, i, s) => i === s.findIndex((ee) => e.id === ee.id)) as manga (manga.id)}
 			<IntersectionObserver
-				let:intersecting
 				root={document.querySelector('#page') ?? undefined}
 				top={400}
 				bottom={400}
 			>
-				<div class="aspect-cover">
-					{#if intersecting}
-						<a
-							href="/manga/{manga.id}"
-							class="h-full cursor-pointer hover:opacity-70"
-							tabindex="-1"
-						>
-							<MangaCard
-								thumbnailUrl={manga.thumbnailUrl ?? ''}
-								title={manga.title}
-								rounded="{$Meta.Display === display.Compact && 'rounded-lg'}
-										{$Meta.Display === display.Comfortable && 'rounded-none rounded-t-lg'}"
+				{#snippet children({ intersecting })}
+					<div class="aspect-cover">
+						{#if intersecting}
+							<a
+								href="/manga/{manga.id}"
+								class="h-full cursor-pointer hover:opacity-70"
+								tabindex="-1"
 							>
-								{#if $Meta.Display === display.Compact}
-									<div
-										class="variant-glass absolute bottom-0 left-0 right-0 rounded-b-olg"
-									>
+								<MangaCard
+									thumbnailUrl={manga.thumbnailUrl ?? ''}
+									title={manga.title}
+									rounded="{$Meta.Display === display.Compact && 'rounded-lg'}
+											{$Meta.Display === display.Comfortable && 'rounded-none rounded-t-lg'}"
+								>
+									{#if $Meta.Display === display.Compact}
+										<div
+											class="variant-glass absolute bottom-0 left-0 right-0 rounded-b-olg"
+										>
+											<div
+												class="line-clamp-2 h-12 px-2 text-center"
+												title={manga.title}
+											>
+												{manga.title}
+											</div>
+										</div>
+									{/if}
+									{#if manga.inLibrary}
+										<div
+											class="variant-filled-primary badge absolute right-1 top-1"
+										>
+											In Library
+										</div>
+									{/if}
+								</MangaCard>
+								{#if $Meta.Display === display.Comfortable}
+									<div class="variant-glass-surface rounded-b-lg">
 										<div
 											class="line-clamp-2 h-12 px-2 text-center"
 											title={manga.title}
@@ -145,30 +177,13 @@
 										</div>
 									</div>
 								{/if}
-								{#if manga.inLibrary}
-									<div
-										class="variant-filled-primary badge absolute right-1 top-1"
-									>
-										In Library
-									</div>
-								{/if}
-							</MangaCard>
-							{#if $Meta.Display === display.Comfortable}
-								<div class="variant-glass-surface rounded-b-lg">
-									<div
-										class="line-clamp-2 h-12 px-2 text-center"
-										title={manga.title}
-									>
-										{manga.title}
-									</div>
-								</div>
-							{/if}
-						</a>
+							</a>
+						{/if}
+					</div>
+					{#if !intersecting && $Meta.Display === display.Comfortable}
+						<div class="h-12"></div>
 					{/if}
-				</div>
-				{#if !intersecting && $Meta.Display === display.Comfortable}
-					<div class="h-12" />
-				{/if}
+				{/snippet}
 			</IntersectionObserver>
 		{/each}
 		{#if all.hasNextPage && !isLoading && !$source.fetching}
@@ -176,8 +191,8 @@
 				root={document.querySelector('#page') ?? undefined}
 				top={400}
 				bottom={400}
-				on:intersect={(e) => {
-					if (e.detail && all.hasNextPage) page++;
+				onintersect={(e) => {
+					if (e && all.hasNextPage) page++;
 				}}
 			/>
 		{/if}
@@ -188,11 +203,11 @@
 						class="placeholder h-full animate-pulse
 						{$Meta.Display === display.Compact && 'rounded-lg'}
 						{$Meta.Display === display.Comfortable && 'rounded-none rounded-t-lg'}"
-					/>
+					></div>
 					{#if $Meta.Display === display.Comfortable}
 						<div
 							class="placeholder h-12 animate-pulse rounded-none rounded-b-lg px-2 text-center"
-						/>
+						></div>
 					{/if}
 				</div>
 			{/each}
@@ -204,7 +219,7 @@
 		ignore error
 		<button
 			class="variant-filled-primary btn"
-			on:click={() => {
+			onclick={() => {
 				mainerror = '';
 				all.hasNextPage = true;
 			}}

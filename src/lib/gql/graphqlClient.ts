@@ -261,7 +261,7 @@ export const client = new Client({
 
 function trackProgressUpdater(
 	data: ResultOf<typeof trackProgress> | undefined,
-	vars: VariablesOf<typeof trackProgress>,
+	_vars: VariablesOf<typeof trackProgress>,
 	cache: Cache
 ) {
 	if (!data?.trackProgress) return;
@@ -576,7 +576,7 @@ function setServerSettingsUpdater(
 
 function createCategoryUpdater(
 	data: ResultOf<typeof createCategory> | undefined,
-	vars: VariablesOf<typeof createCategory>,
+	_vars: VariablesOf<typeof createCategory>,
 	cache: Cache
 ) {
 	if (!data?.createCategory) return;
@@ -785,7 +785,7 @@ function updateMangasCategoriesUpdater(
 			cache.writeFragment(MangaTypeFragment, manga, {
 				id: manga.id
 			});
-		} catch (error) {}
+		} catch {}
 	});
 
 	const currentCategoryId = parseInt(
@@ -861,7 +861,7 @@ function updateMangasCategoriesUpdater(
 					return oldCategoryData;
 				}
 			);
-		} catch (error) {}
+		} catch {}
 	});
 }
 

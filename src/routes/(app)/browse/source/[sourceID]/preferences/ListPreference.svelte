@@ -12,15 +12,18 @@
 	import { getContextClient } from '@urql/svelte';
 	import type { ResultOf } from '$lib/gql/graphql';
 
-	export let pref: Extract<
-		ResultOf<typeof getSource>['source']['preferences'][0],
-		{ __typename: 'ListPreference' | undefined }
-	>;
+	interface Props {
+		pref: Extract<
+			ResultOf<typeof getSource>['source']['preferences'][0],
+			{ __typename: 'ListPreference' | undefined }
+		>;
+		index: number;
+		id: string;
+	}
 
-	export let index: number;
-	export let id: string;
+	let { pref, index, id }: Props = $props();
 
-	let selected = pref.ListCurrentValue ?? pref.ListDefault;
+	let selected = $state(pref.ListCurrentValue ?? pref.ListDefault);
 	const client = getContextClient();
 	function handelchange() {
 		client
@@ -40,7 +43,7 @@
 			<span>{pref.summary}</span>
 		{/if}
 	</div>
-	<select bind:value={selected} on:change={handelchange} class="select">
+	<select bind:value={selected} onchange={handelchange} class="select">
 		{#each pref.entryValues as value, index}
 			<option {value}> {pref.entries[index]}</option>
 		{/each}

@@ -12,17 +12,21 @@
 	import ModalTemplate from '$lib/components/ModalTemplate.svelte';
 	const modalStore = getModalStore();
 
-	export let mangaMeta: ReturnType<typeof MangaMeta>;
+	interface Props {
+		mangaMeta: ReturnType<typeof MangaMeta>;
+	}
+
+	let { mangaMeta }: Props = $props();
 </script>
 
 {#if $modalStore[0]}
-	<ModalTemplate title="Notes">
+	<ModalTemplate titleText="Notes">
 		<div>
 			<textarea
 				class="textarea h-40 w-full"
-				on:change={(e) => ($mangaMeta.notes = e.currentTarget.value)}
+				onchange={(e) => ($mangaMeta.notes = e.currentTarget.value)}
 				value={$mangaMeta.notes ?? ''}
-			/>
+			></textarea>
 		</div>
 	</ModalTemplate>
 {/if}

@@ -18,13 +18,18 @@
 	import type { ResultOf, VariablesOf } from '$lib/gql/graphql';
 	import type { getSource } from '$lib/gql/Queries';
 	import type { fetchSourceManga } from '$lib/gql/Mutations';
+	import { untrack } from 'svelte';
 
-	export let filter: Extract<
-		ResultOf<typeof getSource>['source']['filters'][number],
-		{ __typename: 'GroupFilter' }
-	>;
-	export let filters: VariablesOf<typeof fetchSourceManga>['filters'];
-	export let index: number;
+	interface Props {
+		filter: Extract<
+			ResultOf<typeof getSource>['source']['filters'][number],
+			{ __typename: 'GroupFilter' }
+		>;
+		filters: VariablesOf<typeof fetchSourceManga>['filters'];
+		index: number;
+	}
+
+	let { filter, filters = $bindable(), index }: Props = $props();
 
 	let groupFilters = filters?.filter((e) => e.position === index) as {
 		groupChange:
@@ -33,30 +38,44 @@
 		position: number;
 	}[];
 
-	$: fakeFilters = groupFilters
-		.map((e) => e.groupChange)
-		.filter((e) => e) as NonNullable<
+	let fakeFilters: NonNullable<
 		VariablesOf<typeof fetchSourceManga>['filters']
-	>;
+	> = $state([]);
+	$effect(() => {
+		fakeFilters = groupFilters
+			.map((e) => e.groupChange)
+			.filter((e) => e) as NonNullable<
+			VariablesOf<typeof fetchSourceManga>['filters']
+		>;
+	});
 
-	$: if (fakeFilters.length !== 0) {
-		filters = filters?.filter((e) => e.position !== index) ?? [];
-		fakeFilters.forEach((e) => {
-			if (!filters) filters = [];
-			filters.push({
-				position: index,
-				groupChange: e
-			});
+	$effect(() => {
+		const _ = [fakeFilters];
+		untrack(() => {
+			if (fakeFilters.length !== 0) {
+				filters = filters?.filter((e) => e.position !== index) ?? [];
+
+				fakeFilters.forEach((e) => {
+					if (!filters) {
+						filters = [];
+					}
+					filters!.push({
+						position: index,
+						groupChange: e
+					});
+				});
+			} else {
+				filters = filters?.filter((e) => e.position !== index);
+			}
 		});
-		filters = filters;
-	} else {
-		filters = filters?.filter((e) => e.position !== index);
-	}
+	});
 </script>
 
 <AccordionItem>
-	<svelte:fragment slot="summary">{filter.name}</svelte:fragment>
-	<svelte:fragment slot="content">
+	{#snippet summary()}
+		{filter.name}
+	{/snippet}
+	{#snippet content()}
 		<div class="variant-ghost-surface space-y-1 p-1">
 			{#each filter.filters as filte, index}
 				{#if '__typename' in filte}
@@ -78,5 +97,5 @@
 				{/if}
 			{/each}
 		</div>
-	</svelte:fragment>
+	{/snippet}
 </AccordionItem>

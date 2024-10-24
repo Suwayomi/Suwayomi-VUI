@@ -6,9 +6,19 @@
  file, You can obtain one at http://mozilla.org/MPL/2.0/.
 -->
 <script lang="ts">
-	export let value: number;
-	export let max: number;
-	export let title: string;
+	interface Props {
+		value: number;
+		max: number;
+		title: string;
+		onchange: () => void;
+	}
+
+	let {
+		value = $bindable(),
+		max,
+		title,
+		onchange = () => {}
+	}: Props = $props();
 </script>
 
 <label
@@ -18,13 +28,13 @@
 	<div class="flex flex-1 flex-nowrap items-center justify-end space-x-2 pl-2">
 		<input
 			class="hidden flex-1 sm:inline sm:max-w-96"
-			on:change
+			{onchange}
 			type="range"
 			bind:value
 			{max}
 		/>
 		<input
-			on:change
+			{onchange}
 			class="input max-w-32 flex-1 sm:max-w-48"
 			bind:value
 			title="backup Interval"

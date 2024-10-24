@@ -20,14 +20,20 @@
 	import { type ResultOf } from '$lib/gql/graphql';
 	import ModalTemplate from '$lib/components/ModalTemplate.svelte';
 
-	export let manga: ResultOf<typeof getManga>['manga'] | undefined;
+	interface Props {
+		manga: ResultOf<typeof getManga>['manga'] | undefined;
+	}
+
+	let { manga }: Props = $props();
 	const client = getContextClient();
 	const modalStore = getModalStore();
 	const getCategories = queryStore({ client, query: GetCategories });
 
-	$: categories = $getCategories.data?.categories?.nodes
-		?.filter((e) => e.id !== 0)
-		.sort((a, b) => (a.order > b.order ? 1 : -1));
+	let categories = $derived(
+		$getCategories.data?.categories?.nodes
+			?.filter((e) => e.id !== 0)
+			.sort((a, b) => (a.order > b.order ? 1 : -1))
+	);
 
 	let MangaCategories = manga?.categories.nodes?.map((e) => e.id) ?? [];
 
@@ -67,14 +73,14 @@
 </script>
 
 {#if $modalStore[0] && categories && MangaCategories}
-	<ModalTemplate title="Set categories">
-		<svelte:fragment>
+	<ModalTemplate titleText="Set categories">
+		{#snippet children()}
 			{#each categories as Category}
 				<TriStateSlide
 					triState={false}
 					checked={MangaCategories.includes(Category.id)}
-					on:changeE={(e) => {
-						handelClicked(Category, e.detail);
+					onchange={(e) => {
+						handelClicked(Category, e);
 					}}
 					class="p-1 pl-2 outline-0 hover:variant-glass-surface"
 					labelClass="w-full"
@@ -82,13 +88,13 @@
 					{Category.name}
 				</TriStateSlide>
 			{/each}
-		</svelte:fragment>
-		<svelte:fragment slot="footer">
+		{/snippet}
+		{#snippet footer()}
 			<div class="flex items-center justify-end px-4 pb-4">
-				<button on:click={handelSubmit} class="variant-filled btn">
+				<button onclick={handelSubmit} class="variant-filled btn">
 					Submit
 				</button>
 			</div>
-		</svelte:fragment>
+		{/snippet}
 	</ModalTemplate>
 {/if}

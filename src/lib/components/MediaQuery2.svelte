@@ -9,6 +9,13 @@
 <script lang="ts">
 	import { screens, type Screens } from '$lib/screens';
 	import { onMount } from 'svelte';
+	interface Props {
+		children?: import('svelte').Snippet<
+			[{ matches: Screens<boolean>; gridnumber: number }]
+		>;
+	}
+
+	let { children }: Props = $props();
 
 	const queries = Object.fromEntries(
 		Object.entries(screens).map((e) => {
@@ -24,10 +31,12 @@
 			Object.entries(screens).map((e) => [e[0], undefined])
 		) as Screens<((e: MediaQueryListEvent) => void) | undefined>;
 
-	let wasMounted = false;
-	let matches: Screens<boolean> = Object.fromEntries(
-		Object.entries(screens).map((e) => [e[0], false])
-	) as Screens<boolean>;
+	let wasMounted = $state(false);
+	let matches: Screens<boolean> = $state(
+		Object.fromEntries(
+			Object.entries(screens).map((e) => [e[0], false])
+		) as Screens<boolean>
+	);
 
 	onMount(() => {
 		wasMounted = true;
@@ -35,13 +44,6 @@
 			removeActiveListener(queries);
 		};
 	});
-
-	$: {
-		if (wasMounted) {
-			removeActiveListener(queries);
-			addNewListener(queries);
-		}
-	}
 
 	function addNewListener(queries: Screens<string>) {
 		(Object.entries(queries) as [keyof Screens<string>, string][]).forEach(
@@ -70,7 +72,6 @@
 		);
 	}
 
-	$: gridnumber = getgridnumber(matches);
 	function getgridnumber(matches: Screens<boolean>) {
 		if (matches['3xl']) return 10;
 		else if (matches['2xl']) return 8;
@@ -81,6 +82,13 @@
 		else if (matches['xs']) return 2;
 		else return 1;
 	}
+	$effect(() => {
+		if (wasMounted) {
+			removeActiveListener(queries);
+			addNewListener(queries);
+		}
+	});
+	let gridnumber = $derived(getgridnumber(matches));
 </script>
 
-<slot {matches} {gridnumber} />
+{@render children?.({ matches, gridnumber })}

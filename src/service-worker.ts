@@ -173,7 +173,7 @@ function respondGET(event: FetchEvent) {
 		//general Response, no-cache
 		try {
 			return await networkResponse;
-		} catch (error) {
+		} catch {
 			return new Response('not Found', { status: 404 });
 		}
 	}

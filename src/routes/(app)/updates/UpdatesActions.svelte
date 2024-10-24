@@ -15,111 +15,116 @@
 	import { selected, selectMode } from './UpdatesStores';
 	import Icon from '$lib/components/IconWrapper.svelte';
 	import IconWrapper from '$lib/components/IconWrapper.svelte';
-	export let selectAll: () => void;
-	export let updateSelectedValues: (
-		prop: dlreabook,
-		is: boolean | undefined
-	) => void;
+	interface Props {
+		selectAll: () => void;
+		updateSelectedValues: (prop: dlreabook, is: boolean | undefined) => void;
+	}
+
+	let { selectAll, updateSelectedValues }: Props = $props();
 </script>
 
 <div class="flex h-full items-center space-x-1 p-0">
 	<MediaQuery
 		query="(min-width: {screens.lg}),(min-width: {screens.sm}) and (max-width: {screens.md})"
-		let:matches
 	>
-		{#if matches}
-			{#if $selectMode}
-				<TooltipIconButton
-					class="text-surface-700 dark:text-surface-300"
-					on:click={async () => {
-						await HelpUpdateChapters(dlreabook.download, selected);
-					}}
-					tip="download/delete Selected"
-					name="mdi:download"
-				/>
-				<TooltipIconButton
-					class="text-surface-700 dark:text-surface-300"
-					on:click={async () => {
-						const is = await HelpUpdateChapters(dlreabook.read, selected);
-						updateSelectedValues(dlreabook.read, is);
-					}}
-					tip="Read/Un-Read Selected"
-					name="mdi:book-open-page-variant-outline"
-				/>
-				<TooltipIconButton
-					class="text-surface-700 dark:text-surface-300"
-					on:click={async () => {
-						const is = await HelpUpdateChapters(dlreabook.bookmark, selected);
-						updateSelectedValues(dlreabook.bookmark, is);
-					}}
-					tip="bookmark/Un-bookmark Selected"
-					name="mdi:bookmark"
-				/>
-			{/if}
-			<TooltipIconButton
-				class="text-surface-700 dark:text-surface-300"
-				on:click={selectAll}
-				name="mdi:select-all"
-				tip="Select all/none"
-			/>
-		{:else if $selectMode}
-			<button
-				use:popup={{
-					event: 'click',
-					target: 'selectmenu',
-					placement: 'bottom'
-				}}
-				class="aspect-square h-full p-2 hover:variant-glass-surface"
-			>
-				<Icon
-					name="mdi:dots-vertical"
-					class="aspect-square h-full w-full text-surface-700 dark:text-surface-300"
-				/>
-			</button>
-			<div class="z-50" data-popup="selectmenu">
-				<div class="card max-w-xs rounded-lg p-0">
-					<button
-						class="flex w-full items-center justify-start rounded-t-lg p-4 text-2xl hover:variant-glass-surface"
-						on:click={async () => {
+		{#snippet children({ matches })}
+			{#if matches}
+				{#if $selectMode}
+					<TooltipIconButton
+						class="text-surface-700 dark:text-surface-300"
+						onclick={async () => {
 							await HelpUpdateChapters(dlreabook.download, selected);
 						}}
-					>
-						<IconWrapper name="mdi:download" class="mr-2" />download / delete
-					</button>
-					<button
-						class="flex w-full items-center justify-start p-4 text-2xl hover:variant-glass-surface"
-						on:click={async () => {
+						tip="download/delete Selected"
+						name="mdi:download"
+					/>
+					<TooltipIconButton
+						class="text-surface-700 dark:text-surface-300"
+						onclick={async () => {
 							const is = await HelpUpdateChapters(dlreabook.read, selected);
 							updateSelectedValues(dlreabook.read, is);
 						}}
-					>
-						<IconWrapper
-							name="mdi:book-open-page-variant-outline"
-							class="mr-2"
-						/>Un/Read
-					</button>
-					<button
-						class="flex w-full items-center justify-start p-4 text-2xl hover:variant-glass-surface"
-						on:click={async () => {
+						tip="Read/Un-Read Selected"
+						name="mdi:book-open-page-variant-outline"
+					/>
+					<TooltipIconButton
+						class="text-surface-700 dark:text-surface-300"
+						onclick={async () => {
 							const is = await HelpUpdateChapters(dlreabook.bookmark, selected);
 							updateSelectedValues(dlreabook.bookmark, is);
 						}}
-					>
-						<IconWrapper name="mdi:bookmark" class="mr-2" />Un/bookmark
-					</button>
-					<button
-						class="flex w-full items-center justify-start rounded-b-lg p-4 text-2xl hover:variant-glass-surface"
-						on:click={selectAll}
-					>
-						<IconWrapper name="mdi:select-all" class="mr-2" />Select all
-					</button>
+						tip="bookmark/Un-bookmark Selected"
+						name="mdi:bookmark"
+					/>
+				{/if}
+				<TooltipIconButton
+					class="text-surface-700 dark:text-surface-300"
+					onclick={selectAll}
+					name="mdi:select-all"
+					tip="Select all/none"
+				/>
+			{:else if $selectMode}
+				<button
+					use:popup={{
+						event: 'click',
+						target: 'selectmenu',
+						placement: 'bottom'
+					}}
+					class="aspect-square h-full p-2 hover:variant-glass-surface"
+				>
+					<Icon
+						name="mdi:dots-vertical"
+						class="aspect-square h-full w-full text-surface-700 dark:text-surface-300"
+					/>
+				</button>
+				<div class="z-50" data-popup="selectmenu">
+					<div class="card max-w-xs rounded-lg p-0">
+						<button
+							class="flex w-full items-center justify-start rounded-t-lg p-4 text-2xl hover:variant-glass-surface"
+							onclick={async () => {
+								await HelpUpdateChapters(dlreabook.download, selected);
+							}}
+						>
+							<IconWrapper name="mdi:download" class="mr-2" />download / delete
+						</button>
+						<button
+							class="flex w-full items-center justify-start p-4 text-2xl hover:variant-glass-surface"
+							onclick={async () => {
+								const is = await HelpUpdateChapters(dlreabook.read, selected);
+								updateSelectedValues(dlreabook.read, is);
+							}}
+						>
+							<IconWrapper
+								name="mdi:book-open-page-variant-outline"
+								class="mr-2"
+							/>Un/Read
+						</button>
+						<button
+							class="flex w-full items-center justify-start p-4 text-2xl hover:variant-glass-surface"
+							onclick={async () => {
+								const is = await HelpUpdateChapters(
+									dlreabook.bookmark,
+									selected
+								);
+								updateSelectedValues(dlreabook.bookmark, is);
+							}}
+						>
+							<IconWrapper name="mdi:bookmark" class="mr-2" />Un/bookmark
+						</button>
+						<button
+							class="flex w-full items-center justify-start rounded-b-lg p-4 text-2xl hover:variant-glass-surface"
+							onclick={selectAll}
+						>
+							<IconWrapper name="mdi:select-all" class="mr-2" />Select all
+						</button>
+					</div>
 				</div>
-			</div>
-		{/if}
+			{/if}
+		{/snippet}
 	</MediaQuery>
 	<TooltipIconButton
 		class="text-surface-700 dark:text-surface-300"
-		on:click={() => {
+		onclick={() => {
 			$selectMode = !$selectMode;
 		}}
 		name="mdi:{$selectMode ? 'select-multiple' : 'flip-to-front'}"

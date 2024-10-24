@@ -7,6 +7,8 @@
 -->
 
 <script lang="ts">
+	import { run } from 'svelte/legacy';
+
 	import { goto } from '$app/navigation';
 	import { page } from '$app/stores';
 	import { AppBarData } from '$lib/MountTitleAction';
@@ -16,7 +18,7 @@
 	import { Layout, MangaMeta, Mode } from '$lib/simpleStores';
 	import { ErrorHelp } from '$lib/util';
 	import { getDrawerStore } from '@skeletonlabs/skeleton';
-	import { onMount } from 'svelte';
+	import { onMount, untrack } from 'svelte';
 	import type { PageData } from './$types';
 	import {
 		ViewNav,
@@ -42,15 +44,14 @@
 	import { queryParam, ssp } from 'sveltekit-search-params';
 	import { writable } from 'svelte/store';
 
-	export let data: PageData;
+	interface Props {
+		data: PageData;
+	}
+
+	let { data }: Props = $props();
 	let mangaMeta = MangaMeta(data.MangaID);
 
 	let pagenav = queryParam('pagenav', ssp.boolean(), { pushHistory: false });
-
-	$: if ($pagenav) {
-		$pagenav = null;
-		all = [];
-	}
 
 	onMount(() => {
 		if (
@@ -78,8 +79,6 @@
 		topChapter = data.ChapterID;
 	});
 
-	$: currentChapterID = data.ChapterID;
-
 	const toastStore = getToastStore();
 	const client = getContextClient();
 	const manga = queryStore({
@@ -90,22 +89,26 @@
 	let pageElement = undefined as HTMLDivElement | undefined;
 	const drawerStore = getDrawerStore();
 
-	let chapterLoading = true;
-	let path: Paths;
+	let chapterLoading = $state(true);
+	let path: Paths | undefined = $state();
 	let visiblePages: {
 		selector: string;
 		chapterIndex: number;
 		pageIndex: number;
-	}[] = [];
+	}[] = $state([]);
 	let all: {
 		chapterID: number;
 		pages: NonNullable<
 			ResultOf<typeof fetchChapterPages>['fetchChapterPages']
 		>['pages'];
-	}[] = [];
+	}[] = $state([]);
 
-	let pages: Promise<OperationResult<ResultOf<typeof fetchChapterPages>>>;
-	$: currentChapterID, loadNew();
+	let filteredChapters = $derived(
+		$manga.data?.manga?.chapters.nodes?.filter(filterChapters(mangaMeta, true))
+	);
+	let pages:
+		| Promise<OperationResult<ResultOf<typeof fetchChapterPages>>>
+		| undefined = $state();
 	function loadNew() {
 		if (preload && !pagenav) pages = preload;
 		else
@@ -116,23 +119,14 @@
 
 	let preload:
 		| Promise<OperationResult<ResultOf<typeof fetchChapterPages>>>
-		| undefined = undefined;
-	let preLoadingId: number | undefined = undefined;
-	$: nextid = getChapterAfterID(currentChapterID, $manga)?.id;
-	$: if (
-		nextid !== undefined &&
-		$mangaMeta.preLoadNextChapter &&
-		nextid !== preLoadingId
-	) {
-		preLoadingId = nextid;
-		preload = client
-			.mutation(fetchChapterPages, { chapterId: nextid })
-			.toPromise();
-	}
-	$: updatePages(pages);
+		| undefined = $state(undefined);
+	let preLoadingId: number | undefined = $state(undefined);
 	async function updatePages(
-		pages: Promise<OperationResult<ResultOf<typeof fetchChapterPages>>>
+		pages:
+			| Promise<OperationResult<ResultOf<typeof fetchChapterPages>>>
+			| undefined
 	) {
+		if (!pages) return;
 		chapterLoading = true;
 		const obj: (typeof all)[0] = {
 			chapterID: currentChapterID,
@@ -151,10 +145,6 @@
 		const next = getChapterAfterID(currentID);
 		if (next) currentChapterID = next.id;
 	}
-
-	$: filteredChapters = $manga.data?.manga?.chapters.nodes?.filter(
-		filterChapters(mangaMeta, true)
-	);
 
 	function getChapterOfID(
 		currentID: number
@@ -197,12 +187,6 @@
 		);
 	}
 
-	$: if ($mangaMeta.ReaderMode === Mode.RTL) {
-		path = layoutToPath(paths.rtl, $mangaMeta.NavLayout);
-	} else {
-		path = layoutToPath(paths.ltr, $mangaMeta.NavLayout);
-	}
-
 	function layoutToPath(path: PathLayout, layout: Layout) {
 		switch (layout) {
 			case Layout.L:
@@ -217,7 +201,6 @@
 	}
 
 	const dataStore = writable(data);
-	$: dataStore.set(data);
 	const Toggledraw = makeToggleDrawer(drawerStore, dataStore);
 
 	async function handelKeypress(keyEvent: KeyboardEvent) {
@@ -325,6 +308,8 @@
 	}
 
 	function handleClick(e: MouseEvent) {
+		if (!path) return;
+
 		if (!pageElement) {
 			pageElement = document.querySelector('#page') as HTMLDivElement;
 		}
@@ -406,14 +391,14 @@
 	let updatedChaps: string[] = [];
 
 	function PageIntersect(
-		e: CustomEvent<boolean>,
+		e: boolean,
 		selector: string,
 		chapterIndex: number,
 		pageIndex: number,
 		maxPages: number,
 		id: number
 	) {
-		if (e.detail) {
+		if (e) {
 			pageIndicator = `${pageIndex + 1}/${maxPages}`;
 			visiblePages = [
 				...visiblePages,
@@ -449,11 +434,6 @@
 		}
 	}
 
-	$: $mangaTitle = $manga.data?.manga?.title ?? '';
-	$: $chapterTitle =
-		filteredChapters?.find((e) => e.id === currentChapterID)?.name ?? '';
-	$: currentChapterID, got();
-
 	function got() {
 		goto($page.url.pathname.replace(/[^/]*$/, currentChapterID.toString()), {
 			replaceState: true,
@@ -461,53 +441,8 @@
 		});
 	}
 
-	$: lowestIntersect = document.querySelector(
-		visiblePages.reduce(
-			(a, c) => {
-				if (
-					c.chapterIndex > a.chapterIndex ||
-					(c.chapterIndex === a.chapterIndex && c.pageIndex > a.pageIndex)
-				) {
-					return c;
-				}
-				return a;
-			},
-			{
-				selector: 'c0p0',
-				chapterIndex: 0,
-				pageIndex: 0
-			}
-		).selector
-	) as HTMLElement | undefined;
-
-	$: $manga.data?.manga,
-		AppBarData(`${$manga.data?.manga?.title} ${$chapterTitle}` || 'Manga');
-	type tmp = (typeof path)[keyof typeof path];
-	type TTmp = keyof typeof path;
-
-	$: currPath = Object.fromEntries(
-		(Object.entries(path) as [TTmp, tmp][]).map((dat): [TTmp, string] => {
-			if (path === undefined) {
-				return [dat[0], ''] as [TTmp, string];
-			}
-			return [
-				dat[0],
-				`clip-path: polygon(${dat[1]
-					.map((point) => {
-						return point
-							.map((percent) => {
-								return percent === 0 ? percent.toString() : `${percent}%`;
-							})
-							.join(' ');
-					})
-					.join(',')});top: 0;
-      bottom: 0;
-      left: 0;
-      right: 0;
-			`
-			] as [TTmp, string];
-		})
-	);
+	type tmp = NonNullable<typeof path>[keyof NonNullable<typeof path>];
+	type TTmp = keyof NonNullable<typeof path>;
 
 	onMount(() => {
 		document.addEventListener('keydown', handelKeypress, true);
@@ -516,27 +451,139 @@
 		};
 	});
 
-	let buttonElement: HTMLButtonElement;
+	let buttonElement: HTMLButtonElement | undefined = $state();
 
-	$: if (!$drawerStore.open) {
-		buttonElement?.focus();
-	}
-
-	let pageIndicator: string = '1/0';
+	let pageIndicator: string = $state('1/0');
+	$effect(() => {
+		if ($pagenav) {
+			$pagenav = null;
+			all = [];
+		}
+	});
+	let currentChapterID: number = $state(data.ChapterID);
+	$effect(() => {
+		currentChapterID = data.ChapterID;
+	});
+	$effect(() => {
+		const _ = [currentChapterID];
+		untrack(loadNew);
+	});
+	let nextid = $derived.by(() => {
+		const _ = [currentChapterID];
+		untrack(() => {
+			return getChapterAfterID(currentChapterID, $manga)?.id;
+		});
+	});
+	$effect(() => {
+		if (
+			nextid !== undefined &&
+			$mangaMeta.preLoadNextChapter &&
+			nextid !== preLoadingId
+		) {
+			untrack(() => {
+				preLoadingId = nextid;
+			});
+			preload = client
+				.mutation(fetchChapterPages, { chapterId: nextid })
+				.toPromise();
+		}
+	});
+	$effect(() => {
+		const _ = [pages];
+		untrack(() => {
+			updatePages(pages);
+		});
+	});
+	$effect(() => {
+		if ($mangaMeta.ReaderMode === Mode.RTL) {
+			path = layoutToPath(paths.rtl, $mangaMeta.NavLayout);
+		} else {
+			path = layoutToPath(paths.ltr, $mangaMeta.NavLayout);
+		}
+	});
+	$effect(() => {
+		dataStore.set(data);
+	});
+	$effect(() => {
+		$mangaTitle = $manga.data?.manga?.title ?? '';
+	});
+	$effect(() => {
+		$chapterTitle =
+			filteredChapters?.find((e) => e.id === currentChapterID)?.name ?? '';
+	});
+	$effect(() => {
+		const _ = [currentChapterID];
+		untrack(got);
+	});
+	let lowestIntersect = $derived(
+		document.querySelector(
+			visiblePages.reduce(
+				(a, c) => {
+					if (
+						c.chapterIndex > a.chapterIndex ||
+						(c.chapterIndex === a.chapterIndex && c.pageIndex > a.pageIndex)
+					) {
+						return c;
+					}
+					return a;
+				},
+				{
+					selector: 'c0p0',
+					chapterIndex: 0,
+					pageIndex: 0
+				}
+			).selector
+		) as HTMLElement | undefined
+	);
+	$effect(() => {
+		AppBarData(`${$manga.data?.manga?.title} ${$chapterTitle}`);
+	});
+	let currPath = $derived(
+		path
+			? Object.fromEntries(
+					(Object.entries(path) as [TTmp, tmp][]).map((dat): [TTmp, string] => {
+						if (path === undefined) {
+							return [dat[0], ''] as [TTmp, string];
+						}
+						return [
+							dat[0],
+							`clip-path: polygon(${dat[1]
+								.map((point) => {
+									return point
+										.map((percent) => {
+											return percent === 0 ? percent.toString() : `${percent}%`;
+										})
+										.join(' ');
+								})
+								.join(',')});top: 0;
+      bottom: 0;
+      left: 0;
+      right: 0;
+			`
+						] as [TTmp, string];
+					})
+				)
+			: {}
+	);
+	$effect(() => {
+		if (!$drawerStore.open) {
+			buttonElement?.focus();
+		}
+	});
 </script>
 
 <button
 	tabindex="0"
 	bind:this={buttonElement}
-	on:click={handleClick}
+	onclick={handleClick}
 	class="w-full"
 >
 	{#if $ViewNav}
 		<div class="pointer-events-none">
-			<div class="fixed z-10 bg-blue-500/50" style={currPath.forward} />
-			<div class="fixed z-10 bg-red-500/50" style={currPath.back} />
+			<div class="fixed z-10 bg-blue-500/50" style={currPath.forward}></div>
+			<div class="fixed z-10 bg-red-500/50" style={currPath.back}></div>
 			{#if currPath.menu}
-				<div class="fixed z-10 bg-green-500/50" style={currPath.menu} />
+				<div class="fixed z-10 bg-green-500/50" style={currPath.menu}></div>
 			{/if}
 		</div>
 	{/if}
@@ -547,15 +594,14 @@
 				{$mangaMeta.ReaderMode === Mode.Vertical && 'flex flex-col items-center'}
 				{$mangaMeta.ReaderMode === Mode.single && 'flex flex-col items-center'}
 				{$mangaMeta.ReaderMode === Mode.RTL &&
-					`grid grid-cols-2 place-content-center
-						[&>div:nth-child(even)]:justify-self-start [&>div:nth-child(odd)]:justify-self-end`}
+					'place-content-center[&>div:nth-child(even)]:justify-self-start grid grid-cols-2 [&>div:nth-child(odd)]:justify-self-end'}
 				{$mangaMeta.ReaderMode === Mode.LTR &&
-					`grid grid-cols-2 place-content-center
-						[&>div:nth-child(even)]:justify-self-start [&>div:nth-child(odd)]:justify-self-end`}"
+					'place-content-center[&>div:nth-child(even)]:justify-self-start grid grid-cols-2 [&>div:nth-child(odd)]:justify-self-end'}
+				"
 				dir={$mangaMeta.ReaderMode === Mode.RTL ? 'rtl' : 'ltr'}
 			>
 				{#if ($mangaMeta.ReaderMode === Mode.RTL || $mangaMeta.ReaderMode === Mode.LTR) && $mangaMeta.Offset}
-					<div />
+					<div></div>
 				{/if}
 				{#each chapter.pages as page, pageIndex (page)}
 					<div
@@ -577,7 +623,7 @@
 								{$mangaMeta.Scale && $mangaMeta.ReaderMode === Mode.single ? 'max-w-full' : ''}"
 					>
 						<IntersectionObserver
-							on:intersect={(e) => {
+							onintersect={(e) => {
 								PageIntersect(
 									e,
 									`#c${index}p${pageIndex}`,
@@ -625,8 +671,8 @@
 		</div>
 		{#if index === all.length - 1 && !chapterLoading}
 			<IntersectionObserver
-				on:intersect={(e) => {
-					if (e.detail) {
+				onintersect={(e) => {
+					if (e) {
 						client
 							.mutation(updateChapter, {
 								id: chapter.chapterID,

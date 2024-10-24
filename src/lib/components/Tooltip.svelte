@@ -13,10 +13,25 @@
 		type CssClasses,
 		type PopupSettings
 	} from '@skeletonlabs/skeleton';
-	export let tip: string;
-	export let tipclass: CssClasses = 'z-50';
-	export let placement: Placement = 'top';
-	export let offset: OffsetOptions = 0;
+	interface Props {
+		tip: string;
+		tipclass?: CssClasses;
+		placement?: Placement;
+		offset?: OffsetOptions;
+		children?: import('svelte').Snippet;
+		tooltip?: import('svelte').Snippet;
+		[key: string]: unknown;
+	}
+
+	let {
+		tip,
+		tipclass = 'z-50',
+		placement = 'top',
+		offset = 0,
+		children,
+		tooltip,
+		...rest
+	}: Props = $props();
 
 	const popupHover: PopupSettings = {
 		event: 'hover',
@@ -28,15 +43,15 @@
 	};
 </script>
 
-<div use:popup={popupHover} class={$$props.class}>
-	<slot />
+<div use:popup={popupHover} class={rest.class as string | undefined ?? ''}>
+	{@render children?.()}
 </div>
 
 <div class={tipclass} data-popup={tip}>
 	<div class="card variant-filled-surface p-2">
-		<slot name="tooltip">
+		{#if tooltip}{@render tooltip()}{:else}
 			<p>{tip}</p>
-		</slot>
-		<div class="variant-filled-surface arrow" />
+		{/if}
+		<div class="variant-filled-surface arrow"></div>
 	</div>
 </div>

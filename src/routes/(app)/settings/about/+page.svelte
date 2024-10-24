@@ -26,8 +26,8 @@
 	{/if}
 	{#each new Array(5) as _}
 		<div class="py-2 pl-4">
-			<div class="placeholder mb-1 h-7 w-full max-w-xs animate-pulse" />
-			<div class="placeholder h-6 w-full max-w-sm animate-pulse" />
+			<div class="placeholder mb-1 h-7 w-full max-w-xs animate-pulse"></div>
+			<div class="placeholder h-6 w-full max-w-sm animate-pulse"></div>
 		</div>
 	{/each}
 {:else if $about.error}

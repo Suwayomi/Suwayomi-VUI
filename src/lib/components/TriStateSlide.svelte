@@ -7,6 +7,9 @@
 -->
 
 <script lang="ts">
+	import { run, createBubbler } from 'svelte/legacy';
+
+	const bubble = createBubbler();
 	import IconWrapper from './IconWrapper.svelte';
 	import { createEventDispatcher } from 'svelte';
 
@@ -22,34 +25,8 @@
 	const dispatch = createEventDispatcher<SlideToggleEvent>();
 
 	// Props
-	/**
-	 * Required. Set a unique name for the input.
-	 * @type {string}
-	 */
-	export let name: string = '';
-	/** The checked state of the input element. */
-	export let checked: boolean | null = null;
-
-	export let triState = true;
-
-	// Props (styles)
-	export let size: 'sm' | 'md' | 'lg' = 'md';
-	/** Provide classes to set the inactive state background color. */
-	export let inactive: CssClasses = 'bg-surface-400 dark:bg-surface-700';
-	/** Provide classes to set the active state background color. */
-	export let active: CssClasses = 'bg-surface-900 dark:bg-surface-300';
-	/** Provide classes to set the active state background color. */
-	export let indeterminate: CssClasses = 'bg-surface-500 dark:bg-surface-500';
-	/** Provide classes to set the border styles. */
-	export let border: CssClasses = '';
-	/** Provide classes to set border radius styles. */
-	export let rounded: CssClasses = 'rounded-full';
-	/** Provide classes for the label div */
-	export let labelClass: CssClasses = 'ml-3';
 
 	// Props (a11y)
-	/** Provide a semantic label. */
-	export let label = '';
 
 	// Base Styles
 	const cBase = 'inline-block';
@@ -59,13 +36,15 @@
 		'w-[50%] h-full scale-[0.8] transition-all duration-[200ms] shadow';
 
 	// Set track size
-	let trackSize: string;
+	let trackSize: string = $state('');
 	// prettier-ignore
-	switch (size) {
-		case 'sm': trackSize = 'w-12 h-6'; break;
-		case 'lg': trackSize = 'w-20 h-10'; break;
-		default: trackSize = 'w-16 h-8';
-	}
+	$effect(() => { 
+		switch (size) {
+			case 'sm': trackSize = 'w-12 h-6'; break;
+			case 'lg': trackSize = 'w-20 h-10'; break;
+			default: trackSize = 'w-16 h-8';
+		}
+});
 
 	// A11y Input Handlers
 	function onKeyDown(event: SvelteEvent<KeyboardEvent, HTMLDivElement>) {
@@ -80,83 +59,131 @@
 	}
 
 	// Interactive
-	let cTrackActive = '';
-	$: if (state === 0) {
-		cTrackActive = indeterminate;
-	} else if (state === 1) {
-		cTrackActive = active;
-	} else {
-		cTrackActive = inactive;
-	}
+	let cTrackActive = $state('');
 
-	let cThumbBackground = '';
-	$: if (state === 0) {
-		cThumbBackground = 'bg-white';
-	} else if (state === 1) {
-		cThumbBackground = 'bg-white/75';
-	} else {
-		cThumbBackground = 'bg-white';
-	}
+	let cThumbBackground = $state('');
 
-	let cThumbPos = '';
-	$: if (state === 0) {
-		cThumbPos = 'translate-x-[50%]';
-	} else if (state === 1) {
-		cThumbPos = 'translate-x-full';
-	} else {
-		cThumbPos = '';
-	}
-	// Reactive Classes
-	$: classesDisabled =
-		$$props.disabled === true
-			? 'opacity-50'
-			: 'hover:brightness-[105%] dark:hover:brightness-110 cursor-pointer';
-	$: classesBase = `${cBase} ${rounded} ${classesDisabled} ${$$props.class}`;
-	$: classesLabel = `${cLabel} cursor-pointer`;
-	$: classesTrack = `${cTrack} ${border} ${rounded} ${trackSize} ${cTrackActive}`;
-	$: classesThumb = `${cThumb} ${rounded} ${cThumbBackground} ${cThumbPos}`;
+	let cThumbPos = $state('');
 
-	// Prune $$restProps to avoid overwriting $$props.class
+	// Prune $$restProps to avoid overwriting rest.class
 	function prunedRestProps() {
-		delete $$restProps.class;
-		return $$restProps;
+		const { class: _, ...tmp } = rest;
+		return tmp;
 	}
 
-	export let state: TriState = checked === null ? 0 : checked ? 1 : 2;
+	interface Props {
+		/**
+		 * Required. Set a unique name for the input.
+		 * @type {string}
+		 */
+		name?: string;
+		/** The checked state of the input element. */
+		checked?: boolean | null;
+		triState?: boolean;
+		// Props (styles)
+		size?: 'sm' | 'md' | 'lg';
+		/** Provide classes to set the inactive state background color. */
+		inactive?: CssClasses;
+		/** Provide classes to set the active state background color. */
+		active?: CssClasses;
+		/** Provide classes to set the active state background color. */
+		indeterminate?: CssClasses;
+		/** Provide classes to set the border styles. */
+		border?: CssClasses;
+		/** Provide classes to set border radius styles. */
+		rounded?: CssClasses;
+		/** Provide classes for the label div */
+		labelClass?: CssClasses;
+		// Provide a semantic label.
+		label?: string;
+		state?: TriState;
+		children?: import('svelte').Snippet;
+		onchange?: (e: boolean) => void;
+		[key: string]: unknown;
+	}
+
+	let {
+		name = '',
+		checked = $bindable(null),
+		triState = true,
+		size = 'md',
+		inactive = 'bg-surface-400 dark:bg-surface-700',
+		active = 'bg-surface-900 dark:bg-surface-300',
+		indeterminate = 'bg-surface-500 dark:bg-surface-500',
+		border = '',
+		rounded = 'rounded-full',
+		labelClass = 'ml-3',
+		label = '',
+		state: Lstate = $bindable(checked === null ? 0 : checked ? 1 : 2),
+		onchange = () => {},
+		children,
+		...rest
+	}: Props = $props();
 	export function handelClick() {
 		if (triState) {
-			switch (state) {
+			switch (Lstate) {
 				case 0:
-					state = 1;
+					Lstate = 1;
 					break;
 				case 1:
-					state = 2;
+					Lstate = 2;
 					break;
 				case 2:
-					state = 0;
+					Lstate = 0;
 					break;
 			}
 		} else {
-			switch (state) {
+			switch (Lstate) {
 				case 1:
-					state = 2;
+					Lstate = 2;
 					checked = false;
-					dispatch('changeE', checked);
+					onchange(checked);
 					break;
 				case 2:
-					state = 1;
+					Lstate = 1;
 					checked = true;
-					dispatch('changeE', checked);
+					onchange(checked);
 					break;
 			}
 		}
 	}
+	$effect(() => {
+		if (Lstate === 0) {
+			cTrackActive = indeterminate;
+			cThumbBackground = 'bg-white';
+			cThumbPos = 'translate-x-[50%]';
+		} else if (Lstate === 1) {
+			cTrackActive = active;
+			cThumbBackground = 'bg-white/75';
+			cThumbPos = 'translate-x-full';
+		} else {
+			cTrackActive = inactive;
+			cThumbBackground = 'bg-white';
+			cThumbPos = '';
+		}
+	});
+	// Reactive Classes
+	let classesDisabled = $derived(
+		rest.disabled === true
+			? 'opacity-50'
+			: 'hover:brightness-[105%] dark:hover:brightness-110 cursor-pointer'
+	);
+	let classesBase = $derived(
+		`${cBase} ${rounded} ${classesDisabled} ${rest.class}`
+	);
+	let classesLabel = $derived(`${cLabel} cursor-pointer`);
+	let classesTrack = $derived(
+		`${cTrack} ${border} ${rounded} ${trackSize} ${cTrackActive}`
+	);
+	let classesThumb = $derived(
+		`${cThumb} ${rounded} ${cThumbBackground} ${cThumbPos}`
+	);
 </script>
 
 <div
 	id={label}
 	class="slide-toggle {classesBase} "
-	on:keydown={onKeyDown}
+	onkeydown={onKeyDown}
 	role="switch"
 	aria-label={label}
 	aria-checked={checked}
@@ -169,33 +196,33 @@
 			class="slide-toggle-input hidden"
 			bind:checked
 			{name}
-			on:click={handelClick}
-			on:keydown
-			on:keyup
-			on:keypress
-			on:mouseover
-			on:change
-			on:focus
-			on:blur
+			onclick={handelClick}
+			onkeydown={bubble('keydown')}
+			onkeyup={bubble('keyup')}
+			onkeypress={bubble('keypress')}
+			onmouseover={bubble('mouseover')}
+			onchange={bubble('change')}
+			onfocus={bubble('focus')}
+			onblur={bubble('blur')}
 			{...prunedRestProps()}
-			disabled={$$props.disabled}
+			disabled={rest.disabled as boolean | undefined | null}
 		/>
 		<!-- Label -->
-		{#if $$slots.default}<div class="slide-toggle-text flex-1 {labelClass}">
-				<slot />
+		{#if children}<div class="slide-toggle-text flex-1 {labelClass}">
+				{@render children?.()}
 			</div>{/if}
 		<!-- Slider Track/Thumb -->
 		<div
 			class="slide-toggle-track {classesTrack}"
-			class:cursor-not-allowed={$$props.disabled}
+			class:cursor-not-allowed={rest.disabled}
 		>
 			<div
 				class="slide-toggle-thumb text-surface-500 {classesThumb} aspect-square"
-				class:cursor-not-allowed={$$props.disabled}
+				class:cursor-not-allowed={rest.disabled}
 			>
-				{#if state === 1}
+				{#if Lstate === 1}
 					<IconWrapper name="mdi:check" class="aspect-square h-full w-full" />
-				{:else if state === 2}
+				{:else if Lstate === 2}
 					<IconWrapper name="mdi:close" class="aspect-square h-full w-full" />
 				{/if}
 			</div>

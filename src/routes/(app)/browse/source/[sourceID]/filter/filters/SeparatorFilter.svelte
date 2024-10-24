@@ -6,4 +6,4 @@
  file, You can obtain one at http://mozilla.org/MPL/2.0/.
 -->
 
-<div class="border-b border-surface-500" />
+<div class="border-b border-surface-500"></div>

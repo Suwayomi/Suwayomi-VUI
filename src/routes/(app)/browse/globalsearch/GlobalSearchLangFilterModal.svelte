@@ -20,21 +20,27 @@
 	import { type ResultOf } from '$lib/gql/graphql';
 	import type { getSources } from '$lib/gql/Queries';
 	const modalStore = getModalStore();
-	export let langs: Set<string>;
-	export let langFilter: Writable<Set<string>>;
-	export let rawSources: ResultOf<typeof getSources>['sources']['nodes'];
+	interface Props {
+		langs: Set<string>;
+		langFilter: Writable<Set<string>>;
+		rawSources: ResultOf<typeof getSources>['sources']['nodes'];
+	}
+
+	let { langs, langFilter, rawSources }: Props = $props();
 	const tabSet = localStorageStore<number>('browseTabSet', 0);
 
-	$: LangFilteredSources = rawSources?.filter((source) => {
-		if (
-			$langFilter.has('pinned') &&
-			source.meta.find((e) => e.key === 'pinned')
-		) {
+	let LangFilteredSources = $derived(
+		rawSources?.filter((source) => {
+			if (
+				$langFilter.has('pinned') &&
+				source.meta.find((e) => e.key === 'pinned')
+			) {
+				return true;
+			}
+			if (!$langFilter.has(source.lang)) return false;
 			return true;
-		}
-		if (!$langFilter.has(source.lang)) return false;
-		return true;
-	});
+		})
+	);
 </script>
 
 {#if $modalStore[0]}
@@ -56,8 +62,8 @@
 					{#each langs as lang}
 						<Slide
 							class="p-1 pl-2 outline-0 hover:variant-glass-surface"
-							on:changeE={(e) => {
-								if (e.detail) {
+							onchange={(e) => {
+								if (e) {
 									$langFilter.add(lang);
 									$langFilter = $langFilter;
 									return;
@@ -77,8 +83,8 @@
 						{@const source = sourc}
 						<Slide
 							class="p-1 pl-2 outline-0 hover:variant-glass-surface"
-							on:changeE={(e) => {
-								if (e.detail) {
+							onchange={(e) => {
+								if (e) {
 									$SpecificSourceFilter.add(source.id);
 									$SpecificSourceFilter = $SpecificSourceFilter;
 									return;

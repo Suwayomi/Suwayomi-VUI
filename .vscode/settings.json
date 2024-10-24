@@ -122,14 +122,27 @@
 	"licenser.projectName": "suwayomi-VUI",
 	"licenser.author": "Contributors to the Suwayomi project",
 	"cSpell.words": [
+		"graphqlsp",
 		"iconify",
 		"localsourcelang",
 		"Mangas",
 		"Pausable",
+		"skeletonlabs",
 		"Suwayomi",
-		"tipclass"
+		"tipclass",
+		"purgecss",
+		"graphcache"
 	],
 	"cSpell.ignoreRegExpList": ["\\s*import (.+\n?)+ from '.*';"],
+	"cSpell.ignorePaths": [
+		"**/node_modules/**",
+		"**/.git/**",
+		"**/dist/**",
+		"**/build/**",
+		"**/buildZip/**",
+		"**/bun.lockb",
+		"**/package.json"
+	],
 	"typescript.tsdk": "node_modules/typescript/lib",
 	"typescript.enablePromptUseWorkspaceTsdk": true,
 	"codeium.enableCodeLens": true,
@@ -138,5 +151,14 @@
 	"codeium.enableSearch": true,
 	"tailwind-fold.unfoldIfLineSelected": true,
 	"tailwind-fold.foldLengthThreshold": 80,
-	"tailwind-fold.unfoldedTextOpacity": 1
+	"tailwind-fold.unfoldedTextOpacity": 1,
+	"editor.formatOnPaste": true,
+	"editor.formatOnSave": true,
+	"editor.formatOnType": true,
+	"notebook.formatOnCellExecution": true,
+	"tailwind-fold.foldStyle": "QUOTES",
+	"tailwind-fold.autoFold": false,
+	"eslint.codeActionsOnSave.rules": null,
+	"eslint.format.enable": false,
+	"eslint.lintTask.options": ". -c ./eslint.config.mjs"
 }

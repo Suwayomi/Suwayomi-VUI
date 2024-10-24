@@ -7,6 +7,8 @@
 -->
 
 <script lang="ts">
+	import { run } from 'svelte/legacy';
+
 	import Image from '$lib/components/Image.svelte';
 	import { TrackRecordTypeFragment } from '$lib/gql/Fragments';
 	import {
@@ -27,20 +29,20 @@
 	import { type ResultOf } from '$lib/gql/graphql';
 	import IconButton from '$lib/components/IconButton.svelte';
 
-	export let manga: OperationResultStore<ResultOf<typeof getManga>> & Pausable;
+	interface Props {
+		manga: OperationResultStore<ResultOf<typeof getManga>> & Pausable;
+	}
+
+	let { manga }: Props = $props();
 
 	const modalStore = getModalStore();
 
-	let preQuery = $manga.data?.manga?.title ?? '';
-	let query = $manga.data?.manga?.title ?? '';
+	let preQuery = $state($manga.data?.manga?.title ?? '');
+	let query = $state($manga.data?.manga?.title ?? '');
 	const client = getContextClient();
-	let items: OperationResultStore<ResultOf<typeof searchTracker>> & Pausable;
-	$: if (tabSet !== 'Tracking')
-		items = queryStore({
-			client,
-			query: searchTracker,
-			variables: { query, trackerId: tabSet }
-		});
+	let items:
+		| (OperationResultStore<ResultOf<typeof searchTracker>> & Pausable)
+		| undefined = $state();
 
 	const Trackers = queryStore({
 		client,
@@ -57,7 +59,7 @@
 		});
 	});
 
-	let tabSet: number | 'Tracking' = 'Tracking';
+	let tabSet: number | 'Tracking' = $state('Tracking');
 
 	async function trackThis(
 		item:
@@ -110,6 +112,14 @@
 			}
 		});
 	}
+	$effect(() => {
+		if (tabSet !== 'Tracking')
+			items = queryStore({
+				client,
+				query: searchTracker,
+				variables: { query, trackerId: tabSet }
+			});
+	});
 </script>
 
 {#if $modalStore[0]}
@@ -129,7 +139,7 @@
 							type="text"
 							class="input"
 							bind:value={preQuery}
-							on:change={() => (query = preQuery)}
+							onchange={() => (query = preQuery)}
 						/>
 					</div>
 					<TabGroup class="[&>.tab-panel]:!outline-none">
@@ -177,7 +187,7 @@
 												<select
 													class="input w-auto"
 													value={RecordItem.status}
-													on:change={(e) =>
+													onchange={(e) =>
 														updateStatus(e.currentTarget.value, RecordItem.id)}
 												>
 													{#each track?.statuses ?? [] as status}
@@ -187,7 +197,7 @@
 												<select
 													class="input"
 													value={RecordItem.displayScore}
-													on:change={(e) =>
+													onchange={(e) =>
 														updateScore(e.currentTarget.value, RecordItem.id)}
 												>
 													{#each track?.scores ?? [] as score}
@@ -196,7 +206,7 @@
 												</select>
 												<IconButton
 													tabindex={-1}
-													on:click={(e) => {
+													onclick={(e) => {
 														e.preventDefault();
 														e.stopPropagation();
 														untrack(RecordItem.id);
@@ -218,11 +228,11 @@
 										(e) => e.trackerId === tabSet
 									)}
 								<div class="h-72 overflow-auto">
-									{#if $items.error}
+									{#if $items?.error}
 										<div class="whitespace-pre-wrap p-4">
 											{JSON.stringify($items.error, null, 4)}
 										</div>
-									{:else if $items.fetching}
+									{:else if !$items || $items?.fetching}
 										{#each new Array(3).fill(0) as _}
 											<span
 												class="flex w-full p-1 pl-4 text-left hover:variant-ghost-surface"
@@ -230,29 +240,29 @@
 												<div class="w-1/5 flex-shrink-0 pr-1">
 													<div
 														class="placeholder aspect-cover h-full w-full animate-pulse rounded-lg"
-													/>
+													></div>
 												</div>
 												<div class="w-full">
-													<div class="placeholder mb-2 h-7 w-full" />
+													<div class="placeholder mb-2 h-7 w-full"></div>
 													<div class="text-sm xl:text-base">
 														<div class="mb-2 grid w-full grid-cols-2 gap-1">
 															<div
 																class="placeholder h-4 w-full animate-pulse"
-															/>
+															></div>
 															<div
 																class="placeholder h-4 w-full animate-pulse"
-															/>
+															></div>
 															<div
 																class="placeholder h-4 w-full animate-pulse"
-															/>
+															></div>
 															<div
 																class="placeholder h-4 w-full animate-pulse"
-															/>
+															></div>
 														</div>
 														{#each new Array(3).fill(0) as _}
 															<div
 																class="placeholder mt-1 line-clamp-3 h-4 w-full animate-pulse"
-															/>
+															></div>
 														{/each}
 													</div>
 												</div>
@@ -262,7 +272,7 @@
 										{#each $items.data.searchTracker.trackSearches as item (item.trackerId + ' ' + item.remoteId)}
 											<a
 												href={item.trackingUrl}
-												on:click={(e) => {
+												onclick={(e) => {
 													e.preventDefault();
 													trackThis(item);
 												}}
@@ -310,36 +320,36 @@
 									{/if}
 								</div>
 								<!-- <div>
-									<div class="h-24 pl-4">
-										<div class="mb-2 line-clamp-1 text-lg font-bold">
-											Tracking: {ThisTrack ? ThisTrack.title : 'None'}
-										</div>
-										{#if ThisTrack}
-											<div class="flex justify-between pr-4">
-												<button
-													class="variant-filled-surface btn mb-4"
-													on:click={() => trackThis(ThisTrack)}
-												>
-													Untrack
-												</button>
-												<a
-													target="_blank"
-													class="variant-filled-surface btn mb-4"
-													href={ThisTrack.remoteUrl}
-												>
-													Open tracked manga
-												</a>
+										<div class="h-24 pl-4">
+											<div class="mb-2 line-clamp-1 text-lg font-bold">
+												Tracking: {ThisTrack ? ThisTrack.title : 'None'}
 											</div>
-										{/if}
-									</div>
-								</div> -->
+											{#if ThisTrack}
+												<div class="flex justify-between pr-4">
+													<button
+														class="variant-filled-surface btn mb-4"
+														onclick={() => trackThis(ThisTrack)}
+													>
+														Untrack
+													</button>
+													<a
+														target="_blank"
+														class="variant-filled-surface btn mb-4"
+														href={ThisTrack.remoteUrl}
+													>
+														Open tracked manga
+													</a>
+												</div>
+											{/if}
+										</div>
+									</div> -->
 							{/if}
 						</svelte:fragment>
 					</TabGroup>
 				{:else}
 					<div class="p-4">
 						No Trackers Authorized, go to <a
-							on:click={modalStore.close}
+							onclick={modalStore.close}
 							href="/settings"
 							class="anchor inline">Settings</a
 						> to add some.

@@ -53,12 +53,6 @@
 		});
 	}
 
-	$: langs = getLangs($extensions?.data);
-	$: AppBarData('Extensions', {
-		component: ExtensionsActions,
-		props: { langs }
-	});
-
 	function getLangs(
 		extensionsQuery: ResultOf<typeof getExtensions> | undefined
 	) {
@@ -75,16 +69,6 @@
 		}
 		return new Set<string>();
 	}
-
-	$: filteredExtensions = $extensions?.data?.extensions.nodes?.filter((ele) => {
-		if (!$langFilter.has(ele.lang)) return false;
-		if ($query !== '' && $query !== null) {
-			return ele.name.toLowerCase().includes($query.toLocaleLowerCase());
-		}
-		return true;
-	}) as TExtension[] | undefined;
-
-	$: groupExtensions = groupSources(filteredExtensions, langs);
 
 	function groupSources(
 		filteredExtensions: TExtension[] | undefined,
@@ -113,46 +97,69 @@
 			...groupBy(notInstalledExtensions, (extension) => extension.lang)
 		];
 	}
+	let langs = $derived(getLangs($extensions?.data));
+	$effect(() => {
+		AppBarData('Extensions', {
+			component: ExtensionsActions,
+			props: { langs }
+		});
+	});
+	let filteredExtensions = $derived(
+		$extensions?.data?.extensions.nodes?.filter((ele) => {
+			if (!$langFilter.has(ele.lang)) return false;
+			if ($query !== '' && $query !== null) {
+				return ele.name.toLowerCase().includes($query.toLocaleLowerCase());
+			}
+			return true;
+		}) as TExtension[] | undefined
+	);
+	let groupExtensions = $derived(groupSources(filteredExtensions, langs));
 </script>
 
-<Nav let:scrollingElement>
-	{#if $extensions === undefined || $extensions.fetching}
-		<div class="px-4">
-			{#each new Array(5) as _}
-				<div class="placeholder m-2 h-8 max-w-xs animate-pulse md:h-10" />
+<Nav>
+	{#snippet children()}
+		{#if $extensions === undefined || $extensions.fetching}
+			<div class="px-4">
 				{#each new Array(5) as _}
-					<div class="m-1 h-28">
-						<div class="card variant-ghost flex h-full w-full items-center">
-							<div class="h-full w-auto p-1">
+					<div class="placeholder m-2 h-8 max-w-xs animate-pulse md:h-10"></div>
+					{#each new Array(5) as _}
+						<div class="m-1 h-28">
+							<div class="card variant-ghost flex h-full w-full items-center">
+								<div class="h-full w-auto p-1">
+									<div
+										class="placeholder aspect-square h-full w-auto animate-pulse rounded-lg"
+									></div>
+								</div>
 								<div
-									class="placeholder aspect-square h-full w-auto animate-pulse rounded-lg"
-								/>
-							</div>
-							<div class="flex h-full w-full max-w-xs flex-col justify-center">
-								<div class="placeholder my-2 max-w-[10rem] animate-pulse" />
-								<div class="my-2">
-									<div class="placeholder animate-pulse" />
+									class="flex h-full w-full max-w-xs flex-col justify-center"
+								>
+									<div
+										class="placeholder my-2 max-w-[10rem] animate-pulse"
+									></div>
+									<div class="my-2">
+										<div class="placeholder animate-pulse"></div>
+									</div>
 								</div>
 							</div>
 						</div>
-					</div>
+					{/each}
 				{/each}
-			{/each}
-		</div>
-	{:else if $extensions.error}
-		<div class="white-space-pre-wrap">
-			{JSON.stringify($extensions.error, null, 4)}
-		</div>
-	{:else if groupExtensions}
-		<div class="px-4">
-			{#each groupExtensions as [lang, sause]}
-				<h2 class="h2 p-2">
-					{FindLangName(lang)}
-				</h2>
-				{#each sause as ext (ext.pkgName + ext.repo)}
-					<ExtensionCard {ext} {scrollingElement} />
+			</div>
+		{:else if $extensions.error}
+			<div class="white-space-pre-wrap">
+				{JSON.stringify($extensions.error, null, 4)}
+			</div>
+		{:else if groupExtensions}
+			<div class="px-4">
+				{#each groupExtensions as [lang, sause]}
+					<h2 class="h2 p-2">
+						{FindLangName(lang)}
+					</h2>
+					{#each sause as ext (ext.pkgName + ext.repo)}
+						<ExtensionCard {ext} />
+					{/each}
 				{/each}
-			{/each}
-		</div>
-	{/if}
+			</div>
+		{/if}
+	{/snippet}
 </Nav>

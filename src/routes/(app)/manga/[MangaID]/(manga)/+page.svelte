@@ -7,6 +7,8 @@
 -->
 
 <script lang="ts">
+	import { run } from 'svelte/legacy';
+
 	import { AppBarData } from '$lib/MountTitleAction';
 	import { ErrorHelpUntyped } from '$lib/util';
 	import type { PageData } from './$types';
@@ -17,8 +19,13 @@
 	import { getContextClient, queryStore } from '@urql/svelte';
 	import { getManga } from '$lib/gql/Queries';
 	import { fetchMangaChapters, fetchMangaInfo } from '$lib/gql/Mutations';
+	import { untrack } from 'svelte';
 
-	export let data: PageData;
+	interface Props {
+		data: PageData;
+	}
+
+	let { data }: Props = $props();
 
 	const mangaMeta = MangaMeta(data.MangaID);
 
@@ -37,11 +44,13 @@
 		);
 	}
 
-	$: if ($manga.data?.manga?.lastFetchedAt === '0') {
-		fetchChapters();
-	}
+	$effect(() => {
+		if ($manga.data?.manga?.lastFetchedAt === '0') {
+			untrack(fetchChapters);
+		}
+	});
 
-	$: $manga.data?.manga,
+	$effect(() => {
 		AppBarData($manga.data?.manga?.title || 'Manga', {
 			component: MangaActions,
 			props: {
@@ -49,6 +58,7 @@
 				fetchChapters
 			}
 		});
+	});
 </script>
 
 <div class="block md:relative md:flex md:h-full">

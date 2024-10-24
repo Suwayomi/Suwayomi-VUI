@@ -9,7 +9,11 @@
 <script lang="ts">
 	import { page } from '$app/stores';
 
-	export let supportsLatest: boolean = false;
+	interface Props {
+		supportsLatest?: boolean;
+	}
+
+	let { supportsLatest = false }: Props = $props();
 </script>
 
 <div class="flex h-full space-x-1">

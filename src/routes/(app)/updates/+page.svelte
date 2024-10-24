@@ -7,6 +7,8 @@
 -->
 
 <script lang="ts">
+	import { run } from 'svelte/legacy';
+
 	import UpdatesActions from './UpdatesActions.svelte';
 	import { AppBarData } from '$lib/MountTitleAction';
 	import { writable } from 'svelte/store';
@@ -28,6 +30,7 @@
 	import { getContextClient, queryStore } from '@urql/svelte';
 	import { updates } from '$lib/gql/Queries';
 	import type { ResultOf } from '$lib/gql/graphql';
+	import { untrack } from 'svelte';
 
 	AppBarData('Updates', {
 		component: UpdatesActions,
@@ -40,12 +43,6 @@
 	let page = writable(0);
 	let all = writable<ResultOf<typeof updates>['chapters'] | null>(null);
 	const client = getContextClient();
-	$: update = queryStore({
-		client,
-		query: updates,
-		variables: { offset: $page }
-	});
-	$: $update, updateall();
 	function updateall() {
 		if (!$update.data?.chapters) return;
 		if (!$all) {
@@ -59,7 +56,7 @@
 	function LongHandler(): void {
 		$selectMode = true;
 	}
-	let lastSelected: UpdateNode | undefined;
+	let lastSelected: UpdateNode | undefined = $state();
 
 	function selectAll() {
 		HelpSelectAll(selectMode, selected, $all?.nodes);
@@ -88,6 +85,17 @@
 				break;
 		}
 	}
+	let update = $derived(
+		queryStore({
+			client,
+			query: updates,
+			variables: { offset: $page }
+		})
+	);
+	$effect(() => {
+		const _ = [$update];
+		untrack(updateall);
+	});
 </script>
 
 {#if !$all && $update.fetching}
@@ -98,11 +106,11 @@
 					class="placeholder h-full animate-pulse
 						{$Meta.Display === display.Compact && 'rounded-lg'}
 						{$Meta.Display === display.Comfortable && 'rounded-none rounded-t-lg'}"
-				/>
+				></div>
 				{#if $Meta.Display === display.Comfortable}
 					<div
 						class="placeholder h-12 animate-pulse rounded-none rounded-b-lg px-2 text-center"
-					/>
+					></div>
 				{/if}
 			</div>
 		{/each}
@@ -115,62 +123,102 @@
 	<div class="grid {gridValues} m-2 gap-2">
 		{#each $all.nodes as updat}
 			<IntersectionObserver
-				let:intersecting
 				root={document.querySelector('#page') ?? undefined}
 				top={400}
 				bottom={400}
 				class="aspect-cover w-full"
 			>
-				{#if intersecting}
-					<a
-						use:longPress
-						on:longPress={() => $selectMode || LongHandler()}
-						href="/manga/{updat.manga.id}"
-						on:click|stopPropagation={(e) => {
-							if (e.ctrlKey) return;
-							if ($selectMode) {
-								e.preventDefault();
-								lastSelected = HelpDoSelect(
-									updat,
-									e,
-									lastSelected,
-									$all?.nodes,
-									selected
-								);
-							} else {
-								e.preventDefault();
-								goto(`/manga/${updat.manga.id}`);
-							}
-						}}
-						class="h-full cursor-pointer hover:opacity-70"
-						tabindex="-1"
-					>
-						<MangaCard
-							thumbnailUrl={updat.manga.thumbnailUrl ?? ''}
-							title={updat.manga.title}
-							class={$selectMode && 'opacity-80'}
-							titleA="{updat.isDownloaded ? 'Downloaded' : ''}
-{updat.isRead ? 'Read' : ''}
-{updat.isBookmarked ? 'Bookmarked' : ''}"
-							rounded="{$Meta.Display === display.Compact && 'rounded-lg'}
-							{$Meta.Display === display.Comfortable && 'rounded-none rounded-t-lg'}"
+				{#snippet children({ intersecting })}
+					{#if intersecting}
+						<a
+							use:longPress
+							onlongPress={() => $selectMode || LongHandler()}
+							href="/manga/{updat.manga.id}"
+							onclick={(e) => {
+								e.stopPropagation();
+								if (e.ctrlKey) return;
+								if ($selectMode) {
+									e.preventDefault();
+									lastSelected = HelpDoSelect(
+										updat,
+										e,
+										lastSelected,
+										$all?.nodes,
+										selected
+									);
+								} else {
+									e.preventDefault();
+									goto(`/manga/${updat.manga.id}`);
+								}
+							}}
+							class="h-full cursor-pointer hover:opacity-70"
+							tabindex="-1"
 						>
-							{#if $selectMode}
-								<div
-									class="bg-base-100/75 absolute bottom-0 left-0 right-0 top-0 cursor-pointer"
-								>
-									<IconWrapper
-										name={$selected[updat.id] === undefined
-											? 'fluent:checkbox-unchecked-24-filled'
-											: 'fluent:checkbox-checked-24-filled'}
-										class="absolute right-2 top-2 text-4xl"
-									/>
+							<MangaCard
+								thumbnailUrl={updat.manga.thumbnailUrl ?? ''}
+								title={updat.manga.title}
+								class={$selectMode && 'opacity-80'}
+								titleA="{updat.isDownloaded ? 'Downloaded' : ''}
+	{updat.isRead ? 'Read' : ''}
+	{updat.isBookmarked ? 'Bookmarked' : ''}"
+								rounded="{$Meta.Display === display.Compact && 'rounded-lg'}
+								{$Meta.Display === display.Comfortable && 'rounded-none rounded-t-lg'}"
+							>
+								{#if $selectMode}
+									<div
+										class="bg-base-100/75 absolute bottom-0 left-0 right-0 top-0 cursor-pointer"
+									>
+										<IconWrapper
+											name={$selected[updat.id] === undefined
+												? 'fluent:checkbox-unchecked-24-filled'
+												: 'fluent:checkbox-checked-24-filled'}
+											class="absolute right-2 top-2 text-4xl"
+										/>
+									</div>
+								{/if}
+								{#if $Meta.Display === display.Compact}
+									<div
+										class="variant-glass absolute bottom-0 left-0 right-0 rounded-b-olg"
+									>
+										<div
+											class="line-clamp-1 h-6 px-2 text-center"
+											title={updat.manga.title}
+										>
+											{updat.manga.title}
+										</div>
+										<div
+											class="line-clamp-1 h-6 px-2 text-center"
+											title={updat.name}
+										>
+											{updat.name}
+										</div>
+										<div
+											class="line-clamp-1 h-6 px-2 text-center"
+											title={new Date(
+												parseInt(updat.fetchedAt) * 1000
+											).toLocaleString()}
+										>
+											{formatDate(new Date(parseInt(updat.fetchedAt) * 1000))}
+										</div>
+									</div>
+								{/if}
+								<div class="absolute left-2 top-2 flex h-8">
+									{#if updat.isDownloaded}
+										<IconWrapper class="h-full w-full" name="mdi:download" />
+									{/if}
+									{#if updat.isRead}
+										<IconWrapper
+											class="h-full w-full"
+											name="mdi:book-open-page-variant-outline"
+										/>
+									{/if}
+									{#if updat.isBookmarked}
+										<IconWrapper class="h-full w-full" name="mdi:bookmark" />
+									{/if}
 								</div>
-							{/if}
-							{#if $Meta.Display === display.Compact}
-								<div
-									class="variant-glass absolute bottom-0 left-0 right-0 rounded-b-olg"
-								>
+							</MangaCard>
+							{#if $Meta.Display === display.Comfortable}
+								<div class="variant-glass-surface rounded-b-lg">
 									<div
 										class="line-clamp-1 h-6 px-2 text-center"
 										title={updat.manga.title}
@@ -189,51 +237,15 @@
 											parseInt(updat.fetchedAt) * 1000
 										).toLocaleString()}
 									>
-										{formatDate(new Date(parseInt(updat.fetchedAt) * 1000))}
+										{new Date(
+											parseInt(updat.fetchedAt) * 1000
+										).toLocaleString()}
 									</div>
 								</div>
 							{/if}
-							<div class="absolute left-2 top-2 flex h-8">
-								{#if updat.isDownloaded}
-									<IconWrapper class="h-full w-full" name="mdi:download" />
-								{/if}
-								{#if updat.isRead}
-									<IconWrapper
-										class="h-full w-full"
-										name="mdi:book-open-page-variant-outline"
-									/>
-								{/if}
-								{#if updat.isBookmarked}
-									<IconWrapper class="h-full w-full" name="mdi:bookmark" />
-								{/if}
-							</div>
-						</MangaCard>
-						{#if $Meta.Display === display.Comfortable}
-							<div class="variant-glass-surface rounded-b-lg">
-								<div
-									class="line-clamp-1 h-6 px-2 text-center"
-									title={updat.manga.title}
-								>
-									{updat.manga.title}
-								</div>
-								<div
-									class="line-clamp-1 h-6 px-2 text-center"
-									title={updat.name}
-								>
-									{updat.name}
-								</div>
-								<div
-									class="line-clamp-1 h-6 px-2 text-center"
-									title={new Date(
-										parseInt(updat.fetchedAt) * 1000
-									).toLocaleString()}
-								>
-									{new Date(parseInt(updat.fetchedAt) * 1000).toLocaleString()}
-								</div>
-							</div>
-						{/if}
-					</a>
-				{/if}
+						</a>
+					{/if}
+				{/snippet}
 			</IntersectionObserver>
 		{/each}
 		{#if !$update.fetching && $all.pageInfo.hasNextPage}
@@ -241,8 +253,8 @@
 				root={document.querySelector('#page') ?? undefined}
 				top={400}
 				bottom={400}
-				on:intersect={(e) => {
-					if (e.detail) $page = $all?.nodes.length ?? 0;
+				onintersect={(e) => {
+					if (e) $page = $all?.nodes.length ?? 0;
 				}}
 			/>
 		{/if}
@@ -253,11 +265,11 @@
 						class="placeholder h-full animate-pulse
 							{$Meta.Display === display.Compact && 'rounded-lg'}
 							{$Meta.Display === display.Comfortable && 'rounded-none rounded-t-lg'}"
-					/>
+					></div>
 					{#if $Meta.Display === display.Comfortable}
 						<div
 							class="placeholder h-12 animate-pulse rounded-none rounded-b-lg px-2 text-center"
-						/>
+						></div>
 					{/if}
 				</div>
 			{/each}

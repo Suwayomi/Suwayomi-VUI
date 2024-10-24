@@ -153,20 +153,22 @@
 		<div
 			class="flex h-16 w-full cursor-pointer items-center p-2 text-left hover:variant-glass-surface"
 		>
-			<div class="placeholder aspect-square h-full w-auto animate-pulse" />
+			<div class="placeholder aspect-square h-full w-auto animate-pulse"></div>
 			<div class="w-full">
-				<div class="placeholder mx-2 max-w-xs animate-pulse" />
+				<div class="placeholder mx-2 max-w-xs animate-pulse"></div>
 			</div>
 			<div class="flex h-full sm:mr-8">
 				{#each new Array(4) as _}
-					<div class="placeholder aspect-square h-full w-auto animate-pulse" />
+					<div
+						class="placeholder aspect-square h-full w-auto animate-pulse"
+					></div>
 				{/each}
 			</div>
-			<div class="placeholder aspect-square h-full w-auto animate-pulse" />
-			<div class="placeholder aspect-square h-full w-auto animate-pulse" />
+			<div class="placeholder aspect-square h-full w-auto animate-pulse"></div>
+			<div class="placeholder aspect-square h-full w-auto animate-pulse"></div>
 		</div>
 		<div class="fixed bottom-2 right-2">
-			<div class="placeholder h-16 w-16 animate-pulse rounded-full" />
+			<div class="placeholder h-16 w-16 animate-pulse rounded-full"></div>
 		</div>
 	{/each}
 {:else if $cats.error}
@@ -176,7 +178,7 @@
 {:else if $cats.data?.categories.nodes}
 	{#each [...$cats.data.categories.nodes].sort( (a, b) => (a.order > b.order ? 1 : -1) ) as cat}
 		<button
-			on:click={(e) => edit(e, cat)}
+			onclick={(e) => edit(e, cat)}
 			class="flex h-16 w-full cursor-pointer items-center p-2 text-left hover:variant-glass-surface"
 		>
 			<IconWrapper class="h-full w-auto" name="mdi:theme" />
@@ -184,22 +186,22 @@
 			{#if cat.id !== 0}
 				<div class="flex h-full sm:mr-8">
 					<IconButton
-						on:click={(e) => move(e, cat, Movement.top)}
+						onclick={(e) => move(e, cat, Movement.top)}
 						name="mdi:chevron-double-up"
 						class="h-full  w-auto hover:variant-ghost"
 					/>
 					<IconButton
-						on:click={(e) => move(e, cat, Movement.up)}
+						onclick={(e) => move(e, cat, Movement.up)}
 						name="mdi:chevron-up"
 						class="h-full  w-auto hover:variant-ghost"
 					/>
 					<IconButton
-						on:click={(e) => move(e, cat, Movement.down)}
+						onclick={(e) => move(e, cat, Movement.down)}
 						name="mdi:chevron-down"
 						class="h-full  w-auto hover:variant-ghost"
 					/>
 					<IconButton
-						on:click={(e) => move(e, cat, Movement.bottom)}
+						onclick={(e) => move(e, cat, Movement.bottom)}
 						name="mdi:chevron-double-down"
 						class="h-full  w-auto hover:variant-ghost"
 					/>
@@ -207,7 +209,7 @@
 			{/if}
 			<TooltipIconButton
 				tip="Edit"
-				on:click={(e) => edit(e, cat)}
+				onclick={(e) => edit(e, cat)}
 				name="mdi:edit"
 				hover="hover:variant-ghost"
 			/>
@@ -215,7 +217,7 @@
 				tip={cat.id !== 0
 					? 'Delete'
 					: `Remove all ${cat.mangas.totalCount} manga from this category for it to not show up in the library`}
-				on:click={(e) => {
+				onclick={(e) => {
 					if (cat.id !== 0) delCategory(e, cat);
 				}}
 				name="mdi:delete"
@@ -225,7 +227,7 @@
 		</button>
 	{/each}
 	<IconButton
-		on:click={addNew}
+		onclick={addNew}
 		name="mdi:plus"
 		hover="hover:variant-glass-primary"
 		height="h-16"

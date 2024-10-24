@@ -7,6 +7,8 @@
 -->
 
 <script lang="ts">
+	import { run } from 'svelte/legacy';
+
 	import { AppBarData } from '$lib/MountTitleAction';
 	import IntersectionObserver from '$lib/components/IntersectionObserver.svelte';
 	import MangaCard from '$lib/components/MangaCard.svelte';
@@ -19,7 +21,11 @@
 		sourceMigrationSource
 	} from '$lib/gql/Queries';
 
-	export let data: PageData;
+	interface Props {
+		data: PageData;
+	}
+
+	let { data }: Props = $props();
 
 	AppBarData(data.SourceID);
 	const client = getContextClient();
@@ -34,8 +40,10 @@
 		variables: { sourceId: data.SourceID }
 	});
 
-	$: if ($source.data?.source?.displayName)
-		AppBarData($source.data?.source.displayName);
+	$effect(() => {
+		if ($source.data?.source?.displayName)
+			AppBarData($source.data?.source.displayName);
+	});
 </script>
 
 {#if $Manga.fetching}
@@ -46,11 +54,11 @@
 					class="placeholder h-full animate-pulse
 						{$Meta.Display === display.Compact && 'rounded-lg'}
 						{$Meta.Display === display.Comfortable && 'rounded-none rounded-t-lg'}"
-				/>
+				></div>
 				{#if $Meta.Display === display.Comfortable}
 					<div
 						class="placeholder h-12 animate-pulse rounded-none rounded-b-lg px-2 text-center"
-					/>
+					></div>
 				{/if}
 			</div>
 		{/each}
@@ -63,28 +71,39 @@
 	<div class="yoy grid {gridValues} m-2 gap-2">
 		{#each $Manga.data.mangas.nodes as manga}
 			<IntersectionObserver
-				let:intersecting
 				root={document.querySelector('#page') ?? undefined}
 				top={400}
 				bottom={400}
 			>
-				<div class="aspect-cover">
-					{#if intersecting}
-						<a
-							href="/manga/{manga.id}"
-							class="h-full cursor-pointer hover:opacity-70"
-							tabindex="-1"
-						>
-							<MangaCard
-								thumbnailUrl={manga.thumbnailUrl ?? ''}
-								title={manga.title}
-								rounded="{$Meta.Display === display.Compact && 'rounded-lg'}
-									{$Meta.Display === display.Comfortable && 'rounded-none rounded-t-lg'}"
+				{#snippet children({ intersecting })}
+					<div class="aspect-cover">
+						{#if intersecting}
+							<a
+								href="/manga/{manga.id}"
+								class="h-full cursor-pointer hover:opacity-70"
+								tabindex="-1"
 							>
-								{#if $Meta.Display === display.Compact}
-									<div
-										class="variant-glass absolute bottom-0 left-0 right-0 rounded-b-olg"
-									>
+								<MangaCard
+									thumbnailUrl={manga.thumbnailUrl ?? ''}
+									title={manga.title}
+									rounded="{$Meta.Display === display.Compact && 'rounded-lg'}
+										{$Meta.Display === display.Comfortable && 'rounded-none rounded-t-lg'}"
+								>
+									{#if $Meta.Display === display.Compact}
+										<div
+											class="variant-glass absolute bottom-0 left-0 right-0 rounded-b-olg"
+										>
+											<div
+												class="line-clamp-2 h-12 px-2 text-center"
+												title={manga.title}
+											>
+												{manga.title}
+											</div>
+										</div>
+									{/if}
+								</MangaCard>
+								{#if $Meta.Display === display.Comfortable}
+									<div class="variant-glass-surface rounded-b-lg">
 										<div
 											class="line-clamp-2 h-12 px-2 text-center"
 											title={manga.title}
@@ -93,23 +112,13 @@
 										</div>
 									</div>
 								{/if}
-							</MangaCard>
-							{#if $Meta.Display === display.Comfortable}
-								<div class="variant-glass-surface rounded-b-lg">
-									<div
-										class="line-clamp-2 h-12 px-2 text-center"
-										title={manga.title}
-									>
-										{manga.title}
-									</div>
-								</div>
-							{/if}
-						</a>
+							</a>
+						{/if}
+					</div>
+					{#if !intersecting && $Meta.Display === display.Comfortable}
+						<div class="h-12"></div>
 					{/if}
-				</div>
-				{#if !intersecting && $Meta.Display === display.Comfortable}
-					<div class="h-12" />
-				{/if}
+				{/snippet}
 			</IntersectionObserver>
 		{/each}
 	</div>

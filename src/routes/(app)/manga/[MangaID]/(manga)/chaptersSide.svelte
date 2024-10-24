@@ -41,10 +41,15 @@
 		updateChapters
 	} from '$lib/gql/Mutations';
 	import { filterChapters } from '../util';
+	import { untrack } from 'svelte';
 
-	export let manga: OperationResultStore<ResultOf<typeof getManga>> & Pausable;
-	export let MangaID: number;
-	export let mangaMeta: ReturnType<typeof MangaMeta>;
+	interface Props {
+		manga: OperationResultStore<ResultOf<typeof getManga>> & Pausable;
+		MangaID: number;
+		mangaMeta: ReturnType<typeof MangaMeta>;
+	}
+
+	let { manga, MangaID, mangaMeta }: Props = $props();
 
 	const client = getContextClient();
 	const modalStore = getModalStore();
@@ -54,12 +59,7 @@
 	});
 
 	let lastDownloads: ResultOf<typeof downloadsOnChapters> | undefined =
-		undefined;
-
-	$: if ($downloads?.data?.downloadChanged) {
-		checkinNeedRefresh();
-		lastDownloads = $downloads?.data;
-	}
+		$state(undefined);
 
 	function checkinNeedRefresh() {
 		let filtered = lastDownloads?.downloadChanged.queue.filter(
@@ -90,38 +90,21 @@
 		}
 	}
 
-	$: chaptersInfo = $manga?.data?.manga?.chapters.nodes;
-
-	$: filteredChapters = chaptersInfo?.filter(filterChapters(mangaMeta));
-
-	$: sortedChapters = filteredChapters
-		? [...filteredChapters].sort((a, b) => {
-				let tmp = true;
-				if ($mangaMeta.ChapterSort === ChapterSort.Source) {
-					tmp = a.sourceOrder > b.sourceOrder;
-				} else if ($mangaMeta.ChapterSort === ChapterSort['Fetched Date']) {
-					tmp = a.fetchedAt > b.fetchedAt;
-				} else {
-					tmp = a.uploadDate > b.uploadDate;
-				}
-				if ($mangaMeta.ChapterAsc) tmp = !tmp;
-				return tmp ? -1 : 1;
-			})
-		: undefined;
-
-	$: sortedChapters, updateselected();
 	function updateselected() {
-		$selected?.forEach((e) => {
-			const tmp = sortedChapters?.find((ee) => ee.id === e.id);
-			if (tmp) {
-				$selected[tmp.id] = tmp;
-			} else {
-				delete $selected[e.id];
-			}
+		const _ = [sortedChapters];
+		untrack(() => {
+			$selected?.forEach((e) => {
+				const tmp = sortedChapters?.find((ee) => ee.id === e.id);
+				if (tmp) {
+					$selected[tmp.id] = tmp;
+				} else {
+					delete $selected[e.id];
+				}
+			});
 		});
 	}
 
-	let chapterSideElement: HTMLDivElement | undefined;
+	let chapterSideElement: HTMLDivElement | undefined = $state();
 
 	async function handelPrevRead(chapter: chaptertype) {
 		if (!sortedChapters) return;
@@ -172,7 +155,7 @@
 		$selectMode = true;
 	}
 
-	let lastSelected: chaptertype | undefined;
+	let lastSelected: chaptertype | undefined = $state();
 
 	function handelFilter() {
 		modalStore.trigger({
@@ -182,10 +165,9 @@
 		});
 	}
 
-	let scrollTo = true;
-	let _scrollToChaps: HTMLDivElement[] = [];
-	let scrollToChaps: HTMLDivElement | undefined;
-	$: if (scrollTo && _scrollToChaps) handelScrollToChaps();
+	let scrollTo = $state(true);
+	let _scrollToChaps: HTMLDivElement[] = $state([]);
+	let scrollToChaps: HTMLDivElement | undefined = $state();
 
 	function handelScrollToChaps() {
 		let ind = _scrollToChaps
@@ -196,8 +178,6 @@
 			scrollToChaps = _scrollToChaps[ind - 3];
 		}
 	}
-
-	$: if (scrollTo && scrollToChaps) scroll();
 
 	function isScrollable(elem: HTMLElement | undefined) {
 		if (!elem) return false;
@@ -222,13 +202,52 @@
 		});
 	}
 
-	$: chapterNumbers = sortedChapters?.map((e) => e.chapterNumber) ?? [];
-	$: checkArray = Array.from(
-		Array(Math.floor(chapterNumbers.reduce((a, c) => Math.max(a, c), 0))),
-		(_, index) => index + 1
+	$effect(() => {
+		if ($downloads?.data?.downloadChanged) {
+			untrack(checkinNeedRefresh);
+			lastDownloads = $downloads?.data;
+		}
+	});
+	let chaptersInfo = $derived($manga?.data?.manga?.chapters.nodes);
+	let filteredChapters = $derived(
+		chaptersInfo?.filter(filterChapters(mangaMeta))
 	);
-	$: missingChapters = checkArray?.filter(
-		(e) => chapterNumbers?.find((n) => n >= e && n < e + 1) === undefined
+	let sortedChapters = $derived(
+		filteredChapters
+			? [...filteredChapters].sort((a, b) => {
+					let tmp = true;
+					if ($mangaMeta.ChapterSort === ChapterSort.Source) {
+						tmp = a.sourceOrder > b.sourceOrder;
+					} else if ($mangaMeta.ChapterSort === ChapterSort['Fetched Date']) {
+						tmp = a.fetchedAt > b.fetchedAt;
+					} else {
+						tmp = a.uploadDate > b.uploadDate;
+					}
+					if ($mangaMeta.ChapterAsc) tmp = !tmp;
+					return tmp ? -1 : 1;
+				})
+			: undefined
+	);
+	$effect(updateselected);
+	$effect(() => {
+		if (scrollTo && _scrollToChaps) untrack(handelScrollToChaps);
+	});
+	$effect(() => {
+		if (scrollTo && scrollToChaps) untrack(scroll);
+	});
+	let chapterNumbers = $derived(
+		sortedChapters?.map((e) => e.chapterNumber) ?? []
+	);
+	let checkArray = $derived(
+		Array.from(
+			Array(Math.floor(chapterNumbers.reduce((a, c) => Math.max(a, c), 0))),
+			(_, index) => index + 1
+		)
+	);
+	let missingChapters = $derived(
+		checkArray?.filter(
+			(e) => chapterNumbers?.find((n) => n >= e && n < e + 1) === undefined
+		)
 	);
 </script>
 
@@ -238,18 +257,18 @@
 			overflow-x-hidden md:absolute md:bottom-0 md:right-0 md:top-0 md:w-1/2 md:overflow-y-auto"
 	>
 		<div class="card variant-glass flex items-center space-x-1 p-2">
-			<div class="placeholder w-full animate-pulse" />
-			<div class="placeholder-circle h-12 animate-pulse" />
-			<div class="placeholder-circle h-12 animate-pulse" />
-			<div class="placeholder-circle h-12 animate-pulse" />
+			<div class="placeholder w-full animate-pulse"></div>
+			<div class="placeholder-circle h-12 animate-pulse"></div>
+			<div class="placeholder-circle h-12 animate-pulse"></div>
+			<div class="placeholder-circle h-12 animate-pulse"></div>
 		</div>
 		{#each new Array(10) as _}
 			<div class="card variant-glass flex items-center space-x-1 p-2">
 				<div class="w-full space-y-1">
-					<div class="placeholder w-full animate-pulse" />
-					<div class="placeholder w-full animate-pulse" />
+					<div class="placeholder w-full animate-pulse"></div>
+					<div class="placeholder w-full animate-pulse"></div>
 				</div>
-				<div class="placeholder-circle h-12 animate-pulse" />
+				<div class="placeholder-circle h-12 animate-pulse"></div>
 			</div>
 		{/each}
 	</div>
@@ -285,98 +304,99 @@
 				</div>
 				<MediaQuery
 					query="(min-width: {screens.lg}),(min-width: {screens.sm}) and (max-width: {screens.md})"
-					let:matches
 				>
-					{#if matches}
-						{#if $selectMode}
+					{#snippet children({ matches })}
+						{#if matches}
+							{#if $selectMode}
+								<TooltipIconButton
+									class="text-surface-700 dark:text-surface-300"
+									onclick={() => {
+										HelpUpdateChapters(dlreabook.download, selected);
+									}}
+									tip="download/delete Selected"
+									name="mdi:download"
+								/>
+								<TooltipIconButton
+									class="text-surface-700 dark:text-surface-300"
+									onclick={() => {
+										HelpUpdateChapters(dlreabook.read, selected);
+									}}
+									tip="Read/unRead Selected"
+									name="mdi:book-open-page-variant-outline"
+								/>
+								<TooltipIconButton
+									class="text-surface-700 dark:text-surface-300"
+									onclick={() => {
+										HelpUpdateChapters(dlreabook.bookmark, selected);
+									}}
+									tip="bookmark/unbookmark Selected"
+									name="mdi:bookmark"
+								/>
+							{/if}
 							<TooltipIconButton
 								class="text-surface-700 dark:text-surface-300"
-								on:click={() => {
-									HelpUpdateChapters(dlreabook.download, selected);
-								}}
-								tip="download/delete Selected"
-								name="mdi:download"
+								onclick={() =>
+									HelpSelectAll(selectMode, selected, sortedChapters)}
+								name="mdi:select-all"
+								tip="Select all/none"
 							/>
-							<TooltipIconButton
-								class="text-surface-700 dark:text-surface-300"
-								on:click={() => {
-									HelpUpdateChapters(dlreabook.read, selected);
-								}}
-								tip="Read/unRead Selected"
-								name="mdi:book-open-page-variant-outline"
-							/>
-							<TooltipIconButton
-								class="text-surface-700 dark:text-surface-300"
-								on:click={() => {
-									HelpUpdateChapters(dlreabook.bookmark, selected);
-								}}
-								tip="bookmark/unbookmark Selected"
-								name="mdi:bookmark"
-							/>
-						{/if}
-						<TooltipIconButton
-							class="text-surface-700 dark:text-surface-300"
-							on:click={() =>
-								HelpSelectAll(selectMode, selected, sortedChapters)}
-							name="mdi:select-all"
-							tip="Select all/none"
-						/>
-					{:else if $selectMode}
-						<button
-							use:popup={{
-								event: 'click',
-								target: 'selectmenu',
-								placement: 'bottom'
-							}}
-							class="aspect-square h-full p-2 hover:variant-glass-surface"
-						>
-							<IconWrapper
-								name="mdi:dots-vertical"
-								class="aspect-square h-full w-full text-surface-700 dark:text-surface-300"
-							/>
-						</button>
-						<div class="card max-w-xs rounded-lg p-0" data-popup="selectmenu">
+						{:else if $selectMode}
 							<button
-								class="flex w-full items-center justify-start rounded-t-lg p-4 text-2xl hover:variant-glass-surface"
-								on:click={() => {
-									HelpUpdateChapters(dlreabook.download, selected);
+								use:popup={{
+									event: 'click',
+									target: 'selectmenu',
+									placement: 'bottom'
 								}}
-							>
-								<IconWrapper name="mdi:download" class="mr-2" />download /
-								delete
-							</button>
-							<button
-								class="flex w-full items-center justify-start p-4 text-2xl hover:variant-glass-surface"
-								on:click={() => {
-									HelpUpdateChapters(dlreabook.read, selected);
-								}}
+								class="aspect-square h-full p-2 hover:variant-glass-surface"
 							>
 								<IconWrapper
-									name="mdi:book-open-page-variant-outline"
-									class="mr-2"
-								/>Un/Read
+									name="mdi:dots-vertical"
+									class="aspect-square h-full w-full text-surface-700 dark:text-surface-300"
+								/>
 							</button>
-							<button
-								class="flex w-full items-center justify-start p-4 text-2xl hover:variant-glass-surface"
-								on:click={() => {
-									HelpUpdateChapters(dlreabook.bookmark, selected);
-								}}
-							>
-								<IconWrapper name="mdi:bookmark" class="mr-2" />Un/bookmark
-							</button>
-							<button
-								class="flex w-full items-center justify-start rounded-b-lg p-4 text-2xl hover:variant-glass-surface"
-								on:click={() =>
-									HelpSelectAll(selectMode, selected, sortedChapters)}
-							>
-								<IconWrapper name="mdi:select-all" class="mr-2" />Select all
-							</button>
-						</div>
-					{/if}
+							<div class="card max-w-xs rounded-lg p-0" data-popup="selectmenu">
+								<button
+									class="flex w-full items-center justify-start rounded-t-lg p-4 text-2xl hover:variant-glass-surface"
+									onclick={() => {
+										HelpUpdateChapters(dlreabook.download, selected);
+									}}
+								>
+									<IconWrapper name="mdi:download" class="mr-2" />download /
+									delete
+								</button>
+								<button
+									class="flex w-full items-center justify-start p-4 text-2xl hover:variant-glass-surface"
+									onclick={() => {
+										HelpUpdateChapters(dlreabook.read, selected);
+									}}
+								>
+									<IconWrapper
+										name="mdi:book-open-page-variant-outline"
+										class="mr-2"
+									/>Un/Read
+								</button>
+								<button
+									class="flex w-full items-center justify-start p-4 text-2xl hover:variant-glass-surface"
+									onclick={() => {
+										HelpUpdateChapters(dlreabook.bookmark, selected);
+									}}
+								>
+									<IconWrapper name="mdi:bookmark" class="mr-2" />Un/bookmark
+								</button>
+								<button
+									class="flex w-full items-center justify-start rounded-b-lg p-4 text-2xl hover:variant-glass-surface"
+									onclick={() =>
+										HelpSelectAll(selectMode, selected, sortedChapters)}
+								>
+									<IconWrapper name="mdi:select-all" class="mr-2" />Select all
+								</button>
+							</div>
+						{/if}
+					{/snippet}
 				</MediaQuery>
 				<TooltipIconButton
 					class="text-surface-700 dark:text-surface-300"
-					on:click={() => {
+					onclick={() => {
 						$selectMode = !$selectMode;
 					}}
 					name="mdi:{$selectMode ? 'select-multiple' : 'flip-to-front'}"
@@ -384,208 +404,226 @@
 				/>
 				<TooltipIconButton
 					class="text-surface-700 dark:text-surface-300"
-					on:click={handelFilter}
+					onclick={handelFilter}
 					name="mdi:filter"
 					tip="Filter/Sort"
 				/>
 			</div>
 		</div>
-		<MediaQuery query="(min-width: {screens.md})" let:matches>
-			{#each sortedChapters as chapter, index (chapter.id)}
-				<IntersectionObserver
-					let:intersecting
-					class="relative h-20"
-					root={(matches
-						? chapterSideElement
-						: document.querySelector('#page')) ?? undefined}
-					top={400}
-					bottom={400}
-				>
-					<div
-						id="#{chapter.id}"
-						bind:this={_scrollToChaps[index]}
-						class="h-full"
+		<MediaQuery query="(min-width: {screens.md})">
+			{#snippet children({ matches })}
+				{#each sortedChapters as chapter, index (chapter.id)}
+					<IntersectionObserver
+						class="relative h-20"
+						root={(matches
+							? chapterSideElement
+							: document.querySelector('#page')) ?? undefined}
+						top={400}
+						bottom={400}
 					>
-						{#if intersecting}
-							<a
-								in:fade
-								class="card variant-glass flex h-full items-center space-x-1 p-2"
-								use:longPress
-								on:longPress={() => $selectMode || LongHandler()}
-								href="/manga/{mangaFrag?.id}/chapter/{chapter.id}"
-								on:click={(e) => {
-									if (e.ctrlKey) return;
-									if ($selectMode) {
-										e.preventDefault();
-										e.stopPropagation();
-										lastSelected = HelpDoSelect(
-											chapter,
-											e,
-											lastSelected,
-											sortedChapters,
-											selected
-										);
-									}
-								}}
+						{#snippet children({ intersecting })}
+							<div
+								id="#{chapter.id}"
+								bind:this={_scrollToChaps[index]}
+								class="h-full"
 							>
-								{#if chapter.isBookmarked}
-									<IconWrapper
-										name="mdi:bookmark"
-										class="aspect-square h-1/2 w-auto text-primary-500"
-									/>
-								{/if}
-								<div class="w-full space-y-0 {chapter.isRead && 'opacity-50'}">
-									<div class="line-clamp-1 w-full text-xl md:text-2xl">
-										{$mangaMeta.ChapterTitle === ChapterTitle['Source Title']
-											? chapter.name
-											: `Chapter ${chapter.chapterNumber}`}
-									</div>
-									<div
-										class="line-clamp-1 w-full text-sm font-light md:text-base"
-										title="Fetched Date: {new Date(
-											parseInt(chapter.fetchedAt) * 1000
-										).toLocaleString()}&#013;Upload Date: {new Date(
-											parseInt(chapter.uploadDate)
-										).toLocaleString()}"
+								{#if intersecting}
+									<a
+										in:fade
+										class="card variant-glass flex h-full items-center space-x-1 p-2"
+										use:longPress
+										onlongPress={() => $selectMode || LongHandler()}
+										href="/manga/{mangaFrag?.id}/chapter/{chapter.id}"
+										onclick={(e) => {
+											if (e.ctrlKey) return;
+											if ($selectMode) {
+												e.preventDefault();
+												e.stopPropagation();
+												lastSelected = HelpDoSelect(
+													chapter,
+													e,
+													lastSelected,
+													sortedChapters,
+													selected
+												);
+											}
+										}}
 									>
-										{new Date(
-											$mangaMeta.ChapterFetchUpload
-												? parseInt(chapter.uploadDate)
-												: parseInt(chapter.fetchedAt) * 1000
-										).toLocaleDateString()}{chapter.isDownloaded
-											? ' • Downloaded'
-											: ''}{chapter.scanlator ? ` • ${chapter.scanlator}` : ''}
-									</div>
-								</div>
+										{#if chapter.isBookmarked}
+											<IconWrapper
+												name="mdi:bookmark"
+												class="aspect-square h-1/2 w-auto text-primary-500"
+											/>
+										{/if}
+										<div
+											class="w-full space-y-0 {chapter.isRead && 'opacity-50'}"
+										>
+											<div class="line-clamp-1 w-full text-xl md:text-2xl">
+												{$mangaMeta.ChapterTitle ===
+												ChapterTitle['Source Title']
+													? chapter.name
+													: `Chapter ${chapter.chapterNumber}`}
+											</div>
+											<div
+												class="line-clamp-1 w-full text-sm font-light md:text-base"
+												title="Fetched Date: {new Date(
+													parseInt(chapter.fetchedAt) * 1000
+												).toLocaleString()}&#013;Upload Date: {new Date(
+													parseInt(chapter.uploadDate)
+												).toLocaleString()}"
+											>
+												{new Date(
+													$mangaMeta.ChapterFetchUpload
+														? parseInt(chapter.uploadDate)
+														: parseInt(chapter.fetchedAt) * 1000
+												).toLocaleDateString()}{chapter.isDownloaded
+													? ' • Downloaded'
+													: ''}{chapter.scanlator
+													? ` • ${chapter.scanlator}`
+													: ''}
+											</div>
+										</div>
 
-								<DownloadProgressRadial
-									download={$downloads?.data?.downloadChanged?.queue.find(
-										(e) => e.chapter.id === chapter.id
-									)}
-								/>
-
-								{#if $selectMode}
-									<button class="h-full rounded-full p-2 hover:variant-ghost">
-										<IconWrapper
-											class="aspect-square h-full w-full text-surface-700 dark:text-surface-300"
-											name={$selected[chapter.id] === undefined
-												? 'fluent:checkbox-unchecked-24-filled'
-												: 'fluent:checkbox-checked-24-filled'}
+										<DownloadProgressRadial
+											download={$downloads?.data?.downloadChanged?.queue.find(
+												(e) => e.chapter.id === chapter.id
+											)}
 										/>
-									</button>
-								{/if}
-								<button
-									use:popup={{
-										event: 'click',
-										target: chapter.id.toString(),
-										placement: 'bottom'
-									}}
-									on:click|preventDefault|stopPropagation={() => {}}
-									class="h-full rounded-full p-2 hover:variant-ghost"
-								>
-									<IconWrapper
-										name="mdi:dots-vertical"
-										class="aspect-square h-full w-full text-surface-700 dark:text-surface-300"
-									/>
-								</button>
-							</a>
-							<div class="card z-10 w-72 p-2 shadow-xl" data-popup={chapter.id}>
-								<div>
-									{#if chapter.isDownloaded}
+
+										{#if $selectMode}
+											<button
+												class="h-full rounded-full p-2 hover:variant-ghost"
+											>
+												<IconWrapper
+													class="aspect-square h-full w-full text-surface-700 dark:text-surface-300"
+													name={$selected[chapter.id] === undefined
+														? 'fluent:checkbox-unchecked-24-filled'
+														: 'fluent:checkbox-checked-24-filled'}
+												/>
+											</button>
+										{/if}
 										<button
-											on:click={() => {
-												client
-													.mutation(deleteDownloadedChapters, {
-														ids: [chapter.id]
-													})
-													.toPromise();
+											use:popup={{
+												event: 'click',
+												target: chapter.id.toString(),
+												placement: 'bottom'
 											}}
-											class="variant-glass w-full cursor-pointer select-none p-2 hover:variant-soft"
+											onclick={(e) => {
+												e.stopPropagation();
+												e.preventDefault();
+											}}
+											class="h-full rounded-full p-2 hover:variant-ghost"
 										>
-											delete
+											<IconWrapper
+												name="mdi:dots-vertical"
+												class="aspect-square h-full w-full text-surface-700 dark:text-surface-300"
+											/>
 										</button>
-									{:else}
-										<button
-											on:click={() =>
-												client
-													.mutation(enqueueChapterDownloads, {
-														ids: [chapter.id]
-													})
-													.toPromise()}
-											class="variant-glass w-full cursor-pointer select-none p-2 hover:variant-soft"
-										>
-											download
-										</button>
-									{/if}
-									{#if chapter.isBookmarked}
-										<button
-											on:click={() =>
-												client
-													.mutation(updateChapters, {
-														isBookmarked: false,
-														ids: [chapter.id]
-													})
-													.toPromise()}
-											class="variant-glass w-full cursor-pointer select-none p-2 hover:variant-soft"
-										>
-											unbookmark
-										</button>
-									{:else}
-										<button
-											on:click={() =>
-												client
-													.mutation(updateChapters, {
-														isBookmarked: true,
-														ids: [chapter.id]
-													})
-													.toPromise()}
-											class="variant-glass w-full cursor-pointer select-none p-2 hover:variant-soft"
-										>
-											bookmark
-										</button>
-									{/if}
-									{#if chapter.isRead}
-										<button
-											on:click={() => handelUnRead(chapter)}
-											class="variant-glass w-full cursor-pointer select-none p-2 hover:variant-soft"
-										>
-											mark as unread
-										</button>
-									{:else}
-										<button
-											on:click={() => handelRead(chapter)}
-											class="variant-glass w-full cursor-pointer select-none p-2 hover:variant-soft"
-										>
-											mark as read
-										</button>
-									{/if}
-									<button
-										on:click={() => handelPrevRead(chapter)}
-										class="variant-glass w-full cursor-pointer select-none p-2 hover:variant-soft"
+									</a>
+									<div
+										class="card z-10 w-72 p-2 shadow-xl"
+										data-popup={chapter.id}
 									>
-										mark previous as read
-									</button>
-								</div>
-								<div class="bg-surface-100-800-token arrow" />
+										<div>
+											{#if chapter.isDownloaded}
+												<button
+													onclick={() => {
+														client
+															.mutation(deleteDownloadedChapters, {
+																ids: [chapter.id]
+															})
+															.toPromise();
+													}}
+													class="variant-glass w-full cursor-pointer select-none p-2 hover:variant-soft"
+												>
+													delete
+												</button>
+											{:else}
+												<button
+													onclick={() =>
+														client
+															.mutation(enqueueChapterDownloads, {
+																ids: [chapter.id]
+															})
+															.toPromise()}
+													class="variant-glass w-full cursor-pointer select-none p-2 hover:variant-soft"
+												>
+													download
+												</button>
+											{/if}
+											{#if chapter.isBookmarked}
+												<button
+													onclick={() =>
+														client
+															.mutation(updateChapters, {
+																isBookmarked: false,
+																ids: [chapter.id]
+															})
+															.toPromise()}
+													class="variant-glass w-full cursor-pointer select-none p-2 hover:variant-soft"
+												>
+													unbookmark
+												</button>
+											{:else}
+												<button
+													onclick={() =>
+														client
+															.mutation(updateChapters, {
+																isBookmarked: true,
+																ids: [chapter.id]
+															})
+															.toPromise()}
+													class="variant-glass w-full cursor-pointer select-none p-2 hover:variant-soft"
+												>
+													bookmark
+												</button>
+											{/if}
+											{#if chapter.isRead}
+												<button
+													onclick={() => handelUnRead(chapter)}
+													class="variant-glass w-full cursor-pointer select-none p-2 hover:variant-soft"
+												>
+													mark as unread
+												</button>
+											{:else}
+												<button
+													onclick={() => handelRead(chapter)}
+													class="variant-glass w-full cursor-pointer select-none p-2 hover:variant-soft"
+												>
+													mark as read
+												</button>
+											{/if}
+											<button
+												onclick={() => handelPrevRead(chapter)}
+												class="variant-glass w-full cursor-pointer select-none p-2 hover:variant-soft"
+											>
+												mark previous as read
+											</button>
+										</div>
+										<div class="bg-surface-100-800-token arrow"></div>
+									</div>
+								{/if}
 							</div>
-						{/if}
-					</div>
-				</IntersectionObserver>
-			{/each}
+						{/snippet}
+					</IntersectionObserver>
+				{/each}
+			{/snippet}
 		</MediaQuery>
 	</div>
 	{#if sortedChapters.filter((e) => !e.isRead).length}
-		<MediaQuery query="(min-width: {screens.md})" let:matches>
-			<a
-				href="/manga/{mangaFrag?.id}/chapter/{sortedChapters
-					.filter((e) => !e.isRead)
-					.sort((a, b) => (a.sourceOrder > b.sourceOrder ? 1 : -1))[0].id}"
-				class="variant-filled-primary btn fixed hover:variant-glass-primary {matches
-					? 'bottom-2'
-					: 'bottom-[4.5rem]'} right-16 z-10"
-			>
-				resume
-			</a>
+		<MediaQuery query="(min-width: {screens.md})">
+			{#snippet children({ matches })}
+				<a
+					href="/manga/{mangaFrag?.id}/chapter/{sortedChapters
+						.filter((e) => !e.isRead)
+						.sort((a, b) => (a.sourceOrder > b.sourceOrder ? 1 : -1))[0].id}"
+					class="variant-filled-primary btn fixed hover:variant-glass-primary {matches
+						? 'bottom-2'
+						: 'bottom-[4.5rem]'} right-16 z-10"
+				>
+					resume
+				</a>
+			{/snippet}
 		</MediaQuery>
 	{/if}
 {/if}

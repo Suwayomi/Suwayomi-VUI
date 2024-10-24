@@ -14,18 +14,22 @@
 	import ModalTemplate from '$lib/components/ModalTemplate.svelte';
 
 	const modalStore = getModalStore();
-	export let langs: Set<string>;
-	export let langFilter: Writable<Set<string>>;
+	interface Props {
+		langs: Set<string>;
+		langFilter: Writable<Set<string>>;
+	}
+
+	let { langs, langFilter }: Props = $props();
 </script>
 
 {#if $modalStore[0]}
-	<ModalTemplate title="Allowed Languages">
-		<svelte:fragment>
+	<ModalTemplate titleText="Allowed Languages">
+		{#snippet children()}
 			{#each langs as lang}
 				<Slide
 					class="p-1 pl-2 outline-0 hover:variant-glass-surface"
-					on:changeE={(e) => {
-						if (e.detail) {
+					onchange={(e) => {
+						if (e) {
 							$langFilter.add(lang);
 							$langFilter = $langFilter;
 							return;
@@ -38,6 +42,6 @@
 					{FindLangName(lang)}
 				</Slide>
 			{/each}
-		</svelte:fragment>
+		{/snippet}
 	</ModalTemplate>
 {/if}

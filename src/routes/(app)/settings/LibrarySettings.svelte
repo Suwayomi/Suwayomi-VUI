@@ -15,7 +15,7 @@
 </script>
 
 {#if $modalStore[0]}
-	<ModalTemplate title="Library settings">
+	<ModalTemplate titleText="Library settings">
 		<Slide
 			bind:checked={$Meta.ignoreFiltersWhenSearching}
 			class="my-1 p-1 pl-2 hover:variant-glass-surface focus:outline-0"

@@ -6,9 +6,19 @@
  file, You can obtain one at http://mozilla.org/MPL/2.0/.
 -->
 <script lang="ts">
-	export let value: string;
-	export let title: string;
-	export let options: Array<string>;
+	interface Props {
+		value: string;
+		title: string;
+		options: Array<string>;
+		onchange: () => void;
+	}
+
+	let {
+		value = $bindable(),
+		title,
+		options,
+		onchange = () => {}
+	}: Props = $props();
 </script>
 
 <label
@@ -16,7 +26,7 @@
 >
 	{title}
 	<div class="flex flex-1 flex-nowrap items-center justify-end space-x-2">
-		<select class="input max-w-32 sm:max-w-[36.5rem]" bind:value on:change>
+		<select class="input max-w-32 sm:max-w-[36.5rem]" bind:value {onchange}>
 			{#each options as option}
 				<option class="capitalize" value={option}
 					>{option.toLocaleLowerCase()}</option

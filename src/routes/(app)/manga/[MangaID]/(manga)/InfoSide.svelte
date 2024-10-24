@@ -31,44 +31,49 @@
 	import NotesModal from './NotesModal.svelte';
 	import { getToastStore } from '$lib/components/Toast/stores';
 	import { longPress } from '$lib/press';
+	import { untrack } from 'svelte';
 
 	const toastStore = getToastStore();
 	const modalStore = getModalStore();
 	const client = getContextClient();
 
-	export let manga: OperationResultStore<ResultOf<typeof getManga>> & Pausable;
-	export let MangaID: number;
-	export let mangaMeta: ReturnType<typeof MangaMeta>;
+	interface Props {
+		manga: OperationResultStore<ResultOf<typeof getManga>> & Pausable;
+		MangaID: number;
+		mangaMeta: ReturnType<typeof MangaMeta>;
+	}
+
+	let { manga: manga2, MangaID, mangaMeta }: Props = $props();
 
 	function libToggle() {
 		if (
 			$Meta.DownloadAllChaptersOnAddToLibrary &&
-			!$manga.data?.manga?.inLibrary
+			!manga.data?.manga?.inLibrary
 		) {
 			client
 				.mutation(enqueueChapterDownloads, {
-					ids: $manga.data?.manga?.chapters.nodes?.map((e) => e.id) ?? []
+					ids: manga.data?.manga?.chapters.nodes?.map((e) => e.id) ?? []
 				})
 				.toPromise();
 		}
 		if (
-			$manga.data?.manga?.inLibrary &&
+			manga.data?.manga?.inLibrary &&
 			$Meta.DeleteAllChaptersOnRemoveFromLibrary
 		) {
 			client
 				.mutation(deleteDownloadedChapters, {
-					ids: $manga.data?.manga?.chapters.nodes?.map((e) => e.id) ?? []
+					ids: manga.data?.manga?.chapters.nodes?.map((e) => e.id) ?? []
 				})
 				.toPromise();
 		}
 
 		if (
-			$manga.data?.manga?.inLibrary &&
+			manga.data?.manga?.inLibrary &&
 			$Meta.RemoveChaptersFromDownloadQueueOnRemoveFromLibrary
 		) {
 			client
 				.mutation(dequeueChapterDownloads, {
-					ids: $manga.data?.manga?.chapters.nodes?.map((e) => e.id) ?? []
+					ids: manga.data?.manga?.chapters.nodes?.map((e) => e.id) ?? []
 				})
 				.toPromise();
 		}
@@ -76,15 +81,15 @@
 		client
 			.mutation(updateMangas, {
 				ids: [MangaID],
-				inLibrary: !$manga.data?.manga?.inLibrary
+				inLibrary: !manga.data?.manga?.inLibrary
 			})
 			.toPromise();
 	}
-	let ImageFailed = false;
+	let ImageFailed = $state(false);
 
 	function LongHandler() {
-		if ($manga.data?.manga?.title) {
-			navigator.clipboard.writeText($manga.data?.manga?.title);
+		if (manga.data?.manga?.title) {
+			navigator.clipboard.writeText(manga.data?.manga?.title);
 			toastStore.trigger({
 				message: 'Title copied to clipboard',
 				background: 'bg-primary-600'
@@ -96,60 +101,78 @@
 			});
 		}
 	}
+
+	let manga = $derived.by(() => {
+		untrack(() => {
+			manga2.pause();
+		});
+		const _ = [$manga2];
+		const tmp = untrack(() => {
+			manga2.resume();
+			return $state.snapshot($manga2);
+		});
+		return tmp;
+	});
 </script>
 
-{#if $manga.fetching}
+{#if manga.fetching}
 	<div
 		class="max-h-full w-full space-y-8 p-4
 			md:absolute md:bottom-0 md:left-0 md:top-0 md:w-1/2 md:overflow-y-auto"
 	>
 		<div class="flex flex-col space-x-4 sm:flex-row">
 			<div class="md:flex-0 aspect-cover md:w-[33%]">
-				<div class="placeholder h-full animate-pulse rounded-lg" />
+				<div class="placeholder h-full animate-pulse rounded-lg"></div>
 			</div>
 			<div class="space-y-2 md:mt-8 md:w-[66%] md:flex-1 lg:space-y-8">
+				<!-- svelte-ignore a11y_missing_content -->
 				<h1 class="h1 line-clamp-2 md:h3 lg:h2 xl:h1 xl:leading-[4rem]">
-					<span class="placeholder inline-block h-10 w-full animate-pulse" />
+					<span class="placeholder inline-block h-10 w-full animate-pulse">
+					</span>
 				</h1>
 				<div class="w-3/4 space-y-1 lg:space-y-2">
+					<!-- svelte-ignore a11y_missing_content -->
 					<h3 class="h3 flex items-center space-x-2">
 						<span
 							class="placeholder inline-block w-full max-w-[33%] animate-pulse"
-						/>
+						></span>
 						<span
 							class="placeholder inline-block w-full max-w-[66%] animate-pulse"
-						/>
+						></span>
 					</h3>
+					<!-- svelte-ignore a11y_missing_content -->
 					<h3 class="h3 flex items-center space-x-2">
 						<span
 							class="placeholder inline-block w-full max-w-[33%] animate-pulse"
-						/>
+						></span>
 						<span
 							class="placeholder inline-block w-full max-w-[66%] animate-pulse"
-						/>
+						></span>
 					</h3>
+					<!-- svelte-ignore a11y_missing_content -->
 					<h3 class="h3 flex items-center space-x-2">
 						<span
 							class="placeholder inline-block w-full max-w-[33%] animate-pulse"
-						/>
+						></span>
 						<span
 							class="placeholder inline-block w-full max-w-[66%] animate-pulse"
-						/>
+						></span>
 					</h3>
+					<!-- svelte-ignore a11y_missing_content -->
 					<h3 class="h3 flex items-center space-x-2">
 						<span
 							class="placeholder inline-block w-full max-w-[33%] animate-pulse"
-						/>
+						></span>
 						<span
 							class="placeholder inline-block w-full max-w-[66%] animate-pulse"
-						/>
+						></span>
 					</h3>
 				</div>
 			</div>
 		</div>
 		<div class="flex justify-around">
-			<div class="placeholder w-full max-w-[8rem] animate-pulse" />
-			<div class="placeholder w-full max-w-[8rem] animate-pulse" />
+			<div class="placeholder w-full max-w-[8rem] animate-pulse"></div>
+			<div class="placeholder w-full max-w-[8rem] animate-pulse"></div>
 		</div>
 		<section class="w-full">
 			<div class="space-y-4">
@@ -164,7 +187,7 @@
 									{i + 1 === 6 && 'grid-cols-6'} gap-4"
 					>
 						{#each new Array(i + 1) as _}
-							<div class="placeholder animate-pulse" />
+							<div class="placeholder animate-pulse"></div>
 						{/each}
 					</div>
 				{/each}
@@ -174,25 +197,25 @@
 			{#each new Array(8) as _}
 				<div
 					class="placeholder variant-filled-primary inline-block w-16 animate-pulse"
-				/>
+				></div>
 			{/each}
 		</div>
 	</div>
-{:else if $manga.error}
+{:else if manga.error}
 	<div
 		class="max-h-full w-full space-y-8 whitespace-pre-wrap p-4 md:absolute md:bottom-0 md:left-0 md:top-0 md:w-1/2 md:overflow-y-auto"
 	>
-		Errors loading manga Info: {JSON.stringify($manga.error, null, 4)}
+		Errors loading manga Info: {JSON.stringify(manga.error, null, 4)}
 	</div>
-{:else if $manga.data?.manga}
-	{@const mangaFrag = $manga.data.manga}
+{:else if manga.data?.manga}
+	{@const mangaFrag = manga.data.manga}
 	<div
 		class="max-h-full w-full space-y-8 p-4 md:absolute md:bottom-0 md:left-0 md:top-0 md:w-1/2 md:overflow-y-auto"
 	>
 		<div class="flex flex-col space-x-4 sm:flex-row">
 			<div class="md:flex-0 md:max-w-[33%]">
 				<Image
-					on:failed={() => (ImageFailed = true)}
+					onfailed={() => (ImageFailed = true)}
 					src={mangaFrag.thumbnailUrl ?? ''}
 					alt={mangaFrag.title}
 					width="w-auto"
@@ -204,7 +227,7 @@
 				<h1
 					class="h1 line-clamp-2 select-none md:h3 lg:h2 xl:h1 hover:cursor-pointer xl:leading-[4rem]"
 					use:longPress
-					on:longPress={LongHandler}
+					onlongPress={LongHandler}
 					title="long press to copy title"
 				>
 					{mangaFrag.title}
@@ -217,64 +240,69 @@
 				</div>
 			</div>
 		</div>
-		<MediaQuery query="(min-width: {screens.sm})" let:matches>
-			<div class="grid grid-cols-2 gap-1">
-				<button
-					on:click={libToggle}
-					class="variant-soft btn flex h-12 items-center px-2 sm:px-5"
-				>
-					<IconWrapper
-						name="mdi:heart"
-						class="aspect-square h-full w-auto {mangaFrag.inLibrary &&
-							'text-red-500'}"
-					/>
-					{#if matches}
-						<span class="text-sm uppercase sm:text-base">
-							{mangaFrag.inLibrary ? 'In Library' : 'Add to library'}
-						</span>
-					{/if}
-				</button>
-				<a
-					href={mangaFrag.realUrl}
-					target="_blank"
-					class="variant-soft btn flex h-12 items-center px-2 sm:px-5"
-				>
-					<IconWrapper name="mdi:earth" class="aspect-square h-full w-auto" />
-					{#if matches}
-						<span class="text-sm uppercase sm:text-base">Open site</span>
-					{/if}
-				</a>
-				{#if mangaFrag.inLibrary}
-					<a
-						href="/browse/migrate/manga/{mangaFrag.id}"
-						class="variant-soft btn flex h-12 items-center px-2 sm:px-5"
-					>
-						<IconWrapper name="mdi:bird" class="aspect-square h-full w-auto" />
-						{#if matches}
-							<span class="text-sm uppercase sm:text-base">Migrate</span>
-						{/if}
-					</a>
+		<MediaQuery query="(min-width: {screens.sm})">
+			{#snippet children({ matches })}
+				<div class="grid grid-cols-2 gap-1">
 					<button
-						on:click={() => {
-							modalStore.trigger({
-								type: 'component',
-								backdropClasses: '!p-0',
-								component: { ref: TrackingModal, props: { manga } }
-							});
-						}}
+						onclick={libToggle}
 						class="variant-soft btn flex h-12 items-center px-2 sm:px-5"
 					>
 						<IconWrapper
-							name="mdi:target"
-							class="aspect-square h-full w-auto {mangaFrag.trackRecords.nodes
-								.length > 0 && 'text-red-500'}"
+							name="mdi:heart"
+							class="aspect-square h-full w-auto {mangaFrag.inLibrary &&
+								'text-red-500'}"
 						/>
 						{#if matches}
-							<span class="text-sm uppercase sm:text-base"> Tracking</span>
+							<span class="text-sm uppercase sm:text-base">
+								{mangaFrag.inLibrary ? 'In Library' : 'Add to library'}
+							</span>
 						{/if}
 					</button>
-				{/if}
-			</div>
+					<a
+						href={mangaFrag.realUrl}
+						target="_blank"
+						class="variant-soft btn flex h-12 items-center px-2 sm:px-5"
+					>
+						<IconWrapper name="mdi:earth" class="aspect-square h-full w-auto" />
+						{#if matches}
+							<span class="text-sm uppercase sm:text-base">Open site</span>
+						{/if}
+					</a>
+					{#if mangaFrag.inLibrary}
+						<a
+							href="/browse/migrate/manga/{mangaFrag.id}"
+							class="variant-soft btn flex h-12 items-center px-2 sm:px-5"
+						>
+							<IconWrapper
+								name="mdi:bird"
+								class="aspect-square h-full w-auto"
+							/>
+							{#if matches}
+								<span class="text-sm uppercase sm:text-base">Migrate</span>
+							{/if}
+						</a>
+						<button
+							onclick={() => {
+								modalStore.trigger({
+									type: 'component',
+									backdropClasses: '!p-0',
+									component: { ref: TrackingModal, props: { manga } }
+								});
+							}}
+							class="variant-soft btn flex h-12 items-center px-2 sm:px-5"
+						>
+							<IconWrapper
+								name="mdi:target"
+								class="aspect-square h-full w-auto {mangaFrag.trackRecords.nodes
+									.length > 0 && 'text-red-500'}"
+							/>
+							{#if matches}
+								<span class="text-sm uppercase sm:text-base"> Tracking</span>
+							{/if}
+						</button>
+					{/if}
+				</div>
+			{/snippet}
 		</MediaQuery>
 		<section class="w-full text-xs xs:text-sm md:text-base">
 			<p>{mangaFrag.description}</p>
@@ -285,13 +313,13 @@
 					<div class="variant-outline-primary badge">{genre}</div>
 				{/if}
 			{:else}
-				<div />
+				<div></div>
 			{/each}
 		</div>
 		<div>
 			<button
 				class="w-full cursor-pointer p-2 text-left hover:variant-glass-surface"
-				on:click={() => {
+				onclick={() => {
 					modalStore.trigger({
 						type: 'component',
 						backdropClasses: '!p-0',

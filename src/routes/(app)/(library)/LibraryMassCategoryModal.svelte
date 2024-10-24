@@ -61,8 +61,8 @@
 </script>
 
 {#if $modalStore[0]}
-	<ModalTemplate title="Set Categories">
-		<svelte:fragment>
+	<ModalTemplate titleText="Set Categories">
+		{#snippet children()}
 			{#if $categories.fetching}
 				loading...
 			{:else if $categories.error}
@@ -78,8 +78,8 @@
 						<TriStateSlide
 							triState={false}
 							checked={false}
-							on:changeE={(e) => {
-								handelClicked(category, e.detail);
+							onchange={(e) => {
+								handelClicked(category, e);
 							}}
 							class="w-full p-1 pl-2 hover:variant-glass-surface focus:outline-0"
 							labelClass="w-full"
@@ -89,16 +89,16 @@
 					</div>
 				{/each}
 			{/if}
-		</svelte:fragment>
-		<svelte:fragment slot="footer">
+		{/snippet}
+		{#snippet footer()}
 			<div class="flex items-center justify-end px-4 pb-4">
 				<button
-					on:click={handelSubmit}
+					onclick={handelSubmit}
 					class="variant-filled btn float-right mr-4"
 				>
 					Submit
 				</button>
 			</div>
-		</svelte:fragment>
+		{/snippet}
 	</ModalTemplate>
 {/if}

@@ -11,9 +11,13 @@
 	import { ProgressRadial } from '@skeletonlabs/skeleton';
 	import type { ResultOf } from '$lib/gql/graphql';
 
-	export let download:
-		| ResultOf<typeof downloadsOnChapters>['downloadChanged']['queue'][0]
-		| undefined;
+	interface Props {
+		download:
+			| ResultOf<typeof downloadsOnChapters>['downloadChanged']['queue'][0]
+			| undefined;
+	}
+
+	let { download }: Props = $props();
 </script>
 
 {#if download}

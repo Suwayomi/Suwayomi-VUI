@@ -7,8 +7,12 @@
 -->
 
 <script lang="ts">
-	export let text: undefined | string | null = undefined;
-	export let name: string = 'undefined';
+	interface Props {
+		text?: undefined | string | null;
+		name?: string;
+	}
+
+	let { text = undefined, name = 'undefined' }: Props = $props();
 </script>
 
 {#if text}

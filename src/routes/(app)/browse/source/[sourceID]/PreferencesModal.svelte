@@ -8,7 +8,7 @@
 
 <script lang="ts">
 	import { getModalStore } from '@skeletonlabs/skeleton';
-	import { onDestroy } from 'svelte';
+	import { onDestroy, untrack } from 'svelte';
 	import type { LayoutData } from './$types';
 	import CheckBoxPreference from './preferences/CheckBoxPreference.svelte';
 	import ListPreference from './preferences/ListPreference.svelte';
@@ -19,22 +19,38 @@
 	import { getSource } from '$lib/gql/Queries';
 	import ModalTemplate from '$lib/components/ModalTemplate.svelte';
 
-	export let data: LayoutData;
-	export let clearAll: () => void;
+	interface Props {
+		data: LayoutData;
+		clearAll: () => void;
+	}
+
+	let { data, clearAll }: Props = $props();
 
 	const modalStore = getModalStore();
 	const client = getContextClient();
-	const sauce = queryStore({
+	let sauce2 = queryStore({
 		client,
 		query: getSource,
 		variables: { id: data.sourceID }
 	});
 	onDestroy(clearAll);
+
+	let sauce = $derived.by(() => {
+		untrack(() => {
+			sauce2.pause();
+		});
+		const _ = [$sauce2];
+		const tmp = untrack(() => {
+			sauce2.resume();
+			return $state.snapshot($sauce2).data?.source;
+		});
+		return tmp;
+	});
 </script>
 
-{#if $modalStore[0] && $sauce.data?.source?.isConfigurable}
-	<ModalTemplate title="Preferences">
-		{#each $sauce.data.source.preferences as pref, index}
+{#if $modalStore[0] && sauce?.isConfigurable}
+	<ModalTemplate titleText="Preferences">
+		{#each sauce.preferences as pref, index}
 			<div>
 				{#if pref.__typename === 'CheckBoxPreference'}
 					<CheckBoxPreference {pref} {index} id={data.sourceID} />

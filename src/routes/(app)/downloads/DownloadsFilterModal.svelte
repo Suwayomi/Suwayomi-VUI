@@ -25,11 +25,11 @@
 </script>
 
 {#if $modalStore[0]}
-	<ModalTemplate title="Filter Downloads">
+	<ModalTemplate titleText="Filter Downloads">
 		{#each FilterT as value}
 			<Slide
 				class="w-full outline-0"
-				on:change={() => {
+				onchange={() => {
 					toggleState(value);
 				}}
 				checked={!$filter.has(value)}>{value}</Slide

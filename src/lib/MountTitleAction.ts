@@ -5,25 +5,28 @@
 // file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
 import { onDestroy } from 'svelte';
-import type { ComponentType, ComponentProps } from 'svelte';
+import type { ComponentProps, Component } from 'svelte';
 import { readonly, writable } from 'svelte/store';
 
-type actionStoreT<T extends ComponentType = ComponentType> = {
-	component: T;
-	props?: ComponentProps<InstanceType<T>>;
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+type actionStoreT<TComponent extends Component<any>> = {
+	component: TComponent;
+	props: ComponentProps<TComponent>;
 };
 
 // i dont really like that i cant type this nicely, AppBarData is typed good though
-const actionStore = writable<actionStoreT | null>(null);
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const actionStore = writable<actionStoreT<Component<any>> | null>(null);
 
 const titleStore = writable<string>('Loading...');
 
 export const action = readonly(actionStore);
 export const title = readonly(titleStore);
 
-export function AppBarData<T extends ComponentType>(
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export function AppBarData<TComponent extends Component<any>>(
 	title: string,
-	action?: actionStoreT<T>
+	action?: actionStoreT<TComponent>
 ) {
 	if (action) actionStore.set(action);
 	titleStore.set(title);

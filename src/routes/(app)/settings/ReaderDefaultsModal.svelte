@@ -16,7 +16,7 @@
 </script>
 
 {#if $modalStore[0]}
-	<ModalTemplate title="Reader Defaults">
+	<ModalTemplate titleText="Reader Defaults">
 		<Slide
 			class="mt-1 p-1 outline-0 hover:variant-glass-surface"
 			bind:checked={$Meta.mangaMetaDefaults.Margins}

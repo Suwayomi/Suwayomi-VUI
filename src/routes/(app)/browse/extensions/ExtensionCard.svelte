@@ -16,12 +16,15 @@
 	import type { ExtensionTypeFragment } from '$lib/gql/Fragments';
 	import type { ResultOf } from '$lib/gql/graphql';
 
-	export let scrollingElement: HTMLDivElement;
-	export let ext: ResultOf<typeof ExtensionTypeFragment>;
+	interface Props {
+		ext: ResultOf<typeof ExtensionTypeFragment>;
+	}
 
-	let loadingUpdate = false;
-	let loadingInstall = false;
-	let loadingUnInstall = false;
+	let { ext }: Props = $props();
+
+	let loadingUpdate = $state(false);
+	let loadingInstall = $state(false);
+	let loadingUnInstall = $state(false);
 	const client = getContextClient();
 
 	async function unInstall() {
@@ -67,87 +70,87 @@
 	}
 </script>
 
-<IntersectionObserver
-	let:intersecting
-	root={scrollingElement}
-	top={400}
-	bottom={400}
-	class="m-1 h-28"
->
-	{#if intersecting}
-		<div class="card variant-ghost flex h-full w-full items-center">
-			<div class="h-full flex-shrink-0 p-1">
-				<Image
-					height="h-full"
-					width="w-auto"
-					aspect="aspect-square"
-					src={ext.iconUrl}
-				/>
-			</div>
-			<div>
-				{ext.name}
-				<div class="text-sm opacity-70">
-					{ext.versionName}
-					{#if ext.isNsfw}
-						<span class="text-red-600">18+</span>
-					{/if}
+<IntersectionObserver top={400} bottom={400} class="m-1 h-28">
+	{#snippet children({ intersecting })}
+		{#if intersecting}
+			<div class="card variant-ghost flex h-full w-full items-center">
+				<div class="h-full flex-shrink-0 p-1">
+					<Image
+						height="h-full"
+						width="w-auto"
+						aspect="aspect-square"
+						src={ext.iconUrl}
+					/>
 				</div>
-				<div class="line-clamp-1 break-all text-sm opacity-70">
-					{ext.repo}
-				</div>
-			</div>
-			<div class="flex flex-1 flex-wrap justify-end">
-				{#if ext.isObsolete}
-					<button
-						on:click={() => unInstall()}
-						class="variant-ghost-error btn m-1"
-					>
-						{#if loadingUnInstall}
-							Uninstalling<ProgressRadial
-								class="ml-1 aspect-square h-4 w-auto"
-							/>
-						{:else}
-							Obsolete
+				<div>
+					{ext.name}
+					<div class="text-sm opacity-70">
+						{ext.versionName}
+						{#if ext.isNsfw}
+							<span class="text-red-600">18+</span>
 						{/if}
-					</button>
-				{:else if ext.isInstalled}
-					{#if ext.hasUpdate}
+					</div>
+					<div class="line-clamp-1 break-all text-sm opacity-70">
+						{ext.repo}
+					</div>
+				</div>
+				<div class="flex flex-1 flex-wrap justify-end">
+					{#if ext.isObsolete}
 						<button
-							on:click={() => Update()}
+							onclick={() => unInstall()}
+							class="variant-ghost-error btn m-1"
+						>
+							{#if loadingUnInstall}
+								Uninstalling<ProgressRadial
+									class="ml-1 aspect-square h-4 w-auto"
+								/>
+							{:else}
+								Obsolete
+							{/if}
+						</button>
+					{:else if ext.isInstalled}
+						{#if ext.hasUpdate}
+							<button
+								onclick={() => Update()}
+								class="variant-ghost-surface btn m-1"
+							>
+								{#if loadingUpdate}
+									Updating<ProgressRadial
+										class="ml-1 aspect-square h-4 w-auto"
+									/>
+								{:else}
+									Update
+								{/if}
+							</button>
+						{/if}
+						<button
+							onclick={() => unInstall()}
 							class="variant-ghost-surface btn m-1"
 						>
-							{#if loadingUpdate}
-								Updating<ProgressRadial class="ml-1 aspect-square h-4 w-auto" />
+							{#if loadingUnInstall}
+								Uninstalling<ProgressRadial
+									class="ml-1 aspect-square h-4 w-auto"
+								/>
 							{:else}
-								Update
+								Uninstall
+							{/if}
+						</button>
+					{:else}
+						<button
+							onclick={() => Install()}
+							class="variant-ghost-surface btn m-1"
+						>
+							{#if loadingInstall}
+								Installing<ProgressRadial
+									class="ml-1 aspect-square h-4 w-auto"
+								/>
+							{:else}
+								Install
 							{/if}
 						</button>
 					{/if}
-					<button
-						on:click={() => unInstall()}
-						class="variant-ghost-surface btn m-1"
-					>
-						{#if loadingUnInstall}
-							Uninstalling<ProgressRadial
-								class="ml-1 aspect-square h-4 w-auto"
-							/>
-						{:else}
-							Uninstall
-						{/if}
-					</button>
-				{:else}
-					<button
-						on:click={() => Install()}
-						class="variant-ghost-surface btn m-1"
-					>
-						{#if loadingInstall}
-							Installing<ProgressRadial class="ml-1 aspect-square h-4 w-auto" />
-						{:else}
-							Install
-						{/if}
-					</button>
-				{/if}
+				</div>
 			</div>
-		</div>
-	{/if}
+		{/if}
+	{/snippet}
 </IntersectionObserver>

@@ -9,10 +9,14 @@
 <script lang="ts">
 	import type { getSource } from '$lib/gql/Queries';
 	import type { ResultOf } from '$lib/gql/graphql';
-	export let filter: Extract<
-		ResultOf<typeof getSource>['source']['filters'][0],
-		{ __typename: 'HeaderFilter' | undefined }
-	>;
+	interface Props {
+		filter: Extract<
+			ResultOf<typeof getSource>['source']['filters'][0],
+			{ __typename: 'HeaderFilter' | undefined }
+		>;
+	}
+
+	let { filter }: Props = $props();
 </script>
 
 {filter.name}

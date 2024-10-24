@@ -30,7 +30,11 @@
 
 	const client = getContextClient();
 
-	export let selectAll: () => void;
+	interface Props {
+		selectAll: () => void;
+	}
+
+	let { selectAll }: Props = $props();
 
 	const toastStore = getToastStore();
 	const modalStore = getModalStore();
@@ -135,69 +139,71 @@
 </script>
 
 <div class="flex h-full max-w-full">
-	<MediaQuery query="(min-width: {screens.sm})" let:matches>
-		{#if matches}
-			{#if $selectMode}
-				<TooltipIconButton
-					on:click={handelDownload}
-					tip="Download unread chapters"
-					name="mdi:download"
-				/>
-				<TooltipIconButton
-					on:click={handelCategory}
-					tip="Change Categories"
-					name="mdi:shape"
-				/>
-				<TooltipIconButton
-					on:click={handelDelete}
-					tip="Remove Selected"
-					name="mdi:bin"
-				/>
-			{/if}
-
-			<TooltipIconButton
-				on:click={selectAll}
-				name="mdi:select-all"
-				tip="Select all/none"
-			/>
-		{:else if $selectMode}
-			<div class="card p-0" data-popup="popupClick">
-				<div class="flex h-12 xs:h-14">
+	<MediaQuery query="(min-width: {screens.sm})">
+		{#snippet children({ matches })}
+			{#if matches}
+				{#if $selectMode}
 					<TooltipIconButton
-						on:click={handelDownload}
+						onclick={handelDownload}
 						tip="Download unread chapters"
 						name="mdi:download"
 					/>
 					<TooltipIconButton
-						on:click={handelCategory}
+						onclick={handelCategory}
 						tip="Change Categories"
 						name="mdi:shape"
 					/>
 					<TooltipIconButton
-						on:click={handelDelete}
+						onclick={handelDelete}
 						tip="Remove Selected"
 						name="mdi:bin"
 					/>
-					<TooltipIconButton
-						on:click={selectAll}
-						name="mdi:select-all"
-						tip="Select all/none"
-					/>
+				{/if}
+
+				<TooltipIconButton
+					onclick={selectAll}
+					name="mdi:select-all"
+					tip="Select all/none"
+				/>
+			{:else if $selectMode}
+				<div class="card p-0" data-popup="popupClick">
+					<div class="flex h-12 xs:h-14">
+						<TooltipIconButton
+							onclick={handelDownload}
+							tip="Download unread chapters"
+							name="mdi:download"
+						/>
+						<TooltipIconButton
+							onclick={handelCategory}
+							tip="Change Categories"
+							name="mdi:shape"
+						/>
+						<TooltipIconButton
+							onclick={handelDelete}
+							tip="Remove Selected"
+							name="mdi:bin"
+						/>
+						<TooltipIconButton
+							onclick={selectAll}
+							name="mdi:select-all"
+							tip="Select all/none"
+						/>
+					</div>
+					<div class="bg-surface-100-800-token arrow"></div>
 				</div>
-				<div class="bg-surface-100-800-token arrow" />
-			</div>
-			<button
-				class="variant-filled-primary btn fixed bottom-2 right-2 h-12 text-xl xs:h-14 xs:text-4xl"
-				use:popup={popupClick}
-			>
-				{$selected.filter((e) => e).length}
-				<IconWrapper name="mdi:dots-vertical" class="h-full" />
-			</button>
-		{/if}
+				<button
+					class="variant-filled-primary btn fixed bottom-2 right-2 h-12 text-xl xs:h-14 xs:text-4xl"
+					use:popup={popupClick}
+				>
+					{$selected.filter((e) => e).length}
+					<IconWrapper name="mdi:dots-vertical" class="h-full" />
+				</button>
+			{/if}
+		{/snippet}
 	</MediaQuery>
 
 	<TooltipIconButton
-		on:click={() => {
+		onclick={() => {
 			$selectMode = !$selectMode;
 		}}
 		name="mdi:{$selectMode ? 'select-multiple' : 'flip-to-front'}"
@@ -211,7 +217,7 @@
 			placement="left"
 		>
 			<button
-				on:click={handelHelp}
+				onclick={handelHelp}
 				class="variant-ghost-primary btn z-[60] w-0 p-3 leading-[0] opacity-20 hover:opacity-100"
 			>
 				?
@@ -219,7 +225,7 @@
 		</Tooltip>
 	</Search>
 	<TooltipIconButton
-		on:click={handelFilter}
+		onclick={handelFilter}
 		name="mdi:filter"
 		tip="Filter/Sort"
 	/>

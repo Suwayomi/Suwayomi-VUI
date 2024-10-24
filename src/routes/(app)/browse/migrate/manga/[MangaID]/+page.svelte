@@ -15,7 +15,11 @@
 	import { getContextClient, queryStore } from '@urql/svelte';
 	import { getManga } from '$lib/gql/Queries';
 
-	export let data: PageData;
+	interface Props {
+		data: PageData;
+	}
+
+	let { data }: Props = $props();
 
 	const modalStore = getModalStore();
 

@@ -13,14 +13,17 @@
 	import { getContextClient } from '@urql/svelte';
 	import type { ResultOf } from '$lib/gql/graphql';
 
-	export let pref: Extract<
-		ResultOf<typeof getSource>['source']['preferences'][0],
-		{ __typename: 'EditTextPreference' | undefined }
-	>;
+	interface Props {
+		pref: Extract<
+			ResultOf<typeof getSource>['source']['preferences'][0],
+			{ __typename: 'EditTextPreference' | undefined }
+		>;
+		index: number;
+		id: string;
+	}
 
-	export let index: number;
-	export let id: string;
-	let value = pref.EditTextCurrentValue ?? pref.EditTextDefault;
+	let { pref, index, id }: Props = $props();
+	let value = $state(pref.EditTextCurrentValue ?? pref.EditTextDefault);
 	const client = getContextClient();
 	function handelChange() {
 		client
@@ -42,7 +45,7 @@
 			placement: 'bottom'
 		}}
 		bind:value
-		on:change={handelChange}
+		onchange={handelChange}
 		class="input"
 		title="Input (text)"
 		type="text"
@@ -51,5 +54,5 @@
 </label>
 <div class="card z-50 max-w-sm p-4" data-popup="{id} {index}">
 	<p>{pref.summary}</p>
-	<div class="card arrow z-50" style="border-radius:0" />
+	<div class="card arrow z-50" style="border-radius:0"></div>
 </div>

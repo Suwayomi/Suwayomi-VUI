@@ -10,15 +10,19 @@
 	import { getModalStore } from '@skeletonlabs/skeleton';
 	import ModalTemplate from '$lib/components/ModalTemplate.svelte';
 
-	export let repos: string[];
+	interface Props {
+		repos: string[];
+	}
+
+	let { repos = $bindable() }: Props = $props();
 
 	const modalStore = getModalStore();
-	let newrepo = '';
+	let newrepo = $state('');
 </script>
 
 {#if $modalStore[0]}
-	<ModalTemplate title="Extension Repos">
-		<svelte:fragment>
+	<ModalTemplate titleText="Extension Repos">
+		{#snippet children()}
 			<div class="space-y-2 py-4">
 				<div class="flex flex-nowrap items-center justify-between space-x-1">
 					<input
@@ -28,7 +32,7 @@
 						bind:value={newrepo}
 					/>
 					<button
-						on:click={() => {
+						onclick={() => {
 							repos = [...repos, newrepo];
 							newrepo = '';
 							setSettings({ extensionRepos: repos });
@@ -45,7 +49,7 @@
 								{value}
 							</div>
 							<button
-								on:click={() => {
+								onclick={() => {
 									repos = repos.filter((x) => x !== value);
 									setSettings({ extensionRepos: repos });
 								}}
@@ -55,6 +59,6 @@
 					{/each}
 				</div>
 			</div>
-		</svelte:fragment>
+		{/snippet}
 	</ModalTemplate>
 {/if}

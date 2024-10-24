@@ -12,13 +12,17 @@
 	import LangFilterModal from './LangFilterModal.svelte';
 	import { getModalStore } from '@skeletonlabs/skeleton';
 
-	export let langs: Set<string>;
-	export let langFilter: Writable<Set<string>>;
+	interface Props {
+		langs: Set<string>;
+		langFilter: Writable<Set<string>>;
+	}
+
+	let { langs, langFilter }: Props = $props();
 	const modalStore = getModalStore();
 </script>
 
 <TooltipIconButton
-	on:click={() => {
+	onclick={() => {
 		modalStore.trigger({
 			type: 'component',
 			backdropClasses: '!p-0',

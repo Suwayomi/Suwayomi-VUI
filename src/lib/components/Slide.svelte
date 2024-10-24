@@ -7,46 +7,54 @@
 -->
 
 <script lang="ts">
+	import { run } from 'svelte/legacy';
+
 	import IconWrapper from './IconWrapper.svelte';
-	import { createEventDispatcher } from 'svelte';
 
 	// Types
 	import type { CssClasses, SvelteEvent } from '@skeletonlabs/skeleton';
 
-	// Event Dispatcher
-	type SlideToggleEvent = {
-		keyup: SvelteEvent<KeyboardEvent, HTMLDivElement>;
-		changeE: boolean;
-	};
-	const dispatch = createEventDispatcher<SlideToggleEvent>();
+	interface Props {
+		/**
+		 * Required. Set a unique name for the input.
+		 * @type {string}
+		 */
+		name?: string;
+		/** The checked state of the input element. */
+		checked?: boolean | null;
+		// Props (styles)
+		size?: 'sm' | 'md' | 'lg';
+		/** Provide classes to set the inactive state background color. */
+		inactive?: CssClasses;
+		/** Provide classes to set the active state background color. */
+		active?: CssClasses;
+		/** Provide classes to set the border styles. */
+		border?: CssClasses;
+		/** Provide classes to set border radius styles. */
+		rounded?: CssClasses;
+		/** Provide classes for the label div */
+		labelClass?: CssClasses;
+		// Provide a semantic label.
+		label?: string;
+		children?: import('svelte').Snippet;
+		onchange?: (e: boolean) => void;
+		[key: string]: unknown;
+	}
 
-	// Props
-	/**
-	 * Required. Set a unique name for the input.
-	 * @type {string}
-	 */
-	export let name: string = '';
-	/** The checked state of the input element. */
-	export let checked: boolean | null = null;
-
-	// Props (styles)
-	export let size: 'sm' | 'md' | 'lg' = 'md';
-	/** Provide classes to set the inactive state background color. */
-	export let inactive: CssClasses = 'bg-surface-300 dark:bg-surface-700';
-	/** Provide classes to set the active state background color. */
-	export let active: CssClasses = 'bg-surface-700 dark:bg-surface-300';
-	/** Provide classes to set the active state background color. */
-	// export let indeterminate: CssClasses = 'bg-surface-500 dark:bg-surface-500';
-	/** Provide classes to set the border styles. */
-	export let border: CssClasses = '';
-	/** Provide classes to set border radius styles. */
-	export let rounded: CssClasses = 'rounded-full';
-	/** Provide classes for the label div */
-	export let labelClass: CssClasses = 'ml-3';
-
-	// Props (a11y)
-	/** Provide a semantic label. */
-	export let label = '';
+	let {
+		name = '',
+		checked = $bindable(null),
+		size = 'md',
+		inactive = 'bg-surface-300 dark:bg-surface-700',
+		active = 'bg-surface-700 dark:bg-surface-300',
+		border = '',
+		rounded = 'rounded-full',
+		labelClass = 'ml-3',
+		label = '',
+		onchange = () => {},
+		children,
+		...rest
+	}: Props = $props();
 
 	// Base Styles
 	const cBase = 'inline-block';
@@ -56,7 +64,7 @@
 		'w-[50%] h-full scale-[0.8] transition-all duration-[200ms] shadow';
 
 	// Set track size
-	let trackSize: string;
+	let trackSize: string | undefined = $state();
 	// prettier-ignore
 	switch (size) {
 		case 'sm': trackSize = 'w-12 h-6'; break;
@@ -70,58 +78,59 @@
 		if (['Enter', 'Space'].includes(event.code)) {
 			event.preventDefault();
 			/** @event {{ event }} keyup Fires when the component is focused and key is pressed. */
-			dispatch('keyup', event);
 			const inputElem = event.currentTarget.firstChild as HTMLLabelElement;
 			inputElem.click();
 		}
 	}
 
 	// Interactive
-	let cTrackActive = '';
-	$: if (checked) {
-		cTrackActive = active;
-	} else {
-		cTrackActive = inactive;
-	}
+	let cTrackActive = $state('');
+	let cThumbBackground = $state('');
+	let cThumbPos = $state('');
+	$effect(() => {
+		if (checked) {
+			cTrackActive = active;
+			cThumbBackground = 'bg-white/75';
+			cThumbPos = 'translate-x-full';
+		} else {
+			cTrackActive = inactive;
+			cThumbBackground = 'bg-white';
+			cThumbPos = '';
+		}
+	});
 
-	let cThumbBackground = '';
-	$: if (checked) {
-		cThumbBackground = 'bg-white/75';
-	} else {
-		cThumbBackground = 'bg-white';
-	}
-
-	let cThumbPos = '';
-	$: if (checked) {
-		cThumbPos = 'translate-x-full';
-	} else {
-		cThumbPos = '';
-	}
 	// Reactive Classes
-	$: classesDisabled =
-		$$props.disabled === true
+	let classesDisabled = $derived(
+		rest.disabled === true
 			? 'opacity-50'
-			: 'hover:brightness-[105%] dark:hover:brightness-110 cursor-pointer';
-	$: classesBase = `${cBase} ${rounded} ${classesDisabled} ${$$props.class}`;
-	$: classesLabel = `${cLabel} cursor-pointer`;
-	$: classesTrack = `${cTrack} ${border} ${rounded} ${trackSize} ${cTrackActive}`;
-	$: classesThumb = `${cThumb} ${rounded} ${cThumbBackground} ${cThumbPos}`;
+			: 'hover:brightness-[105%] dark:hover:brightness-110 cursor-pointer'
+	);
+	let classesBase = $derived(
+		`${cBase} ${rounded} ${classesDisabled} ${rest.class}`
+	);
+	let classesLabel = $derived(`${cLabel} cursor-pointer`);
+	let classesTrack = $derived(
+		`${cTrack} ${border} ${rounded} ${trackSize} ${cTrackActive}`
+	);
+	let classesThumb = $derived(
+		`${cThumb} ${rounded} ${cThumbBackground} ${cThumbPos}`
+	);
 
-	// Prune $$restProps to avoid overwriting $$props.class
+	// Prune $$restProps to avoid overwriting propstmp.class
 	function prunedRestProps() {
-		delete $$restProps.class;
-		return $$restProps;
+		const { class: _, ...tmp } = rest;
+		return tmp;
 	}
 
 	export function handelClick() {
 		switch (checked) {
 			case true:
 				checked = false;
-				dispatch('changeE', checked);
+				onchange(checked);
 				break;
 			case false:
 				checked = true;
-				dispatch('changeE', checked);
+				onchange(checked);
 				break;
 		}
 	}
@@ -130,7 +139,7 @@
 <div
 	id={label}
 	class="slide-toggle {classesBase} "
-	on:keydown={onKeyDown}
+	onkeydown={onKeyDown}
 	role="switch"
 	aria-label={label}
 	aria-checked={checked}
@@ -143,29 +152,22 @@
 			class="slide-toggle-input hidden"
 			bind:checked
 			{name}
-			on:click={handelClick}
-			on:keydown
-			on:keyup
-			on:keypress
-			on:mouseover
-			on:change
-			on:focus
-			on:blur
+			onclick={handelClick}
 			{...prunedRestProps()}
-			disabled={$$props.disabled}
+			disabled={rest.disabled as boolean | undefined | null}
 		/>
 		<!-- Label -->
-		{#if $$slots.default}<div class="slide-toggle-text flex-1 {labelClass}">
-				<slot />
+		{#if children}<div class="slide-toggle-text flex-1 {labelClass}">
+				{@render children?.()}
 			</div>{/if}
 		<!-- Slider Track/Thumb -->
 		<div
 			class="slide-toggle-track {classesTrack}"
-			class:cursor-not-allowed={$$props.disabled}
+			class:cursor-not-allowed={rest.disabled}
 		>
 			<div
 				class="slide-toggle-thumb text-surface-500 {classesThumb} aspect-square"
-				class:cursor-not-allowed={$$props.disabled}
+				class:cursor-not-allowed={rest.disabled}
 			>
 				{#if checked}
 					<IconWrapper name="mdi:check" class="aspect-square h-full w-full" />

@@ -25,22 +25,24 @@
 	class="bg-surface-100-800-token w-full"
 	regionList=" h-16"
 >
-	<MediaQuery query="(max-width: {screens.sm})" let:matches>
-		{@const Nav = matches ? SmallAppNavData : AppNavData}
-		{#each Nav as Loc}
-			<TabAnchor
-				href={Loc.href}
-				selected={Loc.match($page.url.pathname)}
-				class="h-full [&>.tab-interface]:h-full [&>div>.tab-label]:h-full"
-			>
-				<div class="flex h-full w-full flex-col items-center">
-					<IconWrapper
-						name={Loc.icon}
-						class="aspect-square max-h-full w-full grow"
-					/>
-					<span class="text-sm">{Loc.title}</span>
-				</div>
-			</TabAnchor>
-		{/each}
+	<MediaQuery query="(max-width: {screens.sm})">
+		{#snippet children({ matches })}
+			{@const Nav = matches ? SmallAppNavData : AppNavData}
+			{#each Nav as Loc}
+				<TabAnchor
+					href={Loc.href}
+					selected={Loc.match($page.url.pathname)}
+					class="h-full [&>.tab-interface]:h-full [&>div>.tab-label]:h-full"
+				>
+					<div class="flex h-full w-full flex-col items-center">
+						<IconWrapper
+							name={Loc.icon}
+							class="aspect-square max-h-full w-full grow"
+						/>
+						<span class="text-sm">{Loc.title}</span>
+					</div>
+				</TabAnchor>
+			{/each}
+		{/snippet}
 	</MediaQuery>
 </TabGroup>

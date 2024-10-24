@@ -40,8 +40,10 @@
 			.toPromise();
 	}
 
-	$: filteredQueue = $downloads?.data?.downloadChanged.queue.filter(
-		(dls) => !$filter.has(dls.state)
+	let filteredQueue = $derived(
+		$downloads?.data?.downloadChanged.queue.filter(
+			(dls) => !$filter.has(dls.state)
+		)
 	);
 </script>
 
@@ -58,19 +60,19 @@
 				<div class="mr-2 aspect-cover h-full py-1">
 					<div
 						class="placeholder aspect-cover h-full w-auto animate-pulse rounded-lg"
-					/>
+					></div>
 				</div>
 				<div class="w-full py-4">
-					<div class="placeholder mb-1 max-w-xs animate-pulse" />
-					<div class="placeholder mb-1 max-w-sm animate-pulse" />
+					<div class="placeholder mb-1 max-w-xs animate-pulse"></div>
+					<div class="placeholder mb-1 max-w-sm animate-pulse"></div>
 					<div class="flex max-w-3xl items-center">
-						<div class="placeholder mr-2 w-10 animate-pulse" />
-						<div class="placeholder h-2 w-full animate-pulse" />
+						<div class="placeholder mr-2 w-10 animate-pulse"></div>
+						<div class="placeholder h-2 w-full animate-pulse"></div>
 					</div>
 				</div>
 				<div class="h-full py-4">
 					<div class="aspect-square h-full w-auto p-4">
-						<div class="placeholder h-full w-full animate-pulse" />
+						<div class="placeholder h-full w-full animate-pulse"></div>
 					</div>
 				</div>
 			</div>
@@ -79,57 +81,58 @@
 {:else if filteredQueue}
 	{#each filteredQueue as dls (dls.chapter.id)}
 		<IntersectionObserver
-			let:intersecting
 			root={document.querySelector('#page') ?? undefined}
 			top={400}
 			bottom={400}
 			class="h-28"
 		>
-			{#if intersecting}
-				<a
-					href="/manga/{dls.manga.id}"
-					class="flex h-full flex-nowrap items-center px-4 hover:variant-glass-surface"
-				>
-					<div class="mr-2 aspect-cover h-full py-1">
-						<Image
-							src={dls.manga.thumbnailUrl}
-							class="rounded-lg"
-							height="h-full"
-							width="w-auto"
-							aspect="aspect-cover"
-						/>
-					</div>
-					<div class="w-full py-4">
-						<div class="text-xl">
-							{dls.manga.title}
-						</div>
-						<div>
-							{dls.chapter.name}, state: {dls.state[0] +
-								dls.state.slice(1, dls.state.length).toLowerCase()}
-						</div>
-						<div class="flex max-w-3xl items-center">
-							<span class="flex-none pr-1"
-								>{Math.round(dls.progress * 1000) / 10}%</span
-							>
-							<ProgressBar
-								meter="bg-primary-500"
-								track="bg-primary-500/30"
-								max={1}
-								value={dls.progress}
+			{#snippet children({ intersecting })}
+				{#if intersecting}
+					<a
+						href="/manga/{dls.manga.id}"
+						class="flex h-full flex-nowrap items-center px-4 hover:variant-glass-surface"
+					>
+						<div class="mr-2 aspect-cover h-full py-1">
+							<Image
+								src={dls.manga.thumbnailUrl}
+								class="rounded-lg"
+								height="h-full"
+								width="w-auto"
+								aspect="aspect-cover"
 							/>
 						</div>
-					</div>
-					<div class="h-full py-4">
-						<IconButton
-							on:click={(e) => handelclick(e, dls)}
-							name="mdi:delete"
-							hover="hover:variant-ghost-primary"
-							class="rounded-full p-1"
-							height="h-full"
-						/>
-					</div>
-				</a>
-			{/if}
+						<div class="w-full py-4">
+							<div class="text-xl">
+								{dls.manga.title}
+							</div>
+							<div>
+								{dls.chapter.name}, state: {dls.state[0] +
+									dls.state.slice(1, dls.state.length).toLowerCase()}
+							</div>
+							<div class="flex max-w-3xl items-center">
+								<span class="flex-none pr-1"
+									>{Math.round(dls.progress * 1000) / 10}%</span
+								>
+								<ProgressBar
+									meter="bg-primary-500"
+									track="bg-primary-500/30"
+									max={1}
+									value={dls.progress}
+								/>
+							</div>
+						</div>
+						<div class="h-full py-4">
+							<IconButton
+								onclick={(e) => handelclick(e, dls)}
+								name="mdi:delete"
+								hover="hover:variant-ghost-primary"
+								class="rounded-full p-1"
+								height="h-full"
+							/>
+						</div>
+					</a>
+				{/if}
+			{/snippet}
 		</IntersectionObserver>
 	{:else}
 		there are no downloads in queue matching filters
