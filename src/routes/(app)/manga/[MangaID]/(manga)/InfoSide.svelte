@@ -20,7 +20,7 @@
 		type OperationResultStore,
 		type Pausable
 	} from '@urql/svelte';
-	import { type ResultOf } from '$lib/gql/graphql';
+	import type { ResultOf } from '$lib/gql/graphql';
 	import {
 		deleteDownloadedChapters,
 		dequeueChapterDownloads,
@@ -286,7 +286,7 @@
 								modalStore.trigger({
 									type: 'component',
 									backdropClasses: '!p-0',
-									component: { ref: TrackingModal, props: { manga } }
+									component: { ref: TrackingModal, props: { manga: manga2 } }
 								});
 							}}
 							class="variant-soft btn flex h-12 items-center px-2 sm:px-5"

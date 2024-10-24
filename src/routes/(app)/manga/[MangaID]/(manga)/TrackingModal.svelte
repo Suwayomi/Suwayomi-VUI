@@ -28,7 +28,7 @@
 	import IconButton from '$lib/components/IconButton.svelte';
 
 	interface Props {
-		manga: OperationResultStore<ResultOf<typeof getManga>> & Pausable;
+		manga: OperationResultStore<ResultOf<typeof getManga>>;
 	}
 
 	let { manga }: Props = $props();
@@ -42,18 +42,24 @@
 		| (OperationResultStore<ResultOf<typeof searchTracker>> & Pausable)
 		| undefined = $state();
 
-	const Trackers = queryStore({
+	const Trackers2 = queryStore({
 		client,
 		query: trackers,
 		variables: { isLoggedIn: true },
 		requestPolicy: 'network-only'
 	});
 
-	$manga.data?.manga?.trackRecords.nodes.forEach((e) => {
-		mutationStore({
-			client,
-			query: fetchTrack,
-			variables: { recordId: e.id }
+	let Trackers = $derived.by(() => {
+		return $state.snapshot($Trackers2);
+	});
+
+	$effect(() => {
+		$manga.data?.manga?.trackRecords.nodes.forEach((e) => {
+			mutationStore({
+				client,
+				query: fetchTrack,
+				variables: { recordId: e.id }
+			});
 		});
 	});
 
@@ -125,13 +131,13 @@
 		<h1 class="h3 py-4 pl-4">Tracking</h1>
 		<div class="border-t border-surface-700">
 			<div class="grid grid-cols-1 gap-1">
-				{#if $Trackers.fetching}
+				{#if Trackers.fetching}
 					Loading...
-				{:else if $Trackers.error}
+				{:else if Trackers.error}
 					<div class="white-space-pre-wrap">
-						{JSON.stringify($Trackers.error, null, 4)}
+						{JSON.stringify(Trackers.error, null, 4)}
 					</div>
-				{:else if $Trackers.data?.trackers.nodes.length}
+				{:else if Trackers.data?.trackers.nodes.length}
 					<div class="px-4 pt-1">
 						<input
 							type="text"
@@ -144,7 +150,7 @@
 						<Tab bind:group={tabSet} name="Tracking" value="Tracking">
 							Tracking
 						</Tab>
-						{#each $Trackers.data.trackers.nodes as tracke}
+						{#each Trackers.data.trackers.nodes as tracke (tracke.id)}
 							{@const tracker = tracke}
 							<Tab bind:group={tabSet} name={tracker.name} value={tracker.id}>
 								{tracker.name}
@@ -154,9 +160,9 @@
 						<svelte:fragment slot="panel">
 							{#if tabSet === 'Tracking'}
 								{@const Records = $manga.data?.manga?.trackRecords.nodes ?? []}
-								{@const tracks = $Trackers.data?.trackers.nodes}
+								{@const tracks = Trackers.data?.trackers.nodes}
 								<div class="flex h-72 flex-col space-y-1 overflow-auto p-1">
-									{#each Records as RecordItem}
+									{#each Records as RecordItem (RecordItem.id)}
 										{@const track = tracks.find(
 											(e) => e.id === RecordItem.trackerId
 										)}
