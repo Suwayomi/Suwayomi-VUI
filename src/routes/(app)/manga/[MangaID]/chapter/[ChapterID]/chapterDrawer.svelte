@@ -80,8 +80,9 @@
 		});
 		const _ = [mangaMeta, $manga];
 		const tmp = untrack(() => {
-			return $manga.data?.manga.chapters.nodes
-				.filter(filterChapters(mangaMeta, true))
+			return $state
+				.snapshot($manga)
+				.data?.manga.chapters.nodes.filter(filterChapters(mangaMeta, true))
 				.sort((a, b) => {
 					return b.sourceOrder - a.sourceOrder;
 				});
