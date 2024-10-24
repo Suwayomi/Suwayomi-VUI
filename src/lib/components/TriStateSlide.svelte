@@ -7,26 +7,11 @@
 -->
 
 <script lang="ts">
-	import { run, createBubbler } from 'svelte/legacy';
-
-	const bubble = createBubbler();
 	import IconWrapper from './IconWrapper.svelte';
-	import { createEventDispatcher } from 'svelte';
 
 	// Types
 	import type { CssClasses, SvelteEvent } from '@skeletonlabs/skeleton';
 	import type { TriState } from '$lib/util';
-
-	// Event Dispatcher
-	type SlideToggleEvent = {
-		keyup: SvelteEvent<KeyboardEvent, HTMLDivElement>;
-		changeE: boolean;
-	};
-	const dispatch = createEventDispatcher<SlideToggleEvent>();
-
-	// Props
-
-	// Props (a11y)
 
 	// Base Styles
 	const cBase = 'inline-block';
@@ -52,7 +37,7 @@
 		if (['Enter', 'Space'].includes(event.code)) {
 			event.preventDefault();
 			/** @event {{ event }} keyup Fires when the component is focused and key is pressed. */
-			dispatch('keyup', event);
+			onkeyup(event);
 			const inputElem = event.currentTarget.firstChild as HTMLLabelElement;
 			inputElem.click();
 		}
@@ -99,6 +84,7 @@
 		state?: TriState;
 		children?: import('svelte').Snippet;
 		onchange?: (e: boolean) => void;
+		onkeyup?: (e: SvelteEvent<KeyboardEvent, HTMLDivElement>) => void;
 		[key: string]: unknown;
 	}
 
@@ -116,6 +102,7 @@
 		label = '',
 		state: Lstate = $bindable(checked === null ? 0 : checked ? 1 : 2),
 		onchange = () => {},
+		onkeyup = () => {},
 		children,
 		...rest
 	}: Props = $props();
@@ -197,13 +184,6 @@
 			bind:checked
 			{name}
 			onclick={handelClick}
-			onkeydown={bubble('keydown')}
-			onkeyup={bubble('keyup')}
-			onkeypress={bubble('keypress')}
-			onmouseover={bubble('mouseover')}
-			onchange={bubble('change')}
-			onfocus={bubble('focus')}
-			onblur={bubble('blur')}
 			{...prunedRestProps()}
 			disabled={rest.disabled as boolean | undefined | null}
 		/>

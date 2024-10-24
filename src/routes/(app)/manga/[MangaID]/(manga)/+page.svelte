@@ -7,8 +7,6 @@
 -->
 
 <script lang="ts">
-	import { run } from 'svelte/legacy';
-
 	import { AppBarData } from '$lib/MountTitleAction';
 	import { ErrorHelpUntyped } from '$lib/util';
 	import type { PageData } from './$types';

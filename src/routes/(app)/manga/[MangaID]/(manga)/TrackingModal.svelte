@@ -7,8 +7,6 @@
 -->
 
 <script lang="ts">
-	import { run } from 'svelte/legacy';
-
 	import Image from '$lib/components/Image.svelte';
 	import { TrackRecordTypeFragment } from '$lib/gql/Fragments';
 	import {

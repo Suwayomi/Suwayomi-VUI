@@ -7,8 +7,6 @@
 -->
 
 <script lang="ts">
-	import { run } from 'svelte/legacy';
-
 	import Slide from '$lib/components/Slide.svelte';
 	import { AccordionItem } from '@skeletonlabs/skeleton';
 

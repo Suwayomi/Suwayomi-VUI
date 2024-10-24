@@ -81,10 +81,10 @@
 		const _ = [mangaMeta, $manga];
 		const tmp = untrack(() => {
 			return $manga.data?.manga.chapters.nodes
-				.toSorted((a, b) => {
+				.filter(filterChapters(mangaMeta, true))
+				.sort((a, b) => {
 					return b.sourceOrder - a.sourceOrder;
-				})
-				.filter(filterChapters(mangaMeta, true));
+				});
 		});
 		untrack(() => {
 			manga.resume();

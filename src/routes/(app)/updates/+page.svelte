@@ -7,8 +7,6 @@
 -->
 
 <script lang="ts">
-	import { run } from 'svelte/legacy';
-
 	import UpdatesActions from './UpdatesActions.svelte';
 	import { AppBarData } from '$lib/MountTitleAction';
 	import { writable } from 'svelte/store';

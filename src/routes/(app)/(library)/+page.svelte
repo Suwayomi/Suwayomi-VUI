@@ -214,7 +214,7 @@
 	let orderedCategories = $derived(
 		($categories.data?.categories?.nodes ?? [])
 			.filter((e) => e.mangas.totalCount)
-			.toSorted((a, b) => {
+			.sort((a, b) => {
 				return a.order > b.order ? 1 : -1;
 			})
 	);

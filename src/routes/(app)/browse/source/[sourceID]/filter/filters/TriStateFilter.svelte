@@ -7,8 +7,6 @@
 -->
 
 <script lang="ts">
-	import { run } from 'svelte/legacy';
-
 	import TriStateSlide from '$lib/components/TriStateSlide.svelte';
 	import type { TriState } from '$lib/util';
 	import type { getSource } from '$lib/gql/Queries';
