@@ -12,8 +12,9 @@
 	import GlobalSearch from '../../../globalSearch.svelte';
 	import { getModalStore } from '@skeletonlabs/skeleton';
 	import MigrateModal from './migrateModal.svelte';
-	import { getContextClient, queryStore } from '@urql/svelte';
+	import { getContextClient } from '@urql/svelte';
 	import { getManga } from '$lib/gql/Queries';
+	import { queryState } from '$lib/util.svelte';
 
 	interface Props {
 		data: PageData;
@@ -25,20 +26,21 @@
 
 	const query = queryParam('q', ssp.string(), { pushHistory: false });
 	const client = getContextClient();
-	const manga = queryStore({
+	const manga = queryState({
 		client,
 		query: getManga,
 		variables: { id: data.MangaID }
 	});
 
-	const unSub = manga.subscribe(onSub);
+	let unSub = false;
+	$effect(() => {
+		if (!unSub) onSub(manga.value);
+	});
 
-	function onSub(mangaNow: typeof $manga) {
+	function onSub(mangaNow: typeof manga.value) {
 		if (mangaNow?.data?.manga?.title) {
 			$query = mangaNow?.data?.manga?.title;
-			setTimeout(() => {
-				unSub();
-			}, 1);
+			unSub = true;
 		}
 	}
 
@@ -50,13 +52,13 @@
 				ref: MigrateModal,
 				props: {
 					id,
-					manga: $manga.data?.manga
+					manga: manga.value.data?.manga
 				}
 			}
 		});
 	}
 </script>
 
-{#if $manga.data?.manga?.title}
-	<GlobalSearch title={$manga.data?.manga?.title} {OpenModal} />
+{#if manga.value.data?.manga?.title}
+	<GlobalSearch title={manga.value.data?.manga?.title} {OpenModal} />
 {/if}

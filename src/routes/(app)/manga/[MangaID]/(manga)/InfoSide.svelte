@@ -14,66 +14,59 @@
 	import InfoSubTitles from './InfoSubTitles.svelte';
 	import TrackingModal from './TrackingModal.svelte';
 	import { getModalStore } from '@skeletonlabs/skeleton';
-	import type { getManga } from '$lib/gql/Queries';
-	import {
-		getContextClient,
-		type OperationResultStore,
-		type Pausable
-	} from '@urql/svelte';
-	import type { ResultOf } from '$lib/gql/graphql';
+	import { getContextClient } from '@urql/svelte';
 	import {
 		deleteDownloadedChapters,
 		dequeueChapterDownloads,
 		enqueueChapterDownloads,
 		updateMangas
 	} from '$lib/gql/Mutations';
-	import { type MangaMeta, Meta } from '$lib/simpleStores';
+	import { gmState, mmState } from '$lib/simpleStores.svelte';
+
 	import NotesModal from './NotesModal.svelte';
 	import { getToastStore } from '$lib/components/Toast/stores';
 	import { longPress } from '$lib/press';
-	import { untrack } from 'svelte';
+	import { manga } from './mangaStores.svelte';
 
 	const toastStore = getToastStore();
 	const modalStore = getModalStore();
 	const client = getContextClient();
 
 	interface Props {
-		manga: OperationResultStore<ResultOf<typeof getManga>> & Pausable;
 		MangaID: number;
-		mangaMeta: ReturnType<typeof MangaMeta>;
 	}
 
-	let { manga: manga2, MangaID, mangaMeta }: Props = $props();
+	let { MangaID }: Props = $props();
 
 	function libToggle() {
 		if (
-			$Meta.DownloadAllChaptersOnAddToLibrary &&
-			!manga.data?.manga?.inLibrary
+			gmState.value.DownloadAllChaptersOnAddToLibrary &&
+			!manga.value?.data?.manga?.inLibrary
 		) {
 			client
 				.mutation(enqueueChapterDownloads, {
-					ids: manga.data?.manga?.chapters.nodes?.map((e) => e.id) ?? []
+					ids: manga.value?.data?.manga?.chapters.nodes?.map((e) => e.id) ?? []
 				})
 				.toPromise();
 		}
 		if (
-			manga.data?.manga?.inLibrary &&
-			$Meta.DeleteAllChaptersOnRemoveFromLibrary
+			manga.value?.data?.manga?.inLibrary &&
+			gmState.value.DeleteAllChaptersOnRemoveFromLibrary
 		) {
 			client
 				.mutation(deleteDownloadedChapters, {
-					ids: manga.data?.manga?.chapters.nodes?.map((e) => e.id) ?? []
+					ids: manga.value?.data?.manga?.chapters.nodes?.map((e) => e.id) ?? []
 				})
 				.toPromise();
 		}
 
 		if (
-			manga.data?.manga?.inLibrary &&
-			$Meta.RemoveChaptersFromDownloadQueueOnRemoveFromLibrary
+			manga.value?.data?.manga?.inLibrary &&
+			gmState.value.RemoveChaptersFromDownloadQueueOnRemoveFromLibrary
 		) {
 			client
 				.mutation(dequeueChapterDownloads, {
-					ids: manga.data?.manga?.chapters.nodes?.map((e) => e.id) ?? []
+					ids: manga.value?.data?.manga?.chapters.nodes?.map((e) => e.id) ?? []
 				})
 				.toPromise();
 		}
@@ -81,15 +74,15 @@
 		client
 			.mutation(updateMangas, {
 				ids: [MangaID],
-				inLibrary: !manga.data?.manga?.inLibrary
+				inLibrary: !manga.value?.data?.manga?.inLibrary
 			})
 			.toPromise();
 	}
 	let ImageFailed = $state(false);
 
 	function LongHandler() {
-		if (manga.data?.manga?.title) {
-			navigator.clipboard.writeText(manga.data?.manga?.title);
+		if (manga.value?.data?.manga?.title) {
+			navigator.clipboard.writeText(manga.value?.data?.manga?.title);
 			toastStore.trigger({
 				message: 'Title copied to clipboard',
 				background: 'bg-primary-600'
@@ -101,21 +94,9 @@
 			});
 		}
 	}
-
-	let manga = $derived.by(() => {
-		untrack(() => {
-			manga2.pause();
-		});
-		const _ = [$manga2];
-		const tmp = untrack(() => {
-			manga2.resume();
-			return $state.snapshot($manga2);
-		});
-		return tmp;
-	});
 </script>
 
-{#if manga.fetching}
+{#if manga.value?.fetching}
 	<div
 		class="max-h-full w-full space-y-8 p-4
 			md:absolute md:bottom-0 md:left-0 md:top-0 md:w-1/2 md:overflow-y-auto"
@@ -201,14 +182,14 @@
 			{/each}
 		</div>
 	</div>
-{:else if manga.error}
+{:else if manga.value?.error}
 	<div
 		class="max-h-full w-full space-y-8 whitespace-pre-wrap p-4 md:absolute md:bottom-0 md:left-0 md:top-0 md:w-1/2 md:overflow-y-auto"
 	>
-		Errors loading manga Info: {JSON.stringify(manga.error, null, 4)}
+		Errors loading manga Info: {JSON.stringify(manga.value?.error, null, 4)}
 	</div>
-{:else if manga.data?.manga}
-	{@const mangaFrag = manga.data.manga}
+{:else if manga.value?.data?.manga}
+	{@const mangaFrag = manga.value?.data.manga}
 	<div
 		class="max-h-full w-full space-y-8 p-4 md:absolute md:bottom-0 md:left-0 md:top-0 md:w-1/2 md:overflow-y-auto"
 	>
@@ -286,7 +267,9 @@
 								modalStore.trigger({
 									type: 'component',
 									backdropClasses: '!p-0',
-									component: { ref: TrackingModal, props: { manga: manga2 } }
+									component: {
+										ref: TrackingModal
+									}
 								});
 							}}
 							class="variant-soft btn flex h-12 items-center px-2 sm:px-5"
@@ -323,15 +306,15 @@
 					modalStore.trigger({
 						type: 'component',
 						backdropClasses: '!p-0',
-						component: { ref: NotesModal, props: { mangaMeta } }
+						component: { ref: NotesModal }
 					});
 				}}
 			>
 				Notes:
 			</button>
 			<div class="whitespace-pre-line pl-4 text-left">
-				{#if $mangaMeta.notes}
-					{$mangaMeta.notes}
+				{#if mmState.value.notes}
+					{mmState.value.notes}
 				{/if}
 			</div>
 		</div>

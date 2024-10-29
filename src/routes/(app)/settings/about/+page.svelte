@@ -9,13 +9,14 @@
 <script lang="ts">
 	import { AppBarData } from '$lib/MountTitleAction';
 	import { getabout } from '$lib/gql/Queries';
-	import { getContextClient, queryStore } from '@urql/svelte';
+	import { queryState } from '$lib/util.svelte';
+	import { getContextClient } from '@urql/svelte';
 
-	let about = queryStore({ client: getContextClient(), query: getabout });
+	let about = queryState({ client: getContextClient(), query: getabout });
 	AppBarData('About');
 </script>
 
-{#if $about.fetching}
+{#if about.value.fetching}
 	{#if typeof window !== 'undefined' && window.version}
 		<div class="py-2 pl-4">
 			<div class="text-xl">client version</div>
@@ -30,17 +31,17 @@
 			<div class="placeholder h-6 w-full max-w-sm animate-pulse"></div>
 		</div>
 	{/each}
-{:else if $about.error}
+{:else if about.value.error}
 	<div class="white-space-pre-wrap">
-		{JSON.stringify($about.error, null, 4)}
+		{JSON.stringify(about.value.error, null, 4)}
 	</div>
-{:else if $about.data}
+{:else if about.value.data}
 	<div class="pt-2">
 		<div class="py-2 pl-4">
 			<div class="text-xl">Server</div>
 			<div class="opacity-80">
-				{$about.data.aboutServer.name}
-				{$about.data.aboutServer.buildType}
+				{about.value.data.aboutServer.name}
+				{about.value.data.aboutServer.buildType}
 			</div>
 		</div>
 		{#if typeof window !== 'undefined' && window.version}
@@ -54,33 +55,34 @@
 		<div class="py-2 pl-4">
 			<div class="text-xl">Server version</div>
 			<div class="opacity-80">
-				{$about.data.aboutServer.version}-{$about.data.aboutServer.revision}
+				{about.value.data.aboutServer.version}-{about.value.data.aboutServer
+					.revision}
 			</div>
 		</div>
 		<div class="py-2 pl-4">
 			<div class="text-xl">Build time</div>
 			<div class="opacity-80">
 				{new Date(
-					parseInt($about.data.aboutServer.buildTime) * 1000
+					parseInt(about.value.data.aboutServer.buildTime) * 1000
 				).toUTCString()}
 			</div>
 		</div>
 		<a
 			class="block py-2 pl-4 hover:variant-glass-surface"
-			href={$about.data.aboutServer.github}
+			href={about.value.data.aboutServer.github}
 		>
 			<div class="text-xl">Github</div>
 			<div class="opacity-80">
-				{$about.data.aboutServer.github}
+				{about.value.data.aboutServer.github}
 			</div>
 		</a>
 		<a
 			class="block py-2 pl-4 hover:variant-glass-surface"
-			href={$about.data.aboutServer.discord}
+			href={about.value.data.aboutServer.discord}
 		>
 			<div class="text-xl">Discord</div>
 			<div class="opacity-80">
-				{$about.data.aboutServer.discord}
+				{about.value.data.aboutServer.discord}
 			</div>
 		</a>
 	</div>

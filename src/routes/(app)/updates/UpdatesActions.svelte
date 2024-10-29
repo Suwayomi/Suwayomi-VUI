@@ -11,7 +11,7 @@
 	import TooltipIconButton from '$lib/components/TooltipIconButton.svelte';
 	import { screens } from '$lib/screens';
 	import { popup } from '@skeletonlabs/skeleton';
-	import { HelpUpdateChapters, dlreabook } from '$lib/util';
+	import { HelpUpdateChapters, dlreabook } from '$lib/util.svelte';
 	import { selected, selectMode } from './UpdatesStores';
 	import Icon from '$lib/components/IconWrapper.svelte';
 	import IconWrapper from '$lib/components/IconWrapper.svelte';

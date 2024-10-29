@@ -11,14 +11,15 @@
 	import { getModalStore } from '@skeletonlabs/skeleton';
 	import TrackLogin from './TrackLogin.svelte';
 	import { onMount } from 'svelte';
-	import { getContextClient, queryStore } from '@urql/svelte';
+	import { getContextClient } from '@urql/svelte';
 	import { trackers } from '$lib/gql/Queries';
 	import { type ResultOf } from '$lib/gql/graphql';
 	import { TrackerTypeFragment } from '$lib/gql/Fragments';
 	import ModalTemplate from '$lib/components/ModalTemplate.svelte';
+	import { queryState } from '$lib/util.svelte';
 	const modalStore = getModalStore();
 	const client = getContextClient();
-	let Trackers = queryStore({ client, query: trackers });
+	let Trackers = queryState({ client, query: trackers });
 
 	onMount(() => {
 		window.addEventListener('storage', message_receive);
@@ -31,7 +32,7 @@
 		if (event.key === 'VUI3_TRACKER_LOGIN' && event.newValue === 'true') {
 			localStorage.setItem('VUI3_TRACKER_LOGIN', 'false');
 			client.query(trackers, {}, { requestPolicy: 'network-only' }).toPromise();
-			Trackers = queryStore({
+			Trackers = queryState({
 				client,
 				query: trackers,
 				requestPolicy: 'cache-first'
@@ -54,11 +55,11 @@
 {#if $modalStore[0]}
 	<ModalTemplate titleText="Tracking">
 		<div class="pl-4">
-			{#if $Trackers.error}
+			{#if Trackers.value.error}
 				<div class="white-space-pre-wrap">
-					{JSON.stringify($Trackers.error, null, 4)}
+					{JSON.stringify(Trackers.value.error, null, 4)}
 				</div>
-			{:else if $Trackers.fetching}
+			{:else if Trackers.value.fetching}
 				{#each new Array(4).fill(0) as _}
 					<div class="flex w-full p-1 pl-4 text-left">
 						<div
@@ -70,8 +71,8 @@
 						</div>
 					</div>
 				{/each}
-			{:else if $Trackers.data}
-				{#each $Trackers.data.trackers.nodes as tracker}
+			{:else if Trackers.value.data}
+				{#each Trackers.value.data.trackers.nodes as tracker}
 					<button
 						class="block w-full hover:variant-ghost-surface"
 						onclick={() => {

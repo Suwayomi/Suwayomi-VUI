@@ -15,9 +15,10 @@
 	import SwitchPreference from './preferences/SwitchPreference.svelte';
 	import MultiSelectListPreference from './preferences/MultiSelectListPreference.svelte';
 	import EditTextPreference from './preferences/EditTextPreference.svelte';
-	import { getContextClient, queryStore } from '@urql/svelte';
+	import { getContextClient } from '@urql/svelte';
 	import { getSource } from '$lib/gql/Queries';
 	import ModalTemplate from '$lib/components/ModalTemplate.svelte';
+	import { queryState } from '$lib/util.svelte';
 
 	interface Props {
 		data: LayoutData;
@@ -28,23 +29,20 @@
 
 	const modalStore = getModalStore();
 	const client = getContextClient();
-	let sauce2 = queryStore({
-		client,
-		query: getSource,
-		variables: { id: data.sourceID }
-	});
 	onDestroy(clearAll);
 
 	let sauce = $derived.by(() => {
-		untrack(() => {
-			sauce2.pause();
-		});
-		const _ = [$sauce2];
-		const tmp = untrack(() => {
-			sauce2.resume();
-			return $state.snapshot($sauce2).data?.source;
-		});
-		return tmp;
+		const _ = [data.sourceID];
+		return untrack(
+			() =>
+				queryState({
+					client,
+					query: getSource,
+					variables: {
+						id: data.sourceID
+					}
+				}).value.data?.source
+		);
 	});
 </script>
 

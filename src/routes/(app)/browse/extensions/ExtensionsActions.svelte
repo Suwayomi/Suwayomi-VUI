@@ -10,7 +10,7 @@
 	import { langFilter, lastFetched } from './ExtensionsStores';
 	import Search from '$lib/components/Search.svelte';
 	import LangFilterButton from '$lib/components/LangFilterButton.svelte';
-	import { ErrorHelp } from '$lib/util';
+	import { ErrorHelp } from '$lib/util.svelte';
 	import TooltipIconButton from '$lib/components/TooltipIconButton.svelte';
 	import { FileButton } from '@skeletonlabs/skeleton';
 	import Tooltip from '$lib/components/Tooltip.svelte';

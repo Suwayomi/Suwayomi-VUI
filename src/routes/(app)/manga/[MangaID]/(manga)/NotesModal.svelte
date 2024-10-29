@@ -8,15 +8,9 @@
 
 <script lang="ts">
 	import { getModalStore } from '@skeletonlabs/skeleton';
-	import type { MangaMeta } from '$lib/simpleStores';
+	import { mmState } from '$lib/simpleStores.svelte';
 	import ModalTemplate from '$lib/components/ModalTemplate.svelte';
 	const modalStore = getModalStore();
-
-	interface Props {
-		mangaMeta: ReturnType<typeof MangaMeta>;
-	}
-
-	let { mangaMeta }: Props = $props();
 </script>
 
 {#if $modalStore[0]}
@@ -24,8 +18,8 @@
 		<div>
 			<textarea
 				class="textarea h-40 w-full"
-				onchange={(e) => ($mangaMeta.notes = e.currentTarget.value)}
-				value={$mangaMeta.notes ?? ''}
+				onchange={(e) => (mmState.value.notes = e.currentTarget.value)}
+				value={mmState.value.notes ?? ''}
 			></textarea>
 		</div>
 	</ModalTemplate>

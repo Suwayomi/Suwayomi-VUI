@@ -7,7 +7,11 @@
 -->
 
 <script lang="ts">
-	import { ErrorHelp } from '$lib/util';
+	import {
+		ErrorHelp,
+		queryState,
+		type queryStateReturn
+	} from '$lib/util.svelte';
 	import {
 		FileDropzone,
 		ProgressBar,
@@ -15,15 +19,10 @@
 	} from '@skeletonlabs/skeleton';
 	import { getToastStore } from '$lib/components/Toast/stores';
 	import { AppBarData } from '$lib/MountTitleAction';
-	import {
-		getContextClient,
-		queryStore,
-		type Pausable,
-		type OperationResultStore
-	} from '@urql/svelte';
+	import { getContextClient } from '@urql/svelte';
 	import { createBackup, restoreBackup } from '$lib/gql/Mutations';
 	import { restoreStatus, validateBackup } from '$lib/gql/Queries';
-	import type { ResultOf } from '$lib/gql/graphql';
+	import type { ResultOf, VariablesOf } from '$lib/gql/graphql';
 	import ModalTemplate from '$lib/components/ModalTemplate.svelte';
 
 	const toastStore = getToastStore();
@@ -76,13 +75,16 @@ ${e.data?.validateBackup.missingSources.map((ele) => ele.name).join(',')}
 	}
 
 	type RestoreStatus =
-		| (OperationResultStore<ResultOf<typeof restoreStatus>> & Pausable)
+		| queryStateReturn<
+				ResultOf<typeof restoreStatus>,
+				VariablesOf<typeof restoreStatus>
+		  >
 		| undefined;
 
 	let restoreStat: RestoreStatus = $state();
 
 	$effect(() => {
-		if ($restoreStat?.data?.restoreStatus?.state === 'SUCCESS') {
+		if (restoreStat?.value.data?.restoreStatus?.state === 'SUCCESS') {
 			toastStore.trigger({
 				hoverable: true,
 				message: `<h3>you successfully restored the backup</h3>`,
@@ -93,7 +95,7 @@ ${e.data?.validateBackup.missingSources.map((ele) => ele.name).join(',')}
 	});
 
 	$effect(() => {
-		if ($restoreStat?.data?.restoreStatus?.state === 'FAILURE') {
+		if (restoreStat?.value.data?.restoreStatus?.state === 'FAILURE') {
 			toastStore.trigger({
 				hoverable: true,
 				message: `<h3>The backup failed to restore</h3>`,
@@ -110,7 +112,7 @@ ${e.data?.validateBackup.missingSources.map((ele) => ele.name).join(',')}
 			client.mutation(restoreBackup, { backup: files[0] }).toPromise(),
 			(e) => {
 				if (e.data?.restoreBackup.id) {
-					restoreStat = queryStore({
+					restoreStat = queryState({
 						client,
 						query: restoreStatus,
 						variables: { id: e.data.restoreBackup.id },
@@ -172,17 +174,17 @@ ${e.data?.validateBackup.missingSources.map((ele) => ele.name).join(',')}
 						</div>
 					{/snippet}
 				</FileDropzone>
-				{#if $restoreStat?.data?.restoreStatus?.state}
+				{#if restoreStat?.value.data?.restoreStatus?.state}
 					<div
 						class="p-4"
-						title="{$restoreStat.data.restoreStatus.state
+						title="{restoreStat.value.data.restoreStatus.state
 							.toLowerCase()
-							.replaceAll('_', ' ')}&#013;{$restoreStat.data.restoreStatus
-							.mangaProgress}/{$restoreStat.data.restoreStatus.totalManga}"
+							.replaceAll('_', ' ')}&#013;{restoreStat.value.data.restoreStatus
+							.mangaProgress}/{restoreStat.value.data.restoreStatus.totalManga}"
 					>
 						<ProgressBar
-							value={$restoreStat.data.restoreStatus.mangaProgress}
-							max={$restoreStat.data.restoreStatus.totalManga}
+							value={restoreStat.value.data.restoreStatus.mangaProgress}
+							max={restoreStat.value.data.restoreStatus.totalManga}
 						/>
 					</div>
 				{/if}

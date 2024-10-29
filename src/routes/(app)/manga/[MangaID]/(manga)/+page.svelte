@@ -8,16 +8,16 @@
 
 <script lang="ts">
 	import { AppBarData } from '$lib/MountTitleAction';
-	import { ErrorHelpUntyped } from '$lib/util';
+	import { ErrorHelpUntyped } from '$lib/util.svelte';
 	import type { PageData } from './$types';
 	import InfoSide from './InfoSide.svelte';
 	import MangaActions from './MangaActions.svelte';
 	import ChaptersSide from './chaptersSide.svelte';
-	import { MangaMeta } from '$lib/simpleStores';
-	import { getContextClient, queryStore } from '@urql/svelte';
-	import { getManga } from '$lib/gql/Queries';
+	import { mmState } from '$lib/simpleStores.svelte';
+	import { getContextClient } from '@urql/svelte';
 	import { fetchMangaChapters, fetchMangaInfo } from '$lib/gql/Mutations';
 	import { untrack } from 'svelte';
+	import { manga, setMangaId } from './mangaStores.svelte';
 
 	interface Props {
 		data: PageData;
@@ -25,14 +25,9 @@
 
 	let { data }: Props = $props();
 
-	const mangaMeta = MangaMeta(data.MangaID);
-
+	mmState.id = data.MangaID;
 	const client = getContextClient();
-	const manga = queryStore({
-		client,
-		query: getManga,
-		variables: { id: data.MangaID }
-	});
+	setMangaId(data.MangaID);
 
 	async function fetchChapters() {
 		await ErrorHelpUntyped(
@@ -43,16 +38,15 @@
 	}
 
 	$effect(() => {
-		if ($manga.data?.manga?.lastFetchedAt === '0') {
+		if (manga.value?.data?.manga?.lastFetchedAt === '0') {
 			untrack(fetchChapters);
 		}
 	});
 
 	$effect(() => {
-		AppBarData($manga.data?.manga?.title || 'Manga', {
+		AppBarData(manga.value?.data?.manga?.title || 'Manga', {
 			component: MangaActions,
 			props: {
-				manga: $manga.data?.manga,
 				fetchChapters
 			}
 		});
@@ -60,6 +54,6 @@
 </script>
 
 <div class="block md:relative md:flex md:h-full">
-	<InfoSide {manga} MangaID={data.MangaID} {mangaMeta} />
-	<ChaptersSide {manga} MangaID={data.MangaID} {mangaMeta} />
+	<InfoSide MangaID={data.MangaID} />
+	<ChaptersSide MangaID={data.MangaID} />
 </div>

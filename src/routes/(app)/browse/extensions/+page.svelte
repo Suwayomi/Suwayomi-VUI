@@ -8,24 +8,26 @@
 
 <script lang="ts">
 	import { AppBarData } from '$lib/MountTitleAction';
-	import { ErrorHelp, Partition, groupBy } from '$lib/util';
+	import {
+		ErrorHelp,
+		Partition,
+		groupBy,
+		queryState,
+		type queryStateReturn
+	} from '$lib/util.svelte';
 	import { queryParam, ssp } from 'sveltekit-search-params';
 	import Nav from '../Nav.svelte';
 	import { FindLangName } from '../languages';
 	import ExtensionsActions from './ExtensionsActions.svelte';
 	import { langFilter, lastFetched } from './ExtensionsStores';
 	import ExtensionCard from './ExtensionCard.svelte';
-	import { Meta } from '$lib/simpleStores';
-	import { queryStore } from '@urql/svelte';
-	import {
-		getContextClient,
-		type OperationResultStore,
-		type Pausable
-	} from '@urql/svelte';
+
+	import { getContextClient } from '@urql/svelte';
 	import { getExtensions } from '$lib/gql/Queries';
 	import { ExtensionTypeFragment } from '$lib/gql/Fragments';
-	import { type ResultOf } from '$lib/gql/graphql';
+	import { type ResultOf, type VariablesOf } from '$lib/gql/graphql';
 	import { fetchExtensions } from '$lib/gql/Mutations';
+	import { gmState } from '$lib/simpleStores.svelte';
 
 	const client = getContextClient();
 
@@ -33,8 +35,11 @@
 	type TExtension = ResultOf<typeof ExtensionTypeFragment>;
 
 	let extensions:
-		| (OperationResultStore<ResultOf<typeof getExtensions>> & Pausable)
-		| undefined;
+		| queryStateReturn<
+				ResultOf<typeof getExtensions>,
+				VariablesOf<typeof getExtensions>
+		  >
+		| undefined = $state();
 
 	checkIfFetchNewExtensions();
 
@@ -46,10 +51,10 @@
 			);
 			$lastFetched = new Date();
 		}
-		extensions = queryStore({
+		extensions = queryState({
 			client,
 			query: getExtensions,
-			variables: { isNsfw: $Meta.nsfw ? null : false }
+			variables: { isNsfw: gmState.value.nsfw ? null : false }
 		});
 	}
 
@@ -97,7 +102,7 @@
 			...groupBy(notInstalledExtensions, (extension) => extension.lang)
 		];
 	}
-	let langs = $derived(getLangs($extensions?.data));
+	let langs = $derived(getLangs(extensions?.value?.data));
 	$effect(() => {
 		AppBarData('Extensions', {
 			component: ExtensionsActions,
@@ -105,7 +110,7 @@
 		});
 	});
 	let filteredExtensions = $derived(
-		$extensions?.data?.extensions.nodes?.filter((ele) => {
+		extensions?.value?.data?.extensions.nodes?.filter((ele) => {
 			if (!$langFilter.has(ele.lang)) return false;
 			if ($query !== '' && $query !== null) {
 				return ele.name.toLowerCase().includes($query.toLocaleLowerCase());
@@ -118,7 +123,7 @@
 
 <Nav>
 	{#snippet children()}
-		{#if $extensions === undefined || $extensions.fetching}
+		{#if extensions?.value === undefined || extensions?.value.fetching}
 			<div class="px-4">
 				{#each new Array(5) as _}
 					<div class="placeholder m-2 h-8 max-w-xs animate-pulse md:h-10"></div>
@@ -145,9 +150,9 @@
 					{/each}
 				{/each}
 			</div>
-		{:else if $extensions.error}
+		{:else if extensions?.value.error}
 			<div class="white-space-pre-wrap">
-				{JSON.stringify($extensions.error, null, 4)}
+				{JSON.stringify(extensions?.value.error, null, 4)}
 			</div>
 		{:else if groupExtensions}
 			<div class="px-4">

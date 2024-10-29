@@ -7,12 +7,13 @@
 -->
 <script lang="ts">
 	import { AppBarData } from '$lib/MountTitleAction';
-	import { GetEnumArray, errortoast, setSettings } from '$lib/util';
 	import {
-		getContextClient,
-		queryStore,
-		subscriptionStore
-	} from '@urql/svelte';
+		GetEnumArray,
+		errortoast,
+		queryState,
+		setSettings
+	} from '$lib/util.svelte';
+	import { getContextClient, subscriptionStore } from '@urql/svelte';
 	import Select from './components/Select.svelte';
 	import ExtensionReposModal from './components/extensionReposModal.svelte';
 	import Number from './components/number.svelte';
@@ -37,7 +38,7 @@
 
 	AppBarData('Server Settings');
 	const client = getContextClient();
-	const settingsData = queryStore({
+	const settingsData = queryState({
 		client,
 		query: serverSettings
 	});
@@ -115,55 +116,65 @@
 	);
 	let webUIUpdateCheckInterval = $state(23);
 
-	settingsData.subscribe((data) => {
-		if (data.data?.settings) {
-			autoDownloadNewChapters = data.data.settings.autoDownloadNewChapters;
-			autoDownloadIgnoreReUploads = data.data.settings
+	$effect(() => {
+		if (settingsData.value.data?.settings) {
+			autoDownloadNewChapters =
+				settingsData.value.data.settings.autoDownloadNewChapters;
+			autoDownloadIgnoreReUploads = settingsData.value.data.settings
 				.autoDownloadIgnoreReUploads as boolean;
 			autoDownloadNewChaptersLimit =
-				data.data.settings.autoDownloadNewChaptersLimit;
-			backupInterval = data.data.settings.backupInterval;
-			backupPath = data.data.settings.backupPath;
-			backupTTL = data.data.settings.backupTTL;
-			backupTime = data.data.settings.backupTime;
-			basicAuthEnabled = data.data.settings.basicAuthEnabled;
-			basicAuthPassword = data.data.settings.basicAuthPassword;
-			basicAuthUsername = data.data.settings.basicAuthUsername;
-			debugLogsEnabled = data.data.settings.debugLogsEnabled;
-			downloadAsCbz = data.data.settings.downloadAsCbz;
-			downloadsPath = data.data.settings.downloadsPath;
-			electronPath = data.data.settings.electronPath;
-			excludeCompleted = data.data.settings.excludeCompleted;
+				settingsData.value.data.settings.autoDownloadNewChaptersLimit;
+			backupInterval = settingsData.value.data.settings.backupInterval;
+			backupPath = settingsData.value.data.settings.backupPath;
+			backupTTL = settingsData.value.data.settings.backupTTL;
+			backupTime = settingsData.value.data.settings.backupTime;
+			basicAuthEnabled = settingsData.value.data.settings.basicAuthEnabled;
+			basicAuthPassword = settingsData.value.data.settings.basicAuthPassword;
+			basicAuthUsername = settingsData.value.data.settings.basicAuthUsername;
+			debugLogsEnabled = settingsData.value.data.settings.debugLogsEnabled;
+			downloadAsCbz = settingsData.value.data.settings.downloadAsCbz;
+			downloadsPath = settingsData.value.data.settings.downloadsPath;
+			electronPath = settingsData.value.data.settings.electronPath;
+			excludeCompleted = settingsData.value.data.settings.excludeCompleted;
 			excludeEntryWithUnreadChapters =
-				data.data.settings.excludeEntryWithUnreadChapters;
-			excludeNotStarted = data.data.settings.excludeNotStarted;
-			extensionRepos = data.data.settings.extensionRepos;
-			excludeUnreadChapters = data.data.settings.excludeUnreadChapters;
-			flareSolverrEnabled = data.data.settings.flareSolverrEnabled;
-			flareSolverrSessionName = data.data.settings.flareSolverrSessionName;
-			flareSolverrSessionTtl = data.data.settings.flareSolverrSessionTtl;
-			flareSolverrTimeout = data.data.settings.flareSolverrTimeout;
-			flareSolverrUrl = data.data.settings.flareSolverrUrl;
-			globalUpdateInterval = data.data.settings.globalUpdateInterval;
-			gqlDebugLogsEnabled = data.data.settings.gqlDebugLogsEnabled;
+				settingsData.value.data.settings.excludeEntryWithUnreadChapters;
+			excludeNotStarted = settingsData.value.data.settings.excludeNotStarted;
+			extensionRepos = settingsData.value.data.settings.extensionRepos;
+			excludeUnreadChapters =
+				settingsData.value.data.settings.excludeUnreadChapters;
+			flareSolverrEnabled =
+				settingsData.value.data.settings.flareSolverrEnabled;
+			flareSolverrSessionName =
+				settingsData.value.data.settings.flareSolverrSessionName;
+			flareSolverrSessionTtl =
+				settingsData.value.data.settings.flareSolverrSessionTtl;
+			flareSolverrTimeout =
+				settingsData.value.data.settings.flareSolverrTimeout;
+			flareSolverrUrl = settingsData.value.data.settings.flareSolverrUrl;
+			globalUpdateInterval =
+				settingsData.value.data.settings.globalUpdateInterval;
+			gqlDebugLogsEnabled =
+				settingsData.value.data.settings.gqlDebugLogsEnabled;
 			initialOpenInBrowserEnabled =
-				data.data.settings.initialOpenInBrowserEnabled;
-			ip = data.data.settings.ip;
-			localSourcePath = data.data.settings.localSourcePath;
-			maxSourcesInParallel = data.data.settings.maxSourcesInParallel;
-			port = data.data.settings.port;
-			socksProxyEnabled = data.data.settings.socksProxyEnabled;
-			socksProxyHost = data.data.settings.socksProxyHost;
-			socksProxyPort = data.data.settings.socksProxyPort;
-			socksProxyPassword = data.data.settings.socksProxyPassword;
-			socksProxyUsername = data.data.settings.socksProxyUsername;
-			socksProxyVersion = data.data.settings.socksProxyVersion;
-			systemTrayEnabled = data.data.settings.systemTrayEnabled;
-			updateMangas = data.data.settings.updateMangas;
-			webUIChannel = data.data.settings.webUIChannel;
-			webUIFlavor = data.data.settings.webUIFlavor;
-			webUIInterface = data.data.settings.webUIInterface;
-			webUIUpdateCheckInterval = data.data.settings.webUIUpdateCheckInterval;
+				settingsData.value.data.settings.initialOpenInBrowserEnabled;
+			ip = settingsData.value.data.settings.ip;
+			localSourcePath = settingsData.value.data.settings.localSourcePath;
+			maxSourcesInParallel =
+				settingsData.value.data.settings.maxSourcesInParallel;
+			port = settingsData.value.data.settings.port;
+			socksProxyEnabled = settingsData.value.data.settings.socksProxyEnabled;
+			socksProxyHost = settingsData.value.data.settings.socksProxyHost;
+			socksProxyPort = settingsData.value.data.settings.socksProxyPort;
+			socksProxyPassword = settingsData.value.data.settings.socksProxyPassword;
+			socksProxyUsername = settingsData.value.data.settings.socksProxyUsername;
+			socksProxyVersion = settingsData.value.data.settings.socksProxyVersion;
+			systemTrayEnabled = settingsData.value.data.settings.systemTrayEnabled;
+			updateMangas = settingsData.value.data.settings.updateMangas;
+			webUIChannel = settingsData.value.data.settings.webUIChannel;
+			webUIFlavor = settingsData.value.data.settings.webUIFlavor;
+			webUIInterface = settingsData.value.data.settings.webUIInterface;
+			webUIUpdateCheckInterval =
+				settingsData.value.data.settings.webUIUpdateCheckInterval;
 		}
 	});
 
@@ -218,14 +229,14 @@
 	}
 </script>
 
-{#if $settingsData.error}
+{#if settingsData.value.error}
 	<div class="white-space-pre-wrap">
-		{JSON.stringify($settingsData.error, null, 4)}
+		{JSON.stringify(settingsData.value.error, null, 4)}
 	</div>
-{:else if $settingsData.fetching}
+{:else if settingsData.value.fetching}
 	Loading...
-{:else if $settingsData.data}
-	{@const settings = $settingsData.data.settings}
+{:else if settingsData.value.data}
+	{@const settings = settingsData.value.data.settings}
 	<div class="[&>*]:px-4">
 		<!-- remove category from Manga Not In Library -->
 		<button

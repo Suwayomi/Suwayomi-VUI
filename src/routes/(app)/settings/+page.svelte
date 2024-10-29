@@ -11,16 +11,18 @@
 	import IconWrapper from '$lib/components/IconWrapper.svelte';
 	import { AppBarData } from '$lib/MountTitleAction';
 	import Lightswitch from '$lib/components/lightswitch.svelte';
-	import { Meta, display } from '$lib/simpleStores';
+	import { display, gmState } from '$lib/simpleStores.svelte';
+
 	import { presetWithIcons } from '$lib/presets';
 	import Slide from '$lib/components/Slide.svelte';
 	import { getModalStore } from '@skeletonlabs/skeleton';
 	import ReaderDefaultsModal from './ReaderDefaultsModal.svelte';
 	import BackupModal from './BackupModal.svelte';
-	import { enumKeys } from '$lib/util';
+	import { enumKeys } from '$lib/util.svelte';
 	import MangaSettingsModal from './MangaSettingsModal.svelte';
 	import TrackingModal from './TrackingModal.svelte';
 	import CacheSettingsModal from './CacheSettingsModal.svelte';
+
 	const modalStore = getModalStore();
 	AppBarData('Settings');
 </script>
@@ -88,7 +90,7 @@
 >
 	<IconWrapper class="h-full w-auto p-2" name="mdi:television-guide" />
 	<div class="w-full">Grid Display</div>
-	<select bind:value={$Meta.Display} class="select mr-1 max-w-sm">
+	<select bind:value={gmState.value.Display} class="select mr-1 max-w-sm">
 		{#each enumKeys(display) as value}
 			<option {value}>{value}</option>
 		{/each}
@@ -98,7 +100,7 @@
 	onclickcapture={(e) => {
 		e.stopPropagation();
 		e.preventDefault();
-		$Meta.dark = !$Meta.dark;
+		gmState.value.dark = !gmState.value.dark;
 	}}
 	class="flex h-16 w-full cursor-pointer items-center text-left hover:variant-glass-surface"
 >
@@ -111,7 +113,7 @@
 >
 	<IconWrapper class="h-full w-auto p-2" name="mdi:palette-outline" />
 	<div class="w-full">Theme settings</div>
-	<select bind:value={$Meta.theme} class="select mr-1 max-w-sm">
+	<select bind:value={gmState.value.theme} class="select mr-1 max-w-sm">
 		{#each presetWithIcons as preset}
 			<option value={preset.name}>{preset.icon} {preset.name}</option>
 		{/each}
@@ -119,14 +121,14 @@
 </label>
 <button
 	onclick={() => {
-		$Meta.nsfw = !$Meta.nsfw;
+		gmState.value.nsfw = !gmState.value.nsfw;
 	}}
 	class="flex h-16 w-full cursor-pointer items-center text-left hover:variant-glass-surface"
 >
 	<IconWrapper class="h-full w-auto p-2" name="mdi:heart" />
 	<div class="w-full">Show Nsfw</div>
 	<Slide
-		bind:checked={$Meta.nsfw}
+		bind:checked={gmState.value.nsfw}
 		class="p-1 pl-2 hover:variant-glass-surface focus:outline-0"
 	/>
 </button>

@@ -16,16 +16,16 @@
 	import { SourceLangFilter } from './(app)/browse/sources/SourcesStores';
 	import { queryParam, ssp } from 'sveltekit-search-params';
 	import { page } from '$app/stores';
-	import { getContextClient, queryStore } from '@urql/svelte';
+	import { getContextClient } from '@urql/svelte';
 	import {
 		getCategories,
 		getCategory,
 		getManga,
 		getSources
 	} from '$lib/gql/Queries';
-	import type { OperationResultStore, Pausable } from '@urql/svelte';
-	import type { ResultOf } from '$lib/gql/graphql';
+	import type { ResultOf, VariablesOf } from '$lib/gql/graphql';
 	import { ChapterTypeFragment } from '$lib/gql/Fragments';
+	import { queryState, type queryStateReturn } from '$lib/util.svelte';
 
 	interface Props {
 		parent: SvelteComponent;
@@ -102,9 +102,12 @@
 
 	const client = getContextClient();
 
-	let sources: OperationResultStore<ResultOf<typeof getSources>> & Pausable;
+	let sources: queryStateReturn<
+		ResultOf<typeof getSources>,
+		VariablesOf<typeof getSources>
+	>;
 
-	let categories = queryStore({
+	let categories = queryState({
 		client,
 		query: getCategories
 	});
@@ -113,11 +116,14 @@
 	let mangaId: undefined | number = $state(undefined);
 
 	let category:
-		| (OperationResultStore<ResultOf<typeof getCategory>> & Pausable)
+		| queryStateReturn<
+				ResultOf<typeof getCategory>,
+				VariablesOf<typeof getCategory>
+		  >
 		| undefined = $state();
 
 	let manga:
-		| (OperationResultStore<ResultOf<typeof getManga>> & Pausable)
+		| queryStateReturn<ResultOf<typeof getManga>, VariablesOf<typeof getManga>>
 		| undefined = $state();
 
 	async function doCategory() {
@@ -126,8 +132,8 @@
 			const categorySearch: string | undefined = parsed[0];
 			const mangaSearch: string | undefined = parsed[1];
 			const chapterNameSearch: string | undefined = parsed[2];
-			const includeCategory = $categories.data?.categories.nodes?.filter((e) =>
-				e.name.toLowerCase().includes(categorySearch.toLowerCase())
+			const includeCategory = categories.value.data?.categories.nodes?.filter(
+				(e) => e.name.toLowerCase().includes(categorySearch.toLowerCase())
 			);
 			let includeMangas:
 				| ResultOf<typeof getCategory>['category']['mangas']['nodes']
@@ -136,41 +142,45 @@
 				undefined;
 			if (mangaSearch !== undefined && includeCategory?.[0]) {
 				catId = includeCategory[0].id;
+				let unSub = () => {};
 				includeMangas = await new Promise((resolve) => {
 					window.requestAnimationFrame(() => {
-						let unSub = () => {};
-						unSub =
-							category?.subscribe((ee) => {
-								if (ee?.data?.category?.mangas?.nodes) {
-									unSub();
+						unSub = $effect.root(() => {
+							$effect(() => {
+								if (category?.value?.data?.category?.mangas?.nodes) {
 									resolve(
-										ee.data.category.mangas.nodes.filter((e) =>
+										category?.value.data.category.mangas.nodes.filter((e) =>
 											e.title.toLowerCase().includes(mangaSearch.toLowerCase())
 										)
 									);
 								}
-							}) ?? (() => {});
+							});
+						});
 					});
 				});
+				unSub();
 
 				if (chapterNameSearch !== undefined && includeMangas?.[0]) {
 					mangaId = includeMangas[0].id;
+					let unSub = () => {};
 					includeChapters = await new Promise((resolve) => {
-						let unSub = () => {};
-						unSub =
-							manga?.subscribe((ee) => {
-								if (ee?.data?.manga?.chapters?.nodes) {
-									unSub();
-									resolve(
-										ee.data.manga.chapters.nodes.filter((e) =>
-											e.name
-												.toLowerCase()
-												.includes(chapterNameSearch.toLowerCase())
-										)
-									);
-								}
-							}) ?? (() => {});
+						window.requestAnimationFrame(() => {
+							unSub = $effect.root(() => {
+								$effect(() => {
+									if (manga?.value?.data?.manga.chapters.nodes) {
+										resolve(
+											manga?.value.data.manga.chapters.nodes.filter((e) =>
+												e.name
+													.toLowerCase()
+													.includes(chapterNameSearch.toLowerCase())
+											)
+										);
+									}
+								});
+							});
+						});
 					});
+					unSub();
 				}
 			}
 
@@ -213,11 +223,11 @@
 
 	function doSource() {
 		if (value.startsWith('@')) {
-			if (!sources) sources = queryStore({ client, query: getSources });
+			if (!sources) sources = queryState({ client, query: getSources });
 			const parsed = value.slice(1).split('/');
 			const sourceSearch: string | undefined = parsed[0];
 			const mangaSearch: string | undefined = parsed[1];
-			const includeSource = $sources.data?.sources?.nodes
+			const includeSource = sources.value.data?.sources?.nodes
 				?.filter((e) =>
 					e.displayName.toLowerCase().includes(sourceSearch.toLowerCase())
 				)
@@ -294,18 +304,18 @@
 		}
 	});
 	$effect(() => {
-		const _ = [$category, $categories, value];
+		const _ = [category?.value, categories.value, value];
 		untrack(doCategory);
 	});
 	$effect(() => {
-		const _ = [$sources, value];
+		const _ = [sources?.value, value];
 		untrack(doSource);
 	});
 	$effect(() => {
 		if (catId === undefined) return;
 		untrack(() => {
 			if (catId === undefined) return;
-			category = queryStore({
+			category = queryState({
 				client,
 				query: getCategory,
 				variables: { id: catId }
@@ -316,7 +326,7 @@
 		if (!mangaId) return;
 		untrack(() => {
 			if (!mangaId) return;
-			manga = queryStore({
+			manga = queryState({
 				client,
 				query: getManga,
 				variables: { id: mangaId }

@@ -10,32 +10,26 @@
 	import TriStateSlide from '$lib/components/TriStateSlide.svelte';
 	import { CategoryTypeFragment } from '$lib/gql/Fragments';
 	import { updateMangaCategories } from '$lib/gql/Mutations';
-	import {
-		getCategories as GetCategories,
-		type getManga
-	} from '$lib/gql/Queries';
-	import { ErrorHelp } from '$lib/util';
+	import { getCategories as GetCategories } from '$lib/gql/Queries';
+	import { ErrorHelp, queryState } from '$lib/util.svelte';
 	import { getModalStore } from '@skeletonlabs/skeleton';
-	import { getContextClient, queryStore } from '@urql/svelte';
+	import { getContextClient } from '@urql/svelte';
 	import { type ResultOf } from '$lib/gql/graphql';
 	import ModalTemplate from '$lib/components/ModalTemplate.svelte';
+	import { manga } from './mangaStores.svelte';
 
-	interface Props {
-		manga: ResultOf<typeof getManga>['manga'] | undefined;
-	}
-
-	let { manga }: Props = $props();
 	const client = getContextClient();
 	const modalStore = getModalStore();
-	const getCategories = queryStore({ client, query: GetCategories });
+	const getCategories = queryState({ client, query: GetCategories });
 
 	let categories = $derived(
-		$getCategories.data?.categories?.nodes
+		getCategories.value.data?.categories?.nodes
 			?.filter((e) => e.id !== 0)
 			.sort((a, b) => (a.order > b.order ? 1 : -1))
 	);
 
-	let MangaCategories = manga?.categories.nodes?.map((e) => e.id) ?? [];
+	let MangaCategories =
+		manga.value?.data?.manga.categories.nodes?.map((e) => e.id) ?? [];
 
 	let selectedCategories: number[] = [...MangaCategories];
 
@@ -62,7 +56,7 @@
 				'Failed to change mangas categories',
 				client
 					.mutation(updateMangaCategories, {
-						id: manga!.id,
+						id: manga.value!.data!.manga.id!,
 						addTo: selectedCategories,
 						clear: true
 					})

@@ -15,46 +15,41 @@
 		unbindTrack,
 		updateTrack
 	} from '$lib/gql/Mutations';
-	import { searchTracker, type getManga, trackers } from '$lib/gql/Queries';
+	import { searchTracker, trackers } from '$lib/gql/Queries';
 	import { Tab, TabGroup, getModalStore } from '@skeletonlabs/skeleton';
-	import {
-		getContextClient,
-		queryStore,
-		type OperationResultStore,
-		type Pausable,
-		mutationStore
-	} from '@urql/svelte';
+	import { getContextClient, mutationStore } from '@urql/svelte';
 	import { type ResultOf } from '$lib/gql/graphql';
 	import IconButton from '$lib/components/IconButton.svelte';
-
-	interface Props {
-		manga: OperationResultStore<ResultOf<typeof getManga>>;
-	}
-
-	let { manga }: Props = $props();
+	import { manga } from './mangaStores.svelte';
+	import { queryState } from '$lib/util.svelte';
 
 	const modalStore = getModalStore();
 
-	let preQuery = $state($manga.data?.manga?.title ?? '');
-	let query = $state($manga.data?.manga?.title ?? '');
+	let preQuery = $state(manga.value?.data?.manga?.title ?? '');
+	let query = $state(manga.value?.data?.manga?.title ?? '');
 	const client = getContextClient();
-	let items:
-		| (OperationResultStore<ResultOf<typeof searchTracker>> & Pausable)
-		| undefined = $state();
 
-	const Trackers2 = queryStore({
+	let items = $derived.by(() => {
+		console.log('tabSet', tabSet);
+		if (tabSet === 'Tracking') return undefined;
+		return queryState({
+			client,
+			query: searchTracker,
+			variables: { query, trackerId: tabSet }
+		});
+	});
+
+	let Trackers = queryState({
 		client,
 		query: trackers,
 		variables: { isLoggedIn: true },
 		requestPolicy: 'network-only'
 	});
 
-	let Trackers = $derived.by(() => {
-		return $state.snapshot($Trackers2);
-	});
+	$inspect(Trackers.value);
 
 	$effect(() => {
-		$manga.data?.manga?.trackRecords.nodes.forEach((e) => {
+		manga.value?.data?.manga?.trackRecords.nodes.forEach((e) => {
 			mutationStore({
 				client,
 				query: fetchTrack,
@@ -70,7 +65,7 @@
 			| ResultOf<typeof TrackRecordTypeFragment>
 			| ResultOf<typeof searchTracker>['searchTracker']['trackSearches'][0]
 	) {
-		const same = $manga.data?.manga?.trackRecords.nodes.find(
+		const same = manga.value?.data?.manga?.trackRecords.nodes.find(
 			(e) => e.remoteId === item.remoteId
 		);
 		if (same) {
@@ -81,7 +76,7 @@
 				.toPromise();
 			return;
 		}
-		const id = $manga.data?.manga?.id;
+		const id = manga.value?.data?.manga?.id;
 		if (!id) return;
 		if (tabSet === 'Tracking') return;
 		await client
@@ -116,14 +111,6 @@
 			}
 		});
 	}
-	$effect(() => {
-		if (tabSet !== 'Tracking')
-			items = queryStore({
-				client,
-				query: searchTracker,
-				variables: { query, trackerId: tabSet }
-			});
-	});
 </script>
 
 {#if $modalStore[0]}
@@ -131,13 +118,13 @@
 		<h1 class="h3 py-4 pl-4">Tracking</h1>
 		<div class="border-t border-surface-700">
 			<div class="grid grid-cols-1 gap-1">
-				{#if Trackers.fetching}
+				{#if Trackers.value.fetching}
 					Loading...
-				{:else if Trackers.error}
+				{:else if Trackers.value.error}
 					<div class="white-space-pre-wrap">
-						{JSON.stringify(Trackers.error, null, 4)}
+						{JSON.stringify(Trackers.value.error, null, 4)}
 					</div>
-				{:else if Trackers.data?.trackers.nodes.length}
+				{:else if Trackers.value.data?.trackers.nodes.length}
 					<div class="px-4 pt-1">
 						<input
 							type="text"
@@ -150,7 +137,7 @@
 						<Tab bind:group={tabSet} name="Tracking" value="Tracking">
 							Tracking
 						</Tab>
-						{#each Trackers.data.trackers.nodes as tracke (tracke.id)}
+						{#each Trackers.value.data.trackers.nodes as tracke (tracke.id)}
 							{@const tracker = tracke}
 							<Tab bind:group={tabSet} name={tracker.name} value={tracker.id}>
 								{tracker.name}
@@ -159,8 +146,9 @@
 						<!-- Tab Panels --->
 						<svelte:fragment slot="panel">
 							{#if tabSet === 'Tracking'}
-								{@const Records = $manga.data?.manga?.trackRecords.nodes ?? []}
-								{@const tracks = Trackers.data?.trackers.nodes}
+								{@const Records =
+									manga.value?.data?.manga?.trackRecords.nodes ?? []}
+								{@const tracks = Trackers.value.data?.trackers.nodes}
 								<div class="flex h-72 flex-col space-y-1 overflow-auto p-1">
 									{#each Records as RecordItem (RecordItem.id)}
 										{@const track = tracks.find(
@@ -228,15 +216,15 @@
 								</div>
 							{:else}
 								{@const isTracked =
-									$manga.data?.manga?.trackRecords.nodes?.filter(
+									manga.value?.data?.manga?.trackRecords.nodes?.filter(
 										(e) => e.trackerId === tabSet
 									)}
 								<div class="h-72 overflow-auto">
-									{#if $items?.error}
+									{#if items?.value?.error}
 										<div class="whitespace-pre-wrap p-4">
-											{JSON.stringify($items.error, null, 4)}
+											{JSON.stringify(items?.value.error, null, 4)}
 										</div>
-									{:else if !$items || $items?.fetching}
+									{:else if !items?.value || items?.value?.fetching}
 										{#each new Array(3).fill(0) as _}
 											<span
 												class="flex w-full p-1 pl-4 text-left hover:variant-ghost-surface"
@@ -272,8 +260,8 @@
 												</div>
 											</span>
 										{/each}
-									{:else if $items.data}
-										{#each $items.data.searchTracker.trackSearches as item (item.trackerId + ' ' + item.remoteId)}
+									{:else if items.value.data}
+										{#each items.value.data.searchTracker.trackSearches as item (item.trackerId + ' ' + item.remoteId)}
 											<a
 												href={item.trackingUrl}
 												onclick={(e) => {
@@ -323,30 +311,6 @@
 										{/each}
 									{/if}
 								</div>
-								<!-- <div>
-										<div class="h-24 pl-4">
-											<div class="mb-2 line-clamp-1 text-lg font-bold">
-												Tracking: {ThisTrack ? ThisTrack.title : 'None'}
-											</div>
-											{#if ThisTrack}
-												<div class="flex justify-between pr-4">
-													<button
-														class="variant-filled-surface btn mb-4"
-														onclick={() => trackThis(ThisTrack)}
-													>
-														Untrack
-													</button>
-													<a
-														target="_blank"
-														class="variant-filled-surface btn mb-4"
-														href={ThisTrack.remoteUrl}
-													>
-														Open tracked manga
-													</a>
-												</div>
-											{/if}
-										</div>
-									</div> -->
 							{/if}
 						</svelte:fragment>
 					</TabGroup>

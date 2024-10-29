@@ -9,8 +9,9 @@
 <script lang="ts">
 	import { getModalStore } from '@skeletonlabs/skeleton';
 	import Slide from '$lib/components/Slide.svelte';
-	import { Layout, Meta, Mode } from '$lib/simpleStores';
-	import { enumKeys } from '$lib/util';
+	import { gmState, Layout, Mode } from '$lib/simpleStores.svelte';
+
+	import { enumKeys } from '$lib/util.svelte';
 	import ModalTemplate from '$lib/components/ModalTemplate.svelte';
 	const modalStore = getModalStore();
 </script>
@@ -19,33 +20,36 @@
 	<ModalTemplate titleText="Reader Defaults">
 		<Slide
 			class="mt-1 p-1 outline-0 hover:variant-glass-surface"
-			bind:checked={$Meta.mangaMetaDefaults.Margins}
+			bind:checked={gmState.value.mangaMetaDefaults.Margins}
 		>
 			Page Margins
 		</Slide>
 		<Slide
 			class="p-1 outline-0 hover:variant-glass-surface"
-			bind:checked={$Meta.mangaMetaDefaults.Scale}
+			bind:checked={gmState.value.mangaMetaDefaults.Scale}
 		>
 			Page Scale
 		</Slide>
 		<Slide
 			class="p-1 outline-0 hover:variant-glass-surface"
-			bind:checked={$Meta.mangaMetaDefaults.SmoothScroll}
+			bind:checked={gmState.value.mangaMetaDefaults.SmoothScroll}
 		>
 			Smooth Scroll
 		</Slide>
-		{#if $Meta.mangaMetaDefaults.ReaderMode !== Mode.Vertical}
+		{#if gmState.value.mangaMetaDefaults.ReaderMode !== Mode.Vertical}
 			<Slide
 				class="p-1 outline-0 hover:variant-glass-surface"
-				bind:checked={$Meta.mangaMetaDefaults.Offset}
+				bind:checked={gmState.value.mangaMetaDefaults.Offset}
 			>
 				Page Offset
 			</Slide>
 		{/if}
 		<label class="pl-3">
 			<span>Reader Mode</span>
-			<select bind:value={$Meta.mangaMetaDefaults.ReaderMode} class="select">
+			<select
+				bind:value={gmState.value.mangaMetaDefaults.ReaderMode}
+				class="select"
+			>
 				{#each enumKeys(Mode) as value}
 					<option {value}>{value}</option>
 				{/each}
@@ -53,7 +57,10 @@
 		</label>
 		<label class="mb-2 pl-3">
 			<span>Navigation Layout</span>
-			<select bind:value={$Meta.mangaMetaDefaults.NavLayout} class="select">
+			<select
+				bind:value={gmState.value.mangaMetaDefaults.NavLayout}
+				class="select"
+			>
 				{#each enumKeys(Layout) as value}
 					<option {value}>{value}</option>
 				{/each}
@@ -61,19 +68,20 @@
 		</label>
 		<Slide
 			class="p-1 outline-0 hover:variant-glass-surface"
-			bind:checked={$Meta.mangaMetaDefaults.preLoadNextChapter}
+			bind:checked={gmState.value.mangaMetaDefaults.preLoadNextChapter}
 		>
 			preload Next Chapter
 		</Slide>
 		<Slide
 			class="p-1 outline-0 hover:variant-glass-surface"
-			bind:checked={$Meta.mangaMetaDefaults.mobileFullScreenOnChapterPage}
+			bind:checked={gmState.value.mangaMetaDefaults
+				.mobileFullScreenOnChapterPage}
 		>
 			mobile Full Screen On Chapter Page
 		</Slide>
 		<Slide
 			class="p-1 outline-0 hover:variant-glass-surface"
-			bind:checked={$Meta.mangaMetaDefaults.doPageIndicator}
+			bind:checked={gmState.value.mangaMetaDefaults.doPageIndicator}
 		>
 			Chapter Page Indicator
 		</Slide>

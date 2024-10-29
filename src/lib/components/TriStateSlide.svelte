@@ -11,7 +11,7 @@
 
 	// Types
 	import type { CssClasses, SvelteEvent } from '@skeletonlabs/skeleton';
-	import type { TriState } from '$lib/util';
+	import type { TriState } from '$lib/util.svelte';
 
 	// Base Styles
 	const cBase = 'inline-block';

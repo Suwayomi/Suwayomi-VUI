@@ -15,23 +15,24 @@
 	import Nav from '../Nav.svelte';
 	import SourcesActions from './SourcesActions.svelte';
 	import { SourceLangFilter } from './SourcesStores';
-	import { Meta } from '$lib/simpleStores';
-	import { groupBy } from '$lib/util';
+
+	import { groupBy, queryState } from '$lib/util.svelte';
 	import { longPress } from '$lib/press';
 	import { getSources } from '$lib/gql/Queries';
 	import { type ResultOf } from '$lib/gql/graphql';
-	import { getContextClient, queryStore } from '@urql/svelte';
+	import { getContextClient } from '@urql/svelte';
 	import { SourceTypeFragment } from '$lib/gql/Fragments';
 	import { deleteSourceMeta, setSourceMeta } from '$lib/gql/Mutations';
+	import { gmState } from '$lib/simpleStores.svelte';
 
 	AppBarData('Sources');
 
 	type Tsource = ResultOf<typeof getSources>['sources']['nodes'][number];
 	const client = getContextClient();
-	const sources = queryStore({
+	const sources = queryState({
 		client,
 		query: getSources,
-		variables: { isNsfw: $Meta.nsfw ? null : false }
+		variables: { isNsfw: gmState.value.nsfw ? null : false }
 	});
 	const query = queryParam('q', ssp.string(), { pushHistory: false });
 
@@ -78,7 +79,7 @@
 		}
 	}
 	let filteredSources = $derived(
-		$sources.data?.sources?.nodes.filter((ele) => {
+		sources.value.data?.sources?.nodes.filter((ele) => {
 			if (ele.meta.find((e) => e.key === 'pinned')) return true;
 			if (!$SourceLangFilter.has(ele.lang)) return false;
 			if ($query !== '' && $query !== null) {
@@ -89,7 +90,7 @@
 			return true;
 		}) as Tsource[] | undefined
 	);
-	let langs = $derived(getLanguages($sources.data));
+	let langs = $derived(getLanguages(sources.value.data));
 	$effect(() => {
 		AppBarData('Sources', { component: SourcesActions, props: { langs } });
 	});
@@ -98,11 +99,11 @@
 
 <Nav>
 	{#snippet children()}
-		{#if $sources.error}
+		{#if sources.value.error}
 			<div class="white-space-pre-wrap">
-				{JSON.stringify($sources.error, null, 4)}
+				{JSON.stringify(sources.value.error, null, 4)}
 			</div>
-		{:else if $sources.fetching}
+		{:else if sources.value.fetching}
 			{#each new Array(5) as _}
 				<div class="px-8 py-4">
 					<div class="placeholder h-12 animate-pulse"></div>

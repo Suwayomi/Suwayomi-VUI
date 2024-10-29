@@ -44,10 +44,9 @@ import type {
 	updateTrack
 } from './Mutations';
 import type { ResultOf, VariablesOf } from '$lib/gql/graphql';
-import { get } from 'svelte/store';
 import { lastFetched } from '../../../src/routes/(app)/browse/extensions/ExtensionsStores';
-import { Meta } from '$lib/simpleStores';
 import { introspection } from '../../graphql-env';
+import { gmState } from '$lib/simpleStores.svelte';
 // import type { downloadChanged } from './Subscriptions';
 
 export const client = new Client({
@@ -752,11 +751,11 @@ function fetchExtensionsUpdater(
 ) {
 	if (!data?.fetchExtensions) return;
 	let filteredExtensions = data.fetchExtensions.extensions;
-	if (!get(Meta).nsfw)
+	if (!gmState.value.nsfw)
 		filteredExtensions = filteredExtensions.filter((e) => !e.isNsfw);
 	filteredExtensions.forEach((e) => {
 		cache.writeFragment(ExtensionTypeFragment, e, {
-			isNsfw: get(Meta).nsfw ? null : false
+			isNsfw: gmState.value.nsfw ? null : false
 		});
 	});
 	lastFetched.set(new Date());
@@ -875,7 +874,7 @@ function updateExtentionsList<T extends { pkgName: string }>(
 	cache.updateQuery(
 		{
 			query: getExtensions,
-			variables: { isNsfw: get(Meta).nsfw ? null : false }
+			variables: { isNsfw: gmState.value.nsfw ? null : false }
 		},
 		(extensionsData) => {
 			if (!extensionsData) return extensionsData;
@@ -901,7 +900,7 @@ function updateSourcesList<T extends { pkgName: string }>(
 	cache.updateQuery(
 		{
 			query: getSources,
-			variables: { isNsfw: get(Meta).nsfw ? null : false }
+			variables: { isNsfw: gmState.value.nsfw ? null : false }
 		},
 		(sourcesData) => {
 			if (!sourcesData) return sourcesData;

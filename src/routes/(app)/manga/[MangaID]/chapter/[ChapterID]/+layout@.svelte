@@ -11,7 +11,7 @@
 	import { getDrawerStore, AppShell } from '@skeletonlabs/skeleton';
 	import type { LayoutData } from './$types';
 	import { writable } from 'svelte/store';
-	import { makeToggleDrawer } from './chapterStores';
+	import { makeToggleDrawer } from './chapterStores.svelte';
 
 	interface Props {
 		data: LayoutData;

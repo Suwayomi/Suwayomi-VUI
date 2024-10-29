@@ -6,7 +6,7 @@
 
 import { get, type Writable } from 'svelte/store';
 
-import { toastStore } from './simpleStores';
+import { toastStore } from './simpleStores.svelte';
 import { client } from './gql/graphqlClient';
 import {
 	deleteDownloadedChapters,
@@ -15,10 +15,26 @@ import {
 	updateChapters
 } from './gql/Mutations';
 import type { VariablesOf } from '$lib/gql/graphql';
-import type { OperationResult } from '@urql/svelte';
+import {
+	mutationStore,
+	queryStore,
+	type AnyVariables,
+	type MutationArgs,
+	type OperationContext,
+	type OperationResult,
+	type OperationResultState,
+	type QueryArgs
+} from '@urql/svelte';
 import { introspection } from '../graphql-env';
 
 export type TriState = 0 | 1 | 2;
+export type OperationResultF<
+	/* eslint-disable-next-line  @typescript-eslint/no-explicit-any */
+	Data = any,
+	Variables extends AnyVariables = AnyVariables
+> = OperationResult<Data, Variables> & {
+	fetching: boolean;
+};
 
 export function HelpDoSelect<T extends { id: number }>(
 	update: T,
@@ -315,4 +331,70 @@ export function formatDate(date: Date) {
 	}
 
 	return date.toLocaleString();
+}
+
+export type queryStateReturn<
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any
+	Data = any,
+	Variables extends AnyVariables = AnyVariables
+> = {
+	get value(): OperationResultState<Data, Variables>;
+	get isPaused$(): boolean;
+	pause(): void;
+	resume(): void;
+	reexecute(context: Partial<OperationContext>): void;
+};
+
+export function queryState<
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any
+	Data = any,
+	Variables extends AnyVariables = AnyVariables
+>(args: QueryArgs<Data, Variables>): queryStateReturn<Data, Variables> {
+	const store = queryStore(args);
+	let queryState = $state(get(store));
+	let isPaused = $state(get(store.isPaused$));
+
+	store.subscribe((value) => {
+		queryState = value;
+	});
+	store.isPaused$.subscribe((value) => {
+		isPaused = value;
+	});
+
+	return {
+		get value() {
+			return queryState;
+		},
+		get isPaused$() {
+			return isPaused;
+		},
+		pause: store.pause,
+		resume: store.resume,
+		reexecute: store.reexecute
+	};
+}
+
+export type mutationStateReturn<
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any
+	Data = any,
+	Variables extends AnyVariables = AnyVariables
+> = {
+	get value(): OperationResultState<Data, Variables>;
+};
+
+export function mutationState<
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any
+	Data = any,
+	Variables extends AnyVariables = AnyVariables
+>(args: MutationArgs<Data, Variables>): mutationStateReturn<Data, Variables> {
+	const store = mutationStore(args);
+	let mutationState = $state(get(store));
+	store.subscribe((value) => {
+		mutationState = value;
+	});
+	return {
+		get value() {
+			return mutationState;
+		}
+	};
 }

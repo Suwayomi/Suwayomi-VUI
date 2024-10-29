@@ -9,7 +9,7 @@
 <script lang="ts">
 	import IntersectionObserver from '$lib/components/IntersectionObserver.svelte';
 	import Image from '$lib/components/Image.svelte';
-	import { ErrorHelp } from '$lib/util';
+	import { ErrorHelp } from '$lib/util.svelte';
 	import { ProgressRadial } from '@skeletonlabs/skeleton';
 	import { getContextClient } from '@urql/svelte';
 	import { updateExtension } from '$lib/gql/Mutations';

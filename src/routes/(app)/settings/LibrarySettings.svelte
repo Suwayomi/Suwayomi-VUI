@@ -9,15 +9,16 @@
 <script lang="ts">
 	import { getModalStore } from '@skeletonlabs/skeleton';
 	import Slide from '$lib/components/Slide.svelte';
-	import { Meta } from '$lib/simpleStores';
+
 	import ModalTemplate from '$lib/components/ModalTemplate.svelte';
+	import { gmState } from '$lib/simpleStores.svelte';
 	const modalStore = getModalStore();
 </script>
 
 {#if $modalStore[0]}
 	<ModalTemplate titleText="Library settings">
 		<Slide
-			bind:checked={$Meta.ignoreFiltersWhenSearching}
+			bind:checked={gmState.value.ignoreFiltersWhenSearching}
 			class="my-1 p-1 pl-2 hover:variant-glass-surface focus:outline-0"
 		>
 			Ignore Filters When Searching

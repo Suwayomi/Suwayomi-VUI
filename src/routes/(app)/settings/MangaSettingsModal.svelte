@@ -13,8 +13,9 @@
 		SlideToggle,
 		getModalStore
 	} from '@skeletonlabs/skeleton';
-	import { ChapterSort, ChapterTitle, Meta } from '$lib/simpleStores';
-	import { enumKeys } from '$lib/util';
+	import { ChapterSort, ChapterTitle, gmState } from '$lib/simpleStores.svelte';
+
+	import { enumKeys } from '$lib/util.svelte';
 	import TriStateSlide from '$lib/components/TriStateSlide.svelte';
 	import ModalTemplate from '$lib/components/ModalTemplate.svelte';
 	import Slide from '$lib/components/Slide.svelte';
@@ -24,26 +25,27 @@
 {#if $modalStore[0]}
 	<ModalTemplate titleText="Manga Settings Defaults">
 		<Slide
-			bind:checked={$Meta.DownloadAllChaptersOnAddToLibrary}
+			bind:checked={gmState.value.DownloadAllChaptersOnAddToLibrary}
 			class="my-1 p-1 pl-2 hover:variant-glass-surface focus:outline-0"
 		>
 			Download all chapters when add manga to library
 		</Slide>
 		<Slide
-			bind:checked={$Meta.DeleteAllChaptersOnRemoveFromLibrary}
+			bind:checked={gmState.value.DeleteAllChaptersOnRemoveFromLibrary}
 			class="my-1 p-1 pl-2 hover:variant-glass-surface focus:outline-0"
 		>
 			Delete all chapters when remove manga from library
 		</Slide>
 		<Slide
-			bind:checked={$Meta.RemoveChaptersFromDownloadQueueOnRemoveFromLibrary}
+			bind:checked={gmState.value
+				.RemoveChaptersFromDownloadQueueOnRemoveFromLibrary}
 			class="my-1 p-1 pl-2 hover:variant-glass-surface focus:outline-0"
 		>
 			Remove chapters from download queue when remove manga from library
 		</Slide>
 		<h2 class="h4 mb-1 border-b border-surface-700">Filters</h2>
 		<TriStateSlide
-			bind:state={$Meta.mangaMetaDefaults.ChapterUnread}
+			bind:state={gmState.value.mangaMetaDefaults.ChapterUnread}
 			label={'Unread'}
 			class="w-full p-1 pl-2 hover:variant-glass-surface focus:outline-0"
 			labelClass="w-full"
@@ -51,7 +53,7 @@
 			<span>Unread</span>
 		</TriStateSlide>
 		<TriStateSlide
-			bind:state={$Meta.mangaMetaDefaults.ChapterDownloaded}
+			bind:state={gmState.value.mangaMetaDefaults.ChapterDownloaded}
 			label={'Downloaded'}
 			class="w-full p-1 pl-2 hover:variant-glass-surface focus:outline-0"
 			labelClass="w-full"
@@ -59,7 +61,7 @@
 			<span>Downloaded</span>
 		</TriStateSlide>
 		<TriStateSlide
-			bind:state={$Meta.mangaMetaDefaults.ChapterBookmarked}
+			bind:state={gmState.value.mangaMetaDefaults.ChapterBookmarked}
 			label={'Downloaded'}
 			class="w-full p-1 pl-2 hover:variant-glass-surface focus:outline-0"
 			labelClass="w-full"
@@ -69,7 +71,7 @@
 		<h2 class="h4 mb-1 border-b border-surface-700">Sort</h2>
 		<TriStateSlide
 			triState={false}
-			bind:checked={$Meta.mangaMetaDefaults.ChapterAsc}
+			bind:checked={gmState.value.mangaMetaDefaults.ChapterAsc}
 			label={'Ascending'}
 			class="w-full p-1 pl-2 hover:variant-glass-surface focus:outline-0"
 			labelClass="w-full"
@@ -86,7 +88,7 @@
 		>
 			{#each enumKeys(ChapterSort) as value}
 				<RadioItem
-					bind:group={$Meta.mangaMetaDefaults.ChapterSort}
+					bind:group={gmState.value.mangaMetaDefaults.ChapterSort}
 					class="focus:outline-0"
 					name="justify"
 					{value}
@@ -101,15 +103,15 @@
 			onclick={(e) => {
 				e.preventDefault();
 				e.stopPropagation();
-				$Meta.mangaMetaDefaults.showMissingChapters =
-					!$Meta.mangaMetaDefaults.showMissingChapters;
+				gmState.value.mangaMetaDefaults.showMissingChapters =
+					!gmState.value.mangaMetaDefaults.showMissingChapters;
 			}}
 		>
 			<span>Show Missing Chapters</span>
 			<SlideToggle
 				name="slide"
 				class="focus:outline-0"
-				bind:checked={$Meta.mangaMetaDefaults.showMissingChapters}
+				bind:checked={gmState.value.mangaMetaDefaults.showMissingChapters}
 			/>
 		</button>
 		<button
@@ -117,15 +119,15 @@
 			onclick={(e) => {
 				e.preventDefault();
 				e.stopPropagation();
-				$Meta.mangaMetaDefaults.ChapterFetchUpload =
-					!$Meta.mangaMetaDefaults.ChapterFetchUpload;
+				gmState.value.mangaMetaDefaults.ChapterFetchUpload =
+					!gmState.value.mangaMetaDefaults.ChapterFetchUpload;
 			}}
 		>
 			<span>FetchDate/UploadDate</span>
 			<SlideToggle
 				name="slide"
 				class="focus:outline-0"
-				bind:checked={$Meta.mangaMetaDefaults.ChapterFetchUpload}
+				bind:checked={gmState.value.mangaMetaDefaults.ChapterFetchUpload}
 			/>
 		</button>
 		<RadioGroup
@@ -138,7 +140,7 @@
 		>
 			{#each enumKeys(ChapterTitle) as value}
 				<RadioItem
-					bind:group={$Meta.mangaMetaDefaults.ChapterTitle}
+					bind:group={gmState.value.mangaMetaDefaults.ChapterTitle}
 					class="focus:outline-0"
 					name="justify"
 					{value}

@@ -24,7 +24,7 @@
 	import { getContextClient, type OperationResult } from '@urql/svelte';
 	import { type ResultOf } from '$lib/gql/graphql';
 	import type { SvelteComponent } from 'svelte';
-	import { ErrorHelp } from '$lib/util';
+	import { ErrorHelp } from '$lib/util.svelte';
 	import ModalTemplate from '$lib/components/ModalTemplate.svelte';
 
 	const modalStore = getModalStore();

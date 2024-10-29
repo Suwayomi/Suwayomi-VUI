@@ -9,17 +9,28 @@
 <script lang="ts">
 	import IconButton from '$lib/components/IconButton.svelte';
 	import Slide from '$lib/components/Slide.svelte';
-	import { enumKeys } from '$lib/util';
+	import { enumKeys } from '$lib/util.svelte';
 	import { getDrawerStore } from '@skeletonlabs/skeleton';
-	import { ViewNav, chapterTitle, mangaTitle } from './chapterStores';
-	import { ChapterTitle, Layout, MangaMeta, Mode } from '$lib/simpleStores';
-	import { onMount, untrack } from 'svelte';
-	import { getContextClient, queryStore } from '@urql/svelte';
-	import { getManga } from '$lib/gql/Queries';
+	import {
+		ViewNav,
+		chapterTitle,
+		get_manga,
+		mangaTitle
+	} from './chapterStores.svelte';
+	import {
+		ChapterTitle,
+		Layout,
+		mmState,
+		Mode
+	} from '$lib/simpleStores.svelte';
+	import { onMount } from 'svelte';
+	import { getContextClient } from '@urql/svelte';
 	import { filterChapters } from '../../util';
 	import type { Writable } from 'svelte/store';
 	import IntersectionObserver from '$lib/components/IntersectionObserver.svelte';
 	import { onNavigate } from '$app/navigation';
+	import { longPress } from '$lib/press';
+	import { trackProgress, updateChapters } from '$lib/gql/Mutations';
 	const drawerStore = getDrawerStore();
 
 	let data = $derived(
@@ -29,28 +40,23 @@
 		}>
 	);
 
-	let mangaMeta: ReturnType<typeof MangaMeta> = $state(
-		MangaMeta($data?.MangaID)
-	);
-	$effect(() => {
-		mangaMeta = MangaMeta($data?.MangaID);
-	});
+	mmState.id = $data.MangaID;
 
 	onMount(() => {
-		// let elem = document.querySelector(`#chapter-${$data.ChapterID}`)!;
-		// elem = elem.previousElementSibling ?? elem;
-		// const to = elem?.getBoundingClientRect();
-		// chapterSideElement?.scrollTo({
-		// 	top:
-		// 		chapterSideElement.scrollTop -
-		// 		chapterSideElement.getBoundingClientRect().top +
-		// 		(to?.top ?? 0)
-		// });
+		let elem = document.querySelector(`#chapter-${$data.ChapterID}`)!;
+		elem = elem.previousElementSibling ?? elem;
+		const to = elem?.getBoundingClientRect();
+		chapterSideElement?.scrollTo({
+			top:
+				chapterSideElement.scrollTop -
+				chapterSideElement.getBoundingClientRect().top +
+				(to?.top ?? 0)
+		});
 		if (
 			/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
 				navigator.userAgent
 			) &&
-			$mangaMeta.mobileFullScreenOnChapterPage
+			mmState.value.mobileFullScreenOnChapterPage
 		) {
 			document.exitFullscreen();
 		}
@@ -59,7 +65,7 @@
 				/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
 					navigator.userAgent
 				) &&
-				$mangaMeta.mobileFullScreenOnChapterPage
+				mmState.value.mobileFullScreenOnChapterPage
 			) {
 				document.documentElement.requestFullscreen();
 			}
@@ -68,30 +74,15 @@
 
 	const client = getContextClient();
 
-	let manga = queryStore({
-		client,
-		query: getManga,
-		variables: { id: $data?.MangaID }
-	});
+	let manga = $derived(get_manga.manga);
 
-	let filteredChapters = $derived.by(() => {
-		untrack(() => {
-			manga.pause();
-		});
-		const _ = [mangaMeta, $manga];
-		const tmp = untrack(() => {
-			return $state
-				.snapshot($manga)
-				.data?.manga.chapters.nodes.filter(filterChapters(mangaMeta, true))
-				.sort((a, b) => {
-					return b.sourceOrder - a.sourceOrder;
-				});
-		});
-		untrack(() => {
-			manga.resume();
-		});
-		return tmp;
-	});
+	let filteredChapters = $derived(
+		manga?.data?.manga.chapters.nodes
+			.filter(filterChapters(mmState, true))
+			.sort((a, b) => {
+				return b.sourceOrder - a.sourceOrder;
+			})
+	);
 
 	let chapterSideElement: HTMLDivElement | undefined = $state();
 
@@ -101,9 +92,24 @@
 			drawerStore.close();
 		}
 	});
+
+	let didLongPress = -1;
+
+	async function setChapterRead(
+		chapter: NonNullable<typeof filteredChapters>[number]
+	) {
+		didLongPress = chapter.id;
+		await client
+			.mutation(updateChapters, { isRead: !chapter.isRead, ids: [chapter.id] })
+			.toPromise();
+		if ($data.MangaID)
+			await client
+				.mutation(trackProgress, { mangaId: $data.MangaID })
+				.toPromise();
+	}
 </script>
 
-{#if $mangaMeta}
+{#if mmState.value}
 	<div class="flex flex-col p-4">
 		<div class="mb-4 flex justify-end border-b border-surface-500 pb-4">
 			<IconButton
@@ -123,33 +129,33 @@
 			<Slide
 				tabindex={0}
 				class="p-1 hover:variant-glass-surface"
-				bind:checked={$mangaMeta.Margins}
+				bind:checked={mmState.value.Margins}
 			>
 				Page Margins
 			</Slide>
 			<Slide
 				class="p-1 hover:variant-glass-surface"
-				bind:checked={$mangaMeta.Scale}
+				bind:checked={mmState.value.Scale}
 			>
 				Page Scale
 			</Slide>
 			<Slide
 				class="p-1 hover:variant-glass-surface"
-				bind:checked={$mangaMeta.SmoothScroll}
+				bind:checked={mmState.value.SmoothScroll}
 			>
 				Smooth Scroll
 			</Slide>
-			{#if $mangaMeta.ReaderMode !== Mode.Vertical}
+			{#if mmState.value.ReaderMode !== Mode.Vertical}
 				<Slide
 					class="p-1 hover:variant-glass-surface"
-					bind:checked={$mangaMeta.Offset}
+					bind:checked={mmState.value.Offset}
 				>
 					Page Offset
 				</Slide>
 			{/if}
 			<label class="pl-3">
 				<span>Reader Mode</span>
-				<select bind:value={$mangaMeta.ReaderMode} class="select">
+				<select bind:value={mmState.value.ReaderMode} class="select">
 					{#each enumKeys(Mode) as value}
 						<option {value}>{value}</option>
 					{/each}
@@ -160,7 +166,7 @@
 			</Slide>
 			<label class="pl-3">
 				<span>Navigation Layout</span>
-				<select bind:value={$mangaMeta.NavLayout} class="select">
+				<select bind:value={mmState.value.NavLayout} class="select">
 					{#each enumKeys(Layout) as value}
 						<option {value}>{value}</option>
 					{/each}
@@ -173,7 +179,7 @@
 				id="chapterSideElement"
 				class="max-h-60 w-full overflow-y-auto"
 			>
-				{#each $state.snapshot(filteredChapters ?? []) as chapter}
+				{#each filteredChapters ?? [] as chapter}
 					<IntersectionObserver
 						class="relative h-20"
 						root={chapterSideElement}
@@ -184,7 +190,16 @@
 						{#snippet children({ intersecting })}
 							{#if intersecting}
 								<a
+									use:longPress
+									onlongPress={() => setChapterRead(chapter)}
 									data-sveltekit-replacestate
+									onclick={(e) => {
+										if (didLongPress === chapter.id) {
+											e.preventDefault();
+											e.stopPropagation();
+										}
+										didLongPress = -1;
+									}}
 									href="./{chapter.id}?pagenav"
 									class="h-20"
 								>
@@ -194,7 +209,8 @@
 										{chapter.isRead && 'opacity-50'}"
 									>
 										<div class="line-clamp-1 w-full text-xl md:text-2xl">
-											{$mangaMeta.ChapterTitle === ChapterTitle['Source Title']
+											{mmState.value.ChapterTitle ===
+											ChapterTitle['Source Title']
 												? chapter.name
 												: `Chapter ${chapter.chapterNumber}`}
 										</div>
@@ -207,7 +223,7 @@
 											).toLocaleString()}"
 										>
 											{new Date(
-												$mangaMeta.ChapterFetchUpload
+												mmState.value.ChapterFetchUpload
 													? parseInt(chapter.uploadDate)
 													: parseInt(chapter.fetchedAt) * 1000
 											).toLocaleDateString()}{chapter.isDownloaded
