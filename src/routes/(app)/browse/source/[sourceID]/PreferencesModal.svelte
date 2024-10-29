@@ -36,7 +36,7 @@
 		return untrack(
 			() =>
 				queryState({
-					client: getContextClient(),
+					client,
 					query: getSource,
 					variables: {
 						id: data.sourceID

@@ -10,10 +10,7 @@
 	import TriStateSlide from '$lib/components/TriStateSlide.svelte';
 	import { CategoryTypeFragment } from '$lib/gql/Fragments';
 	import { updateMangaCategories } from '$lib/gql/Mutations';
-	import {
-		getCategories as GetCategories,
-		type getManga
-	} from '$lib/gql/Queries';
+	import { getCategories as GetCategories } from '$lib/gql/Queries';
 	import { ErrorHelp, queryState } from '$lib/util.svelte';
 	import { getModalStore } from '@skeletonlabs/skeleton';
 	import { getContextClient } from '@urql/svelte';
@@ -59,7 +56,7 @@
 				'Failed to change mangas categories',
 				client
 					.mutation(updateMangaCategories, {
-						id: manga.value?.data?.manga.id!,
+						id: manga.value!.data!.manga.id!,
 						addTo: selectedCategories,
 						clear: true
 					})

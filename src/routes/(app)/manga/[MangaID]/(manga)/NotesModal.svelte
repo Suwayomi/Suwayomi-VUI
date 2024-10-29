@@ -11,8 +11,6 @@
 	import { mmState } from '$lib/simpleStores.svelte';
 	import ModalTemplate from '$lib/components/ModalTemplate.svelte';
 	const modalStore = getModalStore();
-
-	mmState.value.notes;
 </script>
 
 {#if $modalStore[0]}
