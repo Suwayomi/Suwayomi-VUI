@@ -18,8 +18,8 @@
 		getModalStore,
 		localStorageStore
 	} from '@skeletonlabs/skeleton';
-	import { ChapterSort, ChapterTitle, MangaMeta } from '$lib/simpleStores';
-	import { enumKeys } from '$lib/util';
+	import { ChapterSort, ChapterTitle, mmState } from '$lib/simpleStores.svelte';
+	import { enumKeys } from '$lib/util.svelte';
 	import Tooltip from '$lib/components/Tooltip.svelte';
 	const modalStore = getModalStore();
 	let tabSet = localStorageStore('libraryModalTabs', 0);
@@ -28,7 +28,7 @@
 	}
 
 	let { MangaID }: Props = $props();
-	const mangaMeta = MangaMeta(MangaID);
+	mmState.id = MangaID;
 </script>
 
 {#if $modalStore[0]}
@@ -85,7 +85,7 @@
 				<div class="mx-4 mb-4">
 					{#if $tabSet === 0}
 						<TriStateSlide
-							bind:state={$mangaMeta.ChapterUnread}
+							bind:state={mmState.value.ChapterUnread}
 							label={'Unread'}
 							class="w-full p-1 pl-2 hover:variant-glass-surface focus:outline-0"
 							labelClass="w-full"
@@ -93,7 +93,7 @@
 							<span>Unread</span>
 						</TriStateSlide>
 						<TriStateSlide
-							bind:state={$mangaMeta.ChapterDownloaded}
+							bind:state={mmState.value.ChapterDownloaded}
 							label={'Downloaded'}
 							class="w-full p-1 pl-2 hover:variant-glass-surface focus:outline-0"
 							labelClass="w-full"
@@ -101,7 +101,7 @@
 							<span>Downloaded</span>
 						</TriStateSlide>
 						<TriStateSlide
-							bind:state={$mangaMeta.ChapterBookmarked}
+							bind:state={mmState.value.ChapterBookmarked}
 							label={'Downloaded'}
 							class="w-full p-1 pl-2 hover:variant-glass-surface focus:outline-0"
 							labelClass="w-full"
@@ -115,14 +115,14 @@
 								<span class="pr-2">Groups</span>
 								<input
 									onchange={(e) => {
-										$mangaMeta.groupPartials = e.currentTarget.value
+										mmState.value.groupPartials = e.currentTarget.value
 											.split(',')
 											.map((a) => a.trim())
 											.filter((a) => a.length > 0);
 										e.currentTarget.value =
-											$mangaMeta.groupPartials?.join(',') ?? '';
+											mmState.value.groupPartials?.join(',') ?? '';
 									}}
-									value={$mangaMeta.groupPartials?.join(',') ?? ''}
+									value={mmState.value.groupPartials?.join(',') ?? ''}
 									class="input w-1/2"
 									type="text"
 									placeholder="asura,dex,..."
@@ -132,7 +132,7 @@
 					{:else if $tabSet === 1}
 						<TriStateSlide
 							triState={false}
-							bind:checked={$mangaMeta.ChapterAsc}
+							bind:checked={mmState.value.ChapterAsc}
 							label={'Ascending'}
 							class="w-full p-1 pl-2 hover:variant-glass-surface focus:outline-0"
 							labelClass="w-full"
@@ -149,7 +149,7 @@
 						>
 							{#each enumKeys(ChapterSort) as value}
 								<RadioItem
-									bind:group={$mangaMeta.ChapterSort}
+									bind:group={mmState.value.ChapterSort}
 									class="focus:outline-0"
 									name="justify"
 									{value}
@@ -164,15 +164,15 @@
 							onclick={(e) => {
 								e.stopPropagation();
 								e.preventDefault();
-								$mangaMeta.showMissingChapters =
-									!$mangaMeta.showMissingChapters;
+								mmState.value.showMissingChapters =
+									!mmState.value.showMissingChapters;
 							}}
 						>
 							<span>Show Missing Chapters</span>
 							<SlideToggle
 								name="slide"
 								class="focus:outline-0"
-								bind:checked={$mangaMeta.showMissingChapters}
+								bind:checked={mmState.value.showMissingChapters}
 							/>
 						</button>
 						<button
@@ -180,14 +180,15 @@
 							onclick={(e) => {
 								e.stopPropagation();
 								e.preventDefault();
-								$mangaMeta.ChapterFetchUpload = !$mangaMeta.ChapterFetchUpload;
+								mmState.value.ChapterFetchUpload =
+									!mmState.value.ChapterFetchUpload;
 							}}
 						>
 							<span>FetchDate/UploadDate</span>
 							<SlideToggle
 								name="slide"
 								class="focus:outline-0"
-								bind:checked={$mangaMeta.ChapterFetchUpload}
+								bind:checked={mmState.value.ChapterFetchUpload}
 							/>
 						</button>
 						<RadioGroup
@@ -200,7 +201,7 @@
 						>
 							{#each enumKeys(ChapterTitle) as value}
 								<RadioItem
-									bind:group={$mangaMeta.ChapterTitle}
+									bind:group={mmState.value.ChapterTitle}
 									class="focus:outline-0"
 									name="justify"
 									{value}

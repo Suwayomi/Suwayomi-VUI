@@ -8,7 +8,7 @@
 
 <script lang="ts">
 	import TriStateSlide from '$lib/components/TriStateSlide.svelte';
-	import type { TriState } from '$lib/util';
+	import type { TriState } from '$lib/util.svelte';
 	import type { getSource } from '$lib/gql/Queries';
 	import type { ResultOf, VariablesOf } from '$lib/gql/graphql';
 	import type { fetchSourceManga } from '$lib/gql/Mutations';

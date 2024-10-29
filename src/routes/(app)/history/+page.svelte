@@ -8,14 +8,15 @@
 
 <script lang="ts">
 	import { AppBarData } from '$lib/MountTitleAction';
-	import { getContextClient, queryStore } from '@urql/svelte';
+	import { getContextClient } from '@urql/svelte';
 	import { History } from '$lib/gql/Queries';
 	import type { ResultOf } from '$lib/gql/graphql';
-	import { formatDate, gridValues } from '$lib/util';
+	import { formatDate, gridValues, queryState } from '$lib/util.svelte';
 	import MangaCard from '$lib/components/MangaCard.svelte';
 	import IntersectionObserver from '$lib/components/IntersectionObserver.svelte';
 	import IconWrapper from '$lib/components/IconWrapper.svelte';
-	import { display, Meta } from '$lib/simpleStores';
+	import { display, gmState } from '$lib/simpleStores.svelte';
+
 	import { untrack } from 'svelte';
 
 	AppBarData('History');
@@ -24,39 +25,40 @@
 	let all: ResultOf<typeof History>['chapters'] | null = $state(null);
 
 	function updateAll() {
-		const _ = [$CurrentHistory];
+		const _ = [CurrentHistory.value];
 		untrack(() => {
-			if (!$CurrentHistory.data?.chapters) return;
+			if (!CurrentHistory.value.data?.chapters) return;
 			if (!all) {
-				all = structuredClone($CurrentHistory.data.chapters);
+				all = $state.snapshot(CurrentHistory.value.data.chapters);
 				return;
 			}
-			all.nodes.push(...$CurrentHistory.data.chapters.nodes);
-			all.pageInfo = $CurrentHistory.data.chapters.pageInfo;
+			all.nodes.push(...CurrentHistory.value.data.chapters.nodes);
+			all.pageInfo = CurrentHistory.value.data.chapters.pageInfo;
 		});
 	}
-	let CurrentHistory = $derived(
-		queryStore({
-			client,
-			query: History,
-			variables: { offset: page }
-		})
-	);
+	let CurrentHistory = $derived.by(() => {
+		const _ = [page];
+		return untrack(() =>
+			queryState({
+				client,
+				query: History,
+				variables: { offset: page }
+			})
+		);
+	});
 	$effect(updateAll);
 </script>
 
-<div>test</div>
-
-{#if !all && $CurrentHistory.fetching}
+{#if !all && CurrentHistory.value.fetching}
 	<div class="grid {gridValues} m-2 gap-2">
 		{#each new Array(110) as _}
 			<div class="aspect-cover w-full">
 				<div
 					class="placeholder h-full animate-pulse
-						{$Meta.Display === display.Compact && 'rounded-lg'}
-						{$Meta.Display === display.Comfortable && 'rounded-none rounded-t-lg'}"
+						{gmState.value.Display === display.Compact && 'rounded-lg'}
+						{gmState.value.Display === display.Comfortable && 'rounded-none rounded-t-lg'}"
 				></div>
-				{#if $Meta.Display === display.Comfortable}
+				{#if gmState.value.Display === display.Comfortable}
 					<div
 						class="placeholder h-12 animate-pulse rounded-none rounded-b-lg px-2 text-center"
 					></div>
@@ -64,9 +66,9 @@
 			</div>
 		{/each}
 	</div>
-{:else if !all && $CurrentHistory.error}
+{:else if !all && CurrentHistory.value.error}
 	<div class="white-space-pre-wrap">
-		{JSON.stringify($CurrentHistory.error, null, 4)}
+		{JSON.stringify(CurrentHistory.value.error, null, 4)}
 	</div>
 {:else if all?.nodes}
 	<div class="grid {gridValues} m-2 gap-2">
@@ -89,10 +91,11 @@
 								title={updat.manga.title}
 								titleA="{updat.isDownloaded ? 'Downloaded' : ''}
 	{updat.isBookmarked ? 'Bookmarked' : ''}"
-								rounded="{$Meta.Display === display.Compact && 'rounded-lg'}
-								{$Meta.Display === display.Comfortable && 'rounded-none rounded-t-lg'}"
+								rounded="{gmState.value.Display === display.Compact &&
+									'rounded-lg'}
+								{gmState.value.Display === display.Comfortable && 'rounded-none rounded-t-lg'}"
 							>
-								{#if $Meta.Display === display.Compact}
+								{#if gmState.value.Display === display.Compact}
 									<div
 										class="variant-glass absolute bottom-0 left-0 right-0 rounded-b-olg"
 									>
@@ -127,7 +130,7 @@
 									{/if}
 								</div>
 							</MangaCard>
-							{#if $Meta.Display === display.Comfortable}
+							{#if gmState.value.Display === display.Comfortable}
 								<div class="variant-glass-surface rounded-b-lg">
 									<div
 										class="line-clamp-1 h-6 px-2 text-center"
@@ -158,7 +161,7 @@
 				{/snippet}
 			</IntersectionObserver>
 		{/each}
-		{#if !$CurrentHistory.fetching && all.pageInfo.hasNextPage}
+		{#if !CurrentHistory.value.fetching && all.pageInfo.hasNextPage}
 			<IntersectionObserver
 				root={document.querySelector('#page') ?? undefined}
 				top={400}
@@ -168,15 +171,15 @@
 				}}
 			/>
 		{/if}
-		{#if $CurrentHistory.fetching && all.pageInfo.hasNextPage}
+		{#if CurrentHistory.value.fetching && all.pageInfo.hasNextPage}
 			{#each new Array(10) as _}
 				<div class="aspect-cover w-full">
 					<div
 						class="placeholder h-full animate-pulse
-							{$Meta.Display === display.Compact && 'rounded-lg'}
-							{$Meta.Display === display.Comfortable && 'rounded-none rounded-t-lg'}"
+							{gmState.value.Display === display.Compact && 'rounded-lg'}
+							{gmState.value.Display === display.Comfortable && 'rounded-none rounded-t-lg'}"
 					></div>
-					{#if $Meta.Display === display.Comfortable}
+					{#if gmState.value.Display === display.Comfortable}
 						<div
 							class="placeholder h-12 animate-pulse rounded-none rounded-b-lg px-2 text-center"
 						></div>

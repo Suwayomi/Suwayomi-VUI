@@ -6,7 +6,7 @@
  file, You can obtain one at http://mozilla.org/MPL/2.0/.
 -->
 <script lang="ts">
-	import { setSettings } from '$lib/util';
+	import { setSettings } from '$lib/util.svelte';
 	import { getModalStore } from '@skeletonlabs/skeleton';
 	import ModalTemplate from '$lib/components/ModalTemplate.svelte';
 

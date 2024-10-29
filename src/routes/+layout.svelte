@@ -9,7 +9,7 @@
 <script lang="ts">
 	import { title as titleStore } from '$lib/MountTitleAction';
 	import Toast from '$lib/components/Toast/Toast.svelte';
-	import { Meta, toastStore } from '$lib/simpleStores';
+	import { gmState, toastStore } from '$lib/simpleStores.svelte';
 	import '../app.postcss';
 	// Floating UI for Popups
 	import { getToastStore } from '$lib/components/Toast/stores';
@@ -44,17 +44,18 @@
 	storePopup.set({ computePosition, autoUpdate, flip, shift, offset, arrow });
 	initializeStores();
 
-	onMount(() => {
-		Meta.subscribe(() => {
-			themeFunc();
-		});
-	});
+	$effect(themeFunc);
 	function themeFunc() {
-		document.body.dataset.theme = $Meta.theme;
-		if ($Meta.dark && !document.documentElement.classList.contains('dark')) {
+		document.body.dataset.theme = gmState.value.theme;
+		if (
+			gmState.value.dark &&
+			!document.documentElement.classList.contains('dark')
+		) {
 			document.documentElement.classList.add('dark');
-		} else if (
-			!$Meta.dark &&
+			return;
+		}
+		if (
+			!gmState.value.dark &&
 			document.documentElement.classList.contains('dark')
 		) {
 			document.documentElement.classList.remove('dark');

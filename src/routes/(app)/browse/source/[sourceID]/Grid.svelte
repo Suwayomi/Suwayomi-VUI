@@ -8,16 +8,17 @@
 
 <script lang="ts">
 	import type { LayoutData } from './$types';
-	import { errortoast, gridValues } from '$lib/util';
+	import { errortoast, gridValues, queryState } from '$lib/util.svelte';
 	import IntersectionObserver from '$lib/components/IntersectionObserver.svelte';
 	import MangaCard from '$lib/components/MangaCard.svelte';
 	import IconWrapper from '$lib/components/IconWrapper.svelte';
 	import PreferencesModal from './PreferencesModal.svelte';
 	import { getModalStore } from '@skeletonlabs/skeleton';
-	import { Meta, display } from '$lib/simpleStores';
+	import { display, gmState } from '$lib/simpleStores.svelte';
+
 	import type { ResultOf, VariablesOf } from '$lib/gql/graphql';
 	import { fetchSourceManga } from '$lib/gql/Mutations';
-	import { getContextClient, mutationStore, queryStore } from '@urql/svelte';
+	import { getContextClient, mutationStore } from '@urql/svelte';
 	import { getSource } from '$lib/gql/Queries';
 	import { untrack } from 'svelte';
 
@@ -31,15 +32,18 @@
 	let { data, type, query = undefined, filters = undefined }: Props = $props();
 	const client = getContextClient();
 
-	let sause2 = queryStore({
-		client,
-		query: getSource,
-		variables: { id: data.sourceID }
-	});
-
-	let sause: typeof $sause2 | undefined = $state();
-	$effect(() => {
-		sause = structuredClone($sause2);
+	let sause = $derived.by(() => {
+		const _ = [data.sourceID];
+		return untrack(
+			() =>
+				queryState({
+					client: getContextClient(),
+					query: getSource,
+					variables: {
+						id: data.sourceID
+					}
+				}).value
+		);
 	});
 
 	const modalStore = getModalStore();
@@ -144,10 +148,11 @@
 								<MangaCard
 									thumbnailUrl={manga.thumbnailUrl ?? ''}
 									title={manga.title}
-									rounded="{$Meta.Display === display.Compact && 'rounded-lg'}
-											{$Meta.Display === display.Comfortable && 'rounded-none rounded-t-lg'}"
+									rounded="{gmState.value.Display === display.Compact &&
+										'rounded-lg'}
+											{gmState.value.Display === display.Comfortable && 'rounded-none rounded-t-lg'}"
 								>
-									{#if $Meta.Display === display.Compact}
+									{#if gmState.value.Display === display.Compact}
 										<div
 											class="variant-glass absolute bottom-0 left-0 right-0 rounded-b-olg"
 										>
@@ -167,7 +172,7 @@
 										</div>
 									{/if}
 								</MangaCard>
-								{#if $Meta.Display === display.Comfortable}
+								{#if gmState.value.Display === display.Comfortable}
 									<div class="variant-glass-surface rounded-b-lg">
 										<div
 											class="line-clamp-2 h-12 px-2 text-center"
@@ -180,7 +185,7 @@
 							</a>
 						{/if}
 					</div>
-					{#if !intersecting && $Meta.Display === display.Comfortable}
+					{#if !intersecting && gmState.value.Display === display.Comfortable}
 						<div class="h-12"></div>
 					{/if}
 				{/snippet}
@@ -201,10 +206,10 @@
 				<div class="aspect-cover w-full">
 					<div
 						class="placeholder h-full animate-pulse
-						{$Meta.Display === display.Compact && 'rounded-lg'}
-						{$Meta.Display === display.Comfortable && 'rounded-none rounded-t-lg'}"
+						{gmState.value.Display === display.Compact && 'rounded-lg'}
+						{gmState.value.Display === display.Comfortable && 'rounded-none rounded-t-lg'}"
 					></div>
-					{#if $Meta.Display === display.Comfortable}
+					{#if gmState.value.Display === display.Comfortable}
 						<div
 							class="placeholder h-12 animate-pulse rounded-none rounded-b-lg px-2 text-center"
 						></div>

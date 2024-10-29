@@ -10,27 +10,28 @@
 	import IntersectionObserver from '$lib/components/IntersectionObserver.svelte';
 	import MangaCard from '$lib/components/MangaCard.svelte';
 	import { longPress } from '$lib/press';
-	import { display, Meta, sort } from '$lib/simpleStores';
+	import { display, gmState, sort } from '$lib/simpleStores.svelte';
 	import { Tab, TabGroup } from '@skeletonlabs/skeleton';
 	import { queryParam, ssp } from 'sveltekit-search-params';
 	import LibraryActions from './libraryActions.svelte';
 	import { selected, selectMode, type MangaType } from './LibraryStores';
-	import { onMount } from 'svelte';
+	import { onMount, untrack } from 'svelte';
 	import { AppBarData } from '$lib/MountTitleAction';
 	import {
 		errortoast,
 		gridValues,
 		HelpDoSelect,
-		HelpSelectAll
-	} from '$lib/util';
+		HelpSelectAll,
+		queryState
+	} from '$lib/util.svelte';
 	import IconWrapper from '$lib/components/IconWrapper.svelte';
 	import { parseQuery, type ANO, type parsedQueryType } from './queryParse';
 	import { getCategories, getCategory } from '$lib/gql/Queries';
-	import { getContextClient, queryStore } from '@urql/svelte';
+	import { getContextClient } from '@urql/svelte';
 
 	const client = getContextClient();
 
-	const categories = queryStore({
+	const categories = queryState({
 		client,
 		query: getCategories
 	});
@@ -212,7 +213,7 @@
 		validateParsedQuery(parsedQuery);
 	});
 	let orderedCategories = $derived(
-		($categories.data?.categories?.nodes ?? [])
+		(categories.value.data?.categories?.nodes ?? [])
 			.filter((e) => e.mangas.totalCount)
 			.sort((a, b) => {
 				return a.order > b.order ? 1 : -1;
@@ -228,23 +229,27 @@
 			});
 		}
 	});
-	let mangas = $derived(
-		queryStore({
-			client,
-			query: getCategory,
-			variables: { id: $tab ?? 0 },
-			requestPolicy: 'cache-first'
-		})
-	);
+
+	let mangas = $derived.by(() => {
+		const _ = [$tab];
+		return untrack(() =>
+			queryState({
+				client,
+				query: getCategory,
+				variables: { id: $tab ?? 0 },
+				requestPolicy: 'cache-first'
+			})
+		);
+	});
 	$effect(() => {
 		if ($selectMode === false) {
 			$selected = [];
 		}
 	});
 	let filteredMangas = $derived(
-		$mangas.data?.category?.mangas.nodes.filter((ele) => {
+		mangas.value.data?.category?.mangas.nodes.filter((ele) => {
 			if (!ele.inLibrary) return false;
-			if ($Meta.ignoreFiltersWhenSearching) {
+			if (gmState.value.ignoreFiltersWhenSearching) {
 				if (
 					parsedQuery !== null &&
 					specificSearch(ele, parsedQuery).findIndex((e) => e === false) === -1
@@ -253,15 +258,17 @@
 				}
 			}
 
-			if ($Meta.Downloaded === 1 && ele.downloadCount === 0) return false;
-			if ($Meta.Downloaded === 2 && ele.downloadCount !== 0) return false;
-
-			if ($Meta.Unread === 1 && ele.unreadCount === 0) return false;
-			if ($Meta.Unread === 2 && ele.unreadCount !== 0) return false;
-
-			if ($Meta.Tracked === 1 && ele.trackRecords.nodes.length === 0)
+			if (gmState.value.Downloaded === 1 && ele.downloadCount === 0)
 				return false;
-			if ($Meta.Tracked === 2 && ele.trackRecords.nodes.length !== 0)
+			if (gmState.value.Downloaded === 2 && ele.downloadCount !== 0)
+				return false;
+
+			if (gmState.value.Unread === 1 && ele.unreadCount === 0) return false;
+			if (gmState.value.Unread === 2 && ele.unreadCount !== 0) return false;
+
+			if (gmState.value.Tracked === 1 && ele.trackRecords.nodes.length === 0)
+				return false;
+			if (gmState.value.Tracked === 2 && ele.trackRecords.nodes.length !== 0)
 				return false;
 
 			if (
@@ -290,11 +297,11 @@
 	});
 	let sortedMangas = $derived(
 		filteredMangas
-			? $Meta.Sort === sort.Random
+			? gmState.value.Sort === sort.Random
 				? shuffle([...filteredMangas])
 				: [...filteredMangas].sort((a, b) => {
 						let tru = true;
-						switch ($Meta.Sort) {
+						switch (gmState.value.Sort) {
 							case sort.ID:
 								tru = a.id > b.id;
 								break;
@@ -321,14 +328,14 @@
 								break;
 						}
 
-						if ($Meta.Asc) tru = !tru;
+						if (gmState.value.Asc) tru = !tru;
 						return tru ? -1 : 1;
 					})
 			: undefined
 	);
 </script>
 
-{#if $categories.fetching}
+{#if categories.value.fetching}
 	<div class="mb-3 flex h-[47px] items-center space-x-4 pl-4">
 		<div class="placeholder w-20 animate-pulse"></div>
 		<div class="placeholder w-20 animate-pulse"></div>
@@ -339,10 +346,10 @@
 			<div class="aspect-cover w-full">
 				<div
 					class="placeholder h-full animate-pulse
-			{$Meta.Display === display.Compact && 'rounded-lg'}
-			{$Meta.Display === display.Comfortable && 'rounded-none rounded-t-lg'}"
+			{gmState.value.Display === display.Compact && 'rounded-lg'}
+			{gmState.value.Display === display.Comfortable && 'rounded-none rounded-t-lg'}"
 				></div>
-				{#if $Meta.Display === display.Comfortable}
+				{#if gmState.value.Display === display.Comfortable}
 					<div
 						class="placeholder h-12 animate-pulse rounded-none rounded-b-lg px-2 text-center"
 					></div>
@@ -350,9 +357,9 @@
 			</div>
 		{/each}
 	</div>
-{:else if $categories.error}
+{:else if categories.value.error}
 	<div class="whitespace-pre-wrap">
-		Error loading categories: {JSON.stringify($categories.error, null, 4)}
+		Error loading categories: {JSON.stringify(categories.value.error, null, 4)}
 	</div>
 {:else}
 	<TabGroup>
@@ -361,7 +368,7 @@
 				<Tab bind:group={$tab} name={cat.name} value={cat.id}>
 					{#snippet lead()}
 						{cat.name}
-						{#if $Meta.libraryCategoryTotalCounts}
+						{#if gmState.value.libraryCategoryTotalCounts}
 							<span
 								class="variant-filled-surface m-0 rounded-full px-1 text-sm"
 							>
@@ -373,16 +380,16 @@
 			{/each}
 		{/if}
 		<svelte:fragment slot="panel">
-			{#if $mangas.fetching}
+			{#if mangas.value.fetching}
 				<div class="yoy m-2 grid gap-2 {gridValues}">
 					{#each new Array(orderedCategories.find((e) => e.id === $tab)?.mangas.totalCount ?? 10) as _}
 						<div class="aspect-cover w-full">
 							<div
 								class="placeholder h-full animate-pulse
-									{$Meta.Display === display.Compact && 'rounded-lg'}
-									{$Meta.Display === display.Comfortable && 'rounded-none rounded-t-lg'}"
+									{gmState.value.Display === display.Compact && 'rounded-lg'}
+									{gmState.value.Display === display.Comfortable && 'rounded-none rounded-t-lg'}"
 							></div>
-							{#if $Meta.Display === display.Comfortable}
+							{#if gmState.value.Display === display.Comfortable}
 								<div
 									class="placeholder h-12 animate-pulse rounded-none rounded-b-lg px-2 text-center"
 								></div>
@@ -390,9 +397,9 @@
 						</div>
 					{/each}
 				</div>
-			{:else if $mangas.error}
+			{:else if mangas.value.error}
 				<div class="whitespace-pre-wrap">
-					Error loading mangas: {JSON.stringify($mangas.error, null, 4)}
+					Error loading mangas: {JSON.stringify(mangas.value.error, null, 4)}
 				</div>
 			{:else if sortedMangas}
 				<div class="yoy grid {gridValues} m-2 gap-2">
@@ -432,14 +439,15 @@
 												thumbnailUrl={manga.thumbnailUrl ?? ''}
 												title={manga.title}
 												class="select-none {$selectMode && 'opacity-80'}"
-												rounded="{$Meta.Display === display.Compact &&
+												rounded="{gmState.value.Display === display.Compact &&
 													'rounded-lg'}
-												{$Meta.Display === display.Comfortable && 'rounded-none rounded-t-lg'}"
+												{gmState.value.Display === display.Comfortable && 'rounded-none rounded-t-lg'}"
 											>
 												<div class="absolute left-2 top-2 flex">
-													{#if manga.downloadCount && $Meta.downloadsBadge}
+													{#if manga.downloadCount && gmState.value.downloadsBadge}
 														<div
-															class="{manga.unreadCount && $Meta.unreadBadge
+															class="{manga.unreadCount &&
+															gmState.value.unreadBadge
 																? 'rounded-l'
 																: 'rounded'}
 															variant-filled-primary m-0 px-1 py-0.5"
@@ -447,10 +455,10 @@
 															{manga.downloadCount}
 														</div>
 													{/if}
-													{#if manga.unreadCount && $Meta.unreadBadge}
+													{#if manga.unreadCount && gmState.value.unreadBadge}
 														<div
 															class="{manga.downloadCount &&
-															$Meta.downloadsBadge
+															gmState.value.downloadsBadge
 																? 'rounded-r'
 																: 'rounded'}
 															variant-filled-secondary m-0 px-1 py-0.5"
@@ -471,7 +479,7 @@
 														/>
 													</div>
 												{/if}
-												{#if $Meta.Display === display.Compact}
+												{#if gmState.value.Display === display.Compact}
 													<div
 														class="variant-glass absolute bottom-0 left-0 right-0 rounded-b-olg"
 													>
@@ -484,7 +492,7 @@
 													</div>
 												{/if}
 											</MangaCard>
-											{#if $Meta.Display === display.Comfortable}
+											{#if gmState.value.Display === display.Comfortable}
 												<div class="variant-glass-surface rounded-b-lg">
 													<div
 														class="line-clamp-2 h-12 px-2 text-center"
@@ -497,7 +505,7 @@
 										</a>
 									{/if}
 								</div>
-								{#if !intersecting && $Meta.Display === display.Comfortable}
+								{#if !intersecting && gmState.value.Display === display.Comfortable}
 									<div class="h-12"></div>
 								{/if}
 							{/snippet}

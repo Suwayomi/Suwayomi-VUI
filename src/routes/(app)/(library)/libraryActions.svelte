@@ -21,7 +21,7 @@
 	import { screens } from '$lib/screens';
 	import IconWrapper from '$lib/components/IconWrapper.svelte';
 	import { selected, selectMode } from './LibraryStores';
-	import { ErrorHelp } from '$lib/util';
+	import { ErrorHelp } from '$lib/util.svelte';
 	import { getContextClient } from '@urql/svelte';
 	import { ConditionalChaptersOfGivenManga } from '$lib/gql/Queries';
 	import { enqueueChapterDownloads, updateMangas } from '$lib/gql/Mutations';

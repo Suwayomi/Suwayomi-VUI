@@ -9,7 +9,8 @@
 <script lang="ts">
 	import MangaCard from '$lib/components/MangaCard.svelte';
 	import IntersectionObserver from '$lib/components/IntersectionObserver.svelte';
-	import { Meta, display } from '$lib/simpleStores';
+	import { display, gmState } from '$lib/simpleStores.svelte';
+
 	import type { fetchSourceManga } from '$lib/gql/Mutations';
 	import type { ResultOf } from '$lib/gql/graphql';
 
@@ -57,12 +58,13 @@
 								<MangaCard
 									thumbnailUrl={manga.thumbnailUrl ?? ''}
 									title={manga.title}
-									rounded="{$Meta.Display === display.Compact && 'rounded-lg'}
-	                  {$Meta.Display === display.Comfortable &&
+									rounded="{gmState.value.Display === display.Compact &&
+										'rounded-lg'}
+	                  {gmState.value.Display === display.Comfortable &&
 										'rounded-none rounded-t-lg'}"
 									aspect="aspect-cover"
 								>
-									{#if $Meta.Display === display.Compact}
+									{#if gmState.value.Display === display.Compact}
 										<div
 											class="variant-glass absolute bottom-0 left-0 right-0 rounded-b-olg"
 										>
@@ -83,7 +85,7 @@
 									{/if}
 								</MangaCard>
 							</div>
-							{#if $Meta.Display === display.Comfortable}
+							{#if gmState.value.Display === display.Comfortable}
 								<div class="variant-glass-surface rounded-b-lg">
 									<div
 										class="line-clamp-2 h-12 px-2 text-center"
@@ -96,7 +98,7 @@
 						</a>
 					{:else}
 						<div class="aspect-cover w-full"></div>
-						{#if $Meta.Display === display.Comfortable}
+						{#if gmState.value.Display === display.Comfortable}
 							<div class="h-12"></div>
 						{/if}
 					{/if}

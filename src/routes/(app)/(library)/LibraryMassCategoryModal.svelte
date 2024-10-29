@@ -8,10 +8,10 @@
 
 <script lang="ts">
 	import TriStateSlide from '$lib/components/TriStateSlide.svelte';
-	import { ErrorHelp } from '$lib/util';
+	import { ErrorHelp, queryState } from '$lib/util.svelte';
 	import { getModalStore } from '@skeletonlabs/skeleton';
 	import { selected } from './LibraryStores';
-	import { getContextClient, queryStore } from '@urql/svelte';
+	import { getContextClient } from '@urql/svelte';
 	import { updateMangasCategories } from '$lib/gql/Mutations';
 	import { getCategories } from '$lib/gql/Queries';
 	import { type ResultOf } from '$lib/gql/graphql';
@@ -22,7 +22,7 @@
 
 	let selectedCategories: number[] = [];
 
-	const categories = queryStore({
+	const categories = queryState({
 		client,
 		query: getCategories
 	});
@@ -63,14 +63,18 @@
 {#if $modalStore[0]}
 	<ModalTemplate titleText="Set Categories">
 		{#snippet children()}
-			{#if $categories.fetching}
+			{#if categories.value.fetching}
 				loading...
-			{:else if $categories.error}
+			{:else if categories.value.error}
 				<div class="whitespace-pre-wrap">
-					Error loading categories: {JSON.stringify($categories.error, null, 4)}
+					Error loading categories: {JSON.stringify(
+						categories.value.error,
+						null,
+						4
+					)}
 				</div>
-			{:else if $categories.data}
-				{@const nodes = $categories.data.categories.nodes}
+			{:else if categories.value.data}
+				{@const nodes = categories.value.data.categories.nodes}
 				{#each nodes
 					.filter((e) => e.id !== 0)
 					.sort((a, b) => (a.order > b.order ? 1 : -1)) as category}

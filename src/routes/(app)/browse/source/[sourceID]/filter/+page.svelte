@@ -16,8 +16,10 @@
 	import FilterModal from './FilterModal.svelte';
 	import type { fetchSourceManga } from '$lib/gql/Mutations';
 	import type { VariablesOf } from '$lib/gql/graphql';
-	import { getContextClient, queryStore } from '@urql/svelte';
+	import { getContextClient } from '@urql/svelte';
 	import { getSource } from '$lib/gql/Queries';
+	import { queryState } from '$lib/util.svelte';
+	import { untrack } from 'svelte';
 
 	const modalStore = getModalStore();
 
@@ -32,16 +34,16 @@
 	}
 	$filtersSause = data.sourceID;
 
-	const sause2 = queryStore({
-		client: getContextClient(),
-		query: getSource,
-		variables: { id: data.sourceID }
-	});
-
-	let sause: typeof $sause2 | undefined = $state();
-
-	$effect(() => {
-		sause = structuredClone($sause2);
+	let sause = $derived.by(() => {
+		const _ = [data.sourceID];
+		return untrack(
+			() =>
+				queryState({
+					client: getContextClient(),
+					query: getSource,
+					variables: { id: data.sourceID }
+				}).value
+		);
 	});
 
 	const query = queryParam('q', ssp.string(), { pushHistory: false });

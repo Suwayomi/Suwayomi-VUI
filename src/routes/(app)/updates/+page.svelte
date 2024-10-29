@@ -9,7 +9,6 @@
 <script lang="ts">
 	import UpdatesActions from './UpdatesActions.svelte';
 	import { AppBarData } from '$lib/MountTitleAction';
-	import { writable } from 'svelte/store';
 	import MangaCard from '$lib/components/MangaCard.svelte';
 	import { longPress } from '$lib/press';
 	import { selectMode, selected } from './UpdatesStores';
@@ -22,10 +21,12 @@
 		formatDate,
 		gridValues,
 		HelpDoSelect,
-		HelpSelectAll
-	} from '$lib/util';
-	import { display, Meta } from '$lib/simpleStores';
-	import { getContextClient, queryStore } from '@urql/svelte';
+		HelpSelectAll,
+		queryState
+	} from '$lib/util.svelte';
+	import { display, gmState } from '$lib/simpleStores.svelte';
+
+	import { getContextClient } from '@urql/svelte';
 	import { updates } from '$lib/gql/Queries';
 	import type { ResultOf } from '$lib/gql/graphql';
 	import { untrack } from 'svelte';
@@ -38,17 +39,17 @@
 		}
 	});
 
-	let page = writable(0);
-	let all = writable<ResultOf<typeof updates>['chapters'] | null>(null);
+	let page = $state(0);
+	let all = $state<ResultOf<typeof updates>['chapters'] | null>(null);
 	const client = getContextClient();
 	function updateall() {
-		if (!$update.data?.chapters) return;
-		if (!$all) {
-			$all = structuredClone($update.data.chapters);
+		if (!update.value.data?.chapters) return;
+		if (!all) {
+			all = $state.snapshot(update.value.data.chapters);
 			return;
 		}
-		$all.nodes.push(...$update.data.chapters.nodes);
-		$all.pageInfo = $update.data.chapters.pageInfo;
+		all.nodes.push(...update.value.data.chapters.nodes);
+		all.pageInfo = update.value.data.chapters.pageInfo;
 	}
 
 	function LongHandler(): void {
@@ -57,7 +58,7 @@
 	let lastSelected: UpdateNode | undefined = $state();
 
 	function selectAll() {
-		HelpSelectAll(selectMode, selected, $all?.nodes);
+		HelpSelectAll(selectMode, selected, all?.nodes);
 	}
 
 	function updateSelectedValues(prop: dlreabook, is: boolean | undefined) {
@@ -65,47 +66,50 @@
 		switch (prop) {
 			case dlreabook.bookmark:
 				$selected.forEach((element) => {
-					const fin = $all?.nodes.findIndex((ele) => ele.id === element.id);
-					if (fin && $all?.nodes[fin]) $all.nodes[fin].isBookmarked = is;
+					const fin = all?.nodes.findIndex((ele) => ele.id === element.id);
+					if (fin && all?.nodes[fin]) all.nodes[fin].isBookmarked = is;
 				});
 				break;
 			case dlreabook.download:
 				$selected.forEach((element) => {
-					const fin = $all?.nodes.findIndex((ele) => ele.id === element.id);
-					if (fin && $all?.nodes[fin]) $all.nodes[fin].isDownloaded = is;
+					const fin = all?.nodes.findIndex((ele) => ele.id === element.id);
+					if (fin && all?.nodes[fin]) all.nodes[fin].isDownloaded = is;
 				});
 				break;
 			default:
 				$selected.forEach((element) => {
-					const fin = $all?.nodes.findIndex((ele) => ele.id === element.id);
-					if (fin && $all?.nodes[fin]) $all.nodes[fin].isRead = is;
+					const fin = all?.nodes.findIndex((ele) => ele.id === element.id);
+					if (fin && all?.nodes[fin]) all.nodes[fin].isRead = is;
 				});
 				break;
 		}
 	}
-	let update = $derived(
-		queryStore({
-			client,
-			query: updates,
-			variables: { offset: $page }
-		})
-	);
+	let update = $derived.by(() => {
+		const _ = [page];
+		return untrack(() =>
+			queryState({
+				client,
+				query: updates,
+				variables: { offset: page }
+			})
+		);
+	});
 	$effect(() => {
-		const _ = [$update];
+		const _ = [update.value];
 		untrack(updateall);
 	});
 </script>
 
-{#if !$all && $update.fetching}
+{#if !all && update.value.fetching}
 	<div class="grid {gridValues} m-2 gap-2">
 		{#each new Array(110) as _}
 			<div class="aspect-cover w-full">
 				<div
 					class="placeholder h-full animate-pulse
-						{$Meta.Display === display.Compact && 'rounded-lg'}
-						{$Meta.Display === display.Comfortable && 'rounded-none rounded-t-lg'}"
+						{gmState.value.Display === display.Compact && 'rounded-lg'}
+						{gmState.value.Display === display.Comfortable && 'rounded-none rounded-t-lg'}"
 				></div>
-				{#if $Meta.Display === display.Comfortable}
+				{#if gmState.value.Display === display.Comfortable}
 					<div
 						class="placeholder h-12 animate-pulse rounded-none rounded-b-lg px-2 text-center"
 					></div>
@@ -113,13 +117,13 @@
 			</div>
 		{/each}
 	</div>
-{:else if !$all && $update.error}
+{:else if !all && update.value.error}
 	<div class="white-space-pre-wrap">
-		{JSON.stringify($update.error, null, 4)}
+		{JSON.stringify(update.value.error, null, 4)}
 	</div>
-{:else if $all?.nodes}
+{:else if all?.nodes}
 	<div class="grid {gridValues} m-2 gap-2">
-		{#each $all.nodes as updat}
+		{#each all.nodes as updat}
 			<IntersectionObserver
 				root={document.querySelector('#page') ?? undefined}
 				top={400}
@@ -141,7 +145,7 @@
 										updat,
 										e,
 										lastSelected,
-										$all?.nodes,
+										all?.nodes,
 										selected
 									);
 								} else {
@@ -159,8 +163,9 @@
 								titleA="{updat.isDownloaded ? 'Downloaded' : ''}
 	{updat.isRead ? 'Read' : ''}
 	{updat.isBookmarked ? 'Bookmarked' : ''}"
-								rounded="{$Meta.Display === display.Compact && 'rounded-lg'}
-								{$Meta.Display === display.Comfortable && 'rounded-none rounded-t-lg'}"
+								rounded="{gmState.value.Display === display.Compact &&
+									'rounded-lg'}
+								{gmState.value.Display === display.Comfortable && 'rounded-none rounded-t-lg'}"
 							>
 								{#if $selectMode}
 									<div
@@ -174,7 +179,7 @@
 										/>
 									</div>
 								{/if}
-								{#if $Meta.Display === display.Compact}
+								{#if gmState.value.Display === display.Compact}
 									<div
 										class="variant-glass absolute bottom-0 left-0 right-0 rounded-b-olg"
 									>
@@ -215,7 +220,7 @@
 									{/if}
 								</div>
 							</MangaCard>
-							{#if $Meta.Display === display.Comfortable}
+							{#if gmState.value.Display === display.Comfortable}
 								<div class="variant-glass-surface rounded-b-lg">
 									<div
 										class="line-clamp-1 h-6 px-2 text-center"
@@ -246,25 +251,25 @@
 				{/snippet}
 			</IntersectionObserver>
 		{/each}
-		{#if !$update.fetching && $all.pageInfo.hasNextPage}
+		{#if !update.value.fetching && all.pageInfo.hasNextPage}
 			<IntersectionObserver
 				root={document.querySelector('#page') ?? undefined}
 				top={400}
 				bottom={400}
 				onintersect={(e) => {
-					if (e) $page = $all?.nodes.length ?? 0;
+					if (e) page = all?.nodes.length ?? 0;
 				}}
 			/>
 		{/if}
-		{#if $update.fetching && $all.pageInfo.hasNextPage}
+		{#if update.value.fetching && all.pageInfo.hasNextPage}
 			{#each new Array(10) as _}
 				<div class="aspect-cover w-full">
 					<div
 						class="placeholder h-full animate-pulse
-							{$Meta.Display === display.Compact && 'rounded-lg'}
-							{$Meta.Display === display.Comfortable && 'rounded-none rounded-t-lg'}"
+							{gmState.value.Display === display.Compact && 'rounded-lg'}
+							{gmState.value.Display === display.Comfortable && 'rounded-none rounded-t-lg'}"
 					></div>
-					{#if $Meta.Display === display.Comfortable}
+					{#if gmState.value.Display === display.Comfortable}
 						<div
 							class="placeholder h-12 animate-pulse rounded-none rounded-b-lg px-2 text-center"
 						></div>

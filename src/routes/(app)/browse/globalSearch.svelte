@@ -15,8 +15,9 @@
 	import { SpecificSourceFilter } from './BrowseStores';
 	import HorisontalmangaElement from './HorisontalmangaElement.svelte';
 	import { AppBarData } from '$lib/MountTitleAction';
-	import { Meta, display } from '$lib/simpleStores';
-	import { groupBy } from '$lib/util';
+	import { display, gmState } from '$lib/simpleStores.svelte';
+
+	import { groupBy } from '$lib/util.svelte';
 	import { getContextClient, CombinedError } from '@urql/svelte';
 	import { getSources } from '$lib/gql/Queries';
 	import { type ResultOf } from '$lib/gql/graphql';
@@ -47,7 +48,7 @@
 
 	const client = getContextClient();
 	client
-		.query(getSources, { isNsfw: $Meta.nsfw ? null : false })
+		.query(getSources, { isNsfw: gmState.value.nsfw ? null : false })
 		.toPromise()
 		.then((ee) => {
 			rawSources.update((e) => {
@@ -77,7 +78,7 @@
 
 	function onQueryChange() {
 		const Query = $query;
-		alterableRaw = structuredClone(filteredSources);
+		alterableRaw = $state.snapshot(filteredSources);
 		queue.clear();
 		if (Query) {
 			filteredSources?.forEach(async (souc) => {
@@ -213,12 +214,13 @@
 										<div class="aspect-cover h-full w-auto">
 											<div
 												class="placeholder h-full w-full animate-pulse
-	                        {$Meta.Display === display.Compact && 'rounded-lg'}
-	                        {$Meta.Display === display.Comfortable &&
+	                        {gmState.value.Display === display.Compact &&
+													'rounded-lg'}
+	                        {gmState.value.Display === display.Comfortable &&
 													'rounded-none rounded-t-lg'}"
 											></div>
 										</div>
-										{#if $Meta.Display === display.Comfortable}
+										{#if gmState.value.Display === display.Comfortable}
 											<div
 												class="placeholder h-12 animate-pulse rounded-none rounded-b-lg px-2 text-center"
 											></div>

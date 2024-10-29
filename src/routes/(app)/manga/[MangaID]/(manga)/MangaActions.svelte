@@ -10,15 +10,13 @@
 	import TooltipIconButton from '$lib/components/TooltipIconButton.svelte';
 	import MangaCatagoryModal from './MangaCatagoryModal.svelte';
 	import { getModalStore } from '@skeletonlabs/skeleton';
-	import { type ResultOf } from '$lib/gql/graphql';
-	import type { getManga } from '$lib/gql/Queries';
+	import { manga } from './mangaStores.svelte';
 
 	interface Props {
-		manga: ResultOf<typeof getManga>['manga'] | undefined;
 		fetchChapters: () => Promise<void>;
 	}
 
-	let { manga, fetchChapters }: Props = $props();
+	let { fetchChapters }: Props = $props();
 
 	const modalStore = getModalStore();
 
@@ -42,7 +40,7 @@
 		onclick={refreshManga}
 	/>
 
-	{#if manga?.inLibrary}
+	{#if manga.value?.data?.manga.inLibrary}
 		<TooltipIconButton
 			class="text-surface-700 dark:text-surface-300"
 			placement="bottom"

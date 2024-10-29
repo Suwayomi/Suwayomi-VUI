@@ -10,9 +10,10 @@
 	import { AppBarData } from '$lib/MountTitleAction';
 	import IntersectionObserver from '$lib/components/IntersectionObserver.svelte';
 	import MangaCard from '$lib/components/MangaCard.svelte';
-	import { Meta, display } from '$lib/simpleStores';
-	import { gridValues } from '$lib/util';
-	import { getContextClient, queryStore } from '@urql/svelte';
+	import { display, gmState } from '$lib/simpleStores.svelte';
+
+	import { gridValues, queryState } from '$lib/util.svelte';
+	import { getContextClient } from '@urql/svelte';
 	import type { PageData } from './$types';
 	import {
 		sourceMigrationManga,
@@ -27,33 +28,33 @@
 
 	AppBarData(data.SourceID);
 	const client = getContextClient();
-	const Manga = queryStore({
+	const Manga = queryState({
 		client,
 		query: sourceMigrationManga,
 		variables: { sourceId: data.SourceID }
 	});
-	const source = queryStore({
+	const source = queryState({
 		client,
 		query: sourceMigrationSource,
 		variables: { sourceId: data.SourceID }
 	});
 
 	$effect(() => {
-		if ($source.data?.source?.displayName)
-			AppBarData($source.data?.source.displayName);
+		if (source.value.data?.source?.displayName)
+			AppBarData(source.value.data?.source.displayName);
 	});
 </script>
 
-{#if $Manga.fetching}
+{#if Manga.value.fetching}
 	<div class="yoy m-2 grid gap-2 {gridValues}">
 		{#each new Array(30) as _}
 			<div class="aspect-cover w-full">
 				<div
 					class="placeholder h-full animate-pulse
-						{$Meta.Display === display.Compact && 'rounded-lg'}
-						{$Meta.Display === display.Comfortable && 'rounded-none rounded-t-lg'}"
+						{gmState.value.Display === display.Compact && 'rounded-lg'}
+						{gmState.value.Display === display.Comfortable && 'rounded-none rounded-t-lg'}"
 				></div>
-				{#if $Meta.Display === display.Comfortable}
+				{#if gmState.value.Display === display.Comfortable}
 					<div
 						class="placeholder h-12 animate-pulse rounded-none rounded-b-lg px-2 text-center"
 					></div>
@@ -61,13 +62,13 @@
 			</div>
 		{/each}
 	</div>
-{:else if $Manga.error}
+{:else if Manga.value.error}
 	<div class="white-space-pre-wrap">
-		{JSON.stringify($Manga.error, null, 4)}
+		{JSON.stringify(Manga.value.error, null, 4)}
 	</div>
-{:else if $Manga.data}
+{:else if Manga.value.data}
 	<div class="yoy grid {gridValues} m-2 gap-2">
-		{#each $Manga.data.mangas.nodes as manga}
+		{#each Manga.value.data.mangas.nodes as manga}
 			<IntersectionObserver
 				root={document.querySelector('#page') ?? undefined}
 				top={400}
@@ -84,10 +85,11 @@
 								<MangaCard
 									thumbnailUrl={manga.thumbnailUrl ?? ''}
 									title={manga.title}
-									rounded="{$Meta.Display === display.Compact && 'rounded-lg'}
-										{$Meta.Display === display.Comfortable && 'rounded-none rounded-t-lg'}"
+									rounded="{gmState.value.Display === display.Compact &&
+										'rounded-lg'}
+										{gmState.value.Display === display.Comfortable && 'rounded-none rounded-t-lg'}"
 								>
-									{#if $Meta.Display === display.Compact}
+									{#if gmState.value.Display === display.Compact}
 										<div
 											class="variant-glass absolute bottom-0 left-0 right-0 rounded-b-olg"
 										>
@@ -100,7 +102,7 @@
 										</div>
 									{/if}
 								</MangaCard>
-								{#if $Meta.Display === display.Comfortable}
+								{#if gmState.value.Display === display.Comfortable}
 									<div class="variant-glass-surface rounded-b-lg">
 										<div
 											class="line-clamp-2 h-12 px-2 text-center"
@@ -113,7 +115,7 @@
 							</a>
 						{/if}
 					</div>
-					{#if !intersecting && $Meta.Display === display.Comfortable}
+					{#if !intersecting && gmState.value.Display === display.Comfortable}
 						<div class="h-12"></div>
 					{/if}
 				{/snippet}

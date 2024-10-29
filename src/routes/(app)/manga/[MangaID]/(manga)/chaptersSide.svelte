@@ -13,24 +13,19 @@
 	import TooltipIconButton from '$lib/components/TooltipIconButton.svelte';
 	import { longPress } from '$lib/press';
 	import { screens } from '$lib/screens';
-	import { ChapterSort, ChapterTitle, MangaMeta } from '$lib/simpleStores';
+	import { ChapterSort, ChapterTitle, mmState } from '$lib/simpleStores.svelte';
 	import {
 		HelpDoSelect,
 		HelpSelectAll,
 		HelpUpdateChapters,
 		dlreabook
-	} from '$lib/util';
+	} from '$lib/util.svelte';
 	import { getModalStore, popup } from '@skeletonlabs/skeleton';
 	import { fade } from 'svelte/transition';
 	import ChaptersFilterModal from './ChaptersFilterModal.svelte';
 	import DownloadProgressRadial from './DownloadProgressRadial.svelte';
-	import { selected, selectMode, type chaptertype } from './mangaStores';
-	import {
-		getContextClient,
-		subscriptionStore,
-		type OperationResultStore,
-		type Pausable
-	} from '@urql/svelte';
+	import { selected, selectMode, type chapterType } from './mangaStores.svelte';
+	import { getContextClient, subscriptionStore } from '@urql/svelte';
 	import { getSingleChapter, getManga } from '$lib/gql/Queries';
 	import { type ResultOf } from '$lib/gql/graphql';
 	import { downloadsOnChapters } from '$lib/gql/Subscriptions';
@@ -42,14 +37,13 @@
 	} from '$lib/gql/Mutations';
 	import { filterChapters } from '../util';
 	import { untrack } from 'svelte';
+	import { manga } from './mangaStores.svelte';
 
 	interface Props {
-		manga: OperationResultStore<ResultOf<typeof getManga>> & Pausable;
 		MangaID: number;
-		mangaMeta: ReturnType<typeof MangaMeta>;
 	}
 
-	let { manga, MangaID, mangaMeta }: Props = $props();
+	let { MangaID }: Props = $props();
 
 	const client = getContextClient();
 	const modalStore = getModalStore();
@@ -61,7 +55,7 @@
 	let lastDownloads: ResultOf<typeof downloadsOnChapters> | undefined =
 		$state(undefined);
 
-	function checkinNeedRefresh() {
+	function checkingNeedRefresh() {
 		let filtered = lastDownloads?.downloadChanged.queue.filter(
 			(e) =>
 				!$downloads?.data?.downloadChanged.queue.find(
@@ -90,7 +84,7 @@
 		}
 	}
 
-	function updateselected() {
+	function updateSelected() {
 		const _ = [sortedChapters];
 		untrack(() => {
 			$selected?.forEach((e) => {
@@ -106,39 +100,39 @@
 
 	let chapterSideElement: HTMLDivElement | undefined = $state();
 
-	async function handelPrevRead(chapter: chaptertype) {
+	async function handelPrevRead(chapter: chapterType) {
 		if (!sortedChapters) return;
 		const ind = sortedChapters?.findIndex((e) => e.id === chapter.id);
 		const chapters = sortedChapters.slice(ind, sortedChapters.length);
 		const ids = chapters.map((e) => e.id);
 
 		await client.mutation(updateChapters, { isRead: true, ids }).toPromise();
-		if ($manga.data?.manga.id)
+		if (manga.value?.data?.manga.id)
 			await client
-				.mutation(trackProgress, { mangaId: $manga.data.manga.id })
+				.mutation(trackProgress, { mangaId: manga.value?.data.manga.id })
 				.toPromise();
 	}
 
 	function HighestChapterNumber() {
 		return Math.floor(
-			$manga.data?.manga.chapters.nodes?.reduce((a, c) => {
+			manga.value?.data?.manga.chapters.nodes?.reduce((a, c) => {
 				return c.isRead && c.chapterNumber > a ? c.chapterNumber : a;
 			}, 0) ?? 0
 		);
 	}
 
-	async function handelRead(chapter: chaptertype) {
+	async function handelRead(chapter: chapterType) {
 		if (!manga) return;
 		await client
 			.mutation(updateChapters, { isRead: true, ids: [chapter.id] })
 			.toPromise();
-		if ($manga.data?.manga.id)
+		if (manga.value?.data?.manga.id)
 			await client
-				.mutation(trackProgress, { mangaId: $manga.data.manga.id })
+				.mutation(trackProgress, { mangaId: manga.value?.data.manga.id })
 				.toPromise();
 	}
 
-	async function handelUnRead(chapter: chaptertype) {
+	async function handelUnRead(chapter: chapterType) {
 		if (!manga) return '';
 		if (Math.floor(chapter.chapterNumber) !== HighestChapterNumber()) {
 			client
@@ -155,7 +149,7 @@
 		$selectMode = true;
 	}
 
-	let lastSelected: chaptertype | undefined = $state();
+	let lastSelected: chapterType | undefined = $state();
 
 	function handelFilter() {
 		modalStore.trigger({
@@ -204,31 +198,33 @@
 
 	$effect(() => {
 		if ($downloads?.data?.downloadChanged) {
-			untrack(checkinNeedRefresh);
+			untrack(checkingNeedRefresh);
 			lastDownloads = $downloads?.data;
 		}
 	});
-	let chaptersInfo = $derived($manga?.data?.manga?.chapters.nodes);
+	let chaptersInfo = $derived(manga.value?.data?.manga?.chapters.nodes);
 	let filteredChapters = $derived(
-		chaptersInfo?.filter(filterChapters(mangaMeta))
+		chaptersInfo?.filter(filterChapters(mmState))
 	);
 	let sortedChapters = $derived(
 		filteredChapters
 			? [...filteredChapters].sort((a, b) => {
 					let tmp = true;
-					if ($mangaMeta.ChapterSort === ChapterSort.Source) {
+					if (mmState.value.ChapterSort === ChapterSort.Source) {
 						tmp = a.sourceOrder > b.sourceOrder;
-					} else if ($mangaMeta.ChapterSort === ChapterSort['Fetched Date']) {
+					} else if (
+						mmState.value.ChapterSort === ChapterSort['Fetched Date']
+					) {
 						tmp = a.fetchedAt > b.fetchedAt;
 					} else {
 						tmp = a.uploadDate > b.uploadDate;
 					}
-					if ($mangaMeta.ChapterAsc) tmp = !tmp;
+					if (mmState.value.ChapterAsc) tmp = !tmp;
 					return tmp ? -1 : 1;
 				})
 			: undefined
 	);
-	$effect(updateselected);
+	$effect(updateSelected);
 	$effect(() => {
 		if (scrollTo && _scrollToChaps) untrack(handelScrollToChaps);
 	});
@@ -251,7 +247,7 @@
 	);
 </script>
 
-{#if !$manga || $manga.fetching}
+{#if !manga.value || manga.value?.fetching}
 	<div
 		class="max-h-full w-full
 			overflow-x-hidden md:absolute md:bottom-0 md:right-0 md:top-0 md:w-1/2 md:overflow-y-auto"
@@ -272,16 +268,16 @@
 			</div>
 		{/each}
 	</div>
-{:else if $manga.error}
+{:else if manga.value?.error}
 	<div
 		bind:this={chapterSideElement}
 		id="chapterSideElement"
 		class="max-h-full w-full whitespace-pre-wrap md:absolute md:bottom-0 md:right-0 md:top-0 md:w-1/2 md:overflow-y-auto"
 	>
-		Error loading chapters: {JSON.stringify($manga.error, null, 4)}
+		Error loading chapters: {JSON.stringify(manga.value?.error, null, 4)}
 	</div>
 {:else if sortedChapters}
-	{@const mangaFrag = $manga.data?.manga}
+	{@const mangaFrag = manga.value?.data?.manga}
 	<div
 		bind:this={chapterSideElement}
 		id="chapterSideElement"
@@ -293,7 +289,7 @@
 					<span class="line-clamp-1 pl-2 text-2xl font-medium md:text-3xl">
 						{sortedChapters.length} Chapters
 					</span>
-					{#if $mangaMeta.showMissingChapters && missingChapters?.length}
+					{#if mmState.value.showMissingChapters && missingChapters?.length}
 						<span
 							class="line-clamp-1 h-full pl-2 text-2xl font-medium md:text-xl"
 							title={missingChapters.join('\n')}
@@ -459,7 +455,7 @@
 											class="w-full space-y-0 {chapter.isRead && 'opacity-50'}"
 										>
 											<div class="line-clamp-1 w-full text-xl md:text-2xl">
-												{$mangaMeta.ChapterTitle ===
+												{mmState.value.ChapterTitle ===
 												ChapterTitle['Source Title']
 													? chapter.name
 													: `Chapter ${chapter.chapterNumber}`}
@@ -473,7 +469,7 @@
 												).toLocaleString()}"
 											>
 												{new Date(
-													$mangaMeta.ChapterFetchUpload
+													mmState.value.ChapterFetchUpload
 														? parseInt(chapter.uploadDate)
 														: parseInt(chapter.fetchedAt) * 1000
 												).toLocaleDateString()}{chapter.isDownloaded

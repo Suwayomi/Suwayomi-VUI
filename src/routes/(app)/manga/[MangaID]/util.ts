@@ -3,19 +3,15 @@
 // This Source Code Form is subject to the terms of the Mozilla Public
 // License, v. 2.0. If a copy of the MPL was not distributed with this
 // file, You can obtain one at https://mozilla.org/MPL/2.0/.
-import { get } from 'svelte/store';
-import type { MangaMeta } from '$lib/simpleStores';
+import type { mmState } from '$lib/simpleStores.svelte';
 import type { ResultOf } from 'gql.tada';
 import type { getManga } from '$lib/gql/Queries';
 
-export function filterChapters(
-	mangaMeta: ReturnType<typeof MangaMeta>,
-	reading = false
-) {
+export function filterChapters(mangaMeta: typeof mmState, reading = false) {
 	return (
 		chapter: ResultOf<typeof getManga>['manga']['chapters']['nodes'][number]
 	) => {
-		const groupPartials = get(mangaMeta).groupPartials;
+		const groupPartials = mangaMeta.value.groupPartials;
 		if (groupPartials && groupPartials.length > 0) {
 			if (
 				!groupPartials
@@ -30,17 +26,17 @@ export function filterChapters(
 			}
 		}
 		if (!reading) {
-			if (get(mangaMeta).ChapterUnread === 1 && chapter.isRead) return false;
-			if (get(mangaMeta).ChapterUnread === 2 && !chapter.isRead) return false;
+			if (mangaMeta.value.ChapterUnread === 1 && chapter.isRead) return false;
+			if (mangaMeta.value.ChapterUnread === 2 && !chapter.isRead) return false;
 
-			if (get(mangaMeta).ChapterDownloaded === 1 && !chapter.isDownloaded)
+			if (mangaMeta.value.ChapterDownloaded === 1 && !chapter.isDownloaded)
 				return false;
-			if (get(mangaMeta).ChapterDownloaded === 2 && chapter.isDownloaded)
+			if (mangaMeta.value.ChapterDownloaded === 2 && chapter.isDownloaded)
 				return false;
 
-			if (get(mangaMeta).ChapterBookmarked === 1 && !chapter.isBookmarked)
+			if (mangaMeta.value.ChapterBookmarked === 1 && !chapter.isBookmarked)
 				return false;
-			if (get(mangaMeta).ChapterBookmarked === 2 && chapter.isBookmarked)
+			if (mangaMeta.value.ChapterBookmarked === 2 && chapter.isBookmarked)
 				return false;
 		}
 		return true;

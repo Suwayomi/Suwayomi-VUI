@@ -22,9 +22,10 @@
 	import { queryParam, ssp } from 'sveltekit-search-params';
 	import type { VariablesOf } from '$lib/gql/graphql';
 	import type { fetchSourceManga } from '$lib/gql/Mutations';
-	import { getContextClient, queryStore } from '@urql/svelte';
+	import { getContextClient } from '@urql/svelte';
 	import { getSource } from '$lib/gql/Queries';
 	import ModalTemplate from '$lib/components/ModalTemplate.svelte';
+	import { queryState } from '$lib/util.svelte';
 
 	interface Props {
 		parent: SvelteComponent;
@@ -38,24 +39,18 @@
 	let { parent, data, submit }: Props = $props();
 
 	const modalStore = getModalStore();
-	const sause2 = queryStore({
-		client: getContextClient(),
-		query: getSource,
-		variables: {
-			id: data.sourceID
-		}
-	});
 
 	let sauce = $derived.by(() => {
-		untrack(() => {
-			sause2.pause();
+		const _ = [data.sourceID];
+		return untrack(() => {
+			return queryState({
+				client: getContextClient(),
+				query: getSource,
+				variables: {
+					id: data.sourceID
+				}
+			});
 		});
-		const _ = [$sause2];
-		const tmp = untrack(() => {
-			sause2.resume();
-			return $state.snapshot($sause2).data?.source;
-		});
-		return tmp;
 	});
 
 	const queryy = queryParam('q', ssp.string(), { pushHistory: false });
@@ -90,8 +85,8 @@
 			</div>
 		{/snippet}
 		{#snippet children()}
-			{#if sauce?.filters}
-				{#each sauce.filters as filter, index}
+			{#if sauce.value.data?.source?.filters}
+				{#each sauce.value.data?.source.filters as filter, index}
 					<div class="mx-4 mt-4">
 						<Accordion>
 							{#if filter.__typename === 'CheckBoxFilter'}

@@ -13,25 +13,21 @@
 	import Image from '$lib/components/Image.svelte';
 	import IntersectionObserver from '$lib/components/IntersectionObserver.svelte';
 	import { getToastStore } from '$lib/components/Toast/stores';
-	import { Layout, MangaMeta, Mode } from '$lib/simpleStores';
-	import { ErrorHelp } from '$lib/util';
+	import { Layout, mmState, Mode } from '$lib/simpleStores.svelte';
+	import { ErrorHelp } from '$lib/util.svelte';
 	import { getDrawerStore } from '@skeletonlabs/skeleton';
 	import { onMount, untrack } from 'svelte';
 	import type { PageData } from './$types';
 	import {
 		ViewNav,
 		chapterTitle,
+		get_manga,
 		makeToggleDrawer,
 		mangaTitle
-	} from './chapterStores';
+	} from './chapterStores.svelte';
 	import { filterChapters } from '../../util';
 	import { paths, type PathLayout, type Paths, type TPath } from './paths';
-	import {
-		getContextClient,
-		queryStore,
-		type OperationResult
-	} from '@urql/svelte';
-	import { getManga } from '$lib/gql/Queries';
+	import { getContextClient, type OperationResult } from '@urql/svelte';
 	import { type ResultOf } from '$lib/gql/graphql';
 	import {
 		fetchChapterPages,
@@ -47,7 +43,7 @@
 	}
 
 	let { data }: Props = $props();
-	let mangaMeta = MangaMeta(data.MangaID);
+	mmState.id = data.MangaID;
 
 	let pagenav = queryParam('pagenav', ssp.boolean(), { pushHistory: false });
 
@@ -56,7 +52,7 @@
 			/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
 				navigator.userAgent
 			) &&
-			$mangaMeta.mobileFullScreenOnChapterPage
+			mmState.value.mobileFullScreenOnChapterPage
 		) {
 			document.documentElement.requestFullscreen();
 		}
@@ -65,7 +61,7 @@
 				/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
 					navigator.userAgent
 				) &&
-				$mangaMeta.mobileFullScreenOnChapterPage
+				mmState.value.mobileFullScreenOnChapterPage
 			) {
 				document.exitFullscreen();
 			}
@@ -79,11 +75,9 @@
 
 	const toastStore = getToastStore();
 	const client = getContextClient();
-	const manga = queryStore({
-		client,
-		query: getManga,
-		variables: { id: data.MangaID }
-	});
+	get_manga.id = data.MangaID;
+	const manga = $derived(get_manga.manga);
+
 	let pageElement = undefined as HTMLDivElement | undefined;
 	const drawerStore = getDrawerStore();
 
@@ -102,7 +96,7 @@
 	}[] = $state([]);
 
 	let filteredChapters = $derived(
-		$manga.data?.manga?.chapters.nodes?.filter(filterChapters(mangaMeta, true))
+		manga?.data?.manga?.chapters.nodes?.filter(filterChapters(mmState, true))
 	);
 	let pages:
 		| Promise<OperationResult<ResultOf<typeof fetchChapterPages>>>
@@ -382,7 +376,7 @@
 		pageElement?.scrollTo({
 			top:
 				addition + (pageElement.scrollTop + pageElement.clientHeight * decimal),
-			behavior: $mangaMeta.SmoothScroll ? 'smooth' : 'instant'
+			behavior: mmState.value.SmoothScroll ? 'smooth' : 'instant'
 		});
 	}
 
@@ -415,10 +409,10 @@
 							isRead: pageIndex >= maxPages * 0.8 ? true : null
 						})
 						.toPromise();
-					if (!$manga.data?.manga?.id || pageIndex !== maxPages - 1) return;
+					if (!manga?.data?.manga?.id || pageIndex !== maxPages - 1) return;
 					await client
 						.mutation(trackProgress, {
-							mangaId: $manga.data?.manga?.id
+							mangaId: manga?.data?.manga?.id
 						})
 						.toPromise();
 				})();
@@ -469,13 +463,13 @@
 	let nextid = $derived.by(() => {
 		const _ = [currentChapterID];
 		untrack(() => {
-			return getChapterAfterID(currentChapterID, $manga)?.id;
+			return getChapterAfterID(currentChapterID, manga)?.id;
 		});
 	});
 	$effect(() => {
 		if (
 			nextid !== undefined &&
-			$mangaMeta.preLoadNextChapter &&
+			mmState.value.preLoadNextChapter &&
 			nextid !== preLoadingId
 		) {
 			untrack(() => {
@@ -493,17 +487,17 @@
 		});
 	});
 	$effect(() => {
-		if ($mangaMeta.ReaderMode === Mode.RTL) {
-			path = layoutToPath(paths.rtl, $mangaMeta.NavLayout);
+		if (mmState.value.ReaderMode === Mode.RTL) {
+			path = layoutToPath(paths.rtl, mmState.value.NavLayout);
 		} else {
-			path = layoutToPath(paths.ltr, $mangaMeta.NavLayout);
+			path = layoutToPath(paths.ltr, mmState.value.NavLayout);
 		}
 	});
 	$effect(() => {
 		dataStore.set(data);
 	});
 	$effect(() => {
-		$mangaTitle = $manga.data?.manga?.title ?? '';
+		$mangaTitle = manga?.data?.manga?.title ?? '';
 	});
 	$effect(() => {
 		$chapterTitle =
@@ -534,7 +528,7 @@
 		) as HTMLElement | undefined
 	);
 	$effect(() => {
-		AppBarData(`${$manga.data?.manga?.title} ${$chapterTitle}`);
+		AppBarData(`${manga?.data?.manga?.title} ${$chapterTitle}`);
 	});
 	let currPath = $derived(
 		path
@@ -589,36 +583,38 @@
 		<div>
 			<div
 				class="
-				{$mangaMeta.ReaderMode === Mode.Vertical && 'flex flex-col items-center'}
-				{$mangaMeta.ReaderMode === Mode.single && 'flex flex-col items-center'}
-				{$mangaMeta.ReaderMode === Mode.RTL &&
+				{mmState.value.ReaderMode === Mode.Vertical && 'flex flex-col items-center'}
+				{mmState.value.ReaderMode === Mode.single && 'flex flex-col items-center'}
+				{mmState.value.ReaderMode === Mode.RTL &&
 					'place-content-center[&>div:nth-child(even)]:justify-self-start grid grid-cols-2 [&>div:nth-child(odd)]:justify-self-end'}
-				{$mangaMeta.ReaderMode === Mode.LTR &&
+				{mmState.value.ReaderMode === Mode.LTR &&
 					'place-content-center[&>div:nth-child(even)]:justify-self-start grid grid-cols-2 [&>div:nth-child(odd)]:justify-self-end'}
 				"
-				dir={$mangaMeta.ReaderMode === Mode.RTL ? 'rtl' : 'ltr'}
+				dir={mmState.value.ReaderMode === Mode.RTL ? 'rtl' : 'ltr'}
 			>
-				{#if ($mangaMeta.ReaderMode === Mode.RTL || $mangaMeta.ReaderMode === Mode.LTR) && $mangaMeta.Offset}
+				{#if (mmState.value.ReaderMode === Mode.RTL || mmState.value.ReaderMode === Mode.LTR) && mmState.value.Offset}
 					<div></div>
 				{/if}
 				{#each chapter.pages as page, pageIndex (page)}
 					<div
 						class="h-auto w-auto
-							{$mangaMeta.Margins && $mangaMeta.ReaderMode === Mode.Vertical && 'mb-4'}
-							{$mangaMeta.Margins && $mangaMeta.ReaderMode === Mode.single && 'mb-4'}
-							{$mangaMeta.Margins &&
-							$mangaMeta.ReaderMode === Mode.RTL &&
+							{mmState.value.Margins && mmState.value.ReaderMode === Mode.Vertical && 'mb-4'}
+							{mmState.value.Margins && mmState.value.ReaderMode === Mode.single && 'mb-4'}
+							{mmState.value.Margins &&
+							mmState.value.ReaderMode === Mode.RTL &&
 							'mb-4 odd:ml-2 even:mr-2'}
-							{$mangaMeta.Margins &&
-							$mangaMeta.ReaderMode === Mode.LTR &&
+							{mmState.value.Margins &&
+							mmState.value.ReaderMode === Mode.LTR &&
 							'mb-4 odd:mr-2 even:ml-2'}
-							{$mangaMeta.Scale && $mangaMeta.ReaderMode !== Mode.Vertical
+							{mmState.value.Scale && mmState.value.ReaderMode !== Mode.Vertical
 							? 'h-full max-h-screen'
-							: 'h-auto'} {$mangaMeta.Scale &&
-						$mangaMeta.ReaderMode === Mode.Vertical
+							: 'h-auto'} {mmState.value.Scale &&
+						mmState.value.ReaderMode === Mode.Vertical
 							? 'w-full'
 							: 'w-auto'}
-								{$mangaMeta.Scale && $mangaMeta.ReaderMode === Mode.single ? 'max-w-full' : ''}"
+								{mmState.value.Scale && mmState.value.ReaderMode === Mode.single
+							? 'max-w-full'
+							: ''}"
 					>
 						<IntersectionObserver
 							onintersect={(e) => {
@@ -633,31 +629,35 @@
 							}}
 							root={document.querySelector('#page') ?? undefined}
 							bottom={0}
-							top={$mangaMeta.Margins ? 16 : 0}
+							top={mmState.value.Margins ? 16 : 0}
 						/>
 						<div
 							id="c{index}p{pageIndex}"
-							class="{$mangaMeta.Scale &&
-							$mangaMeta.ReaderMode !== Mode.Vertical
+							class="{mmState.value.Scale &&
+							mmState.value.ReaderMode !== Mode.Vertical
 								? 'h-full max-h-screen'
-								: 'h-auto'} {$mangaMeta.Scale &&
-							$mangaMeta.ReaderMode === Mode.Vertical
+								: 'h-auto'} {mmState.value.Scale &&
+							mmState.value.ReaderMode === Mode.Vertical
 								? 'w-full'
 								: 'w-auto'}
-								{$mangaMeta.Scale && $mangaMeta.ReaderMode === Mode.single ? 'max-w-full' : ''}"
+								{mmState.value.Scale && mmState.value.ReaderMode === Mode.single
+								? 'max-w-full'
+								: ''}"
 						>
 							<Image
 								reload_button={true}
 								src={page}
-								height={$mangaMeta.Scale &&
-								$mangaMeta.ReaderMode !== Mode.Vertical
+								height={mmState.value.Scale &&
+								mmState.value.ReaderMode !== Mode.Vertical
 									? 'max-h-screen h-full'
 									: 'h-auto'}
-								width="{$mangaMeta.Scale &&
-								$mangaMeta.ReaderMode === Mode.Vertical
+								width="{mmState.value.Scale &&
+								mmState.value.ReaderMode === Mode.Vertical
 									? 'w-full'
 									: 'w-auto'}
-									{$mangaMeta.Scale && $mangaMeta.ReaderMode === Mode.single ? 'max-w-full' : ''}"
+									{mmState.value.Scale && mmState.value.ReaderMode === Mode.single
+									? 'max-w-full'
+									: ''}"
 								rounded=" rounded-none"
 								LoadingHeight="h-screen"
 								LoadingWidth="w-screen"
@@ -703,7 +703,7 @@
 			</div>
 		</div>
 	{/each}
-	{#if $mangaMeta.doPageIndicator}
+	{#if mmState.value.doPageIndicator}
 		<div
 			class="fixed bottom-2 left-1/2 -translate-x-1/2 rounded bg-surface-500/60 p-2 text-black dark:text-white"
 		>

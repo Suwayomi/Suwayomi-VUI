@@ -12,13 +12,14 @@
 	import { AppBarData } from '$lib/MountTitleAction';
 	import { type ResultOf } from '$lib/gql/graphql';
 	import Nav from '../Nav.svelte';
-	import { getContextClient, queryStore } from '@urql/svelte';
+	import { getContextClient } from '@urql/svelte';
 	import { sourcesMigration } from '$lib/gql/Queries';
 	import { SourceTypeFragment } from '$lib/gql/Fragments';
+	import { queryState } from '$lib/util.svelte';
 
 	AppBarData('Migrate');
 	const client = getContextClient();
-	const Migration = queryStore({
+	const Migration = queryState({
 		client,
 		query: sourcesMigration
 	});
@@ -58,12 +59,12 @@
 		});
 		return tmpSources.filter((e) => e.mangas?.TotalCount);
 	}
-	let sources = $derived(FigureOutSources($Migration.data));
+	let sources = $derived(FigureOutSources(Migration.value.data));
 </script>
 
 <Nav>
 	{#snippet children()}
-		{#if $Migration.fetching}
+		{#if Migration.value.fetching}
 			{#each new Array(8) as _}
 				<div class="m-1 h-24">
 					<div class="card variant-ghost flex h-full w-full items-center">
@@ -81,9 +82,9 @@
 					</div>
 				</div>
 			{/each}
-		{:else if $Migration.error}
+		{:else if Migration.value.error}
 			<div class="white-space-pre-wrap">
-				{JSON.stringify($Migration.error, null, 4)}
+				{JSON.stringify(Migration.value.error, null, 4)}
 			</div>
 		{:else if sources}
 			<div>
