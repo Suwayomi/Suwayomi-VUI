@@ -128,178 +128,7 @@ const trueDefaults = {
 	RemoveChaptersFromDownloadQueueOnRemoveFromLibrary: false
 };
 
-// function GlobalMeta() {
-// 	const Meta = queryStore({
-// 		client,
-// 		query: metas
-// 	});
-// 	const store = localStorageStore('GlobalMeta', trueDefaults);
-
-// 	if (get(store).mangaUpdatesTracking === undefined) {
-// 		store.update((newStore) => {
-// 			newStore.mangaUpdatesTracking = trueDefaults.mangaUpdatesTracking;
-// 			return newStore;
-// 		});
-// 	}
-
-// 	Meta.subscribe((queryResult) => {
-// 		store.update((value) => {
-// 			return extractGlobalMeta(value, queryResult);
-// 		});
-// 	});
-
-// 	function extractGlobalMeta(
-// 		value: typeof trueDefaults,
-// 		queryResult: OperationResultState<ResultOf<typeof metas>>
-// 	): typeof trueDefaults {
-// 		const globalMetaCopy = { ...get(store) } as typeof trueDefaults;
-// 		const metas = queryResult.data?.metas?.nodes || [];
-// 		getObjectKeys(value).forEach(
-// 			<T extends keyof typeof trueDefaults>(key: T) => {
-// 				const foundMeta = metas.find(
-// 					(node) => node.key.replace('VUI3_', '') === key
-// 				);
-// 				if (foundMeta) {
-// 					globalMetaCopy[key] = JSON.parse(
-// 						foundMeta.value
-// 					) as (typeof trueDefaults)[T];
-// 				}
-// 			}
-// 		);
-// 		return globalMetaCopy;
-// 	}
-
-// 	async function set(val: typeof trueDefaults) {
-// 		for (const [key, value] of getObjectEntries(val)) {
-// 			const stringValue = JSON.stringify(value);
-// 			const metaKey = `VUI3_${key}`;
-// 			const existingValue = get(Meta).data?.metas?.nodes.find(
-// 				(e) => e.key === metaKey
-// 			)?.value;
-
-// 			if (stringValue !== existingValue) {
-// 				try {
-// 					//update early for instant UI updates
-// 					store.update((vall) => {
-// 						(vall[key] as unknown) = value;
-// 						return vall;
-// 					});
-
-// 					const variables = { key: metaKey, value: stringValue };
-// 					if (stringValue !== JSON.stringify(trueDefaults[key])) {
-// 						await client.mutation(setGlobalMeta, variables).toPromise();
-// 					} else if (existingValue !== undefined) {
-// 						await client.mutation(deleteGlobalMeta, variables).toPromise();
-// 					}
-// 				} catch {}
-// 			}
-// 		}
-// 	}
-
-// 	async function update(
-// 		func: (value: typeof trueDefaults) => typeof trueDefaults
-// 	) {
-// 		const currentStore = get(store);
-// 		const updatedStore = func(currentStore);
-// 		set(updatedStore);
-// 	}
-
-// 	return {
-// 		subscribe: store.subscribe,
-// 		set,
-// 		update
-// 	};
-// }
-
-// export const Meta = GlobalMeta();
-
-// getObjectKeys(mangaMetaDefaults).forEach((key) => {
-// 	if (get(Meta).mangaMetaDefaults[key] === undefined) {
-// 		Meta.update((old) => {
-// 			const tmp = old;
-// 			tmp.mangaMetaDefaults[key] = mangaMetaDefaults[key] as never;
-// 			return tmp;
-// 		});
-// 	}
-// });
-
-// export function MangaMeta(id: number) {
-// 	const MMeta = queryStore({
-// 		client,
-// 		query: getManga,
-// 		variables: { id }
-// 	});
-// 	const store = writable(get(Meta).mangaMetaDefaults);
-
-// 	MMeta.subscribe((queryResult) => {
-// 		store.update((value) => {
-// 			return extractMangaMeta(value, queryResult);
-// 		});
-// 	});
-
-// 	function extractMangaMeta(
-// 		newMeta: typeof mangaMetaDefaults,
-// 		queryResult: OperationResultState<ResultOf<typeof getManga>>
-// 	): typeof mangaMetaDefaults {
-// 		const clonedStore = {
-// 			...get(Meta).mangaMetaDefaults
-// 		} as typeof mangaMetaDefaults;
-// 		const metas = queryResult.data?.manga.meta || [];
-// 		getObjectKeys(newMeta).forEach(
-// 			<T extends keyof typeof mangaMetaDefaults>(key: T) => {
-// 				const matchedMeta = metas.find(
-// 					(meta) => meta.key.replace('VUI3_', '') === key
-// 				);
-// 				if (!matchedMeta) return;
-// 				clonedStore[key] = JSON.parse(
-// 					matchedMeta.value
-// 				) as (typeof mangaMetaDefaults)[T];
-// 			}
-// 		);
-// 		return clonedStore;
-// 	}
-
-// 	async function set(value: typeof mangaMetaDefaults) {
-// 		for (const [key, val] of getObjectEntries(value)) {
-// 			const jsonValue = JSON.stringify(val);
-// 			const cacheKey = `VUI3_${key}`;
-// 			const cachedValue = get(MMeta).data?.manga?.meta.find(
-// 				(e) => e.key === cacheKey
-// 			)?.value;
-
-// 			if (jsonValue !== cachedValue) {
-// 				try {
-// 					//update early for instant UI updates
-// 					store.update((vall) => {
-// 						(vall[key] as unknown) = val;
-// 						return vall;
-// 					});
-
-// 					const variables = { key: cacheKey, value: jsonValue, id };
-// 					if (val !== get(Meta).mangaMetaDefaults[key]) {
-// 						await client.mutation(setMangaMeta, variables);
-// 					} else if (cachedValue !== undefined) {
-// 						await client.mutation(deleteMangaMeta, variables);
-// 					}
-// 				} catch {}
-// 			}
-// 		}
-// 	}
-
-// 	async function update(
-// 		func: (value: typeof mangaMetaDefaults) => typeof mangaMetaDefaults
-// 	) {
-// 		const value = get(store);
-// 		const updatedValue = func(value);
-// 		set(updatedValue);
-// 	}
-
-// 	return {
-// 		subscribe: store.subscribe,
-// 		set,
-// 		update
-// 	};
-// }
+const metaKeyBase = 'VUI3_';
 
 class LocalStore<T> {
 	value = $state<T>() as T;
@@ -361,7 +190,7 @@ class GMState {
 			$effect(() => {
 				for (const key of getObjectKeys(trueDefaults)) {
 					const stringValue = JSON.stringify(this.store.value[key]);
-					const metaKey = `VUI3_g2_${key}`;
+					const metaKey = metaKeyBase + key;
 					const existingValue = get(Meta).data?.metas?.nodes.find(
 						(e) => e.key === metaKey
 					)?.value;
@@ -408,7 +237,7 @@ class GMState {
 		getObjectKeys(trueDefaults).forEach(
 			<T extends keyof typeof trueDefaults>(key: T) => {
 				const foundMeta = metas.find(
-					(node) => node.key.replace('VUI3_', '') === key
+					(node) => node.key.replace(metaKeyBase, '') === key
 				);
 				if (!foundMeta) {
 					globalMetaCopy[key] = trueDefaults[key];
@@ -463,7 +292,7 @@ class MMState {
 					})
 				)) {
 					const serializedValue = JSON.stringify(this.store[key]);
-					const metaKey = `VUI3_${key}`;
+					const metaKey = metaKeyBase + key;
 					const storedValue = untrack(() => {
 						if (!this.MMeta) return;
 						return get(this.MMeta).data?.manga?.meta.find(
@@ -548,7 +377,7 @@ class MMState {
 		getObjectKeys($state.snapshot(gmState.value.mangaMetaDefaults)).forEach(
 			<T extends keyof typeof mangaMetaDefaults>(key: T) => {
 				const matchedMeta = metas.find(
-					(meta) => meta.key.replace('VUI3_', '') === key
+					(meta) => meta.key.replace(metaKeyBase, '') === key
 				);
 				if (!matchedMeta) {
 					clonedStore[key] = $state.snapshot(gmState.value.mangaMetaDefaults)[
