@@ -48,7 +48,7 @@
 
 	const client = getContextClient();
 	client
-		.query(getSources, { isNsfw: gmState.value.nsfw ? null : false })
+		.query(getSources, { isNsfw: gmState.nsfw ? null : false })
 		.toPromise()
 		.then((ee) => {
 			rawSources.update((e) => {
@@ -214,13 +214,12 @@
 										<div class="aspect-cover h-full w-auto">
 											<div
 												class="placeholder h-full w-full animate-pulse
-	                        {gmState.value.Display === display.Compact &&
-													'rounded-lg'}
-	                        {gmState.value.Display === display.Comfortable &&
+	                        {gmState.Display === display.Compact && 'rounded-lg'}
+	                        {gmState.Display === display.Comfortable &&
 													'rounded-none rounded-t-lg'}"
 											></div>
 										</div>
-										{#if gmState.value.Display === display.Comfortable}
+										{#if gmState.Display === display.Comfortable}
 											<div
 												class="placeholder h-12 animate-pulse rounded-none rounded-b-lg px-2 text-center"
 											></div>

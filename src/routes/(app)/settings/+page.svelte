@@ -90,7 +90,7 @@
 >
 	<IconWrapper class="h-full w-auto p-2" name="mdi:television-guide" />
 	<div class="w-full">Grid Display</div>
-	<select bind:value={gmState.value.Display} class="select mr-1 max-w-sm">
+	<select bind:value={gmState.Display} class="select mr-1 max-w-sm">
 		{#each enumKeys(display) as value}
 			<option {value}>{value}</option>
 		{/each}
@@ -100,7 +100,7 @@
 	onclickcapture={(e) => {
 		e.stopPropagation();
 		e.preventDefault();
-		gmState.value.dark = !gmState.value.dark;
+		gmState.dark = !gmState.dark;
 	}}
 	class="flex h-16 w-full cursor-pointer items-center text-left hover:variant-glass-surface"
 >
@@ -113,7 +113,7 @@
 >
 	<IconWrapper class="h-full w-auto p-2" name="mdi:palette-outline" />
 	<div class="w-full">Theme settings</div>
-	<select bind:value={gmState.value.theme} class="select mr-1 max-w-sm">
+	<select bind:value={gmState.theme} class="select mr-1 max-w-sm">
 		{#each presetWithIcons as preset}
 			<option value={preset.name}>{preset.icon} {preset.name}</option>
 		{/each}
@@ -121,14 +121,14 @@
 </label>
 <button
 	onclick={() => {
-		gmState.value.nsfw = !gmState.value.nsfw;
+		gmState.nsfw = !gmState.nsfw;
 	}}
 	class="flex h-16 w-full cursor-pointer items-center text-left hover:variant-glass-surface"
 >
 	<IconWrapper class="h-full w-auto p-2" name="mdi:heart" />
 	<div class="w-full">Show Nsfw</div>
 	<Slide
-		bind:checked={gmState.value.nsfw}
+		bind:checked={gmState.nsfw}
 		class="p-1 pl-2 hover:variant-glass-surface focus:outline-0"
 	/>
 </button>

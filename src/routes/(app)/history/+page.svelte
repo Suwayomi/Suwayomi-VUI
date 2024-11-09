@@ -55,10 +55,10 @@
 			<div class="aspect-cover w-full">
 				<div
 					class="placeholder h-full animate-pulse
-						{gmState.value.Display === display.Compact && 'rounded-lg'}
-						{gmState.value.Display === display.Comfortable && 'rounded-none rounded-t-lg'}"
+						{gmState.Display === display.Compact && 'rounded-lg'}
+						{gmState.Display === display.Comfortable && 'rounded-none rounded-t-lg'}"
 				></div>
-				{#if gmState.value.Display === display.Comfortable}
+				{#if gmState.Display === display.Comfortable}
 					<div
 						class="placeholder h-12 animate-pulse rounded-none rounded-b-lg px-2 text-center"
 					></div>
@@ -91,11 +91,10 @@
 								title={updat.manga.title}
 								titleA="{updat.isDownloaded ? 'Downloaded' : ''}
 	{updat.isBookmarked ? 'Bookmarked' : ''}"
-								rounded="{gmState.value.Display === display.Compact &&
-									'rounded-lg'}
-								{gmState.value.Display === display.Comfortable && 'rounded-none rounded-t-lg'}"
+								rounded="{gmState.Display === display.Compact && 'rounded-lg'}
+								{gmState.Display === display.Comfortable && 'rounded-none rounded-t-lg'}"
 							>
-								{#if gmState.value.Display === display.Compact}
+								{#if gmState.Display === display.Compact}
 									<div
 										class="variant-glass absolute bottom-0 left-0 right-0 rounded-b-olg"
 									>
@@ -130,7 +129,7 @@
 									{/if}
 								</div>
 							</MangaCard>
-							{#if gmState.value.Display === display.Comfortable}
+							{#if gmState.Display === display.Comfortable}
 								<div class="variant-glass-surface rounded-b-lg">
 									<div
 										class="line-clamp-1 h-6 px-2 text-center"
@@ -176,10 +175,10 @@
 				<div class="aspect-cover w-full">
 					<div
 						class="placeholder h-full animate-pulse
-							{gmState.value.Display === display.Compact && 'rounded-lg'}
-							{gmState.value.Display === display.Comfortable && 'rounded-none rounded-t-lg'}"
+							{gmState.Display === display.Compact && 'rounded-lg'}
+							{gmState.Display === display.Comfortable && 'rounded-none rounded-t-lg'}"
 					></div>
-					{#if gmState.value.Display === display.Comfortable}
+					{#if gmState.Display === display.Comfortable}
 						<div
 							class="placeholder h-12 animate-pulse rounded-none rounded-b-lg px-2 text-center"
 						></div>

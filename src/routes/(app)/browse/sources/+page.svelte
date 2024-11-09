@@ -32,7 +32,7 @@
 	const sources = queryState({
 		client,
 		query: getSources,
-		variables: { isNsfw: gmState.value.nsfw ? null : false }
+		variables: { isNsfw: gmState.nsfw ? null : false }
 	});
 	const query = queryParam('q', ssp.string(), { pushHistory: false });
 
