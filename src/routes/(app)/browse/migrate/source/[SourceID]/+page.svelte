@@ -51,10 +51,10 @@
 			<div class="aspect-cover w-full">
 				<div
 					class="placeholder h-full animate-pulse
-						{gmState.Display === display.Compact && 'rounded-lg'}
-						{gmState.Display === display.Comfortable && 'rounded-none rounded-t-lg'}"
+						{gmState.value.Display === display.Compact && 'rounded-lg'}
+						{gmState.value.Display === display.Comfortable && 'rounded-none rounded-t-lg'}"
 				></div>
-				{#if gmState.Display === display.Comfortable}
+				{#if gmState.value.Display === display.Comfortable}
 					<div
 						class="placeholder h-12 animate-pulse rounded-none rounded-b-lg px-2 text-center"
 					></div>
@@ -85,10 +85,11 @@
 								<MangaCard
 									thumbnailUrl={manga.thumbnailUrl ?? ''}
 									title={manga.title}
-									rounded="{gmState.Display === display.Compact && 'rounded-lg'}
-										{gmState.Display === display.Comfortable && 'rounded-none rounded-t-lg'}"
+									rounded="{gmState.value.Display === display.Compact &&
+										'rounded-lg'}
+										{gmState.value.Display === display.Comfortable && 'rounded-none rounded-t-lg'}"
 								>
-									{#if gmState.Display === display.Compact}
+									{#if gmState.value.Display === display.Compact}
 										<div
 											class="variant-glass absolute bottom-0 left-0 right-0 rounded-b-olg"
 										>
@@ -101,7 +102,7 @@
 										</div>
 									{/if}
 								</MangaCard>
-								{#if gmState.Display === display.Comfortable}
+								{#if gmState.value.Display === display.Comfortable}
 									<div class="variant-glass-surface rounded-b-lg">
 										<div
 											class="line-clamp-2 h-12 px-2 text-center"
@@ -114,7 +115,7 @@
 							</a>
 						{/if}
 					</div>
-					{#if !intersecting && gmState.Display === display.Comfortable}
+					{#if !intersecting && gmState.value.Display === display.Comfortable}
 						<div class="h-12"></div>
 					{/if}
 				{/snippet}

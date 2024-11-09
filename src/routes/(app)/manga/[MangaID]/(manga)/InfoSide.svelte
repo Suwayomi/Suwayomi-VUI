@@ -40,7 +40,7 @@
 
 	function libToggle() {
 		if (
-			gmState.DownloadAllChaptersOnAddToLibrary &&
+			gmState.value.DownloadAllChaptersOnAddToLibrary &&
 			!manga.value?.data?.manga?.inLibrary
 		) {
 			client
@@ -51,7 +51,7 @@
 		}
 		if (
 			manga.value?.data?.manga?.inLibrary &&
-			gmState.DeleteAllChaptersOnRemoveFromLibrary
+			gmState.value.DeleteAllChaptersOnRemoveFromLibrary
 		) {
 			client
 				.mutation(deleteDownloadedChapters, {
@@ -62,7 +62,7 @@
 
 		if (
 			manga.value?.data?.manga?.inLibrary &&
-			gmState.RemoveChaptersFromDownloadQueueOnRemoveFromLibrary
+			gmState.value.RemoveChaptersFromDownloadQueueOnRemoveFromLibrary
 		) {
 			client
 				.mutation(dequeueChapterDownloads, {
@@ -313,8 +313,8 @@
 				Notes:
 			</button>
 			<div class="whitespace-pre-line pl-4 text-left">
-				{#if mmState.notes}
-					{mmState.notes}
+				{#if mmState.value.notes}
+					{mmState.value.notes}
 				{/if}
 			</div>
 		</div>

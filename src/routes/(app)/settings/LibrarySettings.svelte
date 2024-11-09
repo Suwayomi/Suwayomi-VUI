@@ -18,7 +18,7 @@
 {#if $modalStore[0]}
 	<ModalTemplate titleText="Library settings">
 		<Slide
-			bind:checked={gmState.ignoreFiltersWhenSearching}
+			bind:checked={gmState.value.ignoreFiltersWhenSearching}
 			class="my-1 p-1 pl-2 hover:variant-glass-surface focus:outline-0"
 		>
 			Ignore Filters When Searching

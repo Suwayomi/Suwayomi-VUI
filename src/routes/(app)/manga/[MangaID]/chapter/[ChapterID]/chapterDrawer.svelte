@@ -56,7 +56,7 @@
 			/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
 				navigator.userAgent
 			) &&
-			mmState.mobileFullScreenOnChapterPage
+			mmState.value.mobileFullScreenOnChapterPage
 		) {
 			document.exitFullscreen();
 		}
@@ -65,7 +65,7 @@
 				/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
 					navigator.userAgent
 				) &&
-				mmState.mobileFullScreenOnChapterPage
+				mmState.value.mobileFullScreenOnChapterPage
 			) {
 				document.documentElement.requestFullscreen();
 			}
@@ -129,33 +129,33 @@
 			<Slide
 				tabindex={0}
 				class="p-1 hover:variant-glass-surface"
-				bind:checked={mmState.Margins}
+				bind:checked={mmState.value.Margins}
 			>
 				Page Margins
 			</Slide>
 			<Slide
 				class="p-1 hover:variant-glass-surface"
-				bind:checked={mmState.Scale}
+				bind:checked={mmState.value.Scale}
 			>
 				Page Scale
 			</Slide>
 			<Slide
 				class="p-1 hover:variant-glass-surface"
-				bind:checked={mmState.SmoothScroll}
+				bind:checked={mmState.value.SmoothScroll}
 			>
 				Smooth Scroll
 			</Slide>
-			{#if mmState.ReaderMode !== Mode.Vertical}
+			{#if mmState.value.ReaderMode !== Mode.Vertical}
 				<Slide
 					class="p-1 hover:variant-glass-surface"
-					bind:checked={mmState.Offset}
+					bind:checked={mmState.value.Offset}
 				>
 					Page Offset
 				</Slide>
 			{/if}
 			<label class="pl-3">
 				<span>Reader Mode</span>
-				<select bind:value={mmState.ReaderMode} class="select">
+				<select bind:value={mmState.value.ReaderMode} class="select">
 					{#each enumKeys(Mode) as value}
 						<option {value}>{value}</option>
 					{/each}
@@ -166,7 +166,7 @@
 			</Slide>
 			<label class="pl-3">
 				<span>Navigation Layout</span>
-				<select bind:value={mmState.NavLayout} class="select">
+				<select bind:value={mmState.value.NavLayout} class="select">
 					{#each enumKeys(Layout) as value}
 						<option {value}>{value}</option>
 					{/each}
@@ -209,7 +209,8 @@
 										{chapter.isRead && 'opacity-50'}"
 									>
 										<div class="line-clamp-1 w-full text-xl md:text-2xl">
-											{mmState.ChapterTitle === ChapterTitle['Source Title']
+											{mmState.value.ChapterTitle ===
+											ChapterTitle['Source Title']
 												? chapter.name
 												: `Chapter ${chapter.chapterNumber}`}
 										</div>
@@ -222,7 +223,7 @@
 											).toLocaleString()}"
 										>
 											{new Date(
-												mmState.ChapterFetchUpload
+												mmState.value.ChapterFetchUpload
 													? parseInt(chapter.uploadDate)
 													: parseInt(chapter.fetchedAt) * 1000
 											).toLocaleDateString()}{chapter.isDownloaded

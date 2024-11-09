@@ -212,14 +212,16 @@
 		filteredChapters
 			? [...filteredChapters].sort((a, b) => {
 					let tmp = true;
-					if (mmState.ChapterSort === ChapterSort.Source) {
+					if (mmState.value.ChapterSort === ChapterSort.Source) {
 						tmp = a.sourceOrder > b.sourceOrder;
-					} else if (mmState.ChapterSort === ChapterSort['Fetched Date']) {
+					} else if (
+						mmState.value.ChapterSort === ChapterSort['Fetched Date']
+					) {
 						tmp = a.fetchedAt > b.fetchedAt;
 					} else {
 						tmp = a.uploadDate > b.uploadDate;
 					}
-					if (mmState.ChapterAsc) tmp = !tmp;
+					if (mmState.value.ChapterAsc) tmp = !tmp;
 					return tmp ? -1 : 1;
 				})
 			: undefined
@@ -289,7 +291,7 @@
 					<span class="line-clamp-1 pl-2 text-2xl font-medium md:text-3xl">
 						{sortedChapters.length} Chapters
 					</span>
-					{#if mmState.showMissingChapters && missingChapters?.length}
+					{#if mmState.value.showMissingChapters && missingChapters?.length}
 						<span
 							class="line-clamp-1 h-full pl-2 text-2xl font-medium md:text-xl"
 							title={missingChapters.join('\n')}
@@ -455,7 +457,8 @@
 											class="w-full space-y-0 {chapter.isRead && 'opacity-50'}"
 										>
 											<div class="line-clamp-1 w-full text-xl md:text-2xl">
-												{mmState.ChapterTitle === ChapterTitle['Source Title']
+												{mmState.value.ChapterTitle ===
+												ChapterTitle['Source Title']
 													? chapter.name
 													: `Chapter ${chapter.chapterNumber}`}
 											</div>
@@ -468,7 +471,7 @@
 												).toLocaleString()}"
 											>
 												{new Date(
-													mmState.ChapterFetchUpload
+													mmState.value.ChapterFetchUpload
 														? parseInt(chapter.uploadDate)
 														: parseInt(chapter.fetchedAt) * 1000
 												).toLocaleDateString()}{chapter.isDownloaded

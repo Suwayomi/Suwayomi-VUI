@@ -249,7 +249,7 @@
 	let filteredMangas = $derived(
 		mangas.value.data?.category?.mangas.nodes.filter((ele) => {
 			if (!ele.inLibrary) return false;
-			if (gmState.ignoreFiltersWhenSearching) {
+			if (gmState.value.ignoreFiltersWhenSearching) {
 				if (
 					parsedQuery !== null &&
 					specificSearch(ele, parsedQuery).findIndex((e) => e === false) === -1
@@ -258,15 +258,17 @@
 				}
 			}
 
-			if (gmState.Downloaded === 1 && ele.downloadCount === 0) return false;
-			if (gmState.Downloaded === 2 && ele.downloadCount !== 0) return false;
-
-			if (gmState.Unread === 1 && ele.unreadCount === 0) return false;
-			if (gmState.Unread === 2 && ele.unreadCount !== 0) return false;
-
-			if (gmState.Tracked === 1 && ele.trackRecords.nodes.length === 0)
+			if (gmState.value.Downloaded === 1 && ele.downloadCount === 0)
 				return false;
-			if (gmState.Tracked === 2 && ele.trackRecords.nodes.length !== 0)
+			if (gmState.value.Downloaded === 2 && ele.downloadCount !== 0)
+				return false;
+
+			if (gmState.value.Unread === 1 && ele.unreadCount === 0) return false;
+			if (gmState.value.Unread === 2 && ele.unreadCount !== 0) return false;
+
+			if (gmState.value.Tracked === 1 && ele.trackRecords.nodes.length === 0)
+				return false;
+			if (gmState.value.Tracked === 2 && ele.trackRecords.nodes.length !== 0)
 				return false;
 
 			if (
@@ -295,11 +297,11 @@
 	});
 	let sortedMangas = $derived(
 		filteredMangas
-			? gmState.Sort === sort.Random
+			? gmState.value.Sort === sort.Random
 				? shuffle([...filteredMangas])
 				: [...filteredMangas].sort((a, b) => {
 						let tru = true;
-						switch (gmState.Sort) {
+						switch (gmState.value.Sort) {
 							case sort.ID:
 								tru = a.id > b.id;
 								break;
@@ -326,7 +328,7 @@
 								break;
 						}
 
-						if (gmState.Asc) tru = !tru;
+						if (gmState.value.Asc) tru = !tru;
 						return tru ? -1 : 1;
 					})
 			: undefined
@@ -344,10 +346,10 @@
 			<div class="aspect-cover w-full">
 				<div
 					class="placeholder h-full animate-pulse
-			{gmState.Display === display.Compact && 'rounded-lg'}
-			{gmState.Display === display.Comfortable && 'rounded-none rounded-t-lg'}"
+			{gmState.value.Display === display.Compact && 'rounded-lg'}
+			{gmState.value.Display === display.Comfortable && 'rounded-none rounded-t-lg'}"
 				></div>
-				{#if gmState.Display === display.Comfortable}
+				{#if gmState.value.Display === display.Comfortable}
 					<div
 						class="placeholder h-12 animate-pulse rounded-none rounded-b-lg px-2 text-center"
 					></div>
@@ -366,7 +368,7 @@
 				<Tab bind:group={$tab} name={cat.name} value={cat.id}>
 					{#snippet lead()}
 						{cat.name}
-						{#if gmState.libraryCategoryTotalCounts}
+						{#if gmState.value.libraryCategoryTotalCounts}
 							<span
 								class="variant-filled-surface m-0 rounded-full px-1 text-sm"
 							>
@@ -384,10 +386,10 @@
 						<div class="aspect-cover w-full">
 							<div
 								class="placeholder h-full animate-pulse
-									{gmState.Display === display.Compact && 'rounded-lg'}
-									{gmState.Display === display.Comfortable && 'rounded-none rounded-t-lg'}"
+									{gmState.value.Display === display.Compact && 'rounded-lg'}
+									{gmState.value.Display === display.Comfortable && 'rounded-none rounded-t-lg'}"
 							></div>
-							{#if gmState.Display === display.Comfortable}
+							{#if gmState.value.Display === display.Comfortable}
 								<div
 									class="placeholder h-12 animate-pulse rounded-none rounded-b-lg px-2 text-center"
 								></div>
@@ -437,14 +439,15 @@
 												thumbnailUrl={manga.thumbnailUrl ?? ''}
 												title={manga.title}
 												class="select-none {$selectMode && 'opacity-80'}"
-												rounded="{gmState.Display === display.Compact &&
+												rounded="{gmState.value.Display === display.Compact &&
 													'rounded-lg'}
-												{gmState.Display === display.Comfortable && 'rounded-none rounded-t-lg'}"
+												{gmState.value.Display === display.Comfortable && 'rounded-none rounded-t-lg'}"
 											>
 												<div class="absolute left-2 top-2 flex">
-													{#if manga.downloadCount && gmState.downloadsBadge}
+													{#if manga.downloadCount && gmState.value.downloadsBadge}
 														<div
-															class="{manga.unreadCount && gmState.unreadBadge
+															class="{manga.unreadCount &&
+															gmState.value.unreadBadge
 																? 'rounded-l'
 																: 'rounded'}
 															variant-filled-primary m-0 px-1 py-0.5"
@@ -452,10 +455,10 @@
 															{manga.downloadCount}
 														</div>
 													{/if}
-													{#if manga.unreadCount && gmState.unreadBadge}
+													{#if manga.unreadCount && gmState.value.unreadBadge}
 														<div
 															class="{manga.downloadCount &&
-															gmState.downloadsBadge
+															gmState.value.downloadsBadge
 																? 'rounded-r'
 																: 'rounded'}
 															variant-filled-secondary m-0 px-1 py-0.5"
@@ -476,7 +479,7 @@
 														/>
 													</div>
 												{/if}
-												{#if gmState.Display === display.Compact}
+												{#if gmState.value.Display === display.Compact}
 													<div
 														class="variant-glass absolute bottom-0 left-0 right-0 rounded-b-olg"
 													>
@@ -489,7 +492,7 @@
 													</div>
 												{/if}
 											</MangaCard>
-											{#if gmState.Display === display.Comfortable}
+											{#if gmState.value.Display === display.Comfortable}
 												<div class="variant-glass-surface rounded-b-lg">
 													<div
 														class="line-clamp-2 h-12 px-2 text-center"
@@ -502,7 +505,7 @@
 										</a>
 									{/if}
 								</div>
-								{#if !intersecting && gmState.Display === display.Comfortable}
+								{#if !intersecting && gmState.value.Display === display.Comfortable}
 									<div class="h-12"></div>
 								{/if}
 							{/snippet}

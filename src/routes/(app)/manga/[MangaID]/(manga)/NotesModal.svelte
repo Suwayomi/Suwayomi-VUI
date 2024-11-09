@@ -18,8 +18,8 @@
 		<div>
 			<textarea
 				class="textarea h-40 w-full"
-				onchange={(e) => (mmState.notes = e.currentTarget.value)}
-				value={mmState.notes ?? ''}
+				onchange={(e) => (mmState.value.notes = e.currentTarget.value)}
+				value={mmState.value.notes ?? ''}
 			></textarea>
 		</div>
 	</ModalTemplate>

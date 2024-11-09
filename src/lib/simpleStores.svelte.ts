@@ -117,12 +117,6 @@ const trueDefaults = {
 	mangaMetaDefaults,
 	downloadsBadge: true,
 	unreadBadge: true,
-	mangaUpdatesTracking: {
-		enabled: false,
-		username: '',
-		password: '',
-		Authorization: ''
-	},
 	libraryCategoryTotalCounts: false,
 	DownloadAllChaptersOnAddToLibrary: false,
 	DeleteAllChaptersOnRemoveFromLibrary: false,
@@ -223,13 +217,6 @@ class GMState {
 								client.mutation(deleteGlobalMeta, variables)
 							);
 							continue;
-						}
-						if (
-							this.store.value[key] === undefined &&
-							trueDefaults[key] !== undefined
-						) {
-							(this.store.value[key] as (typeof trueDefaults)[typeof key]) =
-								trueDefaults[key];
 						}
 					}
 				}
@@ -363,13 +350,6 @@ class MMState {
 								);
 								return;
 							}
-							if (
-								this.store[key] === undefined &&
-								gmState.value.mangaMetaDefaults[key] !== undefined
-							) {
-								(this.store[key] as (typeof this.store)[typeof key]) =
-									gmState.value.mangaMetaDefaults[key];
-							}
 						});
 					}
 				}
@@ -378,7 +358,22 @@ class MMState {
 		});
 	}
 
+	private isRecord(obj: unknown): obj is Record<string, unknown> {
+		return obj === Object(obj);
+	}
+
+	private traverse<T extends Record<string, unknown>>(value: T, defaults: T) {
+		getObjectKeys(value).forEach((key) => {
+			if (value[key] === undefined) {
+				value[key] = defaults[key];
+			}
+			if (this.isRecord(value[key]) && this.isRecord(defaults[key]))
+				this.traverse(value[key], defaults[key]);
+		});
+	}
+
 	get value() {
+		this.traverse(this.store, gmState.value.mangaMetaDefaults);
 		return this.store;
 	}
 
