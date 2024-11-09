@@ -13,7 +13,7 @@ import {
 	type OperationResultStore
 } from '@urql/svelte';
 import type { ResultOf, VariablesOf } from '$lib/gql/graphql';
-import { writable } from 'svelte/store';
+import { get, writable } from 'svelte/store';
 import type { ToastStore } from './components/Toast/types';
 import {
 	deleteGlobalMeta,
@@ -26,6 +26,7 @@ import { client } from './gql/graphqlClient';
 import type { presetConst } from './presets';
 import type { TriState } from './util.svelte';
 import { browser } from '$app/environment';
+import { untrack } from 'svelte';
 
 // function getObjectEntries<T extends object>(obj: T): [keyof T, T[keyof T]][] {
 // 	return Object.entries(obj) as [keyof T, T[keyof T]][];
@@ -139,15 +140,20 @@ class LocalStore<T> {
 		this.key = key;
 		if (browser) {
 			const item = localStorage.getItem(this.key);
-			if (item) this.val = this.#deserialize(item);
+			if (item) this.val = this.deserialize(item);
 		}
+		$effect.root(() => {
+			$effect(() => {
+				localStorage.setItem(key, this.serialize(this.value));
+			});
+		});
 	}
 
-	#serialize(value: T): string {
+	private serialize(value: T): string {
 		return JSON.stringify(value);
 	}
 
-	#deserialize(item: string): T {
+	private deserialize(item: string): T {
 		return JSON.parse(item);
 	}
 
@@ -157,7 +163,7 @@ class LocalStore<T> {
 
 	set value(value: T) {
 		this.val = value;
-		localStorage.setItem(this.key, this.#serialize(value));
+		localStorage.setItem(this.key, this.serialize(value));
 	}
 }
 
@@ -165,10 +171,10 @@ function localStore<T>(key: string, value: T) {
 	return new LocalStore(key, value);
 }
 
-function GMState() {
-	const store = localStore<typeof trueDefaults>('GlobalMeta', trueDefaults);
-	let runningMutations = false;
-	const mutations: Map<
+class GMState {
+	private store = localStore<typeof trueDefaults>('GlobalMeta', trueDefaults);
+	private runningMutations = false;
+	private mutations: Map<
 		string,
 		OperationResultSource<
 			| OperationResult<
@@ -181,31 +187,76 @@ function GMState() {
 			  >
 		>
 	> = new Map();
-	let unSub = () => {};
-	const Meta = queryStore({
-		client,
-		query: metas
-	});
+	private unSub = () => {};
+	constructor() {
+		$effect.root(() => {
+			const Meta = queryStore({
+				client,
+				query: metas
+			});
 
-	async function startRunMutations() {
-		if (runningMutations) return;
-		runningMutations = true;
+			this.unSub = Meta.subscribe((queryResult) => {
+				this.store.value = this.extractGlobalMeta(queryResult);
+				if (queryResult.fetching) return;
+				this.unSub();
+			});
+			$effect(() => {
+				for (const key of getObjectKeys(trueDefaults)) {
+					const stringValue = JSON.stringify(this.store.value[key]);
+					const metaKey = metaKeyBase + key;
+					const existingValue = get(Meta).data?.metas?.nodes.find(
+						(e) => e.key === metaKey
+					)?.value;
+
+					if (stringValue !== existingValue) {
+						const variables = { key: metaKey, value: stringValue };
+						if (stringValue !== JSON.stringify(trueDefaults[key])) {
+							this.mutations.set(
+								key,
+								client.mutation(setGlobalMeta, variables)
+							);
+							continue;
+						}
+						if (existingValue !== undefined) {
+							this.mutations.set(
+								key,
+								client.mutation(deleteGlobalMeta, variables)
+							);
+							continue;
+						}
+						if (
+							this.store.value[key] === undefined &&
+							trueDefaults[key] !== undefined
+						) {
+							(this.store.value[key] as (typeof trueDefaults)[typeof key]) =
+								trueDefaults[key];
+						}
+					}
+				}
+				this.startRunMutations();
+			});
+		});
+	}
+
+	private async startRunMutations() {
+		if (this.runningMutations) return;
+		this.runningMutations = true;
 		let prom: Promise<unknown> | undefined = undefined;
-		while (mutations.size > 0) {
-			const key = Array.from(mutations.keys())[0];
-			const mutation = mutations.get(key);
-			mutations.delete(key);
+		while (this.mutations.size > 0) {
+			const key = Array.from(this.mutations.keys())[0];
+			const mutation = this.mutations.get(key);
+			this.mutations.delete(key);
 			prom = mutation?.toPromise();
 			await prom;
 		}
 		await prom;
-		runningMutations = false;
+		this.runningMutations = false;
 	}
 
-	function extractGlobalMeta(
+	private extractGlobalMeta(
 		queryResult: OperationResultState<ResultOf<typeof metas>>
 	): typeof trueDefaults {
-		const globalMetaCopy = $state.snapshot(store.value);
+		const globalMetaCopy = $state.snapshot(this.store.value);
 		const metas = queryResult.data?.metas?.nodes || [];
 		getObjectKeys(trueDefaults).forEach(
 			<T extends keyof typeof trueDefaults>(key: T) => {
@@ -223,57 +274,42 @@ function GMState() {
 		);
 		return globalMetaCopy;
 	}
-	unSub = Meta.subscribe((queryResult) => {
-		store.value = extractGlobalMeta(queryResult);
-		if (queryResult.fetching) return;
-		unSub();
-	});
 
-	const ret = {} as typeof trueDefaults;
+	private isRecord(obj: unknown): obj is Record<string, unknown> {
+		return obj === Object(obj);
+	}
 
-	getObjectKeys(trueDefaults).forEach((key) => {
-		Object.defineProperty(ret, key, {
-			get: function () {
-				if (store.value[key] === undefined) {
-					(store.value[key] as unknown) = trueDefaults[key];
-				}
-				return store.value[key];
-			},
-			set: function (value: (typeof trueDefaults)[typeof key]) {
-				(store.value[key] as unknown) = value;
-				const stringValue = JSON.stringify(value);
-				if (stringValue !== JSON.stringify(trueDefaults[key])) {
-					mutations.set(
-						key,
-						client.mutation(setGlobalMeta, {
-							key: metaKeyBase + key,
-							value: stringValue
-						})
-					);
-					startRunMutations();
-					return;
-				}
-				mutations.set(
-					key,
-					client.mutation(deleteGlobalMeta, { key: metaKeyBase + key })
-				);
-				startRunMutations();
+	private traverse<T extends Record<string, unknown>>(value: T, defaults: T) {
+		getObjectKeys(value).forEach((key) => {
+			if (value[key] === undefined) {
+				value[key] = defaults[key];
 			}
+			if (this.isRecord(value[key]) && this.isRecord(defaults[key]))
+				this.traverse(value[key], defaults[key]);
 		});
-	});
+	}
 
-	return ret;
+	get value() {
+		this.traverse(this.store.value, trueDefaults);
+		return this.store.value;
+	}
+
+	set value(val: typeof trueDefaults) {
+		this.store.value = val;
+	}
 }
 
-export const gmState = GMState();
+export const gmState = new GMState();
 
-function MMState() {
-	let _id: number = -1;
-	let store = $state<typeof mangaMetaDefaults>(gmState.mangaMetaDefaults);
-	let unSub = () => {};
-	let MMeta: OperationResultStore<ResultOf<typeof getManga>> | null = null;
-	let isRunningMutations = false;
-	const mutations: Map<
+class MMState {
+	private _id: number = -1;
+	private store = $state<typeof mangaMetaDefaults>(
+		gmState.value.mangaMetaDefaults
+	);
+	private unSub = () => {};
+	private MMeta: OperationResultStore<ResultOf<typeof getManga>> | null = null;
+	private isRunningMutations = false;
+	private mutations: Map<
 		string,
 		OperationResultSource<
 			| OperationResult<
@@ -286,27 +322,106 @@ function MMState() {
 			  >
 		>
 	> = new Map();
-	async function runPendingMutations() {
-		if (isRunningMutations) return;
-		isRunningMutations = true;
+
+	constructor() {
+		$effect.root(() => {
+			$effect(() => {
+				for (const key of getObjectKeys(
+					untrack(() => {
+						return $state.snapshot(gmState.value.mangaMetaDefaults);
+					})
+				)) {
+					const serializedValue = JSON.stringify(this.store[key]);
+					const metaKey = metaKeyBase + key;
+					const storedValue = untrack(() => {
+						if (!this.MMeta) return;
+						return get(this.MMeta).data?.manga?.meta.find(
+							(e) => e.key === metaKey
+						)?.value;
+					});
+					if (serializedValue !== storedValue) {
+						const mutationVariables = {
+							key: metaKey,
+							value: serializedValue,
+							id: this._id
+						};
+						untrack(() => {
+							if (
+								serializedValue !==
+								JSON.stringify(gmState.value.mangaMetaDefaults[key])
+							) {
+								this.mutations.set(
+									key + this.id,
+									client.mutation(setMangaMeta, mutationVariables)
+								);
+								return;
+							}
+							if (storedValue !== undefined) {
+								this.mutations.set(
+									key + this.id,
+									client.mutation(deleteMangaMeta, mutationVariables)
+								);
+								return;
+							}
+							if (
+								this.store[key] === undefined &&
+								gmState.value.mangaMetaDefaults[key] !== undefined
+							) {
+								(this.store[key] as (typeof this.store)[typeof key]) =
+									gmState.value.mangaMetaDefaults[key];
+							}
+						});
+					}
+				}
+				this.runPendingMutations();
+			});
+		});
+	}
+
+	get value() {
+		return this.store;
+	}
+
+	set value(val: typeof mangaMetaDefaults) {
+		this.store = val;
+	}
+
+	set id(val: number) {
+		this._id = val;
+		this.unSub();
+		this.MMeta = queryStore({
+			client,
+			query: getManga,
+			variables: { id: val }
+		});
+		this.unSub = this.MMeta.subscribe((queryResult) => {
+			this.store = this.extractMangaMeta(queryResult);
+			if (queryResult.fetching) return;
+			this.unSub();
+		});
+	}
+
+	private async runPendingMutations() {
+		if (this.isRunningMutations) return;
+		this.isRunningMutations = true;
 		let prom: Promise<unknown> | undefined = undefined;
-		while (mutations.size > 0) {
-			const key = Array.from(mutations.keys())[0];
-			const mutation = mutations.get(key);
-			mutations.delete(key);
+		while (this.mutations.size > 0) {
+			const key = Array.from(this.mutations.keys())[0];
+			const mutation = this.mutations.get(key);
+			this.mutations.delete(key);
 			prom = mutation?.toPromise();
 			await prom;
 		}
 		await prom;
-		isRunningMutations = false;
+		this.isRunningMutations = false;
 	}
 
-	function extractMangaMeta(
+	private extractMangaMeta(
 		queryResult: OperationResultState<ResultOf<typeof getManga>>
 	): typeof mangaMetaDefaults {
-		const clonedStore = $state.snapshot(store);
+		const clonedStore = $state.snapshot(this.store);
 		const metas = queryResult.data?.manga.meta || [];
-		const Defaults = $state.snapshot(gmState.mangaMetaDefaults);
+		const Defaults = $state.snapshot(gmState.value.mangaMetaDefaults);
 		getObjectKeys(Defaults).forEach(
 			<T extends keyof typeof mangaMetaDefaults>(key: T) => {
 				const matchedMeta = metas.find(
@@ -323,65 +438,6 @@ function MMState() {
 		);
 		return clonedStore;
 	}
-
-	const ret = {
-		set id(val: number) {
-			_id = val;
-			unSub();
-			MMeta = queryStore({
-				client,
-				query: getManga,
-				variables: { id: val }
-			});
-			unSub = MMeta.subscribe((queryResult) => {
-				store = extractMangaMeta(queryResult);
-				if (queryResult.fetching) return;
-				unSub();
-			});
-		},
-		get id() {
-			return _id;
-		}
-	} as typeof mangaMetaDefaults & { id: number };
-
-	getObjectKeys(mangaMetaDefaults).forEach((key) => {
-		Object.defineProperty(ret, key, {
-			get: function () {
-				if (store[key] === undefined) {
-					(store[key] as unknown) = gmState.mangaMetaDefaults[key];
-				}
-				return store[key];
-			},
-			set: function (value: (typeof mangaMetaDefaults)[typeof key]) {
-				(store[key] as unknown) = value;
-				const serializedValue = JSON.stringify(value);
-				if (
-					serializedValue !== JSON.stringify(gmState.mangaMetaDefaults[key])
-				) {
-					mutations.set(
-						key + _id,
-						client.mutation(setMangaMeta, {
-							key: metaKeyBase + key,
-							value: serializedValue,
-							id: _id
-						})
-					);
-					runPendingMutations();
-					return;
-				}
-				mutations.set(
-					key + _id,
-					client.mutation(deleteMangaMeta, {
-						key: metaKeyBase + key,
-						id: _id
-					})
-				);
-				runPendingMutations();
-			}
-		});
-	});
-
-	return ret;
 }
 
-export const mmState = MMState();
+export const mmState = new MMState();
