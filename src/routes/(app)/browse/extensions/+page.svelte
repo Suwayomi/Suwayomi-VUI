@@ -54,7 +54,7 @@
 		extensions = queryState({
 			client,
 			query: getExtensions,
-			variables: { isNsfw: gmState.value.nsfw ? null : false }
+			variables: { isNsfw: gmState.nsfw ? null : false }
 		});
 	}
 

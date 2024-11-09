@@ -52,7 +52,7 @@
 			/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
 				navigator.userAgent
 			) &&
-			mmState.value.mobileFullScreenOnChapterPage
+			mmState.mobileFullScreenOnChapterPage
 		) {
 			document.documentElement.requestFullscreen();
 		}
@@ -61,7 +61,7 @@
 				/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
 					navigator.userAgent
 				) &&
-				mmState.value.mobileFullScreenOnChapterPage
+				mmState.mobileFullScreenOnChapterPage
 			) {
 				document.exitFullscreen();
 			}
@@ -376,7 +376,7 @@
 		pageElement?.scrollTo({
 			top:
 				addition + (pageElement.scrollTop + pageElement.clientHeight * decimal),
-			behavior: mmState.value.SmoothScroll ? 'smooth' : 'instant'
+			behavior: mmState.SmoothScroll ? 'smooth' : 'instant'
 		});
 	}
 
@@ -469,7 +469,7 @@
 	$effect(() => {
 		if (
 			nextid !== undefined &&
-			mmState.value.preLoadNextChapter &&
+			mmState.preLoadNextChapter &&
 			nextid !== preLoadingId
 		) {
 			untrack(() => {
@@ -487,10 +487,10 @@
 		});
 	});
 	$effect(() => {
-		if (mmState.value.ReaderMode === Mode.RTL) {
-			path = layoutToPath(paths.rtl, mmState.value.NavLayout);
+		if (mmState.ReaderMode === Mode.RTL) {
+			path = layoutToPath(paths.rtl, mmState.NavLayout);
 		} else {
-			path = layoutToPath(paths.ltr, mmState.value.NavLayout);
+			path = layoutToPath(paths.ltr, mmState.NavLayout);
 		}
 	});
 	$effect(() => {
@@ -583,38 +583,35 @@
 		<div>
 			<div
 				class="
-				{mmState.value.ReaderMode === Mode.Vertical && 'flex flex-col items-center'}
-				{mmState.value.ReaderMode === Mode.single && 'flex flex-col items-center'}
-				{mmState.value.ReaderMode === Mode.RTL &&
+				{mmState.ReaderMode === Mode.Vertical && 'flex flex-col items-center'}
+				{mmState.ReaderMode === Mode.single && 'flex flex-col items-center'}
+				{mmState.ReaderMode === Mode.RTL &&
 					'place-content-center[&>div:nth-child(even)]:justify-self-start grid grid-cols-2 [&>div:nth-child(odd)]:justify-self-end'}
-				{mmState.value.ReaderMode === Mode.LTR &&
+				{mmState.ReaderMode === Mode.LTR &&
 					'place-content-center[&>div:nth-child(even)]:justify-self-start grid grid-cols-2 [&>div:nth-child(odd)]:justify-self-end'}
 				"
-				dir={mmState.value.ReaderMode === Mode.RTL ? 'rtl' : 'ltr'}
+				dir={mmState.ReaderMode === Mode.RTL ? 'rtl' : 'ltr'}
 			>
-				{#if (mmState.value.ReaderMode === Mode.RTL || mmState.value.ReaderMode === Mode.LTR) && mmState.value.Offset}
+				{#if (mmState.ReaderMode === Mode.RTL || mmState.ReaderMode === Mode.LTR) && mmState.Offset}
 					<div></div>
 				{/if}
 				{#each chapter.pages as page, pageIndex (page)}
 					<div
 						class="h-auto w-auto
-							{mmState.value.Margins && mmState.value.ReaderMode === Mode.Vertical && 'mb-4'}
-							{mmState.value.Margins && mmState.value.ReaderMode === Mode.single && 'mb-4'}
-							{mmState.value.Margins &&
-							mmState.value.ReaderMode === Mode.RTL &&
+							{mmState.Margins && mmState.ReaderMode === Mode.Vertical && 'mb-4'}
+							{mmState.Margins && mmState.ReaderMode === Mode.single && 'mb-4'}
+							{mmState.Margins &&
+							mmState.ReaderMode === Mode.RTL &&
 							'mb-4 odd:ml-2 even:mr-2'}
-							{mmState.value.Margins &&
-							mmState.value.ReaderMode === Mode.LTR &&
+							{mmState.Margins &&
+							mmState.ReaderMode === Mode.LTR &&
 							'mb-4 odd:mr-2 even:ml-2'}
-							{mmState.value.Scale && mmState.value.ReaderMode !== Mode.Vertical
+							{mmState.Scale && mmState.ReaderMode !== Mode.Vertical
 							? 'h-full max-h-screen'
-							: 'h-auto'} {mmState.value.Scale &&
-						mmState.value.ReaderMode === Mode.Vertical
+							: 'h-auto'} {mmState.Scale && mmState.ReaderMode === Mode.Vertical
 							? 'w-full'
 							: 'w-auto'}
-								{mmState.value.Scale && mmState.value.ReaderMode === Mode.single
-							? 'max-w-full'
-							: ''}"
+								{mmState.Scale && mmState.ReaderMode === Mode.single ? 'max-w-full' : ''}"
 					>
 						<IntersectionObserver
 							onintersect={(e) => {
@@ -629,35 +626,28 @@
 							}}
 							root={document.querySelector('#page') ?? undefined}
 							bottom={0}
-							top={mmState.value.Margins ? 16 : 0}
+							top={mmState.Margins ? 16 : 0}
 						/>
 						<div
 							id="c{index}p{pageIndex}"
-							class="{mmState.value.Scale &&
-							mmState.value.ReaderMode !== Mode.Vertical
+							class="{mmState.Scale && mmState.ReaderMode !== Mode.Vertical
 								? 'h-full max-h-screen'
-								: 'h-auto'} {mmState.value.Scale &&
-							mmState.value.ReaderMode === Mode.Vertical
+								: 'h-auto'} {mmState.Scale &&
+							mmState.ReaderMode === Mode.Vertical
 								? 'w-full'
 								: 'w-auto'}
-								{mmState.value.Scale && mmState.value.ReaderMode === Mode.single
-								? 'max-w-full'
-								: ''}"
+								{mmState.Scale && mmState.ReaderMode === Mode.single ? 'max-w-full' : ''}"
 						>
 							<Image
 								reload_button={true}
 								src={page}
-								height={mmState.value.Scale &&
-								mmState.value.ReaderMode !== Mode.Vertical
+								height={mmState.Scale && mmState.ReaderMode !== Mode.Vertical
 									? 'max-h-screen h-full'
 									: 'h-auto'}
-								width="{mmState.value.Scale &&
-								mmState.value.ReaderMode === Mode.Vertical
+								width="{mmState.Scale && mmState.ReaderMode === Mode.Vertical
 									? 'w-full'
 									: 'w-auto'}
-									{mmState.value.Scale && mmState.value.ReaderMode === Mode.single
-									? 'max-w-full'
-									: ''}"
+									{mmState.Scale && mmState.ReaderMode === Mode.single ? 'max-w-full' : ''}"
 								rounded=" rounded-none"
 								LoadingHeight="h-screen"
 								LoadingWidth="w-screen"
@@ -703,7 +693,7 @@
 			</div>
 		</div>
 	{/each}
-	{#if mmState.value.doPageIndicator}
+	{#if mmState.doPageIndicator}
 		<div
 			class="fixed bottom-2 left-1/2 -translate-x-1/2 rounded bg-surface-500/60 p-2 text-black dark:text-white"
 		>

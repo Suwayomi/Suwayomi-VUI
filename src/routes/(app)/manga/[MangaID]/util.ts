@@ -11,7 +11,7 @@ export function filterChapters(mangaMeta: typeof mmState, reading = false) {
 	return (
 		chapter: ResultOf<typeof getManga>['manga']['chapters']['nodes'][number]
 	) => {
-		const groupPartials = mangaMeta.value.groupPartials;
+		const groupPartials = mangaMeta.groupPartials;
 		if (groupPartials && groupPartials.length > 0) {
 			if (
 				!groupPartials
@@ -26,17 +26,17 @@ export function filterChapters(mangaMeta: typeof mmState, reading = false) {
 			}
 		}
 		if (!reading) {
-			if (mangaMeta.value.ChapterUnread === 1 && chapter.isRead) return false;
-			if (mangaMeta.value.ChapterUnread === 2 && !chapter.isRead) return false;
+			if (mangaMeta.ChapterUnread === 1 && chapter.isRead) return false;
+			if (mangaMeta.ChapterUnread === 2 && !chapter.isRead) return false;
 
-			if (mangaMeta.value.ChapterDownloaded === 1 && !chapter.isDownloaded)
+			if (mangaMeta.ChapterDownloaded === 1 && !chapter.isDownloaded)
 				return false;
-			if (mangaMeta.value.ChapterDownloaded === 2 && chapter.isDownloaded)
+			if (mangaMeta.ChapterDownloaded === 2 && chapter.isDownloaded)
 				return false;
 
-			if (mangaMeta.value.ChapterBookmarked === 1 && !chapter.isBookmarked)
+			if (mangaMeta.ChapterBookmarked === 1 && !chapter.isBookmarked)
 				return false;
-			if (mangaMeta.value.ChapterBookmarked === 2 && chapter.isBookmarked)
+			if (mangaMeta.ChapterBookmarked === 2 && chapter.isBookmarked)
 				return false;
 		}
 		return true;
