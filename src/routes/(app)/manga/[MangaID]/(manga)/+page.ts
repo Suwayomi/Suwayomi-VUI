@@ -15,13 +15,15 @@ export const load: PageLoad = ({ params, fetch }) => {
 	if (browser)
 		(async () => {
 			const mod = await import('$lib/gql/graphqlClient');
-			mod.client.query(
-				getManga,
-				{ id: MangaID },
-				{
-					fetch
-				}
-			);
+			mod.client
+				.query(
+					getManga,
+					{ id: MangaID },
+					{
+						fetch
+					}
+				)
+				.toPromise();
 		})();
 	return {
 		MangaID

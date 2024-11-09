@@ -12,20 +12,24 @@ export const load: PageLoad = ({ params, fetch }) => {
 	if (browser)
 		(async () => {
 			const mod = await import('$lib/gql/graphqlClient');
-			mod.client.query(
-				sourceMigrationManga,
-				{ sourceId: params.SourceID },
-				{
-					fetch
-				}
-			);
-			mod.client.query(
-				sourceMigrationSource,
-				{ sourceId: params.SourceID },
-				{
-					fetch
-				}
-			);
+			mod.client
+				.query(
+					sourceMigrationManga,
+					{ sourceId: params.SourceID },
+					{
+						fetch
+					}
+				)
+				.toPromise();
+			mod.client
+				.query(
+					sourceMigrationSource,
+					{ sourceId: params.SourceID },
+					{
+						fetch
+					}
+				)
+				.toPromise();
 		})();
 	return params;
 };

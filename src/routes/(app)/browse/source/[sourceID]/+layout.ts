@@ -12,13 +12,15 @@ export const load: LayoutLoad = ({ params, fetch }) => {
 	if (browser)
 		(async () => {
 			const mod = await import('$lib/gql/graphqlClient');
-			mod.client.query(
-				getSource,
-				{ id: params.sourceID },
-				{
-					fetch
-				}
-			);
+			mod.client
+				.query(
+					getSource,
+					{ id: params.sourceID },
+					{
+						fetch
+					}
+				)
+				.toPromise();
 		})();
 	return { ...params };
 };

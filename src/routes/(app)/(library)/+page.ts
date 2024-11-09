@@ -12,14 +12,16 @@ export const load: PageLoad = ({ fetch, url }) => {
 	if (browser)
 		(async () => {
 			const mod = await import('$lib/gql/graphqlClient');
-			mod.client.query(
-				getCategories,
-				{},
-				{
-					fetch
-				}
-			);
+			mod.client
+				.query(
+					getCategories,
+					{},
+					{
+						fetch
+					}
+				)
+				.toPromise();
 			const tab = parseInt(url.searchParams.get('tab') ?? '0');
-			mod.client.query(getCategory, { id: tab }, { fetch });
+			mod.client.query(getCategory, { id: tab }, { fetch }).toPromise();
 		})();
 };

@@ -11,13 +11,15 @@ export const load: PageLoad = ({ params, fetch }) => {
 	if (browser)
 		(async () => {
 			const mod = await import('$lib/gql/graphqlClient');
-			mod.client.query(
-				sourcesMigration,
-				{},
-				{
-					fetch
-				}
-			);
+			mod.client
+				.query(
+					sourcesMigration,
+					{},
+					{
+						fetch
+					}
+				)
+				.toPromise();
 		})();
 	return params;
 };

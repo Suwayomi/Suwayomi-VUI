@@ -12,13 +12,15 @@ export const load: PageLoad = ({ params, fetch }) => {
 	if (browser)
 		(async () => {
 			const mod = await import('$lib/gql/graphqlClient');
-			mod.client.query(
-				getSources,
-				{ isNsfw: gmState.value.nsfw ? null : false },
-				{
-					fetch
-				}
-			);
+			mod.client
+				.query(
+					getSources,
+					{ isNsfw: gmState.value.nsfw ? null : false },
+					{
+						fetch
+					}
+				)
+				.toPromise();
 		})();
 	return { ...params };
 };
