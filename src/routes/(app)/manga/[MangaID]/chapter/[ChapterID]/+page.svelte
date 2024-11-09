@@ -102,8 +102,11 @@
 		| Promise<OperationResult<ResultOf<typeof fetchChapterPages>>>
 		| undefined = $state();
 	function loadNew() {
-		if (preload && !pagenav) pages = preload;
-		else
+		if (preload && !$pagenav) pages = preload;
+		else if (preload === data.pre) {
+			pages = preload;
+			preload = undefined;
+		} else
 			pages = client
 				.mutation(fetchChapterPages, { chapterId: currentChapterID })
 				.toPromise();
@@ -111,7 +114,7 @@
 
 	let preload:
 		| Promise<OperationResult<ResultOf<typeof fetchChapterPages>>>
-		| undefined = $state(undefined);
+		| undefined = $state(data.pre);
 	let preLoadingId: number | undefined = $state(undefined);
 	async function updatePages(
 		pages:
@@ -145,8 +148,7 @@
 	}
 
 	function getChapterAfterID(
-		currentID: number,
-		_: unknown = undefined
+		currentID: number
 	): ResultOf<typeof ChapterTypeFragment> | undefined {
 		const currentChapter = getChapterOfID(currentID);
 		if (!currentChapter) return undefined;
@@ -460,12 +462,7 @@
 		const _ = [currentChapterID];
 		untrack(loadNew);
 	});
-	let nextid = $derived.by(() => {
-		const _ = [currentChapterID];
-		untrack(() => {
-			return getChapterAfterID(currentChapterID, manga)?.id;
-		});
-	});
+	let nextid = $derived(getChapterAfterID(currentChapterID)?.id);
 	$effect(() => {
 		if (
 			nextid !== undefined &&

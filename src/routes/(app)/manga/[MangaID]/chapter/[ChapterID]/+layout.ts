@@ -6,6 +6,8 @@
 
 import { error } from '@sveltejs/kit';
 import type { LayoutLoad } from './$types';
+import { browser } from '$app/environment';
+import { fetchChapterPages } from '$lib/gql/Mutations';
 
 export const ssr = false;
 export const prerender = false;
@@ -15,6 +17,22 @@ export const load: LayoutLoad = ({ params }) => {
 	const ChapterID = parseInt(params.ChapterID);
 	if (isNaN(MangaID)) error(400, 'MangaID should be a number');
 	if (isNaN(ChapterID)) error(400, 'MangaID should be a number');
+	if (browser)
+		return import('$lib/gql/graphqlClient').then((mod) => {
+			return {
+				pre: mod.client
+					.mutation(
+						fetchChapterPages,
+						{ chapterId: ChapterID },
+						{
+							fetch
+						}
+					)
+					.toPromise(),
+				MangaID,
+				ChapterID
+			};
+		});
 	return {
 		MangaID,
 		ChapterID

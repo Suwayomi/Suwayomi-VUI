@@ -6,12 +6,33 @@
 
 import { error } from '@sveltejs/kit';
 import type { PageLoad } from './$types';
+import { browser } from '$app/environment';
+import { getManga, getSources } from '$lib/gql/Queries';
+import { gmState } from '$lib/simpleStores.svelte';
 
-export const load: PageLoad = ({ params }) => {
+export const load: PageLoad = ({ params, fetch }) => {
 	const MangaID = parseInt(params.MangaID);
 	if (isNaN(MangaID)) {
 		error(400, 'MangaID should be a number');
 	}
+	if (browser)
+		(async () => {
+			const mod = await import('$lib/gql/graphqlClient');
+			mod.client.query(
+				getManga,
+				{ id: MangaID },
+				{
+					fetch
+				}
+			);
+			mod.client.query(
+				getSources,
+				{ isNsfw: gmState.value.nsfw ? null : false },
+				{
+					fetch
+				}
+			);
+		})();
 	return {
 		MangaID
 	};
