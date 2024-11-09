@@ -85,7 +85,7 @@
 				<div class="mx-4 mb-4">
 					{#if $tabSet === 0}
 						<TriStateSlide
-							bind:state={mmState.ChapterUnread}
+							bind:state={mmState.value.ChapterUnread}
 							label={'Unread'}
 							class="w-full p-1 pl-2 hover:variant-glass-surface focus:outline-0"
 							labelClass="w-full"
@@ -93,7 +93,7 @@
 							<span>Unread</span>
 						</TriStateSlide>
 						<TriStateSlide
-							bind:state={mmState.ChapterDownloaded}
+							bind:state={mmState.value.ChapterDownloaded}
 							label={'Downloaded'}
 							class="w-full p-1 pl-2 hover:variant-glass-surface focus:outline-0"
 							labelClass="w-full"
@@ -101,7 +101,7 @@
 							<span>Downloaded</span>
 						</TriStateSlide>
 						<TriStateSlide
-							bind:state={mmState.ChapterBookmarked}
+							bind:state={mmState.value.ChapterBookmarked}
 							label={'Downloaded'}
 							class="w-full p-1 pl-2 hover:variant-glass-surface focus:outline-0"
 							labelClass="w-full"
@@ -115,14 +115,14 @@
 								<span class="pr-2">Groups</span>
 								<input
 									onchange={(e) => {
-										mmState.groupPartials = e.currentTarget.value
+										mmState.value.groupPartials = e.currentTarget.value
 											.split(',')
 											.map((a) => a.trim())
 											.filter((a) => a.length > 0);
 										e.currentTarget.value =
-											mmState.groupPartials?.join(',') ?? '';
+											mmState.value.groupPartials?.join(',') ?? '';
 									}}
-									value={mmState.groupPartials?.join(',') ?? ''}
+									value={mmState.value.groupPartials?.join(',') ?? ''}
 									class="input w-1/2"
 									type="text"
 									placeholder="asura,dex,..."
@@ -132,7 +132,7 @@
 					{:else if $tabSet === 1}
 						<TriStateSlide
 							triState={false}
-							bind:checked={mmState.ChapterAsc}
+							bind:checked={mmState.value.ChapterAsc}
 							label={'Ascending'}
 							class="w-full p-1 pl-2 hover:variant-glass-surface focus:outline-0"
 							labelClass="w-full"
@@ -149,7 +149,7 @@
 						>
 							{#each enumKeys(ChapterSort) as value}
 								<RadioItem
-									bind:group={mmState.ChapterSort}
+									bind:group={mmState.value.ChapterSort}
 									class="focus:outline-0"
 									name="justify"
 									{value}
@@ -164,14 +164,15 @@
 							onclick={(e) => {
 								e.stopPropagation();
 								e.preventDefault();
-								mmState.showMissingChapters = !mmState.showMissingChapters;
+								mmState.value.showMissingChapters =
+									!mmState.value.showMissingChapters;
 							}}
 						>
 							<span>Show Missing Chapters</span>
 							<SlideToggle
 								name="slide"
 								class="focus:outline-0"
-								bind:checked={mmState.showMissingChapters}
+								bind:checked={mmState.value.showMissingChapters}
 							/>
 						</button>
 						<button
@@ -179,14 +180,15 @@
 							onclick={(e) => {
 								e.stopPropagation();
 								e.preventDefault();
-								mmState.ChapterFetchUpload = !mmState.ChapterFetchUpload;
+								mmState.value.ChapterFetchUpload =
+									!mmState.value.ChapterFetchUpload;
 							}}
 						>
 							<span>FetchDate/UploadDate</span>
 							<SlideToggle
 								name="slide"
 								class="focus:outline-0"
-								bind:checked={mmState.ChapterFetchUpload}
+								bind:checked={mmState.value.ChapterFetchUpload}
 							/>
 						</button>
 						<RadioGroup
@@ -199,7 +201,7 @@
 						>
 							{#each enumKeys(ChapterTitle) as value}
 								<RadioItem
-									bind:group={mmState.ChapterTitle}
+									bind:group={mmState.value.ChapterTitle}
 									class="focus:outline-0"
 									name="justify"
 									{value}

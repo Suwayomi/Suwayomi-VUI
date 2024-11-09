@@ -46,12 +46,18 @@
 
 	$effect(themeFunc);
 	function themeFunc() {
-		document.body.dataset.theme = gmState.theme;
-		if (gmState.dark && !document.documentElement.classList.contains('dark')) {
+		document.body.dataset.theme = gmState.value.theme;
+		if (
+			gmState.value.dark &&
+			!document.documentElement.classList.contains('dark')
+		) {
 			document.documentElement.classList.add('dark');
 			return;
 		}
-		if (!gmState.dark && document.documentElement.classList.contains('dark')) {
+		if (
+			!gmState.value.dark &&
+			document.documentElement.classList.contains('dark')
+		) {
 			document.documentElement.classList.remove('dark');
 		}
 	}

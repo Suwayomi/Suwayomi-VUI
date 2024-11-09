@@ -751,11 +751,11 @@ function fetchExtensionsUpdater(
 ) {
 	if (!data?.fetchExtensions) return;
 	let filteredExtensions = data.fetchExtensions.extensions;
-	if (!gmState.nsfw)
+	if (!gmState.value.nsfw)
 		filteredExtensions = filteredExtensions.filter((e) => !e.isNsfw);
 	filteredExtensions.forEach((e) => {
 		cache.writeFragment(ExtensionTypeFragment, e, {
-			isNsfw: gmState.nsfw ? null : false
+			isNsfw: gmState.value.nsfw ? null : false
 		});
 	});
 	lastFetched.set(new Date());
@@ -874,7 +874,7 @@ function updateExtentionsList<T extends { pkgName: string }>(
 	cache.updateQuery(
 		{
 			query: getExtensions,
-			variables: { isNsfw: gmState.nsfw ? null : false }
+			variables: { isNsfw: gmState.value.nsfw ? null : false }
 		},
 		(extensionsData) => {
 			if (!extensionsData) return extensionsData;
@@ -900,7 +900,7 @@ function updateSourcesList<T extends { pkgName: string }>(
 	cache.updateQuery(
 		{
 			query: getSources,
-			variables: { isNsfw: gmState.nsfw ? null : false }
+			variables: { isNsfw: gmState.value.nsfw ? null : false }
 		},
 		(sourcesData) => {
 			if (!sourcesData) return sourcesData;

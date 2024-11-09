@@ -79,7 +79,7 @@
 				<div class="mx-4 mb-4">
 					{#if $tabSet === 0}
 						<TriStateSlide
-							bind:state={gmState.Unread}
+							bind:state={gmState.value.Unread}
 							label={'Unread'}
 							class="w-full p-1 pl-2 hover:variant-glass-surface focus:outline-0"
 							labelClass="w-full"
@@ -87,7 +87,7 @@
 							<span>Unread</span>
 						</TriStateSlide>
 						<TriStateSlide
-							bind:state={gmState.Downloaded}
+							bind:state={gmState.value.Downloaded}
 							label={'Downloaded'}
 							class="w-full p-1 pl-2 hover:variant-glass-surface focus:outline-0"
 							labelClass="w-full"
@@ -95,7 +95,7 @@
 							<span>Downloaded</span>
 						</TriStateSlide>
 						<TriStateSlide
-							bind:state={gmState.Tracked}
+							bind:state={gmState.value.Tracked}
 							label={'Tracked'}
 							class="w-full p-1 pl-2 hover:variant-glass-surface focus:outline-0"
 							labelClass="w-full"
@@ -105,7 +105,7 @@
 					{:else if $tabSet === 1}
 						<TriStateSlide
 							triState={false}
-							bind:checked={gmState.Asc}
+							bind:checked={gmState.value.Asc}
 							label={'Ascending'}
 							class="w-full p-1 pl-2 hover:variant-glass-surface focus:outline-0"
 							labelClass="w-full"
@@ -122,7 +122,7 @@
 						>
 							{#each enumKeys(sort) as value}
 								<RadioItem
-									bind:group={gmState.Sort}
+									bind:group={gmState.value.Sort}
 									class="focus:outline-0"
 									name="justify"
 									{value}
@@ -133,18 +133,18 @@
 						</RadioGroup>
 					{:else if $tabSet === 2}
 						<Slide
-							bind:checked={gmState.libraryCategoryTotalCounts}
+							bind:checked={gmState.value.libraryCategoryTotalCounts}
 							class="w-full p-1 pl-2 outline-0 hover:variant-glass-surface"
 						>
 							Category Total Counts
 						</Slide>
 						<Slide
-							bind:checked={gmState.downloadsBadge}
+							bind:checked={gmState.value.downloadsBadge}
 							class="w-full p-1 pl-2 outline-0 hover:variant-glass-surface"
 							>Downloads Badge</Slide
 						>
 						<Slide
-							bind:checked={gmState.unreadBadge}
+							bind:checked={gmState.value.unreadBadge}
 							class="w-full p-1 pl-2 outline-0 hover:variant-glass-surface"
 							>Unread Badge</Slide
 						>
@@ -158,7 +158,7 @@
 						>
 							{#each enumKeys(display) as value}
 								<RadioItem
-									bind:group={gmState.Display}
+									bind:group={gmState.value.Display}
 									class="focus:outline-0"
 									name="justify"
 									{value}

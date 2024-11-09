@@ -52,7 +52,7 @@
 			/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
 				navigator.userAgent
 			) &&
-			mmState.mobileFullScreenOnChapterPage
+			mmState.value.mobileFullScreenOnChapterPage
 		) {
 			document.documentElement.requestFullscreen();
 		}
@@ -61,7 +61,7 @@
 				/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
 					navigator.userAgent
 				) &&
-				mmState.mobileFullScreenOnChapterPage
+				mmState.value.mobileFullScreenOnChapterPage
 			) {
 				document.exitFullscreen();
 			}
@@ -102,8 +102,11 @@
 		| Promise<OperationResult<ResultOf<typeof fetchChapterPages>>>
 		| undefined = $state();
 	function loadNew() {
-		if (preload && !pagenav) pages = preload;
-		else
+		if (preload && !$pagenav) pages = preload;
+		else if (preload === data.pre) {
+			pages = preload;
+			preload = undefined;
+		} else
 			pages = client
 				.mutation(fetchChapterPages, { chapterId: currentChapterID })
 				.toPromise();
@@ -111,7 +114,7 @@
 
 	let preload:
 		| Promise<OperationResult<ResultOf<typeof fetchChapterPages>>>
-		| undefined = $state(undefined);
+		| undefined = $state(data.pre);
 	let preLoadingId: number | undefined = $state(undefined);
 	async function updatePages(
 		pages:
@@ -145,8 +148,7 @@
 	}
 
 	function getChapterAfterID(
-		currentID: number,
-		_: unknown = undefined
+		currentID: number
 	): ResultOf<typeof ChapterTypeFragment> | undefined {
 		const currentChapter = getChapterOfID(currentID);
 		if (!currentChapter) return undefined;
@@ -376,7 +378,7 @@
 		pageElement?.scrollTo({
 			top:
 				addition + (pageElement.scrollTop + pageElement.clientHeight * decimal),
-			behavior: mmState.SmoothScroll ? 'smooth' : 'instant'
+			behavior: mmState.value.SmoothScroll ? 'smooth' : 'instant'
 		});
 	}
 
@@ -460,16 +462,11 @@
 		const _ = [currentChapterID];
 		untrack(loadNew);
 	});
-	let nextid = $derived.by(() => {
-		const _ = [currentChapterID];
-		untrack(() => {
-			return getChapterAfterID(currentChapterID, manga)?.id;
-		});
-	});
+	let nextid = $derived(getChapterAfterID(currentChapterID)?.id);
 	$effect(() => {
 		if (
 			nextid !== undefined &&
-			mmState.preLoadNextChapter &&
+			mmState.value.preLoadNextChapter &&
 			nextid !== preLoadingId
 		) {
 			untrack(() => {
@@ -487,10 +484,10 @@
 		});
 	});
 	$effect(() => {
-		if (mmState.ReaderMode === Mode.RTL) {
-			path = layoutToPath(paths.rtl, mmState.NavLayout);
+		if (mmState.value.ReaderMode === Mode.RTL) {
+			path = layoutToPath(paths.rtl, mmState.value.NavLayout);
 		} else {
-			path = layoutToPath(paths.ltr, mmState.NavLayout);
+			path = layoutToPath(paths.ltr, mmState.value.NavLayout);
 		}
 	});
 	$effect(() => {
@@ -583,35 +580,38 @@
 		<div>
 			<div
 				class="
-				{mmState.ReaderMode === Mode.Vertical && 'flex flex-col items-center'}
-				{mmState.ReaderMode === Mode.single && 'flex flex-col items-center'}
-				{mmState.ReaderMode === Mode.RTL &&
+				{mmState.value.ReaderMode === Mode.Vertical && 'flex flex-col items-center'}
+				{mmState.value.ReaderMode === Mode.single && 'flex flex-col items-center'}
+				{mmState.value.ReaderMode === Mode.RTL &&
 					'place-content-center[&>div:nth-child(even)]:justify-self-start grid grid-cols-2 [&>div:nth-child(odd)]:justify-self-end'}
-				{mmState.ReaderMode === Mode.LTR &&
+				{mmState.value.ReaderMode === Mode.LTR &&
 					'place-content-center[&>div:nth-child(even)]:justify-self-start grid grid-cols-2 [&>div:nth-child(odd)]:justify-self-end'}
 				"
-				dir={mmState.ReaderMode === Mode.RTL ? 'rtl' : 'ltr'}
+				dir={mmState.value.ReaderMode === Mode.RTL ? 'rtl' : 'ltr'}
 			>
-				{#if (mmState.ReaderMode === Mode.RTL || mmState.ReaderMode === Mode.LTR) && mmState.Offset}
+				{#if (mmState.value.ReaderMode === Mode.RTL || mmState.value.ReaderMode === Mode.LTR) && mmState.value.Offset}
 					<div></div>
 				{/if}
 				{#each chapter.pages as page, pageIndex (page)}
 					<div
 						class="h-auto w-auto
-							{mmState.Margins && mmState.ReaderMode === Mode.Vertical && 'mb-4'}
-							{mmState.Margins && mmState.ReaderMode === Mode.single && 'mb-4'}
-							{mmState.Margins &&
-							mmState.ReaderMode === Mode.RTL &&
+							{mmState.value.Margins && mmState.value.ReaderMode === Mode.Vertical && 'mb-4'}
+							{mmState.value.Margins && mmState.value.ReaderMode === Mode.single && 'mb-4'}
+							{mmState.value.Margins &&
+							mmState.value.ReaderMode === Mode.RTL &&
 							'mb-4 odd:ml-2 even:mr-2'}
-							{mmState.Margins &&
-							mmState.ReaderMode === Mode.LTR &&
+							{mmState.value.Margins &&
+							mmState.value.ReaderMode === Mode.LTR &&
 							'mb-4 odd:mr-2 even:ml-2'}
-							{mmState.Scale && mmState.ReaderMode !== Mode.Vertical
+							{mmState.value.Scale && mmState.value.ReaderMode !== Mode.Vertical
 							? 'h-full max-h-screen'
-							: 'h-auto'} {mmState.Scale && mmState.ReaderMode === Mode.Vertical
+							: 'h-auto'} {mmState.value.Scale &&
+						mmState.value.ReaderMode === Mode.Vertical
 							? 'w-full'
 							: 'w-auto'}
-								{mmState.Scale && mmState.ReaderMode === Mode.single ? 'max-w-full' : ''}"
+								{mmState.value.Scale && mmState.value.ReaderMode === Mode.single
+							? 'max-w-full'
+							: ''}"
 					>
 						<IntersectionObserver
 							onintersect={(e) => {
@@ -626,28 +626,35 @@
 							}}
 							root={document.querySelector('#page') ?? undefined}
 							bottom={0}
-							top={mmState.Margins ? 16 : 0}
+							top={mmState.value.Margins ? 16 : 0}
 						/>
 						<div
 							id="c{index}p{pageIndex}"
-							class="{mmState.Scale && mmState.ReaderMode !== Mode.Vertical
+							class="{mmState.value.Scale &&
+							mmState.value.ReaderMode !== Mode.Vertical
 								? 'h-full max-h-screen'
-								: 'h-auto'} {mmState.Scale &&
-							mmState.ReaderMode === Mode.Vertical
+								: 'h-auto'} {mmState.value.Scale &&
+							mmState.value.ReaderMode === Mode.Vertical
 								? 'w-full'
 								: 'w-auto'}
-								{mmState.Scale && mmState.ReaderMode === Mode.single ? 'max-w-full' : ''}"
+								{mmState.value.Scale && mmState.value.ReaderMode === Mode.single
+								? 'max-w-full'
+								: ''}"
 						>
 							<Image
 								reload_button={true}
 								src={page}
-								height={mmState.Scale && mmState.ReaderMode !== Mode.Vertical
+								height={mmState.value.Scale &&
+								mmState.value.ReaderMode !== Mode.Vertical
 									? 'max-h-screen h-full'
 									: 'h-auto'}
-								width="{mmState.Scale && mmState.ReaderMode === Mode.Vertical
+								width="{mmState.value.Scale &&
+								mmState.value.ReaderMode === Mode.Vertical
 									? 'w-full'
 									: 'w-auto'}
-									{mmState.Scale && mmState.ReaderMode === Mode.single ? 'max-w-full' : ''}"
+									{mmState.value.Scale && mmState.value.ReaderMode === Mode.single
+									? 'max-w-full'
+									: ''}"
 								rounded=" rounded-none"
 								LoadingHeight="h-screen"
 								LoadingWidth="w-screen"
@@ -693,7 +700,7 @@
 			</div>
 		</div>
 	{/each}
-	{#if mmState.doPageIndicator}
+	{#if mmState.value.doPageIndicator}
 		<div
 			class="fixed bottom-2 left-1/2 -translate-x-1/2 rounded bg-surface-500/60 p-2 text-black dark:text-white"
 		>

@@ -44,9 +44,9 @@
 	};
 
 	// State
-	let trackBg = $derived(!gmState.dark ? bgLight : bgDark);
-	let thumbBg = $derived(!gmState.dark ? bgDark : bgLight);
-	let thumbPosition = $derived(!gmState.dark ? 'translate-x-[100%]' : '');
+	let trackBg = $derived(!gmState.value.dark ? bgLight : bgDark);
+	let thumbBg = $derived(!gmState.value.dark ? bgDark : bgLight);
+	let thumbPosition = $derived(!gmState.value.dark ? 'translate-x-[100%]' : '');
 	// Reactive
 	let classesTrack = $derived(
 		`cursor-pointer ${cTransition} ${width} ${height} ${ring} ${rounded} ${trackBg} ${className ?? ''}`
@@ -55,16 +55,16 @@
 		`aspect-square scale-[0.8] flex justify-center items-center ${cTransition} ${height} ${rounded} ${thumbBg} ${thumbPosition}`
 	);
 	let classesIcon = $derived(
-		`w-[70%] aspect-square ${!gmState.dark ? fillLight : fillDark}`
+		`w-[70%] aspect-square ${!gmState.value.dark ? fillLight : fillDark}`
 	);
 </script>
 
 <button
 	class="lightswitch-track {classesTrack}"
-	onclick={() => (gmState.dark = !gmState.dark)}
+	onclick={() => (gmState.value.dark = !gmState.value.dark)}
 	role="switch"
 	aria-label="Light Switch"
-	aria-checked={!gmState.dark}
+	aria-checked={!gmState.value.dark}
 	{title}
 	tabindex="0"
 >
@@ -74,7 +74,7 @@
 			xmlns="http://www.w3.org/2000/svg"
 			viewBox="0 0 512 512"
 		>
-			<path d={!gmState.dark ? svgPath.sun : svgPath.moon} />
+			<path d={!gmState.value.dark ? svgPath.sun : svgPath.moon} />
 		</svg>
 	</div>
 </button>
