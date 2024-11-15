@@ -15,7 +15,7 @@
 	import { queryParam, ssp } from 'sveltekit-search-params';
 	import LibraryActions from './libraryActions.svelte';
 	import { selected, selectMode, type MangaType } from './LibraryStores';
-	import { onMount, untrack } from 'svelte';
+	import { onMount } from 'svelte';
 	import { AppBarData } from '$lib/MountTitleAction';
 	import {
 		errortoast,

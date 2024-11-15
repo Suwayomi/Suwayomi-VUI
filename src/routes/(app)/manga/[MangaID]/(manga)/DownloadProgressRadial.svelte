@@ -7,9 +7,7 @@
 -->
 
 <script lang="ts">
-	import type { downloadsOnChapters } from '$lib/gql/Subscriptions';
 	import { ProgressRadial } from '@skeletonlabs/skeleton';
-	import type { ResultOf } from '$lib/gql/graphql';
 	import type { downloadChanged } from '$lib/DownloadChanged.svelte';
 
 	interface Props {

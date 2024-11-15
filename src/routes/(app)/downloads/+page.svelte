@@ -14,7 +14,7 @@
 	import { ProgressBar } from '@skeletonlabs/skeleton';
 	import DownloadsActions from './DownloadsActions.svelte';
 	import { filter } from './downloadsStores';
-	import { getContextClient, subscriptionStore } from '@urql/svelte';
+	import { getContextClient } from '@urql/svelte';
 	import { dequeueChapterDownloads } from '$lib/gql/Mutations';
 	import { downloadChanged } from '$lib/DownloadChanged.svelte';
 	const client = getContextClient();

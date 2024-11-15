@@ -25,10 +25,7 @@
 	import ChaptersFilterModal from './ChaptersFilterModal.svelte';
 	import DownloadProgressRadial from './DownloadProgressRadial.svelte';
 	import { selected, selectMode, type chapterType } from './mangaStores.svelte';
-	import { getContextClient, subscriptionStore } from '@urql/svelte';
-	import { getSingleChapter, getManga } from '$lib/gql/Queries';
-	import { type ResultOf } from '$lib/gql/graphql';
-	import { downloadsOnChapters } from '$lib/gql/Subscriptions';
+	import { getContextClient } from '@urql/svelte';
 	import {
 		deleteDownloadedChapters,
 		enqueueChapterDownloads,
