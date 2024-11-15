@@ -1,38 +1,52 @@
-<!-- @migration-task Error while migrating Svelte code: $$props is used together with named props in a way that cannot be automatically migrated. -->
 <script lang="ts">
-	// Slots
-	/** @slot header - Insert fixed header content, such as Skeleton's App Bar component.
-	 * @slot sidebarLeft - Hidden when empty. Allows you to set fixed left sidebar content.
-	 * @slot sidebarRight - Hidden when empty. Allows you to set fixed right sidebar content.
-	 * @slot pageHeader - Insert content that resides above your page content. Great for global alerts.
-	 * @slot pageFooter - Insert content that resides below your page content. Recommended for most layouts.
-	 * @slot footer - Insert fixed footer content. Not recommended for most layouts.
-	 */
-
-	// Types
 	import type { CssClasses } from '@skeletonlabs/skeleton';
+	import type { Snippet } from 'svelte';
 
-	// Props
-	/** Set `scrollbar-gutter` style. */
-	export let scrollbarGutter = 'auto';
+	interface Props {
+		header: Snippet;
+		sidebarLeft: Snippet;
+		pageHeader: Snippet;
+		children: Snippet;
+		pageFooter: Snippet;
+		sidebarRight: Snippet;
+		footer: Snippet;
+		onscroll: (
+			e: UIEvent & {
+				currentTarget: EventTarget & HTMLDivElement;
+			}
+		) => void;
+		scrollbarGutter: CssClasses;
+		regionPage: CssClasses;
+		slotHeader: CssClasses;
+		slotSidebarLeft: CssClasses;
+		slotSidebarRight: CssClasses;
+		slotPageHeader: CssClasses;
+		slotPageContent: CssClasses;
+		slotPageFooter: CssClasses;
+		slotFooter: CssClasses;
+		class: CssClasses;
+	}
 
-	// Props (regions)
-	/** Apply arbitrary classes to the entire `#page` region. */
-	export let regionPage: CssClasses = '';
-	/** Apply arbitrary classes to the `header` slot container element */
-	export let slotHeader: CssClasses = 'z-10';
-	/** Apply arbitrary classes to the `sidebarLeft` slot container element */
-	export let slotSidebarLeft: CssClasses = 'w-auto';
-	/** Apply arbitrary classes to the `sidebarRight` slot container element */
-	export let slotSidebarRight: CssClasses = 'w-auto';
-	/** Apply arbitrary classes to the `pageHeader` slot container element */
-	export let slotPageHeader: CssClasses = '';
-	/** Apply arbitrary classes to the `pageContent` slot container element */
-	export let slotPageContent: CssClasses = '';
-	/** Apply arbitrary classes to the `pageFooter` slot container element */
-	export let slotPageFooter: CssClasses = '';
-	/** Apply arbitrary classes to the `footer` slot container element */
-	export let slotFooter: CssClasses = '';
+	const {
+		header,
+		sidebarLeft,
+		pageHeader,
+		children,
+		pageFooter,
+		sidebarRight,
+		footer,
+		onscroll = () => {},
+		scrollbarGutter = 'auto',
+		regionPage = '',
+		slotHeader = 'z-10',
+		slotSidebarLeft = 'w-auto',
+		slotSidebarRight = 'w-auto',
+		slotPageHeader = '',
+		slotPageContent = '',
+		slotPageFooter = '',
+		slotFooter = '',
+		class: classNames
+	}: Props = $props();
 
 	// Base Classes
 	const cBaseAppShell = 'w-full h-full flex flex-col overflow-hidden';
@@ -42,30 +56,30 @@
 	const cSidebarRight = 'flex-none overflow-x-hidden overflow-y-auto';
 
 	// Reactive Classes
-	$: classesBase = `${cBaseAppShell} ${$$props.class ?? ''}`;
-	$: classesHeader = `${slotHeader}`;
-	$: classesSidebarLeft = `${cSidebarLeft} ${slotSidebarLeft}`;
-	$: classesSidebarRight = `${cSidebarRight} ${slotSidebarRight}`;
-	$: classesPageHeader = `${slotPageHeader}`;
-	$: classesPageContent = `${slotPageContent}`;
-	$: classesPageFooter = `${slotPageFooter}`;
-	$: classesFooter = `${slotFooter}`;
+	const classesBase = $derived(`${cBaseAppShell} ${classNames ?? ''}`);
+	const classesHeader = $derived(`${slotHeader}`);
+	const classesSidebarLeft = $derived(`${cSidebarLeft} ${slotSidebarLeft}`);
+	const classesSidebarRight = $derived(`${cSidebarRight} ${slotSidebarRight}`);
+	const classesPageHeader = $derived(`${slotPageHeader}`);
+	const classesPageContent = $derived(`${slotPageContent}`);
+	const classesPageFooter = $derived(`${slotPageFooter}`);
+	const classesFooter = $derived(`${slotFooter}`);
 </script>
 
 <div id="appShell" class={classesBase} data-testid="app-shell">
 	<!-- Slot: Header -->
-	{#if $$slots.header}
+	{#if header}
 		<header id="shell-header" class="flex-none {classesHeader}">
-			<slot name="header" />
+			{@render header?.()}
 		</header>
 	{/if}
 
 	<!-- Content Area -->
 	<div class="flex-auto {cContentArea}">
 		<!-- Slot: Sidebar (left) -->
-		{#if $$slots.sidebarLeft}
+		{#if sidebarLeft}
 			<aside id="sidebar-left" class={classesSidebarLeft}>
-				<slot name="sidebarLeft" />
+				{@render sidebarLeft?.()}
 			</aside>
 		{/if}
 
@@ -74,40 +88,40 @@
 			id="page"
 			class="{regionPage} {cPage}"
 			style:scrollbar-gutter={scrollbarGutter}
-			on:scroll
+			{onscroll}
 		>
 			<!-- Slot: Page Header -->
-			{#if $$slots.pageHeader}
+			{#if pageHeader}
 				<header id="page-header" class="flex-none {classesPageHeader}">
-					<slot name="pageHeader">(slot:header)</slot>
+					{#if pageHeader}{@render pageHeader()}{:else}(slot:header){/if}
 				</header>
 			{/if}
 
 			<!-- Slot: Page Content (default) -->
 			<main id="page-content" class="flex-auto {classesPageContent}">
-				<slot />
+				{@render children?.()}
 			</main>
 
 			<!-- Slot: Page Footer -->
-			{#if $$slots.pageFooter}
+			{#if pageFooter}
 				<footer id="page-footer" class="flex-none {classesPageFooter}">
-					<slot name="pageFooter">(slot:footer)</slot>
+					{#if pageFooter}{@render pageFooter()}{:else}(slot:footer){/if}
 				</footer>
 			{/if}
 		</div>
 
 		<!-- Slot: Sidebar (right) -->
-		{#if $$slots.sidebarRight}
+		{#if sidebarRight}
 			<aside id="sidebar-right" class={classesSidebarRight}>
-				<slot name="sidebarRight" />
+				{@render sidebarRight?.()}
 			</aside>
 		{/if}
 	</div>
 
 	<!-- Slot: footer -->
-	{#if $$slots.footer}
+	{#if footer}
 		<footer id="shell-footer" class="flex-none {classesFooter}">
-			<slot name="footer" />
+			{@render footer?.()}
 		</footer>
 	{/if}
 </div>

@@ -17,7 +17,7 @@
 
 <div class="flex h-full flex-col">
 	<div
-		class="card variant-glass hide-scrollbar sticky top-14 z-10 grid justify-items-center overflow-x-auto rounded-none"
+		class="card variant-glass hide-scrollbar sticky top-0 z-10 grid justify-items-center overflow-x-auto rounded-none"
 	>
 		<div class="flex space-x-2 py-2">
 			<a
