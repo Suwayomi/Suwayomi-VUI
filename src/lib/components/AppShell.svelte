@@ -3,28 +3,28 @@
 	import type { Snippet } from 'svelte';
 
 	interface Props {
-		header: Snippet;
-		sidebarLeft: Snippet;
-		pageHeader: Snippet;
+		header?: Snippet;
+		sidebarLeft?: Snippet;
+		pageHeader?: Snippet;
 		children: Snippet;
-		pageFooter: Snippet;
-		sidebarRight: Snippet;
-		footer: Snippet;
-		onscroll: (
+		pageFooter?: Snippet;
+		sidebarRight?: Snippet;
+		footer?: Snippet;
+		onscroll?: (
 			e: UIEvent & {
 				currentTarget: EventTarget & HTMLDivElement;
 			}
 		) => void;
-		scrollbarGutter: CssClasses;
-		regionPage: CssClasses;
-		slotHeader: CssClasses;
-		slotSidebarLeft: CssClasses;
-		slotSidebarRight: CssClasses;
-		slotPageHeader: CssClasses;
-		slotPageContent: CssClasses;
-		slotPageFooter: CssClasses;
-		slotFooter: CssClasses;
-		class: CssClasses;
+		scrollbarGutter?: CssClasses;
+		regionPage?: CssClasses;
+		slotHeader?: CssClasses;
+		slotSidebarLeft?: CssClasses;
+		slotSidebarRight?: CssClasses;
+		slotPageHeader?: CssClasses;
+		slotPageContent?: CssClasses;
+		slotPageFooter?: CssClasses;
+		slotFooter?: CssClasses;
+		class?: CssClasses;
 	}
 
 	const {
