@@ -15,7 +15,7 @@
 	import { queryParam, ssp } from 'sveltekit-search-params';
 	import LibraryActions from './libraryActions.svelte';
 	import { selected, selectMode, type MangaType } from './LibraryStores';
-	import { onMount, untrack } from 'svelte';
+	import { onMount } from 'svelte';
 	import { AppBarData } from '$lib/MountTitleAction';
 	import {
 		errortoast,
@@ -230,17 +230,28 @@
 		}
 	});
 
-	let mangas = $derived.by(() => {
-		const _ = [$tab];
-		return untrack(() =>
-			queryState({
-				client,
-				query: getCategory,
-				variables: { id: $tab ?? 0 },
-				requestPolicy: 'cache-first'
-			})
-		);
+	onMount(() => {
+		const removeOnVisibilityChange = (document.onvisibilitychange = () => {
+			if (document.visibilityState === 'visible') {
+				queryState({
+					client,
+					query: getCategory,
+					variables: { id: $tab ?? 0 },
+					requestPolicy: 'network-only'
+				});
+			}
+		});
+		return removeOnVisibilityChange;
 	});
+
+	let mangas = $derived(
+		queryState({
+			client,
+			query: getCategory,
+			variables: { id: $tab ?? 0 },
+			requestPolicy: 'cache-first'
+		})
+	);
 	$effect(() => {
 		if ($selectMode === false) {
 			$selected = [];

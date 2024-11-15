@@ -10,25 +10,14 @@
 	import IconButton from '$lib/components/IconButton.svelte';
 	import { getModalStore } from '@skeletonlabs/skeleton';
 	import DownloadsFilterModal from './DownloadsFilterModal.svelte';
-	import type { downloadChanged } from '$lib/gql/Subscriptions';
-	import {
-		getContextClient,
-		type OperationResultStore,
-		type Pausable
-	} from '@urql/svelte';
-	import type { ResultOf } from '$lib/gql/graphql';
+	import { getContextClient } from '@urql/svelte';
 	import {
 		clearDownloader,
 		startDownloader,
 		stopDownloader
 	} from '$lib/gql/Mutations';
+	import { downloadChanged } from '$lib/DownloadChanged.svelte';
 
-	interface Props {
-		downloads: OperationResultStore<ResultOf<typeof downloadChanged>> &
-			Pausable;
-	}
-
-	let { downloads }: Props = $props();
 	const modalStore = getModalStore();
 	const client = getContextClient();
 </script>
@@ -53,11 +42,9 @@
 	/>
 
 	<IconButton
-		name="mdi:{$downloads?.data?.downloadChanged.state === 'STARTED'
-			? 'pause'
-			: 'play'}"
+		name="mdi:{downloadChanged.status === 'STARTED' ? 'pause' : 'play'}"
 		onclick={() => {
-			if ($downloads?.data?.downloadChanged.state === 'STARTED') {
+			if (downloadChanged.status === 'STARTED') {
 				client.mutation(stopDownloader, {}).toPromise();
 				return;
 			}

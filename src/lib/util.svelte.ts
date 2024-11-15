@@ -18,12 +18,14 @@ import type { VariablesOf } from '$lib/gql/graphql';
 import {
 	mutationStore,
 	queryStore,
+	subscriptionStore,
 	type AnyVariables,
 	type MutationArgs,
 	type OperationContext,
 	type OperationResult,
 	type OperationResultState,
-	type QueryArgs
+	type QueryArgs,
+	type SubscriptionArgs
 } from '@urql/svelte';
 import { introspection } from '../graphql-env';
 
@@ -396,5 +398,46 @@ export function mutationState<
 		get value() {
 			return mutationState;
 		}
+	};
+}
+
+export type subscriptionStateReturn<
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any
+	Data = any,
+	Variables extends AnyVariables = AnyVariables
+> = {
+	get value(): OperationResultState<Data, Variables>;
+	get isPaused$(): boolean;
+	pause(): void;
+	resume(): void;
+};
+
+export function subscriptionState<
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any
+	Data = any,
+	Variables extends AnyVariables = AnyVariables
+>(
+	args: SubscriptionArgs<Data, Variables>
+): subscriptionStateReturn<Data, Variables> {
+	const store = subscriptionStore(args);
+	let queryState = $state(get(store));
+	let isPaused = $state(get(store.isPaused$));
+
+	store.subscribe((value) => {
+		queryState = value;
+	});
+	store.isPaused$.subscribe((value) => {
+		isPaused = value;
+	});
+
+	return {
+		get value() {
+			return queryState;
+		},
+		get isPaused$() {
+			return isPaused;
+		},
+		pause: store.pause,
+		resume: store.resume
 	};
 }

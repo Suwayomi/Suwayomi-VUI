@@ -2851,6 +2851,20 @@ const introspection = {
         "isOneOf": false
       },
       {
+        "kind": "INPUT_OBJECT",
+        "name": "DownloadChangedInput",
+        "inputFields": [
+          {
+            "name": "maxUpdates",
+            "type": {
+              "kind": "SCALAR",
+              "name": "Int"
+            }
+          }
+        ],
+        "isOneOf": false
+      },
+      {
         "kind": "OBJECT",
         "name": "DownloadEdge",
         "fields": [
@@ -3046,6 +3060,18 @@ const introspection = {
             "isDeprecated": false
           },
           {
+            "name": "position",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "Int"
+              }
+            },
+            "args": [],
+            "isDeprecated": false
+          },
+          {
             "name": "progress",
             "type": {
               "kind": "NON_NULL",
@@ -3076,6 +3102,131 @@ const introspection = {
               "ofType": {
                 "kind": "SCALAR",
                 "name": "Int"
+              }
+            },
+            "args": [],
+            "isDeprecated": false
+          }
+        ],
+        "interfaces": []
+      },
+      {
+        "kind": "OBJECT",
+        "name": "DownloadUpdate",
+        "fields": [
+          {
+            "name": "download",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "OBJECT",
+                "name": "DownloadType"
+              }
+            },
+            "args": [],
+            "isDeprecated": false
+          },
+          {
+            "name": "type",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "ENUM",
+                "name": "DownloadUpdateType"
+              }
+            },
+            "args": [],
+            "isDeprecated": false
+          }
+        ],
+        "interfaces": []
+      },
+      {
+        "kind": "ENUM",
+        "name": "DownloadUpdateType",
+        "enumValues": [
+          {
+            "name": "QUEUED",
+            "isDeprecated": false
+          },
+          {
+            "name": "DEQUEUED",
+            "isDeprecated": false
+          },
+          {
+            "name": "PROGRESS",
+            "isDeprecated": false
+          },
+          {
+            "name": "FINISHED",
+            "isDeprecated": false
+          },
+          {
+            "name": "ERROR",
+            "isDeprecated": false
+          },
+          {
+            "name": "POSITION",
+            "isDeprecated": false
+          }
+        ]
+      },
+      {
+        "kind": "OBJECT",
+        "name": "DownloadUpdates",
+        "fields": [
+          {
+            "name": "initial",
+            "type": {
+              "kind": "LIST",
+              "ofType": {
+                "kind": "NON_NULL",
+                "ofType": {
+                  "kind": "OBJECT",
+                  "name": "DownloadType"
+                }
+              }
+            },
+            "args": [],
+            "isDeprecated": false
+          },
+          {
+            "name": "omittedUpdates",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "Boolean"
+              }
+            },
+            "args": [],
+            "isDeprecated": false
+          },
+          {
+            "name": "state",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "ENUM",
+                "name": "DownloaderState"
+              }
+            },
+            "args": [],
+            "isDeprecated": false
+          },
+          {
+            "name": "updates",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "LIST",
+                "ofType": {
+                  "kind": "NON_NULL",
+                  "ofType": {
+                    "kind": "OBJECT",
+                    "name": "DownloadUpdate"
+                  }
+                }
               }
             },
             "args": [],
@@ -8121,6 +8272,10 @@ const introspection = {
           {
             "kind": "OBJECT",
             "name": "DownloadType"
+          },
+          {
+            "kind": "OBJECT",
+            "name": "DownloadUpdate"
           },
           {
             "kind": "OBJECT",
@@ -13450,6 +13605,29 @@ const introspection = {
               }
             },
             "args": [],
+            "isDeprecated": true
+          },
+          {
+            "name": "downloadStatusChanged",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "OBJECT",
+                "name": "DownloadUpdates"
+              }
+            },
+            "args": [
+              {
+                "name": "input",
+                "type": {
+                  "kind": "NON_NULL",
+                  "ofType": {
+                    "kind": "INPUT_OBJECT",
+                    "name": "DownloadChangedInput"
+                  }
+                }
+              }
+            ],
             "isDeprecated": false
           },
           {

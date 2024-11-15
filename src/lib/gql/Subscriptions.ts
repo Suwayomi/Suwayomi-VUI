@@ -6,28 +6,6 @@
 
 import { graphql } from './graphql';
 
-export const downloadChanged = graphql(`
-	subscription downloadChanged {
-		downloadChanged {
-			queue {
-				chapter {
-					name
-					id
-				}
-				manga {
-					title
-					thumbnailUrl
-					id
-				}
-				progress
-				state
-				tries
-			}
-			state
-		}
-	}
-`);
-
 export const downloadsOnChapters = graphql(`
 	subscription downloadsOnChapters {
 		downloadChanged {
@@ -101,6 +79,47 @@ export const updateStatusChanged = graphql(`
 						title
 						thumbnailUrl
 					}
+				}
+			}
+		}
+	}
+`);
+
+export const DownloadChanged = graphql(`
+	subscription MySubscription {
+		downloadStatusChanged(input: {}) {
+			initial {
+				chapter {
+					name
+					id
+				}
+				manga {
+					title
+					thumbnailUrl
+					id
+				}
+				progress
+				state
+				tries
+				position
+			}
+			state
+			updates {
+				type
+				download {
+					chapter {
+						name
+						id
+					}
+					manga {
+						title
+						thumbnailUrl
+						id
+					}
+					progress
+					state
+					tries
+					position
 				}
 			}
 		}
