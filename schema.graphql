@@ -428,6 +428,19 @@ input DoubleFilterInput {
   notIn: [Float!]
 }
 
+input DownloadChangedInput {
+  """
+  Sets a max number of updates that can be contained in a download update
+  message.Everything above this limit will be omitted and the "downloadStatus"
+  should be re-fetched via the corresponding query. Due to the graphql
+  subscription execution strategy not supporting batching for data loaders, the
+  data loaders run into the n+1 problem, which can cause the server to get
+  unresponsive until the status update has been handled. This is an issue e.g.
+  when mass en- or dequeuing downloads.
+  """
+  maxUpdates: Int
+}
+
 type DownloadEdge implements Edge {
   cursor: Cursor!
   node: DownloadType!
@@ -458,11 +471,42 @@ type DownloadStatus {
 }
 
 type DownloadType {
+  position: Int!
   progress: Float!
   state: DownloadState!
   tries: Int!
   chapter: ChapterType!
   manga: MangaType!
+}
+
+type DownloadUpdate {
+  download: DownloadType!
+  type: DownloadUpdateType!
+}
+
+type DownloadUpdates {
+  """
+  The current download queue at the time of sending initial message. Is null for all following messages
+  """
+  initial: [DownloadType!]
+
+  """
+  Indicates whether updates have been omitted based on the "maxUpdates"
+  subscription variable. In case updates have been omitted, the "downloadStatus"
+  query should be re-fetched.
+  """
+  omittedUpdates: Boolean!
+  state: DownloaderState!
+  updates: [DownloadUpdate!]!
+}
+
+enum DownloadUpdateType {
+  QUEUED
+  DEQUEUED
+  PROGRESS
+  FINISHED
+  ERROR
+  POSITION
 }
 
 interface Edge {
@@ -1062,7 +1106,7 @@ type Mutation {
   updateStop(input: UpdateStopInput!): UpdateStopPayload!
 }
 
-union Node = CategoryMetaType | CategoryType | ChapterMetaType | ChapterType | DownloadType | ExtensionType | GlobalMetaType | MangaMetaType | MangaType | PartialSettingsType | SettingsType | SourceMetaType | SourceType | TrackRecordType | TrackerType
+union Node = CategoryMetaType | CategoryType | ChapterMetaType | ChapterType | DownloadType | DownloadUpdate | ExtensionType | GlobalMetaType | MangaMetaType | MangaType | PartialSettingsType | SettingsType | SourceMetaType | SourceType | TrackRecordType | TrackerType
 
 interface NodeList {
   """
@@ -1638,7 +1682,8 @@ input StringFilterInput {
 }
 
 type Subscription {
-  downloadChanged: DownloadStatus!
+  downloadChanged: DownloadStatus! @deprecated(reason: "Replaced width downloadStatusChanged, replace with downloadStatusChanged(input)")
+  downloadStatusChanged(input: DownloadChangedInput!): DownloadUpdates!
   webUIUpdateStatusChange: WebUIUpdateStatus!
   updateStatusChanged: UpdateStatus!
 }

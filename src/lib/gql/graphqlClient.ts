@@ -47,7 +47,7 @@ import type { ResultOf, VariablesOf } from '$lib/gql/graphql';
 import { lastFetched } from '../../../src/routes/(app)/browse/extensions/ExtensionsStores';
 import { introspection } from '../../graphql-env';
 import { gmState } from '$lib/simpleStores.svelte';
-// import type { downloadChanged } from './Subscriptions';
+import type { DownloadChanged } from './Subscriptions';
 
 export const client = new Client({
 	url: '/api/graphql',
@@ -225,11 +225,13 @@ export const client = new Client({
 					}
 				},
 				Subscription: {
-					// downloadChanged(result, _, cache, info) {
-					// 	const res = result as ResultOf<typeof downloadChanged>;
-					// 	const variables = info.variables as VariablesOf<typeof downloadChanged>;
-					// 	downloadChangedUpdater(res, variables, cache);
-					// }
+					downloadStatusChanged(result, _, cache, info) {
+						const res = result as ResultOf<typeof DownloadChanged>;
+						const variables = info.variables as VariablesOf<
+							typeof DownloadChanged
+						>;
+						newDownloadChangedUpdater(res, variables, cache);
+					}
 				}
 			},
 			schema: introspection
@@ -257,6 +259,36 @@ export const client = new Client({
 		})
 	]
 });
+
+function newDownloadChangedUpdater(
+	data: ResultOf<typeof DownloadChanged> | undefined,
+	_vars: VariablesOf<typeof DownloadChanged>,
+	cache: Cache
+) {
+	if (!data?.downloadStatusChanged) return;
+	if (!data.downloadStatusChanged.updates) return;
+
+	data.downloadStatusChanged.updates.forEach((update) => {
+		if (update.download.state !== 'FINISHED') return;
+		const chapter = cache.readFragment(ChapterTypeFragment, {
+			id: update.download.chapter.id
+		} as ResultOf<typeof ChapterTypeFragment>);
+		if (!chapter) return;
+		chapter.isDownloaded = true;
+		cache.writeFragment(ChapterTypeFragment, chapter, {
+			id: update.download.chapter.id
+		});
+
+		const manga = cache.readFragment(MangaTypeFragment, {
+			id: update.download.manga.id
+		} as ResultOf<typeof MangaTypeFragment>);
+		if (!manga) return;
+		manga.downloadCount++;
+		cache.writeFragment(MangaTypeFragment, manga, {
+			id: update.download.manga.id
+		});
+	});
+}
 
 function trackProgressUpdater(
 	data: ResultOf<typeof trackProgress> | undefined,

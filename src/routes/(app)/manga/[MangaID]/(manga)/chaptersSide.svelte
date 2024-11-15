@@ -38,6 +38,7 @@
 	import { filterChapters } from '../util';
 	import { untrack } from 'svelte';
 	import { manga } from './mangaStores.svelte';
+	import { downloadChanged } from '$lib/DownloadChanged.svelte';
 
 	interface Props {
 		MangaID: number;
@@ -49,42 +50,6 @@
 
 	const client = getContextClient();
 	const modalStore = getModalStore();
-	const downloads = subscriptionStore({
-		client,
-		query: downloadsOnChapters
-	});
-
-	let lastDownloads: ResultOf<typeof downloadsOnChapters> | undefined =
-		$state(undefined);
-
-	function checkingNeedRefresh() {
-		let filtered = lastDownloads?.downloadChanged.queue.filter(
-			(e) =>
-				!$downloads?.data?.downloadChanged.queue.find(
-					(ee) => ee.chapter.id === e.chapter.id
-				)
-		);
-		if ((filtered?.length ?? 0) > 2) {
-			client
-				.query(getManga, { id: MangaID }, { requestPolicy: 'network-only' })
-				.toPromise();
-		} else {
-			filtered?.forEach((element) => {
-				const existingDownload = $downloads?.data?.downloadChanged.queue.find(
-					(e) => e.chapter.id === element.chapter.id
-				);
-				if (!existingDownload) {
-					client
-						.query(
-							getSingleChapter,
-							{ id: element.chapter.id },
-							{ requestPolicy: 'network-only' }
-						)
-						.toPromise();
-				}
-			});
-		}
-	}
 
 	function updateSelected() {
 		const _ = [sortedChapters];
@@ -198,12 +163,6 @@
 		});
 	}
 
-	$effect(() => {
-		if ($downloads?.data?.downloadChanged) {
-			untrack(checkingNeedRefresh);
-			lastDownloads = $downloads?.data;
-		}
-	});
 	let chaptersInfo = $derived(manga.value?.data?.manga?.chapters.nodes);
 	let filteredChapters = $derived(
 		chaptersInfo?.filter(filterChapters(mmState))
@@ -483,7 +442,7 @@
 										</div>
 
 										<DownloadProgressRadial
-											download={$downloads?.data?.downloadChanged?.queue.find(
+											download={downloadChanged.store?.find(
 												(e) => e.chapter.id === chapter.id
 											)}
 										/>

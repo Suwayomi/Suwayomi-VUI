@@ -15,22 +15,16 @@
 	import DownloadsActions from './DownloadsActions.svelte';
 	import { filter } from './downloadsStores';
 	import { getContextClient, subscriptionStore } from '@urql/svelte';
-	import { downloadChanged } from '$lib/gql/Subscriptions';
-	import type { ResultOf } from '$lib/gql/graphql';
 	import { dequeueChapterDownloads } from '$lib/gql/Mutations';
+	import { downloadChanged } from '$lib/DownloadChanged.svelte';
 	const client = getContextClient();
-
-	let downloads = subscriptionStore({
-		client,
-		query: downloadChanged
-	});
 
 	AppBarData('Downloads', {
 		component: DownloadsActions,
-		props: { downloads }
+		props: {}
 	});
 
-	type DLS = ResultOf<typeof downloadChanged>['downloadChanged']['queue'][0];
+	type DLS = NonNullable<(typeof downloadChanged)['store']>[number];
 
 	function handelclick(e: MouseEvent, dls: DLS): void {
 		e.preventDefault();
@@ -41,17 +35,15 @@
 	}
 
 	let filteredQueue = $derived(
-		$downloads?.data?.downloadChanged.queue.filter(
-			(dls) => !$filter.has(dls.state)
-		)
+		downloadChanged.store?.filter((dls) => !$filter.has(dls.state))
 	);
 </script>
 
-{#if $downloads.error}
+{#if downloadChanged.error}
 	<div class="white-space-pre-wrap">
-		{JSON.stringify($downloads.error, null, 4)}
+		{JSON.stringify(downloadChanged.error, null, 4)}
 	</div>
-{:else if !$downloads.data}
+{:else if !downloadChanged.store}
 	{#each new Array(15) as _}
 		<div class="h-28">
 			<div

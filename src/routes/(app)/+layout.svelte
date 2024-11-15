@@ -7,6 +7,7 @@
 -->
 <script lang="ts">
 	import { action, title } from '$lib/MountTitleAction';
+	import AppShell from '$lib/components/AppShell.svelte';
 	import MainAppRail from '$lib/components/MainAppRail.svelte';
 	import MediaQuery from '$lib/components/MediaQuery.svelte';
 	import MobileAppNavigation from '$lib/components/MobileAppNavigation.svelte';
@@ -19,8 +20,8 @@
 	let { children }: Props = $props();
 </script>
 
-<div class="grid w-full grid-cols-[auto_1fr]">
-	<header class="sticky top-0 z-50 col-span-full">
+<AppShell slotHeader="">
+	{#snippet header()}
 		<AppBar padding="" slotTrail="h-10 xs:h-14" gap="" slotLead="h-10 xs:h-14">
 			{#snippet lead()}
 				<span
@@ -39,22 +40,18 @@
 				{/if}
 			{/snippet}
 		</AppBar>
-	</header>
-	<MediaQuery query="(max-width: {screens.md})">
-		{#snippet children({ matches })}
-			{#if !matches}
-				<aside
-					class="sticky top-14 z-50 col-span-1 row-start-2 block h-[calc(100vh-3.5rem)]"
-				>
+	{/snippet}
+	{#snippet sidebarLeft()}
+		<MediaQuery query="(max-width: {screens.md})">
+			{#snippet children({ matches })}
+				{#if !matches}
 					<MainAppRail />
-				</aside>
-			{/if}
-		{/snippet}
-	</MediaQuery>
-	<main class="row-start-2 block h-full min-h-[calc(100dvh-3.5rem)]">
-		{@render children?.()}
-	</main>
-	<footer class="sticky bottom-0 z-50 col-span-full row-start-3">
+				{/if}
+			{/snippet}
+		</MediaQuery>
+	{/snippet}
+	{@render children?.()}
+	{#snippet footer()}
 		<MediaQuery query="(max-width: {screens.md})">
 			{#snippet children({ matches })}
 				{#if matches}
@@ -62,5 +59,5 @@
 				{/if}
 			{/snippet}
 		</MediaQuery>
-	</footer>
-</div>
+	{/snippet}
+</AppShell>
