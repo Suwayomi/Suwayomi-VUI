@@ -16,6 +16,7 @@
 	import { sourcesMigration } from '$lib/gql/Queries';
 	import { SourceTypeFragment } from '$lib/gql/Fragments';
 	import { queryState } from '$lib/util.svelte';
+	import { untrack } from 'svelte';
 
 	AppBarData('Migrate');
 	const client = getContextClient();
@@ -37,25 +38,28 @@
 		data: ResultOf<typeof sourcesMigration> | undefined
 	) {
 		if (!data?.sources || !data.mangas) return undefined;
-		const tmpSources: sourceWithMangaCount[] = data.sources.nodes;
-		data.mangas.nodes.forEach((manga) => {
-			const tmp = tmpSources.find((source) => source.id === manga.sourceId);
-			if (!tmp) {
-				tmpSources.push({
-					id: manga.sourceId,
-					displayName: manga.sourceId,
-					iconUrl: '',
-					lang: '',
-					broken: true,
-					mangas: {
-						TotalCount: 1
-					},
-					meta: []
-				});
-				return;
-			}
-			if (tmp.mangas) tmp.mangas.TotalCount += 1;
-			else tmp.mangas = { TotalCount: 1 };
+		const tmpSources = untrack(() => {
+			const tmpSources: sourceWithMangaCount[] = data.sources.nodes;
+			data.mangas.nodes.forEach((manga) => {
+				const tmp = tmpSources.find((source) => source.id === manga.sourceId);
+				if (!tmp) {
+					tmpSources.push({
+						id: manga.sourceId,
+						displayName: manga.sourceId,
+						iconUrl: '',
+						lang: '',
+						broken: true,
+						mangas: {
+							TotalCount: 1
+						},
+						meta: []
+					});
+					return;
+				}
+				if (tmp.mangas) tmp.mangas.TotalCount += 1;
+				else tmp.mangas = { TotalCount: 1 };
+			});
+			return tmpSources;
 		});
 		return tmpSources.filter((e) => e.mangas?.TotalCount);
 	}
