@@ -38,7 +38,6 @@ import type {
 	trackProgress,
 	unbindTrack,
 	updateExtension,
-	updateMangaCategories,
 	updateMangas,
 	updateMangasCategories,
 	updateTrack
@@ -182,13 +181,6 @@ export const client = new Client({
 							typeof deleteMangaMeta
 						>;
 						deleteMangaMetaUpdater(res, variables, cache);
-					},
-					updateMangaCategories(result, _, cache, info) {
-						const res = result as ResultOf<typeof updateMangaCategories>;
-						const variables = info.variables as VariablesOf<
-							typeof updateMangaCategories
-						>;
-						updateMangaCategoriesUpdater(res, variables, cache);
 					},
 					updateMangas(result, _, cache, info) {
 						const res = result as ResultOf<typeof updateMangas>;
@@ -393,126 +385,6 @@ function getSingleChapterUpdater(
 	});
 }
 
-function updateMangaCategoriesUpdater(
-	data: ResultOf<typeof updateMangaCategories> | undefined,
-	vars: VariablesOf<typeof updateMangaCategories>,
-	cache: Cache
-) {
-	if (!data?.updateMangaCategories?.manga.categories.nodes) return;
-	const nodes = data.updateMangaCategories.manga.categories.nodes;
-	// update this mangas categories
-	try {
-		const manga = cache.readFragment(MangaTypeFragment, {
-			id: vars.id
-		} as ResultOf<typeof MangaTypeFragment>);
-		if (!manga) throw new Error('Manga not found in cache');
-		manga.categories.nodes = nodes;
-		cache.writeFragment(MangaTypeFragment, manga, { id: vars.id });
-	} catch {}
-
-	// update the categories in library
-	const dat = cache.readQuery({
-		query: getManga,
-		variables: { id: vars.id }
-	});
-	if (!dat) return;
-	const oldNodes = dat.manga?.categories.nodes;
-	if (!oldNodes) return;
-	try {
-		const currentManga: ResultOf<
-			typeof getCategory
-		>['category']['mangas']['nodes'][0] = {
-			id: vars.id,
-			title: dat.manga.title,
-			inLibrary: dat.manga.inLibrary ?? true,
-			thumbnailUrl: dat.manga.thumbnailUrl,
-			unreadCount: dat.manga.unreadCount ?? 0,
-			downloadCount: dat.manga.downloadCount ?? 0,
-			latestFetchedChapter: dat.manga.latestFetchedChapter,
-			lastReadChapter: dat.manga.lastReadChapter,
-			latestUploadedChapter: dat.manga.latestUploadedChapter,
-			trackRecords: dat.manga.trackRecords,
-			source: dat.manga.source,
-			status: dat.manga.status,
-			genre: dat.manga.genre,
-			description: dat.manga.description,
-			author: dat.manga.author,
-			artist: dat.manga.artist,
-			chapters: dat.manga.chapters ?? {
-				totalCount: 0
-			}
-		};
-		// add to categories that now have it
-		nodes.forEach((newNode) => {
-			if (oldNodes.find((oldNode) => oldNode.id === newNode.id)) return;
-			try {
-				cache.updateQuery(
-					{
-						query: getCategory,
-						variables: { id: newNode.id }
-					},
-					(Category) => {
-						if (!Category) return Category;
-						Category.category.mangas.nodes.push(currentManga);
-						return Category;
-					}
-				);
-			} catch {}
-		});
-		// add to 0 if now in default
-		if (nodes.length === 0 && oldNodes.length > 0) {
-			try {
-				cache.updateQuery(
-					{
-						query: getCategory,
-						variables: { id: 0 }
-					},
-					(Category) => {
-						if (!Category) return Category;
-						Category.category.mangas.nodes.push(currentManga);
-						return Category;
-					}
-				);
-			} catch {}
-		}
-	} catch {}
-	//remove from categories that no longer have it
-	oldNodes.forEach((oldNode) => {
-		if (nodes.find((newNode) => oldNode.id === newNode.id)) return;
-		try {
-			cache.updateQuery(
-				{
-					query: getCategory,
-					variables: { id: oldNode.id }
-				},
-				(Category) => {
-					if (!Category) return Category;
-					Category.category.mangas.nodes =
-						Category.category.mangas.nodes.filter((e) => e.id !== vars.id);
-					return Category;
-				}
-			);
-		} catch {}
-	});
-	// remove from 0 if no longer in default
-	if (oldNodes.length === 0 && nodes.length > 0) {
-		try {
-			cache.updateQuery(
-				{
-					query: getCategory,
-					variables: { id: 0 }
-				},
-				(Category) => {
-					if (!Category) return Category;
-					Category.category.mangas.nodes =
-						Category.category.mangas.nodes.filter((e) => e.id !== vars.id);
-					return Category;
-				}
-			);
-		} catch {}
-	}
-}
-
 function deleteMangaMetaUpdater(
 	data: ResultOf<typeof deleteMangaMeta> | undefined,
 	vars: VariablesOf<typeof deleteMangaMeta>,
@@ -655,33 +527,9 @@ function fetchMangaInfoUpdater(
 ) {
 	if (!data?.fetchManga) return;
 	const fetchManga = data.fetchManga;
-	cache.updateQuery(
-		{
-			query: getManga,
-			variables: {
-				id: vars.id
-			}
-		},
-		(manga) => {
-			if (!manga?.manga)
-				return {
-					manga: {
-						__typename: 'MangaType',
-						chapters: {
-							__typename: 'ChapterNodeList',
-							nodes: [],
-							totalCount: 0
-						},
-						...fetchManga.manga
-					}
-				};
-			manga.manga = {
-				...manga.manga,
-				...fetchManga.manga
-			};
-			return manga;
-		}
-	);
+	cache.writeFragment(MangaTypeFragment, fetchManga.manga, {
+		id: vars.id
+	});
 }
 
 function bindTrackUpdater(
@@ -800,99 +648,83 @@ function updateMangasCategoriesUpdater(
 ) {
 	if (!variables.addTo || !data?.updateMangasCategories) return;
 	const mangaIds = data.updateMangasCategories.mangas.map((manga) => manga.id);
-	const defaultCategory = variables.addTo?.length === 0 ? [0] : variables.addTo;
 	mangaIds.forEach((id) => {
-		try {
-			const oldData = cache.readQuery({
-				query: getManga,
-				variables: { id }
-			});
-			if (!oldData) throw new Error();
-			const manga = oldData.manga;
-			manga.categories.nodes =
-				variables.addTo?.map((categoryId) => ({
+		cache.updateQuery({ query: getManga, variables: { id } }, (manga) => {
+			if (!manga) return manga;
+			manga.manga.categories.nodes = manga.manga.categories.nodes.filter(
+				(ee) => !variables.removeFrom?.includes(ee.id)
+			);
+			variables.addTo?.forEach((categoryId) => {
+				if (manga.manga.categories.nodes.find((ee) => ee.id === categoryId))
+					return;
+				manga.manga.categories.nodes.push({
 					id: categoryId
-				})) ?? manga.categories.nodes;
-			cache.writeFragment(MangaTypeFragment, manga, {
-				id: manga.id
+				});
 			});
-		} catch {}
+			return manga;
+		});
 	});
-
-	const currentCategoryId = parseInt(
-		new URLSearchParams(window.location.search).get('tab') ?? '0'
-	);
-	const currentCategoryData = cache.readQuery({
-		query: getCategory,
-		variables: { id: currentCategoryId }
-	});
-	if (!currentCategoryData) return;
-	const mangas = currentCategoryData.category.mangas.nodes.filter((manga) =>
-		mangaIds.includes(manga.id)
-	);
 
 	const categories = cache.readQuery({
 		query: getCategories
 	});
-	categories?.categories.nodes.forEach((frag) => {
-		const category = frag;
-		try {
-			const oldCategoryData = cache.readQuery({
-				query: getCategory,
-				variables: { id: category.id }
-			});
-			if (!oldCategoryData) return;
-			if (defaultCategory.includes(category.id)) {
-				const mangasToAdd: ResultOf<
-					typeof getCategory
-				>['category']['mangas']['nodes'] = [];
-				mangas.forEach((manga) => {
-					if (
-						!oldCategoryData.category.mangas.nodes.find(
-							(m) => m.id === manga.id
-						)
-					) {
-						mangasToAdd.push(manga);
-					}
-				});
-				oldCategoryData.category.mangas.nodes.push(...mangasToAdd);
-			} else {
-				oldCategoryData.category.mangas.nodes =
-					oldCategoryData.category.mangas.nodes.filter(
-						(m) => !mangaIds.includes(m.id)
-					);
+	if (!categories) return;
+	categories.categories.nodes.forEach((category) => {
+		const mangas = variables.id
+			.map((id) => {
+				const manga = cache.readFragment(MangaTypeFragment, {
+					id
+				} as ResultOf<typeof MangaTypeFragment>);
+				return manga;
+			})
+			.filter((manga) => manga !== null);
+
+		mangas.forEach((manga) => {
+			const addto = variables.addTo ?? [];
+
+			if (manga.categories.nodes.length === 0) {
+				addto.push(0);
 			}
-			cache.updateQuery(
-				{
-					query: getCategory,
-					variables: { id: category.id }
-				},
-				(oldCategoryData) => {
-					if (!oldCategoryData) return oldCategoryData;
-					if (defaultCategory.includes(category.id)) {
-						const mangasToAdd: ResultOf<
-							typeof getCategory
-						>['category']['mangas']['nodes'] = [];
-						mangas.forEach((manga) => {
-							if (
-								!oldCategoryData.category.mangas.nodes.find(
-									(m) => m.id === manga.id
-								)
-							) {
-								mangasToAdd.push(manga);
-							}
-						});
-						oldCategoryData.category.mangas.nodes.push(...mangasToAdd);
-					} else {
-						oldCategoryData.category.mangas.nodes =
-							oldCategoryData.category.mangas.nodes.filter(
-								(m) => !mangaIds.includes(m.id)
-							);
+
+			addto.forEach((cat) => {
+				cache.updateQuery(
+					{
+						query: getCategory,
+						variables: { id: cat }
+					},
+					(data) => {
+						if (!data) return data;
+						data.category.mangas.nodes = data.category.mangas.nodes.filter(
+							(e) => e.id !== manga.id
+						);
+						data.category.mangas.nodes.push(manga);
+						return data;
 					}
-					return oldCategoryData;
-				}
-			);
-		} catch {}
+				);
+			});
+
+			if (
+				variables.removeFrom?.includes(category.id) ||
+				(category.id === 0 && manga.categories.nodes.length !== 0) ||
+				(variables.clear &&
+					(!manga.categories.nodes.find((e) => e.id === category.id) ||
+						(manga.categories.nodes.length === 0 && category.id === 0)))
+			) {
+				cache.updateQuery(
+					{
+						query: getCategory,
+						variables: { id: category.id }
+					},
+					(data) => {
+						if (!data) return data;
+						data.category.mangas.nodes = data.category.mangas.nodes.filter(
+							(e) => e.id !== manga.id
+						);
+						return data;
+					}
+				);
+			}
+		});
 	});
 }
 

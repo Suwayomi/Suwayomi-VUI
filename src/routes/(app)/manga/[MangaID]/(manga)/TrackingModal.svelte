@@ -46,8 +46,6 @@
 		requestPolicy: 'network-only'
 	});
 
-	$inspect(Trackers.value);
-
 	$effect(() => {
 		manga.value?.data?.manga?.trackRecords.nodes.forEach((e) => {
 			mutationStore({

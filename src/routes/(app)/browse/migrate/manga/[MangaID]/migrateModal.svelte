@@ -16,8 +16,8 @@
 		fetchChaptersMigration,
 		unbindTrack,
 		updateChapters,
-		updateMangaCategories,
-		updateMangas
+		updateMangas,
+		updateMangasCategories
 	} from '$lib/gql/Mutations';
 	import { getManga } from '$lib/gql/Queries';
 	import { ProgressRadial, getModalStore } from '@skeletonlabs/skeleton';
@@ -154,8 +154,8 @@
 
 	async function CopyMangaCategories() {
 		const categories = manga.categories.nodes.map((ele) => ele.id);
-		await client.mutation(updateMangaCategories, {
-			id: id,
+		await client.mutation(updateMangasCategories, {
+			id: [id],
 			addTo: categories,
 			clear: true
 		});

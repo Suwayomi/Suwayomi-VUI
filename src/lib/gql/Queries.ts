@@ -11,8 +11,7 @@ import {
 	MangaTypeFragment,
 	PreferenceFragment,
 	SourceTypeFragment,
-	TrackerTypeFragment,
-	TrackRecordTypeFragment
+	TrackerTypeFragment
 } from './Fragments';
 import { graphql } from './graphql';
 
@@ -36,47 +35,13 @@ export const getCategory = graphql(
 				id
 				mangas {
 					nodes {
-						id
-						title
-						inLibrary
-						thumbnailUrl
-						unreadCount
-						downloadCount
-						latestFetchedChapter {
-							fetchedAt
-							id
-						}
-						latestUploadedChapter {
-							uploadDate
-							id
-						}
-						lastReadChapter {
-							lastReadAt
-							id
-						}
-						chapters {
-							totalCount
-						}
-						artist
-						author
-						description
-						genre
-						status
-						source {
-							displayName
-							id
-						}
-						trackRecords {
-							nodes {
-								...TrackRecordTypeFragment
-							}
-						}
+						...MangaTypeFragment
 					}
 				}
 			}
 		}
 	`,
-	[TrackRecordTypeFragment]
+	[MangaTypeFragment]
 );
 
 export const getManga = graphql(

@@ -21,7 +21,7 @@
 		height?: CssClasses;
 		ring?: CssClasses;
 		rounded?: CssClasses;
-		class?: CssClasses;
+		[key: string]: unknown;
 	}
 
 	let {
@@ -29,11 +29,11 @@
 		bgDark = 'bg-surface-900',
 		fillLight = 'fill-surface-50',
 		fillDark = 'fill-surface-900',
-		width = 'w-12',
-		height = 'h-6',
+		width = 'w-16',
+		height = 'h-8',
 		ring = 'ring-[1px] ring-surface-500/30',
 		rounded = 'rounded-token',
-		class: className
+		...rest
 	}: Props = $props();
 
 	const cTransition = `transition-all duration-[200ms]`;
@@ -49,7 +49,7 @@
 	let thumbPosition = $derived(!gmState.value.dark ? 'translate-x-[100%]' : '');
 	// Reactive
 	let classesTrack = $derived(
-		`cursor-pointer ${cTransition} ${width} ${height} ${ring} ${rounded} ${trackBg} ${className ?? ''}`
+		`cursor-pointer ${cTransition} ${width} ${height} ${ring} ${rounded} ${trackBg} ${rest.class ?? ''}`
 	);
 	let classesThumb = $derived(
 		`aspect-square scale-[0.8] flex justify-center items-center ${cTransition} ${height} ${rounded} ${thumbBg} ${thumbPosition}`

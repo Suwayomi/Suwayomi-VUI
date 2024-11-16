@@ -106,7 +106,7 @@
 >
 	<IconWrapper class="h-full w-auto p-2" name="mdi:theme-light-dark" />
 	<div class="w-full">Dark mode</div>
-	<Lightswitch width="w-16" height="h-8" class="mr-1" />
+	<Lightswitch class="flex-shrink-0 " />
 </button>
 <label
 	class="flex h-16 w-full cursor-pointer items-center text-left hover:variant-glass-surface"
@@ -129,7 +129,7 @@
 	<div class="w-full">Show Nsfw</div>
 	<Slide
 		bind:checked={gmState.value.nsfw}
-		class="p-1 pl-2 hover:variant-glass-surface focus:outline-0"
+		class="p-1 hover:variant-glass-surface focus:outline-0"
 	/>
 </button>
 <button
