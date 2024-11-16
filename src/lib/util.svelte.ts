@@ -38,6 +38,15 @@ export type OperationResultF<
 	fetching: boolean;
 };
 
+export function getObjectEntries<T extends object>(
+	obj: T
+): [string, T[keyof T]][] {
+	return Object.entries(obj) as [string, T[keyof T]][];
+}
+export function getObjectKeys<T extends object>(obj: T): (keyof T)[] {
+	return Object.keys(obj) as (keyof T)[];
+}
+
 export function HelpDoSelect<T extends { id: number }>(
 	update: T,
 	e: MouseEvent & { currentTarget: EventTarget & HTMLAnchorElement },

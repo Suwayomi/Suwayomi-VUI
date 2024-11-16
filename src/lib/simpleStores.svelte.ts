@@ -24,16 +24,9 @@ import {
 import { getManga, metas } from './gql/Queries';
 import { client } from './gql/graphqlClient';
 import type { presetConst } from './presets';
-import type { TriState } from './util.svelte';
+import { getObjectKeys, type TriState } from './util.svelte';
 import { browser } from '$app/environment';
 import { untrack } from 'svelte';
-
-// function getObjectEntries<T extends object>(obj: T): [keyof T, T[keyof T]][] {
-// 	return Object.entries(obj) as [keyof T, T[keyof T]][];
-// }
-function getObjectKeys<T extends object>(obj: T): (keyof T)[] {
-	return Object.keys(obj) as (keyof T)[];
-}
 
 export const toastStore = writable<ToastStore | null>(null);
 

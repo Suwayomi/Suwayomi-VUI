@@ -61,6 +61,9 @@ export const MangaTypeFragment = graphql(
 				fetchedAt
 				id
 			}
+			chapters {
+				totalCount
+			}
 			latestUploadedChapter {
 				uploadDate
 				id

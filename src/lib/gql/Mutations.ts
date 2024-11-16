@@ -485,41 +485,19 @@ export const updateMangasCategories = graphql(
 			$addTo: [Int!] = null
 			$clear: Boolean = null
 			$id: [Int!]!
+			$removeFrom: [Int!] = null
 		) {
 			updateMangasCategories(
 				input: {
 					ids: $id
-					patch: { addToCategories: $addTo, clearCategories: $clear }
+					patch: {
+						addToCategories: $addTo
+						clearCategories: $clear
+						removeFromCategories: $removeFrom
+					}
 				}
 			) {
 				mangas {
-					id
-					categories {
-						nodes {
-							id
-						}
-					}
-				}
-			}
-		}
-	`,
-	[]
-);
-
-export const updateMangaCategories = graphql(
-	`
-		mutation updateMangaCategories(
-			$addTo: [Int!] = null
-			$clear: Boolean = null
-			$id: Int!
-		) {
-			updateMangaCategories(
-				input: {
-					id: $id
-					patch: { addToCategories: $addTo, clearCategories: $clear }
-				}
-			) {
-				manga {
 					id
 					categories {
 						nodes {

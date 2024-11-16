@@ -8,36 +8,53 @@
 
 <script lang="ts">
 	import TriStateSlide from '$lib/components/TriStateSlide.svelte';
-	import { ErrorHelp, queryState } from '$lib/util.svelte';
+	import {
+		ErrorHelp,
+		getObjectEntries,
+		queryState,
+		type TriState
+	} from '$lib/util.svelte';
 	import { getModalStore } from '@skeletonlabs/skeleton';
 	import { selected } from './LibraryStores';
 	import { getContextClient } from '@urql/svelte';
 	import { updateMangasCategories } from '$lib/gql/Mutations';
 	import { getCategories } from '$lib/gql/Queries';
-	import { type ResultOf } from '$lib/gql/graphql';
-	import { CategoryTypeFragment } from '$lib/gql/Fragments';
 	import ModalTemplate from '$lib/components/ModalTemplate.svelte';
 	const client = getContextClient();
 	const modalStore = getModalStore();
-
-	let selectedCategories: number[] = [];
 
 	const categories = queryState({
 		client,
 		query: getCategories
 	});
 
-	function handelClicked(
-		category: ResultOf<typeof CategoryTypeFragment>,
-		e: boolean
-	) {
-		if (e) {
-			selectedCategories.push(category.id);
-			return;
-		}
-		selectedCategories = selectedCategories.filter(
-			(ele) => ele !== category.id
-		);
+	const CategoriesState: Record<number, TriState | undefined> = $state({});
+
+	$effect(() => {
+		categories.value.data?.categories.nodes.forEach((e) => {
+			CategoriesState[e.id] = 0;
+		});
+	});
+
+	function addRemove() {
+		const addTo: number[] = [];
+		const removeFrom: number[] = [];
+		getObjectEntries(CategoriesState).forEach(([id, value]) => {
+			switch (value) {
+				case 1:
+					addTo.push(Number(id));
+					break;
+				case 2:
+					removeFrom.push(Number(id));
+					break;
+				default:
+					break;
+			}
+		});
+		return {
+			addTo,
+			removeFrom
+		};
 	}
 
 	async function handelSubmit() {
@@ -50,8 +67,7 @@
 					updateMangasCategories,
 					{
 						id,
-						addTo: selectedCategories,
-						clear: true
+						...addRemove()
 					},
 					undefined
 				)
@@ -73,18 +89,14 @@
 						4
 					)}
 				</div>
-			{:else if categories.value.data}
+			{:else if categories.value.data && Object.keys(CategoriesState).length}
 				{@const nodes = categories.value.data.categories.nodes}
 				{#each nodes
 					.filter((e) => e.id !== 0)
 					.sort((a, b) => (a.order > b.order ? 1 : -1)) as category}
 					<div>
 						<TriStateSlide
-							triState={false}
-							checked={false}
-							onchange={(e) => {
-								handelClicked(category, e);
-							}}
+							bind:state={CategoriesState[category.id]}
 							class="w-full p-1 pl-2 hover:variant-glass-surface focus:outline-0"
 							labelClass="w-full"
 						>
