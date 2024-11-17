@@ -75,9 +75,9 @@ export enum display {
 
 // do not make a key named "id" it will break the state
 const mangaMetaDefaults = {
-	ChapterUnread: 0 as TriState,
-	ChapterDownloaded: 0 as TriState,
-	ChapterBookmarked: 0 as TriState,
+	ChapterUnread: 'intermediate' as TriState,
+	ChapterDownloaded: 'intermediate' as TriState,
+	ChapterBookmarked: 'intermediate' as TriState,
 	ChapterSort: ChapterSort.Source,
 	ChapterAsc: false,
 	ChapterFetchUpload: false,
@@ -104,9 +104,9 @@ const trueDefaults = {
 	Display: display.Compact,
 	Sort: sort.ID,
 	Asc: true,
-	Unread: 0 as TriState,
-	Downloaded: 0 as TriState,
-	Tracked: 0 as TriState,
+	Unread: 'intermediate' as TriState,
+	Downloaded: 'intermediate' as TriState,
+	Tracked: 'intermediate' as TriState,
 	mangaMetaDefaults,
 	downloadsBadge: true,
 	unreadBadge: true,
@@ -158,6 +158,18 @@ function localStore<T>(key: string, value: T) {
 	return new LocalStore(key, value);
 }
 
+function convertOldTriState(value: unknown): TriState {
+	switch (value) {
+		case 0:
+			return 'intermediate';
+		case 1:
+			return 'on';
+		case 2:
+			return 'off';
+	}
+	return value as TriState;
+}
+
 class GMState {
 	private store = localStore<typeof trueDefaults>('GlobalMeta', trueDefaults);
 	private runningMutations = false;
@@ -184,6 +196,7 @@ class GMState {
 
 			this.unSub = Meta.subscribe((queryResult) => {
 				this.store.value = this.extractGlobalMeta(queryResult);
+				this.fixOldTriStates();
 				if (queryResult.fetching) return;
 				this.unSub();
 			});
@@ -216,6 +229,47 @@ class GMState {
 				this.startRunMutations();
 			});
 		});
+	}
+
+	private fixOldTriStates() {
+		if ([0, 1, 2].includes(this.store.value.Tracked as unknown as number))
+			this.store.value.Tracked = convertOldTriState(
+				this.store.value.Tracked as unknown
+			);
+		if ([0, 1, 2].includes(this.store.value.Unread as unknown as number))
+			this.store.value.Tracked = convertOldTriState(
+				this.store.value.Tracked as unknown
+			);
+		if ([0, 1, 2].includes(this.store.value.Downloaded as unknown as number))
+			this.store.value.Tracked = convertOldTriState(
+				this.store.value.Tracked as unknown
+			);
+		if (
+			[0, 1, 2].includes(
+				this.store.value.mangaMetaDefaults
+					.ChapterBookmarked as unknown as number
+			)
+		)
+			this.store.value.mangaMetaDefaults.ChapterBookmarked = convertOldTriState(
+				this.store.value.mangaMetaDefaults.ChapterBookmarked as unknown
+			);
+		if (
+			[0, 1, 2].includes(
+				this.store.value.mangaMetaDefaults
+					.ChapterDownloaded as unknown as number
+			)
+		)
+			this.store.value.mangaMetaDefaults.ChapterDownloaded = convertOldTriState(
+				this.store.value.mangaMetaDefaults.ChapterDownloaded as unknown
+			);
+		if (
+			[0, 1, 2].includes(
+				this.store.value.mangaMetaDefaults.ChapterUnread as unknown as number
+			)
+		)
+			this.store.value.mangaMetaDefaults.ChapterUnread = convertOldTriState(
+				this.store.value.mangaMetaDefaults.ChapterUnread as unknown
+			);
 	}
 
 	private async startRunMutations() {

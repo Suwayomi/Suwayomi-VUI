@@ -13,6 +13,10 @@ export default {
 		join(
 			require.resolve('@skeletonlabs/skeleton'),
 			'../**/*.{html,js,svelte,ts}'
+		),
+		join(
+			require.resolve('svelte-skeleton-three-state-switch'),
+			'../**/*.{html,js,svelte,ts}'
 		)
 	],
 	theme: {

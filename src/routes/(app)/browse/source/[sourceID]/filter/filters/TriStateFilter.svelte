@@ -7,12 +7,12 @@
 -->
 
 <script lang="ts">
-	import TriStateSlide from '$lib/components/TriStateSlide.svelte';
 	import type { TriState } from '$lib/util.svelte';
 	import type { getSource } from '$lib/gql/Queries';
 	import type { ResultOf, VariablesOf } from '$lib/gql/graphql';
 	import type { fetchSourceManga } from '$lib/gql/Mutations';
 	import { untrack } from 'svelte';
+	import ThreeStateSwitchCustom from '$lib/components/ThreeStateSwitchCustom.svelte';
 
 	interface Props {
 		filter: Extract<
@@ -39,22 +39,22 @@
 	): unknown {
 		switch (tri) {
 			case 'IGNORE':
-				return 0;
+				return 'intermediate';
 			case 'EXCLUDE':
-				return 2;
+				return 'off';
 			case 'INCLUDE':
-				return 1;
+				return '1on';
 		}
 		return undefined;
 	}
 
 	function OneTwoThreetoTri(tri: TriState) {
 		switch (tri) {
-			case 0:
+			case 'intermediate':
 				return 'IGNORE';
-			case 2:
+			case 'off':
 				return 'EXCLUDE';
-			case 1:
+			case 'on':
 				return 'INCLUDE';
 		}
 	}
@@ -76,10 +76,10 @@
 	});
 </script>
 
-<TriStateSlide
+<ThreeStateSwitchCustom
 	bind:state
 	class="my-1 w-full p-1 pl-1 hover:variant-glass-surface"
 	labelClass="w-full ml-1"
 >
 	{filter.name}
-</TriStateSlide>
+</ThreeStateSwitchCustom>
