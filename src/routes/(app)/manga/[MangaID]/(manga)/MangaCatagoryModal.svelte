@@ -7,7 +7,7 @@
 -->
 
 <script lang="ts">
-	import TriStateSlide from '$lib/components/TriStateSlide.svelte';
+	import Switch from '$lib/components/switch.svelte';
 	import { CategoryTypeFragment } from '$lib/gql/Fragments';
 	import { updateMangasCategories } from '$lib/gql/Mutations';
 	import { getCategories as GetCategories } from '$lib/gql/Queries';
@@ -70,7 +70,7 @@
 	<ModalTemplate titleText="Set categories">
 		{#snippet children()}
 			{#each categories as Category}
-				<TriStateSlide
+				<Switch
 					triState={false}
 					checked={MangaCategories.includes(Category.id)}
 					onchange={(e) => {
@@ -80,7 +80,7 @@
 					labelClass="w-full"
 				>
 					{Category.name}
-				</TriStateSlide>
+				</Switch>
 			{/each}
 		{/snippet}
 		{#snippet footer()}

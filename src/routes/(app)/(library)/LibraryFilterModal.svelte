@@ -7,7 +7,7 @@
 -->
 
 <script lang="ts">
-	import TriStateSlide from '$lib/components/TriStateSlide.svelte';
+	import Switch from '$lib/components/switch.svelte';
 	import IconWrapper from '$lib/components/IconWrapper.svelte';
 	import {
 		RadioGroup,
@@ -21,6 +21,7 @@
 
 	import { enumKeys } from '$lib/util.svelte';
 	import Slide from '$lib/components/Slide.svelte';
+	import ThreeStateSwitchCustom from '$lib/components/ThreeStateSwitchCustom.svelte';
 	const modalStore = getModalStore();
 	let tabSet = localStorageStore('libraryModalTabs', 0);
 </script>
@@ -78,32 +79,32 @@
 			<svelte:fragment slot="panel">
 				<div class="mx-4 mb-4">
 					{#if $tabSet === 0}
-						<TriStateSlide
+						<ThreeStateSwitchCustom
 							bind:state={gmState.value.Unread}
 							label={'Unread'}
 							class="w-full p-1 pl-2 hover:variant-glass-surface focus:outline-0"
-							labelClass="w-full"
+							labelClass="w-full flex-1"
 						>
 							<span>Unread</span>
-						</TriStateSlide>
-						<TriStateSlide
+						</ThreeStateSwitchCustom>
+						<ThreeStateSwitchCustom
 							bind:state={gmState.value.Downloaded}
 							label={'Downloaded'}
 							class="w-full p-1 pl-2 hover:variant-glass-surface focus:outline-0"
 							labelClass="w-full"
 						>
 							<span>Downloaded</span>
-						</TriStateSlide>
-						<TriStateSlide
+						</ThreeStateSwitchCustom>
+						<ThreeStateSwitchCustom
 							bind:state={gmState.value.Tracked}
 							label={'Tracked'}
 							class="w-full p-1 pl-2 hover:variant-glass-surface focus:outline-0"
 							labelClass="w-full"
 						>
 							<span>Tracked</span>
-						</TriStateSlide>
+						</ThreeStateSwitchCustom>
 					{:else if $tabSet === 1}
-						<TriStateSlide
+						<Switch
 							triState={false}
 							bind:checked={gmState.value.Asc}
 							label={'Ascending'}
@@ -111,7 +112,7 @@
 							labelClass="w-full"
 						>
 							<span>Ascending</span>
-						</TriStateSlide>
+						</Switch>
 						<RadioGroup
 							rounded="rounded-container-token"
 							background="bg-transparent"

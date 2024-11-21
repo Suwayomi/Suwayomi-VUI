@@ -29,7 +29,7 @@ import {
 } from '@urql/svelte';
 import { introspection } from '../graphql-env';
 
-export type TriState = 0 | 1 | 2;
+export type TriState = 'on' | 'off' | 'intermediate';
 export type OperationResultF<
 	/* eslint-disable-next-line  @typescript-eslint/no-explicit-any */
 	Data = any,

@@ -8,7 +8,7 @@
 
 <script lang="ts">
 	import IconWrapper from '$lib/components/IconWrapper.svelte';
-	import TriStateSlide from '$lib/components/TriStateSlide.svelte';
+	import Switch from '$lib/components/switch.svelte';
 	import {
 		RadioGroup,
 		RadioItem,
@@ -21,6 +21,7 @@
 	import { ChapterSort, ChapterTitle, mmState } from '$lib/simpleStores.svelte';
 	import { enumKeys } from '$lib/util.svelte';
 	import Tooltip from '$lib/components/Tooltip.svelte';
+	import ThreeStateSwitchCustom from '$lib/components/ThreeStateSwitchCustom.svelte';
 	const modalStore = getModalStore();
 	let tabSet = localStorageStore('libraryModalTabs', 0);
 	interface Props {
@@ -84,30 +85,30 @@
 			<svelte:fragment slot="panel">
 				<div class="mx-4 mb-4">
 					{#if $tabSet === 0}
-						<TriStateSlide
+						<ThreeStateSwitchCustom
 							bind:state={mmState.value.ChapterUnread}
 							label={'Unread'}
 							class="w-full p-1 pl-2 hover:variant-glass-surface focus:outline-0"
 							labelClass="w-full"
 						>
 							<span>Unread</span>
-						</TriStateSlide>
-						<TriStateSlide
+						</ThreeStateSwitchCustom>
+						<ThreeStateSwitchCustom
 							bind:state={mmState.value.ChapterDownloaded}
 							label={'Downloaded'}
 							class="w-full p-1 pl-2 hover:variant-glass-surface focus:outline-0"
 							labelClass="w-full"
 						>
 							<span>Downloaded</span>
-						</TriStateSlide>
-						<TriStateSlide
+						</ThreeStateSwitchCustom>
+						<ThreeStateSwitchCustom
 							bind:state={mmState.value.ChapterBookmarked}
 							label={'Downloaded'}
 							class="w-full p-1 pl-2 hover:variant-glass-surface focus:outline-0"
 							labelClass="w-full"
 						>
 							<span>Bookmarked</span>
-						</TriStateSlide>
+						</ThreeStateSwitchCustom>
 						<Tooltip tip="Comma seperated list">
 							<label
 								class="label flex w-full items-center justify-between rounded-full p-1 pl-2 hover:variant-glass-surface focus:outline-0"
@@ -130,7 +131,7 @@
 							</label>
 						</Tooltip>
 					{:else if $tabSet === 1}
-						<TriStateSlide
+						<Switch
 							triState={false}
 							bind:checked={mmState.value.ChapterAsc}
 							label={'Ascending'}
@@ -138,7 +139,7 @@
 							labelClass="w-full"
 						>
 							<span>Ascending</span>
-						</TriStateSlide>
+						</Switch>
 						<RadioGroup
 							rounded="rounded-container-token"
 							background="bg-transparent"

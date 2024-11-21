@@ -16,9 +16,10 @@
 	import { ChapterSort, ChapterTitle, gmState } from '$lib/simpleStores.svelte';
 
 	import { enumKeys } from '$lib/util.svelte';
-	import TriStateSlide from '$lib/components/TriStateSlide.svelte';
+	import Switch from '$lib/components/switch.svelte';
 	import ModalTemplate from '$lib/components/ModalTemplate.svelte';
 	import Slide from '$lib/components/Slide.svelte';
+	import ThreeStateSwitchCustom from '$lib/components/ThreeStateSwitchCustom.svelte';
 	const modalStore = getModalStore();
 </script>
 
@@ -44,32 +45,32 @@
 			Remove chapters from download queue when remove manga from library
 		</Slide>
 		<h2 class="h4 mb-1 border-b border-surface-700">Filters</h2>
-		<TriStateSlide
+		<ThreeStateSwitchCustom
 			bind:state={gmState.value.mangaMetaDefaults.ChapterUnread}
 			label={'Unread'}
 			class="w-full p-1 pl-2 hover:variant-glass-surface focus:outline-0"
 			labelClass="w-full"
 		>
 			<span>Unread</span>
-		</TriStateSlide>
-		<TriStateSlide
+		</ThreeStateSwitchCustom>
+		<ThreeStateSwitchCustom
 			bind:state={gmState.value.mangaMetaDefaults.ChapterDownloaded}
 			label={'Downloaded'}
 			class="w-full p-1 pl-2 hover:variant-glass-surface focus:outline-0"
 			labelClass="w-full"
 		>
 			<span>Downloaded</span>
-		</TriStateSlide>
-		<TriStateSlide
+		</ThreeStateSwitchCustom>
+		<ThreeStateSwitchCustom
 			bind:state={gmState.value.mangaMetaDefaults.ChapterBookmarked}
 			label={'Downloaded'}
 			class="w-full p-1 pl-2 hover:variant-glass-surface focus:outline-0"
 			labelClass="w-full"
 		>
 			<span>Bookmarked</span>
-		</TriStateSlide>
+		</ThreeStateSwitchCustom>
 		<h2 class="h4 mb-1 border-b border-surface-700">Sort</h2>
-		<TriStateSlide
+		<Switch
 			triState={false}
 			bind:checked={gmState.value.mangaMetaDefaults.ChapterAsc}
 			label={'Ascending'}
@@ -77,7 +78,7 @@
 			labelClass="w-full"
 		>
 			<span>Ascending</span>
-		</TriStateSlide>
+		</Switch>
 		<RadioGroup
 			rounded="rounded-container-token"
 			background="bg-transparent"

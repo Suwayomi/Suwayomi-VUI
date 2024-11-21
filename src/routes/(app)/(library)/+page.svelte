@@ -269,17 +269,20 @@
 				}
 			}
 
-			if (gmState.value.Downloaded === 1 && ele.downloadCount === 0)
+			if (gmState.value.Downloaded === 'on' && ele.downloadCount === 0)
 				return false;
-			if (gmState.value.Downloaded === 2 && ele.downloadCount !== 0)
+			if (gmState.value.Downloaded === 'off' && ele.downloadCount !== 0)
 				return false;
 
-			if (gmState.value.Unread === 1 && ele.unreadCount === 0) return false;
-			if (gmState.value.Unread === 2 && ele.unreadCount !== 0) return false;
+			if (gmState.value.Unread === 'on' && ele.unreadCount === 0) return false;
+			if (gmState.value.Unread === 'off' && ele.unreadCount !== 0) return false;
 
-			if (gmState.value.Tracked === 1 && ele.trackRecords.nodes.length === 0)
+			if (gmState.value.Tracked === 'on' && ele.trackRecords.nodes.length === 0)
 				return false;
-			if (gmState.value.Tracked === 2 && ele.trackRecords.nodes.length !== 0)
+			if (
+				gmState.value.Tracked === 'off' &&
+				ele.trackRecords.nodes.length !== 0
+			)
 				return false;
 
 			if (

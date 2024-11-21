@@ -26,17 +26,19 @@ export function filterChapters(mangaMeta: typeof mmState, reading = false) {
 			}
 		}
 		if (!reading) {
-			if (mangaMeta.value.ChapterUnread === 1 && chapter.isRead) return false;
-			if (mangaMeta.value.ChapterUnread === 2 && !chapter.isRead) return false;
-
-			if (mangaMeta.value.ChapterDownloaded === 1 && !chapter.isDownloaded)
+			if (mangaMeta.value.ChapterUnread === 'on' && chapter.isRead)
 				return false;
-			if (mangaMeta.value.ChapterDownloaded === 2 && chapter.isDownloaded)
+			if (mangaMeta.value.ChapterUnread === 'off' && !chapter.isRead)
 				return false;
 
-			if (mangaMeta.value.ChapterBookmarked === 1 && !chapter.isBookmarked)
+			if (mangaMeta.value.ChapterDownloaded === 'on' && !chapter.isDownloaded)
 				return false;
-			if (mangaMeta.value.ChapterBookmarked === 2 && chapter.isBookmarked)
+			if (mangaMeta.value.ChapterDownloaded === 'off' && chapter.isDownloaded)
+				return false;
+
+			if (mangaMeta.value.ChapterBookmarked === 'on' && !chapter.isBookmarked)
+				return false;
+			if (mangaMeta.value.ChapterBookmarked === 'off' && chapter.isBookmarked)
 				return false;
 		}
 		return true;

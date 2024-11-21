@@ -7,7 +7,6 @@
 -->
 
 <script lang="ts">
-	import TriStateSlide from '$lib/components/TriStateSlide.svelte';
 	import {
 		ErrorHelp,
 		getObjectEntries,
@@ -20,6 +19,7 @@
 	import { updateMangasCategories } from '$lib/gql/Mutations';
 	import { getCategories } from '$lib/gql/Queries';
 	import ModalTemplate from '$lib/components/ModalTemplate.svelte';
+	import ThreeStateSwitchCustom from '$lib/components/ThreeStateSwitchCustom.svelte';
 	const client = getContextClient();
 	const modalStore = getModalStore();
 
@@ -32,7 +32,7 @@
 
 	$effect(() => {
 		categories.value.data?.categories.nodes.forEach((e) => {
-			CategoriesState[e.id] = 0;
+			CategoriesState[e.id] = 'intermediate';
 		});
 	});
 
@@ -41,10 +41,10 @@
 		const removeFrom: number[] = [];
 		getObjectEntries(CategoriesState).forEach(([id, value]) => {
 			switch (value) {
-				case 1:
+				case 'on':
 					addTo.push(Number(id));
 					break;
-				case 2:
+				case 'off':
 					removeFrom.push(Number(id));
 					break;
 				default:
@@ -95,13 +95,13 @@
 					.filter((e) => e.id !== 0)
 					.sort((a, b) => (a.order > b.order ? 1 : -1)) as category}
 					<div>
-						<TriStateSlide
+						<ThreeStateSwitchCustom
 							bind:state={CategoriesState[category.id]}
 							class="w-full p-1 pl-2 hover:variant-glass-surface focus:outline-0"
 							labelClass="w-full"
 						>
 							{category.name}
-						</TriStateSlide>
+						</ThreeStateSwitchCustom>
 					</div>
 				{/each}
 			{/if}
