@@ -26,8 +26,6 @@
 		inactive?: CssClasses;
 		/** Provide classes to set the active state background color. */
 		active?: CssClasses;
-		/** Provide classes to set the active state background color. */
-		indeterminate?: CssClasses;
 		/** Provide classes to set the border styles. */
 		border?: CssClasses;
 		/** Provide classes to set border radius styles. */
@@ -38,7 +36,6 @@
 		// Provide a semantic label.
 		label?: string;
 		children?: import('svelte').Snippet;
-		onchange?: (e: boolean) => void;
 		onkeydown?: (
 			e: KeyboardEvent & {
 				currentTarget: EventTarget & HTMLDivElement;
@@ -53,13 +50,11 @@
 		size = 'md',
 		inactive = 'bg-surface-400 dark:bg-surface-700',
 		active = 'bg-surface-900 dark:bg-surface-300',
-		indeterminate = 'bg-surface-500 dark:bg-surface-500',
 		border = '',
 		rounded = 'rounded-full',
 		labelClass = 'ml-3',
 		label = '',
 		class: clasNames = '',
-		onchange = () => {},
 		onkeydown = () => {},
 		children,
 		...rest
