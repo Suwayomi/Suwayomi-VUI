@@ -12,11 +12,12 @@
 
 	let {
 		state = $bindable(),
+		children,
 		...props
 	}: ComponentProps<typeof ThreeStateSwitch> = $props();
 </script>
 
-<ThreeStateSwitch {...props} bind:state>
+<ThreeStateSwitch {...props} bind:state labelBefore>
 	{#snippet onThumb()}
 		<svg
 			in:scale={{ delay: 100, duration: 100 }}
@@ -49,4 +50,5 @@
 			</path>
 		</svg>
 	{/snippet}
+	{@render children?.()}
 </ThreeStateSwitch>

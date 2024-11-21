@@ -83,7 +83,7 @@
 							bind:state={gmState.value.Unread}
 							label={'Unread'}
 							class="w-full p-1 pl-2 hover:variant-glass-surface focus:outline-0"
-							labelClass="w-full"
+							labelClass="w-full flex-1"
 						>
 							<span>Unread</span>
 						</ThreeStateSwitchCustom>
