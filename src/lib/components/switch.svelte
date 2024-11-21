@@ -36,6 +36,7 @@
 		// Provide a semantic label.
 		label?: string;
 		children?: import('svelte').Snippet;
+		onchange?: (e: boolean) => void;
 		onkeydown?: (
 			e: KeyboardEvent & {
 				currentTarget: EventTarget & HTMLDivElement;
@@ -55,6 +56,7 @@
 		labelClass = 'ml-3',
 		label = '',
 		class: clasNames = '',
+		onchange = () => {},
 		onkeydown = () => {},
 		children,
 		...rest
@@ -136,6 +138,9 @@
 			bind:checked
 			{name}
 			{...rest}
+			onchange={(e) => {
+				onchange(checked ?? false);
+			}}
 			disabled={rest.disabled as boolean | undefined | null}
 		/>
 		<!-- Label -->
