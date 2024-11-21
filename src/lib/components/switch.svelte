@@ -138,7 +138,7 @@
 			bind:checked
 			{name}
 			{...rest}
-			onchange={(e) => {
+			onchange={(_) => {
 				onchange(checked ?? false);
 			}}
 			disabled={rest.disabled as boolean | undefined | null}
