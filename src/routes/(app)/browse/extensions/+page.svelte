@@ -44,12 +44,12 @@
 	checkIfFetchNewExtensions();
 
 	async function checkIfFetchNewExtensions() {
-		if ($lastFetched.getTime() > new Date().getTime() - 60000) {
+		if (lastFetched.value.getTime() < new Date().getTime() - 60000) {
 			await ErrorHelp(
 				'failed to fetch new extensions',
 				client.mutation(fetchExtensions, {}).toPromise()
 			);
-			$lastFetched = new Date();
+			lastFetched.value = new Date();
 		}
 		extensions = queryState({
 			client,

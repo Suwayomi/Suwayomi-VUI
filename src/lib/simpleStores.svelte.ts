@@ -118,44 +118,46 @@ const trueDefaults = {
 
 const metaKeyBase = 'VUI3_';
 
-class LocalStore<T> {
-	private val = $state<T>() as T;
-	private key = '';
+type json<T> = {
+	stringify: (value: T) => string;
+	parse: (value: string) => T;
+};
 
-	constructor(key: string, value: T) {
-		this.val = value;
+export class LocalStore<T> {
+	value = $state<T>() as T;
+	private key = '';
+	private serializer: json<T> = JSON;
+
+	constructor(key: string, value: T, serializer: json<T> = JSON) {
+		this.value = value;
 		this.key = key;
+		this.serializer = serializer;
 		if (browser) {
 			const item = localStorage.getItem(this.key);
-			if (item) this.val = this.deserialize(item);
-		}
-		$effect.root(() => {
-			$effect(() => {
-				localStorage.setItem(key, this.serialize(this.value));
+			if (item) this.value = this.deserialize(item);
+			$effect.root(() => {
+				$effect(() => {
+					localStorage.setItem(key, this.serialize(this.value));
+				});
 			});
-		});
+		}
 	}
 
 	private serialize(value: T): string {
-		return JSON.stringify(value);
+		return this.serializer.stringify(value);
 	}
 
 	private deserialize(item: string): T {
-		return JSON.parse(item);
-	}
-
-	get value() {
-		return this.val;
-	}
-
-	set value(value: T) {
-		this.val = value;
-		localStorage.setItem(this.key, this.serialize(value));
+		return this.serializer.parse(item);
 	}
 }
 
-function localStore<T>(key: string, value: T) {
-	return new LocalStore(key, value);
+export function localStore<T>(
+	key: string,
+	value: T,
+	serializer: json<T> = JSON
+) {
+	return new LocalStore(key, value, serializer);
 }
 
 function convertOldTriState(value: unknown): TriState {
