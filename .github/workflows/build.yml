@@ -88,7 +88,7 @@ jobs:
         working-directory: ./build
         run: zip -r  Suwayomi-VUI-Web-${{ needs.GenTag.outputs.value }}.zip ./*
       - name: Release
-        uses: softprops/action-gh-release@v1
+        uses: softprops/action-gh-release@v2
         with:
           files: |
             ./build/Suwayomi-VUI-Web-${{ needs.GenTag.outputs.value }}.zip

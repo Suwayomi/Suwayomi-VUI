@@ -34,7 +34,7 @@
 			'failed to fetch new extensions',
 			client.mutation(fetchExtensions, {}).toPromise()
 		);
-		$lastFetched = new Date();
+		lastFetched.value = new Date();
 		loading = false;
 	}
 

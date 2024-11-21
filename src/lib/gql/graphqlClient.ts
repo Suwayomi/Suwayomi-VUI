@@ -43,7 +43,6 @@ import type {
 	updateTrack
 } from './Mutations';
 import type { ResultOf, VariablesOf } from '$lib/gql/graphql';
-import { lastFetched } from '../../../src/routes/(app)/browse/extensions/ExtensionsStores';
 import { introspection } from '../../graphql-env';
 import { gmState } from '$lib/simpleStores.svelte';
 import type { DownloadChanged } from './Subscriptions';
@@ -631,14 +630,21 @@ function fetchExtensionsUpdater(
 ) {
 	if (!data?.fetchExtensions) return;
 	let filteredExtensions = data.fetchExtensions.extensions;
-	if (!gmState.value.nsfw)
-		filteredExtensions = filteredExtensions.filter((e) => !e.isNsfw);
-	filteredExtensions.forEach((e) => {
-		cache.writeFragment(ExtensionTypeFragment, e, {
-			isNsfw: gmState.value.nsfw ? null : false
+	import('$lib/simpleStores.svelte').then((mod) => {
+		const gmState = mod.gmState;
+		if (!gmState.value.nsfw)
+			filteredExtensions = filteredExtensions.filter((e) => !e.isNsfw);
+		filteredExtensions.forEach((e) => {
+			cache.writeFragment(ExtensionTypeFragment, e, {
+				isNsfw: gmState.value.nsfw ? null : false
+			});
 		});
+		import('../../../src/routes/(app)/browse/extensions/ExtensionsStores').then(
+			(mod) => {
+				mod.lastFetched.value = new Date();
+			}
+		);
 	});
-	lastFetched.set(new Date());
 }
 
 function updateMangasCategoriesUpdater(
