@@ -369,7 +369,7 @@
 		const _ = [sources?.value, value];
 		untrack(doSource);
 	});
-	let debounceTimer: NodeJS.Timeout | undefined;
+	let debounceTimer: ReturnType<typeof setTimeout> | undefined;
 	$effect(() => {
 		const _ = [value];
 		clearTimeout(debounceTimer);
