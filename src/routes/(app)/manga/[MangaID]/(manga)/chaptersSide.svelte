@@ -127,7 +127,6 @@
 	let hash = $state(location.hash);
 	// @ts-ignore-next-line
 	navigation?.addEventListener('navigate', (event) => {
-		console.log(event.destination.url);
 		hash = new URL(event.destination.url).hash;
 	});
 

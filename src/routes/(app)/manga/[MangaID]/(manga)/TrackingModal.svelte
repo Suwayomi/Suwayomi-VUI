@@ -30,7 +30,6 @@
 	const client = getContextClient();
 
 	let items = $derived.by(() => {
-		console.log('tabSet', tabSet);
 		if (tabSet === 'Tracking') return undefined;
 		return queryState({
 			client,
