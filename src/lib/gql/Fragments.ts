@@ -57,6 +57,7 @@ export const MangaTypeFragment = graphql(
 			thumbnailUrl
 			unreadCount
 			downloadCount
+			inLibraryAt
 			latestFetchedChapter {
 				fetchedAt
 				id
