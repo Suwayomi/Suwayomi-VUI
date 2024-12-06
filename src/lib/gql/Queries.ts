@@ -498,3 +498,36 @@ export const History = graphql(`
 		}
 	}
 `);
+
+export const ChaptersByName = graphql(`
+	query ChaptersByName($name: String = "chapter 1") {
+		chapters(
+			filter: { name: { includes: $name }, inLibrary: { equalTo: true } }
+		) {
+			nodes {
+				id
+				name
+				manga {
+					id
+					title
+					thumbnailUrl
+				}
+			}
+		}
+	}
+`);
+
+export const MangasByTitle = graphql(`
+	query MangasByTitle($title: String!) {
+		mangas(
+			filter: { title: { includesInsensitive: $title } }
+			condition: { inLibrary: true }
+		) {
+			nodes {
+				id
+				title
+				thumbnailUrl
+			}
+		}
+	}
+`);

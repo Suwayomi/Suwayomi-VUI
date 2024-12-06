@@ -94,6 +94,9 @@
 			});
 		}
 	}
+	$effect(() => {
+		if (manga.value?.data?.manga.id) ImageFailed = false;
+	});
 </script>
 
 {#if manga.value?.fetching}

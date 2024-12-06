@@ -25,9 +25,7 @@
 
 	let { data }: Props = $props();
 
-	mmState.id = data.MangaID;
 	const client = getContextClient();
-	setMangaId(data.MangaID);
 
 	async function fetchChapters() {
 		await ErrorHelpUntyped(
@@ -36,6 +34,13 @@
 			client.mutation(fetchMangaChapters, { id: data.MangaID }).toPromise()
 		);
 	}
+	$effect(() => {
+		const _ = [data.MangaID];
+		untrack(() => {
+			mmState.id = data.MangaID;
+			setMangaId(data.MangaID);
+		});
+	});
 
 	$effect(() => {
 		if (manga.value?.data?.manga?.lastFetchedAt === '0') {

@@ -43,8 +43,6 @@
 
 	let { MangaID }: Props = $props();
 
-	mmState.id = MangaID;
-
 	const client = getContextClient();
 	const modalStore = getModalStore();
 
@@ -126,11 +124,15 @@
 	let scrollTo = $state(true);
 	let _scrollToChaps: HTMLDivElement[] = $state([]);
 	let scrollToChaps: HTMLDivElement | undefined = $state();
+	let hash = $state(location.hash);
+	// @ts-ignore-next-line
+	navigation?.addEventListener('navigate', (event) => {
+		console.log(event.destination.url);
+		hash = new URL(event.destination.url).hash;
+	});
 
 	function handelScrollToChaps() {
-		let ind = _scrollToChaps
-			.filter((e) => e)
-			.findIndex((e) => e.id === location.hash);
+		let ind = _scrollToChaps.filter((e) => e).findIndex((e) => e.id === hash);
 
 		if (ind !== -1 && ind - 3 > 0) {
 			scrollToChaps = _scrollToChaps[ind - 3];
@@ -184,10 +186,16 @@
 	);
 	$effect(updateSelected);
 	$effect(() => {
-		if (scrollTo && _scrollToChaps) untrack(handelScrollToChaps);
+		if (scrollTo && _scrollToChaps.length) untrack(handelScrollToChaps);
 	});
 	$effect(() => {
 		if (scrollTo && scrollToChaps) untrack(scroll);
+	});
+	$effect(() => {
+		const _ = [manga.value?.data?.manga?.id, hash];
+		window.requestAnimationFrame(() => {
+			scrollTo = true;
+		});
 	});
 	let chapterNumbers = $derived(
 		sortedChapters?.map((e) => e.chapterNumber) ?? []

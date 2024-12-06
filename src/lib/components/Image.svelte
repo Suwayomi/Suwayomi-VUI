@@ -75,6 +75,7 @@
 	}: Props = $props();
 	$effect(() => {
 		if (typeof src !== 'string') {
+			console.log('src not string');
 			error();
 		}
 	});

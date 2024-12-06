@@ -18,10 +18,12 @@
 	import { page } from '$app/stores';
 	import { getContextClient } from '@urql/svelte';
 	import {
+		ChaptersByName,
 		getCategories,
 		getCategory,
 		getManga,
-		getSources
+		getSources,
+		MangasByTitle
 	} from '$lib/gql/Queries';
 	import type { ResultOf, VariablesOf } from '$lib/gql/graphql';
 	import { ChapterTypeFragment } from '$lib/gql/Fragments';
@@ -59,7 +61,6 @@
 		firstLine: string;
 		secondLineBoldText: string;
 	};
-
 	type sourceItem = {
 		img: string;
 		url: string;
@@ -67,8 +68,19 @@
 		firstLine?: string;
 		secondLine: string;
 	};
+	type mangaItemGlobal = {
+		img: string;
+		url: string;
+		firstLine: string;
+	};
 
-	type item = helpItem | categoryItem | mangaItem | chapterItem | sourceItem;
+	type item =
+		| helpItem
+		| categoryItem
+		| mangaItem
+		| chapterItem
+		| sourceItem
+		| mangaItemGlobal;
 
 	let items: item[] = $state([]);
 	let inputElement: boolean = $state(false);
@@ -93,6 +105,14 @@
 		{
 			str: '#C/M:CN',
 			firstLine: "Go to Chapter 'CN' from Manga 'M' in Category 'C'"
+		},
+		{
+			str: ':M',
+			firstLine: "Search for manga 'M' in Library"
+		},
+		{
+			str: ';C',
+			firstLine: "search for chapter 'C' in Library"
 		},
 		{
 			str: 'X',
@@ -189,7 +209,7 @@
 				items = includeChapters.map((e) => {
 					return {
 						img: Manga.thumbnailUrl ?? '',
-						url: `/manga/${Manga.id}/chapter/${e.id}`,
+						url: `/manga/${Manga.id}#${e.id}`,
 						firstLine: Manga.title + '/',
 						secondLineBoldText: e.name
 					};
@@ -248,6 +268,45 @@
 		}
 	}
 
+	async function doManga() {
+		if (value.startsWith(':')) {
+			const mangaTitleSearchString = value.slice(1);
+			if (!mangaTitleSearchString) return;
+			const result = await client
+				.query(MangasByTitle, {
+					title: mangaTitleSearchString
+				})
+				.toPromise();
+			items =
+				result.data?.mangas.nodes
+					.filter((_, i) => i <= 20)
+					.map((e) => ({
+						img: e.thumbnailUrl ?? '',
+						url: `/manga/${e.id}`,
+						firstLine: e.title
+					})) ?? help;
+		}
+	}
+
+	async function doChapter() {
+		if (value.startsWith(';')) {
+			const ChapterTitleSearchString = value.slice(1);
+			if (!ChapterTitleSearchString) return;
+			const result = await client
+				.query(ChaptersByName, {
+					name: ChapterTitleSearchString
+				})
+				.toPromise();
+			items =
+				result.data?.chapters.nodes.map((e) => ({
+					img: e.manga.thumbnailUrl ?? '',
+					url: `/manga/${e.manga.id}#${e.id}`,
+					firstLine: e.manga.title,
+					secondLineBoldText: e.name
+				})) ?? help;
+		}
+	}
+
 	function handelKey(event: KeyboardEvent) {
 		if (event.key === 'Enter') {
 			if ('url' in items[0]) {
@@ -297,7 +356,6 @@
 		}
 	}
 
-	let inputEl: HTMLInputElement | undefined = $state(undefined);
 	$effect(() => {
 		if (value === '') {
 			items = help;
@@ -310,6 +368,15 @@
 	$effect(() => {
 		const _ = [sources?.value, value];
 		untrack(doSource);
+	});
+	let debounceTimer: NodeJS.Timeout | undefined;
+	$effect(() => {
+		const _ = [value];
+		clearTimeout(debounceTimer);
+		debounceTimer = setTimeout(() => {
+			untrack(doManga);
+			untrack(doChapter);
+		}, 300);
 	});
 	$effect(() => {
 		if (catId === undefined) return;
@@ -348,7 +415,6 @@
 			onfocus={() => (inputElement = true)}
 			onblur={() => (inputElement = false)}
 			bind:value
-			bind:this={inputEl}
 			onkeydown={handelKey}
 			class="tabindex input rounded-2xl"
 			type="text"
