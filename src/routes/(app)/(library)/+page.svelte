@@ -325,20 +325,25 @@
 							case sort.Alphabetical:
 								tru = a.title > b.title;
 								break;
-							case sort['Latest Read']:
+							case sort.Read:
 								tru =
 									parseInt(a.lastReadChapter?.lastReadAt ?? '0') >
 									parseInt(b.lastReadChapter?.lastReadAt ?? '0');
 								break;
-							case sort['Latest Fetched']:
+							case sort.Fetched:
 								tru =
 									parseInt(a.latestFetchedChapter?.fetchedAt ?? '0') >
 									parseInt(b.latestFetchedChapter?.fetchedAt ?? '0');
 								break;
-							case sort['Latest Uploaded']:
+							case sort.Uploaded:
 								tru =
 									parseInt(a.latestUploadedChapter?.uploadDate ?? '0') >
 									parseInt(b.latestUploadedChapter?.uploadDate ?? '0');
+								break;
+							case sort.Added:
+								tru =
+									parseInt(a.inLibraryAt ?? '0') >
+									parseInt(b.inLibraryAt ?? '0');
 								break;
 						}
 

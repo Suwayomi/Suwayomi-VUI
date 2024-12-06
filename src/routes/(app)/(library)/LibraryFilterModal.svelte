@@ -19,7 +19,7 @@
 	} from '@skeletonlabs/skeleton';
 	import { display, gmState, sort } from '$lib/simpleStores.svelte';
 
-	import { enumKeys } from '$lib/util.svelte';
+	import { enumEntries } from '$lib/util.svelte';
 	import Slide from '$lib/components/Slide.svelte';
 	import ThreeStateSwitchCustom from '$lib/components/ThreeStateSwitchCustom.svelte';
 	const modalStore = getModalStore();
@@ -121,14 +121,14 @@
 							display="flex-col"
 							active="variant-glass-primary"
 						>
-							{#each enumKeys(sort) as value}
+							{#each enumEntries(sort) as [value, name]}
 								<RadioItem
 									bind:group={gmState.value.Sort}
 									class="focus:outline-0"
 									name="justify"
 									{value}
 								>
-									{value}
+									{name}
 								</RadioItem>
 							{/each}
 						</RadioGroup>
@@ -157,14 +157,14 @@
 							display="flex-col"
 							active="variant-glass-primary"
 						>
-							{#each enumKeys(display) as value}
+							{#each enumEntries(display) as [value, name]}
 								<RadioItem
 									bind:group={gmState.value.Display}
 									class="focus:outline-0"
 									name="justify"
 									{value}
 								>
-									{value}
+									{name}
 								</RadioItem>
 							{/each}
 						</RadioGroup>

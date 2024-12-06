@@ -61,9 +61,10 @@ export enum sort {
 	Unread = 'Unread',
 	Alphabetical = 'Alphabetical',
 	ID = 'ID',
-	'Latest Read' = 'Latest Read',
-	'Latest Fetched' = 'Latest Fetched',
-	'Latest Uploaded' = 'Latest Uploaded',
+	Added = 'Latest Added',
+	Read = 'Latest Read',
+	Fetched = 'Latest Fetched',
+	Uploaded = 'Latest Uploaded',
 	Random = 'Random'
 }
 
