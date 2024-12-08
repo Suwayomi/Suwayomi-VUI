@@ -6,6 +6,7 @@ COPY ./set-env-variable.sh /docker-entrypoint.d
 RUN chmod +x /docker-entrypoint.d/set-env-variable.sh
 RUN dos2unix /docker-entrypoint.d/set-env-variable.sh
 RUN chown -R 101 /usr/share/nginx/html
+RUN chown -R 101 /etc/nginx/conf.d/default.conf
 USER 101
 EXPOSE 8080
 CMD ["nginx", "-g", "daemon off;"]
