@@ -135,9 +135,18 @@ jobs:
           platforms: linux/amd64, linux/arm/v6, linux/arm/v7, linux/arm64, linux/386, linux/ppc64le, linux/s390x
           context: .
           build-args: version=${{ needs.GenTag.outputs.value }}
-          push: true
+          push: false
           tags: |
             ghcr.io/${{ needs.RepoName.outputs.value }}:latest,
             ghcr.io/${{ needs.RepoName.outputs.value }}:${{ needs.GenTag.outputs.value }},
             ${{ needs.RepoName.outputs.value }}:latest,
             ${{ needs.RepoName.outputs.value }}:${{ needs.GenTag.outputs.value }},
+      # Slim it!
+      - uses: kitabisa/docker-slim-action@v1
+        env:
+          DSLIM_HTTP_PROBE: false
+        with:
+          target: ghcr.io/${{ needs.RepoName.outputs.value }}:latest
+          tag: 'slim'
+      # Push to the registry
+      - run: docker image push "${{ github.repository }}" --all-tags
