@@ -7,6 +7,7 @@
 # exec "$@"
 
 TMP=$(echo "$suwayomi" | sed "s@/\$@@")
+echo $TMP
 
 # get the resolver IPs from /etc/resolv.conf and make them nginx syntax
 TMP2=$(awk '
