@@ -142,4 +142,6 @@ jobs:
           target: ghcr.io/${{ needs.RepoName.outputs.value }}:latest
           tag: 'slim'
       # Push to the registry
-      - run: docker image push "ghcr.io/${{ needs.RepoName.outputs.value }}" --all-tags
+      - run: docker image push "ghcr.io/${{ needs.RepoName.outputs.value }}:latest"
+      - run: docker image push "ghcr.io/${{ needs.RepoName.outputs.value }}:slim"
+      - run: docker image push "ghcr.io/${{ needs.RepoName.outputs.value }}:${{ needs.GenTag.outputs.value }}"
