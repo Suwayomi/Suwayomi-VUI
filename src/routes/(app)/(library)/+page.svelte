@@ -10,7 +10,7 @@
 	import IntersectionObserver from '$lib/components/IntersectionObserver.svelte';
 	import MangaCard from '$lib/components/MangaCard.svelte';
 	import { longPress } from '$lib/press';
-	import { display, gmState, sort } from '$lib/simpleStores.svelte';
+	import { display, gmState } from '$lib/simpleStores.svelte';
 	import { Tab, TabGroup } from '@skeletonlabs/skeleton';
 	import { queryParam, ssp } from 'sveltekit-search-params';
 	import LibraryActions from './libraryActions.svelte';
@@ -311,36 +311,36 @@
 	});
 	let sortedMangas = $derived(
 		filteredMangas
-			? gmState.value.Sort === sort.Random
+			? gmState.value.Sort === 'Random'
 				? shuffle([...filteredMangas])
 				: [...filteredMangas].sort((a, b) => {
 						let tru = true;
 						switch (gmState.value.Sort) {
-							case sort.ID:
+							case 'ID':
 								tru = a.id > b.id;
 								break;
-							case sort.Unread:
+							case 'Unread':
 								tru = a.unreadCount > b.unreadCount;
 								break;
-							case sort.Alphabetical:
+							case 'Alphabetical':
 								tru = a.title > b.title;
 								break;
-							case sort.Read:
+							case 'Read':
 								tru =
 									parseInt(a.lastReadChapter?.lastReadAt ?? '0') >
 									parseInt(b.lastReadChapter?.lastReadAt ?? '0');
 								break;
-							case sort.Fetched:
+							case 'Fetched':
 								tru =
 									parseInt(a.latestFetchedChapter?.fetchedAt ?? '0') >
 									parseInt(b.latestFetchedChapter?.fetchedAt ?? '0');
 								break;
-							case sort.Uploaded:
+							case 'Uploaded':
 								tru =
 									parseInt(a.latestUploadedChapter?.uploadDate ?? '0') >
 									parseInt(b.latestUploadedChapter?.uploadDate ?? '0');
 								break;
-							case sort.Added:
+							case 'Added':
 								tru =
 									parseInt(a.inLibraryAt ?? '0') >
 									parseInt(b.inLibraryAt ?? '0');
