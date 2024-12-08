@@ -22,8 +22,8 @@ sed -i "s@resolverPLACEHOLDER@$TMP2@" /etc/nginx/conf.d/default.conf
 sed -i "s@PLACEHOLDER@$TMP@" /etc/nginx/conf.d/default.conf
 
 cd /usr/share/nginx/html
-${theme:="skeleton"}
-find . -name '*.html' -exec sed -i -e "s/data-theme=\"skeleton\"/data-theme=\"$theme\"/g" {} \;
+THEME="${theme:-skeleton}"
+find . -name '*.html' -exec sed -i -e "s/data-theme=\"skeleton\"/data-theme=\"$THEME\"/g" {} \;
 
 if [[ "${light}" = "true" || "${light}" = "True" || "${light}" = "TRUE" ]]; then
     find . -name '*.html' -exec sed -i -e 's/<html lang="en" class="dark">/<html lang="en" class>/g' {} \;
