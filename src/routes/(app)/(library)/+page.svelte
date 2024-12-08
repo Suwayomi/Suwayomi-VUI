@@ -10,7 +10,7 @@
 	import IntersectionObserver from '$lib/components/IntersectionObserver.svelte';
 	import MangaCard from '$lib/components/MangaCard.svelte';
 	import { longPress } from '$lib/press';
-	import { display, gmState, sort } from '$lib/simpleStores.svelte';
+	import { display, gmState } from '$lib/simpleStores.svelte';
 	import { Tab, TabGroup } from '@skeletonlabs/skeleton';
 	import { queryParam, ssp } from 'sveltekit-search-params';
 	import LibraryActions from './libraryActions.svelte';
