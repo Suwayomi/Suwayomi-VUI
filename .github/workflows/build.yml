@@ -145,6 +145,7 @@ jobs:
       - uses: kitabisa/docker-slim-action@v1
         env:
           DSLIM_HTTP_PROBE: false
+          DSLIM_PRESERVE_PATH: /usr/share/nginx/html
         with:
           target: ghcr.io/${{ needs.RepoName.outputs.value }}:latest
           tag: 'slim'
