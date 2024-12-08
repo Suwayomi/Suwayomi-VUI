@@ -22,6 +22,7 @@ sed -i "s@resolverPLACEHOLDER@$TMP2@" /etc/nginx/conf.d/default.conf
 sed -i "s@PLACEHOLDER@$TMP@" /etc/nginx/conf.d/default.conf
 
 cd /usr/share/nginx/html
+# test
 THEME="${theme:-skeleton}"
 find . -name '*.html' -exec sed -i -e "s/data-theme=\"skeleton\"/data-theme=\"$THEME\"/g" {} \;
 
