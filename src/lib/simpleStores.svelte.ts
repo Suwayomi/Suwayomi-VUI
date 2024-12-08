@@ -57,16 +57,16 @@ export enum Layout {
 	Edge = 'Edge'
 }
 
-export enum sort {
-	Unread = 'Unread',
-	Alphabetical = 'Alphabetical',
-	ID = 'ID',
-	Added = 'Latest Added',
-	Read = 'Latest Read',
-	Fetched = 'Latest Fetched',
-	Uploaded = 'Latest Uploaded',
-	Random = 'Random'
-}
+export const sort = {
+	Unread: 'Unread',
+	Alphabetical: 'Alphabetical',
+	ID: 'ID',
+	Added: 'Latest Added',
+	Read: 'Latest Read',
+	Fetched: 'Latest Fetched',
+	Uploaded: 'Latest Uploaded',
+	Random: 'Random'
+} as const;
 
 export enum display {
 	Compact = 'Compact',
@@ -103,7 +103,7 @@ const trueDefaults = {
 	theme: 'skeleton' as Themes,
 	dark: true,
 	Display: display.Compact,
-	Sort: sort.ID,
+	Sort: 'ID' as keyof typeof sort,
 	Asc: true,
 	Unread: 'intermediate' as TriState,
 	Downloaded: 'intermediate' as TriState,
