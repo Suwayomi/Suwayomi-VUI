@@ -19,10 +19,17 @@ $1=="nameserver" && $2~/^((25[0-5]|(2[0-4]|1[0-9]|[1-9]|)[0-9])\.?){4}$/{
 $1=="nameserver" && $2!~/^((25[0-5]|(2[0-4]|1[0-9]|[1-9]|)[0-9])\.?){4}$/{
     print "["$2"]"
 }' /etc/resolv.conf)
+echo $TMP2
 sed -i "s@resolverPLACEHOLDER@$TMP2@" /etc/nginx/conf.d/default.conf
+
+cat /etc/nginx/conf.d/default.conf
+echo ""
+echo ""
+
 sed -i "s@PLACEHOLDER@$TMP@" /etc/nginx/conf.d/default.conf
 
 cat /etc/nginx/conf.d/default.conf
+echo ""
 
 cd /usr/share/nginx/html
 # test
