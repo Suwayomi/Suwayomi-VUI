@@ -244,12 +244,9 @@
 		}
 		if (!reloadManga) return;
 		reloadManga = false;
-		queryState({
-			client,
-			query: getCategory,
-			variables: { id: $tab ?? 0 },
-			requestPolicy: 'network-only'
-		});
+		client
+			.query(getCategory, { id: $tab ?? 0 }, { requestPolicy: 'network-only' })
+			.toPromise();
 	}
 
 	onMount(() => {
