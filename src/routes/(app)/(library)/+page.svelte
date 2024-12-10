@@ -230,18 +230,21 @@
 		}
 	});
 
-	onMount(() => {
-		const removeOnVisibilityChange = (document.onvisibilitychange = () => {
-			if (document.visibilityState === 'visible') {
-				queryState({
-					client,
-					query: getCategory,
-					variables: { id: $tab ?? 0 },
-					requestPolicy: 'network-only'
-				});
-			}
+	function visibilityChange() {
+		if (document.hidden) return;
+		queryState({
+			client,
+			query: getCategory,
+			variables: { id: $tab ?? 0 },
+			requestPolicy: 'network-only'
 		});
-		return removeOnVisibilityChange;
+	}
+
+	onMount(() => {
+		document.addEventListener('visibilitychange', visibilityChange);
+		return () => {
+			document.removeEventListener('visibilitychange', visibilityChange);
+		};
 	});
 
 	let mangas = $derived(
