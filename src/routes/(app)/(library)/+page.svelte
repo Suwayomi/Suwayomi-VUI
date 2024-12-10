@@ -230,8 +230,20 @@
 		}
 	});
 
+	let reloadManga = false;
+	let resetTimeout: NodeJS.Timeout | undefined;
+
 	function visibilityChange() {
-		if (document.hidden) return;
+		clearTimeout(resetTimeout);
+		resetTimeout = undefined;
+		if (document.hidden) {
+			resetTimeout = setTimeout(() => {
+				reloadManga = true;
+			}, 60 * 1000);
+			return;
+		}
+		if (!reloadManga) return;
+		reloadManga = false;
 		queryState({
 			client,
 			query: getCategory,
