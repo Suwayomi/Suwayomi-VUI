@@ -230,14 +230,23 @@
 		}
 	});
 
+	let reloadManga = false;
+	let resetTimeout: ReturnType<typeof setTimeout> | undefined;
+
 	function visibilityChange() {
-		if (document.hidden) return;
-		queryState({
-			client,
-			query: getCategory,
-			variables: { id: $tab ?? 0 },
-			requestPolicy: 'network-only'
-		});
+		clearTimeout(resetTimeout);
+		resetTimeout = undefined;
+		if (document.hidden) {
+			resetTimeout = setTimeout(() => {
+				reloadManga = true;
+			}, 60 * 1000);
+			return;
+		}
+		if (!reloadManga) return;
+		reloadManga = false;
+		client
+			.query(getCategory, { id: $tab ?? 0 }, { requestPolicy: 'network-only' })
+			.toPromise();
 	}
 
 	onMount(() => {
