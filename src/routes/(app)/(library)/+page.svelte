@@ -231,7 +231,7 @@
 	});
 
 	let reloadManga = false;
-	let resetTimeout: NodeJS.Timeout | undefined;
+	let resetTimeout: ReturnType<typeof setTimeout> | undefined;
 
 	function visibilityChange() {
 		clearTimeout(resetTimeout);
