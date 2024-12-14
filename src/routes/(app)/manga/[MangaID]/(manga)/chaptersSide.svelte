@@ -125,10 +125,13 @@
 	let _scrollToChaps: HTMLDivElement[] = $state([]);
 	let scrollToChaps: HTMLDivElement | undefined = $state();
 	let hash = $state(location.hash);
-	// @ts-ignore-next-line
-	navigation?.addEventListener('navigate', (event) => {
-		hash = new URL(event.destination.url).hash;
-	});
+
+	if ('navigation' in window) {
+		// @ts-ignore-next-line
+		window.navigation?.addEventListener('navigate', (event) => {
+			hash = new URL(event.destination.url).hash;
+		});
+	}
 
 	function handelScrollToChaps() {
 		let ind = _scrollToChaps.filter((e) => e).findIndex((e) => e.id === hash);

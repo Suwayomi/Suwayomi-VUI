@@ -201,6 +201,7 @@ class GMState {
 				this.store.value = this.extractGlobalMeta(queryResult);
 				this.fixOldTriStates();
 				if (queryResult.fetching) return;
+				this.traverse(this.store.value, trueDefaults);
 				this.unSub();
 			});
 			$effect(() => {
@@ -317,17 +318,22 @@ class GMState {
 	}
 
 	private traverse<T extends Record<string, unknown>>(value: T, defaults: T) {
-		getObjectKeys(value).forEach((key) => {
-			if (value[key] === undefined) {
-				value[key] = defaults[key];
-			}
-			if (this.isRecord(value[key]) && this.isRecord(defaults[key]))
-				this.traverse(value[key], defaults[key]);
-		});
+		const vals: [Record<string, unknown>, Record<string, unknown>][] = [
+			[value, defaults]
+		];
+		while (vals.length > 0) {
+			const [valu, defaulte] = vals.shift()!;
+			Object.keys(value).forEach((key: keyof Record<string, unknown>) => {
+				if (valu[key] === undefined) {
+					valu[key] = defaulte[key];
+				}
+				if (this.isRecord(valu[key]) && this.isRecord(defaulte[key]))
+					vals.push([valu[key], defaulte[key]]);
+			});
+		}
 	}
 
 	get value() {
-		this.traverse(this.store.value, trueDefaults);
 		return this.store.value;
 	}
 
@@ -372,6 +378,7 @@ class MMState {
 					const metaKey = metaKeyBase + key;
 					const storedValue = untrack(() => {
 						if (!this.MMeta) return;
+						this.traverse(this.store, gmState.value.mangaMetaDefaults);
 						return get(this.MMeta).data?.manga?.meta.find(
 							(e) => e.key === metaKey
 						)?.value;
@@ -412,18 +419,28 @@ class MMState {
 		return obj === Object(obj);
 	}
 
-	private traverse<T extends Record<string, unknown>>(value: T, defaults: T) {
-		getObjectKeys(value).forEach((key) => {
-			if (value[key] === undefined) {
-				value[key] = defaults[key];
-			}
-			if (this.isRecord(value[key]) && this.isRecord(defaults[key]))
-				this.traverse(value[key], defaults[key]);
-		});
+	private traverse(
+		value: Record<string, unknown>,
+		defaults: Record<string, unknown>
+	) {
+		const val2 = $state.snapshot(value);
+		const vals: [Record<string, unknown>, Record<string, unknown>][] = [
+			[val2, defaults]
+		];
+		while (vals.length > 0) {
+			const [valu, defaulte] = vals.shift()!;
+			Object.keys(value).forEach((key: keyof Record<string, unknown>) => {
+				if (valu[key] === undefined) {
+					valu[key] = defaulte[key];
+				}
+				if (this.isRecord(valu[key]) && this.isRecord(defaulte[key]))
+					vals.push([valu[key], defaulte[key]]);
+			});
+		}
+		value = val2;
 	}
 
 	get value() {
-		this.traverse(this.store, gmState.value.mangaMetaDefaults);
 		return this.store;
 	}
 
