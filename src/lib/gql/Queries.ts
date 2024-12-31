@@ -38,6 +38,11 @@ export const getCategory = graphql(
 						...MangaTypeFragment
 					}
 				}
+				meta {
+					categoryId
+					key
+					value
+				}
 			}
 		}
 	`,

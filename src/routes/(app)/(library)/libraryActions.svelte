@@ -27,6 +27,7 @@
 	import { enqueueChapterDownloads, updateMangas } from '$lib/gql/Mutations';
 	import Tooltip from '$lib/components/Tooltip.svelte';
 	import LibrarySearchHelp from './LibrarySearchHelp.svelte';
+	import { queryParam, ssp } from 'sveltekit-search-params';
 
 	const client = getContextClient();
 
@@ -38,12 +39,14 @@
 
 	const toastStore = getToastStore();
 	const modalStore = getModalStore();
+	const tab = queryParam('tab', ssp.number(), { pushHistory: false });
 
 	function handelFilter() {
+		if ($tab === null) return;
 		modalStore.trigger({
 			type: 'component',
 			backdropClasses: '!p-0',
-			component: { ref: LibraryFilterModal }
+			component: { ref: LibraryFilterModal, props: { tab: $tab } }
 		});
 	}
 
