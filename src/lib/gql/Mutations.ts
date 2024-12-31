@@ -935,3 +935,17 @@ export const runUpdateLibraryManga = graphql(`
 		}
 	}
 `);
+
+export const setCategoryMeta = graphql(`
+	mutation MyMutation($id: Int!, $key: String!, $value: String!) {
+		setCategoryMeta(
+			input: { meta: { categoryId: $id, key: $key, value: $value } }
+		) {
+			meta {
+				key
+				value
+				categoryId
+			}
+		}
+	}
+`);

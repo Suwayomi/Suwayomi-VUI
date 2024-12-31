@@ -42,6 +42,7 @@
 				currentTarget: EventTarget & HTMLDivElement;
 			}
 		) => void;
+		title?: string;
 		[key: string]: unknown;
 	}
 
@@ -59,6 +60,7 @@
 		onchange = () => {},
 		onkeydown = () => {},
 		children,
+		title,
 		...rest
 	}: Props = $props();
 
@@ -129,6 +131,7 @@
 	aria-label={label}
 	aria-checked={checked}
 	tabindex="0"
+	{title}
 >
 	<label class="slide-toggle-label {classesLabel}">
 		<!-- Hidden Input -->

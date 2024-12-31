@@ -83,7 +83,9 @@ export const client = new Client({
 				ExtensionType: (e) =>
 					(e.pkgName as string) + (e.versionName as string) + e.repo,
 				TrackStatusType: () => null,
-				TrackerNodeList: () => null
+				TrackerNodeList: () => null,
+				CategoryMetaType: (e) =>
+					(e.categoryId as number).toString() + (e.key as string)
 			},
 			updates: {
 				Mutation: {
