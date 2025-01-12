@@ -135,7 +135,7 @@ jobs:
           platforms: linux/amd64, linux/arm/v6, linux/arm/v7, linux/arm64, linux/386, linux/ppc64le, linux/s390x
           context: .
           build-args: version=${{ needs.GenTag.outputs.value }}
-          push: true
+          push: false
           tags: |
             ghcr.io/${{ needs.RepoName.outputs.value }}:latest,
             ghcr.io/${{ needs.RepoName.outputs.value }}:${{ needs.GenTag.outputs.value }},
@@ -149,4 +149,5 @@ jobs:
         with:
           target: ghcr.io/${{ needs.RepoName.outputs.value }}:latest
           tag: 'slim'
-      - run: docker image push "ghcr.io/${{ needs.RepoName.outputs.value }}:slim"
+      - run: docker tag ghcr.io/${{ needs.RepoName.outputs.value }}:slim ghcr.io/${{ needs.RepoName.outputs.value }}:${{ needs.GenTag.outputs.value }}-slim
+      - run: docker image push --all-tags "ghcr.io/${{ needs.RepoName.outputs.value }}"
