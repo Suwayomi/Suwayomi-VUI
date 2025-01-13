@@ -153,6 +153,5 @@ jobs:
           docker tag ghcr.io/${{ needs.RepoName.outputs.value }}:slim ghcr.io/${{ needs.RepoName.outputs.value }}:${{ needs.GenTag.outputs.value }}-slim
           docker tag ghcr.io/${{ needs.RepoName.outputs.value }}:slim ${{ needs.RepoName.outputs.value }}:slim
           docker tag ghcr.io/${{ needs.RepoName.outputs.value }}:slim ${{ needs.RepoName.outputs.value }}:${{ needs.GenTag.outputs.value }}-slim
-          docker image rm ghcr.io/${{ needs.RepoName.outputs.value }}
           docker image rm ${{ needs.RepoName.outputs.value }}
           docker image push --all-tags "ghcr.io/${{ needs.RepoName.outputs.value }}"
