@@ -135,7 +135,7 @@ jobs:
           platforms: linux/amd64, linux/arm/v6, linux/arm/v7, linux/arm64, linux/386, linux/ppc64le, linux/s390x
           context: .
           build-args: version=${{ needs.GenTag.outputs.value }}
-          push: false
+          push: true
           tags: |
             ghcr.io/${{ needs.RepoName.outputs.value }}:latest,
             ghcr.io/${{ needs.RepoName.outputs.value }}:${{ needs.GenTag.outputs.value }},
@@ -149,13 +149,12 @@ jobs:
         with:
           target: ghcr.io/${{ needs.RepoName.outputs.value }}:latest
           tag: 'slim'
-      - uses: kitabisa/docker-slim-action@v1
-        env:
-          DSLIM_HTTP_PROBE: false
-          DSLIM_PRESERVE_PATH: /usr/share/nginx/html,/etc/nginx/conf.d
-          DSLIM_IMAGE_BUILD_ARCH: arm64
-        with:
-          target: ghcr.io/${{ needs.RepoName.outputs.value }}:latest
-          tag: 'slim'
-      - run: docker tag ghcr.io/${{ needs.RepoName.outputs.value }}:slim ghcr.io/${{ needs.RepoName.outputs.value }}:${{ needs.GenTag.outputs.value }}-slim
-      - run: docker image push --all-tags "ghcr.io/${{ needs.RepoName.outputs.value }}"
+      - run: |
+          docker tag ghcr.io/${{ needs.RepoName.outputs.value }}:slim ghcr.io/${{ needs.RepoName.outputs.value }}:${{ needs.GenTag.outputs.value }}-slim
+          docker tag ghcr.io/${{ needs.RepoName.outputs.value }}:slim ${{ needs.RepoName.outputs.value }}:slim
+          docker tag ghcr.io/${{ needs.RepoName.outputs.value }}:slim ${{ needs.RepoName.outputs.value }}:${{ needs.GenTag.outputs.value }}-slim
+          docker image rm ghcr.io/${{ needs.RepoName.outputs.value }}:latest
+          docker image rm ghcr.io/${{ needs.RepoName.outputs.value }}:${{ needs.GenTag.outputs.value }}
+          docker image rm ${{ needs.RepoName.outputs.value }}:latest
+          docker image rm ${{ needs.RepoName.outputs.value }}:${{ needs.GenTag.outputs.value }}
+          docker image push --all-tags "ghcr.io/${{ needs.RepoName.outputs.value }}"
