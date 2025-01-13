@@ -149,5 +149,13 @@ jobs:
         with:
           target: ghcr.io/${{ needs.RepoName.outputs.value }}:latest
           tag: 'slim'
+      - uses: kitabisa/docker-slim-action@v1
+        env:
+          DSLIM_HTTP_PROBE: false
+          DSLIM_PRESERVE_PATH: /usr/share/nginx/html,/etc/nginx/conf.d
+          DSLIM_IMAGE_BUILD_ARCH: linux/arm/v7
+        with:
+          target: ghcr.io/${{ needs.RepoName.outputs.value }}:latest
+          tag: 'slim'
       - run: docker tag ghcr.io/${{ needs.RepoName.outputs.value }}:slim ghcr.io/${{ needs.RepoName.outputs.value }}:${{ needs.GenTag.outputs.value }}-slim
       - run: docker image push --all-tags "ghcr.io/${{ needs.RepoName.outputs.value }}"
