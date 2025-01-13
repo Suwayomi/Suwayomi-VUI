@@ -153,7 +153,7 @@ jobs:
         env:
           DSLIM_HTTP_PROBE: false
           DSLIM_PRESERVE_PATH: /usr/share/nginx/html,/etc/nginx/conf.d
-          DSLIM_IMAGE_BUILD_ARCH: arm/v7
+          DSLIM_IMAGE_BUILD_ARCH: arm64
         with:
           target: ghcr.io/${{ needs.RepoName.outputs.value }}:latest
           tag: 'slim'
