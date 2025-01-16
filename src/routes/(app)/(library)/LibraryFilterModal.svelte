@@ -10,6 +10,8 @@
 	import Switch from '$lib/components/switch.svelte';
 	import IconWrapper from '$lib/components/IconWrapper.svelte';
 	import {
+		Accordion,
+		AccordionItem,
 		RadioGroup,
 		RadioItem,
 		Tab,
@@ -24,9 +26,11 @@
 		sort
 	} from '$lib/simpleStores.svelte';
 
-	import { enumEntries } from '$lib/util.svelte';
+	import { enumEntries, queryState } from '$lib/util.svelte';
 	import Slide from '$lib/components/Slide.svelte';
 	import ThreeStateSwitchCustom from '$lib/components/ThreeStateSwitchCustom.svelte';
+	import { getSources } from '$lib/gql/Queries';
+	import { getContextClient } from '@urql/svelte';
 	const modalStore = getModalStore();
 	let tabSetArch = localStorageStore('libraryModalTabsArch', 0);
 	let tabSet = localStorageStore('libraryModalTabs', 0);
@@ -35,25 +39,34 @@
 	};
 	let { tab }: props = $props();
 	const {
-		unread,
+		Unread,
 		Downloaded,
 		Tracked,
 		Ascending,
-		sortOptions,
-		libraryCategoryTotalCounts,
-		downloadsBadge,
-		unreadBadge,
-		displayOptions,
-		unreadUseDefault,
+		Sort,
+		TotalCounts,
+		DownloadsBadge,
+		UnreadBadge,
+		Display,
+		SourceFilter,
+		UnreadUseDefault,
 		DownloadedUseDefault,
 		TrackedUseDefault,
 		AscendingUseDefault,
-		sortOptionsUseDefault,
-		libraryCategoryTotalCountsUseDefault,
-		downloadsBadgeUseDefault,
-		unreadBadgeUseDefault,
-		displayOptionsUseDefault
+		SortUseDefault,
+		TotalCountsUseDefault,
+		DownloadsBadgeUseDefault,
+		UnreadBadgeUseDefault,
+		DisplayUseDefault,
+		SourceFilterUseDefault
 	} = categoryFilterMetas(tab);
+	const client = getContextClient();
+	const sources = queryState({
+		client,
+		query: getSources,
+		variables: { isNsfw: gmState.value.nsfw ? null : false }
+	});
+	$inspect(sources);
 </script>
 
 {#if $modalStore[0]}
@@ -156,13 +169,13 @@
 												if (e.shiftKey) {
 													e.preventDefault();
 													e.stopPropagation();
-													unreadUseDefault.value = !unreadUseDefault.value;
+													UnreadUseDefault.value = !UnreadUseDefault.value;
 												}
 											}}
-											bind:state={unread.value}
+											bind:state={Unread.value}
 											label={'Unread'}
 											class="w-full p-1 pl-2 hover:variant-glass-surface focus:outline-0 
-											{unreadUseDefault.value && 'opacity-20'}"
+											{UnreadUseDefault.value && 'opacity-20'}"
 											labelClass="w-full flex-1"
 										>
 											<span>Unread</span>
@@ -201,6 +214,44 @@
 										>
 											<span>Tracked</span>
 										</ThreeStateSwitchCustom>
+										<Accordion>
+											<AccordionItem>
+												{#snippet summary()}
+													Source filter
+												{/snippet}
+												{#snippet content()}
+													{#if sources.value?.data?.sources?.nodes}
+														{#each sources.value.data.sources.nodes as source (source.id)}
+															<Switch
+																title="shift click to toggle per or default"
+																checked={SourceFilter.value.includes(source.id)}
+																onclick={(e: MouseEvent) => {
+																	if (e.shiftKey) {
+																		e.preventDefault();
+																		e.stopPropagation();
+																		SourceFilterUseDefault.value = !SourceFilterUseDefault.value;
+																		return;
+																	}
+																	if (SourceFilter.value.includes(source.id)) {
+																		SourceFilter.value = SourceFilter.value.filter(
+																			(e) => e !== source.id
+																		);
+																		return;
+																	}
+																	SourceFilter.value.push(source.id);
+																}}
+																label={source.displayName}
+																class="w-full p-1 pl-2 hover:variant-glass-surface focus:outline-0
+																{SourceFilterUseDefault.value && 'opacity-20'}"
+																labelClass="w-full"
+															>
+																<span>{source.displayName}</span>
+															</Switch>
+														{/each}
+													{/if}
+												{/snippet}
+											</AccordionItem>
+										</Accordion>
 									{:else if $tabSet === 1}
 										<Switch
 											title="shift click to toggle per or default"
@@ -224,7 +275,7 @@
 											rounded="rounded-container-token"
 											background="bg-transparent"
 											class="focus:outline-0
-											{sortOptionsUseDefault.value && 'opacity-20'}"
+											{SortUseDefault.value && 'opacity-20'}"
 											border="border-0"
 											display="flex-col"
 											active="variant-glass-primary"
@@ -232,7 +283,7 @@
 											{#each enumEntries(sort) as [value, name]}
 												<RadioItem
 													title="shift click to toggle per or default"
-													bind:group={sortOptions.value}
+													bind:group={Sort.value}
 													class="focus:outline-0"
 													name="justify"
 													{value}
@@ -240,7 +291,7 @@
 														if (e.shiftKey) {
 															e.preventDefault();
 															e.stopPropagation();
-															sortOptionsUseDefault.value = !sortOptionsUseDefault.value;
+															SortUseDefault.value = !SortUseDefault.value;
 														}
 													}}
 												>
@@ -251,14 +302,14 @@
 									{:else if $tabSet === 2}
 										<Switch
 											title="shift click to toggle per or default"
-											bind:checked={libraryCategoryTotalCounts.value}
+											bind:checked={TotalCounts.value}
 											class="w-full p-1 pl-2 outline-0 hover:variant-glass-surface
-											{libraryCategoryTotalCountsUseDefault.value && 'opacity-20'}"
+											{TotalCountsUseDefault.value && 'opacity-20'}"
 											onclick={(e: MouseEvent) => {
 												if (e.shiftKey) {
 													e.preventDefault();
 													e.stopPropagation();
-													libraryCategoryTotalCountsUseDefault.value = !libraryCategoryTotalCountsUseDefault.value;
+													TotalCountsUseDefault.value = !TotalCountsUseDefault.value;
 												}
 											}}
 										>
@@ -266,14 +317,14 @@
 										</Switch>
 										<Switch
 											title="shift click to toggle per or default"
-											bind:checked={downloadsBadge.value}
+											bind:checked={DownloadsBadge.value}
 											class="w-full p-1 pl-2 outline-0 hover:variant-glass-surface
-											{downloadsBadgeUseDefault.value && 'opacity-20'}"
+											{DownloadsBadgeUseDefault.value && 'opacity-20'}"
 											onclick={(e: MouseEvent) => {
 												if (e.shiftKey) {
 													e.preventDefault();
 													e.stopPropagation();
-													downloadsBadgeUseDefault.value = !downloadsBadgeUseDefault.value;
+													DownloadsBadgeUseDefault.value = !DownloadsBadgeUseDefault.value;
 												}
 											}}
 										>
@@ -281,14 +332,14 @@
 										</Switch>
 										<Switch
 											title="shift click to toggle per or default"
-											bind:checked={unreadBadge.value}
+											bind:checked={UnreadBadge.value}
 											class="w-full p-1 pl-2 outline-0 hover:variant-glass-surface
-											{unreadBadgeUseDefault.value && 'opacity-20'}"
+											{UnreadBadgeUseDefault.value && 'opacity-20'}"
 											onclick={(e: MouseEvent) => {
 												if (e.shiftKey) {
 													e.preventDefault();
 													e.stopPropagation();
-													unreadBadgeUseDefault.value = !unreadBadgeUseDefault.value;
+													UnreadBadgeUseDefault.value = !UnreadBadgeUseDefault.value;
 												}
 											}}
 										>
@@ -298,7 +349,7 @@
 											rounded="rounded-container-token"
 											background="bg-transparent"
 											class="focus:outline-0
-											{displayOptionsUseDefault.value && 'opacity-20'}"
+											{DisplayUseDefault.value && 'opacity-20'}"
 											border="border-0"
 											display="flex-col"
 											active="variant-glass-primary"
@@ -306,7 +357,7 @@
 											{#each enumEntries(display) as [value, name]}
 												<RadioItem
 													title="shift click to toggle per or default"
-													bind:group={displayOptions.value}
+													bind:group={Display.value}
 													class="focus:outline-0"
 													name="justify"
 													{value}
@@ -314,7 +365,7 @@
 														if (e.shiftKey) {
 															e.preventDefault();
 															e.stopPropagation();
-															displayOptionsUseDefault.value = !displayOptionsUseDefault.value;
+															DisplayUseDefault.value = !DisplayUseDefault.value;
 														}
 													}}
 												>
@@ -384,13 +435,13 @@
 												if (e.shiftKey) {
 													e.preventDefault();
 													e.stopPropagation();
-													unreadUseDefault.value = !unreadUseDefault.value;
+													UnreadUseDefault.value = !UnreadUseDefault.value;
 												}
 											}}
 											bind:state={gmState.value.Unread}
 											label={'Unread'}
 											class="w-full p-1 pl-2 hover:variant-glass-surface focus:outline-0 
-											{!unreadUseDefault.value && 'opacity-20'}"
+											{!UnreadUseDefault.value && 'opacity-20'}"
 											labelClass="w-full flex-1"
 										>
 											<span>Unread</span>
@@ -427,6 +478,46 @@
 										>
 											<span>Tracked</span>
 										</ThreeStateSwitchCustom>
+										<Accordion>
+											<AccordionItem>
+												{#snippet summary()}
+													Source filter
+												{/snippet}
+												{#snippet content()}
+													{#if sources.value?.data?.sources?.nodes}
+														{#each sources.value.data.sources.nodes as source (source.id)}
+															<Switch
+																title="shift click to toggle per or default"
+																checked={gmState.value.SourceFilter.includes(
+																	source.id
+																)}
+																onclick={(e: MouseEvent) => {
+																	if (e.shiftKey) {
+																		e.preventDefault();
+																		e.stopPropagation();
+																		SourceFilterUseDefault.value = !SourceFilterUseDefault.value;
+																		return;
+																	}
+																	if (gmState.value.SourceFilter.includes(source.id)) {
+																		gmState.value.SourceFilter = gmState.value.SourceFilter.filter(
+																			(e) => e !== source.id
+																		);
+																		return;
+																	}
+																	gmState.value.SourceFilter.push(source.id);
+																}}
+																label={source.displayName}
+																class="w-full p-1 pl-2 hover:variant-glass-surface focus:outline-0
+																{!SourceFilterUseDefault.value && 'opacity-20'}"
+																labelClass="w-full"
+															>
+																<span>{source.displayName}</span>
+															</Switch>
+														{/each}
+													{/if}
+												{/snippet}
+											</AccordionItem>
+										</Accordion>
 									{:else if $tabSet === 1}
 										<Switch
 											triState={false}
@@ -457,14 +548,14 @@
 												<RadioItem
 													bind:group={gmState.value.Sort}
 													class="focus:outline-0
-													{!sortOptionsUseDefault.value && 'opacity-20'}"
+													{!SortUseDefault.value && 'opacity-20'}"
 													name="justify"
 													{value}
 													onclick={(e: MouseEvent) => {
 														if (e.shiftKey) {
 															e.preventDefault();
 															e.stopPropagation();
-															sortOptionsUseDefault.value = !sortOptionsUseDefault.value;
+															SortUseDefault.value = !SortUseDefault.value;
 														}
 													}}
 												>
@@ -476,12 +567,12 @@
 										<Slide
 											bind:checked={gmState.value.libraryCategoryTotalCounts}
 											class="w-full p-1 pl-2 outline-0 hover:variant-glass-surface
-											{!libraryCategoryTotalCountsUseDefault.value && 'opacity-20'}"
+											{!TotalCountsUseDefault.value && 'opacity-20'}"
 											onclick={(e: MouseEvent) => {
 												if (e.shiftKey) {
 													e.preventDefault();
 													e.stopPropagation();
-													libraryCategoryTotalCountsUseDefault.value = !libraryCategoryTotalCountsUseDefault.value;
+													TotalCountsUseDefault.value = !TotalCountsUseDefault.value;
 												}
 											}}
 										>
@@ -490,12 +581,12 @@
 										<Slide
 											bind:checked={gmState.value.downloadsBadge}
 											class="w-full p-1 pl-2 outline-0 hover:variant-glass-surface
-											{!downloadsBadgeUseDefault.value && 'opacity-20'}"
+											{!DownloadsBadgeUseDefault.value && 'opacity-20'}"
 											onclick={(e: MouseEvent) => {
 												if (e.shiftKey) {
 													e.preventDefault();
 													e.stopPropagation();
-													downloadsBadgeUseDefault.value = !downloadsBadgeUseDefault.value;
+													DownloadsBadgeUseDefault.value = !DownloadsBadgeUseDefault.value;
 												}
 											}}
 											>Downloads Badge</Slide
@@ -503,12 +594,12 @@
 										<Slide
 											bind:checked={gmState.value.unreadBadge}
 											class="w-full p-1 pl-2 outline-0 hover:variant-glass-surface
-											{!unreadBadgeUseDefault.value && 'opacity-20'}"
+											{!UnreadBadgeUseDefault.value && 'opacity-20'}"
 											onclick={(e: MouseEvent) => {
 												if (e.shiftKey) {
 													e.preventDefault();
 													e.stopPropagation();
-													unreadBadgeUseDefault.value = !unreadBadgeUseDefault.value;
+													UnreadBadgeUseDefault.value = !UnreadBadgeUseDefault.value;
 												}
 											}}
 											>Unread Badge</Slide
@@ -525,14 +616,14 @@
 												<RadioItem
 													bind:group={gmState.value.Display}
 													class="focus:outline-0
-													{!displayOptionsUseDefault.value && 'opacity-20'}"
+													{!DisplayUseDefault.value && 'opacity-20'}"
 													name="justify"
 													{value}
 													onclick={(e: MouseEvent) => {
 														if (e.shiftKey) {
 															e.preventDefault();
 															e.stopPropagation();
-															displayOptionsUseDefault.value = !displayOptionsUseDefault.value;
+															DisplayUseDefault.value = !DisplayUseDefault.value;
 														}
 													}}
 												>

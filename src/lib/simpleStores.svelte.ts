@@ -115,7 +115,8 @@ const trueDefaults = {
 	libraryCategoryTotalCounts: false,
 	DownloadAllChaptersOnAddToLibrary: false,
 	DeleteAllChaptersOnRemoveFromLibrary: false,
-	RemoveChaptersFromDownloadQueueOnRemoveFromLibrary: false
+	RemoveChaptersFromDownloadQueueOnRemoveFromLibrary: false,
+	SourceFilter: [] as string[]
 };
 
 const metaKeyBase = 'VUI3_';
@@ -592,153 +593,94 @@ function CategoryMetaStore<T>(
 	return new categoryMetaStoreSingle<T>(key, value, serializer);
 }
 
-const unread = CategoryMetaStore<'on' | 'intermediate' | 'off'>(
-	'Unread',
-	'intermediate'
-);
-const Downloaded = CategoryMetaStore<'on' | 'intermediate' | 'off'>(
-	'Downloaded',
-	'intermediate'
-);
-const Tracked = CategoryMetaStore<'on' | 'intermediate' | 'off'>(
-	'Tracked',
-	'intermediate'
-);
-const Ascending = CategoryMetaStore<boolean>('Ascending', false);
-const sortOptions = CategoryMetaStore<keyof typeof sort>('Sort', 'ID');
-const libraryCategoryTotalCounts = CategoryMetaStore<boolean>(
-	'TotalCounts',
-	true
-);
-const downloadsBadge = CategoryMetaStore<boolean>('DownloadsBadge', true);
+const CategoryMetaStoreItems = {
+	Unread: CategoryMetaStore(
+		'Unread',
+		'intermediate' as 'on' | 'intermediate' | 'off'
+	),
+	UnreadUseDefault: CategoryMetaStore<boolean>('UnreadDefault', true),
+	Downloaded: CategoryMetaStore(
+		'Downloaded',
+		'intermediate' as 'on' | 'intermediate' | 'off'
+	),
+	DownloadedUseDefault: CategoryMetaStore<boolean>('DownloadedDefault', true),
+	Tracked: CategoryMetaStore(
+		'Tracked',
+		'intermediate' as 'on' | 'intermediate' | 'off'
+	),
+	TrackedUseDefault: CategoryMetaStore<boolean>('TrackedDefault', true),
+	Ascending: CategoryMetaStore('Ascending', false as boolean),
+	AscendingUseDefault: CategoryMetaStore<boolean>('AscendingDefault', true),
+	Sort: CategoryMetaStore('Sort', 'ID' as keyof typeof sort),
+	SortUseDefault: CategoryMetaStore<boolean>('SortDefault', true),
+	TotalCounts: CategoryMetaStore('TotalCounts', true),
+	TotalCountsUseDefault: CategoryMetaStore<boolean>('TotalCountsDefault', true),
+	DownloadsBadge: CategoryMetaStore('DownloadsBadge', true),
+	DownloadsBadgeUseDefault: CategoryMetaStore<boolean>(
+		'DownloadsBadgeDefault',
+		true
+	),
+	UnreadBadge: CategoryMetaStore('UnreadBadge', true),
+	UnreadBadgeUseDefault: CategoryMetaStore<boolean>('UnreadBadgeDefault', true),
+	Display: CategoryMetaStore('Display', display.Compact),
+	DisplayUseDefault: CategoryMetaStore<boolean>('DisplayDefault', true),
+	SourceFilter: CategoryMetaStore('SourceFilter', [] as string[]),
+	SourceFilterUseDefault: CategoryMetaStore<boolean>(
+		'SourceFilterDefault',
+		true
+	)
+} as const;
 
-const unreadBadge = CategoryMetaStore<boolean>('UnreadBadge', true);
-
-const displayOptions = CategoryMetaStore<display>('Display', display.Compact);
-
-const unreadUseDefault = CategoryMetaStore<boolean>('UnreadUseDefault', true);
-
-const DownloadedUseDefault = CategoryMetaStore<boolean>(
-	'DownloadedUseDefault',
-	true
-);
-
-const TrackedUseDefault = CategoryMetaStore<boolean>('TrackedUseDefault', true);
-
-const AscendingUseDefault = CategoryMetaStore<boolean>(
-	'AscendingUseDefault',
-	true
-);
-
-const sortOptionsUseDefault = CategoryMetaStore<boolean>(
-	'SortUseDefault',
-	true
-);
-
-const libraryCategoryTotalCountsUseDefault = CategoryMetaStore<boolean>(
-	'TotalCountsUseDefault',
-	true
-);
-
-const downloadsBadgeUseDefault = CategoryMetaStore<boolean>(
-	'DownloadsBadgeUseDefault',
-	true
-);
-
-const unreadBadgeUseDefault = CategoryMetaStore<boolean>(
-	'UnreadBadgeUseDefault',
-	true
-);
-
-const displayOptionsUseDefault = CategoryMetaStore<boolean>(
-	'DisplayUseDefault',
-	true
-);
 export function categoryFilterMetas(id: number) {
-	unread.setId(id);
-	Downloaded.setId(id);
-	Tracked.setId(id);
-	Ascending.setId(id);
-	sortOptions.setId(id);
-	libraryCategoryTotalCounts.setId(id);
-	downloadsBadge.setId(id);
-	unreadBadge.setId(id);
-	displayOptions.setId(id);
-	unreadUseDefault.setId(id);
-	DownloadedUseDefault.setId(id);
-	TrackedUseDefault.setId(id);
-	AscendingUseDefault.setId(id);
-	sortOptionsUseDefault.setId(id);
-	libraryCategoryTotalCountsUseDefault.setId(id);
-	downloadsBadgeUseDefault.setId(id);
-	unreadBadgeUseDefault.setId(id);
-	displayOptionsUseDefault.setId(id);
-	return {
-		unread,
-		Downloaded,
-		Tracked,
-		Ascending,
-		sortOptions,
-		libraryCategoryTotalCounts,
-		downloadsBadge,
-		unreadBadge,
-		displayOptions,
-		unreadUseDefault,
-		DownloadedUseDefault,
-		TrackedUseDefault,
-		AscendingUseDefault,
-		sortOptionsUseDefault,
-		libraryCategoryTotalCountsUseDefault,
-		downloadsBadgeUseDefault,
-		unreadBadgeUseDefault,
-		displayOptionsUseDefault
-	};
+	Object.values(CategoryMetaStoreItems).forEach((e) => e.setId(id));
+	return CategoryMetaStoreItems;
 }
 
 export function categoryFilterMetasReadOnly(id: number) {
 	const {
-		unread,
+		Unread,
+		UnreadUseDefault,
 		Downloaded,
-		Tracked,
-		Ascending,
-		sortOptions,
-		libraryCategoryTotalCounts,
-		downloadsBadge,
-		unreadBadge,
-		displayOptions,
-		unreadUseDefault,
 		DownloadedUseDefault,
+		Tracked,
 		TrackedUseDefault,
+		Ascending,
 		AscendingUseDefault,
-		sortOptionsUseDefault,
-		libraryCategoryTotalCountsUseDefault,
-		downloadsBadgeUseDefault,
-		unreadBadgeUseDefault,
-		displayOptionsUseDefault
+		Sort,
+		SortUseDefault,
+		TotalCounts,
+		TotalCountsUseDefault,
+		DownloadsBadge,
+		DownloadsBadgeUseDefault,
+		UnreadBadge,
+		UnreadBadgeUseDefault,
+		Display,
+		DisplayUseDefault,
+		SourceFilter,
+		SourceFilterUseDefault
 	} = untrack(() => categoryFilterMetas(id));
 
 	const value = $derived({
-		unread: unreadUseDefault.value ? gmState.value.Unread : unread.value,
+		Unread: UnreadUseDefault.value ? gmState.value.Unread : Unread.value,
 		Downloaded: DownloadedUseDefault.value
 			? gmState.value.Downloaded
 			: Downloaded.value,
 		Tracked: TrackedUseDefault.value ? gmState.value.Tracked : Tracked.value,
 		Ascending: AscendingUseDefault.value ? gmState.value.Asc : Ascending.value,
-		sortOptions: sortOptionsUseDefault.value
-			? gmState.value.Sort
-			: sortOptions.value,
-		libraryCategoryTotalCounts: libraryCategoryTotalCountsUseDefault.value
+		Sort: SortUseDefault.value ? gmState.value.Sort : Sort.value,
+		TotalCounts: TotalCountsUseDefault.value
 			? gmState.value.libraryCategoryTotalCounts
-			: libraryCategoryTotalCounts.value,
-		downloadsBadge: downloadsBadgeUseDefault.value
+			: TotalCounts.value,
+		DownloadsBadge: DownloadsBadgeUseDefault.value
 			? gmState.value.downloadsBadge
-			: downloadsBadge.value,
-		unreadBadge: unreadBadgeUseDefault.value
+			: DownloadsBadge.value,
+		UnreadBadge: UnreadBadgeUseDefault.value
 			? gmState.value.unreadBadge
-			: unreadBadge.value,
-		displayOptions: displayOptionsUseDefault.value
-			? gmState.value.Display
-			: displayOptions.value
+			: UnreadBadge.value,
+		Display: DisplayUseDefault.value ? gmState.value.Display : Display.value,
+		SourceFilter: SourceFilterUseDefault.value
+			? gmState.value.SourceFilter
+			: SourceFilter.value
 	} as const);
 
 	return { value };
