@@ -70,7 +70,7 @@
 </script>
 
 {#if $modalStore[0]}
-	<div class="card w-modal rounded-lg p-0 shadow-xl">
+	<div class="card w-modal max-h-svh overflow-auto rounded-lg p-0 shadow-xl">
 		<TabGroup
 			justify="justify-center"
 			flex="flex"
