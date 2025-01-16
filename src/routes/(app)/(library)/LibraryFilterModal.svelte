@@ -30,7 +30,7 @@
 	import Slide from '$lib/components/Slide.svelte';
 	import ThreeStateSwitchCustom from '$lib/components/ThreeStateSwitchCustom.svelte';
 	import { getSources } from '$lib/gql/Queries';
-	import { getContextClient, queryStore } from '@urql/svelte';
+	import { getContextClient } from '@urql/svelte';
 	const modalStore = getModalStore();
 	let tabSetArch = localStorageStore('libraryModalTabsArch', 0);
 	let tabSet = localStorageStore('libraryModalTabs', 0);
