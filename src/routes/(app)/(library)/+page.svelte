@@ -276,43 +276,52 @@
 		}
 	});
 	let filteredMangas = $derived(
-		mangas.value.data?.category?.mangas.nodes.filter((ele) => {
-			if (!ele.inLibrary) return false;
+		mangas.value.data?.category?.mangas.nodes.filter((manga) => {
+			if (!manga.inLibrary) return false;
 			if (gmState.value.ignoreFiltersWhenSearching) {
 				if (
 					parsedQuery !== null &&
-					specificSearch(ele, parsedQuery).findIndex((e) => e === false) === -1
+					specificSearch(manga, parsedQuery).findIndex((e) => e === false) ===
+						-1
 				) {
 					return true;
 				}
 			}
 
-			if (FilterMeta.value.Downloaded === 'on' && ele.downloadCount === 0)
+			if (FilterMeta.value.Downloaded === 'on' && manga.downloadCount === 0)
 				return false;
-			if (FilterMeta.value.Downloaded === 'off' && ele.downloadCount !== 0)
+			if (FilterMeta.value.Downloaded === 'off' && manga.downloadCount !== 0)
 				return false;
 
-			if (FilterMeta.value.unread === 'on' && ele.unreadCount === 0)
+			if (FilterMeta.value.Unread === 'on' && manga.unreadCount === 0)
 				return false;
-			if (FilterMeta.value.unread === 'off' && ele.unreadCount !== 0)
+			if (FilterMeta.value.Unread === 'off' && manga.unreadCount !== 0)
 				return false;
 
 			if (
 				FilterMeta.value.Tracked === 'on' &&
-				ele.trackRecords.nodes.length === 0
+				manga.trackRecords.nodes.length === 0
 			)
 				return false;
 			if (
 				FilterMeta.value.Tracked === 'off' &&
-				ele.trackRecords.nodes.length !== 0
+				manga.trackRecords.nodes.length !== 0
 			)
 				return false;
 
 			if (
 				parsedQuery !== null &&
-				specificSearch(ele, parsedQuery).findIndex((e) => e === false) !== -1
+				specificSearch(manga, parsedQuery).findIndex((e) => e === false) !== -1
 			)
 				return false;
+
+			if (FilterMeta.value.SourceFilter.length > 0) {
+				if (
+					FilterMeta.value.SourceFilter.find((e) => e === manga.source?.id) ===
+					undefined
+				)
+					return false;
+			}
 
 			return true;
 		})
@@ -334,11 +343,11 @@
 	});
 	let sortedMangas = $derived(
 		filteredMangas
-			? FilterMeta.value.sortOptions === 'Random'
+			? FilterMeta.value.Sort === 'Random'
 				? shuffle([...filteredMangas])
 				: [...filteredMangas].sort((a, b) => {
 						let tru = true;
-						switch (FilterMeta.value.sortOptions) {
+						switch (FilterMeta.value.Sort) {
 							case 'ID':
 								tru = a.id > b.id;
 								break;
@@ -388,11 +397,11 @@
 			<div class="aspect-cover w-full">
 				<div
 					class="placeholder h-full animate-pulse
-			{FilterMeta.value.displayOptions === display.Compact && 'rounded-lg'}
-			{FilterMeta.value.displayOptions === display.Comfortable &&
+			{FilterMeta.value.Display === display.Compact && 'rounded-lg'}
+			{FilterMeta.value.Display === display.Comfortable &&
 						'rounded-none rounded-t-lg'}"
 				></div>
-				{#if FilterMeta.value.displayOptions === display.Comfortable}
+				{#if FilterMeta.value.Display === display.Comfortable}
 					<div
 						class="placeholder h-12 animate-pulse rounded-none rounded-b-lg px-2 text-center"
 					></div>
@@ -411,7 +420,7 @@
 				<Tab bind:group={$tab} name={cat.name} value={cat.id}>
 					{#snippet lead()}
 						{cat.name}
-						{#if FilterMeta.value.libraryCategoryTotalCounts}
+						{#if FilterMeta.value.TotalCounts}
 							<span
 								class="variant-filled-surface m-0 rounded-full px-1 text-sm"
 							>
@@ -429,11 +438,11 @@
 						<div class="aspect-cover w-full">
 							<div
 								class="placeholder h-full animate-pulse
-									{FilterMeta.value.displayOptions === display.Compact && 'rounded-lg'}
-									{FilterMeta.value.displayOptions === display.Comfortable &&
+									{FilterMeta.value.Display === display.Compact && 'rounded-lg'}
+									{FilterMeta.value.Display === display.Comfortable &&
 									'rounded-none rounded-t-lg'}"
 							></div>
-							{#if FilterMeta.value.displayOptions === display.Comfortable}
+							{#if FilterMeta.value.Display === display.Comfortable}
 								<div
 									class="placeholder h-12 animate-pulse rounded-none rounded-b-lg px-2 text-center"
 								></div>
@@ -483,16 +492,16 @@
 												thumbnailUrl={manga.thumbnailUrl ?? ''}
 												title={manga.title}
 												class="select-none {$selectMode && 'opacity-80'}"
-												rounded="{FilterMeta.value.displayOptions ===
+												rounded="{FilterMeta.value.Display ===
 													display.Compact && 'rounded-lg'}
-												{FilterMeta.value.displayOptions === display.Comfortable &&
+												{FilterMeta.value.Display === display.Comfortable &&
 													'rounded-none rounded-t-lg'}"
 											>
 												<div class="absolute left-2 top-2 flex">
-													{#if manga.downloadCount && FilterMeta.value.downloadsBadge}
+													{#if manga.downloadCount && FilterMeta.value.DownloadsBadge}
 														<div
 															class="{manga.unreadCount &&
-															FilterMeta.value.unreadBadge
+															FilterMeta.value.UnreadBadge
 																? 'rounded-l'
 																: 'rounded'}
 															variant-filled-primary m-0 px-1 py-0.5"
@@ -500,10 +509,10 @@
 															{manga.downloadCount}
 														</div>
 													{/if}
-													{#if manga.unreadCount && FilterMeta.value.unreadBadge}
+													{#if manga.unreadCount && FilterMeta.value.UnreadBadge}
 														<div
 															class="{manga.downloadCount &&
-															FilterMeta.value.downloadsBadge
+															FilterMeta.value.DownloadsBadge
 																? 'rounded-r'
 																: 'rounded'}
 															variant-filled-secondary m-0 px-1 py-0.5"
@@ -524,7 +533,7 @@
 														/>
 													</div>
 												{/if}
-												{#if FilterMeta.value.displayOptions === display.Compact}
+												{#if FilterMeta.value.Display === display.Compact}
 													<div
 														class="variant-glass absolute bottom-0 left-0 right-0 rounded-b-olg"
 													>
@@ -537,7 +546,7 @@
 													</div>
 												{/if}
 											</MangaCard>
-											{#if FilterMeta.value.displayOptions === display.Comfortable}
+											{#if FilterMeta.value.Display === display.Comfortable}
 												<div class="variant-glass-surface rounded-b-lg">
 													<div
 														class="line-clamp-2 h-12 px-2 text-center"
@@ -550,7 +559,7 @@
 										</a>
 									{/if}
 								</div>
-								{#if !intersecting && FilterMeta.value.displayOptions === display.Comfortable}
+								{#if !intersecting && FilterMeta.value.Display === display.Comfortable}
 									<div class="h-12"></div>
 								{/if}
 							{/snippet}
