@@ -8,9 +8,6 @@
 
 <script lang="ts">
 	import { AppBarData } from '$lib/MountTitleAction';
-	import IntersectionObserver from '$lib/components/IntersectionObserver.svelte';
-	import MangaCard from '$lib/components/MangaCard.svelte';
-	import { display, gmState } from '$lib/simpleStores.svelte';
 
 	import { gridValues, queryState } from '$lib/util.svelte';
 	import { getContextClient } from '@urql/svelte';
@@ -19,6 +16,13 @@
 		sourceMigrationManga,
 		sourceMigrationSource
 	} from '$lib/gql/Queries';
+	import {
+		IntersectionObserverAction,
+		MakeSimpleCallback
+	} from '$lib/actions/IntersectionObserver.svelte';
+	import { SvelteSet } from 'svelte/reactivity';
+	import NonLibraryMangaDisplay from '$lib/components/NonLibraryMangaDisplay.svelte';
+	import FakeMangaItem from '$lib/components/FakeMangaItem.svelte';
 
 	interface Props {
 		data: PageData;
@@ -43,24 +47,12 @@
 		if (source.value.data?.source?.displayName)
 			AppBarData(source.value.data?.source.displayName);
 	});
+	let intersecting: SvelteSet<number> = $state(new SvelteSet());
 </script>
 
 {#if Manga.value.fetching}
 	<div class="yoy m-2 grid gap-2 {gridValues}">
-		{#each new Array(30) as _}
-			<div class="aspect-cover w-full">
-				<div
-					class="placeholder h-full animate-pulse
-						{gmState.value.Display === display.Compact && 'rounded-lg'}
-						{gmState.value.Display === display.Comfortable && 'rounded-none rounded-t-lg'}"
-				></div>
-				{#if gmState.value.Display === display.Comfortable}
-					<div
-						class="placeholder h-12 animate-pulse rounded-none rounded-b-lg px-2 text-center"
-					></div>
-				{/if}
-			</div>
-		{/each}
+		<FakeMangaItem active={true} count={30} />
 	</div>
 {:else if Manga.value.error}
 	<div class="white-space-pre-wrap">
@@ -69,57 +61,16 @@
 {:else if Manga.value.data}
 	<div class="yoy grid {gridValues} m-2 gap-2">
 		{#each Manga.value.data.mangas.nodes as manga}
-			<IntersectionObserver
-				root={document.querySelector('#page') ?? undefined}
-				top={400}
-				bottom={400}
+			<div
+				use:IntersectionObserverAction={{
+					root: document.querySelector('#page') ?? undefined,
+					rootMargin: `400px 0px 400px 0px`,
+					callback: MakeSimpleCallback(intersecting, manga.id)
+				}}
+				class="aspect-cover"
 			>
-				{#snippet children({ intersecting })}
-					<div class="aspect-cover">
-						{#if intersecting}
-							<a
-								href="/manga/{manga.id}"
-								class="h-full cursor-pointer hover:opacity-70"
-								tabindex="-1"
-							>
-								<MangaCard
-									thumbnailUrl={manga.thumbnailUrl ?? ''}
-									title={manga.title}
-									rounded="{gmState.value.Display === display.Compact &&
-										'rounded-lg'}
-										{gmState.value.Display === display.Comfortable && 'rounded-none rounded-t-lg'}"
-								>
-									{#if gmState.value.Display === display.Compact}
-										<div
-											class="variant-glass absolute bottom-0 left-0 right-0 rounded-b-olg"
-										>
-											<div
-												class="line-clamp-2 h-12 px-2 text-center"
-												title={manga.title}
-											>
-												{manga.title}
-											</div>
-										</div>
-									{/if}
-								</MangaCard>
-								{#if gmState.value.Display === display.Comfortable}
-									<div class="variant-glass-surface rounded-b-lg">
-										<div
-											class="line-clamp-2 h-12 px-2 text-center"
-											title={manga.title}
-										>
-											{manga.title}
-										</div>
-									</div>
-								{/if}
-							</a>
-						{/if}
-					</div>
-					{#if !intersecting && gmState.value.Display === display.Comfortable}
-						<div class="h-12"></div>
-					{/if}
-				{/snippet}
-			</IntersectionObserver>
+				<NonLibraryMangaDisplay {manga} {intersecting} />
+			</div>
 		{/each}
 	</div>
 {/if}

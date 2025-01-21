@@ -18,8 +18,7 @@
 	import type { VariablesOf } from '$lib/gql/graphql';
 	import { getContextClient } from '@urql/svelte';
 	import { getSource } from '$lib/gql/Queries';
-	import { queryState } from '$lib/util.svelte';
-	import { untrack } from 'svelte';
+	import { OTT, queryState } from '$lib/util.svelte';
 
 	const modalStore = getModalStore();
 
@@ -35,13 +34,15 @@
 	$filtersSause = data.sourceID;
 
 	let sause = $derived.by(() => {
-		const _ = [data.sourceID];
-		return untrack(
+		return OTT(
+			[data.sourceID],
 			() =>
 				queryState({
 					client: getContextClient(),
 					query: getSource,
-					variables: { id: data.sourceID }
+					variables: {
+						id: data.sourceID
+					}
 				}).value
 		);
 	});

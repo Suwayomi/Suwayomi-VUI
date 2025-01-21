@@ -8,7 +8,7 @@
 
 <script lang="ts">
 	import { getModalStore } from '@skeletonlabs/skeleton';
-	import { onDestroy, untrack } from 'svelte';
+	import { onDestroy } from 'svelte';
 	import type { LayoutData } from './$types';
 	import CheckBoxPreference from './preferences/CheckBoxPreference.svelte';
 	import ListPreference from './preferences/ListPreference.svelte';
@@ -18,7 +18,7 @@
 	import { getContextClient } from '@urql/svelte';
 	import { getSource } from '$lib/gql/Queries';
 	import ModalTemplate from '$lib/components/ModalTemplate.svelte';
-	import { queryState } from '$lib/util.svelte';
+	import { OTT, queryState } from '$lib/util.svelte';
 
 	interface Props {
 		data: LayoutData;
@@ -32,8 +32,8 @@
 	onDestroy(clearAll);
 
 	let sauce = $derived.by(() => {
-		const _ = [data.sourceID];
-		return untrack(
+		return OTT(
+			[data.sourceID],
 			() =>
 				queryState({
 					client,

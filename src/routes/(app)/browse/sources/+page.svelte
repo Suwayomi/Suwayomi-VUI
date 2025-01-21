@@ -7,8 +7,7 @@
 -->
 
 <script lang="ts">
-	import IntersectionObserver from '$lib/components/IntersectionObserver.svelte';
-	import MangaCard from '$lib/components/MangaCard.svelte';
+	import ImageCard from '$lib/components/ImageCard.svelte';
 	import { AppBarData } from '$lib/MountTitleAction';
 	import { queryParam, ssp } from 'sveltekit-search-params';
 	import { FindLangName } from '../languages';
@@ -24,6 +23,11 @@
 	import { SourceTypeFragment } from '$lib/gql/Fragments';
 	import { deleteSourceMeta, setSourceMeta } from '$lib/gql/Mutations';
 	import { gmState } from '$lib/simpleStores.svelte';
+	import { SvelteSet } from 'svelte/reactivity';
+	import {
+		IntersectionObserverAction,
+		MakeSimpleCallback
+	} from '$lib/actions/IntersectionObserver.svelte';
 
 	AppBarData('Sources');
 
@@ -95,6 +99,7 @@
 		AppBarData('Sources', { component: SourcesActions, props: { langs } });
 	});
 	let groupSources = $derived(doGroupSources(filteredSources));
+	let intersecting: SvelteSet<string> = $state(new SvelteSet());
 </script>
 
 <Nav>
@@ -140,48 +145,48 @@
 					class="mx-2 grid gap-2 xs:grid-cols-2 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-8 xl:grid-cols-10 2xl:grid-cols-12"
 				>
 					{#each sou as source (source.id)}
-						<IntersectionObserver
-							top={400}
-							bottom={400}
+						<div
+							use:IntersectionObserverAction={{
+								rootMargin: '400px 0px 400px 0px',
+								callback: MakeSimpleCallback(intersecting, source.id)
+							}}
 							class="card aspect-cover"
 						>
-							{#snippet children({ intersecting })}
-								{#if intersecting}
-									<a
-										use:longPress
-										onlongPress={(e) => {
-											e.stopPropagation();
+							{#if intersecting.has(source.id)}
+								<a
+									use:longPress
+									onlongPress={(e) => {
+										e.stopPropagation();
+										e.preventDefault();
+										LongHandler(source);
+									}}
+									href="/browse/source/{source.id}/popular"
+									onclick={(e) => {
+										if (e.ctrlKey) return;
+										if (stopClick === source.id) {
 											e.preventDefault();
-											LongHandler(source);
-										}}
-										href="/browse/source/{source.id}/popular"
-										onclick={(e) => {
-											if (e.ctrlKey) return;
-											if (stopClick === source.id) {
-												e.preventDefault();
-											}
-										}}
+										}
+									}}
+								>
+									<ImageCard
+										thumbnailUrl={source.iconUrl}
+										title={source.displayName}
+										fit="object-contain object-top"
 									>
-										<MangaCard
-											thumbnailUrl={source.iconUrl}
-											title={source.displayName}
-											fit="object-contain object-top"
+										<div
+											class="variant-soft absolute bottom-0 left-0 right-0 rounded-b"
 										>
 											<div
-												class="variant-glass absolute bottom-0 left-0 right-0 rounded-b-olg"
+												class="line-clamp-2 h-12 px-2 text-center"
+												title={source.displayName}
 											>
-												<div
-													class="line-clamp-2 h-12 px-2 text-center"
-													title={source.displayName}
-												>
-													{source.displayName}
-												</div>
+												{source.displayName}
 											</div>
-										</MangaCard>
-									</a>
-								{/if}
-							{/snippet}
-						</IntersectionObserver>
+										</div>
+									</ImageCard>
+								</a>
+							{/if}
+						</div>
 					{/each}
 				</div>
 			{/each}

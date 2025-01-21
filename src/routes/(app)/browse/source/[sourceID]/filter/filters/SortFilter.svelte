@@ -13,7 +13,7 @@
 	import type { getSource } from '$lib/gql/Queries';
 	import type { ResultOf, VariablesOf } from '$lib/gql/graphql';
 	import type { fetchSourceManga } from '$lib/gql/Mutations';
-	import { untrack } from 'svelte';
+	import { OTT } from '$lib/util.svelte';
 	interface Props {
 		filter: Extract<
 			ResultOf<typeof getSource>['source']['filters'][0],
@@ -37,8 +37,7 @@
 	);
 
 	$effect(() => {
-		const _ = [filter, selected, checked];
-		untrack(() => {
+		OTT([filter, selected, checked], () => {
 			if (
 				selected !== filter.SortDefault?.index ||
 				checked !== filter.SortDefault?.ascending

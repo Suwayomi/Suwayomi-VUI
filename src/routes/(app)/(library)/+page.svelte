@@ -7,8 +7,7 @@
 -->
 
 <script lang="ts">
-	import IntersectionObserver from '$lib/components/IntersectionObserver.svelte';
-	import MangaCard from '$lib/components/MangaCard.svelte';
+	import MangaCard from '$lib/components/ImageCard.svelte';
 	import { longPress } from '$lib/press';
 	import {
 		categoryFilterMetasReadOnly,
@@ -32,6 +31,12 @@
 	import { parseQuery, type ANO, type parsedQueryType } from './queryParse';
 	import { getCategories, getCategory } from '$lib/gql/Queries';
 	import { getContextClient } from '@urql/svelte';
+	import {
+		IntersectionObserverAction,
+		MakeSimpleCallback
+	} from '$lib/actions/IntersectionObserver.svelte';
+	import { SvelteSet } from 'svelte/reactivity';
+	import FakeMangaItem from '$lib/components/FakeMangaItem.svelte';
 
 	const client = getContextClient();
 
@@ -384,6 +389,8 @@
 					})
 			: undefined
 	);
+
+	let intersecting: SvelteSet<number> = $state(new SvelteSet());
 </script>
 
 {#if categories.value.fetching}
@@ -393,21 +400,7 @@
 		<div class="placeholder w-20 animate-pulse"></div>
 	</div>
 	<div class="yoy m-2 grid gap-2 {gridValues}">
-		{#each new Array(30) as _}
-			<div class="aspect-cover w-full">
-				<div
-					class="placeholder h-full animate-pulse
-			{FilterMeta.value.Display === display.Compact && 'rounded-lg'}
-			{FilterMeta.value.Display === display.Comfortable &&
-						'rounded-none rounded-t-lg'}"
-				></div>
-				{#if FilterMeta.value.Display === display.Comfortable}
-					<div
-						class="placeholder h-12 animate-pulse rounded-none rounded-b-lg px-2 text-center"
-					></div>
-				{/if}
-			</div>
-		{/each}
+		<FakeMangaItem active={true} count={30} />
 	</div>
 {:else if categories.value.error}
 	<div class="whitespace-pre-wrap">
@@ -434,21 +427,11 @@
 		<svelte:fragment slot="panel">
 			{#if mangas.value.fetching}
 				<div class="yoy m-2 grid gap-2 {gridValues}">
-					{#each new Array(orderedCategories.find((e) => e.id === $tab)?.mangas.totalCount ?? 10) as _}
-						<div class="aspect-cover w-full">
-							<div
-								class="placeholder h-full animate-pulse
-									{FilterMeta.value.Display === display.Compact && 'rounded-lg'}
-									{FilterMeta.value.Display === display.Comfortable &&
-									'rounded-none rounded-t-lg'}"
-							></div>
-							{#if FilterMeta.value.Display === display.Comfortable}
-								<div
-									class="placeholder h-12 animate-pulse rounded-none rounded-b-lg px-2 text-center"
-								></div>
-							{/if}
-						</div>
-					{/each}
+					<FakeMangaItem
+						active={true}
+						count={orderedCategories.find((e) => e.id === $tab)?.mangas
+							.totalCount ?? 10}
+					/>
 				</div>
 			{:else if mangas.value.error}
 				<div class="whitespace-pre-wrap">
@@ -457,113 +440,114 @@
 			{:else if sortedMangas}
 				<div class="yoy grid {gridValues} m-2 gap-2">
 					{#each sortedMangas as manga (manga.id)}
-						<IntersectionObserver
-							root={document.querySelector('#page') ?? undefined}
-							top={400}
-							bottom={400}
+						<div
+							class="aspect-cover"
+							use:IntersectionObserverAction={{
+								root: document.querySelector('#page') ?? undefined,
+								rootMargin: `400px 0px 400px 0px`,
+								callback: MakeSimpleCallback(intersecting, manga.id)
+							}}
 						>
-							{#snippet children({ intersecting })}
-								<div class="aspect-cover">
-									{#if intersecting}
-										<a
-											draggable={false}
-											use:longPress
-											onlongPress={() => $selectMode || LongHandler()}
-											href="/manga/{manga.id}"
-											onclick={(e) => {
-												if (e.ctrlKey) return;
-												if ($selectMode) {
-													e.stopPropagation();
-													e.preventDefault();
-													lastSelected = HelpDoSelect(
-														manga,
-														e,
-														lastSelected,
-														sortedMangas,
-														selected
-													);
-												}
-											}}
-											class="h-full cursor-pointer hover:opacity-70"
-											tabindex="-1"
-										>
-											<MangaCard
-												draggable={false}
-												thumbnailUrl={manga.thumbnailUrl ?? ''}
-												title={manga.title}
-												class="select-none {$selectMode && 'opacity-80'}"
-												rounded="{FilterMeta.value.Display ===
-													display.Compact && 'rounded-lg'}
-												{FilterMeta.value.Display === display.Comfortable &&
-													'rounded-none rounded-t-lg'}"
-											>
-												<div class="absolute left-2 top-2 flex">
-													{#if manga.downloadCount && FilterMeta.value.DownloadsBadge}
-														<div
-															class="{manga.unreadCount &&
-															FilterMeta.value.UnreadBadge
-																? 'rounded-l'
-																: 'rounded'}
-															variant-filled-primary m-0 px-1 py-0.5"
-														>
-															{manga.downloadCount}
-														</div>
-													{/if}
-													{#if manga.unreadCount && FilterMeta.value.UnreadBadge}
-														<div
-															class="{manga.downloadCount &&
-															FilterMeta.value.DownloadsBadge
-																? 'rounded-r'
-																: 'rounded'}
-															variant-filled-secondary m-0 px-1 py-0.5"
-														>
-															{manga.unreadCount}
-														</div>
-													{/if}
-												</div>
-												{#if $selectMode}
-													<div
-														class="bg-base-100/75 absolute bottom-0 left-0 right-0 top-0 cursor-pointer"
-													>
-														<IconWrapper
-															name={$selected[manga.id] === undefined
-																? 'fluent:checkbox-unchecked-24-filled'
-																: 'fluent:checkbox-checked-24-filled'}
-															class="absolute right-2 top-2 text-4xl"
-														/>
-													</div>
-												{/if}
-												{#if FilterMeta.value.Display === display.Compact}
-													<div
-														class="variant-glass absolute bottom-0 left-0 right-0 rounded-b-olg"
-													>
-														<div
-															class="line-clamp-2 h-12 px-2 text-center"
-															title={manga.title}
-														>
-															{manga.title}
-														</div>
-													</div>
-												{/if}
-											</MangaCard>
-											{#if FilterMeta.value.Display === display.Comfortable}
-												<div class="variant-glass-surface rounded-b-lg">
-													<div
-														class="line-clamp-2 h-12 px-2 text-center"
-														title={manga.title}
-													>
-														{manga.title}
-													</div>
+							{#if intersecting.has(manga.id)}
+								<a
+									draggable={false}
+									use:longPress
+									onlongPress={() => $selectMode || LongHandler()}
+									href="/manga/{manga.id}"
+									onclick={(e) => {
+										if (e.ctrlKey) return;
+										if ($selectMode) {
+											e.stopPropagation();
+											e.preventDefault();
+											lastSelected = HelpDoSelect(
+												manga,
+												e,
+												lastSelected,
+												sortedMangas,
+												selected
+											);
+										}
+									}}
+									class="h-full cursor-pointer hover:opacity-70"
+									tabindex="-1"
+								>
+									<MangaCard
+										draggable={false}
+										thumbnailUrl={manga.thumbnailUrl ?? ''}
+										title={manga.title}
+										class="select-none {$selectMode && 'opacity-80'}"
+										rounded="{FilterMeta.value.Display === display.Compact &&
+											'rounded-lg'}
+													{FilterMeta.value.Display === display.Comfortable &&
+											'rounded-none rounded-t-lg'}"
+									>
+										<div class="absolute left-2 top-2 flex">
+											{#if manga.downloadCount && FilterMeta.value.DownloadsBadge}
+												<div
+													class="{manga.unreadCount &&
+													FilterMeta.value.UnreadBadge
+														? 'rounded-l'
+														: 'rounded'}
+																variant-filled-primary m-0 px-1 py-0.5"
+												>
+													{manga.downloadCount}
 												</div>
 											{/if}
-										</a>
+											{#if manga.unreadCount && FilterMeta.value.UnreadBadge}
+												<div
+													class="{manga.downloadCount &&
+													FilterMeta.value.DownloadsBadge
+														? 'rounded-r'
+														: 'rounded'}
+																variant-filled-secondary m-0 px-1 py-0.5"
+												>
+													{manga.unreadCount}
+												</div>
+											{/if}
+										</div>
+										{#if $selectMode}
+											<div
+												class="bg-base-100/75 absolute bottom-0 left-0 right-0 top-0 cursor-pointer"
+											>
+												<IconWrapper
+													name={$selected[manga.id] === undefined
+														? 'fluent:checkbox-unchecked-24-filled'
+														: 'fluent:checkbox-checked-24-filled'}
+													class="absolute right-2 top-2 text-4xl"
+												/>
+											</div>
+										{/if}
+										{#if FilterMeta.value.Display === display.Compact}
+											<div
+												class="variant-glass absolute bottom-0 left-0 right-0 rounded-b-olg"
+											>
+												<div
+													class="line-clamp-2 h-12 px-2 text-center"
+													title={manga.title}
+												>
+													{manga.title}
+												</div>
+											</div>
+										{/if}
+									</MangaCard>
+									{#if FilterMeta.value.Display === display.Comfortable}
+										<div class="variant-glass-surface rounded-b-lg">
+											<div
+												class="line-clamp-2 h-12 px-2 text-center"
+												title={manga.title}
+											>
+												{manga.title}
+											</div>
+										</div>
 									{/if}
-								</div>
-								{#if !intersecting && FilterMeta.value.Display === display.Comfortable}
+								</a>
+							{:else}
+								<div class="aspect-cover w-full"></div>
+								{#if FilterMeta.value.Display === display.Comfortable}
 									<div class="h-12"></div>
 								{/if}
-							{/snippet}
-						</IntersectionObserver>
+							{/if}
+						</div>
 					{/each}
 				</div>
 			{/if}

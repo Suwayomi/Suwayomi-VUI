@@ -10,19 +10,20 @@
 	import GlobalSearchActions from './globalsearch/GlobalSearchActions.svelte';
 	import PQueue from 'p-queue';
 	import { queryParam, ssp } from 'sveltekit-search-params';
-	import { onDestroy, untrack } from 'svelte';
+	import { onDestroy } from 'svelte';
 	import MediaQuery2 from '$lib/components/MediaQuery2.svelte';
 	import { SpecificSourceFilter } from './BrowseStores';
 	import HorisontalmangaElement from './HorisontalmangaElement.svelte';
 	import { AppBarData } from '$lib/MountTitleAction';
-	import { display, gmState } from '$lib/simpleStores.svelte';
+	import { gmState } from '$lib/simpleStores.svelte';
 
-	import { groupBy } from '$lib/util.svelte';
+	import { groupBy, OTT } from '$lib/util.svelte';
 	import { getContextClient, CombinedError } from '@urql/svelte';
 	import { getSources } from '$lib/gql/Queries';
 	import { type ResultOf } from '$lib/gql/graphql';
 	import { fetchSourceManga } from '$lib/gql/Mutations';
 	import { writable } from 'svelte/store';
+	import FakeMangaItem from '$lib/components/FakeMangaItem.svelte';
 
 	interface Props {
 		title?: string;
@@ -167,8 +168,7 @@
 		});
 	});
 	$effect(() => {
-		const _ = [filteredSources, $query];
-		untrack(onQueryChange);
+		OTT([filteredSources, $query], onQueryChange);
 	});
 	let groupSources = $derived(doGroupSources(alterableRaw));
 </script>
@@ -209,24 +209,7 @@
 								class="flex flex-nowrap"
 								style="width:calc({10 / gridnumber} * 100%)"
 							>
-								{#each new Array(10) as _}
-									<div class="m-1 flex h-full w-full flex-col flex-nowrap">
-										<div class="aspect-cover h-full w-auto">
-											<div
-												class="placeholder h-full w-full animate-pulse
-	                        {gmState.value.Display === display.Compact &&
-													'rounded-lg'}
-	                        {gmState.value.Display === display.Comfortable &&
-													'rounded-none rounded-t-lg'}"
-											></div>
-										</div>
-										{#if gmState.value.Display === display.Comfortable}
-											<div
-												class="placeholder h-12 animate-pulse rounded-none rounded-b-lg px-2 text-center"
-											></div>
-										{/if}
-									</div>
-								{/each}
+								<FakeMangaItem active={true} count={10} />
 							</div>
 						</div>
 					{:else if source.error}

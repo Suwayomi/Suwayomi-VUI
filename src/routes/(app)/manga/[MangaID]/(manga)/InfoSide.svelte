@@ -160,7 +160,7 @@
 		</div>
 		<section class="w-full">
 			<div class="space-y-4">
-				{#each new Array(6) as _, i}
+				{#each new Array(6) as _, i (i)}
 					<div
 						class="grid
 									{i + 1 === 1 && 'grid-cols-1'}
@@ -170,7 +170,7 @@
 									{i + 1 === 5 && 'grid-cols-5'} gap-6
 									{i + 1 === 6 && 'grid-cols-6'} gap-4"
 					>
-						{#each new Array(i + 1) as _}
+						{#each new Array(i + 1) as _, j (j)}
 							<div class="placeholder animate-pulse"></div>
 						{/each}
 					</div>
@@ -178,7 +178,7 @@
 			</div>
 		</section>
 		<div class="space-x-2">
-			{#each new Array(8) as _}
+			{#each new Array(8) as _, i (i)}
 				<div
 					class="placeholder variant-filled-primary inline-block w-16 animate-pulse"
 				></div>
@@ -294,7 +294,7 @@
 			<p>{mangaFrag.description}</p>
 		</section>
 		<div class="flex w-full flex-wrap gap-2">
-			{#each mangaFrag?.genre as genre}
+			{#each mangaFrag?.genre as genre (genre)}
 				{#if genre}
 					<div class="variant-outline-primary badge">{genre}</div>
 				{/if}

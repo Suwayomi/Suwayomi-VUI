@@ -11,10 +11,9 @@
 	import { page } from '$app/stores';
 	import { AppBarData } from '$lib/MountTitleAction';
 	import Image from '$lib/components/Image.svelte';
-	import IntersectionObserver from '$lib/components/IntersectionObserver.svelte';
 	import { getToastStore } from '$lib/components/Toast/stores';
 	import { Layout, mmState, Mode } from '$lib/simpleStores.svelte';
-	import { ErrorHelp } from '$lib/util.svelte';
+	import { ErrorHelp, OTT } from '$lib/util.svelte';
 	import { getDrawerStore } from '@skeletonlabs/skeleton';
 	import { onMount, untrack } from 'svelte';
 	import type { PageData } from './$types';
@@ -37,6 +36,7 @@
 	import { ChapterTypeFragment } from '$lib/gql/Fragments';
 	import { queryParam, ssp } from 'sveltekit-search-params';
 	import { writable } from 'svelte/store';
+	import { IntersectionObserverAction } from '$lib/actions/IntersectionObserver.svelte';
 
 	interface Props {
 		data: PageData;
@@ -459,8 +459,7 @@
 		currentChapterID = data.ChapterID;
 	});
 	$effect(() => {
-		const _ = [currentChapterID];
-		untrack(loadNew);
+		OTT([currentChapterID], loadNew);
 	});
 	let nextid = $derived(getChapterAfterID(currentChapterID)?.id);
 	$effect(() => {
@@ -478,10 +477,7 @@
 		}
 	});
 	$effect(() => {
-		const _ = [pages];
-		untrack(() => {
-			updatePages(pages);
-		});
+		OTT([pages], () => updatePages(pages));
 	});
 	$effect(() => {
 		if (mmState.value.ReaderMode === Mode.RTL) {
@@ -501,8 +497,7 @@
 			filteredChapters?.find((e) => e.id === currentChapterID)?.name ?? '';
 	});
 	$effect(() => {
-		const _ = [currentChapterID];
-		untrack(got);
+		OTT([currentChapterID], got);
 	});
 	let lowestIntersect = $derived(
 		document.querySelector(
@@ -613,21 +608,23 @@
 							? 'max-w-full'
 							: ''}"
 					>
-						<IntersectionObserver
-							onintersect={(e) => {
-								PageIntersect(
-									e,
-									`#c${index}p${pageIndex}`,
-									index,
-									pageIndex,
-									chapter.pages.length,
-									chapter.chapterID
-								);
+						<div
+							use:IntersectionObserverAction={{
+								rootMargin: `0px 0px ${mmState.value.Margins ? 16 : 0}px 0px`,
+								root: document.querySelector('#page') ?? undefined,
+								callback: (e) => {
+									PageIntersect(
+										e.isIntersecting,
+										`#c${index}p${pageIndex}`,
+										index,
+										pageIndex,
+										chapter.pages.length,
+										chapter.chapterID
+									);
+								}
 							}}
-							root={document.querySelector('#page') ?? undefined}
-							bottom={0}
-							top={mmState.value.Margins ? 16 : 0}
-						/>
+						></div>
+
 						<div
 							id="c{index}p{pageIndex}"
 							class="{mmState.value.Scale &&
@@ -664,10 +661,12 @@
 				{/each}
 			</div>
 		</div>
-		{#if index === all.length - 1 && !chapterLoading}
-			<IntersectionObserver
-				onintersect={(e) => {
-					if (e) {
+		<div
+			use:IntersectionObserverAction={{
+				rootMargin: `0px 0px 0px 0px`,
+				root: document.querySelector('#page') ?? undefined,
+				callback: (e) => {
+					if (e.isIntersecting && index === all.length - 1 && !chapterLoading) {
 						client
 							.mutation(updateChapter, {
 								id: chapter.chapterID,
@@ -677,10 +676,10 @@
 							.toPromise();
 						LoadNextChapter(currentChapterID);
 					}
-				}}
-				root={document.querySelector('#page') ?? undefined}
-			/>
-		{/if}
+				}
+			}}
+		></div>
+
 		<div class="p-2">
 			<div
 				class="card variant-glass-surface flex h-[50vh] max-h-96 w-full flex-col items-center justify-center"

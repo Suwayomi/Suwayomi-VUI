@@ -9,12 +9,10 @@
 <script lang="ts">
 	import UpdatesActions from './UpdatesActions.svelte';
 	import { AppBarData } from '$lib/MountTitleAction';
-	import MangaCard from '$lib/components/MangaCard.svelte';
+	import MangaCard from '$lib/components/ImageCard.svelte';
 	import { longPress } from '$lib/press';
 	import { selectMode, selected } from './UpdatesStores';
-	import IntersectionObserver from '$lib/components/IntersectionObserver.svelte';
 	import IconWrapper from '$lib/components/IconWrapper.svelte';
-	import { goto } from '$app/navigation';
 	import type { UpdateNode } from './UpdatesStores';
 	import {
 		dlreabook,
@@ -22,6 +20,7 @@
 		gridValues,
 		HelpDoSelect,
 		HelpSelectAll,
+		OTT,
 		queryState
 	} from '$lib/util.svelte';
 	import { display, gmState } from '$lib/simpleStores.svelte';
@@ -29,7 +28,12 @@
 	import { getContextClient } from '@urql/svelte';
 	import { updates } from '$lib/gql/Queries';
 	import type { ResultOf } from '$lib/gql/graphql';
-	import { untrack } from 'svelte';
+	import {
+		IntersectionObserverAction,
+		MakeSimpleCallback
+	} from '$lib/actions/IntersectionObserver.svelte';
+	import { SvelteSet } from 'svelte/reactivity';
+	import FakeMangaItem from '$lib/components/FakeMangaItem.svelte';
 
 	AppBarData('Updates', {
 		component: UpdatesActions,
@@ -85,37 +89,44 @@
 		}
 	}
 	let update = $derived.by(() => {
-		const _ = [page];
-		return untrack(() =>
-			queryState({
+		return OTT([page], () => {
+			return queryState({
 				client,
 				query: updates,
 				variables: { offset: page }
-			})
-		);
+			});
+		});
 	});
 	$effect(() => {
-		const _ = [update.value];
-		untrack(updateall);
+		OTT([update.value], updateall);
 	});
+	let intersecting: SvelteSet<number> = $state(new SvelteSet());
 </script>
+
+{#snippet mangaText(updat: NonNullable<typeof all>['nodes'][0], absolute = true)}
+	<div
+		class={absolute
+			? 'variant-glass absolute bottom-0 left-0 right-0 rounded-b-olg'
+			: 'variant-glass-surface rounded-b-lg'}
+	>
+		<div class="line-clamp-1 h-6 px-2 text-center" title={updat.manga.title}>
+			{updat.manga.title}
+		</div>
+		<div class="line-clamp-1 h-6 px-2 text-center" title={updat.name}>
+			{updat.name}
+		</div>
+		<div
+			class="line-clamp-1 h-6 px-2 text-center"
+			title={new Date(parseInt(updat.fetchedAt) * 1000).toLocaleString()}
+		>
+			{formatDate(new Date(parseInt(updat.fetchedAt) * 1000))}
+		</div>
+	</div>
+{/snippet}
 
 {#if !all && update.value.fetching}
 	<div class="grid {gridValues} m-2 gap-2">
-		{#each new Array(110) as _}
-			<div class="aspect-cover w-full">
-				<div
-					class="placeholder h-full animate-pulse
-						{gmState.value.Display === display.Compact && 'rounded-lg'}
-						{gmState.value.Display === display.Comfortable && 'rounded-none rounded-t-lg'}"
-				></div>
-				{#if gmState.value.Display === display.Comfortable}
-					<div
-						class="placeholder h-12 animate-pulse rounded-none rounded-b-lg px-2 text-center"
-					></div>
-				{/if}
-			</div>
-		{/each}
+		<FakeMangaItem active={true} count={100} lines={3} />
 	</div>
 {:else if !all && update.value.error}
 	<div class="white-space-pre-wrap">
@@ -124,158 +135,106 @@
 {:else if all?.nodes}
 	<div class="grid {gridValues} m-2 gap-2">
 		{#each all.nodes as updat}
-			<IntersectionObserver
-				root={document.querySelector('#page') ?? undefined}
-				top={400}
-				bottom={400}
+			<div
+				use:IntersectionObserverAction={{
+					root: document.querySelector('#page') ?? undefined,
+					rootMargin: `400px 0px 400px 0px`,
+					callback: MakeSimpleCallback(intersecting, updat.id)
+				}}
 				class="aspect-cover w-full"
 			>
-				{#snippet children({ intersecting })}
-					{#if intersecting}
-						<a
-							use:longPress
-							onlongPress={() => $selectMode || LongHandler()}
-							href="/manga/{updat.manga.id}"
-							onclick={(e) => {
-								e.stopPropagation();
-								if (e.ctrlKey) return;
-								if ($selectMode) {
-									e.preventDefault();
-									lastSelected = HelpDoSelect(
-										updat,
-										e,
-										lastSelected,
-										all?.nodes,
-										selected
-									);
-								} else {
-									e.preventDefault();
-									goto(`/manga/${updat.manga.id}`);
-								}
-							}}
-							class="h-full cursor-pointer hover:opacity-70"
-							tabindex="-1"
-						>
-							<MangaCard
-								thumbnailUrl={updat.manga.thumbnailUrl ?? ''}
-								title={updat.manga.title}
-								class={$selectMode && 'opacity-80'}
-								titleA="{updat.isDownloaded ? 'Downloaded' : ''}
+				{#if intersecting}
+					<a
+						use:longPress
+						onlongPress={() => $selectMode || LongHandler()}
+						href="/manga/{updat.manga.id}#{updat.id}"
+						onclick={(e) => {
+							e.stopPropagation();
+							if (e.ctrlKey) return;
+							if ($selectMode) {
+								e.preventDefault();
+								lastSelected = HelpDoSelect(
+									updat,
+									e,
+									lastSelected,
+									all?.nodes,
+									selected
+								);
+							}
+							//  else {
+							// 	e.preventDefault();
+							// 	goto(`/manga/${updat.manga.id}#${updat.id}`);
+							// }
+						}}
+						class="h-full cursor-pointer hover:opacity-70"
+						tabindex="-1"
+					>
+						<MangaCard
+							thumbnailUrl={updat.manga.thumbnailUrl ?? ''}
+							title={updat.manga.title}
+							class={$selectMode && 'opacity-80'}
+							titleA="{updat.isDownloaded ? 'Downloaded' : ''}
 	{updat.isRead ? 'Read' : ''}
 	{updat.isBookmarked ? 'Bookmarked' : ''}"
-								rounded="{gmState.value.Display === display.Compact &&
-									'rounded-lg'}
+							rounded="{gmState.value.Display === display.Compact &&
+								'rounded-lg'}
 								{gmState.value.Display === display.Comfortable && 'rounded-none rounded-t-lg'}"
-							>
-								{#if $selectMode}
-									<div
-										class="bg-base-100/75 absolute bottom-0 left-0 right-0 top-0 cursor-pointer"
-									>
-										<IconWrapper
-											name={$selected[updat.id] === undefined
-												? 'fluent:checkbox-unchecked-24-filled'
-												: 'fluent:checkbox-checked-24-filled'}
-											class="absolute right-2 top-2 text-4xl"
-										/>
-									</div>
-								{/if}
-								{#if gmState.value.Display === display.Compact}
-									<div
-										class="variant-glass absolute bottom-0 left-0 right-0 rounded-b-olg"
-									>
-										<div
-											class="line-clamp-1 h-6 px-2 text-center"
-											title={updat.manga.title}
-										>
-											{updat.manga.title}
-										</div>
-										<div
-											class="line-clamp-1 h-6 px-2 text-center"
-											title={updat.name}
-										>
-											{updat.name}
-										</div>
-										<div
-											class="line-clamp-1 h-6 px-2 text-center"
-											title={new Date(
-												parseInt(updat.fetchedAt) * 1000
-											).toLocaleString()}
-										>
-											{formatDate(new Date(parseInt(updat.fetchedAt) * 1000))}
-										</div>
-									</div>
-								{/if}
-								<div class="absolute left-2 top-2 flex h-8">
-									{#if updat.isDownloaded}
-										<IconWrapper class="h-full w-full" name="mdi:download" />
-									{/if}
-									{#if updat.isRead}
-										<IconWrapper
-											class="h-full w-full"
-											name="mdi:book-open-page-variant-outline"
-										/>
-									{/if}
-									{#if updat.isBookmarked}
-										<IconWrapper class="h-full w-full" name="mdi:bookmark" />
-									{/if}
-								</div>
-							</MangaCard>
-							{#if gmState.value.Display === display.Comfortable}
-								<div class="variant-glass-surface rounded-b-lg">
-									<div
-										class="line-clamp-1 h-6 px-2 text-center"
-										title={updat.manga.title}
-									>
-										{updat.manga.title}
-									</div>
-									<div
-										class="line-clamp-1 h-6 px-2 text-center"
-										title={updat.name}
-									>
-										{updat.name}
-									</div>
-									<div
-										class="line-clamp-1 h-6 px-2 text-center"
-										title={new Date(
-											parseInt(updat.fetchedAt) * 1000
-										).toLocaleString()}
-									>
-										{new Date(
-											parseInt(updat.fetchedAt) * 1000
-										).toLocaleString()}
-									</div>
+						>
+							{#if $selectMode}
+								<div
+									class="bg-base-100/75 absolute bottom-0 left-0 right-0 top-0 cursor-pointer"
+								>
+									<IconWrapper
+										name={$selected[updat.id] === undefined
+											? 'fluent:checkbox-unchecked-24-filled'
+											: 'fluent:checkbox-checked-24-filled'}
+										class="absolute right-2 top-2 text-4xl"
+									/>
 								</div>
 							{/if}
-						</a>
-					{/if}
-				{/snippet}
-			</IntersectionObserver>
+							{#if gmState.value.Display === display.Compact}
+								{@render mangaText(updat)}
+							{/if}
+							<div class="absolute left-2 top-2 flex h-8">
+								{#if updat.isDownloaded}
+									<IconWrapper class="h-full w-full" name="mdi:download" />
+								{/if}
+								{#if updat.isRead}
+									<IconWrapper
+										class="h-full w-full"
+										name="mdi:book-open-page-variant-outline"
+									/>
+								{/if}
+								{#if updat.isBookmarked}
+									<IconWrapper class="h-full w-full" name="mdi:bookmark" />
+								{/if}
+							</div>
+						</MangaCard>
+						{#if gmState.value.Display === display.Comfortable}
+							{@render mangaText(updat, false)}
+						{/if}
+					</a>
+				{/if}
+			</div>
 		{/each}
-		{#if !update.value.fetching && all.pageInfo.hasNextPage}
-			<IntersectionObserver
-				root={document.querySelector('#page') ?? undefined}
-				top={400}
-				bottom={400}
-				onintersect={(e) => {
-					if (e) page = all?.nodes.length ?? 0;
-				}}
-			/>
-		{/if}
-		{#if update.value.fetching && all.pageInfo.hasNextPage}
-			{#each new Array(10) as _}
-				<div class="aspect-cover w-full">
-					<div
-						class="placeholder h-full animate-pulse
-							{gmState.value.Display === display.Compact && 'rounded-lg'}
-							{gmState.value.Display === display.Comfortable && 'rounded-none rounded-t-lg'}"
-					></div>
-					{#if gmState.value.Display === display.Comfortable}
-						<div
-							class="placeholder h-12 animate-pulse rounded-none rounded-b-lg px-2 text-center"
-						></div>
-					{/if}
-				</div>
-			{/each}
-		{/if}
+
+		<div
+			use:IntersectionObserverAction={{
+				root: document.querySelector('#page') ?? undefined,
+				rootMargin: `400px 0px 400px 0px`,
+				callback: (e) => {
+					if (
+						!update.value.fetching &&
+						all?.pageInfo.hasNextPage &&
+						e.isIntersecting
+					) {
+						page = all?.nodes.length ?? 0;
+					}
+				}
+			}}
+		>
+			<FakeMangaItem active={all.pageInfo.hasNextPage} count={1} lines={3} />
+		</div>
+		<FakeMangaItem active={all.pageInfo.hasNextPage} count={10} lines={3} />
 	</div>
 {/if}

@@ -18,14 +18,14 @@
 	import { Accordion, getModalStore } from '@skeletonlabs/skeleton';
 	import type { LayoutData } from '../$types';
 	import { filters as filtersStore } from './stores';
-	import { untrack, type SvelteComponent } from 'svelte';
+	import type { SvelteComponent } from 'svelte';
 	import { queryParam, ssp } from 'sveltekit-search-params';
 	import type { VariablesOf } from '$lib/gql/graphql';
 	import type { fetchSourceManga } from '$lib/gql/Mutations';
 	import { getContextClient } from '@urql/svelte';
 	import { getSource } from '$lib/gql/Queries';
 	import ModalTemplate from '$lib/components/ModalTemplate.svelte';
-	import { queryState } from '$lib/util.svelte';
+	import { OTT, queryState } from '$lib/util.svelte';
 
 	interface Props {
 		parent: SvelteComponent;
@@ -41,8 +41,7 @@
 	const modalStore = getModalStore();
 
 	let sauce = $derived.by(() => {
-		const _ = [data.sourceID];
-		return untrack(() => {
+		return OTT([data.sourceID], () => {
 			return queryState({
 				client: getContextClient(),
 				query: getSource,

@@ -8,7 +8,6 @@
 
 <script lang="ts">
 	import IconWrapper from '$lib/components/IconWrapper.svelte';
-	import IntersectionObserver from '$lib/components/IntersectionObserver.svelte';
 	import MediaQuery from '$lib/components/MediaQuery.svelte';
 	import TooltipIconButton from '$lib/components/TooltipIconButton.svelte';
 	import { longPress } from '$lib/press';
@@ -18,6 +17,7 @@
 		HelpDoSelect,
 		HelpSelectAll,
 		HelpUpdateChapters,
+		OTT,
 		dlreabook
 	} from '$lib/util.svelte';
 	import { getModalStore, popup } from '@skeletonlabs/skeleton';
@@ -36,6 +36,11 @@
 	import { untrack } from 'svelte';
 	import { manga } from './mangaStores.svelte';
 	import { downloadChanged } from '$lib/DownloadChanged.svelte';
+	import {
+		IntersectionObserverAction,
+		MakeSimpleCallback
+	} from '$lib/actions/IntersectionObserver.svelte';
+	import { SvelteSet } from 'svelte/reactivity';
 
 	interface Props {
 		MangaID: number;
@@ -47,8 +52,7 @@
 	const modalStore = getModalStore();
 
 	function updateSelected() {
-		const _ = [sortedChapters];
-		untrack(() => {
+		OTT([sortedChapters], () => {
 			$selected?.forEach((e) => {
 				const tmp = sortedChapters?.find((ee) => ee.id === e.id);
 				if (tmp) {
@@ -213,6 +217,8 @@
 			(e) => chapterNumbers?.find((n) => n >= e && n < e + 1) === undefined
 		)
 	);
+
+	let intersecting: SvelteSet<number> = $state(new SvelteSet());
 </script>
 
 {#if !manga.value || manga.value?.fetching}
@@ -226,7 +232,7 @@
 			<div class="placeholder-circle h-12 animate-pulse"></div>
 			<div class="placeholder-circle h-12 animate-pulse"></div>
 		</div>
-		{#each new Array(10) as _}
+		{#each new Array(10) as _, i (i)}
 			<div class="card variant-glass flex items-center space-x-1 p-2">
 				<div class="w-full space-y-1">
 					<div class="placeholder w-full animate-pulse"></div>
@@ -376,200 +382,187 @@
 		</div>
 		<MediaQuery query="(min-width: {screens.md})">
 			{#snippet children({ matches })}
-				{#each sortedChapters as chapter, index (chapter.id)}
-					<IntersectionObserver
-						class="relative h-20"
-						root={(matches
-							? chapterSideElement
-							: document.querySelector('#page')) ?? undefined}
-						top={400}
-						bottom={400}
+				{#each sortedChapters as chapter, index (chapter.id + ' ' + MangaID)}
+					<div
+						use:IntersectionObserverAction={{
+							rootMargin: '400px 0px 400px 0px',
+							root:
+								(matches
+									? chapterSideElement
+									: document.querySelector('#page')) ?? undefined,
+							callback: MakeSimpleCallback(intersecting, chapter.id)
+						}}
+						id="#{chapter.id}"
+						bind:this={_scrollToChaps[index]}
+						class="h-20"
 					>
-						{#snippet children({ intersecting })}
-							<div
-								id="#{chapter.id}"
-								bind:this={_scrollToChaps[index]}
-								class="h-full"
+						{#if intersecting.has(chapter.id)}
+							<a
+								in:fade
+								class="card variant-glass flex h-full items-center space-x-1 p-2"
+								use:longPress
+								onlongPress={() => $selectMode || LongHandler()}
+								href="/manga/{mangaFrag?.id}/chapter/{chapter.id}"
+								onclick={(e) => {
+									if (e.ctrlKey) return;
+									if ($selectMode) {
+										e.preventDefault();
+										e.stopPropagation();
+										lastSelected = HelpDoSelect(
+											chapter,
+											e,
+											lastSelected,
+											sortedChapters,
+											selected
+										);
+									}
+								}}
 							>
-								{#if intersecting}
-									<a
-										in:fade
-										class="card variant-glass flex h-full items-center space-x-1 p-2"
-										use:longPress
-										onlongPress={() => $selectMode || LongHandler()}
-										href="/manga/{mangaFrag?.id}/chapter/{chapter.id}"
-										onclick={(e) => {
-											if (e.ctrlKey) return;
-											if ($selectMode) {
-												e.preventDefault();
-												e.stopPropagation();
-												lastSelected = HelpDoSelect(
-													chapter,
-													e,
-													lastSelected,
-													sortedChapters,
-													selected
-												);
-											}
-										}}
-									>
-										{#if chapter.isBookmarked}
-											<IconWrapper
-												name="mdi:bookmark"
-												class="aspect-square h-1/2 w-auto text-primary-500"
-											/>
-										{/if}
-										<div
-											class="w-full space-y-0 {chapter.isRead && 'opacity-50'}"
-										>
-											<div class="line-clamp-1 w-full text-xl md:text-2xl">
-												{mmState.value.ChapterTitle ===
-												ChapterTitle['Source Title']
-													? chapter.name
-													: `Chapter ${chapter.chapterNumber}`}
-											</div>
-											<div
-												class="line-clamp-1 w-full text-sm font-light md:text-base"
-												title="Fetched Date: {new Date(
-													parseInt(chapter.fetchedAt) * 1000
-												).toLocaleString()}&#013;Upload Date: {new Date(
-													parseInt(chapter.uploadDate)
-												).toLocaleString()}"
-											>
-												{new Date(
-													mmState.value.ChapterFetchUpload
-														? parseInt(chapter.uploadDate)
-														: parseInt(chapter.fetchedAt) * 1000
-												).toLocaleDateString()}{chapter.isDownloaded
-													? ' • Downloaded'
-													: ''}{chapter.scanlator
-													? ` • ${chapter.scanlator}`
-													: ''}
-											</div>
-										</div>
-
-										<DownloadProgressRadial
-											download={downloadChanged.store?.find(
-												(e) => e.chapter.id === chapter.id
-											)}
-										/>
-
-										{#if $selectMode}
-											<button
-												class="h-full rounded-full p-2 hover:variant-ghost"
-											>
-												<IconWrapper
-													class="aspect-square h-full w-full text-surface-700 dark:text-surface-300"
-													name={$selected[chapter.id] === undefined
-														? 'fluent:checkbox-unchecked-24-filled'
-														: 'fluent:checkbox-checked-24-filled'}
-												/>
-											</button>
-										{/if}
-										<button
-											use:popup={{
-												event: 'click',
-												target: chapter.id.toString(),
-												placement: 'bottom'
-											}}
-											onclick={(e) => {
-												e.stopPropagation();
-												e.preventDefault();
-											}}
-											class="h-full rounded-full p-2 hover:variant-ghost"
-										>
-											<IconWrapper
-												name="mdi:dots-vertical"
-												class="aspect-square h-full w-full text-surface-700 dark:text-surface-300"
-											/>
-										</button>
-									</a>
-									<div
-										class="card z-10 w-72 p-2 shadow-xl"
-										data-popup={chapter.id}
-									>
-										<div>
-											{#if chapter.isDownloaded}
-												<button
-													onclick={() => {
-														client
-															.mutation(deleteDownloadedChapters, {
-																ids: [chapter.id]
-															})
-															.toPromise();
-													}}
-													class="variant-glass w-full cursor-pointer select-none p-2 hover:variant-soft"
-												>
-													delete
-												</button>
-											{:else}
-												<button
-													onclick={() =>
-														client
-															.mutation(enqueueChapterDownloads, {
-																ids: [chapter.id]
-															})
-															.toPromise()}
-													class="variant-glass w-full cursor-pointer select-none p-2 hover:variant-soft"
-												>
-													download
-												</button>
-											{/if}
-											{#if chapter.isBookmarked}
-												<button
-													onclick={() =>
-														client
-															.mutation(updateChapters, {
-																isBookmarked: false,
-																ids: [chapter.id]
-															})
-															.toPromise()}
-													class="variant-glass w-full cursor-pointer select-none p-2 hover:variant-soft"
-												>
-													unbookmark
-												</button>
-											{:else}
-												<button
-													onclick={() =>
-														client
-															.mutation(updateChapters, {
-																isBookmarked: true,
-																ids: [chapter.id]
-															})
-															.toPromise()}
-													class="variant-glass w-full cursor-pointer select-none p-2 hover:variant-soft"
-												>
-													bookmark
-												</button>
-											{/if}
-											{#if chapter.isRead}
-												<button
-													onclick={() => handelUnRead(chapter)}
-													class="variant-glass w-full cursor-pointer select-none p-2 hover:variant-soft"
-												>
-													mark as unread
-												</button>
-											{:else}
-												<button
-													onclick={() => handelRead(chapter)}
-													class="variant-glass w-full cursor-pointer select-none p-2 hover:variant-soft"
-												>
-													mark as read
-												</button>
-											{/if}
-											<button
-												onclick={() => handelPrevRead(chapter)}
-												class="variant-glass w-full cursor-pointer select-none p-2 hover:variant-soft"
-											>
-												mark previous as read
-											</button>
-										</div>
-										<div class="bg-surface-100-800-token arrow"></div>
-									</div>
+								{#if chapter.isBookmarked}
+									<IconWrapper
+										name="mdi:bookmark"
+										class="aspect-square h-1/2 w-auto text-primary-500"
+									/>
 								{/if}
+								<div class="w-full space-y-0 {chapter.isRead && 'opacity-50'}">
+									<div class="line-clamp-1 w-full text-xl md:text-2xl">
+										{mmState.value.ChapterTitle === ChapterTitle['Source Title']
+											? chapter.name
+											: `Chapter ${chapter.chapterNumber}`}
+									</div>
+									<div
+										class="line-clamp-1 w-full text-sm font-light md:text-base"
+										title="Fetched Date: {new Date(
+											parseInt(chapter.fetchedAt) * 1000
+										).toLocaleString()}&#013;Upload Date: {new Date(
+											parseInt(chapter.uploadDate)
+										).toLocaleString()}"
+									>
+										{new Date(
+											mmState.value.ChapterFetchUpload
+												? parseInt(chapter.uploadDate)
+												: parseInt(chapter.fetchedAt) * 1000
+										).toLocaleDateString()}{chapter.isDownloaded
+											? ' • Downloaded'
+											: ''}{chapter.scanlator ? ` • ${chapter.scanlator}` : ''}
+									</div>
+								</div>
+
+								<DownloadProgressRadial
+									download={downloadChanged.store?.find(
+										(e) => e.chapter.id === chapter.id
+									)}
+								/>
+
+								{#if $selectMode}
+									<button class="h-full rounded-full p-2 hover:variant-ghost">
+										<IconWrapper
+											class="aspect-square h-full w-full text-surface-700 dark:text-surface-300"
+											name={$selected[chapter.id] === undefined
+												? 'fluent:checkbox-unchecked-24-filled'
+												: 'fluent:checkbox-checked-24-filled'}
+										/>
+									</button>
+								{/if}
+								<button
+									use:popup={{
+										event: 'click',
+										target: chapter.id.toString(),
+										placement: 'bottom'
+									}}
+									onclick={(e) => {
+										e.stopPropagation();
+										e.preventDefault();
+									}}
+									class="h-full rounded-full p-2 hover:variant-ghost"
+								>
+									<IconWrapper
+										name="mdi:dots-vertical"
+										class="aspect-square h-full w-full text-surface-700 dark:text-surface-300"
+									/>
+								</button>
+							</a>
+							<div class="card z-10 w-72 p-2 shadow-xl" data-popup={chapter.id}>
+								<div>
+									{#if chapter.isDownloaded}
+										<button
+											onclick={() => {
+												client
+													.mutation(deleteDownloadedChapters, {
+														ids: [chapter.id]
+													})
+													.toPromise();
+											}}
+											class="variant-glass w-full cursor-pointer select-none p-2 hover:variant-soft"
+										>
+											delete
+										</button>
+									{:else}
+										<button
+											onclick={() =>
+												client
+													.mutation(enqueueChapterDownloads, {
+														ids: [chapter.id]
+													})
+													.toPromise()}
+											class="variant-glass w-full cursor-pointer select-none p-2 hover:variant-soft"
+										>
+											download
+										</button>
+									{/if}
+									{#if chapter.isBookmarked}
+										<button
+											onclick={() =>
+												client
+													.mutation(updateChapters, {
+														isBookmarked: false,
+														ids: [chapter.id]
+													})
+													.toPromise()}
+											class="variant-glass w-full cursor-pointer select-none p-2 hover:variant-soft"
+										>
+											unbookmark
+										</button>
+									{:else}
+										<button
+											onclick={() =>
+												client
+													.mutation(updateChapters, {
+														isBookmarked: true,
+														ids: [chapter.id]
+													})
+													.toPromise()}
+											class="variant-glass w-full cursor-pointer select-none p-2 hover:variant-soft"
+										>
+											bookmark
+										</button>
+									{/if}
+									{#if chapter.isRead}
+										<button
+											onclick={() => handelUnRead(chapter)}
+											class="variant-glass w-full cursor-pointer select-none p-2 hover:variant-soft"
+										>
+											mark as unread
+										</button>
+									{:else}
+										<button
+											onclick={() => handelRead(chapter)}
+											class="variant-glass w-full cursor-pointer select-none p-2 hover:variant-soft"
+										>
+											mark as read
+										</button>
+									{/if}
+									<button
+										onclick={() => handelPrevRead(chapter)}
+										class="variant-glass w-full cursor-pointer select-none p-2 hover:variant-soft"
+									>
+										mark previous as read
+									</button>
+								</div>
+								<div class="bg-surface-100-800-token arrow"></div>
 							</div>
-						{/snippet}
-					</IntersectionObserver>
+						{/if}
+					</div>
 				{/each}
 			{/snippet}
 		</MediaQuery>

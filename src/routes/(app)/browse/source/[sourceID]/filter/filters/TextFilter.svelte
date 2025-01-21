@@ -10,7 +10,7 @@
 	import type { fetchSourceManga } from '$lib/gql/Mutations';
 	import type { getSource } from '$lib/gql/Queries';
 	import type { ResultOf, VariablesOf } from '$lib/gql/graphql';
-	import { untrack } from 'svelte';
+	import { OTT } from '$lib/util.svelte';
 	interface Props {
 		filter: Extract<
 			ResultOf<typeof getSource>['source']['filters'][0],
@@ -27,8 +27,7 @@
 	);
 
 	$effect(() => {
-		const _ = [text, filter];
-		untrack(() => {
+		OTT([text, filter], () => {
 			if (text !== filter.TextDefault) {
 				filters = filters?.filter((e) => e.position !== index) ?? [];
 				filters.push({
