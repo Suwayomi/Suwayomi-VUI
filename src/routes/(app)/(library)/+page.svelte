@@ -7,8 +7,7 @@
 -->
 
 <script lang="ts">
-	import IntersectionObserver from '$lib/components/IntersectionObserver.svelte';
-	import MangaCard from '$lib/components/MangaCard.svelte';
+	import MangaCard from '$lib/components/ImageCard.svelte';
 	import { longPress } from '$lib/press';
 	import {
 		categoryFilterMetasReadOnly,
@@ -32,8 +31,12 @@
 	import { parseQuery, type ANO, type parsedQueryType } from './queryParse';
 	import { getCategories, getCategory } from '$lib/gql/Queries';
 	import { getContextClient } from '@urql/svelte';
-	import { IntersectionObserverAction } from '$lib/actions/IntersectionObserver.svelte';
+	import {
+		IntersectionObserverAction,
+		MakeSimpleCallback
+	} from '$lib/actions/IntersectionObserver.svelte';
 	import { SvelteSet } from 'svelte/reactivity';
+	import FakeMangaItem from '$lib/components/FakeMangaItem.svelte';
 
 	const client = getContextClient();
 
@@ -387,7 +390,7 @@
 			: undefined
 	);
 
-	let intersecting = $state(new SvelteSet());
+	let intersecting: SvelteSet<number> = $state(new SvelteSet());
 </script>
 
 {#if categories.value.fetching}
@@ -397,21 +400,7 @@
 		<div class="placeholder w-20 animate-pulse"></div>
 	</div>
 	<div class="yoy m-2 grid gap-2 {gridValues}">
-		{#each new Array(30) as _}
-			<div class="aspect-cover w-full">
-				<div
-					class="placeholder h-full animate-pulse
-			{FilterMeta.value.Display === display.Compact && 'rounded-lg'}
-			{FilterMeta.value.Display === display.Comfortable &&
-						'rounded-none rounded-t-lg'}"
-				></div>
-				{#if FilterMeta.value.Display === display.Comfortable}
-					<div
-						class="placeholder h-12 animate-pulse rounded-none rounded-b-lg px-2 text-center"
-					></div>
-				{/if}
-			</div>
-		{/each}
+		<FakeMangaItem active={true} count={30} />
 	</div>
 {:else if categories.value.error}
 	<div class="whitespace-pre-wrap">
@@ -438,21 +427,11 @@
 		<svelte:fragment slot="panel">
 			{#if mangas.value.fetching}
 				<div class="yoy m-2 grid gap-2 {gridValues}">
-					{#each new Array(orderedCategories.find((e) => e.id === $tab)?.mangas.totalCount ?? 10) as _}
-						<div class="aspect-cover w-full">
-							<div
-								class="placeholder h-full animate-pulse
-									{FilterMeta.value.Display === display.Compact && 'rounded-lg'}
-									{FilterMeta.value.Display === display.Comfortable &&
-									'rounded-none rounded-t-lg'}"
-							></div>
-							{#if FilterMeta.value.Display === display.Comfortable}
-								<div
-									class="placeholder h-12 animate-pulse rounded-none rounded-b-lg px-2 text-center"
-								></div>
-							{/if}
-						</div>
-					{/each}
+					<FakeMangaItem
+						active={true}
+						count={orderedCategories.find((e) => e.id === $tab)?.mangas
+							.totalCount ?? 10}
+					/>
 				</div>
 			{:else if mangas.value.error}
 				<div class="whitespace-pre-wrap">
@@ -466,13 +445,7 @@
 							use:IntersectionObserverAction={{
 								root: document.querySelector('#page') ?? undefined,
 								rootMargin: `400px 0px 400px 0px`,
-								callback: (e) => {
-									if (e.isIntersecting) {
-										intersecting.add(manga.id);
-									} else {
-										intersecting.delete(manga.id);
-									}
-								}
+								callback: MakeSimpleCallback(intersecting, manga.id)
 							}}
 						>
 							{#if intersecting.has(manga.id)}
@@ -568,10 +541,11 @@
 										</div>
 									{/if}
 								</a>
-							{/if}
-							{#if !intersecting.has(manga.id) && FilterMeta.value.Display === display.Comfortable}
+							{:else}
 								<div class="aspect-cover w-full"></div>
-								<div class="h-12"></div>
+								{#if FilterMeta.value.Display === display.Comfortable}
+									<div class="h-12"></div>
+								{/if}
 							{/if}
 						</div>
 					{/each}

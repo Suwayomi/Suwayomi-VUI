@@ -27,7 +27,7 @@
 	} from '$lib/gql/Queries';
 	import type { ResultOf, VariablesOf } from '$lib/gql/graphql';
 	import { ChapterTypeFragment } from '$lib/gql/Fragments';
-	import { queryState, type queryStateReturn } from '$lib/util.svelte';
+	import { OTT, queryState, type queryStateReturn } from '$lib/util.svelte';
 
 	interface Props {
 		parent: SvelteComponent;
@@ -362,12 +362,10 @@
 		}
 	});
 	$effect(() => {
-		const _ = [category?.value, categories.value, value];
-		untrack(doCategory);
+		OTT([category?.value, categories.value, value], doCategory);
 	});
 	$effect(() => {
-		const _ = [sources?.value, value];
-		untrack(doSource);
+		OTT([sources?.value, value], doSource);
 	});
 	let debounceTimer: ReturnType<typeof setTimeout> | undefined;
 	$effect(() => {

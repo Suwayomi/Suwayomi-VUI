@@ -1,4 +1,5 @@
 import type { Action } from 'svelte/action';
+import type { SvelteSet } from 'svelte/reactivity';
 type Callback = (entry: IntersectionObserverEntry) => void;
 const Callbacks = new WeakMap<Element, Callback>();
 const Observers = new WeakMap<IntersectionObserverInit, IntersectionObserver>();
@@ -49,3 +50,13 @@ export const IntersectionObserverAction: Action<Element, Options> = (
 		}
 	};
 };
+
+export function MakeSimpleCallback<T>(set: SvelteSet<T>, key: T): Callback {
+	return (entry) => {
+		if (entry.isIntersecting) {
+			set.add(key);
+		} else {
+			set.delete(key);
+		}
+	};
+}

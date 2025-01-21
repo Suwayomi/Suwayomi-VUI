@@ -8,7 +8,7 @@
 
 <script lang="ts">
 	import { AppBarData } from '$lib/MountTitleAction';
-	import { ErrorHelpUntyped } from '$lib/util.svelte';
+	import { ErrorHelpUntyped, OTT } from '$lib/util.svelte';
 	import type { PageData } from './$types';
 	import InfoSide from './InfoSide.svelte';
 	import MangaActions from './MangaActions.svelte';
@@ -35,8 +35,7 @@
 		);
 	}
 	$effect(() => {
-		const _ = [data.MangaID];
-		untrack(() => {
+		OTT([data.MangaID], () => {
 			mmState.id = data.MangaID;
 			setMangaId(data.MangaID);
 		});

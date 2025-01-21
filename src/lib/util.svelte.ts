@@ -28,6 +28,7 @@ import {
 	type SubscriptionArgs
 } from '@urql/svelte';
 import { introspection } from '../graphql-env';
+import { untrack } from 'svelte';
 
 export type TriState = 'on' | 'off' | 'intermediate';
 export type OperationResultF<
@@ -449,4 +450,9 @@ export function subscriptionState<
 		pause: store.pause,
 		resume: store.resume
 	};
+}
+
+export function OTT<T>(these: unknown[], fn: () => T): T {
+	const _ = [...these];
+	return untrack(fn);
 }

@@ -7,11 +7,10 @@
 -->
 
 <script lang="ts">
-	import type { TriState } from '$lib/util.svelte';
+	import { OTT, type TriState } from '$lib/util.svelte';
 	import type { getSource } from '$lib/gql/Queries';
 	import type { ResultOf, VariablesOf } from '$lib/gql/graphql';
 	import type { fetchSourceManga } from '$lib/gql/Mutations';
-	import { untrack } from 'svelte';
 	import ThreeStateSwitchCustom from '$lib/components/ThreeStateSwitchCustom.svelte';
 
 	interface Props {
@@ -60,8 +59,7 @@
 	}
 
 	$effect(() => {
-		const _ = [state, filter];
-		untrack(() => {
+		OTT([state, filter], () => {
 			if (state !== TriToonetwothree(filter.TriStateDefault)) {
 				filters = filters?.filter((e) => e.position !== index) ?? [];
 				filters.push({

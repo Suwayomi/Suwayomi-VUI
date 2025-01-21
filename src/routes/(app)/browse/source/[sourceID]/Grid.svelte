@@ -8,19 +8,22 @@
 
 <script lang="ts">
 	import type { LayoutData } from './$types';
-	import { errortoast, gridValues, queryState } from '$lib/util.svelte';
-	import IntersectionObserver from '$lib/components/IntersectionObserver.svelte';
-	import MangaCard from '$lib/components/MangaCard.svelte';
+	import { errortoast, gridValues, OTT, queryState } from '$lib/util.svelte';
 	import IconWrapper from '$lib/components/IconWrapper.svelte';
 	import PreferencesModal from './PreferencesModal.svelte';
 	import { getModalStore } from '@skeletonlabs/skeleton';
-	import { display, gmState } from '$lib/simpleStores.svelte';
 
 	import type { ResultOf, VariablesOf } from '$lib/gql/graphql';
 	import { fetchSourceManga } from '$lib/gql/Mutations';
 	import { getContextClient, mutationStore } from '@urql/svelte';
 	import { getSource } from '$lib/gql/Queries';
-	import { untrack } from 'svelte';
+	import { SvelteSet } from 'svelte/reactivity';
+	import {
+		IntersectionObserverAction,
+		MakeSimpleCallback
+	} from '$lib/actions/IntersectionObserver.svelte';
+	import NonLibraryMangaDisplay from '$lib/components/NonLibraryMangaDisplay.svelte';
+	import FakeMangaItem from '$lib/components/FakeMangaItem.svelte';
 
 	interface Props {
 		data: LayoutData;
@@ -33,17 +36,15 @@
 	const client = getContextClient();
 
 	let sause = $derived.by(() => {
-		const _ = [data.sourceID];
-		return untrack(
-			() =>
-				queryState({
-					client: getContextClient(),
-					query: getSource,
-					variables: {
-						id: data.sourceID
-					}
-				}).value
-		);
+		return OTT([data.sourceID], () => {
+			return queryState({
+				client: getContextClient(),
+				query: getSource,
+				variables: {
+					id: data.sourceID
+				}
+			}).value;
+		});
 	});
 
 	const modalStore = getModalStore();
@@ -91,8 +92,7 @@
 		}
 	}
 	$effect(() => {
-		const _ = [query, filters];
-		untrack(clearAll);
+		OTT([query, filters], clearAll);
 	});
 	let source = $derived(
 		mutationStore({
@@ -108,9 +108,10 @@
 		})
 	);
 	$effect(() => {
-		const _ = [$source];
-		untrack(parseall);
+		OTT([$source], parseall);
 	});
+
+	let intersecting: SvelteSet<number> = $state(new SvelteSet());
 </script>
 
 {#if sause?.data?.source?.isConfigurable}
@@ -132,90 +133,42 @@
 {#if all.mangas}
 	<div class="m-2 grid gap-2 {gridValues}">
 		{#each all.mangas.filter((e, i, s) => i === s.findIndex((ee) => e.id === ee.id)) as manga (manga.id)}
-			<IntersectionObserver
-				root={document.querySelector('#page') ?? undefined}
-				top={400}
-				bottom={400}
-			>
-				{#snippet children({ intersecting })}
-					<div class="aspect-cover">
-						{#if intersecting}
-							<a
-								href="/manga/{manga.id}"
-								class="h-full cursor-pointer hover:opacity-70"
-								tabindex="-1"
-							>
-								<MangaCard
-									thumbnailUrl={manga.thumbnailUrl ?? ''}
-									title={manga.title}
-									rounded="{gmState.value.Display === display.Compact &&
-										'rounded-lg'}
-											{gmState.value.Display === display.Comfortable && 'rounded-none rounded-t-lg'}"
-								>
-									{#if gmState.value.Display === display.Compact}
-										<div
-											class="variant-glass absolute bottom-0 left-0 right-0 rounded-b-olg"
-										>
-											<div
-												class="line-clamp-2 h-12 px-2 text-center"
-												title={manga.title}
-											>
-												{manga.title}
-											</div>
-										</div>
-									{/if}
-									{#if manga.inLibrary}
-										<div
-											class="variant-filled-primary badge absolute right-1 top-1"
-										>
-											In Library
-										</div>
-									{/if}
-								</MangaCard>
-								{#if gmState.value.Display === display.Comfortable}
-									<div class="variant-glass-surface rounded-b-lg">
-										<div
-											class="line-clamp-2 h-12 px-2 text-center"
-											title={manga.title}
-										>
-											{manga.title}
-										</div>
-									</div>
-								{/if}
-							</a>
-						{/if}
-					</div>
-					{#if !intersecting && gmState.value.Display === display.Comfortable}
-						<div class="h-12"></div>
-					{/if}
-				{/snippet}
-			</IntersectionObserver>
-		{/each}
-		{#if all.hasNextPage && !isLoading && !$source.fetching}
-			<IntersectionObserver
-				root={document.querySelector('#page') ?? undefined}
-				top={400}
-				bottom={400}
-				onintersect={(e) => {
-					if (e && all.hasNextPage) page++;
+			<div
+				class="aspect-cover"
+				use:IntersectionObserverAction={{
+					root: document.querySelector('#page') ?? undefined,
+					rootMargin: `400px 0px 400px 0px`,
+					callback: MakeSimpleCallback(intersecting, manga.id)
 				}}
-			/>
-		{/if}
+			>
+				<NonLibraryMangaDisplay {manga} {intersecting} />
+			</div>
+		{/each}
+		<div
+			use:IntersectionObserverAction={{
+				root: document.querySelector('#page') ?? undefined,
+				rootMargin: `400px 0px 400px 0px`,
+				callback: (e) => {
+					if (
+						all.hasNextPage &&
+						!isLoading &&
+						!$source.fetching &&
+						e.isIntersecting &&
+						all.hasNextPage
+					) {
+						page++;
+					}
+				}
+			}}
+		></div>
 		{#if all.hasNextPage}
-			{#each new Array(Math.floor((all.mangas.length > 0 ? all.mangas.length : 5) / (page > 0 ? page : 1))) as _}
-				<div class="aspect-cover w-full">
-					<div
-						class="placeholder h-full animate-pulse
-						{gmState.value.Display === display.Compact && 'rounded-lg'}
-						{gmState.value.Display === display.Comfortable && 'rounded-none rounded-t-lg'}"
-					></div>
-					{#if gmState.value.Display === display.Comfortable}
-						<div
-							class="placeholder h-12 animate-pulse rounded-none rounded-b-lg px-2 text-center"
-						></div>
-					{/if}
-				</div>
-			{/each}
+			<FakeMangaItem
+				active={true}
+				count={Math.floor(
+					(all.mangas.length > 0 ? all.mangas.length : 5) /
+						(page > 0 ? page : 1)
+				)}
+			/>
 		{/if}
 	</div>
 {/if}

@@ -8,7 +8,6 @@
 
 <script lang="ts">
 	import Image from '$lib/components/Image.svelte';
-	import IntersectionObserver from '$lib/components/IntersectionObserver.svelte';
 	import { AppBarData } from '$lib/MountTitleAction';
 	import { type ResultOf } from '$lib/gql/graphql';
 	import Nav from '../Nav.svelte';
@@ -17,6 +16,11 @@
 	import { SourceTypeFragment } from '$lib/gql/Fragments';
 	import { queryState } from '$lib/util.svelte';
 	import { untrack } from 'svelte';
+	import { SvelteSet } from 'svelte/reactivity';
+	import {
+		IntersectionObserverAction,
+		MakeSimpleCallback
+	} from '$lib/actions/IntersectionObserver.svelte';
 
 	AppBarData('Migrate');
 	const client = getContextClient();
@@ -64,6 +68,7 @@
 		return tmpSources.filter((e) => e.mangas?.TotalCount);
 	}
 	let sources = $derived(FigureOutSources(Migration.value.data));
+	let intersecting: SvelteSet<string> = $state(new SvelteSet());
 </script>
 
 <Nav>
@@ -93,33 +98,37 @@
 		{:else if sources}
 			<div>
 				{#each sources as source (source.id)}
-					<IntersectionObserver top={400} bottom={400} class="h-24">
-						{#snippet children({ intersecting })}
-							{#if intersecting}
-								<a href="/browse/migrate/source/{source.id}">
-									<div
-										class="card variant-glass m-1 flex h-full items-center hover:variant-glass-primary"
-									>
-										<div class="h-full p-1">
-											<Image
-												src={source.iconUrl}
-												aspect="aspect-square"
-												width="h-auto"
-											/>
-										</div>
-										<div class="w-full">
-											{source.displayName}
-										</div>
-										<div class="m-2">
-											<span class="variant-filled-primary badge"
-												>{source.mangas?.TotalCount}</span
-											>
-										</div>
+					<div
+						class="h-24"
+						use:IntersectionObserverAction={{
+							rootMargin: `400px 0px 400px 0px`,
+							callback: MakeSimpleCallback(intersecting, source.id)
+						}}
+					>
+						{#if intersecting.has(source.id)}
+							<a href="/browse/migrate/source/{source.id}">
+								<div
+									class="card variant-glass m-1 flex h-full items-center hover:variant-glass-primary"
+								>
+									<div class="h-full p-1">
+										<Image
+											src={source.iconUrl}
+											aspect="aspect-square"
+											width="h-auto"
+										/>
 									</div>
-								</a>
-							{/if}
-						{/snippet}
-					</IntersectionObserver>
+									<div class="w-full">
+										{source.displayName}
+									</div>
+									<div class="m-2">
+										<span class="variant-filled-primary badge"
+											>{source.mangas?.TotalCount}</span
+										>
+									</div>
+								</div>
+							</a>
+						{/if}
+					</div>
 				{/each}
 			</div>
 		{/if}

@@ -18,7 +18,7 @@
 	import type { ResultOf, VariablesOf } from '$lib/gql/graphql';
 	import type { getSource } from '$lib/gql/Queries';
 	import type { fetchSourceManga } from '$lib/gql/Mutations';
-	import { untrack } from 'svelte';
+	import { OTT } from '$lib/util.svelte';
 
 	interface Props {
 		filter: Extract<
@@ -50,8 +50,7 @@
 	});
 
 	$effect(() => {
-		const _ = [fakeFilters];
-		untrack(() => {
+		OTT([fakeFilters], () => {
 			if (fakeFilters.length !== 0) {
 				filters = filters?.filter((e) => e.position !== index) ?? [];
 

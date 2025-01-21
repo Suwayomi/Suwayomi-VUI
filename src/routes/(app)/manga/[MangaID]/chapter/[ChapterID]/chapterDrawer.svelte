@@ -27,10 +27,14 @@
 	import { getContextClient } from '@urql/svelte';
 	import { filterChapters } from '../../util';
 	import type { Writable } from 'svelte/store';
-	import IntersectionObserver from '$lib/components/IntersectionObserver.svelte';
 	import { onNavigate } from '$app/navigation';
 	import { longPress } from '$lib/press';
 	import { trackProgress, updateChapters } from '$lib/gql/Mutations';
+	import {
+		IntersectionObserverAction,
+		MakeSimpleCallback
+	} from '$lib/actions/IntersectionObserver.svelte';
+	import { SvelteSet } from 'svelte/reactivity';
 	const drawerStore = getDrawerStore();
 
 	let data = $derived(
@@ -107,10 +111,11 @@
 				.mutation(trackProgress, { mangaId: $data.MangaID })
 				.toPromise();
 	}
+	let intersecting: SvelteSet<number> = $state(new SvelteSet());
 </script>
 
 {#if mmState}
-	<div class="flex flex-col p-4">
+	<div class="flex h-svh flex-col p-4">
 		<div class="mb-4 flex justify-end border-b border-surface-500 pb-4">
 			<IconButton
 				tabindex={999}
@@ -173,70 +178,67 @@
 				</select>
 			</label>
 		</div>
-		<div class="ml-3">
-			<div
-				bind:this={chapterSideElement}
-				id="chapterSideElement"
-				class="max-h-60 w-full overflow-y-auto"
-			>
+		<div
+			class="ml-3 h-full shrink overflow-y-auto"
+			bind:this={chapterSideElement}
+			id="chapterSideElement"
+		>
+			<div class=" w-full">
 				{#each filteredChapters ?? [] as chapter}
-					<IntersectionObserver
+					<div
 						class="relative h-20"
-						root={chapterSideElement}
-						top={400}
-						bottom={400}
 						id="chapter-{chapter.id}"
+						use:IntersectionObserverAction={{
+							rootMargin: '400px 0px 400px 0px',
+							root: chapterSideElement,
+							callback: MakeSimpleCallback(intersecting, chapter.id)
+						}}
 					>
-						{#snippet children({ intersecting })}
-							{#if intersecting}
-								<a
-									use:longPress
-									onlongPress={() => setChapterRead(chapter)}
-									data-sveltekit-replacestate
-									onclick={(e) => {
-										if (didLongPress === chapter.id) {
-											e.preventDefault();
-											e.stopPropagation();
-										}
-										didLongPress = -1;
-									}}
-									href="./{chapter.id}?pagenav"
-									class="h-20"
+						{#if intersecting.has(chapter.id)}
+							<a
+								use:longPress
+								onlongPress={() => setChapterRead(chapter)}
+								data-sveltekit-replacestate
+								onclick={(e) => {
+									if (didLongPress === chapter.id) {
+										e.preventDefault();
+										e.stopPropagation();
+									}
+									didLongPress = -1;
+								}}
+								href="./{chapter.id}?pagenav"
+								class="h-20"
+							>
+								<div
+									class="w-full space-y-0 p-1
+									{chapter.id === $data?.ChapterID && 'variant-ghost'}
+									{chapter.isRead && 'opacity-50'}"
 								>
-									<div
-										class="w-full space-y-0 p-1
-										{chapter.id === $data?.ChapterID && 'variant-ghost'}
-										{chapter.isRead && 'opacity-50'}"
-									>
-										<div class="line-clamp-1 w-full text-xl md:text-2xl">
-											{mmState.value.ChapterTitle ===
-											ChapterTitle['Source Title']
-												? chapter.name
-												: `Chapter ${chapter.chapterNumber}`}
-										</div>
-										<div
-											class="line-clamp-1 w-full text-sm font-light md:text-base"
-											title="Fetched Date: {new Date(
-												parseInt(chapter.fetchedAt) * 1000
-											).toLocaleString()}&#013;Upload Date: {new Date(
-												parseInt(chapter.uploadDate)
-											).toLocaleString()}"
-										>
-											{new Date(
-												mmState.value.ChapterFetchUpload
-													? parseInt(chapter.uploadDate)
-													: parseInt(chapter.fetchedAt) * 1000
-											).toLocaleDateString()}{chapter.isDownloaded
-												? ' • Downloaded'
-												: ''}{chapter.scanlator
-												? ` • ${chapter.scanlator}`
-												: ''}
-										</div>
+									<div class="line-clamp-1 w-full text-xl md:text-2xl">
+										{mmState.value.ChapterTitle === ChapterTitle['Source Title']
+											? chapter.name
+											: `Chapter ${chapter.chapterNumber}`}
 									</div>
-								</a>
-							{/if}
-						{/snippet}
-					</IntersectionObserver>
+									<div
+										class="line-clamp-1 w-full text-sm font-light md:text-base"
+										title="Fetched Date: {new Date(
+											parseInt(chapter.fetchedAt) * 1000
+										).toLocaleString()}&#013;Upload Date: {new Date(
+											parseInt(chapter.uploadDate)
+										).toLocaleString()}"
+									>
+										{new Date(
+											mmState.value.ChapterFetchUpload
+												? parseInt(chapter.uploadDate)
+												: parseInt(chapter.fetchedAt) * 1000
+										).toLocaleDateString()}{chapter.isDownloaded
+											? ' • Downloaded'
+											: ''}{chapter.scanlator ? ` • ${chapter.scanlator}` : ''}
+									</div>
+								</div>
+							</a>
+						{/if}
+					</div>
 				{:else}
 					No chapters found
 				{/each}
