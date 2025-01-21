@@ -7,13 +7,7 @@
 -->
 
 <script lang="ts">
-	/*
-	 * This Source Code Form is subject to the terms of the Mozilla Public
-	 * License, v. 2.0. If a copy of the MPL was not distributed with this
-	 * file, You can obtain one at https://mozilla.org/MPL/2.0/.
-	 */
-	import { onDestroy } from 'svelte';
-
+	import { IntersectionObserverAction } from '$lib/actions/IntersectionObserver.svelte';
 	interface Props {
 		root?: Element | Document | undefined;
 		top?: number;
@@ -23,7 +17,6 @@
 		children?: import('svelte').Snippet<[{ intersecting: boolean }]>;
 		[key: string]: unknown;
 		onintersect?: (e: boolean) => void;
-		onelem?: (e: { isInt: boolean; elem: HTMLDivElement | undefined }) => void;
 	}
 
 	let {
@@ -34,39 +27,26 @@
 		right = 0,
 		children,
 		onintersect = () => {},
-		onelem = () => {},
 		...restProps
 	}: Props = $props();
 
 	let intersecting = $state(false);
-
-	let container: HTMLDivElement | undefined = $state();
-
-	let observer: IntersectionObserver | undefined;
-
-	$effect(() => {
-		if (!container) return;
-		observer?.unobserve(container);
-		observer = new IntersectionObserver(
-			(entries) => {
-				intersecting = entries[entries.length - 1].isIntersecting;
-				onintersect(intersecting);
-				onelem({ isInt: intersecting, elem: container });
-			},
-			{
-				root: root,
-				rootMargin: `${bottom}px ${left}px ${top}px ${right}px`,
-				threshold: 0
-			}
-		);
-		observer.observe(container);
-	});
-
-	onDestroy(() => {
-		observer?.disconnect();
-	});
 </script>
 
-<div bind:this={container} {...restProps}>
+<div
+	use:IntersectionObserverAction={{
+		root,
+		rootMargin: `${bottom}px ${left}px ${top}px ${right}px`,
+		callback: (e) => {
+			if (e.isIntersecting) {
+				intersecting = true;
+			} else {
+				intersecting = false;
+			}
+			onintersect(intersecting);
+		}
+	}}
+	{...restProps}
+>
 	{@render children?.({ intersecting })}
 </div>
