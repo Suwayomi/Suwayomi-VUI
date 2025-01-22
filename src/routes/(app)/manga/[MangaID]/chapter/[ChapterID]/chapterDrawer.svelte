@@ -127,8 +127,14 @@
 				}}
 			/>
 		</div>
-		<h1 class="h2 my-2 line-clamp-3 pl-4">{$mangaTitle}</h1>
-		<h2 class="h3 mt-4 border-y border-surface-500 p-4">{$chapterTitle}</h2>
+		<h1 class="h2 my-2 line-clamp-3 min-h-fit pl-4 leading-[2.75rem]">
+			{$mangaTitle}
+		</h1>
+		<h2
+			class="h3 mt-4 line-clamp-1 min-h-fit border-y border-surface-500 pl-4 leading-10"
+		>
+			{$chapterTitle}
+		</h2>
 
 		<div class="my-2 flex flex-col space-y-2">
 			<Slide
