@@ -181,15 +181,14 @@
 							recordId: tracker.id
 						})
 						.toPromise();
-					try {
-						await client
-							.mutation(bindTrack, {
-								mangaId: id,
-								trackerId: tracker.trackerId,
-								remoteId: tracker.remoteId
-							})
-							.toPromise();
-					} catch {
+					const res = await client
+						.mutation(bindTrack, {
+							mangaId: id,
+							trackerId: tracker.trackerId,
+							remoteId: tracker.remoteId
+						})
+						.toPromise();
+					if (res.error || !res.data) {
 						await client.query(GetTrackers, { isLoggedIn: true }).toPromise();
 						await client
 							.query(searchTracker, {
