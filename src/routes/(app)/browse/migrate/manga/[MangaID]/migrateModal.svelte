@@ -19,7 +19,11 @@
 		updateMangas,
 		updateMangasCategories
 	} from '$lib/gql/Mutations';
-	import { getManga } from '$lib/gql/Queries';
+	import {
+		getManga,
+		searchTracker,
+		trackers as GetTrackers
+	} from '$lib/gql/Queries';
 	import { ProgressRadial, getModalStore } from '@skeletonlabs/skeleton';
 	import { getContextClient, type OperationResult } from '@urql/svelte';
 	import { type ResultOf } from '$lib/gql/graphql';
@@ -142,23 +146,29 @@
 			ele ? ele.isBookmarked : false
 		).map((ele) => ele?.id) as number[];
 
-		await client.mutation(updateChapters, {
-			ids: areRead,
-			isRead: true
-		});
-		await client.mutation(updateChapters, {
-			ids: areBookmarked,
-			isBookmarked: true
-		});
+		await client
+			.mutation(updateChapters, {
+				ids: areRead,
+				isRead: true
+			})
+			.toPromise();
+		await client
+			.mutation(updateChapters, {
+				ids: areBookmarked,
+				isBookmarked: true
+			})
+			.toPromise();
 	}
 
 	async function CopyMangaCategories() {
 		const categories = manga.categories.nodes.map((ele) => ele.id);
-		await client.mutation(updateMangasCategories, {
-			id: [id],
-			addTo: categories,
-			clear: true
-		});
+		await client
+			.mutation(updateMangasCategories, {
+				id: [id],
+				addTo: categories,
+				clear: true
+			})
+			.toPromise();
 	}
 
 	async function CopyMangaTracking(): Promise<void> {
@@ -166,14 +176,35 @@
 		await Promise.all(
 			trackers.map(async (tracker) => {
 				try {
-					await client.mutation(unbindTrack, {
-						recordId: tracker.id
-					});
-					await client.mutation(bindTrack, {
-						mangaId: id,
-						trackerId: tracker.trackerId,
-						remoteId: tracker.remoteId
-					});
+					await client
+						.mutation(unbindTrack, {
+							recordId: tracker.id
+						})
+						.toPromise();
+					try {
+						await client
+							.mutation(bindTrack, {
+								mangaId: id,
+								trackerId: tracker.trackerId,
+								remoteId: tracker.remoteId
+							})
+							.toPromise();
+					} catch {
+						await client.query(GetTrackers, { isLoggedIn: true }).toPromise();
+						await client
+							.query(searchTracker, {
+								trackerId: tracker.trackerId,
+								query: tracker.title
+							})
+							.toPromise();
+						await client
+							.mutation(bindTrack, {
+								mangaId: id,
+								trackerId: tracker.trackerId,
+								remoteId: tracker.remoteId
+							})
+							.toPromise();
+					}
 				} catch {}
 			})
 		);
