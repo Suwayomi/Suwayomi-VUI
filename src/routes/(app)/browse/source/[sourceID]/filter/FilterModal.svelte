@@ -17,7 +17,7 @@
 	import CheckBoxFilter from './filters/CheckBoxFilter.svelte';
 	import { Accordion, getModalStore } from '@skeletonlabs/skeleton';
 	import type { LayoutData } from '../$types';
-	import { filtersState } from './stores';
+	import { filtersState } from './stores.svelte';
 	import type { SvelteComponent } from 'svelte';
 	import { queryParam, ssp } from 'sveltekit-search-params';
 	import type { VariablesOf } from '$lib/gql/graphql';

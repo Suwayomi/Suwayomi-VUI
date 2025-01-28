@@ -9,7 +9,7 @@
 <script lang="ts">
 	import { queryParam, ssp } from 'sveltekit-search-params';
 	import type { LayoutData } from '../$types';
-	import { filtersState } from './stores';
+	import { filtersState } from './stores.svelte';
 	import Grid from '../Grid.svelte';
 	import IconWrapper from '$lib/components/IconWrapper.svelte';
 	import { getModalStore } from '@skeletonlabs/skeleton';
