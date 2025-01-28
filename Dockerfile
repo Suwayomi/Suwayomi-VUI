@@ -1,4 +1,4 @@
-FROM ghcr.io/nginxinc/nginx-unprivileged:1.25.3-alpine-slim
+FROM ghcr.io/nginxinc/nginx-unprivileged:alpine-slim
 USER root
 COPY ./build /usr/share/nginx/html
 COPY ./default.conf /etc/nginx/conf.d/default.conf
