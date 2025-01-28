@@ -8,7 +8,7 @@
 
 <script lang="ts">
 	import Image from '$lib/components/Image.svelte';
-	import { AppBarData } from '$lib/MountTitleAction';
+	import { actionState } from '$lib/MountTitleAction.svelte';
 	import { type ResultOf } from '$lib/gql/graphql';
 	import Nav from '../Nav.svelte';
 	import { getContextClient } from '@urql/svelte';
@@ -22,7 +22,7 @@
 		MakeSimpleCallback
 	} from '$lib/actions/IntersectionObserver.svelte';
 
-	AppBarData('Migrate');
+	actionState.AppBarData('Migrate');
 	const client = getContextClient();
 	const Migration = queryState({
 		client,

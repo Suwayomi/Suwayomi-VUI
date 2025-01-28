@@ -7,7 +7,7 @@
 -->
 
 <script lang="ts">
-	import { title as titleStore } from '$lib/MountTitleAction';
+	import { actionState } from '$lib/MountTitleAction.svelte';
 	import Toast from '$lib/components/Toast/Toast.svelte';
 	import { gmState, toastStore } from '$lib/simpleStores.svelte';
 	import '../app.postcss';
@@ -114,7 +114,7 @@
 
 <svelte:head>
 	<title>
-		{$titleStore}
+		{actionState.title}
 	</title>
 </svelte:head>
 <Drawer>

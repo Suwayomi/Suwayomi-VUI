@@ -19,7 +19,7 @@
 	import LibraryActions from './libraryActions.svelte';
 	import { selectState, type MangaType } from './LibraryStores.svelte';
 	import { onMount } from 'svelte';
-	import { AppBarData } from '$lib/MountTitleAction';
+	import { actionState } from '$lib/MountTitleAction.svelte';
 	import { errortoast, gridValues, queryState } from '$lib/util.svelte';
 	import IconWrapper from '$lib/components/IconWrapper.svelte';
 	import { parseQuery, type ANO, type parsedQueryType } from './queryParse';
@@ -39,7 +39,7 @@
 		query: getCategories
 	});
 
-	AppBarData('Library', {
+	actionState.AppBarData('Library', {
 		component: LibraryActions,
 		props: {
 			selectAll

@@ -7,7 +7,7 @@
 -->
 
 <script lang="ts">
-	import { AppBarData } from '$lib/MountTitleAction';
+	import { actionState } from '$lib/MountTitleAction.svelte';
 	import {
 		ErrorHelp,
 		Partition,
@@ -104,7 +104,7 @@
 	}
 	let langs = $derived(getLangs(extensions?.value?.data));
 	$effect(() => {
-		AppBarData('Extensions', {
+		actionState.AppBarData('Extensions', {
 			component: ExtensionsActions,
 			props: { langs }
 		});

@@ -6,7 +6,7 @@
  file, You can obtain one at http://mozilla.org/MPL/2.0/.
 -->
 <script lang="ts">
-	import { action, title } from '$lib/MountTitleAction';
+	import { actionState } from '$lib/MountTitleAction.svelte';
 	import AppShell from '$lib/components/AppShell.svelte';
 	import MainAppRail from '$lib/components/MainAppRail.svelte';
 	import MediaQuery from '$lib/components/MediaQuery.svelte';
@@ -27,15 +27,15 @@
 				<span
 					class="line-clamp-1 px-2 py-2 text-xl/[5rem] sm:px-4 sm:text-4xl/[5rem]"
 				>
-					{$title}
+					{actionState.title}
 				</span>
 			{/snippet}
 			{#snippet trail()}
-				{#if $action?.props}
-					{@const SvelteComponent = $action.component}
-					<SvelteComponent {...$action.props} />
-				{:else if $action?.component}
-					{@const SvelteComponent_1 = $action.component}
+				{#if actionState.action?.props}
+					{@const SvelteComponent = actionState.action.component}
+					<SvelteComponent {...actionState.action.props} />
+				{:else if actionState.action?.component}
+					{@const SvelteComponent_1 = actionState.action.component}
 					<SvelteComponent_1 />
 				{/if}
 			{/snippet}

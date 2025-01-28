@@ -7,7 +7,7 @@
 -->
 
 <script lang="ts">
-	import { AppBarData } from '$lib/MountTitleAction';
+	import { actionState } from '$lib/MountTitleAction.svelte';
 	import { getContextClient } from '@urql/svelte';
 	import { History } from '$lib/gql/Queries';
 	import type { ResultOf } from '$lib/gql/graphql';
@@ -22,7 +22,7 @@
 	import { SvelteSet } from 'svelte/reactivity';
 	import FakeMangaItem from '$lib/components/FakeMangaItem.svelte';
 
-	AppBarData('History');
+	actionState.AppBarData('History');
 	const client = getContextClient();
 	let page = $state(0);
 	let all: ResultOf<typeof History>['chapters'] | null = $state(null);

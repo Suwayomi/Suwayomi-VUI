@@ -14,7 +14,7 @@
 		type TriState
 	} from '$lib/util.svelte';
 	import { getModalStore } from '@skeletonlabs/skeleton';
-	import { selected } from './LibraryStores';
+	import { selectState } from './LibraryStores.svelte';
 	import { getContextClient } from '@urql/svelte';
 	import { updateMangasCategories } from '$lib/gql/Mutations';
 	import { getCategories } from '$lib/gql/Queries';
@@ -59,7 +59,7 @@
 
 	async function handelSubmit() {
 		modalStore.close();
-		const id = $selected.filter((e) => e).map((e) => e.id);
+		const id = selectState.selectedIds();
 		ErrorHelp(
 			'Failed to change mangas categories',
 			client

@@ -8,7 +8,7 @@
 
 <script lang="ts">
 	import UpdatesActions from './UpdatesActions.svelte';
-	import { AppBarData } from '$lib/MountTitleAction';
+	import { actionState } from '$lib/MountTitleAction.svelte';
 	import MangaCard from '$lib/components/ImageCard.svelte';
 	import { longPress } from '$lib/press';
 	import { selectState } from './UpdatesStores';
@@ -33,7 +33,7 @@
 	import { SvelteSet } from 'svelte/reactivity';
 	import FakeMangaItem from '$lib/components/FakeMangaItem.svelte';
 
-	AppBarData('Updates', {
+	actionState.AppBarData('Updates', {
 		component: UpdatesActions,
 		props: {
 			selectAll,

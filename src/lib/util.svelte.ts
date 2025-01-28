@@ -93,6 +93,12 @@ export class geneticSelectState<T extends { id: number }> {
 			sortedMangas?.forEach((ele) => this.selected.set(ele.id, ele));
 		}
 	}
+	selectedIds(): number[] {
+		return this.selected
+			.values()
+			.map((e) => e.id)
+			.toArray();
+	}
 }
 
 export enum dlreabook {

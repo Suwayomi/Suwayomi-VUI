@@ -7,7 +7,7 @@
 -->
 
 <script lang="ts">
-	import { AppBarData } from '$lib/MountTitleAction';
+	import { actionState } from '$lib/MountTitleAction.svelte';
 	import { ErrorHelpUntyped, OTT } from '$lib/util.svelte';
 	import type { PageData } from './$types';
 	import InfoSide from './InfoSide.svelte';
@@ -48,7 +48,7 @@
 	});
 
 	$effect(() => {
-		AppBarData(manga.value?.data?.manga?.title || 'Manga', {
+		actionState.AppBarData(manga.value?.data?.manga?.title || 'Manga', {
 			component: MangaActions,
 			props: {
 				fetchChapters

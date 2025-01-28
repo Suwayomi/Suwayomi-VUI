@@ -9,7 +9,7 @@
 <script lang="ts">
 	import IconButton from '$lib/components/IconButton.svelte';
 	import Image from '$lib/components/Image.svelte';
-	import { AppBarData } from '$lib/MountTitleAction';
+	import { actionState } from '$lib/MountTitleAction.svelte';
 	import { ProgressBar } from '@skeletonlabs/skeleton';
 	import DownloadsActions from './DownloadsActions.svelte';
 	import { filter } from './downloadsStores';
@@ -23,7 +23,7 @@
 	import { SvelteSet } from 'svelte/reactivity';
 	const client = getContextClient();
 
-	AppBarData('Downloads', {
+	actionState.AppBarData('Downloads', {
 		component: DownloadsActions,
 		props: {}
 	});

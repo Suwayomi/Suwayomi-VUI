@@ -17,7 +17,7 @@
 	import CheckBoxFilter from './filters/CheckBoxFilter.svelte';
 	import { Accordion, getModalStore } from '@skeletonlabs/skeleton';
 	import type { LayoutData } from '../$types';
-	import { filters as filtersStore } from './stores';
+	import { filtersState } from './stores';
 	import type { SvelteComponent } from 'svelte';
 	import { queryParam, ssp } from 'sveltekit-search-params';
 	import type { VariablesOf } from '$lib/gql/graphql';
@@ -55,8 +55,9 @@
 	const queryy = queryParam('q', ssp.string(), { pushHistory: false });
 
 	let query = $state($queryy ?? '');
-	let filters: VariablesOf<typeof fetchSourceManga>['filters'] =
-		$state($filtersStore);
+	let filters: VariablesOf<typeof fetchSourceManga>['filters'] = $state(
+		filtersState.filters
+	);
 
 	function Search() {
 		submit(filters, query);

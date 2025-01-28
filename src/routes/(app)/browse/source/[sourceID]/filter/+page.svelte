@@ -9,7 +9,7 @@
 <script lang="ts">
 	import { queryParam, ssp } from 'sveltekit-search-params';
 	import type { LayoutData } from '../$types';
-	import { filters, filtersSause } from './stores';
+	import { filtersState } from './stores';
 	import Grid from '../Grid.svelte';
 	import IconWrapper from '$lib/components/IconWrapper.svelte';
 	import { getModalStore } from '@skeletonlabs/skeleton';
@@ -28,10 +28,10 @@
 
 	let { data }: Props = $props();
 
-	if ($filtersSause !== data.sourceID) {
-		$filters = [];
+	if (filtersState.filtersSause !== data.sourceID) {
+		filtersState.filters = [];
 	}
-	$filtersSause = data.sourceID;
+	filtersState.filtersSause = data.sourceID;
 
 	let sause = $derived.by(() => {
 		return OTT(
@@ -55,7 +55,7 @@
 
 	let queryfilter = $state({
 		query: $query === '' ? undefined : ($query ?? undefined),
-		filters: $filters?.length ? $filters : undefined
+		filters: filtersState.filters?.length ? filtersState.filters : undefined
 	});
 
 	function submit(
@@ -67,7 +67,7 @@
 			filters: filterss?.length ? filterss : undefined
 		};
 		$query = queryy === '' ? null : (queryy ?? null);
-		$filters = filterss?.length ? filterss : [];
+		filtersState.filters = filterss?.length ? filterss : [];
 	}
 	$effect(doSearch);
 </script>

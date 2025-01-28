@@ -14,7 +14,7 @@
 	import { getModalStore } from '@skeletonlabs/skeleton';
 	import { getToastStore } from '$lib/components/Toast/stores';
 	import TooltipIconButton from '$lib/components/TooltipIconButton.svelte';
-	import { AppBarData } from '$lib/MountTitleAction';
+	import { actionState } from '$lib/MountTitleAction.svelte';
 	import { type ResultOf } from '$lib/gql/graphql';
 	import { getCategories } from '$lib/gql/Queries';
 	import { getContextClient } from '@urql/svelte';
@@ -22,7 +22,7 @@
 	import { deleteCategory, updateCategoryOrder } from '$lib/gql/Mutations';
 	import { queryState } from '$lib/util.svelte';
 
-	AppBarData('Categories');
+	actionState.AppBarData('Categories');
 
 	const modalStore = getModalStore();
 	const toastStore = getToastStore();

@@ -8,7 +8,7 @@
 
 <script lang="ts">
 	import ImageCard from '$lib/components/ImageCard.svelte';
-	import { AppBarData } from '$lib/MountTitleAction';
+	import { actionState } from '$lib/MountTitleAction.svelte';
 	import { queryParam, ssp } from 'sveltekit-search-params';
 	import { FindLangName } from '../languages';
 	import Nav from '../Nav.svelte';
@@ -29,7 +29,7 @@
 		MakeSimpleCallback
 	} from '$lib/actions/IntersectionObserver.svelte';
 
-	AppBarData('Sources');
+	actionState.AppBarData('Sources');
 
 	type Tsource = ResultOf<typeof getSources>['sources']['nodes'][number];
 	const client = getContextClient();
@@ -96,7 +96,10 @@
 	);
 	let langs = $derived(getLanguages(sources.value.data));
 	$effect(() => {
-		AppBarData('Sources', { component: SourcesActions, props: { langs } });
+		actionState.AppBarData('Sources', {
+			component: SourcesActions,
+			props: { langs }
+		});
 	});
 	let groupSources = $derived(doGroupSources(filteredSources));
 	let intersecting: SvelteSet<string> = $state(new SvelteSet());

@@ -7,7 +7,6 @@
 import type { getCategory } from '$lib/gql/Queries';
 import type { ResultOf } from '$lib/gql/graphql';
 import { geneticSelectState } from '$lib/util.svelte';
-// import { writable } from 'svelte/store';
 
 export type MangaType = ResultOf<
 	typeof getCategory
