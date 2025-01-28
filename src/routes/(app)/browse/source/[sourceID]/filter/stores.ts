@@ -6,12 +6,6 @@
 
 import type { fetchSourceManga } from '$lib/gql/Mutations';
 import type { VariablesOf } from '$lib/gql/graphql';
-// import { writable } from 'svelte/store';
-
-// export const filters = writable<
-// 	VariablesOf<typeof fetchSourceManga>['filters']
-// >([]);
-// export const filtersSause = writable('');
 
 export const filtersState = $state<{
 	filters: VariablesOf<typeof fetchSourceManga>['filters'];

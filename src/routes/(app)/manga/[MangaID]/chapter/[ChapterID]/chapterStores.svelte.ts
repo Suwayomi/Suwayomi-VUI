@@ -9,28 +9,27 @@ import { getManga } from '$lib/gql/Queries';
 import type { getDrawerStore } from '@skeletonlabs/skeleton';
 import { queryStore } from '@urql/svelte';
 import type { ResultOf } from 'gql.tada';
-import { get, writable, type Writable } from 'svelte/store';
+import { get } from 'svelte/store';
 import { client } from '$lib/gql/graphqlClient';
 import type { OperationResultF } from '$lib/util.svelte';
 
-export const mangaTitle = writable('');
-export const chapterTitle = writable('');
-export const ViewNav = writable<boolean>(false);
+export const titlesNNav = $state({
+	mangaTitle: '',
+	chapterTitle: '',
+	ViewNav: false,
+	MangaID: -1,
+	ChapterID: -1
+});
 
 export function makeToggleDrawer(
-	drawerStore: ReturnType<typeof getDrawerStore>,
-	dataStore: Writable<{
-		MangaID: number;
-		ChapterID: number;
-	}>
+	drawerStore: ReturnType<typeof getDrawerStore>
 ) {
 	return () => {
 		if (get(drawerStore).open) drawerStore.close();
 		else {
 			drawerStore.open({
 				id: 'ChapterMenu',
-				width: 'w-[280px] md:w-[480px]',
-				meta: dataStore
+				width: 'w-[280px] md:w-[480px]'
 			});
 		}
 	};

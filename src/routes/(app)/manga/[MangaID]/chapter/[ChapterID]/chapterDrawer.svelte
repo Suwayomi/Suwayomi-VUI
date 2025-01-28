@@ -11,12 +11,7 @@
 	import Slide from '$lib/components/Slide.svelte';
 	import { enumKeys } from '$lib/util.svelte';
 	import { getDrawerStore } from '@skeletonlabs/skeleton';
-	import {
-		ViewNav,
-		chapterTitle,
-		get_manga,
-		mangaTitle
-	} from './chapterStores.svelte';
+	import { get_manga, titlesNNav } from './chapterStores.svelte';
 	import {
 		ChapterTitle,
 		Layout,
@@ -26,7 +21,6 @@
 	import { onMount } from 'svelte';
 	import { getContextClient } from '@urql/svelte';
 	import { filterChapters } from '../../util';
-	import type { Writable } from 'svelte/store';
 	import { onNavigate } from '$app/navigation';
 	import { longPress } from '$lib/press';
 	import { trackProgress, updateChapters } from '$lib/gql/Mutations';
@@ -38,14 +32,9 @@
 	import { InitScrollTo } from '$lib/actions/InitScrollTo.svelte';
 	const drawerStore = getDrawerStore();
 
-	let data = $derived(
-		$drawerStore.meta as Writable<{
-			MangaID: number;
-			ChapterID: number;
-		}>
-	);
-
-	mmState.id = $data.MangaID;
+	$effect(() => {
+		mmState.id = titlesNNav.MangaID;
+	});
 
 	onMount(() => {
 		if (
@@ -98,9 +87,9 @@
 		await client
 			.mutation(updateChapters, { isRead: !chapter.isRead, ids: [chapter.id] })
 			.toPromise();
-		if ($data.MangaID)
+		if (titlesNNav.MangaID)
 			await client
-				.mutation(trackProgress, { mangaId: $data.MangaID })
+				.mutation(trackProgress, { mangaId: titlesNNav.MangaID })
 				.toPromise();
 	}
 	let intersecting: SvelteSet<number> = $state(new SvelteSet());
@@ -120,12 +109,12 @@
 			/>
 		</div>
 		<h1 class="h2 my-2 line-clamp-3 min-h-fit pl-4 leading-[2.75rem]">
-			{$mangaTitle}
+			{titlesNNav.mangaTitle}
 		</h1>
 		<h2
 			class="h3 mt-4 line-clamp-1 min-h-fit border-y border-surface-500 pl-4 leading-10"
 		>
-			{$chapterTitle}
+			{titlesNNav.chapterTitle}
 		</h2>
 
 		<div class="my-2 flex flex-col space-y-2">
@@ -164,7 +153,10 @@
 					{/each}
 				</select>
 			</label>
-			<Slide class="p-1 hover:variant-glass-surface" bind:checked={$ViewNav}>
+			<Slide
+				class="p-1 hover:variant-glass-surface"
+				bind:checked={titlesNNav.ViewNav}
+			>
 				View Navigation Layout
 			</Slide>
 			<label class="pl-3">
@@ -181,7 +173,7 @@
 			bind:this={chapterListElement}
 			id="chapterSideElement"
 			use:InitScrollTo={{
-				cssQuerySelector: `#chapter-${$data.ChapterID}`
+				cssQuerySelector: `#chapter-${titlesNNav.ChapterID}`
 			}}
 		>
 			<div class=" w-full">
@@ -212,7 +204,7 @@
 							>
 								<div
 									class="w-full space-y-0 p-1
-									{chapter.id === $data?.ChapterID && 'variant-ghost'}
+									{chapter.id === titlesNNav?.ChapterID && 'variant-ghost'}
 									{chapter.isRead && 'opacity-50'}"
 								>
 									<div class="line-clamp-1 w-full text-xl md:text-2xl">
