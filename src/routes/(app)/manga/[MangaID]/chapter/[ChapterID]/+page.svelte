@@ -18,11 +18,9 @@
 	import { onMount, untrack } from 'svelte';
 	import type { PageData } from './$types';
 	import {
-		ViewNav,
-		chapterTitle,
+		titlesNNav,
 		get_manga,
-		makeToggleDrawer,
-		mangaTitle
+		makeToggleDrawer
 	} from './chapterStores.svelte';
 	import { filterChapters } from '../../util';
 	import { paths, type PathLayout, type Paths, type TPath } from './paths';
@@ -35,7 +33,6 @@
 	} from '$lib/gql/Mutations';
 	import { ChapterTypeFragment } from '$lib/gql/Fragments';
 	import { queryParam, ssp } from 'sveltekit-search-params';
-	import { writable } from 'svelte/store';
 	import { IntersectionObserverAction } from '$lib/actions/IntersectionObserver.svelte';
 
 	interface Props {
@@ -194,8 +191,12 @@
 		}
 	}
 
-	const dataStore = writable(data);
-	const Toggledraw = makeToggleDrawer(drawerStore, dataStore);
+	$effect(() => {
+		titlesNNav.MangaID = data.MangaID;
+		titlesNNav.ChapterID = data.ChapterID;
+	});
+
+	const Toggledraw = makeToggleDrawer(drawerStore);
 
 	async function handelKeypress(keyEvent: KeyboardEvent) {
 		if (!pageElement) {
@@ -487,13 +488,10 @@
 		}
 	});
 	$effect(() => {
-		dataStore.set(data);
+		titlesNNav.mangaTitle = manga?.data?.manga?.title ?? '';
 	});
 	$effect(() => {
-		$mangaTitle = manga?.data?.manga?.title ?? '';
-	});
-	$effect(() => {
-		$chapterTitle =
+		titlesNNav.chapterTitle =
 			filteredChapters?.find((e) => e.id === currentChapterID)?.name ?? '';
 	});
 	$effect(() => {
@@ -520,7 +518,9 @@
 		) as HTMLElement | undefined
 	);
 	$effect(() => {
-		actionState.AppBarData(`${manga?.data?.manga?.title} ${$chapterTitle}`);
+		actionState.AppBarData(
+			`${manga?.data?.manga?.title} ${titlesNNav.chapterTitle}`
+		);
 	});
 	let currPath = $derived(
 		path
@@ -562,7 +562,7 @@
 	onclick={handleClick}
 	class="w-full"
 >
-	{#if $ViewNav}
+	{#if titlesNNav.ViewNav}
 		<div class="pointer-events-none">
 			<div class="fixed z-10 bg-blue-500/50" style={currPath.forward}></div>
 			<div class="fixed z-10 bg-red-500/50" style={currPath.back}></div>

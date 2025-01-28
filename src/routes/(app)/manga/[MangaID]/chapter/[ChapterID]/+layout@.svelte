@@ -10,8 +10,7 @@
 	import IconButton from '$lib/components/IconButton.svelte';
 	import { getDrawerStore, AppShell } from '@skeletonlabs/skeleton';
 	import type { LayoutData } from './$types';
-	import { writable } from 'svelte/store';
-	import { makeToggleDrawer } from './chapterStores.svelte';
+	import { makeToggleDrawer, titlesNNav } from './chapterStores.svelte';
 
 	interface Props {
 		data: LayoutData;
@@ -21,11 +20,11 @@
 	let { data, children }: Props = $props();
 
 	const drawerStore = getDrawerStore();
-	const dataStore = writable(data);
 	$effect(() => {
-		dataStore.set(data);
+		titlesNNav.MangaID = data.MangaID;
+		titlesNNav.ChapterID = data.ChapterID;
 	});
-	const draw = makeToggleDrawer(drawerStore, dataStore);
+	const draw = makeToggleDrawer(drawerStore);
 </script>
 
 <AppShell>
