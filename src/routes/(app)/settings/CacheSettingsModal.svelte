@@ -16,25 +16,29 @@
 
 	const client = getContextClient();
 	async function clearCache() {
-		navigator.serviceWorker.ready.then((registration) => {
-			if (!registration.active) {
-				return;
-			}
-			registration.active.postMessage({
-				type: 'clearCache'
+		try {
+			navigator.serviceWorker.ready.then((registration) => {
+				if (!registration.active) {
+					return;
+				}
+				registration.active.postMessage({
+					type: 'clearCache'
+				});
 			});
-		});
+		} catch {}
 	}
 
 	async function clearCachedImgs() {
-		navigator.serviceWorker.ready.then((registration) => {
-			if (!registration.active) {
-				return;
-			}
-			registration.active.postMessage({
-				type: 'clearCachedImages'
+		try {
+			navigator.serviceWorker.ready.then((registration) => {
+				if (!registration.active) {
+					return;
+				}
+				registration.active.postMessage({
+					type: 'clearCachedImages'
+				});
 			});
-		});
+		} catch {}
 	}
 </script>
 
