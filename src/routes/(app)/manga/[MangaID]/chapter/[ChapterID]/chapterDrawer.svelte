@@ -35,6 +35,7 @@
 		MakeSimpleCallback
 	} from '$lib/actions/IntersectionObserver.svelte';
 	import { SvelteSet } from 'svelte/reactivity';
+	import { InitScrollTo } from '$lib/actions/InitScrollTo.svelte';
 	const drawerStore = getDrawerStore();
 
 	let data = $derived(
@@ -47,15 +48,6 @@
 	mmState.id = $data.MangaID;
 
 	onMount(() => {
-		let elem = document.querySelector(`#chapter-${$data.ChapterID}`)!;
-		elem = elem.previousElementSibling ?? elem;
-		const to = elem?.getBoundingClientRect();
-		chapterSideElement?.scrollTo({
-			top:
-				chapterSideElement.scrollTop -
-				chapterSideElement.getBoundingClientRect().top +
-				(to?.top ?? 0)
-		});
 		if (
 			/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
 				navigator.userAgent
@@ -88,7 +80,7 @@
 			})
 	);
 
-	let chapterSideElement: HTMLDivElement | undefined = $state();
+	let chapterListElement: HTMLDivElement | undefined = $state(undefined);
 
 	onNavigate((e) => {
 		const match = e.to?.url.pathname.match(/\/manga\/(\d+)\/chapter\/(\d+)/);
@@ -186,8 +178,11 @@
 		</div>
 		<div
 			class="ml-3 h-full shrink overflow-y-auto"
-			bind:this={chapterSideElement}
+			bind:this={chapterListElement}
 			id="chapterSideElement"
+			use:InitScrollTo={{
+				cssQuerySelector: `#chapter-${$data.ChapterID}`
+			}}
 		>
 			<div class=" w-full">
 				{#each filteredChapters ?? [] as chapter}
@@ -196,7 +191,7 @@
 						id="chapter-{chapter.id}"
 						use:IntersectionObserverAction={{
 							rootMargin: '400px 0px 400px 0px',
-							root: chapterSideElement,
+							root: chapterListElement,
 							callback: MakeSimpleCallback(intersecting, chapter.id)
 						}}
 					>

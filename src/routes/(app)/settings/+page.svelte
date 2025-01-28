@@ -9,7 +9,7 @@
 <script lang="ts">
 	import LibrarySettings from './LibrarySettings.svelte';
 	import IconWrapper from '$lib/components/IconWrapper.svelte';
-	import { AppBarData } from '$lib/MountTitleAction';
+	import { actionState } from '$lib/MountTitleAction.svelte';
 	import Lightswitch from '$lib/components/lightswitch.svelte';
 	import { display, gmState } from '$lib/simpleStores.svelte';
 
@@ -24,7 +24,7 @@
 	import CacheSettingsModal from './CacheSettingsModal.svelte';
 
 	const modalStore = getModalStore();
-	AppBarData('Settings');
+	actionState.AppBarData('Settings');
 </script>
 
 <a

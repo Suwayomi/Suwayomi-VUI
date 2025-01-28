@@ -6,7 +6,7 @@
  file, You can obtain one at http://mozilla.org/MPL/2.0/.
 -->
 <script lang="ts">
-	import { AppBarData } from '$lib/MountTitleAction';
+	import { actionState } from '$lib/MountTitleAction.svelte';
 	import {
 		GetEnumArray,
 		errortoast,
@@ -36,7 +36,7 @@
 	import IconWrapper from '$lib/components/IconWrapper.svelte';
 	const modalStore = getModalStore();
 
-	AppBarData('Server Settings');
+	actionState.AppBarData('Server Settings');
 	const client = getContextClient();
 	const settingsData = queryState({
 		client,

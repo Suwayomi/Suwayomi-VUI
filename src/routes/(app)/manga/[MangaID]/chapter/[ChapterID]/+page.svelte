@@ -9,7 +9,7 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
 	import { page } from '$app/stores';
-	import { AppBarData } from '$lib/MountTitleAction';
+	import { actionState } from '$lib/MountTitleAction.svelte';
 	import Image from '$lib/components/Image.svelte';
 	import { getToastStore } from '$lib/components/Toast/stores';
 	import { Layout, mmState, Mode } from '$lib/simpleStores.svelte';
@@ -520,7 +520,7 @@
 		) as HTMLElement | undefined
 	);
 	$effect(() => {
-		AppBarData(`${manga?.data?.manga?.title} ${$chapterTitle}`);
+		actionState.AppBarData(`${manga?.data?.manga?.title} ${$chapterTitle}`);
 	});
 	let currPath = $derived(
 		path

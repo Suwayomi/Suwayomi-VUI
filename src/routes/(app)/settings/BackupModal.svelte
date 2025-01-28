@@ -18,7 +18,7 @@
 		getModalStore
 	} from '@skeletonlabs/skeleton';
 	import { getToastStore } from '$lib/components/Toast/stores';
-	import { AppBarData } from '$lib/MountTitleAction';
+	import { actionState } from '$lib/MountTitleAction.svelte';
 	import { getContextClient } from '@urql/svelte';
 	import { createBackup, restoreBackup } from '$lib/gql/Mutations';
 	import { restoreStatus, validateBackup } from '$lib/gql/Queries';
@@ -41,7 +41,7 @@
 		);
 		MakingBackup = false;
 	}
-	AppBarData('Backup');
+	actionState.AppBarData('Backup');
 	let files: FileList | undefined = $state();
 	async function validateRestore() {
 		if (!files) return;

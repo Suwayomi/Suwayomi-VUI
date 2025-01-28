@@ -7,7 +7,7 @@
 -->
 
 <script lang="ts">
-	import { AppBarData } from '$lib/MountTitleAction';
+	import { actionState } from '$lib/MountTitleAction.svelte';
 
 	import { gridValues, queryState } from '$lib/util.svelte';
 	import { getContextClient } from '@urql/svelte';
@@ -30,7 +30,7 @@
 
 	let { data }: Props = $props();
 
-	AppBarData(data.SourceID);
+	actionState.AppBarData(data.SourceID);
 	const client = getContextClient();
 	const Manga = queryState({
 		client,
@@ -45,7 +45,7 @@
 
 	$effect(() => {
 		if (source.value.data?.source?.displayName)
-			AppBarData(source.value.data?.source.displayName);
+			actionState.AppBarData(source.value.data?.source.displayName);
 	});
 	let intersecting: SvelteSet<number> = $state(new SvelteSet());
 </script>

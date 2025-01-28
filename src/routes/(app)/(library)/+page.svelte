@@ -17,16 +17,10 @@
 	import { Tab, TabGroup } from '@skeletonlabs/skeleton';
 	import { queryParam, ssp } from 'sveltekit-search-params';
 	import LibraryActions from './libraryActions.svelte';
-	import { selected, selectMode, type MangaType } from './LibraryStores';
+	import { selectState, type MangaType } from './LibraryStores.svelte';
 	import { onMount } from 'svelte';
-	import { AppBarData } from '$lib/MountTitleAction';
-	import {
-		errortoast,
-		gridValues,
-		HelpDoSelect,
-		HelpSelectAll,
-		queryState
-	} from '$lib/util.svelte';
+	import { actionState } from '$lib/MountTitleAction.svelte';
+	import { errortoast, gridValues, queryState } from '$lib/util.svelte';
 	import IconWrapper from '$lib/components/IconWrapper.svelte';
 	import { parseQuery, type ANO, type parsedQueryType } from './queryParse';
 	import { getCategories, getCategory } from '$lib/gql/Queries';
@@ -35,7 +29,7 @@
 		IntersectionObserverAction,
 		MakeSimpleCallback
 	} from '$lib/actions/IntersectionObserver.svelte';
-	import { SvelteSet } from 'svelte/reactivity';
+	import { SvelteMap, SvelteSet } from 'svelte/reactivity';
 	import FakeMangaItem from '$lib/components/FakeMangaItem.svelte';
 
 	const client = getContextClient();
@@ -45,7 +39,7 @@
 		query: getCategories
 	});
 
-	AppBarData('Library', {
+	actionState.AppBarData('Library', {
 		component: LibraryActions,
 		props: {
 			selectAll
@@ -53,9 +47,9 @@
 	});
 
 	onMount(() => {
-		$selectMode = false;
+		selectState.selectMode = false;
 		return () => {
-			$selectMode = false;
+			selectState.selectMode = false;
 		};
 	});
 
@@ -115,7 +109,7 @@
 	}
 
 	function LongHandler() {
-		$selectMode = true;
+		selectState.selectMode = true;
 	}
 
 	function OrSearch(manga: MangaType, query: ANO[]): boolean {
@@ -211,7 +205,7 @@
 	}
 
 	function selectAll() {
-		HelpSelectAll(selectMode, selected, sortedMangas);
+		selectState.SelectAll(sortedMangas);
 	}
 	let [err, parsedQuery] = $derived(parseQuery($query));
 
@@ -276,8 +270,8 @@
 		})
 	);
 	$effect(() => {
-		if ($selectMode === false) {
-			$selected = [];
+		if (selectState.selectMode === false) {
+			selectState.selected = new SvelteMap();
 		}
 	});
 	let filteredMangas = $derived(
@@ -332,16 +326,11 @@
 		})
 	);
 	$effect(() => {
-		if ($selectMode && Object.keys($selected).length > 0) {
-			Object.keys($selected).forEach((ele) => {
+		if (selectState.selectMode && selectState.selected.size > 0) {
+			selectState.selected.keys().forEach((ele) => {
 				if (filteredMangas !== undefined) {
-					const tmp = filteredMangas.findIndex(
-						(elem) => elem.id.toString() === ele
-					);
-					if (tmp === -1) {
-						delete $selected[parseInt(ele)];
-						$selected = $selected;
-					}
+					const tmp = filteredMangas.findIndex((elem) => elem.id === ele);
+					if (tmp === -1) selectState.selected.delete(ele);
 				}
 			});
 		}
@@ -452,19 +441,18 @@
 								<a
 									draggable={false}
 									use:longPress
-									onlongPress={() => $selectMode || LongHandler()}
+									onlongPress={() => selectState.selectMode || LongHandler()}
 									href="/manga/{manga.id}"
 									onclick={(e) => {
 										if (e.ctrlKey) return;
-										if ($selectMode) {
+										if (selectState.selectMode) {
 											e.stopPropagation();
 											e.preventDefault();
-											lastSelected = HelpDoSelect(
+											lastSelected = selectState.DoSelect(
 												manga,
 												e,
 												lastSelected,
-												sortedMangas,
-												selected
+												sortedMangas
 											);
 										}
 									}}
@@ -475,7 +463,7 @@
 										draggable={false}
 										thumbnailUrl={manga.thumbnailUrl ?? ''}
 										title={manga.title}
-										class="select-none {$selectMode && 'opacity-80'}"
+										class="select-none {selectState.selectMode && 'opacity-80'}"
 										rounded="{FilterMeta.value.Display === display.Compact &&
 											'rounded-lg'}
 													{FilterMeta.value.Display === display.Comfortable &&
@@ -505,12 +493,12 @@
 												</div>
 											{/if}
 										</div>
-										{#if $selectMode}
+										{#if selectState.selectMode}
 											<div
 												class="bg-base-100/75 absolute bottom-0 left-0 right-0 top-0 cursor-pointer"
 											>
 												<IconWrapper
-													name={$selected[manga.id] === undefined
+													name={selectState.selected.get(manga.id) === undefined
 														? 'fluent:checkbox-unchecked-24-filled'
 														: 'fluent:checkbox-checked-24-filled'}
 													class="absolute right-2 top-2 text-4xl"

@@ -7,13 +7,13 @@
 -->
 
 <script lang="ts">
-	import { AppBarData } from '$lib/MountTitleAction';
+	import { actionState } from '$lib/MountTitleAction.svelte';
 	import { getabout } from '$lib/gql/Queries';
 	import { queryState } from '$lib/util.svelte';
 	import { getContextClient } from '@urql/svelte';
 
 	let about = queryState({ client: getContextClient(), query: getabout });
-	AppBarData('About');
+	actionState.AppBarData('About');
 </script>
 
 {#if about.value.fetching}

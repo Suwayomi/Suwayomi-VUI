@@ -4,11 +4,10 @@
 // License, v. 2.0. If a copy of the MPL was not distributed with this
 // file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
-import { writable } from 'svelte/store';
 import type { updates } from '$lib/gql/Queries';
 import type { ResultOf } from '$lib/gql/graphql';
+import { chapterSelectState } from '$lib/util.svelte';
 
 export type UpdateNode = ResultOf<typeof updates>['chapters']['nodes'][0];
 
-export const selected = writable<UpdateNode[]>([]);
-export const selectMode = writable(false);
+export const selectState = new chapterSelectState<UpdateNode>();

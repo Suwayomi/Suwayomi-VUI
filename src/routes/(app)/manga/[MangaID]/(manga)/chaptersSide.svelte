@@ -13,18 +13,12 @@
 	import { longPress } from '$lib/press';
 	import { screens } from '$lib/screens';
 	import { ChapterSort, ChapterTitle, mmState } from '$lib/simpleStores.svelte';
-	import {
-		HelpDoSelect,
-		HelpSelectAll,
-		HelpUpdateChapters,
-		OTT,
-		dlreabook
-	} from '$lib/util.svelte';
+	import { OTT, dlreabook } from '$lib/util.svelte';
 	import { getModalStore, popup } from '@skeletonlabs/skeleton';
 	import { fade } from 'svelte/transition';
 	import ChaptersFilterModal from './ChaptersFilterModal.svelte';
 	import DownloadProgressRadial from './DownloadProgressRadial.svelte';
-	import { selected, selectMode, type chapterType } from './mangaStores.svelte';
+	import { selectState, type chapterType } from './mangaStores.svelte';
 	import { getContextClient } from '@urql/svelte';
 	import {
 		deleteDownloadedChapters,
@@ -41,6 +35,7 @@
 		MakeSimpleCallback
 	} from '$lib/actions/IntersectionObserver.svelte';
 	import { SvelteSet } from 'svelte/reactivity';
+	import { InitScrollTo } from '$lib/actions/InitScrollTo.svelte';
 
 	interface Props {
 		MangaID: number;
@@ -53,12 +48,12 @@
 
 	function updateSelected() {
 		OTT([sortedChapters], () => {
-			$selected?.forEach((e) => {
+			selectState.selected?.forEach((e) => {
 				const tmp = sortedChapters?.find((ee) => ee.id === e.id);
 				if (tmp) {
-					$selected[tmp.id] = tmp;
+					selectState.selected.set(tmp.id, tmp);
 				} else {
-					delete $selected[e.id];
+					selectState.selected.delete(e.id);
 				}
 			});
 		});
@@ -112,7 +107,7 @@
 	}
 
 	function LongHandler() {
-		$selectMode = true;
+		selectState.selectMode = true;
 	}
 
 	let lastSelected: chapterType | undefined = $state();
@@ -126,7 +121,6 @@
 	}
 
 	let scrollTo = $state(true);
-	let _scrollToChaps: HTMLDivElement[] = $state([]);
 	let scrollToChaps: HTMLDivElement | undefined = $state();
 	let hash = $state(location.hash);
 
@@ -134,37 +128,6 @@
 		// @ts-ignore-next-line
 		window.navigation?.addEventListener('navigate', (event) => {
 			hash = new URL(event.destination.url).hash;
-		});
-	}
-
-	function handelScrollToChaps() {
-		let ind = _scrollToChaps.filter((e) => e).findIndex((e) => e.id === hash);
-
-		if (ind !== -1 && ind - 3 > 0) {
-			scrollToChaps = _scrollToChaps[ind - 3];
-		}
-	}
-
-	function isScrollable(elem: HTMLElement | undefined) {
-		if (!elem) return false;
-		return (
-			elem.scrollWidth > elem.clientWidth ||
-			elem.scrollHeight > elem.clientHeight
-		);
-	}
-
-	function scroll() {
-		scrollTo = false;
-		const { top, height } = scrollToChaps?.getBoundingClientRect() ?? {
-			top: 0
-		};
-		let scrollElement;
-		if (isScrollable(chapterSideElement)) {
-			scrollElement = chapterSideElement;
-		} else scrollElement = document.querySelector('#page');
-		scrollElement?.scrollTo({
-			top: top + scrollElement.scrollTop + (height ?? 0) / 2,
-			behavior: 'smooth'
 		});
 	}
 
@@ -191,9 +154,7 @@
 			: undefined
 	);
 	$effect(updateSelected);
-	$effect(() => {
-		if (scrollTo && _scrollToChaps.length) untrack(handelScrollToChaps);
-	});
+
 	$effect(() => {
 		if (scrollTo && scrollToChaps) untrack(scroll);
 	});
@@ -253,6 +214,10 @@
 {:else if sortedChapters}
 	{@const mangaFrag = manga.value?.data?.manga}
 	<div
+		use:InitScrollTo={{
+			cssQuerySelector: hash ? `#c-${hash.slice(1)}` : '',
+			runNow: !!sortedChapters.length
+		}}
 		bind:this={chapterSideElement}
 		id="chapterSideElement"
 		class="max-h-full w-full md:absolute md:bottom-0 md:right-0 md:top-0 md:w-1/2 md:overflow-y-auto"
@@ -268,7 +233,7 @@
 							class="line-clamp-1 h-full pl-2 text-2xl font-medium md:text-xl"
 							title={missingChapters.join('\n')}
 						>
-							Missing {missingChapters.length} Chapters
+							Missing {missingChapters.length} ChaptersrunNow
 						</span>
 					{/if}
 				</div>
@@ -277,11 +242,11 @@
 				>
 					{#snippet children({ matches })}
 						{#if matches}
-							{#if $selectMode}
+							{#if selectState.selectMode}
 								<TooltipIconButton
 									class="text-surface-700 dark:text-surface-300"
 									onclick={() => {
-										HelpUpdateChapters(dlreabook.download, selected);
+										selectState.UpdateChapters(dlreabook.download);
 									}}
 									tip="download/delete Selected"
 									name="mdi:download"
@@ -289,7 +254,7 @@
 								<TooltipIconButton
 									class="text-surface-700 dark:text-surface-300"
 									onclick={() => {
-										HelpUpdateChapters(dlreabook.read, selected);
+										selectState.UpdateChapters(dlreabook.read);
 									}}
 									tip="Read/unRead Selected"
 									name="mdi:book-open-page-variant-outline"
@@ -297,7 +262,7 @@
 								<TooltipIconButton
 									class="text-surface-700 dark:text-surface-300"
 									onclick={() => {
-										HelpUpdateChapters(dlreabook.bookmark, selected);
+										selectState.UpdateChapters(dlreabook.bookmark);
 									}}
 									tip="bookmark/unbookmark Selected"
 									name="mdi:bookmark"
@@ -305,12 +270,11 @@
 							{/if}
 							<TooltipIconButton
 								class="text-surface-700 dark:text-surface-300"
-								onclick={() =>
-									HelpSelectAll(selectMode, selected, sortedChapters)}
+								onclick={() => selectState.SelectAll(sortedChapters)}
 								name="mdi:select-all"
 								tip="Select all/none"
 							/>
-						{:else if $selectMode}
+						{:else if selectState.selectMode}
 							<button
 								use:popup={{
 									event: 'click',
@@ -328,7 +292,7 @@
 								<button
 									class="flex w-full items-center justify-start rounded-t-lg p-4 text-2xl hover:variant-glass-surface"
 									onclick={() => {
-										HelpUpdateChapters(dlreabook.download, selected);
+										selectState.UpdateChapters(dlreabook.download);
 									}}
 								>
 									<IconWrapper name="mdi:download" class="mr-2" />download /
@@ -337,7 +301,7 @@
 								<button
 									class="flex w-full items-center justify-start p-4 text-2xl hover:variant-glass-surface"
 									onclick={() => {
-										HelpUpdateChapters(dlreabook.read, selected);
+										selectState.UpdateChapters(dlreabook.read);
 									}}
 								>
 									<IconWrapper
@@ -348,15 +312,14 @@
 								<button
 									class="flex w-full items-center justify-start p-4 text-2xl hover:variant-glass-surface"
 									onclick={() => {
-										HelpUpdateChapters(dlreabook.bookmark, selected);
+										selectState.UpdateChapters(dlreabook.bookmark);
 									}}
 								>
 									<IconWrapper name="mdi:bookmark" class="mr-2" />Un/bookmark
 								</button>
 								<button
 									class="flex w-full items-center justify-start rounded-b-lg p-4 text-2xl hover:variant-glass-surface"
-									onclick={() =>
-										HelpSelectAll(selectMode, selected, sortedChapters)}
+									onclick={() => selectState.SelectAll(sortedChapters)}
 								>
 									<IconWrapper name="mdi:select-all" class="mr-2" />Select all
 								</button>
@@ -367,9 +330,11 @@
 				<TooltipIconButton
 					class="text-surface-700 dark:text-surface-300"
 					onclick={() => {
-						$selectMode = !$selectMode;
+						selectState.selectMode = !selectState.selectMode;
 					}}
-					name="mdi:{$selectMode ? 'select-multiple' : 'flip-to-front'}"
+					name="mdi:{selectState.selectMode
+						? 'select-multiple'
+						: 'flip-to-front'}"
 					tip="Select Mode"
 				/>
 				<TooltipIconButton
@@ -382,7 +347,7 @@
 		</div>
 		<MediaQuery query="(min-width: {screens.md})">
 			{#snippet children({ matches })}
-				{#each sortedChapters as chapter, index (chapter.id + ' ' + MangaID)}
+				{#each sortedChapters as chapter (chapter.id + ' ' + MangaID)}
 					<div
 						use:IntersectionObserverAction={{
 							rootMargin: '400px 0px 400px 0px',
@@ -392,8 +357,7 @@
 									: document.querySelector('#page')) ?? undefined,
 							callback: MakeSimpleCallback(intersecting, chapter.id)
 						}}
-						id="#{chapter.id}"
-						bind:this={_scrollToChaps[index]}
+						id="c-{chapter.id}"
 						class="h-20"
 					>
 						{#if intersecting.has(chapter.id)}
@@ -401,19 +365,18 @@
 								in:fade
 								class="card variant-glass flex h-full items-center space-x-1 p-2"
 								use:longPress
-								onlongPress={() => $selectMode || LongHandler()}
+								onlongPress={() => selectState.selectMode || LongHandler()}
 								href="/manga/{mangaFrag?.id}/chapter/{chapter.id}"
 								onclick={(e) => {
 									if (e.ctrlKey) return;
-									if ($selectMode) {
+									if (selectState.selectMode) {
 										e.preventDefault();
 										e.stopPropagation();
-										lastSelected = HelpDoSelect(
+										lastSelected = selectState.DoSelect(
 											chapter,
 											e,
 											lastSelected,
-											sortedChapters,
-											selected
+											sortedChapters
 										);
 									}
 								}}
@@ -454,11 +417,11 @@
 									)}
 								/>
 
-								{#if $selectMode}
+								{#if selectState.selectMode}
 									<button class="h-full rounded-full p-2 hover:variant-ghost">
 										<IconWrapper
 											class="aspect-square h-full w-full text-surface-700 dark:text-surface-300"
-											name={$selected[chapter.id] === undefined
+											name={selectState.selected.get(chapter.id) === undefined
 												? 'fluent:checkbox-unchecked-24-filled'
 												: 'fluent:checkbox-checked-24-filled'}
 										/>

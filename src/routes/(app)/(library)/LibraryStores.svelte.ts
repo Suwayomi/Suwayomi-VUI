@@ -6,10 +6,10 @@
 
 import type { getCategory } from '$lib/gql/Queries';
 import type { ResultOf } from '$lib/gql/graphql';
-import { writable } from 'svelte/store';
+import { geneticSelectState } from '$lib/util.svelte';
 
 export type MangaType = ResultOf<
 	typeof getCategory
 >['category']['mangas']['nodes'][0];
-export const selected = writable<MangaType[]>([]);
-export const selectMode = writable(false);
+
+export const selectState = new geneticSelectState<MangaType>();

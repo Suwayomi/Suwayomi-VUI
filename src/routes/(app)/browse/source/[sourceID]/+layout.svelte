@@ -7,7 +7,7 @@
 -->
 
 <script lang="ts">
-	import { AppBarData } from '$lib/MountTitleAction';
+	import { actionState } from '$lib/MountTitleAction.svelte';
 	import { getContextClient } from '@urql/svelte';
 	import type { LayoutData } from './$types';
 	import NavActions from './NavActions.svelte';
@@ -28,7 +28,7 @@
 	});
 
 	$effect(() => {
-		AppBarData(source.value.data?.source?.displayName ?? '', {
+		actionState.AppBarData(source.value.data?.source?.displayName ?? '', {
 			component: NavActions,
 			props: {
 				supportsLatest: source.value.data?.source?.supportsLatest
