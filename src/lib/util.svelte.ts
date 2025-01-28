@@ -4,7 +4,7 @@
 // License, v. 2.0. If a copy of the MPL was not distributed with this
 // file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
-import { get, type Writable } from 'svelte/store';
+import { get } from 'svelte/store';
 
 import { toastStore } from './simpleStores.svelte';
 import { client } from './gql/graphqlClient';
@@ -29,6 +29,7 @@ import {
 } from '@urql/svelte';
 import { introspection } from '../graphql-env';
 import { untrack } from 'svelte';
+import { SvelteMap } from 'svelte/reactivity';
 
 export type TriState = 'on' | 'off' | 'intermediate';
 export type OperationResultF<
@@ -48,61 +49,49 @@ export function getObjectKeys<T extends object>(obj: T): (keyof T)[] {
 	return Object.keys(obj) as (keyof T)[];
 }
 
-export function HelpDoSelect<T extends { id: number }>(
-	update: T,
-	e: MouseEvent & { currentTarget: EventTarget & HTMLAnchorElement },
-	lastSelected: T | undefined,
-	all: T[] | undefined,
-	selected: Writable<T[]>
-) {
-	let ids = [update];
-	if (e && e.shiftKey) {
-		const chaps = all;
-		const thisone = chaps?.findIndex((ele) => ele.id === update.id);
-		const lastone = chaps?.findIndex((ele) => ele.id === lastSelected?.id);
-		if (thisone !== undefined && lastone !== undefined && chaps !== undefined) {
-			const biger = lastone > thisone;
-			ids = chaps.slice(
-				biger ? thisone : lastone,
-				(biger ? lastone : thisone) + 1
-			);
+export class geneticSelectState<T extends { id: number }> {
+	selected: SvelteMap<number, T> = new SvelteMap();
+	selectMode: boolean = false;
+	DoSelect(
+		update: T,
+		e: MouseEvent & { currentTarget: EventTarget & HTMLAnchorElement },
+		lastSelected: T | undefined,
+		all: T[] | undefined
+	) {
+		let ids = [update];
+		if (e && e.shiftKey) {
+			const chaps = all;
+			const thisone = chaps?.findIndex((ele) => ele.id === update.id);
+			const lastone = chaps?.findIndex((ele) => ele.id === lastSelected?.id);
+			if (
+				thisone !== undefined &&
+				lastone !== undefined &&
+				chaps !== undefined
+			) {
+				const biger = lastone > thisone;
+				ids = chaps.slice(
+					biger ? thisone : lastone,
+					(biger ? lastone : thisone) + 1
+				);
+			}
 		}
-	}
-	lastSelected = update;
-	if (get(selected)[update.id] === undefined) {
-		ids.forEach((ele) =>
-			selected.update((e) => {
-				e[ele.id] = ele;
-				return e;
-			})
-		);
-	} else {
-		ids.forEach((ele) => {
-			selected.update((e) => {
-				delete e[ele.id];
-				return e;
+		lastSelected = update;
+		if (this.selected.get(update.id) === undefined) {
+			ids.forEach((ele) => this.selected.set(ele.id, ele));
+		} else {
+			ids.forEach((ele) => {
+				this.selected.delete(ele.id);
 			});
-		});
+		}
+		return lastSelected;
 	}
-	return lastSelected;
-}
-
-export function HelpSelectAll<T extends { id: number }>(
-	selectMode: Writable<boolean>,
-	selected: Writable<T[]>,
-	sortedMangas: T[] | undefined
-) {
-	selectMode.set(true);
-	if (get(selected).filter((e) => e).length === sortedMangas?.length) {
-		selected.set([]);
-	} else {
-		sortedMangas?.forEach((ele) =>
-			selected.update((n) => {
-				const e = n;
-				e[ele.id] = ele;
-				return e;
-			})
-		);
+	SelectAll(sortedMangas: T[] | undefined) {
+		this.selectMode = true;
+		if (this.selected.size === sortedMangas?.length) {
+			this.selected = new SvelteMap();
+		} else {
+			sortedMangas?.forEach((ele) => this.selected.set(ele.id, ele));
+		}
 	}
 }
 
@@ -120,65 +109,81 @@ function getToastStore() {
 	return toast;
 }
 
-export async function HelpUpdateChapters<
+export class chapterSelectState<
 	T extends {
 		id: number;
 		isBookmarked: boolean;
 		isDownloaded: boolean;
 		isRead: boolean;
 	}
->(param: dlreabook, selected: Writable<T[]>) {
-	const ids = get(selected)
-		.filter((e) => e)
-		.map((e) => e.id);
-	let is = true;
-	if (ids)
-		switch (param) {
-			case dlreabook.bookmark:
-				is = !get(selected).filter((e) => e)[0].isBookmarked;
-				ErrorHelp(
-					'failed to update Bookmark status',
-					client
-						.mutation(updateChapters, {
-							isBookmarked: is,
-							ids
-						})
-						.toPromise()
-				);
-				return is;
-			case dlreabook.download:
-				is = get(selected).filter((e) => e)[0].isDownloaded;
-				if (is) {
-					ErrorHelp(
-						'failed to delete Downloaded chapters',
+> extends geneticSelectState<T> {
+	async UpdateChapters(param: dlreabook): Promise<boolean | undefined> {
+		if (this.selected.size) {
+			const actions = {
+				[dlreabook.bookmark]: async () => {
+					const is = this.selected.values().next().value?.isBookmarked;
+					const ids = this.selected
+						.values()
+						.filter((e) => e.isBookmarked === is)
+						.map((e) => e.id)
+						.toArray();
+					await ErrorHelp(
+						'failed to update Bookmark status',
 						client
-							.mutation(deleteDownloadedChapters, {
+							.mutation(updateChapters, {
+								isBookmarked: !is,
 								ids
 							})
 							.toPromise()
-						// deleteDownloadedChapters({ variables: { ids } })
 					);
-				} else {
-					ErrorHelp(
-						'failed to enqueue chapters Downloads',
-						client.mutation(enqueueChapterDownloads, { ids }).toPromise()
-						// enqueueChapterDownloads({ variables: { ids } })
+					return !is;
+				},
+				[dlreabook.download]: async () => {
+					const is = this.selected.values().next().value?.isDownloaded;
+					const ids = this.selected
+						.values()
+						.filter((e) => e.isDownloaded === is)
+						.map((e) => e.id)
+						.toArray();
+					if (is) {
+						await ErrorHelp(
+							'failed to delete Downloaded chapters',
+							client
+								.mutation(deleteDownloadedChapters, {
+									ids
+								})
+								.toPromise()
+						);
+					} else {
+						await ErrorHelp(
+							'failed to enqueue chapters Downloads',
+							client.mutation(enqueueChapterDownloads, { ids }).toPromise()
+						);
+					}
+					return !is;
+				},
+				[dlreabook.read]: async () => {
+					const is = this.selected.values().next().value?.isRead;
+					const ids = this.selected
+						.values()
+						.filter((e) => e.isRead === is)
+						.map((e) => e.id)
+						.toArray();
+					await ErrorHelp(
+						'failed to update Read status',
+						client
+							.mutation(updateChapters, {
+								isRead: !is,
+								ids
+							})
+							.toPromise()
 					);
+					return is;
 				}
-				return !is;
-			default:
-				is = !get(selected).filter((e) => e)[0].isRead;
-				ErrorHelp(
-					'failed to update Read status',
-					client
-						.mutation(updateChapters, {
-							isRead: !get(selected).filter((e) => e)[0].isRead,
-							ids
-						})
-						.toPromise()
-				);
-				return is;
+			} as const;
+			return actions[param]();
 		}
+	}
 }
 
 export async function ErrorHelp<T>(

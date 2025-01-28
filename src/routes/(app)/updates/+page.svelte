@@ -11,15 +11,13 @@
 	import { AppBarData } from '$lib/MountTitleAction';
 	import MangaCard from '$lib/components/ImageCard.svelte';
 	import { longPress } from '$lib/press';
-	import { selectMode, selected } from './UpdatesStores';
+	import { selectState } from './UpdatesStores';
 	import IconWrapper from '$lib/components/IconWrapper.svelte';
 	import type { UpdateNode } from './UpdatesStores';
 	import {
 		dlreabook,
 		formatDate,
 		gridValues,
-		HelpDoSelect,
-		HelpSelectAll,
 		OTT,
 		queryState
 	} from '$lib/util.svelte';
@@ -57,31 +55,31 @@
 	}
 
 	function LongHandler(): void {
-		$selectMode = true;
+		selectState.selectMode = true;
 	}
 	let lastSelected: UpdateNode | undefined = $state();
 
 	function selectAll() {
-		HelpSelectAll(selectMode, selected, all?.nodes);
+		selectState.SelectAll(all?.nodes);
 	}
 
 	function updateSelectedValues(prop: dlreabook, is: boolean | undefined) {
-		if (!$selected || is === undefined) return;
+		if (!selectState.selected || is === undefined) return;
 		switch (prop) {
 			case dlreabook.bookmark:
-				$selected.forEach((element) => {
+				selectState.selected.forEach((element) => {
 					const fin = all?.nodes.findIndex((ele) => ele.id === element.id);
 					if (fin && all?.nodes[fin]) all.nodes[fin].isBookmarked = is;
 				});
 				break;
 			case dlreabook.download:
-				$selected.forEach((element) => {
+				selectState.selected.forEach((element) => {
 					const fin = all?.nodes.findIndex((ele) => ele.id === element.id);
 					if (fin && all?.nodes[fin]) all.nodes[fin].isDownloaded = is;
 				});
 				break;
 			default:
-				$selected.forEach((element) => {
+				selectState.selected.forEach((element) => {
 					const fin = all?.nodes.findIndex((ele) => ele.id === element.id);
 					if (fin && all?.nodes[fin]) all.nodes[fin].isRead = is;
 				});
@@ -146,19 +144,18 @@
 				{#if intersecting}
 					<a
 						use:longPress
-						onlongPress={() => $selectMode || LongHandler()}
+						onlongPress={() => selectState.selectMode || LongHandler()}
 						href="/manga/{updat.manga.id}#{updat.id}"
 						onclick={(e) => {
 							e.stopPropagation();
 							if (e.ctrlKey) return;
-							if ($selectMode) {
+							if (selectState.selectMode) {
 								e.preventDefault();
-								lastSelected = HelpDoSelect(
+								lastSelected = selectState.DoSelect(
 									updat,
 									e,
 									lastSelected,
-									all?.nodes,
-									selected
+									all?.nodes
 								);
 							}
 							//  else {
@@ -172,7 +169,7 @@
 						<MangaCard
 							thumbnailUrl={updat.manga.thumbnailUrl ?? ''}
 							title={updat.manga.title}
-							class={$selectMode && 'opacity-80'}
+							class={selectState.selectMode && 'opacity-80'}
 							titleA="{updat.isDownloaded ? 'Downloaded' : ''}
 	{updat.isRead ? 'Read' : ''}
 	{updat.isBookmarked ? 'Bookmarked' : ''}"
@@ -180,12 +177,12 @@
 								'rounded-lg'}
 								{gmState.value.Display === display.Comfortable && 'rounded-none rounded-t-lg'}"
 						>
-							{#if $selectMode}
+							{#if selectState.selectMode}
 								<div
 									class="bg-base-100/75 absolute bottom-0 left-0 right-0 top-0 cursor-pointer"
 								>
 									<IconWrapper
-										name={$selected[updat.id] === undefined
+										name={selectState.selected.get(updat.id) === undefined
 											? 'fluent:checkbox-unchecked-24-filled'
 											: 'fluent:checkbox-checked-24-filled'}
 										class="absolute right-2 top-2 text-4xl"

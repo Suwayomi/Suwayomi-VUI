@@ -11,8 +11,8 @@
 	import TooltipIconButton from '$lib/components/TooltipIconButton.svelte';
 	import { screens } from '$lib/screens';
 	import { popup } from '@skeletonlabs/skeleton';
-	import { HelpUpdateChapters, dlreabook } from '$lib/util.svelte';
-	import { selected, selectMode } from './UpdatesStores';
+	import { dlreabook } from '$lib/util.svelte';
+	import { selectState } from './UpdatesStores';
 	import Icon from '$lib/components/IconWrapper.svelte';
 	import IconWrapper from '$lib/components/IconWrapper.svelte';
 	interface Props {
@@ -29,11 +29,11 @@
 	>
 		{#snippet children({ matches })}
 			{#if matches}
-				{#if $selectMode}
+				{#if selectState.selectMode}
 					<TooltipIconButton
 						class="text-surface-700 dark:text-surface-300"
 						onclick={async () => {
-							await HelpUpdateChapters(dlreabook.download, selected);
+							selectState.UpdateChapters(dlreabook.download);
 						}}
 						tip="download/delete Selected"
 						name="mdi:download"
@@ -41,7 +41,7 @@
 					<TooltipIconButton
 						class="text-surface-700 dark:text-surface-300"
 						onclick={async () => {
-							const is = await HelpUpdateChapters(dlreabook.read, selected);
+							const is = await selectState.UpdateChapters(dlreabook.read);
 							updateSelectedValues(dlreabook.read, is);
 						}}
 						tip="Read/Un-Read Selected"
@@ -50,7 +50,7 @@
 					<TooltipIconButton
 						class="text-surface-700 dark:text-surface-300"
 						onclick={async () => {
-							const is = await HelpUpdateChapters(dlreabook.bookmark, selected);
+							const is = await selectState.UpdateChapters(dlreabook.bookmark);
 							updateSelectedValues(dlreabook.bookmark, is);
 						}}
 						tip="bookmark/Un-bookmark Selected"
@@ -63,7 +63,7 @@
 					name="mdi:select-all"
 					tip="Select all/none"
 				/>
-			{:else if $selectMode}
+			{:else if selectState.selectMode}
 				<button
 					use:popup={{
 						event: 'click',
@@ -81,8 +81,8 @@
 					<div class="card max-w-xs rounded-lg p-0">
 						<button
 							class="flex w-full items-center justify-start rounded-t-lg p-4 text-2xl hover:variant-glass-surface"
-							onclick={async () => {
-								await HelpUpdateChapters(dlreabook.download, selected);
+							onclick={() => {
+								selectState.UpdateChapters(dlreabook.download);
 							}}
 						>
 							<IconWrapper name="mdi:download" class="mr-2" />download / delete
@@ -90,7 +90,7 @@
 						<button
 							class="flex w-full items-center justify-start p-4 text-2xl hover:variant-glass-surface"
 							onclick={async () => {
-								const is = await HelpUpdateChapters(dlreabook.read, selected);
+								const is = await selectState.UpdateChapters(dlreabook.read);
 								updateSelectedValues(dlreabook.read, is);
 							}}
 						>
@@ -102,10 +102,7 @@
 						<button
 							class="flex w-full items-center justify-start p-4 text-2xl hover:variant-glass-surface"
 							onclick={async () => {
-								const is = await HelpUpdateChapters(
-									dlreabook.bookmark,
-									selected
-								);
+								const is = await selectState.UpdateChapters(dlreabook.bookmark);
 								updateSelectedValues(dlreabook.bookmark, is);
 							}}
 						>
@@ -125,9 +122,9 @@
 	<TooltipIconButton
 		class="text-surface-700 dark:text-surface-300"
 		onclick={() => {
-			$selectMode = !$selectMode;
+			selectState.selectMode = !selectState.selectMode;
 		}}
-		name="mdi:{$selectMode ? 'select-multiple' : 'flip-to-front'}"
+		name="mdi:{selectState.selectMode ? 'select-multiple' : 'flip-to-front'}"
 		tip="Select Mode"
 	/>
 </div>

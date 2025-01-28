@@ -6,16 +6,15 @@
 
 import type { ChapterTypeFragment } from '$lib/gql/Fragments';
 import type { ResultOf, VariablesOf } from '$lib/gql/graphql';
+
 import { getManga } from '$lib/gql/Queries';
-import type { OperationResultF } from '$lib/util.svelte';
+import { chapterSelectState, type OperationResultF } from '$lib/util.svelte';
 import { getContextClient, queryStore } from '@urql/svelte';
 import { onDestroy } from 'svelte';
-import { writable } from 'svelte/store';
 
 export type chapterType = ResultOf<typeof ChapterTypeFragment>;
 
-export const selectMode = writable(false);
-export const selected = writable<chapterType[]>([]);
+export const selectState = new chapterSelectState<chapterType>();
 
 export const manga: {
 	value:
