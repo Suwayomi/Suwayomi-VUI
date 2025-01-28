@@ -141,17 +141,3 @@ jobs:
             ghcr.io/${{ needs.RepoName.outputs.value }}:${{ needs.GenTag.outputs.value }},
             ${{ needs.RepoName.outputs.value }}:latest,
             ${{ needs.RepoName.outputs.value }}:${{ needs.GenTag.outputs.value }},
-      # Slim it!
-      - uses: kitabisa/docker-slim-action@v1
-        env:
-          DSLIM_HTTP_PROBE: false
-          DSLIM_PRESERVE_PATH: /usr/share/nginx/html,/etc/nginx/conf.d,/docker-entrypoint.d
-        with:
-          target: ghcr.io/${{ needs.RepoName.outputs.value }}:latest
-          tag: 'slim'
-      - run: |
-          docker tag ghcr.io/${{ needs.RepoName.outputs.value }}:slim ghcr.io/${{ needs.RepoName.outputs.value }}:${{ needs.GenTag.outputs.value }}-slim
-          docker tag ghcr.io/${{ needs.RepoName.outputs.value }}:slim ${{ needs.RepoName.outputs.value }}:slim
-          docker tag ghcr.io/${{ needs.RepoName.outputs.value }}:slim ${{ needs.RepoName.outputs.value }}:${{ needs.GenTag.outputs.value }}-slim
-          docker image rm ghcr.io/${{ needs.RepoName.outputs.value }}:latest
-          docker image push --all-tags "ghcr.io/${{ needs.RepoName.outputs.value }}"
