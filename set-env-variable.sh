@@ -3,11 +3,10 @@
 # JSON_STRING='window.configs = { \
 #   "APP_VAR":"'"${APP_VAR}"'" \
 # }'
-# sed -i "s@// CONFIGURATIONS_PLACEHOLDER@${JSON_STRING}@" /usr/share/nginx/html/index.html
+# sed -i "s@// CONFIGURATIONS_PLACEHOLDE@${JSON_STRING}@" /usr/share/nginx/html/index.html
 # exec "$@"
 
 TMP=$(echo "$suwayomi" | sed "s@/\$@@")
-echo $TMP
 
 # get the resolver IPs from /etc/resolv.conf and make them nginx syntax
 TMP2=$(awk '
@@ -19,22 +18,21 @@ $1=="nameserver" && $2~/^((25[0-5]|(2[0-4]|1[0-9]|[1-9]|)[0-9])\.?){4}$/{
 $1=="nameserver" && $2!~/^((25[0-5]|(2[0-4]|1[0-9]|[1-9]|)[0-9])\.?){4}$/{
     print "["$2"]"
 }' /etc/resolv.conf)
-echo $TMP2
 
 cat /etc/nginx/conf.d/default.conf
-echo ""
-echo ""
+echo "\n"
 
-sed -i "s@resolverPLACEHOLDER@$TMP2@" /etc/nginx/conf.d/default.conf
-
+echo "resolverPLACEHOLDE -> $TMP2"
+sed -i "s@resolverPLACEHOLDE@$TMP2@" /etc/nginx/conf.d/default.conf
+echo "after sed resolverPLACEHOLDE"
 cat /etc/nginx/conf.d/default.conf
-echo ""
-echo ""
+echo "\n"
 
-sed -i "s@urlPLACEHOLDER@$TMP@" /etc/nginx/conf.d/default.conf
-
+echo "urlPLACEHOLDE -> $TMP"
+sed -i "s@urlPLACEHOLDE@$TMP@" /etc/nginx/conf.d/default.conf
+echo "after sed urlPLACEHOLDE"
 cat /etc/nginx/conf.d/default.conf
-echo ""
+echo "\n"
 
 cd /usr/share/nginx/html
 # test
