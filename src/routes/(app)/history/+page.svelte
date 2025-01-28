@@ -55,6 +55,16 @@
 	});
 	$effect(updateAll);
 	let intersecting: SvelteSet<number> = $state(new SvelteSet());
+	let newPageIntersecting = $state(false);
+	$effect(() => {
+		if (
+			newPageIntersecting &&
+			all?.pageInfo.hasNextPage &&
+			!CurrentHistory.value.fetching
+		) {
+			page = all.nodes.length;
+		}
+	});
 </script>
 
 {#snippet mangaText(updat: NonNullable<typeof all>['nodes'][0], absolute=true)}
@@ -135,15 +145,7 @@
 			use:IntersectionObserverAction={{
 				root: document.querySelector('#page') ?? undefined,
 				rootMargin: `400px 0px 400px 0px`,
-				callback: (e) => {
-					if (
-						e.isIntersecting &&
-						all?.pageInfo.hasNextPage &&
-						!CurrentHistory.value.fetching
-					) {
-						page = all.nodes.length;
-					}
-				}
+				callback: (e) => (newPageIntersecting = e.isIntersecting)
 			}}
 		>
 			<FakeMangaItem active={all.pageInfo.hasNextPage} count={1} lines={3} />

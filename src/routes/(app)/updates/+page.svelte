@@ -99,6 +99,16 @@
 		OTT([update.value], updateall);
 	});
 	let intersecting: SvelteSet<number> = $state(new SvelteSet());
+	let newPageIntersecting = $state(false);
+	$effect(() => {
+		if (
+			newPageIntersecting &&
+			all?.pageInfo.hasNextPage &&
+			!update.value.fetching
+		) {
+			page = all?.nodes.length ?? 0;
+		}
+	});
 </script>
 
 {#snippet mangaText(updat: NonNullable<typeof all>['nodes'][0], absolute = true)}
@@ -220,13 +230,7 @@
 				root: document.querySelector('#page') ?? undefined,
 				rootMargin: `400px 0px 400px 0px`,
 				callback: (e) => {
-					if (
-						!update.value.fetching &&
-						all?.pageInfo.hasNextPage &&
-						e.isIntersecting
-					) {
-						page = all?.nodes.length ?? 0;
-					}
+					newPageIntersecting = e.isIntersecting;
 				}
 			}}
 		>
