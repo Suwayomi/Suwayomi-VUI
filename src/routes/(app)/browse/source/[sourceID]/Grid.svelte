@@ -24,6 +24,7 @@
 	} from '$lib/actions/IntersectionObserver.svelte';
 	import NonLibraryMangaDisplay from '$lib/components/NonLibraryMangaDisplay.svelte';
 	import FakeMangaItem from '$lib/components/FakeMangaItem.svelte';
+	import { untrack } from 'svelte';
 
 	interface Props {
 		data: LayoutData;
@@ -112,6 +113,20 @@
 	});
 
 	let intersecting: SvelteSet<number> = $state(new SvelteSet());
+	let newPageIntersecting = $state(false);
+	$effect(() => {
+		if (
+			all.hasNextPage &&
+			!isLoading &&
+			!$source.fetching &&
+			newPageIntersecting &&
+			all.hasNextPage
+		) {
+			untrack(() => {
+				page++;
+			});
+		}
+	});
 </script>
 
 {#if sause?.data?.source?.isConfigurable}
@@ -149,18 +164,12 @@
 				root: document.querySelector('#page') ?? undefined,
 				rootMargin: `400px 0px 400px 0px`,
 				callback: (e) => {
-					if (
-						all.hasNextPage &&
-						!isLoading &&
-						!$source.fetching &&
-						e.isIntersecting &&
-						all.hasNextPage
-					) {
-						page++;
-					}
+					newPageIntersecting = e.isIntersecting;
 				}
 			}}
-		></div>
+		>
+			<FakeMangaItem active={true} count={1} />
+		</div>
 		{#if all.hasNextPage}
 			<FakeMangaItem
 				active={true}
