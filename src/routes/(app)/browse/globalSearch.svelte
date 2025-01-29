@@ -43,7 +43,6 @@
 		query: getSources,
 		variables: { isNsfw: gmState.value.nsfw ? null : false }
 	});
-	$inspect(fetchSources.value.data);
 	let rawSources = $derived(fetchSources.value);
 
 	function getLanguages(extensions: ResultOf<typeof getSources> | undefined) {
@@ -141,7 +140,6 @@
 				return 0;
 			})
 	);
-	$inspect(actionState);
 	$effect(() => {
 		actionState.AppBarData(title, {
 			component: GlobalSearchActions,
