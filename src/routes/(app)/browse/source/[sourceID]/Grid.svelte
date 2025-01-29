@@ -119,8 +119,7 @@
 			all.hasNextPage &&
 			!isLoading &&
 			!$source.fetching &&
-			newPageIntersecting &&
-			all.hasNextPage
+			newPageIntersecting
 		) {
 			untrack(() => {
 				page++;

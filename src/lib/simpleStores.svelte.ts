@@ -340,6 +340,7 @@ class GMState {
 	}
 
 	set value(val: typeof trueDefaults) {
+		if (this.store.value === val) return;
 		this.store.value = val;
 	}
 }
@@ -447,10 +448,12 @@ class MMState {
 	}
 
 	set value(val: typeof mangaMetaDefaults) {
+		if (this.store === val) return;
 		this.store = val;
 	}
 
 	set id(val: number) {
+		if (this._id === val) return;
 		this._id = val;
 		this.unSub();
 		this.MMeta = queryStore({

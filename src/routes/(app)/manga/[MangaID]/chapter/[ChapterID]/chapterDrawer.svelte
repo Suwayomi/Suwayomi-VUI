@@ -32,10 +32,6 @@
 	import { InitScrollTo } from '$lib/actions/InitScrollTo.svelte';
 	const drawerStore = getDrawerStore();
 
-	$effect(() => {
-		mmState.id = titlesNNav.MangaID;
-	});
-
 	onMount(() => {
 		if (
 			/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(

@@ -480,6 +480,8 @@
 	$effect(() => {
 		OTT([pages], () => updatePages(pages));
 	});
+
+	$inspect(mmState.value.ReaderMode);
 	$effect(() => {
 		if (mmState.value.ReaderMode === Mode.RTL) {
 			path = layoutToPath(paths.rtl, mmState.value.NavLayout);
@@ -517,9 +519,11 @@
 			).selector
 		) as HTMLElement | undefined
 	);
+	$inspect(titlesNNav.chapterTitle);
+	$inspect(titlesNNav.mangaTitle);
 	$effect(() => {
 		actionState.AppBarData(
-			`${manga?.data?.manga?.title} ${titlesNNav.chapterTitle}`
+			`${titlesNNav.mangaTitle} ${titlesNNav.chapterTitle}`
 		);
 	});
 	let currPath = $derived(
