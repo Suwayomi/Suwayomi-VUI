@@ -469,7 +469,6 @@
 			mmState.value.preLoadNextChapter &&
 			nextid !== preLoadingId
 		) {
-			console.log('loops9 1');
 			untrack(() => {
 				preLoadingId = nextid;
 			});
