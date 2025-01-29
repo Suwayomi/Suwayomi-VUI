@@ -134,7 +134,7 @@
 				if (!$SpecificSourceFilter.has(source.id)) return false;
 				return true;
 			})
-			.sort((a, b) => {
+			.toSorted((a, b) => {
 				if (a.meta.find((e) => e.key === 'pinned')) return -1;
 				if (b.meta.find((e) => e.key === 'pinned')) return 1;
 				return 0;

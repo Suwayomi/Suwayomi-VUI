@@ -378,6 +378,8 @@ export function queryState<
 	let isPaused = $state(get(store.isPaused$));
 
 	store.subscribe((value) => {
+		// i dont like this but i think its nessessary
+		if (JSON.stringify(value) === JSON.stringify(queryState)) return;
 		queryState = value;
 	});
 	store.isPaused$.subscribe((value) => {
