@@ -379,7 +379,8 @@ export function queryState<
 
 	store.subscribe((value) => {
 		// i dont like this but i think its nessessary
-		if (JSON.stringify(value) === JSON.stringify(queryState)) return;
+		if (JSON.stringify(value) === JSON.stringify(untrack(() => queryState)))
+			return;
 		queryState = value;
 	});
 	store.isPaused$.subscribe((value) => {
