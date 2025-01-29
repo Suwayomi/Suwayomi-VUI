@@ -10,15 +10,15 @@
 	import GlobalSearchActions from './globalsearch/GlobalSearchActions.svelte';
 	import PQueue from 'p-queue';
 	import { queryParam, ssp } from 'sveltekit-search-params';
-	import { onDestroy } from 'svelte';
+	import { onDestroy, untrack } from 'svelte';
 	import MediaQuery2 from '$lib/components/MediaQuery2.svelte';
 	import { SpecificSourceFilter } from './BrowseStores';
 	import HorisontalmangaElement from './HorisontalmangaElement.svelte';
 	import { actionState } from '$lib/MountTitleAction.svelte';
 	import { gmState } from '$lib/simpleStores.svelte';
 
-	import { groupBy, OTT } from '$lib/util.svelte';
-	import { getContextClient, CombinedError } from '@urql/svelte';
+	import { groupBy, OTT, queryState } from '$lib/util.svelte';
+	import { getContextClient } from '@urql/svelte';
 	import { getSources } from '$lib/gql/Queries';
 	import { type ResultOf } from '$lib/gql/graphql';
 	import { fetchSourceManga } from '$lib/gql/Mutations';
@@ -36,25 +36,15 @@
 
 	let lastQuery = $state($query);
 
-	let rawSources = $state<{
-		data: ResultOf<typeof getSources> | undefined;
-		error: CombinedError | undefined;
-		fetching: boolean;
-	}>({
-		data: undefined,
-		error: undefined,
-		fetching: true
-	});
-
 	const client = getContextClient();
-	client
-		.query(getSources, { isNsfw: gmState.value.nsfw ? null : false })
-		.toPromise()
-		.then((ee) => {
-			rawSources.data = ee.data;
-			rawSources.error = ee.error;
-			rawSources.fetching = false;
-		});
+
+	let fetchSources = queryState({
+		client,
+		query: getSources,
+		variables: { isNsfw: gmState.value.nsfw ? null : false }
+	});
+	$inspect(fetchSources.value.data);
+	let rawSources = $derived(fetchSources.value);
 
 	function getLanguages(extensions: ResultOf<typeof getSources> | undefined) {
 		if (extensions?.sources?.nodes !== undefined) {
@@ -138,6 +128,7 @@
 		}
 	});
 	let langs = $derived(getLanguages(rawSources.data));
+
 	let filteredSources = $derived(
 		rawSources.data?.sources?.nodes
 			?.filter((source) => {
@@ -150,11 +141,12 @@
 				return 0;
 			})
 	);
+	$inspect(actionState);
 	$effect(() => {
 		actionState.AppBarData(title, {
 			component: GlobalSearchActions,
 			props: {
-				rawSources: rawSources.data?.sources?.nodes.sort((a, b) => {
+				rawSources: rawSources.data?.sources?.nodes.toSorted((a, b) => {
 					if (a.meta.find((e) => e.key === 'pinned')) return -1;
 					if (b.meta.find((e) => e.key === 'pinned')) return 1;
 					return 0;
@@ -163,6 +155,7 @@
 			}
 		});
 	});
+
 	$effect(() => {
 		OTT([filteredSources, $query], onQueryChange);
 	});
