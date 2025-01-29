@@ -10,7 +10,7 @@
 	import GlobalSearchActions from './globalsearch/GlobalSearchActions.svelte';
 	import PQueue from 'p-queue';
 	import { queryParam, ssp } from 'sveltekit-search-params';
-	import { onDestroy, untrack } from 'svelte';
+	import { onDestroy } from 'svelte';
 	import MediaQuery2 from '$lib/components/MediaQuery2.svelte';
 	import { SpecificSourceFilter } from './BrowseStores';
 	import HorisontalmangaElement from './HorisontalmangaElement.svelte';
