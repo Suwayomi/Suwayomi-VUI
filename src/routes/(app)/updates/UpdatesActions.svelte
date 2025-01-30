@@ -11,13 +11,13 @@
 	import TooltipIconButton from '$lib/components/TooltipIconButton.svelte';
 	import { screens } from '$lib/screens';
 	import { popup } from '@skeletonlabs/skeleton';
-	import { dlreabook } from '$lib/util.svelte';
+	import { dlreabook, type Tdlreabook } from '$lib/util.svelte';
 	import { selectState } from './UpdatesStores';
 	import Icon from '$lib/components/IconWrapper.svelte';
 	import IconWrapper from '$lib/components/IconWrapper.svelte';
 	interface Props {
 		selectAll: () => void;
-		updateSelectedValues: (prop: dlreabook, is: boolean | undefined) => void;
+		updateSelectedValues: (prop: Tdlreabook, is: boolean | undefined) => void;
 	}
 
 	let { selectAll, updateSelectedValues }: Props = $props();

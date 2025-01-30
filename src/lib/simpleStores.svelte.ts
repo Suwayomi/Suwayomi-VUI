@@ -38,11 +38,15 @@ export const ChapterTitle = {
 	'Chapter Number': 'Chapter Number'
 } as const;
 
+export type TChapterTitle = keyof typeof ChapterTitle;
+
 export const ChapterSort = {
 	Source: 'Source',
 	'Fetched Date': 'Fetched Date',
 	'Upload Date': 'Upload Date'
 } as const;
+
+export type TChapterSort = keyof typeof ChapterSort;
 
 export const Mode = {
 	Vertical: 'Vertical',
@@ -51,12 +55,16 @@ export const Mode = {
 	LTR: 'LTR'
 } as const;
 
+export type TMode = keyof typeof Mode;
+
 export const Layout = {
 	L: 'L',
 	RAL: 'RAL',
 	Kindle: 'Kindle',
 	Edge: 'Edge'
 } as const;
+
+export type TLayout = keyof typeof Layout;
 
 export const sort = {
 	Unread: 'Unread',
@@ -69,30 +77,31 @@ export const sort = {
 	Random: 'Random'
 } as const;
 
+export type TSort = keyof typeof sort;
+
 export const display = {
 	Compact: 'Compact',
 	Comfortable: 'Comfortable'
 	// List: 'List' // WIP
 } as const;
 
+export type TDisplay = keyof typeof display;
+
 // do not make a key named "id" it will break the state
 const mangaMetaDefaults = {
 	ChapterUnread: 'intermediate' as TriState,
 	ChapterDownloaded: 'intermediate' as TriState,
 	ChapterBookmarked: 'intermediate' as TriState,
-	ChapterSort:
-		ChapterSort.Source as (typeof ChapterSort)[keyof typeof ChapterSort],
+	ChapterSort: ChapterSort.Source as TChapterSort,
 	ChapterAsc: false,
 	ChapterFetchUpload: false,
-	ChapterTitle: ChapterTitle[
-		'Source Title'
-	] as (typeof ChapterTitle)[keyof typeof ChapterTitle],
+	ChapterTitle: ChapterTitle['Source Title'] as TChapterTitle,
 	Margins: false,
 	Scale: false,
 	Offset: false,
 	SmoothScroll: true,
-	ReaderMode: Mode.Vertical as (typeof Mode)[keyof typeof Mode],
-	NavLayout: Layout.L as (typeof Layout)[keyof typeof Layout],
+	ReaderMode: Mode.Vertical as TMode,
+	NavLayout: Layout.L as TLayout,
 	preLoadNextChapter: true,
 	mobileFullScreenOnChapterPage: true,
 	doPageIndicator: false as boolean | undefined,
@@ -106,8 +115,8 @@ const trueDefaults = {
 	ignoreFiltersWhenSearching: false,
 	theme: 'skeleton' as Themes,
 	dark: true,
-	Display: display.Compact as (typeof display)[keyof typeof display],
-	Sort: 'ID' as (typeof sort)[keyof typeof sort],
+	Display: display.Compact as TDisplay,
+	Sort: 'ID' as TSort,
 	Asc: true,
 	Unread: 'intermediate' as TriState,
 	Downloaded: 'intermediate' as TriState,

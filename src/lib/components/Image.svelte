@@ -10,14 +10,15 @@
 	import type { CssClasses } from '@skeletonlabs/skeleton';
 	import { onDestroy } from 'svelte';
 
-	// eslint-disable-next-line svelte/valid-compile
-	enum Estate {
-		loading = 'loading',
-		error = 'error',
-		loaded = 'loaded'
-	}
+	const Estate = {
+		loading: 'loading',
+		error: 'error',
+		loaded: 'loaded'
+	} as const;
 
-	let LState = $state(Estate.loading);
+	type TEstate = keyof typeof Estate;
+
+	let LState: TEstate = $state(Estate.loading);
 	let img: HTMLImageElement | undefined = $state();
 
 	function load(

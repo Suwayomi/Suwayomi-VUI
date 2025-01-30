@@ -79,7 +79,7 @@
 	let flareSolverrTimeout = $state(60);
 	let flareSolverrUrl = $state('');
 	let globalUpdateInterval = $state(6);
-	let gqlDebugLogsEnabled = $state(false);
+	// let gqlDebugLogsEnabled = $state(false);
 	let initialOpenInBrowserEnabled = $state(false);
 	let ip = $state('0.0.0.0');
 	let localSourcePath = $state('');
@@ -153,8 +153,8 @@
 			flareSolverrUrl = settingsData.value.data.settings.flareSolverrUrl;
 			globalUpdateInterval =
 				settingsData.value.data.settings.globalUpdateInterval;
-			gqlDebugLogsEnabled =
-				settingsData.value.data.settings.gqlDebugLogsEnabled;
+			// gqlDebugLogsEnabled =
+			// 	settingsData.value.data.settings.gqlDebugLogsEnabled;
 			initialOpenInBrowserEnabled =
 				settingsData.value.data.settings.initialOpenInBrowserEnabled;
 			ip = settingsData.value.data.settings.ip;

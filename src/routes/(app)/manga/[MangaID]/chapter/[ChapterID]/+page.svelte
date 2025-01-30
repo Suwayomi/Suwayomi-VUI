@@ -12,7 +12,12 @@
 	import { actionState } from '$lib/MountTitleAction.svelte';
 	import Image from '$lib/components/Image.svelte';
 	import { getToastStore } from '$lib/components/Toast/stores';
-	import { Layout, mmState, Mode } from '$lib/simpleStores.svelte';
+	import {
+		Layout,
+		mmState,
+		Mode,
+		type TLayout
+	} from '$lib/simpleStores.svelte';
 	import { ErrorHelp, OTT } from '$lib/util.svelte';
 	import { getDrawerStore } from '@skeletonlabs/skeleton';
 	import { onMount, untrack } from 'svelte';
@@ -178,10 +183,7 @@
 		);
 	}
 
-	function layoutToPath(
-		path: PathLayout,
-		layout: (typeof Layout)[keyof typeof Layout]
-	) {
+	function layoutToPath(path: PathLayout, layout: TLayout) {
 		switch (layout) {
 			case Layout.L:
 				return path.L;
