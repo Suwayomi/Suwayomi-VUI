@@ -51,8 +51,8 @@ export function getObjectKeys<T extends object>(obj: T): (keyof T)[] {
 }
 
 export class geneticSelectState<T extends { id: number }> {
-	selected: SvelteMap<number, T> = new SvelteMap();
-	selectMode: boolean = false;
+	selected: SvelteMap<number, T> = $state(new SvelteMap());
+	selectMode: boolean = $state(false);
 	DoSelect(
 		update: T,
 		e: MouseEvent & { currentTarget: EventTarget & HTMLAnchorElement },

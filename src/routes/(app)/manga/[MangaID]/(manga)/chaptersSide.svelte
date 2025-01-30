@@ -330,7 +330,7 @@
 				<TooltipIconButton
 					class="text-surface-700 dark:text-surface-300"
 					onclick={() => {
-						selectState.selectMode = !selectState.selectMode;
+						selectState.selectMode = !$state.snapshot(selectState.selectMode);
 					}}
 					name="mdi:{selectState.selectMode
 						? 'select-multiple'
