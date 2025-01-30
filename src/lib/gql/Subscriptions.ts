@@ -86,7 +86,7 @@ export const updateStatusChanged = graphql(`
 `);
 
 export const DownloadChanged = graphql(`
-	subscription MySubscription {
+	subscription DownloadChanged {
 		downloadStatusChanged(input: {}) {
 			initial {
 				chapter {

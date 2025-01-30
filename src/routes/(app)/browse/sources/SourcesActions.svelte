@@ -20,7 +20,6 @@
 	let { langs }: Props = $props();
 
 	let inputElement: HTMLInputElement | undefined = $state();
-	// eslint-disable-next-line no-undef
 	let timeoutCancel: ReturnType<typeof setTimeout> | undefined = undefined;
 	let searchElementHidden = $state(true);
 
