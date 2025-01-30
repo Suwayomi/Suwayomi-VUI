@@ -17,7 +17,7 @@
 		type TLayout
 	} from '$lib/simpleStores.svelte';
 	import { getDrawerStore } from '@skeletonlabs/skeleton';
-	import { onMount, untrack } from 'svelte';
+	import { onMount } from 'svelte';
 	import type { PageData } from './$types';
 	import {
 		readerState,
