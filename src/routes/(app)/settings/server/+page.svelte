@@ -462,11 +462,11 @@
 		</button>
 
 		<!-- gqlDebugLogsEnabled -->
-		<Toggle
+		<!-- <Toggle
 			title="GQL Debug Logs"
 			bind:checked={gqlDebugLogsEnabled}
 			onchange={() => setSettings({ gqlDebugLogsEnabled })}
-		/>
+		/> -->
 		<!-- initialOpenInBrowserEnabled -->
 		<Toggle
 			title="Initial Open In Browser"

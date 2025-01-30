@@ -3154,6 +3154,14 @@ const introspection = {
             "isDeprecated": false
           },
           {
+            "name": "PAUSED",
+            "isDeprecated": false
+          },
+          {
+            "name": "STOPPED",
+            "isDeprecated": false
+          },
+          {
             "name": "PROGRESS",
             "isDeprecated": false
           },
@@ -8733,7 +8741,7 @@ const introspection = {
               "name": "Boolean"
             },
             "args": [],
-            "isDeprecated": false
+            "isDeprecated": true
           },
           {
             "name": "initialOpenInBrowserEnabled",
@@ -9113,13 +9121,6 @@ const introspection = {
             "type": {
               "kind": "SCALAR",
               "name": "Float"
-            }
-          },
-          {
-            "name": "gqlDebugLogsEnabled",
-            "type": {
-              "kind": "SCALAR",
-              "name": "Boolean"
             }
           },
           {
@@ -11224,7 +11225,7 @@ const introspection = {
               "name": "Boolean"
             },
             "args": [],
-            "isDeprecated": false
+            "isDeprecated": true
           },
           {
             "name": "initialOpenInBrowserEnabled",
@@ -11760,7 +11761,7 @@ const introspection = {
               }
             },
             "args": [],
-            "isDeprecated": false
+            "isDeprecated": true
           },
           {
             "name": "initialOpenInBrowserEnabled",

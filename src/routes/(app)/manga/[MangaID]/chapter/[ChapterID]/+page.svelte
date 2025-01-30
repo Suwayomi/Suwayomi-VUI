@@ -178,7 +178,10 @@
 		);
 	}
 
-	function layoutToPath(path: PathLayout, layout: Layout) {
+	function layoutToPath(
+		path: PathLayout,
+		layout: (typeof Layout)[keyof typeof Layout]
+	) {
 		switch (layout) {
 			case Layout.L:
 				return path.L;
