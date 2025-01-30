@@ -21,7 +21,7 @@
 
 	let inputElement: HTMLInputElement | undefined = $state();
 	// eslint-disable-next-line no-undef
-	let timeoutCancel: NodeJS.Timeout | undefined = undefined;
+	let timeoutCancel: ReturnType<typeof setTimeout> | undefined = undefined;
 	let searchElementHidden = $state(true);
 
 	let value = $state('');

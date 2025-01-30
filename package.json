@@ -55,5 +55,7 @@
 		"sveltekit-search-params": "^3.0.0"
 	},
 	"type": "module",
-	"dependencies": {}
+	"dependencies": {
+		"@types/node": "^22.12.0"
+	}
 }
