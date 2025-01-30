@@ -7,8 +7,6 @@
 -->
 
 <script lang="ts">
-	import { goto } from '$app/navigation';
-	import { page } from '$app/stores';
 	import { actionState } from '$lib/MountTitleAction.svelte';
 	import Image from '$lib/components/Image.svelte';
 	import { getToastStore } from '$lib/components/Toast/stores';
@@ -18,18 +16,19 @@
 		Mode,
 		type TLayout
 	} from '$lib/simpleStores.svelte';
-	import { ErrorHelp, OTT } from '$lib/util.svelte';
 	import { getDrawerStore } from '@skeletonlabs/skeleton';
 	import { onMount, untrack } from 'svelte';
 	import type { PageData } from './$types';
 	import {
-		titlesNNav,
+		readerState,
 		get_manga,
-		makeToggleDrawer
+		makeToggleDrawer,
+		restartOnChapter,
+		gotoChapter
 	} from './chapterStores.svelte';
 	import { filterChapters } from '../../util';
 	import { paths, type PathLayout, type Paths, type TPath } from './paths';
-	import { getContextClient, type OperationResult } from '@urql/svelte';
+	import { getContextClient } from '@urql/svelte';
 	import { type ResultOf } from '$lib/gql/graphql';
 	import {
 		fetchChapterPages,
@@ -37,51 +36,28 @@
 		updateChapter
 	} from '$lib/gql/Mutations';
 	import { ChapterTypeFragment } from '$lib/gql/Fragments';
-	import { queryParam, ssp } from 'sveltekit-search-params';
 	import { IntersectionObserverAction } from '$lib/actions/IntersectionObserver.svelte';
+	import { SvelteSet } from 'svelte/reactivity';
 
 	interface Props {
 		data: PageData;
 	}
 
+	type tmp = NonNullable<typeof path>[keyof NonNullable<typeof path>];
+	type TTmp = keyof NonNullable<typeof path>;
+
 	let { data }: Props = $props();
+	let goBackChapterLoading = false;
+	let pageElement = undefined as HTMLDivElement | undefined;
+	let updatedChaps = new Set<string>();
+
 	mmState.id = data.MangaID;
+	get_manga.id = data.MangaID;
 
-	let pagenav = queryParam('pagenav', ssp.boolean(), { pushHistory: false });
-
-	onMount(() => {
-		if (
-			/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
-				navigator.userAgent
-			) &&
-			mmState.value.mobileFullScreenOnChapterPage
-		) {
-			document.documentElement.requestFullscreen();
-		}
-		return () => {
-			if (
-				/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
-					navigator.userAgent
-				) &&
-				mmState.value.mobileFullScreenOnChapterPage
-			) {
-				document.exitFullscreen();
-			}
-		};
-	});
-
-	let topChapter: number;
-	onMount(() => {
-		topChapter = data.ChapterID;
-	});
-
+	const drawerStore = getDrawerStore();
+	const Toggledraw = makeToggleDrawer(drawerStore);
 	const toastStore = getToastStore();
 	const client = getContextClient();
-	get_manga.id = data.MangaID;
-	const manga = $derived(get_manga.manga);
-
-	let pageElement = undefined as HTMLDivElement | undefined;
-	const drawerStore = getDrawerStore();
 
 	let chapterLoading = $state(true);
 	let path: Paths | undefined = $state();
@@ -90,118 +66,75 @@
 		chapterIndex: number;
 		pageIndex: number;
 	}[] = $state([]);
-	let all: {
-		chapterID: number;
-		pages: NonNullable<
-			ResultOf<typeof fetchChapterPages>['fetchChapterPages']
-		>['pages'];
-	}[] = $state([]);
 
-	let filteredChapters = $derived(
-		manga?.data?.manga?.chapters.nodes?.filter(filterChapters(mmState, true))
-	);
-	let pages:
-		| Promise<OperationResult<ResultOf<typeof fetchChapterPages>>>
-		| undefined = $state();
-	function loadNew() {
-		if (preload && !$pagenav) pages = preload;
-		else if (preload === data.pre) {
-			pages = preload;
-			preload = undefined;
-		} else
-			pages = client
-				.mutation(fetchChapterPages, { chapterId: currentChapterID })
-				.toPromise();
-	}
+	let buttonElement: HTMLButtonElement | undefined = $state();
 
-	let preload:
-		| Promise<OperationResult<ResultOf<typeof fetchChapterPages>>>
-		| undefined = $state(data.pre);
-	let preLoadingId: number | undefined = $state(undefined);
-	async function updatePages(
-		pages:
-			| Promise<OperationResult<ResultOf<typeof fetchChapterPages>>>
-			| undefined
-	) {
-		if (!pages) return;
-		chapterLoading = true;
-		const obj: (typeof all)[0] = {
-			chapterID: currentChapterID,
-			pages: []
-		};
-		await ErrorHelp(`failed to load chapter ${obj.chapterID}`, pages, (e) => {
-			if (!e.data?.fetchChapterPages) return;
-			obj.pages = e.data.fetchChapterPages.pages;
-			all.push(obj);
-			all = all;
-		});
-		chapterLoading = false;
-	}
+	let pageIndicator: string = $state('1/0');
 
-	function LoadNextChapter(currentID: number) {
-		const next = getChapterAfterID(currentID);
-		if (next) currentChapterID = next.id;
-	}
-
-	function getChapterOfID(
-		currentID: number
-	): ResultOf<typeof ChapterTypeFragment> | undefined {
-		return filteredChapters?.find((e) => e.id === currentID);
-	}
-
-	function getChapterAfterID(
-		currentID: number
-	): ResultOf<typeof ChapterTypeFragment> | undefined {
-		const currentChapter = getChapterOfID(currentID);
-		if (!currentChapter) return undefined;
-		return filteredChapters?.reduce(
-			(acc, e) => {
-				if (e.sourceOrder > currentChapter.sourceOrder) {
-					if (!acc) acc = e;
-					if (e.sourceOrder < acc.sourceOrder) acc = e;
-				}
-				return acc;
-			},
-			undefined as ResultOf<typeof ChapterTypeFragment> | undefined
-		);
-	}
-
-	function getChapterBeforeID(
-		currentID: number
-	): ResultOf<typeof ChapterTypeFragment> | undefined {
-		const currentChapter = getChapterOfID(currentID);
-		if (!currentChapter) return undefined;
-		return filteredChapters?.reduce(
-			(acc, e) => {
-				if (e.sourceOrder < currentChapter.sourceOrder) {
-					if (!acc) acc = e;
-					if (e.sourceOrder > acc.sourceOrder) acc = e;
-				}
-				return acc;
-			},
-			undefined as ResultOf<typeof ChapterTypeFragment> | undefined
-		);
-	}
-
-	function layoutToPath(path: PathLayout, layout: TLayout) {
-		switch (layout) {
-			case Layout.L:
-				return path.L;
-			case Layout.Edge:
-				return path.Edge;
-			case Layout.Kindle:
-				return path.Kindle;
-			default:
-				return path.RAL;
-		}
-	}
-
-	$effect(() => {
-		titlesNNav.MangaID = data.MangaID;
-		titlesNNav.ChapterID = data.ChapterID;
+	let IntersectingChapterEnd = $state({
+		intersecting: false,
+		chapterID: -1,
+		index: -1
 	});
 
-	const Toggledraw = makeToggleDrawer(drawerStore);
+	let filteredChapters = $derived(
+		get_manga.manga?.data?.manga?.chapters.nodes?.filter(
+			filterChapters(mmState, true)
+		)
+	);
+
+	let lowestIntersect = $derived(
+		document.querySelector(
+			visiblePages.reduce(
+				(a, c) => {
+					if (
+						c.chapterIndex > a.chapterIndex ||
+						(c.chapterIndex === a.chapterIndex && c.pageIndex > a.pageIndex)
+					) {
+						return c;
+					}
+					return a;
+				},
+				{
+					selector: 'c0p0',
+					chapterIndex: 0,
+					pageIndex: 0
+				}
+			).selector
+		) as HTMLElement | undefined
+	);
+	let currPath = $derived(
+		path
+			? Object.fromEntries(
+					(Object.entries(path) as [TTmp, tmp][]).map((dat): [TTmp, string] => {
+						if (path === undefined) {
+							return [dat[0], ''] as [TTmp, string];
+						}
+						return [
+							dat[0],
+							`clip-path: polygon(${dat[1]
+								.map((point) => {
+									return point
+										.map((percent) => {
+											return percent === 0 ? percent.toString() : `${percent}%`;
+										})
+										.join(' ');
+								})
+								.join(',')});top: 0;
+				bottom: 0;
+				left: 0;
+				right: 0;
+		`
+						] as [TTmp, string];
+					})
+				)
+			: {}
+	);
+	let preloadedChapters = $derived(
+		new SvelteSet(readerState.ChapterPagesMap.keys()).difference(
+			readerState.displayedChapters
+		)
+	);
 
 	async function handelKeypress(keyEvent: KeyboardEvent) {
 		if (!pageElement) {
@@ -262,7 +195,33 @@
 		}
 	}
 
-	let goBackChapterLoading = false;
+	async function loadNew(chapterId: number, preload = false) {
+		if (
+			readerState.displayedChapters.has(chapterId) &&
+			readerState.ChapterPagesMap.has(chapterId)
+		)
+			return;
+		if (readerState.ChapterPagesMap.has(chapterId)) {
+			readerState.displayedChapters.add(chapterId);
+			return;
+		}
+		if (readerState.loadingChaptersIds.has(chapterId)) return;
+		readerState.loadingChaptersIds.add(chapterId);
+		chapterLoading = true;
+		const e = await client
+			.mutation(fetchChapterPages, {
+				chapterId
+			})
+			.toPromise();
+		if (e.data?.fetchChapterPages?.pages) {
+			readerState.ChapterPagesMap.set(
+				chapterId,
+				e.data.fetchChapterPages.pages
+			);
+			if (!preload) readerState.displayedChapters.add(chapterId);
+		}
+		chapterLoading = false;
+	}
 
 	async function goBackChapter() {
 		if (goBackChapterLoading) return;
@@ -271,33 +230,11 @@
 			pageElement = document.querySelector('#page') as HTMLDivElement;
 		}
 		if (pageElement.scrollTop === 0) {
-			const tmp = getChapterBeforeID(topChapter);
+			const tmp = getChapterBeforeID(
+				readerState.displayedChapters.keys().next().value!
+			);
 			if (tmp) {
-				const TTTmp = client
-					.mutation(fetchChapterPages, {
-						chapterId: tmp.id
-					})
-					.toPromise();
-				const obj: (typeof all)[0] = {
-					chapterID: tmp.id,
-					pages: []
-				};
-				await ErrorHelp(
-					`failed to load chapter ${obj.chapterID}`,
-					TTTmp,
-					(e) => {
-						if (!e.data?.fetchChapterPages) return;
-						obj.pages = e.data.fetchChapterPages.pages;
-						all = [obj, ...all];
-					}
-				);
-				const topImg = document.querySelector(`#c1p0`);
-				if (topImg)
-					pageElement?.scrollTo({
-						top: pageElement.scrollTop + topImg.getBoundingClientRect().y + 1,
-						behavior: 'instant'
-					});
-				topChapter = tmp.id;
+				restartOnChapter(tmp.id);
 			} else {
 				toastStore.trigger({
 					message: "You can't go back, you are already at the first chapter"
@@ -305,6 +242,63 @@
 			}
 		}
 		goBackChapterLoading = false;
+	}
+
+	function preloadChapter(id: number) {
+		loadNew(id, true);
+	}
+
+	function getChapterOfID(
+		currentID: number
+	): ResultOf<typeof ChapterTypeFragment> | undefined {
+		return filteredChapters?.find((e) => e.id === currentID);
+	}
+
+	function getChapterAfterID(
+		currentID: number
+	): ResultOf<typeof ChapterTypeFragment> | undefined {
+		const currentChapter = getChapterOfID(currentID);
+		if (!currentChapter) return undefined;
+		return filteredChapters?.reduce(
+			(acc, c) => {
+				if (c.sourceOrder > currentChapter.sourceOrder) {
+					if (!acc) acc = c;
+					if (c.sourceOrder < acc.sourceOrder) acc = c;
+				}
+				return acc;
+			},
+			undefined as ResultOf<typeof ChapterTypeFragment> | undefined
+		);
+	}
+
+	function getChapterBeforeID(
+		currentID: number
+	): ResultOf<typeof ChapterTypeFragment> | undefined {
+		const currentChapter = getChapterOfID(currentID);
+		if (!currentChapter) return undefined;
+		return filteredChapters?.reduce(
+			(acc, e) => {
+				if (e.sourceOrder < currentChapter.sourceOrder) {
+					if (!acc) acc = e;
+					if (e.sourceOrder > acc.sourceOrder) acc = e;
+				}
+				return acc;
+			},
+			undefined as ResultOf<typeof ChapterTypeFragment> | undefined
+		);
+	}
+
+	function layoutToPath(path: PathLayout, layout: TLayout) {
+		switch (layout) {
+			case Layout.L:
+				return path.L;
+			case Layout.Edge:
+				return path.Edge;
+			case Layout.Kindle:
+				return path.Kindle;
+			default:
+				return path.RAL;
+		}
 	}
 
 	function handleClick(e: MouseEvent) {
@@ -336,8 +330,8 @@
 
 		let inside = false;
 		for (let i = 0, j = vs.length - 1; i < vs.length; j = i++) {
-			const ii = vs[i] as [number, number];
-			const jj = vs[j] as [number, number];
+			const ii = vs[i];
+			const jj = vs[j];
 			const xi = ii[0];
 			const yi = ii[1];
 			const xj = jj[0];
@@ -388,8 +382,6 @@
 		});
 	}
 
-	let updatedChaps: string[] = [];
-
 	function PageIntersect(
 		e: boolean,
 		selector: string,
@@ -408,7 +400,7 @@
 					pageIndex
 				}
 			];
-			if (!updatedChaps.includes(selector)) {
+			if (!updatedChaps.has(selector)) {
 				(async () => {
 					await client
 						.mutation(updateChapter, {
@@ -417,16 +409,17 @@
 							isRead: pageIndex >= maxPages * 0.8 ? true : null
 						})
 						.toPromise();
-					if (!manga?.data?.manga?.id || pageIndex !== maxPages - 1) return;
+					if (!get_manga.manga?.data?.manga?.id || pageIndex !== maxPages - 1)
+						return;
 					await client
 						.mutation(trackProgress, {
-							mangaId: manga?.data?.manga?.id
+							mangaId: get_manga.manga?.data?.manga?.id
 						})
 						.toPromise();
 				})();
-				updatedChaps.push(selector);
+				updatedChaps.add(selector);
 				setTimeout(() => {
-					updatedChaps = updatedChaps.filter((e) => e !== selector);
+					updatedChaps.delete(selector);
 				}, 5000);
 			}
 		} else {
@@ -434,16 +427,29 @@
 		}
 	}
 
-	function got() {
-		goto($page.url.pathname.replace(/[^/]*$/, currentChapterID.toString()), {
-			replaceState: true,
-			noScroll: true
-		});
-	}
+	// enter fullscreen on mobile
+	onMount(() => {
+		if (
+			/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
+				navigator.userAgent
+			) &&
+			mmState.value.mobileFullScreenOnChapterPage
+		) {
+			document.documentElement.requestFullscreen();
+		}
+		return () => {
+			if (
+				/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
+					navigator.userAgent
+				) &&
+				mmState.value.mobileFullScreenOnChapterPage
+			) {
+				document.exitFullscreen();
+			}
+		};
+	});
 
-	type tmp = NonNullable<typeof path>[keyof NonNullable<typeof path>];
-	type TTmp = keyof NonNullable<typeof path>;
-
+	// register keydown event
 	onMount(() => {
 		document.addEventListener('keydown', handelKeypress, true);
 		return () => {
@@ -451,42 +457,43 @@
 		};
 	});
 
-	let buttonElement: HTMLButtonElement | undefined = $state();
-
-	let pageIndicator: string = $state('1/0');
+	// load chapter on chapterID in url change
 	$effect(() => {
-		if ($pagenav) {
-			$pagenav = null;
-			all = [];
-		}
+		loadNew(data.ChapterID);
 	});
-	let currentChapterID: number = $state(data.ChapterID);
+	// trigger preload next chapter
 	$effect(() => {
-		currentChapterID = data.ChapterID;
-	});
-	$effect(() => {
-		OTT([currentChapterID], loadNew);
-	});
-	let nextid = $derived(getChapterAfterID(currentChapterID)?.id);
-	$effect(() => {
+		let nextid = getChapterAfterID(data.ChapterID)?.id;
 		if (
 			nextid !== undefined &&
 			mmState.value.preLoadNextChapter &&
-			nextid !== preLoadingId
+			!readerState.ChapterPagesMap.has(nextid)
 		) {
-			untrack(() => {
-				preLoadingId = nextid;
-			});
-			preload = client
-				.mutation(fetchChapterPages, { chapterId: nextid })
-				.toPromise();
+			preloadChapter(nextid);
 		}
 	});
+	// go to next chapter at end of current chapter
 	$effect(() => {
-		OTT([pages], () => updatePages(pages));
+		if (
+			!chapterLoading &&
+			IntersectingChapterEnd.intersecting &&
+			readerState.displayedChapters.has(IntersectingChapterEnd.chapterID) &&
+			readerState.displayedChapters.size === IntersectingChapterEnd.index + 1
+		) {
+			client
+				.mutation(updateChapter, {
+					id: IntersectingChapterEnd.chapterID,
+					lastPageRead: readerState.ChapterPagesMap.get(
+						IntersectingChapterEnd.chapterID
+					)!.length,
+					isRead: true
+				})
+				.toPromise();
+			const next = getChapterAfterID(IntersectingChapterEnd.chapterID);
+			if (next) gotoChapter(next.id);
+		}
 	});
-
-	$inspect(mmState.value.ReaderMode);
+	// set path on reader mode change
 	$effect(() => {
 		if (mmState.value.ReaderMode === Mode.RTL) {
 			path = layoutToPath(paths.rtl, mmState.value.NavLayout);
@@ -494,74 +501,34 @@
 			path = layoutToPath(paths.ltr, mmState.value.NavLayout);
 		}
 	});
-	$effect(() => {
-		titlesNNav.mangaTitle = manga?.data?.manga?.title ?? '';
-	});
-	$effect(() => {
-		titlesNNav.chapterTitle =
-			filteredChapters?.find((e) => e.id === currentChapterID)?.name ?? '';
-	});
-	$effect(() => {
-		OTT([currentChapterID], got);
-	});
-	let lowestIntersect = $derived(
-		document.querySelector(
-			visiblePages.reduce(
-				(a, c) => {
-					if (
-						c.chapterIndex > a.chapterIndex ||
-						(c.chapterIndex === a.chapterIndex && c.pageIndex > a.pageIndex)
-					) {
-						return c;
-					}
-					return a;
-				},
-				{
-					selector: 'c0p0',
-					chapterIndex: 0,
-					pageIndex: 0
-				}
-			).selector
-		) as HTMLElement | undefined
-	);
-	$inspect(titlesNNav.chapterTitle);
-	$inspect(titlesNNav.mangaTitle);
-	$effect(() => {
-		actionState.AppBarData(
-			`${titlesNNav.mangaTitle} ${titlesNNav.chapterTitle}`
-		);
-	});
-	let currPath = $derived(
-		path
-			? Object.fromEntries(
-					(Object.entries(path) as [TTmp, tmp][]).map((dat): [TTmp, string] => {
-						if (path === undefined) {
-							return [dat[0], ''] as [TTmp, string];
-						}
-						return [
-							dat[0],
-							`clip-path: polygon(${dat[1]
-								.map((point) => {
-									return point
-										.map((percent) => {
-											return percent === 0 ? percent.toString() : `${percent}%`;
-										})
-										.join(' ');
-								})
-								.join(',')});top: 0;
-      bottom: 0;
-      left: 0;
-      right: 0;
-			`
-						] as [TTmp, string];
-					})
-				)
-			: {}
-	);
+	// set focus on drawer open
 	$effect(() => {
 		if (!$drawerStore.open) {
 			buttonElement?.focus();
 		}
+	});
+	// set manga title state
+	$effect(() => {
+		readerState.mangaTitle = get_manga.manga?.data?.manga?.title ?? '';
+	});
+	// set chapter title
+	$effect(() => {
+		readerState.chapterTitle =
+			filteredChapters?.find((e) => e.id === data.ChapterID)?.name ?? '';
+	});
+	// set manga id state
+	$effect(() => {
+		readerState.MangaID = data.MangaID;
+	});
+	// set chapter id state
+	$effect(() => {
+		readerState.ChapterID = data.ChapterID;
+	});
+	// set tab title
+	$effect(() => {
+		actionState.AppBarData(
+			`${readerState.mangaTitle} ${readerState.chapterTitle}`
+		);
 	});
 </script>
 
@@ -571,7 +538,7 @@
 	onclick={handleClick}
 	class="w-full"
 >
-	{#if titlesNNav.ViewNav}
+	{#if readerState.ViewNav}
 		<div class="pointer-events-none">
 			<div class="fixed z-10 bg-blue-500/50" style={currPath.forward}></div>
 			<div class="fixed z-10 bg-red-500/50" style={currPath.back}></div>
@@ -580,7 +547,8 @@
 			{/if}
 		</div>
 	{/if}
-	{#each all as chapter, index (chapter.chapterID)}
+	{#each readerState.displayedChapters as chapterID, index (chapterID)}
+		{@const pages = readerState.ChapterPagesMap.get(chapterID) ?? []}
 		<div>
 			<div
 				class="
@@ -596,7 +564,7 @@
 				{#if (mmState.value.ReaderMode === Mode.RTL || mmState.value.ReaderMode === Mode.LTR) && mmState.value.Offset}
 					<div></div>
 				{/if}
-				{#each chapter.pages as page, pageIndex (page)}
+				{#each pages as page, pageIndex (page)}
 					<div
 						class="h-auto w-auto
 							{mmState.value.Margins && mmState.value.ReaderMode === Mode.Vertical && 'mb-4'}
@@ -627,8 +595,8 @@
 										`#c${index}p${pageIndex}`,
 										index,
 										pageIndex,
-										chapter.pages.length,
-										chapter.chapterID
+										pages.length,
+										chapterID
 									);
 								}
 							}}
@@ -672,20 +640,14 @@
 		</div>
 		<div
 			use:IntersectionObserverAction={{
-				rootMargin: `0px 0px 0px 0px`,
+				rootMargin: `0px 0px -1px 0px`,
 				root: document.querySelector('#page') ?? undefined,
-				callback: (e) => {
-					if (e.isIntersecting && index === all.length - 1 && !chapterLoading) {
-						client
-							.mutation(updateChapter, {
-								id: chapter.chapterID,
-								lastPageRead: chapter.pages.length,
-								isRead: true
-							})
-							.toPromise();
-						LoadNextChapter(currentChapterID);
-					}
-				}
+				callback: (e) =>
+					(IntersectingChapterEnd = {
+						intersecting: e.isIntersecting,
+						chapterID,
+						index
+					})
 			}}
 		></div>
 
@@ -694,13 +656,13 @@
 				class="card variant-glass-surface flex h-[50vh] max-h-96 w-full flex-col items-center justify-center"
 			>
 				<div>
-					{getChapterOfID(chapter.chapterID)?.name ??
+					{getChapterOfID(chapterID)?.name ??
 						'if you are seeing this then something is wrong'}
 				</div>
-				{#if getChapterAfterID(chapter.chapterID)}
+				{#if getChapterAfterID(chapterID)}
 					<div>Next Chapter</div>
 					<div>
-						{getChapterAfterID(chapter.chapterID)?.name}
+						{getChapterAfterID(chapterID)?.name}
 					</div>
 				{:else}
 					<div>Last Chapter</div>
@@ -716,13 +678,9 @@
 		</div>
 	{/if}
 
-	{#if preload}
-		{#await preload then preloaded}
-			{#if preloaded.data?.fetchChapterPages}
-				{#each preloaded.data.fetchChapterPages.pages as value}
-					<img src={value} alt="img" class="h-0 w-0" />
-				{/each}
-			{/if}
-		{/await}
-	{/if}
+	{#each preloadedChapters as id}
+		{#each readerState.ChapterPagesMap.get(id) ?? [] as page}
+			<img src={page} alt="preloading page" class="h-0 w-0" />
+		{/each}
+	{/each}
 </button>

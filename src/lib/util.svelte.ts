@@ -16,7 +16,8 @@ import {
 } from './gql/Mutations';
 import type { VariablesOf } from '$lib/gql/graphql';
 import {
-	mutationStore,
+	CombinedError,
+	createRequest,
 	queryStore,
 	subscriptionStore,
 	type AnyVariables,
@@ -401,27 +402,72 @@ export function queryState<
 	};
 }
 
-export type mutationStateReturn<
-	// eslint-disable-next-line @typescript-eslint/no-explicit-any
-	Data = any,
-	Variables extends AnyVariables = AnyVariables
-> = {
-	get value(): OperationResultState<Data, Variables>;
+const initialResult = {
+	operation: undefined,
+	fetching: false,
+	data: undefined,
+	error: undefined,
+	extensions: undefined,
+	hasNext: false,
+	stale: false
 };
 
 export function mutationState<
 	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	Data = any,
 	Variables extends AnyVariables = AnyVariables
->(args: MutationArgs<Data, Variables>): mutationStateReturn<Data, Variables> {
-	const store = mutationStore(args);
-	let mutationState = $state(get(store));
-	store.subscribe((value) => {
-		mutationState = value;
+>(args: MutationArgs<Data, Variables>) {
+	const request = createRequest<Data, Variables>(
+		args.query,
+		args.variables as Variables
+	);
+	const operation = args.client.createRequestOperation<Data, Variables>(
+		'mutation',
+		request,
+		args.context
+	);
+	const state = $state<OperationResultState<Data, Variables>>({
+		...initialResult,
+		operation,
+		fetching: true
 	});
+	try {
+		args.client
+			.mutation(args.query, args.variables, args.context)
+			.toPromise()
+			.then((res) => {
+				state.fetching = false;
+				state.data = res.data;
+				state.error = res.error;
+				state.extensions = res.extensions;
+				state.hasNext = res.hasNext;
+				state.stale = res.stale;
+			});
+	} catch (error) {
+		state.fetching = false;
+		if (error instanceof CombinedError) {
+			state.error = error;
+		}
+	}
+
 	return {
-		get value() {
-			return mutationState;
+		get data() {
+			return state.data;
+		},
+		get error() {
+			return state.error;
+		},
+		get fetching() {
+			return state.fetching;
+		},
+		get extensions() {
+			return state.extensions;
+		},
+		get hasNext() {
+			return state.hasNext;
+		},
+		get stale() {
+			return state.stale;
 		}
 	};
 }

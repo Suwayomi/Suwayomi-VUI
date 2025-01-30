@@ -11,7 +11,12 @@
 	import Slide from '$lib/components/Slide.svelte';
 	import { enumKeys } from '$lib/util.svelte';
 	import { getDrawerStore } from '@skeletonlabs/skeleton';
-	import { get_manga, titlesNNav } from './chapterStores.svelte';
+	import {
+		get_manga,
+		makeChapterUrl,
+		restartOnChapter,
+		readerState
+	} from './chapterStores.svelte';
 	import {
 		ChapterTitle,
 		Layout,
@@ -83,9 +88,9 @@
 		await client
 			.mutation(updateChapters, { isRead: !chapter.isRead, ids: [chapter.id] })
 			.toPromise();
-		if (titlesNNav.MangaID)
+		if (readerState.MangaID)
 			await client
-				.mutation(trackProgress, { mangaId: titlesNNav.MangaID })
+				.mutation(trackProgress, { mangaId: readerState.MangaID })
 				.toPromise();
 	}
 	let intersecting: SvelteSet<number> = $state(new SvelteSet());
@@ -105,12 +110,12 @@
 			/>
 		</div>
 		<h1 class="h2 my-2 line-clamp-3 min-h-fit pl-4 leading-[2.75rem]">
-			{titlesNNav.mangaTitle}
+			{readerState.mangaTitle}
 		</h1>
 		<h2
 			class="h3 mt-4 line-clamp-1 min-h-fit border-y border-surface-500 pl-4 leading-10"
 		>
-			{titlesNNav.chapterTitle}
+			{readerState.chapterTitle}
 		</h2>
 
 		<div class="my-2 flex flex-col space-y-2">
@@ -151,7 +156,7 @@
 			</label>
 			<Slide
 				class="p-1 hover:variant-glass-surface"
-				bind:checked={titlesNNav.ViewNav}
+				bind:checked={readerState.ViewNav}
 			>
 				View Navigation Layout
 			</Slide>
@@ -169,7 +174,7 @@
 			bind:this={chapterListElement}
 			id="chapterSideElement"
 			use:InitScrollTo={{
-				cssQuerySelector: `#chapter-${titlesNNav.ChapterID}`
+				cssQuerySelector: `#chapter-${readerState.ChapterID}`
 			}}
 		>
 			<div class=" w-full">
@@ -189,18 +194,21 @@
 								onlongPress={() => setChapterRead(chapter)}
 								data-sveltekit-replacestate
 								onclick={(e) => {
+									e.preventDefault();
+									e.stopPropagation();
 									if (didLongPress === chapter.id) {
-										e.preventDefault();
-										e.stopPropagation();
+										didLongPress = -1;
+										return;
 									}
-									didLongPress = -1;
+									document.querySelector('#page')?.scrollTo(0, 0);
+									restartOnChapter(chapter.id);
 								}}
-								href="./{chapter.id}?pagenav"
+								href={makeChapterUrl(chapter.id)}
 								class="h-20"
 							>
 								<div
 									class="w-full space-y-0 p-1
-									{chapter.id === titlesNNav?.ChapterID && 'variant-ghost'}
+									{chapter.id === readerState?.ChapterID && 'variant-ghost'}
 									{chapter.isRead && 'opacity-50'}"
 								>
 									<div class="line-clamp-1 w-full text-xl md:text-2xl">

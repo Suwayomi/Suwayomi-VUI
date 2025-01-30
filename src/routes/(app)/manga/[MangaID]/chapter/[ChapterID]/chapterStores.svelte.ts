@@ -12,13 +12,18 @@ import type { ResultOf } from 'gql.tada';
 import { get } from 'svelte/store';
 import { client } from '$lib/gql/graphqlClient';
 import type { OperationResultF } from '$lib/util.svelte';
+import { SvelteMap, SvelteSet } from 'svelte/reactivity';
+import { goto } from '$app/navigation';
 
-export const titlesNNav = $state({
+export const readerState = $state({
 	mangaTitle: '',
 	chapterTitle: '',
 	ViewNav: false,
 	MangaID: -1,
-	ChapterID: -1
+	ChapterID: -1,
+	ChapterPagesMap: new SvelteMap<number, string[]>(),
+	displayedChapters: new SvelteSet<number>(),
+	loadingChaptersIds: new SvelteSet<number>()
 });
 
 export function makeToggleDrawer(
@@ -46,6 +51,7 @@ class GetManga {
 	}
 	private setid(id: number) {
 		if (id === -1) return;
+		if (id === this.manga?.data?.manga.id) return;
 		this.unSub();
 		const tmp = queryStore({
 			client,
@@ -59,3 +65,17 @@ class GetManga {
 }
 
 export const get_manga = new GetManga(-1);
+
+export function gotoChapter(id: number) {
+	goto(makeChapterUrl(id), { replaceState: true });
+}
+
+export function restartOnChapter(id: number) {
+	goto(makeChapterUrl(id), { replaceState: true }).then(() => {
+		readerState.displayedChapters.clear();
+	});
+}
+
+export function makeChapterUrl(id: number) {
+	return `/manga/${readerState.MangaID}/chapter/${id}`;
+}
