@@ -63,7 +63,10 @@
 		selectState.SelectAll(all?.nodes);
 	}
 
-	function updateSelectedValues(prop: dlreabook, is: boolean | undefined) {
+	function updateSelectedValues(
+		prop: (typeof dlreabook)[keyof typeof dlreabook],
+		is: boolean | undefined
+	) {
 		if (!selectState.selected || is === undefined) return;
 		switch (prop) {
 			case dlreabook.bookmark:

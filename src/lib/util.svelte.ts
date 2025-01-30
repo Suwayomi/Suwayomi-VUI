@@ -101,11 +101,12 @@ export class geneticSelectState<T extends { id: number }> {
 	}
 }
 
-export enum dlreabook {
-	download = 'download',
-	read = 'read',
-	bookmark = 'bookmark'
-}
+export const dlreabook = {
+	download: 'download',
+	read: 'read',
+	bookmark: 'bookmark'
+};
+export type Tdlreabook = (typeof dlreabook)[keyof typeof dlreabook];
 
 function getToastStore() {
 	const toast = get(toastStore);
@@ -123,7 +124,7 @@ export class chapterSelectState<
 		isRead: boolean;
 	}
 > extends geneticSelectState<T> {
-	async UpdateChapters(param: dlreabook): Promise<boolean | undefined> {
+	async UpdateChapters(param: Tdlreabook): Promise<boolean | undefined> {
 		if (this.selected.size) {
 			const actions = {
 				[dlreabook.bookmark]: async () => {
