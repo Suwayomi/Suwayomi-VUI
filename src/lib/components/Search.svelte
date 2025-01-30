@@ -17,7 +17,7 @@
 
 	let inputElement: HTMLInputElement | undefined = $state();
 	// eslint-disable-next-line no-undef
-	let timeoutCancel: NodeJS.Timeout | undefined = undefined;
+	let timeoutCancel: ReturnType<typeof setTimeout> | undefined = undefined;
 	const query = queryParam('q', ssp.string(), { pushHistory: false });
 	let searchElementHidden = $state(false);
 	$effect(() => {

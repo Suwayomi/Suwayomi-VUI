@@ -34,12 +34,14 @@
 
 	type catT = ResultOf<typeof CategoryTypeFragment>;
 
-	enum Movement {
-		top = 'top',
-		up = 'up',
-		down = 'down',
-		bottom = 'bottom'
-	}
+	const Movement = {
+		top: 'top',
+		up: 'up',
+		down: 'down',
+		bottom: 'bottom'
+	} as const;
+
+	type TMovement = keyof typeof Movement;
 
 	function edit(e: MouseEvent, cat: catT) {
 		e.stopPropagation();
@@ -69,7 +71,7 @@
 		});
 	}
 
-	function move(e: MouseEvent, cat: catT, movement: Movement) {
+	function move(e: MouseEvent, cat: catT, movement: TMovement) {
 		e.stopPropagation();
 		if (!cats.value.data) return;
 		switch (movement) {

@@ -33,30 +33,38 @@ export const toastStore = writable<ToastStore | null>(null);
 
 type Themes = (typeof presetConst)[number]['name'];
 
-export enum ChapterTitle {
-	'Source Title' = 'Source Title',
-	'Chapter Number' = 'Chapter Number'
-}
+export const ChapterTitle = {
+	'Source Title': 'Source Title',
+	'Chapter Number': 'Chapter Number'
+} as const;
 
-export enum ChapterSort {
-	Source = 'Source',
-	'Fetched Date' = 'Fetched Date',
-	'Upload Date' = 'Upload Date'
-}
+export type TChapterTitle = keyof typeof ChapterTitle;
 
-export enum Mode {
-	Vertical = 'Vertical',
-	single = 'single',
-	RTL = 'RTL',
-	LTR = 'LTR'
-}
+export const ChapterSort = {
+	Source: 'Source',
+	'Fetched Date': 'Fetched Date',
+	'Upload Date': 'Upload Date'
+} as const;
 
-export enum Layout {
-	L = 'L',
-	RAL = 'RAL',
-	Kindle = 'Kindle',
-	Edge = 'Edge'
-}
+export type TChapterSort = keyof typeof ChapterSort;
+
+export const Mode = {
+	Vertical: 'Vertical',
+	single: 'single',
+	RTL: 'RTL',
+	LTR: 'LTR'
+} as const;
+
+export type TMode = keyof typeof Mode;
+
+export const Layout = {
+	L: 'L',
+	RAL: 'RAL',
+	Kindle: 'Kindle',
+	Edge: 'Edge'
+} as const;
+
+export type TLayout = keyof typeof Layout;
 
 export const sort = {
 	Unread: 'Unread',
@@ -69,27 +77,31 @@ export const sort = {
 	Random: 'Random'
 } as const;
 
-export enum display {
-	Compact = 'Compact',
-	Comfortable = 'Comfortable'
-	// List = 'List' // WIP
-}
+export type TSort = keyof typeof sort;
+
+export const display = {
+	Compact: 'Compact',
+	Comfortable: 'Comfortable'
+	// List: 'List' // WIP
+} as const;
+
+export type TDisplay = keyof typeof display;
 
 // do not make a key named "id" it will break the state
 const mangaMetaDefaults = {
 	ChapterUnread: 'intermediate' as TriState,
 	ChapterDownloaded: 'intermediate' as TriState,
 	ChapterBookmarked: 'intermediate' as TriState,
-	ChapterSort: ChapterSort.Source,
+	ChapterSort: ChapterSort.Source as TChapterSort,
 	ChapterAsc: false,
 	ChapterFetchUpload: false,
-	ChapterTitle: ChapterTitle['Source Title'],
+	ChapterTitle: ChapterTitle['Source Title'] as TChapterTitle,
 	Margins: false,
 	Scale: false,
 	Offset: false,
 	SmoothScroll: true,
-	ReaderMode: Mode.Vertical,
-	NavLayout: Layout.L,
+	ReaderMode: Mode.Vertical as TMode,
+	NavLayout: Layout.L as TLayout,
 	preLoadNextChapter: true,
 	mobileFullScreenOnChapterPage: true,
 	doPageIndicator: false as boolean | undefined,
@@ -103,8 +115,8 @@ const trueDefaults = {
 	ignoreFiltersWhenSearching: false,
 	theme: 'skeleton' as Themes,
 	dark: true,
-	Display: display.Compact,
-	Sort: 'ID' as keyof typeof sort,
+	Display: display.Compact as TDisplay,
+	Sort: 'ID' as TSort,
 	Asc: true,
 	Unread: 'intermediate' as TriState,
 	Downloaded: 'intermediate' as TriState,

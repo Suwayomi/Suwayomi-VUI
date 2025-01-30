@@ -4,6 +4,9 @@ directive @specifiedBy(
   url: String!
 ) on SCALAR
 
+"""Indicates an Input Object is a OneOf Input Object."""
+directive @oneOf on INPUT_OBJECT
+
 type AboutServerPayload {
   buildTime: LongString!
   buildType: String!
@@ -503,6 +506,8 @@ type DownloadUpdates {
 enum DownloadUpdateType {
   QUEUED
   DEQUEUED
+  PAUSED
+  STOPPED
   PROGRESS
   FINISHED
   ERROR
@@ -1166,7 +1171,7 @@ type PartialSettingsType implements Settings {
   flareSolverrTimeout: Int
   flareSolverrUrl: String
   globalUpdateInterval: Float
-  gqlDebugLogsEnabled: Boolean
+  gqlDebugLogsEnabled: Boolean @deprecated(reason: "Removed - does not do anything")
   initialOpenInBrowserEnabled: Boolean
   ip: String
   localSourcePath: String
@@ -1216,7 +1221,6 @@ input PartialSettingsTypeInput {
   flareSolverrTimeout: Int
   flareSolverrUrl: String
   globalUpdateInterval: Float
-  gqlDebugLogsEnabled: Boolean
   initialOpenInBrowserEnabled: Boolean
   ip: String
   localSourcePath: String
@@ -1410,7 +1414,7 @@ interface Settings {
   flareSolverrTimeout: Int
   flareSolverrUrl: String
   globalUpdateInterval: Float
-  gqlDebugLogsEnabled: Boolean
+  gqlDebugLogsEnabled: Boolean @deprecated(reason: "Removed - does not do anything")
   initialOpenInBrowserEnabled: Boolean
   ip: String
   localSourcePath: String
@@ -1461,7 +1465,7 @@ type SettingsType implements Settings {
   flareSolverrTimeout: Int!
   flareSolverrUrl: String!
   globalUpdateInterval: Float!
-  gqlDebugLogsEnabled: Boolean!
+  gqlDebugLogsEnabled: Boolean! @deprecated(reason: "Removed - does not do anything")
   initialOpenInBrowserEnabled: Boolean!
   ip: String!
   localSourcePath: String!
