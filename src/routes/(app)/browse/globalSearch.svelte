@@ -43,7 +43,6 @@
 		query: getSources,
 		variables: { isNsfw: gmState.value.nsfw ? null : false }
 	});
-	let rawSources = $derived(fetchSources.value);
 
 	function getLanguages(extensions: ResultOf<typeof getSources> | undefined) {
 		if (extensions?.sources?.nodes !== undefined) {
@@ -126,10 +125,10 @@
 			lastQuery = $query;
 		}
 	});
-	let langs = $derived(getLanguages(rawSources.data));
+	let langs = $derived(getLanguages(fetchSources.data));
 
 	let filteredSources = $derived(
-		rawSources.data?.sources?.nodes
+		fetchSources.data?.sources?.nodes
 			?.filter((source) => {
 				if (!$SpecificSourceFilter.has(source.id)) return false;
 				return true;
@@ -144,7 +143,7 @@
 		actionState.AppBarData(title, {
 			component: GlobalSearchActions,
 			props: {
-				rawSources: rawSources.data?.sources?.nodes.toSorted((a, b) => {
+				rawSources: fetchSources.data?.sources?.nodes.toSorted((a, b) => {
 					if (a.meta.find((e) => e.key === 'pinned')) return -1;
 					if (b.meta.find((e) => e.key === 'pinned')) return 1;
 					return 0;
@@ -167,16 +166,16 @@
 				Try searching for a manga in the top right
 			</div>
 		{/if}
-		{#if rawSources.fetching}
+		{#if fetchSources.fetching}
 			{#each new Array(5) as _}
 				<div class="placeholder m-4 h-12 max-w-xs animate-pulse"></div>
 				{#each new Array(5) as _}
 					<div class="placeholder m-4 ml-8 h-10 max-w-sm animate-pulse"></div>
 				{/each}
 			{/each}
-		{:else if rawSources.error}
+		{:else if fetchSources.error}
 			<div class="white-space-pre-wrap">
-				{JSON.stringify(rawSources.error, null, 4)}
+				{JSON.stringify(fetchSources.error, null, 4)}
 			</div>
 		{:else if !filteredSources?.length}
 			<div class="flex justify-center p-8">

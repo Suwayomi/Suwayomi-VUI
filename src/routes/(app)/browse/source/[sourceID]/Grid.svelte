@@ -44,7 +44,7 @@
 				variables: {
 					id: data.sourceID
 				}
-			}).value;
+			});
 		});
 	});
 

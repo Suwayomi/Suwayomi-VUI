@@ -16,12 +16,9 @@ import {
 } from './gql/Mutations';
 import type { VariablesOf } from '$lib/gql/graphql';
 import {
-	CombinedError,
-	createRequest,
 	queryStore,
 	subscriptionStore,
 	type AnyVariables,
-	type MutationArgs,
 	type OperationContext,
 	type OperationResult,
 	type OperationResultState,
@@ -273,12 +270,6 @@ export type Rename<T, K extends keyof T, N extends string> = Pick<
 };
 
 export type PartialBy<T, K extends keyof T> = Omit<T, K> & Partial<Pick<T, K>>;
-export function enumKeys<E extends object>(e: E): (keyof E)[] {
-	return Object.keys(e) as (keyof E)[];
-}
-export function enumValues<E extends object>(e: E): E[keyof E][] {
-	return Object.values(e) as E[keyof E][];
-}
 export function enumEntries<E extends object>(e: E): [keyof E, E[keyof E]][] {
 	return Object.entries(e) as [keyof E, E[keyof E]][];
 }
@@ -336,7 +327,6 @@ export function formatDate(date: Date) {
 	const msPerHour = msPerMinute * 60;
 	const msPerDay = msPerHour * 24;
 	const msPerMonth = msPerDay * 30;
-	const msPerYear = msPerDay * 365;
 
 	if (date.toDateString() === new Date().toDateString()) {
 		return date.toLocaleTimeString();
@@ -349,21 +339,15 @@ export function formatDate(date: Date) {
 		return Math.round(diff / msPerHour) + ' hours ago';
 	} else if (diff < msPerMonth) {
 		return Math.round(diff / msPerDay) + ' days ago';
-	} else if (diff < msPerYear) {
-		return Math.round(diff / msPerMonth) + ' months ago';
-	} else {
-		return Math.round(diff / msPerYear) + ' years ago';
 	}
 
 	return date.toLocaleString();
 }
 
 export type queryStateReturn<
-	// eslint-disable-next-line @typescript-eslint/no-explicit-any
-	Data = any,
+	Data = unknown,
 	Variables extends AnyVariables = AnyVariables
-> = {
-	get value(): OperationResultState<Data, Variables>;
+> = OperationResultState<Data, Variables> & {
 	get isPaused$(): boolean;
 	pause(): void;
 	resume(): void;
@@ -371,8 +355,7 @@ export type queryStateReturn<
 };
 
 export function queryState<
-	// eslint-disable-next-line @typescript-eslint/no-explicit-any
-	Data = any,
+	Data = unknown,
 	Variables extends AnyVariables = AnyVariables
 >(args: QueryArgs<Data, Variables>): queryStateReturn<Data, Variables> {
 	const store = queryStore(args);
@@ -390,8 +373,26 @@ export function queryState<
 	});
 
 	return {
-		get value() {
-			return queryState;
+		get data() {
+			return queryState.data;
+		},
+		get error() {
+			return queryState.error;
+		},
+		get extensions() {
+			return queryState.extensions;
+		},
+		get fetching() {
+			return queryState.fetching;
+		},
+		get hasNext() {
+			return queryState.hasNext;
+		},
+		get operation() {
+			return queryState.operation;
+		},
+		get stale() {
+			return queryState.stale;
 		},
 		get isPaused$() {
 			return isPaused;
@@ -402,90 +403,17 @@ export function queryState<
 	};
 }
 
-const initialResult = {
-	operation: undefined,
-	fetching: false,
-	data: undefined,
-	error: undefined,
-	extensions: undefined,
-	hasNext: false,
-	stale: false
-};
-
-export function mutationState<
-	// eslint-disable-next-line @typescript-eslint/no-explicit-any
-	Data = any,
-	Variables extends AnyVariables = AnyVariables
->(args: MutationArgs<Data, Variables>) {
-	const request = createRequest<Data, Variables>(
-		args.query,
-		args.variables as Variables
-	);
-	const operation = args.client.createRequestOperation<Data, Variables>(
-		'mutation',
-		request,
-		args.context
-	);
-	const state = $state<OperationResultState<Data, Variables>>({
-		...initialResult,
-		operation,
-		fetching: true
-	});
-	try {
-		args.client
-			.mutation(args.query, args.variables, args.context)
-			.toPromise()
-			.then((res) => {
-				state.fetching = false;
-				state.data = res.data;
-				state.error = res.error;
-				state.extensions = res.extensions;
-				state.hasNext = res.hasNext;
-				state.stale = res.stale;
-			});
-	} catch (error) {
-		state.fetching = false;
-		if (error instanceof CombinedError) {
-			state.error = error;
-		}
-	}
-
-	return {
-		get data() {
-			return state.data;
-		},
-		get error() {
-			return state.error;
-		},
-		get fetching() {
-			return state.fetching;
-		},
-		get extensions() {
-			return state.extensions;
-		},
-		get hasNext() {
-			return state.hasNext;
-		},
-		get stale() {
-			return state.stale;
-		}
-	};
-}
-
 export type subscriptionStateReturn<
-	// eslint-disable-next-line @typescript-eslint/no-explicit-any
-	Data = any,
+	Data = unknown,
 	Variables extends AnyVariables = AnyVariables
-> = {
-	get value(): OperationResultState<Data, Variables>;
+> = OperationResultState<Data, Variables> & {
 	get isPaused$(): boolean;
 	pause(): void;
 	resume(): void;
 };
 
 export function subscriptionState<
-	// eslint-disable-next-line @typescript-eslint/no-explicit-any
-	Data = any,
+	Data = unknown,
 	Variables extends AnyVariables = AnyVariables
 >(
 	args: SubscriptionArgs<Data, Variables>
@@ -502,8 +430,26 @@ export function subscriptionState<
 	});
 
 	return {
-		get value() {
-			return queryState;
+		get data() {
+			return queryState.data;
+		},
+		get error() {
+			return queryState.error;
+		},
+		get extensions() {
+			return queryState.extensions;
+		},
+		get fetching() {
+			return queryState.fetching;
+		},
+		get hasNext() {
+			return queryState.hasNext;
+		},
+		get operation() {
+			return queryState.operation;
+		},
+		get stale() {
+			return queryState.stale;
 		},
 		get isPaused$() {
 			return isPaused;

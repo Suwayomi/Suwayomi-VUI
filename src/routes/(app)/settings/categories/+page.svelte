@@ -73,7 +73,7 @@
 
 	function move(e: MouseEvent, cat: catT, movement: TMovement) {
 		e.stopPropagation();
-		if (!cats.value.data) return;
+		if (!cats.data) return;
 		switch (movement) {
 			case Movement.top:
 				if (cat.order !== 1) {
@@ -96,7 +96,7 @@
 				}
 				break;
 			case Movement.down:
-				if (cat.order !== cats.value.data.categories.nodes.length - 1) {
+				if (cat.order !== cats.data.categories.nodes.length - 1) {
 					client
 						.mutation(updateCategoryOrder, {
 							id: cat.id,
@@ -106,11 +106,11 @@
 				}
 				break;
 			default:
-				if (cat.order !== cats.value.data?.categories.nodes.length - 1) {
+				if (cat.order !== cats.data?.categories.nodes.length - 1) {
 					client
 						.mutation(updateCategoryOrder, {
 							id: cat.id,
-							position: cats.value.data.categories.nodes.length - 1
+							position: cats.data.categories.nodes.length - 1
 						})
 						.toPromise();
 				}
@@ -130,7 +130,7 @@
 	}
 </script>
 
-{#if cats.value.fetching}
+{#if cats.fetching}
 	{#each new Array(5) as _}
 		<div
 			class="flex h-16 w-full cursor-pointer items-center p-2 text-left hover:variant-glass-surface"
@@ -153,12 +153,12 @@
 			<div class="placeholder h-16 w-16 animate-pulse rounded-full"></div>
 		</div>
 	{/each}
-{:else if cats.value.error}
+{:else if cats.error}
 	<div class="whitespace-pre-wrap">
-		{JSON.stringify(cats.value.error, null, 4)}
+		{JSON.stringify(cats.error, null, 4)}
 	</div>
-{:else if cats.value.data?.categories.nodes}
-	{#each [...cats.value.data.categories.nodes].sort( (a, b) => (a.order > b.order ? 1 : -1) ) as cat}
+{:else if cats.data?.categories.nodes}
+	{#each [...cats.data.categories.nodes].sort( (a, b) => (a.order > b.order ? 1 : -1) ) as cat}
 		<button
 			onclick={(e) => edit(e, cat)}
 			class="flex h-16 w-full cursor-pointer items-center p-2 text-left hover:variant-glass-surface"

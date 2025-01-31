@@ -115,13 +115,13 @@
 		<h1 class="h3 py-4 pl-4">Tracking</h1>
 		<div class="border-t border-surface-700">
 			<div class="grid grid-cols-1 gap-1">
-				{#if Trackers.value.fetching}
+				{#if Trackers.fetching}
 					Loading...
-				{:else if Trackers.value.error}
+				{:else if Trackers.error}
 					<div class="white-space-pre-wrap">
-						{JSON.stringify(Trackers.value.error, null, 4)}
+						{JSON.stringify(Trackers.error, null, 4)}
 					</div>
-				{:else if Trackers.value.data?.trackers.nodes.length}
+				{:else if Trackers.data?.trackers.nodes.length}
 					<div class="px-4 pt-1">
 						<input
 							type="text"
@@ -134,7 +134,7 @@
 						<Tab bind:group={tabSet} name="Tracking" value="Tracking">
 							Tracking
 						</Tab>
-						{#each Trackers.value.data.trackers.nodes as tracke (tracke.id)}
+						{#each Trackers.data.trackers.nodes as tracke (tracke.id)}
 							{@const tracker = tracke}
 							<Tab bind:group={tabSet} name={tracker.name} value={tracker.id}>
 								{tracker.name}
@@ -145,7 +145,7 @@
 							{#if tabSet === 'Tracking'}
 								{@const Records =
 									manga.value?.data?.manga?.trackRecords.nodes ?? []}
-								{@const tracks = Trackers.value.data?.trackers.nodes}
+								{@const tracks = Trackers.data?.trackers.nodes}
 								<div class="flex h-72 flex-col space-y-1 overflow-auto p-1">
 									{#each Records as RecordItem (RecordItem.id)}
 										{@const track = tracks.find(
@@ -217,11 +217,11 @@
 										(e) => e.trackerId === tabSet
 									)}
 								<div class="h-72 overflow-auto">
-									{#if items?.value?.error}
+									{#if items?.error}
 										<div class="whitespace-pre-wrap p-4">
-											{JSON.stringify(items?.value.error, null, 4)}
+											{JSON.stringify(items.error, null, 4)}
 										</div>
-									{:else if !items?.value || items?.value?.fetching}
+									{:else if !items || items?.fetching}
 										{#each new Array(3).fill(0) as _}
 											<span
 												class="flex w-full p-1 pl-4 text-left hover:variant-ghost-surface"
@@ -257,8 +257,8 @@
 												</div>
 											</span>
 										{/each}
-									{:else if items.value.data}
-										{#each items.value.data.searchTracker.trackSearches as item (item.trackerId + ' ' + item.remoteId)}
+									{:else if items.data}
+										{#each items.data.searchTracker.trackSearches as item (item.trackerId + ' ' + item.remoteId)}
 											<a
 												href={item.trackingUrl}
 												onclick={(e) => {

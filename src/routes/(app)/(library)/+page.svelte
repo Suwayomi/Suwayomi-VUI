@@ -218,7 +218,7 @@
 		validateParsedQuery(parsedQuery);
 	});
 	let orderedCategories = $derived(
-		(categories.value.data?.categories?.nodes ?? [])
+		(categories.data?.categories?.nodes ?? [])
 			.filter((e) => e.mangas.totalCount)
 			.sort((a, b) => {
 				return a.order > b.order ? 1 : -1;
@@ -275,7 +275,7 @@
 		}
 	});
 	let filteredMangas = $derived(
-		mangas.value.data?.category?.mangas.nodes.filter((manga) => {
+		mangas.data?.category?.mangas.nodes.filter((manga) => {
 			if (!manga.inLibrary) return false;
 			if (gmState.value.ignoreFiltersWhenSearching) {
 				if (
@@ -382,7 +382,7 @@
 	let intersecting: SvelteSet<number> = $state(new SvelteSet());
 </script>
 
-{#if categories.value.fetching}
+{#if categories.fetching}
 	<div class="mb-3 flex h-[47px] items-center space-x-4 pl-4">
 		<div class="placeholder w-20 animate-pulse"></div>
 		<div class="placeholder w-20 animate-pulse"></div>
@@ -391,9 +391,9 @@
 	<div class="yoy m-2 grid gap-2 {gridValues}">
 		<FakeMangaItem active={true} count={30} />
 	</div>
-{:else if categories.value.error}
+{:else if categories.error}
 	<div class="whitespace-pre-wrap">
-		Error loading categories: {JSON.stringify(categories.value.error, null, 4)}
+		Error loading categories: {JSON.stringify(categories.error, null, 4)}
 	</div>
 {:else}
 	<TabGroup>
@@ -414,7 +414,7 @@
 			{/each}
 		{/if}
 		<svelte:fragment slot="panel">
-			{#if mangas.value.fetching}
+			{#if mangas.fetching}
 				<div class="yoy m-2 grid gap-2 {gridValues}">
 					<FakeMangaItem
 						active={true}
@@ -422,9 +422,9 @@
 							.totalCount ?? 10}
 					/>
 				</div>
-			{:else if mangas.value.error}
+			{:else if mangas.error}
 				<div class="whitespace-pre-wrap">
-					Error loading mangas: {JSON.stringify(mangas.value.error, null, 4)}
+					Error loading mangas: {JSON.stringify(mangas.error, null, 4)}
 				</div>
 			{:else if sortedMangas}
 				<div class="yoy grid {gridValues} m-2 gap-2">

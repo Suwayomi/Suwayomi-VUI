@@ -34,10 +34,10 @@
 
 	let unSub = false;
 	$effect(() => {
-		if (!unSub) onSub(manga.value);
+		if (!unSub) onSub(manga);
 	});
 
-	function onSub(mangaNow: typeof manga.value) {
+	function onSub(mangaNow: typeof manga) {
 		if (mangaNow?.data?.manga?.title) {
 			$query = mangaNow?.data?.manga?.title;
 			unSub = true;
@@ -52,13 +52,13 @@
 				ref: MigrateModal,
 				props: {
 					id,
-					manga: manga.value.data?.manga
+					manga: manga.data?.manga
 				}
 			}
 		});
 	}
 </script>
 
-{#if manga.value.data?.manga?.title}
-	<GlobalSearch title={manga.value.data?.manga?.title} {OpenModal} />
+{#if manga.data?.manga?.title}
+	<GlobalSearch title={manga.data?.manga?.title} {OpenModal} />
 {/if}

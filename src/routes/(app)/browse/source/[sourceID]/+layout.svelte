@@ -28,10 +28,10 @@
 	});
 
 	$effect(() => {
-		actionState.AppBarData(source.value.data?.source?.displayName ?? '', {
+		actionState.AppBarData(source.data?.source?.displayName ?? '', {
 			component: NavActions,
 			props: {
-				supportsLatest: source.value.data?.source?.supportsLatest
+				supportsLatest: source.data?.source?.supportsLatest
 			}
 		});
 	});

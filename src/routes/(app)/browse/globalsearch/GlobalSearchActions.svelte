@@ -12,7 +12,7 @@
 	import { getModalStore } from '@skeletonlabs/skeleton';
 	import { langFilter } from '../BrowseStores';
 	import GlobalSearchLangFilterModal from './GlobalSearchLangFilterModal.svelte';
-	import { page } from '$app/stores';
+	import { page } from '$app/state';
 	import Tooltip from '$lib/components/Tooltip.svelte';
 	import IconWrapper from '$lib/components/IconWrapper.svelte';
 	import type { getSources } from '$lib/gql/Queries';
@@ -30,14 +30,14 @@
 
 <div class="flex h-full">
 	<Search />
-	{#if $page.url.pathname.includes('/browse/migrate/manga/')}
+	{#if page.url.pathname.includes('/browse/migrate/manga/')}
 		<Tooltip
 			tip="open migrating manga"
 			class="h-full cursor-pointer hover:variant-glass-surface"
 		>
 			<a
 				class="aspect-square h-full w-auto"
-				href={$page.url.pathname.replace('/browse/migrate', '')}
+				href={page.url.pathname.replace('/browse/migrate', '')}
 			>
 				<IconWrapper name="mdi:step-backward" class="h-full w-auto p-2" />
 			</a>

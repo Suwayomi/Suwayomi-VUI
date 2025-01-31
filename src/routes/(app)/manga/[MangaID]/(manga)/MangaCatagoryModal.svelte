@@ -23,7 +23,7 @@
 	const getCategories = queryState({ client, query: GetCategories });
 
 	let categories = $derived(
-		getCategories.value.data?.categories?.nodes
+		getCategories.data?.categories?.nodes
 			?.filter((e) => e.id !== 0)
 			.sort((a, b) => (a.order > b.order ? 1 : -1))
 	);

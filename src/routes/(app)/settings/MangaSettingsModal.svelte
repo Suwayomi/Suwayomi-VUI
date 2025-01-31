@@ -15,7 +15,7 @@
 	} from '@skeletonlabs/skeleton';
 	import { ChapterSort, ChapterTitle, gmState } from '$lib/simpleStores.svelte';
 
-	import { enumKeys } from '$lib/util.svelte';
+	import { enumEntries } from '$lib/util.svelte';
 	import Switch from '$lib/components/switch.svelte';
 	import ModalTemplate from '$lib/components/ModalTemplate.svelte';
 	import Slide from '$lib/components/Slide.svelte';
@@ -87,7 +87,7 @@
 			display="flex-col"
 			active="variant-glass-primary"
 		>
-			{#each enumKeys(ChapterSort) as value}
+			{#each enumEntries(ChapterSort) as [value, _]}
 				<RadioItem
 					bind:group={gmState.value.mangaMetaDefaults.ChapterSort}
 					class="focus:outline-0"
@@ -139,7 +139,7 @@
 			display="flex-col"
 			active="variant-glass-primary"
 		>
-			{#each enumKeys(ChapterTitle) as value}
+			{#each enumEntries(ChapterTitle) as [value, _]}
 				<RadioItem
 					bind:group={gmState.value.mangaMetaDefaults.ChapterTitle}
 					class="focus:outline-0"

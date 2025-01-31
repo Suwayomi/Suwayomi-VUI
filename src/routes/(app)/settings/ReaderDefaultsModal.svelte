@@ -11,7 +11,7 @@
 	import Slide from '$lib/components/Slide.svelte';
 	import { gmState, Layout, Mode } from '$lib/simpleStores.svelte';
 
-	import { enumKeys } from '$lib/util.svelte';
+	import { enumEntries } from '$lib/util.svelte';
 	import ModalTemplate from '$lib/components/ModalTemplate.svelte';
 	const modalStore = getModalStore();
 </script>
@@ -50,7 +50,7 @@
 				bind:value={gmState.value.mangaMetaDefaults.ReaderMode}
 				class="select"
 			>
-				{#each enumKeys(Mode) as value}
+				{#each enumEntries(Mode) as [value, _]}
 					<option {value}>{value}</option>
 				{/each}
 			</select>
@@ -61,7 +61,7 @@
 				bind:value={gmState.value.mangaMetaDefaults.NavLayout}
 				class="select"
 			>
-				{#each enumKeys(Layout) as value}
+				{#each enumEntries(Layout) as [value, _]}
 					<option {value}>{value}</option>
 				{/each}
 			</select>

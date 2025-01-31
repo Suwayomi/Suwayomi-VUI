@@ -7,7 +7,7 @@
 -->
 
 <script>
-	import { page } from '$app/stores';
+	import { page } from '$app/state';
 	import { AppRail, AppRailAnchor } from '@skeletonlabs/skeleton';
 	import IconWrapper from './IconWrapper.svelte';
 	import Tooltip from './Tooltip.svelte';
@@ -16,7 +16,7 @@
 
 <AppRail width="w-14">
 	{#each AppNavData as Loc}
-		<AppRailAnchor href={Loc.href} selected={Loc.match($page.url.pathname)}>
+		<AppRailAnchor href={Loc.href} selected={Loc.match(page.url.pathname)}>
 			<Tooltip
 				tip={Loc.title}
 				placement="right"

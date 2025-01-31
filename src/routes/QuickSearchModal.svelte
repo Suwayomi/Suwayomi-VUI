@@ -15,7 +15,7 @@
 	import { untrack, type SvelteComponent } from 'svelte';
 	import { SourceLangFilter } from './(app)/browse/sources/SourcesStores';
 	import { queryParam, ssp } from 'sveltekit-search-params';
-	import { page } from '$app/stores';
+	import { page } from '$app/state';
 	import { getContextClient } from '@urql/svelte';
 	import {
 		ChaptersByName,
@@ -135,16 +135,25 @@
 	let catId: undefined | number = $state(undefined);
 	let mangaId: undefined | number = $state(undefined);
 
-	let category:
-		| queryStateReturn<
-				ResultOf<typeof getCategory>,
-				VariablesOf<typeof getCategory>
-		  >
-		| undefined = $state();
+	let category = $derived(
+		catId !== undefined
+			? queryState({
+					client,
+					query: getCategory,
+					variables: { id: catId }
+				})
+			: undefined
+	);
 
-	let manga:
-		| queryStateReturn<ResultOf<typeof getManga>, VariablesOf<typeof getManga>>
-		| undefined = $state();
+	let manga = $derived(
+		mangaId !== undefined
+			? queryState({
+					client,
+					query: getManga,
+					variables: { id: mangaId }
+				})
+			: undefined
+	);
 
 	async function doCategory() {
 		if (value.startsWith('#')) {
@@ -152,8 +161,8 @@
 			const categorySearch: string | undefined = parsed[0];
 			const mangaSearch: string | undefined = parsed[1];
 			const chapterNameSearch: string | undefined = parsed[2];
-			const includeCategory = categories.value.data?.categories.nodes?.filter(
-				(e) => e.name.toLowerCase().includes(categorySearch.toLowerCase())
+			const includeCategory = categories.data?.categories.nodes?.filter((e) =>
+				e.name.toLowerCase().includes(categorySearch.toLowerCase())
 			);
 			let includeMangas:
 				| ResultOf<typeof getCategory>['category']['mangas']['nodes']
@@ -167,9 +176,9 @@
 					window.requestAnimationFrame(() => {
 						unSub = $effect.root(() => {
 							$effect(() => {
-								if (category?.value?.data?.category?.mangas?.nodes) {
+								if (category?.data?.category?.mangas?.nodes) {
 									resolve(
-										category?.value.data.category.mangas.nodes.filter((e) =>
+										category.data.category.mangas.nodes.filter((e) =>
 											e.title.toLowerCase().includes(mangaSearch.toLowerCase())
 										)
 									);
@@ -187,9 +196,9 @@
 						window.requestAnimationFrame(() => {
 							unSub = $effect.root(() => {
 								$effect(() => {
-									if (manga?.value?.data?.manga.chapters.nodes) {
+									if (manga?.data?.manga.chapters.nodes) {
 										resolve(
-											manga?.value.data.manga.chapters.nodes.filter((e) =>
+											manga.data.manga.chapters.nodes.filter((e) =>
 												e.name
 													.toLowerCase()
 													.includes(chapterNameSearch.toLowerCase())
@@ -247,7 +256,7 @@
 			const parsed = value.slice(1).split('/');
 			const sourceSearch: string | undefined = parsed[0];
 			const mangaSearch: string | undefined = parsed[1];
-			const includeSource = sources.value.data?.sources?.nodes
+			const includeSource = sources.data?.sources?.nodes
 				?.filter((e) =>
 					e.displayName.toLowerCase().includes(sourceSearch.toLowerCase())
 				)
@@ -312,11 +321,9 @@
 			if ('url' in items[0]) {
 				goto(items[0].url);
 			} else if (!['#', '@'].includes(value[0])) {
-				if (
-					/(\/browse\/source\/\d*\/)popular|latest/.test($page.url.pathname)
-				) {
+				if (/(\/browse\/source\/\d*\/)popular|latest/.test(page.url.pathname)) {
 					goto(
-						$page.url.pathname.replace(
+						page.url.pathname.replace(
 							/(\/browse\/source\/\d*\/)popular|latest/,
 							`$1filter?q=${value}`
 						)
@@ -362,10 +369,10 @@
 		}
 	});
 	$effect(() => {
-		OTT([category?.value, categories.value, value], doCategory);
+		OTT([category?.data, categories.data, value], doCategory);
 	});
 	$effect(() => {
-		OTT([sources?.value, value], doSource);
+		OTT([sources.data, value], doSource);
 	});
 	let debounceTimer: ReturnType<typeof setTimeout> | undefined;
 	$effect(() => {
@@ -376,34 +383,16 @@
 			untrack(doChapter);
 		}, 300);
 	});
-	$effect(() => {
-		if (catId === undefined) return;
-		untrack(() => {
-			if (catId === undefined) return;
-			category = queryState({
-				client,
-				query: getCategory,
-				variables: { id: catId }
-			});
-		});
-	});
-	$effect(() => {
-		if (!mangaId) return;
-		untrack(() => {
-			if (!mangaId) return;
-			manga = queryState({
-				client,
-				query: getManga,
-				variables: { id: mangaId }
-			});
-		});
-	});
+
 	$effect(() => {
 		if ($modalStore[0]) {
 			window.addEventListener('keydown', handelArrows);
 		} else {
 			window.removeEventListener('keydown', handelArrows);
 		}
+		return () => {
+			window.removeEventListener('keydown', handelArrows);
+		};
 	});
 </script>
 

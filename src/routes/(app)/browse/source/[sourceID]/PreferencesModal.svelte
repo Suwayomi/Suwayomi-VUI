@@ -41,7 +41,7 @@
 					variables: {
 						id: data.sourceID
 					}
-				}).value.data?.source
+				}).data?.source
 		);
 	});
 </script>

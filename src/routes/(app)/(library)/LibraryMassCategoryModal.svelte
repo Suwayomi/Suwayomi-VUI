@@ -31,7 +31,7 @@
 	const CategoriesState: Record<number, TriState | undefined> = $state({});
 
 	$effect(() => {
-		categories.value.data?.categories.nodes.forEach((e) => {
+		categories.data?.categories.nodes.forEach((e) => {
 			CategoriesState[e.id] = 'intermediate';
 		});
 	});
@@ -79,18 +79,14 @@
 {#if $modalStore[0]}
 	<ModalTemplate titleText="Set Categories">
 		{#snippet children()}
-			{#if categories.value.fetching}
+			{#if categories.fetching}
 				loading...
-			{:else if categories.value.error}
+			{:else if categories.error}
 				<div class="whitespace-pre-wrap">
-					Error loading categories: {JSON.stringify(
-						categories.value.error,
-						null,
-						4
-					)}
+					Error loading categories: {JSON.stringify(categories.error, null, 4)}
 				</div>
-			{:else if categories.value.data && Object.keys(CategoriesState).length}
-				{@const nodes = categories.value.data.categories.nodes}
+			{:else if categories.data && Object.keys(CategoriesState).length}
+				{@const nodes = categories.data.categories.nodes}
 				{#each nodes
 					.filter((e) => e.id !== 0)
 					.sort((a, b) => (a.order > b.order ? 1 : -1)) as category}

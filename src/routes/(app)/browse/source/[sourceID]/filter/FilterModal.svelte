@@ -85,8 +85,8 @@
 			</div>
 		{/snippet}
 		{#snippet children()}
-			{#if sauce.value.data?.source?.filters}
-				{#each sauce.value.data?.source.filters as filter, index}
+			{#if sauce.data?.source?.filters}
+				{#each sauce.data.source.filters as filter, index}
 					<div class="mx-4 mt-4">
 						<Accordion>
 							{#if filter.__typename === 'CheckBoxFilter'}

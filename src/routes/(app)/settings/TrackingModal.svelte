@@ -55,11 +55,11 @@
 {#if $modalStore[0]}
 	<ModalTemplate titleText="Tracking">
 		<div class="pl-4">
-			{#if Trackers.value.error}
+			{#if Trackers.error}
 				<div class="white-space-pre-wrap">
-					{JSON.stringify(Trackers.value.error, null, 4)}
+					{JSON.stringify(Trackers.error, null, 4)}
 				</div>
-			{:else if Trackers.value.fetching}
+			{:else if Trackers.fetching}
 				{#each new Array(4).fill(0) as _}
 					<div class="flex w-full p-1 pl-4 text-left">
 						<div
@@ -71,8 +71,8 @@
 						</div>
 					</div>
 				{/each}
-			{:else if Trackers.value.data}
-				{#each Trackers.value.data.trackers.nodes as tracker}
+			{:else if Trackers.data}
+				{#each Trackers.data.trackers.nodes as tracker}
 					<button
 						class="block w-full hover:variant-ghost-surface"
 						onclick={() => {

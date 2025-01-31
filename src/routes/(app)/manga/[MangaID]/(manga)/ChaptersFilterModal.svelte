@@ -19,7 +19,7 @@
 		localStorageStore
 	} from '@skeletonlabs/skeleton';
 	import { ChapterSort, ChapterTitle, mmState } from '$lib/simpleStores.svelte';
-	import { enumKeys } from '$lib/util.svelte';
+	import { enumEntries } from '$lib/util.svelte';
 	import Tooltip from '$lib/components/Tooltip.svelte';
 	import ThreeStateSwitchCustom from '$lib/components/ThreeStateSwitchCustom.svelte';
 	const modalStore = getModalStore();
@@ -148,7 +148,7 @@
 							display="flex-col"
 							active="variant-glass-primary"
 						>
-							{#each enumKeys(ChapterSort) as value}
+							{#each enumEntries(ChapterSort) as [value, _]}
 								<RadioItem
 									bind:group={mmState.value.ChapterSort}
 									class="focus:outline-0"
@@ -200,7 +200,7 @@
 							display="flex-col"
 							active="variant-glass-primary"
 						>
-							{#each enumKeys(ChapterTitle) as value}
+							{#each enumEntries(ChapterTitle) as [value, _]}
 								<RadioItem
 									bind:group={mmState.value.ChapterTitle}
 									class="focus:outline-0"

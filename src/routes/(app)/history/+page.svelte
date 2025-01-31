@@ -28,31 +28,29 @@
 	let all: ResultOf<typeof History>['chapters'] | null = $state(null);
 
 	function updateAll() {
-		OTT([CurrentHistory.value], () => {
-			if (!CurrentHistory.value.data?.chapters) return;
+		OTT([CurrentHistory.data], () => {
+			if (!CurrentHistory.data?.chapters) return;
 			if (!all) {
-				all = $state.snapshot(CurrentHistory.value.data.chapters);
+				all = $state.snapshot(CurrentHistory.data.chapters);
 				return;
 			}
 			// this check is nessessary bacuse the data prefetch on the manga link causes this to be triggered again with the same data
-			if (
-				all.nodes[page]?.id === CurrentHistory.value.data?.chapters.nodes[0].id
-			)
+			if (all.nodes[page]?.id === CurrentHistory.data?.chapters.nodes[0].id)
 				return;
 
-			all.nodes.push(...CurrentHistory.value.data.chapters.nodes);
-			all.pageInfo = CurrentHistory.value.data.chapters.pageInfo;
+			all.nodes.push(...CurrentHistory.data.chapters.nodes);
+			all.pageInfo = CurrentHistory.data.chapters.pageInfo;
 		});
 	}
-	let CurrentHistory = $derived.by(() => {
-		return OTT([page], () =>
+	let CurrentHistory = $derived(
+		OTT([page], () =>
 			queryState({
 				client,
 				query: History,
 				variables: { offset: page }
 			})
-		);
-	});
+		)
+	);
 	$effect(updateAll);
 	let intersecting: SvelteSet<number> = $state(new SvelteSet());
 	let newPageIntersecting = $state(false);
@@ -60,7 +58,7 @@
 		if (
 			newPageIntersecting &&
 			all?.pageInfo.hasNextPage &&
-			!CurrentHistory.value.fetching
+			!CurrentHistory.fetching
 		) {
 			page = all.nodes.length;
 		}
@@ -88,13 +86,13 @@
 	</div>
 {/snippet}
 
-{#if !all && CurrentHistory.value.fetching}
+{#if !all && CurrentHistory.fetching}
 	<div class="grid {gridValues} m-2 gap-2">
 		<FakeMangaItem active={true} count={100} lines={3} />
 	</div>
-{:else if !all && CurrentHistory.value.error}
+{:else if !all && CurrentHistory.error}
 	<div class="white-space-pre-wrap">
-		{JSON.stringify(CurrentHistory.value.error, null, 4)}
+		{JSON.stringify(CurrentHistory.error, null, 4)}
 	</div>
 {:else if all?.nodes}
 	<div class="grid {gridValues} m-2 gap-2">

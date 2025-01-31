@@ -83,7 +83,7 @@
 		}
 	}
 	let filteredSources = $derived(
-		sources.value.data?.sources?.nodes.filter((ele) => {
+		sources.data?.sources?.nodes.filter((ele) => {
 			if (ele.meta.find((e) => e.key === 'pinned')) return true;
 			if (!$SourceLangFilter.has(ele.lang)) return false;
 			if ($query !== '' && $query !== null) {
@@ -94,7 +94,7 @@
 			return true;
 		}) as Tsource[] | undefined
 	);
-	let langs = $derived(getLanguages(sources.value.data));
+	let langs = $derived(getLanguages(sources.data));
 	$effect(() => {
 		actionState.AppBarData('Sources', {
 			component: SourcesActions,
@@ -107,11 +107,11 @@
 
 <Nav>
 	{#snippet children()}
-		{#if sources.value.error}
+		{#if sources.error}
 			<div class="white-space-pre-wrap">
-				{JSON.stringify(sources.value.error, null, 4)}
+				{JSON.stringify(sources.error, null, 4)}
 			</div>
-		{:else if sources.value.fetching}
+		{:else if sources.fetching}
 			{#each new Array(5) as _}
 				<div class="px-8 py-4">
 					<div class="placeholder h-12 animate-pulse"></div>
