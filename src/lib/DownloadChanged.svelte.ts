@@ -7,94 +7,114 @@
 import { browser } from '$app/environment';
 import { DownloadChanged as getDownloadChanged } from '$lib/gql/Subscriptions';
 import { client } from '$lib/gql/graphqlClient';
-import { subscriptionStore } from '@urql/svelte';
 import type { ResultOf } from 'gql.tada';
+import { subscriptionState, type subscriptionStateReturn } from './util.svelte';
+import { untrack } from 'svelte';
+
+const downloadSet = new Set([
+	'QUEUED',
+	'PROGRESS',
+	'FINISHED',
+	'ERROR',
+	'POSITION',
+	'PAUSED',
+	'STOPPED'
+]);
 
 class DownloadChanged {
-	store:
+	#cleanup = () => {};
+	#state:
+		| subscriptionStateReturn<ResultOf<typeof getDownloadChanged>>
+		| undefined = $state();
+	#store:
 		| NonNullable<
 				ResultOf<typeof getDownloadChanged>['downloadStatusChanged']['initial']
 		  >
 		| undefined = $state();
-	status:
-		| ResultOf<typeof getDownloadChanged>['downloadStatusChanged']['state']
-		| undefined = $state();
-	fetching = $state();
-	error = $state();
-	private unSub = () => {};
-	private pause = () => {};
+
+	restart() {
+		this.pause?.();
+		this.#cleanup();
+		this.#state = subscriptionState({
+			query: getDownloadChanged,
+			client
+		});
+		this.#cleanup = $effect.root(() => {
+			$effect(() => {
+				if (!this.#state?.data) {
+					this.#store = undefined;
+					return;
+				}
+				if (this.#state?.data.downloadStatusChanged.initial !== null) {
+					this.#store = this.#state.data.downloadStatusChanged.initial;
+					return;
+				}
+				untrack(() => {
+					this.#store = this.#store?.filter(
+						(item) => item.state !== 'FINISHED'
+					);
+
+					this.#state?.data?.downloadStatusChanged.updates.forEach((update) => {
+						if (this.#store === undefined && downloadSet.has(update.type)) {
+							this.#store = [update.download];
+							return;
+						}
+						if (this.#store === undefined) return;
+						if (downloadSet.has(update.type)) {
+							if (update.type !== 'QUEUED') {
+								const index = this.#store.findIndex(
+									(item) => item.chapter.id === update.download.chapter.id
+								);
+								if (index !== -1) {
+									this.#store[index] = update.download;
+									return;
+								}
+							}
+							this.#store.push(update.download);
+							return;
+						}
+						if (update.type === 'DEQUEUED') {
+							this.#store = this.#store.filter(
+								(item) => item.chapter.id !== update.download.chapter.id
+							);
+							return;
+						}
+					});
+					this.#store = this.#store?.toSorted((a, b) =>
+						a.position > b.position ? 1 : -1
+					);
+				});
+			});
+		});
+	}
 
 	constructor() {
 		if (!browser) return;
 		this.restart();
-		document.onvisibilitychange = () => {
+		document.addEventListener('visibilitychange', () => {
 			if (document.visibilityState === 'visible') {
 				this.restart();
 			}
-		};
+		});
 	}
 
-	restart() {
-		this.pause();
-		this.unSub();
-		const SubStore = subscriptionStore({
-			query: getDownloadChanged,
-			client
-		});
-		this.pause = SubStore.pause;
-		this.unSub = SubStore.subscribe((result) => {
-			this.error = result.error;
-			this.fetching = result.fetching;
-			if (!result.data) {
-				this.store = undefined;
-				return;
-			}
-			this.status = result.data.downloadStatusChanged.state;
-			if (result.data.downloadStatusChanged.initial !== null) {
-				this.store = result.data.downloadStatusChanged.initial;
-				return;
-			}
-
-			this.store = this.store?.filter((item) => item.state !== 'FINISHED');
-
-			result.data.downloadStatusChanged.updates.forEach((update) => {
-				if (
-					this.store === undefined &&
-					['QUEUED', 'PROGRESS', 'FINISHED', 'ERROR', 'POSITION'].includes(
-						update.type
-					)
-				) {
-					this.store = [update.download];
-					return;
-				}
-				if (this.store === undefined) return;
-				if (
-					['PROGRESS', 'FINISHED', 'ERROR', 'POSITION'].includes(update.type)
-				) {
-					const index = this.store.findIndex(
-						(item) => item.chapter.id === update.download.chapter.id
-					);
-					if (index !== -1) {
-						this.store[index] = update.download;
-						return;
-					}
-					this.store.push(update.download);
-					return;
-				}
-				if (update.type === 'QUEUED') {
-					this.store.push(update.download);
-					return;
-				}
-				if (update.type === 'DEQUEUED') {
-					this.store = this.store.filter(
-						(item) => item.chapter.id !== update.download.chapter.id
-					);
-					return;
-				}
-			});
-
-			this.store?.sort((a, b) => (a.position > b.position ? 1 : -1));
-		});
+	get status() {
+		return this.#state?.data?.downloadStatusChanged.state;
+	}
+	get downlaods() {
+		return this.#store;
+	}
+	get error() {
+		return this.#state?.error;
+	}
+	get pause() {
+		return this.#state?.pause;
+	}
+	get resume() {
+		return this.#state?.resume;
+	}
+	get stale() {
+		return this.#state?.stale;
 	}
 }
 

@@ -406,7 +406,7 @@
 								</div>
 
 								<DownloadProgressRadial
-									download={downloadChanged.store?.find(
+									download={downloadChanged.downlaods?.find(
 										(e) => e.chapter.id === chapter.id
 									)}
 								/>

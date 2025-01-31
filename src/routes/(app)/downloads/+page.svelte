@@ -28,7 +28,7 @@
 		props: {}
 	});
 
-	type DLS = NonNullable<(typeof downloadChanged)['store']>[number];
+	type DLS = NonNullable<(typeof downloadChanged)['downlaods']>[number];
 
 	function handelclick(e: MouseEvent, dls: DLS): void {
 		e.preventDefault();
@@ -39,7 +39,7 @@
 	}
 
 	let filteredQueue = $derived(
-		downloadChanged.store?.filter((dls) => !$filter.has(dls.state))
+		downloadChanged.downlaods?.filter((dls) => !$filter.has(dls.state))
 	);
 	let intersecting: SvelteSet<number> = $state(new SvelteSet());
 </script>
@@ -48,7 +48,7 @@
 	<div class="white-space-pre-wrap">
 		{JSON.stringify(downloadChanged.error, null, 4)}
 	</div>
-{:else if !downloadChanged.store}
+{:else if !downloadChanged.downlaods}
 	{#each new Array(15) as _}
 		<div class="h-28">
 			<div
@@ -87,7 +87,7 @@
 		>
 			{#if intersecting.has(dls.chapter.id)}
 				<a
-					href="/manga/{dls.manga.id}"
+					href="/manga/{dls.manga.id}#{dls.chapter.id}"
 					class="flex h-full flex-nowrap items-center px-4 hover:variant-glass-surface"
 				>
 					<div class="mr-2 aspect-cover h-full py-1">
