@@ -14,7 +14,7 @@
 		setSettings,
 		subscriptionState
 	} from '$lib/util.svelte';
-	import { getContextClient, subscriptionStore } from '@urql/svelte';
+	import { getContextClient } from '@urql/svelte';
 	import Select from './components/Select.svelte';
 	import ExtensionReposModal from './components/extensionReposModal.svelte';
 	import Number from './components/number.svelte';
