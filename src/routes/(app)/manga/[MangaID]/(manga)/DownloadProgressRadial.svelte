@@ -12,7 +12,7 @@
 
 	interface Props {
 		download:
-			| NonNullable<(typeof downloadChanged)['store']>[number]
+			| NonNullable<(typeof downloadChanged)['downlaods']>[number]
 			| undefined;
 	}
 
