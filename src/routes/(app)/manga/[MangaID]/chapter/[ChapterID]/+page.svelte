@@ -208,13 +208,13 @@
 		if (readerState.loadingChaptersIds.has(chapterId)) return;
 		readerState.loadingChaptersIds.add(chapterId);
 		chapterLoading = true;
-		const e = await (preload
+		const e = await (preload || !data.pre
 			? client
 					.mutation(fetchChapterPages, {
 						chapterId
 					})
 					.toPromise()
-			: data.pre!);
+			: data.pre);
 		if (e.data?.fetchChapterPages?.pages) {
 			readerState.ChapterPagesMap.set(
 				chapterId,
