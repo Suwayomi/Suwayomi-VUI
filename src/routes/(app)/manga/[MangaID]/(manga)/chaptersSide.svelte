@@ -36,6 +36,7 @@
 	} from '$lib/actions/IntersectionObserver.svelte';
 	import { SvelteSet } from 'svelte/reactivity';
 	import { InitScrollTo } from '$lib/actions/InitScrollTo.svelte';
+	import { page } from '$app/state';
 
 	interface Props {
 		MangaID: number;
@@ -122,14 +123,7 @@
 
 	let scrollTo = $state(true);
 	let scrollToChaps: HTMLDivElement | undefined = $state();
-	let hash = $state(location.hash);
-
-	if ('navigation' in window) {
-		// @ts-ignore-next-line
-		window.navigation?.addEventListener('navigate', (event) => {
-			hash = new URL(event.destination.url).hash;
-		});
-	}
+	let hash = $derived(page.url.hash);
 
 	let chaptersInfo = $derived(manga.value?.data?.manga?.chapters.nodes);
 	let filteredChapters = $derived(

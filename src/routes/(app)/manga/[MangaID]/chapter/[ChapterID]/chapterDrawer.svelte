@@ -9,7 +9,7 @@
 <script lang="ts">
 	import IconButton from '$lib/components/IconButton.svelte';
 	import Slide from '$lib/components/Slide.svelte';
-	import { enumKeys } from '$lib/util.svelte';
+	import { enumEntries } from '$lib/util.svelte';
 	import { getDrawerStore } from '@skeletonlabs/skeleton';
 	import {
 		get_manga,
@@ -149,8 +149,8 @@
 			<label class="pl-3">
 				<span>Reader Mode</span>
 				<select bind:value={mmState.value.ReaderMode} class="select">
-					{#each enumKeys(Mode) as value}
-						<option {value}>{value}</option>
+					{#each enumEntries(Mode) as [value, label]}
+						<option {value}>{label}</option>
 					{/each}
 				</select>
 			</label>
@@ -163,8 +163,8 @@
 			<label class="pl-3">
 				<span>Navigation Layout</span>
 				<select bind:value={mmState.value.NavLayout} class="select">
-					{#each enumKeys(Layout) as value}
-						<option {value}>{value}</option>
+					{#each enumEntries(Layout) as [value, label]}
+						<option {value}>{label}</option>
 					{/each}
 				</select>
 			</label>

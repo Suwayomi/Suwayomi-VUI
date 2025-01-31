@@ -67,13 +67,13 @@
 		});
 		return tmpSources.filter((e) => e.mangas?.TotalCount);
 	}
-	let sources = $derived(FigureOutSources(Migration.value.data));
+	let sources = $derived(FigureOutSources(Migration.data));
 	let intersecting: SvelteSet<string> = $state(new SvelteSet());
 </script>
 
 <Nav>
 	{#snippet children()}
-		{#if Migration.value.fetching}
+		{#if Migration.fetching}
 			{#each new Array(8) as _}
 				<div class="m-1 h-24">
 					<div class="card variant-ghost flex h-full w-full items-center">
@@ -91,9 +91,9 @@
 					</div>
 				</div>
 			{/each}
-		{:else if Migration.value.error}
+		{:else if Migration.error}
 			<div class="white-space-pre-wrap">
-				{JSON.stringify(Migration.value.error, null, 4)}
+				{JSON.stringify(Migration.error, null, 4)}
 			</div>
 		{:else if sources}
 			<div>

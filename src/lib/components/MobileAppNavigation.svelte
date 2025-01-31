@@ -7,7 +7,7 @@
 -->
 
 <script>
-	import { page } from '$app/stores';
+	import { page } from '$app/state';
 	import { TabGroup, TabAnchor } from '@skeletonlabs/skeleton';
 	import IconWrapper from './IconWrapper.svelte';
 	import { AppNavData, SmallAppNavData } from '../AppNavData';
@@ -31,7 +31,7 @@
 			{#each Nav as Loc}
 				<TabAnchor
 					href={Loc.href}
-					selected={Loc.match($page.url.pathname)}
+					selected={Loc.match(page.url.pathname)}
 					class="h-full [&>.tab-interface]:h-full [&>div>.tab-label]:h-full"
 				>
 					<div class="flex h-full w-full flex-col items-center">

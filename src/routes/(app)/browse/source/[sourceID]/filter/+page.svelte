@@ -34,16 +34,14 @@
 	filtersState.filtersSause = data.sourceID;
 
 	let sause = $derived.by(() => {
-		return OTT(
-			[data.sourceID],
-			() =>
-				queryState({
-					client: getContextClient(),
-					query: getSource,
-					variables: {
-						id: data.sourceID
-					}
-				}).value
+		return OTT([data.sourceID], () =>
+			queryState({
+				client: getContextClient(),
+				query: getSource,
+				variables: {
+					id: data.sourceID
+				}
+			})
 		);
 	});
 

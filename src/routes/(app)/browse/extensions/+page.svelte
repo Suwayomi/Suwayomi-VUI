@@ -102,7 +102,7 @@
 			...groupBy(notInstalledExtensions, (extension) => extension.lang)
 		];
 	}
-	let langs = $derived(getLangs(extensions?.value?.data));
+	let langs = $derived(getLangs(extensions?.data));
 	$effect(() => {
 		actionState.AppBarData('Extensions', {
 			component: ExtensionsActions,
@@ -110,7 +110,7 @@
 		});
 	});
 	let filteredExtensions = $derived(
-		extensions?.value?.data?.extensions.nodes?.filter((ele) => {
+		extensions?.data?.extensions.nodes?.filter((ele) => {
 			if (!$langFilter.has(ele.lang)) return false;
 			if ($query !== '' && $query !== null) {
 				return ele.name.toLowerCase().includes($query.toLocaleLowerCase());
@@ -123,7 +123,7 @@
 
 <Nav>
 	{#snippet children()}
-		{#if extensions?.value === undefined || extensions?.value.fetching}
+		{#if extensions === undefined || extensions.fetching}
 			<div class="px-4">
 				{#each new Array(5) as _}
 					<div class="placeholder m-2 h-8 max-w-xs animate-pulse md:h-10"></div>
@@ -150,9 +150,9 @@
 					{/each}
 				{/each}
 			</div>
-		{:else if extensions?.value.error}
+		{:else if extensions.error}
 			<div class="white-space-pre-wrap">
-				{JSON.stringify(extensions?.value.error, null, 4)}
+				{JSON.stringify(extensions.error, null, 4)}
 			</div>
 		{:else if groupExtensions}
 			<div class="px-4">

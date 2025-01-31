@@ -13,13 +13,12 @@
 		AccordionItem,
 		getModalStore
 	} from '@skeletonlabs/skeleton';
-	import type { OperationResultStore, Pausable } from '@urql/svelte';
 	import type { ResultOf } from 'gql.tada';
 	import ModalTemplate from '$lib/components/ModalTemplate.svelte';
+	import type { subscriptionStateReturn } from '$lib/util.svelte';
 
 	interface Props {
-		update: OperationResultStore<ResultOf<typeof updateStatusChanged>> &
-			Pausable;
+		update: subscriptionStateReturn<ResultOf<typeof updateStatusChanged>>;
 	}
 
 	let { update }: Props = $props();
@@ -28,7 +27,7 @@
 </script>
 
 {#if $modalStore[0]}
-	{@const updateStatusChanged = $update.data?.updateStatusChanged}
+	{@const updateStatusChanged = update.data?.updateStatusChanged}
 	<ModalTemplate
 		titleText={'Update Info (' +
 			(updateStatusChanged?.isRunning ? 'Running)' : 'Complete)')}

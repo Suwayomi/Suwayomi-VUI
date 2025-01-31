@@ -16,7 +16,7 @@
 	actionState.AppBarData('About');
 </script>
 
-{#if about.value.fetching}
+{#if about.fetching}
 	{#if typeof window !== 'undefined' && window.version}
 		<div class="py-2 pl-4">
 			<div class="text-xl">client version</div>
@@ -31,17 +31,17 @@
 			<div class="placeholder h-6 w-full max-w-sm animate-pulse"></div>
 		</div>
 	{/each}
-{:else if about.value.error}
+{:else if about.error}
 	<div class="white-space-pre-wrap">
-		{JSON.stringify(about.value.error, null, 4)}
+		{JSON.stringify(about.error, null, 4)}
 	</div>
-{:else if about.value.data}
+{:else if about.data}
 	<div class="pt-2">
 		<div class="py-2 pl-4">
 			<div class="text-xl">Server</div>
 			<div class="opacity-80">
-				{about.value.data.aboutServer.name}
-				{about.value.data.aboutServer.buildType}
+				{about.data.aboutServer.name}
+				{about.data.aboutServer.buildType}
 			</div>
 		</div>
 		{#if typeof window !== 'undefined' && window.version}
@@ -55,34 +55,33 @@
 		<div class="py-2 pl-4">
 			<div class="text-xl">Server version</div>
 			<div class="opacity-80">
-				{about.value.data.aboutServer.version}-{about.value.data.aboutServer
-					.revision}
+				{about.data.aboutServer.version}-{about.data.aboutServer.revision}
 			</div>
 		</div>
 		<div class="py-2 pl-4">
 			<div class="text-xl">Build time</div>
 			<div class="opacity-80">
 				{new Date(
-					parseInt(about.value.data.aboutServer.buildTime) * 1000
+					parseInt(about.data.aboutServer.buildTime) * 1000
 				).toUTCString()}
 			</div>
 		</div>
 		<a
 			class="block py-2 pl-4 hover:variant-glass-surface"
-			href={about.value.data.aboutServer.github}
+			href={about.data.aboutServer.github}
 		>
 			<div class="text-xl">Github</div>
 			<div class="opacity-80">
-				{about.value.data.aboutServer.github}
+				{about.data.aboutServer.github}
 			</div>
 		</a>
 		<a
 			class="block py-2 pl-4 hover:variant-glass-surface"
-			href={about.value.data.aboutServer.discord}
+			href={about.data.aboutServer.discord}
 		>
 			<div class="text-xl">Discord</div>
 			<div class="opacity-80">
-				{about.value.data.aboutServer.discord}
+				{about.data.aboutServer.discord}
 			</div>
 		</a>
 	</div>

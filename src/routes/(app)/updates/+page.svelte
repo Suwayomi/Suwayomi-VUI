@@ -45,13 +45,13 @@
 	let all = $state<ResultOf<typeof updates>['chapters'] | null>(null);
 	const client = getContextClient();
 	function updateall() {
-		if (!update.value.data?.chapters) return;
+		if (!update.data?.chapters) return;
 		if (!all) {
-			all = $state.snapshot(update.value.data.chapters);
+			all = $state.snapshot(update.data.chapters);
 			return;
 		}
-		all.nodes.push(...update.value.data.chapters.nodes);
-		all.pageInfo = update.value.data.chapters.pageInfo;
+		all.nodes.push(...update.data.chapters.nodes);
+		all.pageInfo = update.data.chapters.pageInfo;
 	}
 
 	function LongHandler(): void {
@@ -89,26 +89,22 @@
 				break;
 		}
 	}
-	let update = $derived.by(() => {
-		return OTT([page], () => {
+	let update = $derived(
+		OTT([page], () => {
 			return queryState({
 				client,
 				query: updates,
 				variables: { offset: page }
 			});
-		});
-	});
+		})
+	);
 	$effect(() => {
-		OTT([update.value], updateall);
+		OTT([update.data], updateall);
 	});
 	let intersecting: SvelteSet<number> = $state(new SvelteSet());
 	let newPageIntersecting = $state(false);
 	$effect(() => {
-		if (
-			newPageIntersecting &&
-			all?.pageInfo.hasNextPage &&
-			!update.value.fetching
-		) {
+		if (newPageIntersecting && all?.pageInfo.hasNextPage && !update.fetching) {
 			page = all?.nodes.length ?? 0;
 		}
 	});
@@ -135,13 +131,13 @@
 	</div>
 {/snippet}
 
-{#if !all && update.value.fetching}
+{#if !all && update.fetching}
 	<div class="grid {gridValues} m-2 gap-2">
 		<FakeMangaItem active={true} count={100} lines={3} />
 	</div>
-{:else if !all && update.value.error}
+{:else if !all && update.error}
 	<div class="white-space-pre-wrap">
-		{JSON.stringify(update.value.error, null, 4)}
+		{JSON.stringify(update.error, null, 4)}
 	</div>
 {:else if all?.nodes}
 	<div class="grid {gridValues} m-2 gap-2">

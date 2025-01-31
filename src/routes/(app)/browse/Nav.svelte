@@ -7,7 +7,7 @@
 -->
 
 <script lang="ts">
-	import { page } from '$app/stores';
+	import { page } from '$app/state';
 	interface Props {
 		children?: import('svelte').Snippet;
 	}
@@ -23,7 +23,7 @@
 			<a
 				href="/browse/sources"
 				class="btn
-    {$page.url.pathname.includes('/browse/sources')
+    {page.url.pathname.includes('/browse/sources')
 					? 'variant-filled-secondary'
 					: 'variant-ghost-secondary'}"
 			>
@@ -32,7 +32,7 @@
 			<a
 				href="/browse/extensions"
 				class="btn
-    {$page.url.pathname.includes('/browse/extensions')
+    {page.url.pathname.includes('/browse/extensions')
 					? 'variant-filled-secondary'
 					: 'variant-ghost-secondary'}"
 			>
@@ -41,7 +41,7 @@
 			<a
 				href="/browse/migrate"
 				class="btn
-    {$page.url.pathname.includes('/browse/migrate')
+    {page.url.pathname.includes('/browse/migrate')
 					? 'variant-filled-secondary'
 					: 'variant-ghost-secondary'}"
 			>
@@ -50,7 +50,7 @@
 			<a
 				href="/browse/globalsearch"
 				class="btn
-    {$page.url.pathname.includes('/browse/globalsearch')
+    {page.url.pathname.includes('/browse/globalsearch')
 					? 'variant-filled-secondary'
 					: 'variant-ghost-secondary'}"
 			>

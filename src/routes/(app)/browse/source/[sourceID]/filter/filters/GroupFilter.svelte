@@ -44,9 +44,7 @@
 	$effect(() => {
 		fakeFilters = groupFilters
 			.map((e) => e.groupChange)
-			.filter((e) => e) as NonNullable<
-			VariablesOf<typeof fetchSourceManga>['filters']
-		>;
+			.filter((e) => e !== undefined);
 	});
 
 	$effect(() => {

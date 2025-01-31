@@ -84,7 +84,7 @@ ${e.data?.validateBackup.missingSources.map((ele) => ele.name).join(',')}
 	let restoreStat: RestoreStatus = $state();
 
 	$effect(() => {
-		if (restoreStat?.value.data?.restoreStatus?.state === 'SUCCESS') {
+		if (restoreStat?.data?.restoreStatus?.state === 'SUCCESS') {
 			toastStore.trigger({
 				hoverable: true,
 				message: `<h3>you successfully restored the backup</h3>`,
@@ -95,7 +95,7 @@ ${e.data?.validateBackup.missingSources.map((ele) => ele.name).join(',')}
 	});
 
 	$effect(() => {
-		if (restoreStat?.value.data?.restoreStatus?.state === 'FAILURE') {
+		if (restoreStat?.data?.restoreStatus?.state === 'FAILURE') {
 			toastStore.trigger({
 				hoverable: true,
 				message: `<h3>The backup failed to restore</h3>`,
@@ -174,17 +174,17 @@ ${e.data?.validateBackup.missingSources.map((ele) => ele.name).join(',')}
 						</div>
 					{/snippet}
 				</FileDropzone>
-				{#if restoreStat?.value.data?.restoreStatus?.state}
+				{#if restoreStat?.data?.restoreStatus?.state}
 					<div
 						class="p-4"
-						title="{restoreStat.value.data.restoreStatus.state
+						title="{restoreStat.data.restoreStatus.state
 							.toLowerCase()
-							.replaceAll('_', ' ')}&#013;{restoreStat.value.data.restoreStatus
-							.mangaProgress}/{restoreStat.value.data.restoreStatus.totalManga}"
+							.replaceAll('_', ' ')}&#013;{restoreStat.data.restoreStatus
+							.mangaProgress}/{restoreStat.data.restoreStatus.totalManga}"
 					>
 						<ProgressBar
-							value={restoreStat.value.data.restoreStatus.mangaProgress}
-							max={restoreStat.value.data.restoreStatus.totalManga}
+							value={restoreStat.data.restoreStatus.mangaProgress}
+							max={restoreStat.data.restoreStatus.totalManga}
 						/>
 					</div>
 				{/if}

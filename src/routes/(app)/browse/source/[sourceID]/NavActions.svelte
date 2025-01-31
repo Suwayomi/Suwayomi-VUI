@@ -7,7 +7,7 @@
 -->
 
 <script lang="ts">
-	import { page } from '$app/stores';
+	import { page } from '$app/state';
 
 	interface Props {
 		supportsLatest?: boolean;
@@ -20,7 +20,7 @@
 	<a
 		href="./popular"
 		class="btn rounded-none
-  {$page.url.pathname.includes('/popular')
+  {page.url.pathname.includes('/popular')
 			? 'variant-filled-secondary'
 			: 'variant-ghost-secondary'}"
 	>
@@ -30,7 +30,7 @@
 		<a
 			href="./latest"
 			class="btn rounded-none
-  {$page.url.pathname.includes('/latest')
+  {page.url.pathname.includes('/latest')
 				? 'variant-filled-secondary'
 				: 'variant-ghost-secondary'}"
 		>
@@ -40,7 +40,7 @@
 	<a
 		href="./filter"
 		class="btn rounded-none
-  {$page.url.pathname.includes('/filter')
+  {page.url.pathname.includes('/filter')
 			? 'variant-filled-secondary'
 			: 'variant-ghost-secondary'}"
 	>

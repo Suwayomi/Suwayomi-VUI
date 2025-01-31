@@ -18,7 +18,7 @@
 	import { getModalStore } from '@skeletonlabs/skeleton';
 	import ReaderDefaultsModal from './ReaderDefaultsModal.svelte';
 	import BackupModal from './BackupModal.svelte';
-	import { enumKeys } from '$lib/util.svelte';
+	import { enumEntries } from '$lib/util.svelte';
 	import MangaSettingsModal from './MangaSettingsModal.svelte';
 	import TrackingModal from './TrackingModal.svelte';
 	import CacheSettingsModal from './CacheSettingsModal.svelte';
@@ -91,7 +91,7 @@
 	<IconWrapper class="h-full w-auto p-2" name="mdi:television-guide" />
 	<div class="w-full">Grid Display</div>
 	<select bind:value={gmState.value.Display} class="select mr-1 max-w-sm">
-		{#each enumKeys(display) as value}
+		{#each enumEntries(display) as [value, _]}
 			<option {value}>{value}</option>
 		{/each}
 	</select>

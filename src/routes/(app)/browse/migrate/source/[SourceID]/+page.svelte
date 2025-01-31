@@ -44,23 +44,23 @@
 	});
 
 	$effect(() => {
-		if (source.value.data?.source?.displayName)
-			actionState.AppBarData(source.value.data?.source.displayName);
+		if (source.data?.source?.displayName)
+			actionState.AppBarData(source.data?.source.displayName);
 	});
 	let intersecting: SvelteSet<number> = $state(new SvelteSet());
 </script>
 
-{#if Manga.value.fetching}
+{#if Manga.fetching}
 	<div class="yoy m-2 grid gap-2 {gridValues}">
 		<FakeMangaItem active={true} count={30} />
 	</div>
-{:else if Manga.value.error}
+{:else if Manga.error}
 	<div class="white-space-pre-wrap">
-		{JSON.stringify(Manga.value.error, null, 4)}
+		{JSON.stringify(Manga.error, null, 4)}
 	</div>
-{:else if Manga.value.data}
+{:else if Manga.data}
 	<div class="yoy grid {gridValues} m-2 gap-2">
-		{#each Manga.value.data.mangas.nodes as manga}
+		{#each Manga.data.mangas.nodes as manga}
 			<div
 				use:IntersectionObserverAction={{
 					root: document.querySelector('#page') ?? undefined,

@@ -11,9 +11,10 @@
 		GetEnumArray,
 		errortoast,
 		queryState,
-		setSettings
+		setSettings,
+		subscriptionState
 	} from '$lib/util.svelte';
-	import { getContextClient, subscriptionStore } from '@urql/svelte';
+	import { getContextClient } from '@urql/svelte';
 	import Select from './components/Select.svelte';
 	import ExtensionReposModal from './components/extensionReposModal.svelte';
 	import Number from './components/number.svelte';
@@ -49,7 +50,7 @@
 
 	const webUIInterfaces = GetEnumArray('WebUIInterface');
 
-	const webuiUpdateStatus = subscriptionStore({
+	const webuiUpdateStatus = subscriptionState({
 		client,
 		query: webUIUpdateStatusChange
 	});
@@ -117,74 +118,69 @@
 	let webUIUpdateCheckInterval = $state(23);
 
 	$effect(() => {
-		if (settingsData.value.data?.settings) {
+		if (settingsData.data?.settings) {
 			autoDownloadNewChapters =
-				settingsData.value.data.settings.autoDownloadNewChapters;
-			autoDownloadIgnoreReUploads = settingsData.value.data.settings
+				settingsData.data.settings.autoDownloadNewChapters;
+			autoDownloadIgnoreReUploads = settingsData.data.settings
 				.autoDownloadIgnoreReUploads as boolean;
 			autoDownloadNewChaptersLimit =
-				settingsData.value.data.settings.autoDownloadNewChaptersLimit;
-			backupInterval = settingsData.value.data.settings.backupInterval;
-			backupPath = settingsData.value.data.settings.backupPath;
-			backupTTL = settingsData.value.data.settings.backupTTL;
-			backupTime = settingsData.value.data.settings.backupTime;
-			basicAuthEnabled = settingsData.value.data.settings.basicAuthEnabled;
-			basicAuthPassword = settingsData.value.data.settings.basicAuthPassword;
-			basicAuthUsername = settingsData.value.data.settings.basicAuthUsername;
-			debugLogsEnabled = settingsData.value.data.settings.debugLogsEnabled;
-			downloadAsCbz = settingsData.value.data.settings.downloadAsCbz;
-			downloadsPath = settingsData.value.data.settings.downloadsPath;
-			electronPath = settingsData.value.data.settings.electronPath;
-			excludeCompleted = settingsData.value.data.settings.excludeCompleted;
+				settingsData.data.settings.autoDownloadNewChaptersLimit;
+			backupInterval = settingsData.data.settings.backupInterval;
+			backupPath = settingsData.data.settings.backupPath;
+			backupTTL = settingsData.data.settings.backupTTL;
+			backupTime = settingsData.data.settings.backupTime;
+			basicAuthEnabled = settingsData.data.settings.basicAuthEnabled;
+			basicAuthPassword = settingsData.data.settings.basicAuthPassword;
+			basicAuthUsername = settingsData.data.settings.basicAuthUsername;
+			debugLogsEnabled = settingsData.data.settings.debugLogsEnabled;
+			downloadAsCbz = settingsData.data.settings.downloadAsCbz;
+			downloadsPath = settingsData.data.settings.downloadsPath;
+			electronPath = settingsData.data.settings.electronPath;
+			excludeCompleted = settingsData.data.settings.excludeCompleted;
 			excludeEntryWithUnreadChapters =
-				settingsData.value.data.settings.excludeEntryWithUnreadChapters;
-			excludeNotStarted = settingsData.value.data.settings.excludeNotStarted;
-			extensionRepos = settingsData.value.data.settings.extensionRepos;
-			excludeUnreadChapters =
-				settingsData.value.data.settings.excludeUnreadChapters;
-			flareSolverrEnabled =
-				settingsData.value.data.settings.flareSolverrEnabled;
+				settingsData.data.settings.excludeEntryWithUnreadChapters;
+			excludeNotStarted = settingsData.data.settings.excludeNotStarted;
+			extensionRepos = settingsData.data.settings.extensionRepos;
+			excludeUnreadChapters = settingsData.data.settings.excludeUnreadChapters;
+			flareSolverrEnabled = settingsData.data.settings.flareSolverrEnabled;
 			flareSolverrSessionName =
-				settingsData.value.data.settings.flareSolverrSessionName;
+				settingsData.data.settings.flareSolverrSessionName;
 			flareSolverrSessionTtl =
-				settingsData.value.data.settings.flareSolverrSessionTtl;
-			flareSolverrTimeout =
-				settingsData.value.data.settings.flareSolverrTimeout;
-			flareSolverrUrl = settingsData.value.data.settings.flareSolverrUrl;
-			globalUpdateInterval =
-				settingsData.value.data.settings.globalUpdateInterval;
+				settingsData.data.settings.flareSolverrSessionTtl;
+			flareSolverrTimeout = settingsData.data.settings.flareSolverrTimeout;
+			flareSolverrUrl = settingsData.data.settings.flareSolverrUrl;
+			globalUpdateInterval = settingsData.data.settings.globalUpdateInterval;
 			// gqlDebugLogsEnabled =
-			// 	settingsData.value.data.settings.gqlDebugLogsEnabled;
+			// 	settingsData.data.settings.gqlDebugLogsEnabled;
 			initialOpenInBrowserEnabled =
-				settingsData.value.data.settings.initialOpenInBrowserEnabled;
-			ip = settingsData.value.data.settings.ip;
-			localSourcePath = settingsData.value.data.settings.localSourcePath;
-			maxSourcesInParallel =
-				settingsData.value.data.settings.maxSourcesInParallel;
-			port = settingsData.value.data.settings.port;
-			socksProxyEnabled = settingsData.value.data.settings.socksProxyEnabled;
-			socksProxyHost = settingsData.value.data.settings.socksProxyHost;
-			socksProxyPort = settingsData.value.data.settings.socksProxyPort;
-			socksProxyPassword = settingsData.value.data.settings.socksProxyPassword;
-			socksProxyUsername = settingsData.value.data.settings.socksProxyUsername;
-			socksProxyVersion = settingsData.value.data.settings.socksProxyVersion;
-			systemTrayEnabled = settingsData.value.data.settings.systemTrayEnabled;
-			updateMangas = settingsData.value.data.settings.updateMangas;
-			webUIChannel = settingsData.value.data.settings.webUIChannel;
-			webUIFlavor = settingsData.value.data.settings.webUIFlavor;
-			webUIInterface = settingsData.value.data.settings.webUIInterface;
+				settingsData.data.settings.initialOpenInBrowserEnabled;
+			ip = settingsData.data.settings.ip;
+			localSourcePath = settingsData.data.settings.localSourcePath;
+			maxSourcesInParallel = settingsData.data.settings.maxSourcesInParallel;
+			port = settingsData.data.settings.port;
+			socksProxyEnabled = settingsData.data.settings.socksProxyEnabled;
+			socksProxyHost = settingsData.data.settings.socksProxyHost;
+			socksProxyPort = settingsData.data.settings.socksProxyPort;
+			socksProxyPassword = settingsData.data.settings.socksProxyPassword;
+			socksProxyUsername = settingsData.data.settings.socksProxyUsername;
+			socksProxyVersion = settingsData.data.settings.socksProxyVersion;
+			systemTrayEnabled = settingsData.data.settings.systemTrayEnabled;
+			updateMangas = settingsData.data.settings.updateMangas;
+			webUIChannel = settingsData.data.settings.webUIChannel;
+			webUIFlavor = settingsData.data.settings.webUIFlavor;
+			webUIInterface = settingsData.data.settings.webUIInterface;
 			webUIUpdateCheckInterval =
-				settingsData.value.data.settings.webUIUpdateCheckInterval;
+				settingsData.data.settings.webUIUpdateCheckInterval;
 		}
 	});
 
-	let update = subscriptionStore({
+	let update = subscriptionState({
 		client,
 		query: updateStatusChanged
 	});
 
 	function manuallyLibraryRunUpdate() {
-		if (!$update.data?.updateStatusChanged.isRunning) {
+		if (!update.data?.updateStatusChanged.isRunning) {
 			client.mutation(runUpdateLibraryManga, {}).toPromise();
 		}
 		modalStore.trigger({
@@ -229,14 +225,14 @@
 	}
 </script>
 
-{#if settingsData.value.error}
+{#if settingsData.error}
 	<div class="white-space-pre-wrap">
-		{JSON.stringify(settingsData.value.error, null, 4)}
+		{JSON.stringify(settingsData.error, null, 4)}
 	</div>
-{:else if settingsData.value.fetching}
+{:else if settingsData.fetching}
 	Loading...
-{:else if settingsData.value.data}
-	{@const settings = settingsData.value.data.settings}
+{:else if settingsData.data}
+	{@const settings = settingsData.data.settings}
 	<div class="[&>*]:px-4">
 		<!-- remove category from Manga Not In Library -->
 		<button
@@ -437,20 +433,20 @@
 		<!-- manually run global update -->
 		<button
 			class="flex h-16 w-full items-center justify-between text-left
-			{$update.data?.updateStatusChanged.isRunning
+			{update.data?.updateStatusChanged.isRunning
 				? ''
 				: 'cursor-pointer hover:variant-glass-surface'}"
 			onclick={manuallyLibraryRunUpdate}
-			title={!$update.data?.updateStatusChanged.isRunning
+			title={!update.data?.updateStatusChanged.isRunning
 				? 'click to run Global update now'
 				: 'click below to see more info in the currently running update'}
-			disabled={$update.data?.updateStatusChanged.isRunning}
+			disabled={update.data?.updateStatusChanged.isRunning}
 		>
 			Run Global Update now
 			<IconWrapper
 				name="mdi:autorenew"
 				class="aspect-square h-5/6 w-auto
-				{$update.data?.updateStatusChanged.isRunning ? 'animate-spin' : ''}"
+				{update.data?.updateStatusChanged.isRunning ? 'animate-spin' : ''}"
 			/>
 		</button>
 		<!-- Global update info -->
@@ -616,10 +612,10 @@
 		>
 			UpdateWebUI
 			<div class="text-sm opacity-50">
-				{#if $webuiUpdateStatus.data}
-					{$webuiUpdateStatus.data.webUIUpdateStatusChange.state} | {$webuiUpdateStatus
-						.data.webUIUpdateStatusChange.progress}% | {$webuiUpdateStatus.data
-						.webUIUpdateStatusChange.info.channel} | {$webuiUpdateStatus.data
+				{#if webuiUpdateStatus.data}
+					{webuiUpdateStatus.data.webUIUpdateStatusChange.state} | {webuiUpdateStatus
+						.data.webUIUpdateStatusChange.progress}% | {webuiUpdateStatus.data
+						.webUIUpdateStatusChange.info.channel} | {webuiUpdateStatus.data
 						.webUIUpdateStatusChange.info.tag}
 				{/if}
 			</div>

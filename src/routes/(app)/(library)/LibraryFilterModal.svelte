@@ -66,7 +66,6 @@
 		query: getSources,
 		variables: { isNsfw: gmState.value.nsfw ? null : false }
 	});
-	$inspect(sources);
 </script>
 
 {#if $modalStore[0]}
@@ -220,8 +219,8 @@
 													Source filter
 												{/snippet}
 												{#snippet content()}
-													{#if sources.value?.data?.sources?.nodes}
-														{#each sources.value.data.sources.nodes as source (source.id)}
+													{#if sources.data?.sources?.nodes}
+														{#each sources.data.sources.nodes as source (source.id)}
 															<Switch
 																title="shift click to toggle per or default"
 																checked={SourceFilter.value.includes(source.id)}
@@ -280,13 +279,13 @@
 											display="flex-col"
 											active="variant-glass-primary"
 										>
-											{#each enumEntries(sort) as [value, name]}
+											{#each enumEntries(sort) as [key, display]}
 												<RadioItem
 													title="shift click to toggle per or default"
 													bind:group={Sort.value}
 													class="focus:outline-0"
 													name="justify"
-													{value}
+													value={key}
 													onclick={(e: MouseEvent) => {
 														if (e.shiftKey) {
 															e.preventDefault();
@@ -295,7 +294,7 @@
 														}
 													}}
 												>
-													{name}
+													{display}
 												</RadioItem>
 											{/each}
 										</RadioGroup>
@@ -354,7 +353,7 @@
 											display="flex-col"
 											active="variant-glass-primary"
 										>
-											{#each enumEntries(display) as [value, name]}
+											{#each enumEntries(display) as [value, _]}
 												<RadioItem
 													title="shift click to toggle per or default"
 													bind:group={Display.value}
@@ -369,7 +368,7 @@
 														}
 													}}
 												>
-													{name}
+													{value}
 												</RadioItem>
 											{/each}
 										</RadioGroup>
@@ -484,8 +483,8 @@
 													Source filter
 												{/snippet}
 												{#snippet content()}
-													{#if sources.value?.data?.sources?.nodes}
-														{#each sources.value.data.sources.nodes as source (source.id)}
+													{#if sources.data?.sources?.nodes}
+														{#each sources.data.sources.nodes as source (source.id)}
 															<Switch
 																title="shift click to toggle per or default"
 																checked={gmState.value.SourceFilter.includes(
@@ -544,13 +543,13 @@
 											display="flex-col"
 											active="variant-glass-primary"
 										>
-											{#each enumEntries(sort) as [value, name]}
+											{#each enumEntries(sort) as [key, display]}
 												<RadioItem
 													bind:group={gmState.value.Sort}
 													class="focus:outline-0
 													{!SortUseDefault.value && 'opacity-20'}"
 													name="justify"
-													{value}
+													value={key}
 													onclick={(e: MouseEvent) => {
 														if (e.shiftKey) {
 															e.preventDefault();
@@ -559,7 +558,7 @@
 														}
 													}}
 												>
-													{name}
+													{display}
 												</RadioItem>
 											{/each}
 										</RadioGroup>
@@ -612,13 +611,13 @@
 											display="flex-col"
 											active="variant-glass-primary"
 										>
-											{#each enumEntries(display) as [value, name]}
+											{#each enumEntries(display) as [key, _]}
 												<RadioItem
 													bind:group={gmState.value.Display}
 													class="focus:outline-0
 													{!DisplayUseDefault.value && 'opacity-20'}"
 													name="justify"
-													{value}
+													value={key}
 													onclick={(e: MouseEvent) => {
 														if (e.shiftKey) {
 															e.preventDefault();
@@ -627,7 +626,7 @@
 														}
 													}}
 												>
-													{name}
+													{key}
 												</RadioItem>
 											{/each}
 										</RadioGroup>
