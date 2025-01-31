@@ -22,6 +22,8 @@
 	const drawerStore = getDrawerStore();
 	$effect(() => {
 		readerState.MangaID = data.MangaID;
+	});
+	$effect(() => {
 		readerState.ChapterID = data.ChapterID;
 	});
 	const draw = makeToggleDrawer(drawerStore);
