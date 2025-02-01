@@ -14,6 +14,7 @@
 		deleteDownloadedChapters,
 		enqueueChapterDownloads,
 		fetchChaptersMigration,
+		setMangaMeta,
 		unbindTrack,
 		updateChapters,
 		updateMangas,
@@ -30,6 +31,7 @@
 	import type { SvelteComponent } from 'svelte';
 	import { ErrorHelp } from '$lib/util.svelte';
 	import ModalTemplate from '$lib/components/ModalTemplate.svelte';
+	import { mmState } from '$lib/simpleStores.svelte';
 
 	const modalStore = getModalStore();
 	interface Props {
@@ -44,6 +46,7 @@
 	let doChapters = $state(true);
 	let doCategories = $state(true);
 	let doTracking = $state(true);
+	let doNotes = $state(true);
 	let deleteDownloaded = $state(manga.downloadCount > 0 ? true : false);
 	let DownloadNew = $state(true);
 
@@ -85,6 +88,7 @@
 		if (doCategories) ToDo.push(CopyMangaCategories());
 		if (doTracking) ToDo.push(CopyMangaTracking());
 		if (deleteDownloaded) ToDo.push(deleteDownloadedMangas());
+		if (mmState.value.notes && doNotes) ToDo.push(CopyMangaNotes());
 
 		if (!doChapters && !DownloadNew) {
 			await Promise.all(ToDo);
@@ -160,6 +164,18 @@
 			.toPromise();
 	}
 
+	async function CopyMangaNotes() {
+		const oldNotes = mmState.value.notes;
+		if (!oldNotes) return;
+		await client
+			.mutation(setMangaMeta, {
+				id: id,
+				value: JSON.stringify(oldNotes),
+				key: 'VUI3_notes'
+			})
+			.toPromise();
+	}
+
 	async function CopyMangaCategories() {
 		const categories = manga.categories.nodes.map((ele) => ele.id);
 		await client
@@ -225,11 +241,19 @@
 			>
 				Categories
 			</Slide>
+			{#if mmState.value.notes}
+				<Slide
+					class="p-1 pl-2 outline-0 hover:variant-glass-surface"
+					bind:checked={doTracking}
+				>
+					Tracking
+				</Slide>
+			{/if}
 			<Slide
 				class="p-1 pl-2 outline-0 hover:variant-glass-surface"
-				bind:checked={doTracking}
+				bind:checked={doNotes}
 			>
-				Tracking
+				Notes
 			</Slide>
 			{#if manga.downloadCount > 0}
 				<Slide
