@@ -15,6 +15,7 @@
 	import { getContextClient } from '@urql/svelte';
 	import { getManga } from '$lib/gql/Queries';
 	import { queryState } from '$lib/util.svelte';
+	import { mmState } from '$lib/simpleStores.svelte';
 
 	interface Props {
 		data: PageData;
@@ -23,6 +24,8 @@
 	let { data }: Props = $props();
 
 	const modalStore = getModalStore();
+
+	mmState.id = data.MangaID;
 
 	const query = queryParam('q', ssp.string(), { pushHistory: false });
 	const client = getContextClient();

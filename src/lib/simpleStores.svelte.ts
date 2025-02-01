@@ -360,14 +360,12 @@ class GMState {
 export const gmState = new GMState();
 
 class MMState {
-	private _id: number = -1;
-	private store = $state<typeof mangaMetaDefaults>(
-		gmState.value.mangaMetaDefaults
-	);
-	private unSub = () => {};
-	private MMeta: OperationResultStore<ResultOf<typeof getManga>> | null = null;
-	private isRunningMutations = false;
-	private mutations: Map<
+	#id: number = -1;
+	#store = $state<typeof mangaMetaDefaults>(gmState.value.mangaMetaDefaults);
+	#unSub = () => {};
+	#MMeta: OperationResultStore<ResultOf<typeof getManga>> | null = null;
+	#isRunningMutations = false;
+	#mutations: Map<
 		string,
 		OperationResultSource<
 			| OperationResult<
@@ -380,21 +378,22 @@ class MMState {
 			  >
 		>
 	> = new Map();
+	#cleanup = () => {};
 
 	constructor() {
-		$effect.root(() => {
+		this.#cleanup = $effect.root(() => {
 			$effect(() => {
 				for (const key of getObjectKeys(
 					untrack(() => {
 						return $state.snapshot(gmState.value.mangaMetaDefaults);
 					})
 				)) {
-					const serializedValue = JSON.stringify(this.store[key]);
+					const serializedValue = JSON.stringify(this.#store[key]);
 					const metaKey = metaKeyBase + key;
 					const storedValue = untrack(() => {
-						if (!this.MMeta) return;
-						this.traverse(this.store, gmState.value.mangaMetaDefaults);
-						return get(this.MMeta).data?.manga?.meta.find(
+						if (!this.#MMeta) return;
+						this.traverse(this.#store, gmState.value.mangaMetaDefaults);
+						return get(this.#MMeta).data?.manga?.meta.find(
 							(e) => e.key === metaKey
 						)?.value;
 					});
@@ -402,22 +401,22 @@ class MMState {
 						const mutationVariables = {
 							key: metaKey,
 							value: serializedValue,
-							id: this._id
+							id: this.#id
 						};
 						untrack(() => {
 							if (
 								serializedValue !==
 								JSON.stringify(gmState.value.mangaMetaDefaults[key])
 							) {
-								this.mutations.set(
-									key + this.id,
+								this.#mutations.set(
+									key + this.#id,
 									client.mutation(setMangaMeta, mutationVariables)
 								);
 								return;
 							}
 							if (storedValue !== undefined) {
-								this.mutations.set(
-									key + this.id,
+								this.#mutations.set(
+									key + this.#id,
 									client.mutation(deleteMangaMeta, mutationVariables)
 								);
 								return;
@@ -456,49 +455,49 @@ class MMState {
 	}
 
 	get value() {
-		return this.store;
+		return this.#store;
 	}
 
 	set value(val: typeof mangaMetaDefaults) {
-		if (this.store === val) return;
-		this.store = val;
+		if (this.#store === val) return;
+		this.#store = val;
 	}
 
 	set id(val: number) {
-		if (this._id === val) return;
-		this._id = val;
-		this.unSub();
-		this.MMeta = queryStore({
+		if (this.#id === val) return;
+		this.#id = val;
+		this.#unSub();
+		this.#MMeta = queryStore({
 			client,
 			query: getManga,
 			variables: { id: val }
 		});
-		this.unSub = this.MMeta.subscribe((queryResult) => {
-			this.store = this.extractMangaMeta(queryResult);
+		this.#unSub = this.#MMeta.subscribe((queryResult) => {
+			this.#store = this.extractMangaMeta(queryResult);
 			if (queryResult.fetching) return;
-			this.unSub();
+			this.#unSub();
 		});
 	}
 
 	private async runPendingMutations() {
-		if (this.isRunningMutations) return;
-		this.isRunningMutations = true;
+		if (this.#isRunningMutations) return;
+		this.#isRunningMutations = true;
 		let prom: Promise<unknown> | undefined = undefined;
-		while (this.mutations.size > 0) {
-			const key = Array.from(this.mutations.keys())[0];
-			const mutation = this.mutations.get(key);
-			this.mutations.delete(key);
+		while (this.#mutations.size > 0) {
+			const key = Array.from(this.#mutations.keys())[0];
+			const mutation = this.#mutations.get(key);
+			this.#mutations.delete(key);
 			prom = mutation?.toPromise();
 			await prom;
 		}
 		await prom;
-		this.isRunningMutations = false;
+		this.#isRunningMutations = false;
 	}
 
 	private extractMangaMeta(
 		queryResult: OperationResultState<ResultOf<typeof getManga>>
 	): typeof mangaMetaDefaults {
-		const clonedStore = $state.snapshot(this.store);
+		const clonedStore = $state.snapshot(this.#store);
 		const metas = queryResult.data?.manga.meta || [];
 		const Defaults = $state.snapshot(gmState.value.mangaMetaDefaults);
 		getObjectKeys(Defaults).forEach(
@@ -516,6 +515,10 @@ class MMState {
 			}
 		);
 		return clonedStore;
+	}
+
+	get cleanup() {
+		return this.#cleanup;
 	}
 }
 
