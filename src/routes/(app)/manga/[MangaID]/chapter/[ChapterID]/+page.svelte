@@ -51,9 +51,6 @@
 	let pageElement = undefined as HTMLDivElement | undefined;
 	let updatedChaps = new Set<string>();
 
-	mmState.id = data.MangaID;
-	get_manga.id = data.MangaID;
-
 	const drawerStore = getDrawerStore();
 	const Toggledraw = makeToggleDrawer(drawerStore);
 	const toastStore = getToastStore();
@@ -457,6 +454,15 @@
 		return () => {
 			document.removeEventListener('keydown', handelKeypress, true);
 		};
+	});
+
+	// clear displayed chapters on destroy
+	onMount(() => () => readerState.displayedChapters.clear());
+
+	// load manga and state of mangaID, and clear displayed chapters on MangaID url change
+	$effect(() => {
+		mmState.id = data.MangaID;
+		get_manga.id = data.MangaID;
 	});
 
 	// load chapter on chapterID in url change
