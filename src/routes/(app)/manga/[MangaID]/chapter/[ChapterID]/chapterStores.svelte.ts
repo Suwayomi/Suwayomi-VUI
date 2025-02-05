@@ -42,13 +42,15 @@ export function makeToggleDrawer(
 
 class GetManga {
 	#manga: OperationResultF<ResultOf<typeof getManga>> | undefined = $state();
+	#last_id = -1;
 	private unSub = () => {};
-	constructor(id: number) {
-		this.setid(id);
+	constructor(idd: number) {
+		this.id = idd;
 	}
-	private setid(id: number) {
+	set id(id: number) {
 		if (id === -1) return;
-		if (id === this.#manga?.data?.manga.id) return;
+		if (id === this.#last_id) return;
+		this.#last_id = id;
 		this.unSub();
 		const tmp = queryStore({
 			client,
@@ -58,9 +60,6 @@ class GetManga {
 		this.unSub = tmp.subscribe((res) => {
 			this.#manga = res;
 		});
-	}
-	set id(id: number) {
-		this.setid(id);
 	}
 	get manga() {
 		return this.#manga;
