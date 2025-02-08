@@ -37,7 +37,6 @@
 	import { SvelteSet } from 'svelte/reactivity';
 	import { InitScrollTo } from '$lib/actions/InitScrollTo.svelte';
 	import { page } from '$app/state';
-	import VList from '$lib/components/VList.svelte';
 
 	interface Props {
 		MangaID: number;
@@ -215,9 +214,9 @@
 		}}
 		bind:this={chapterSideElement}
 		id="chapterSideElement"
-		class="max-h-full w-full overflow-hidden md:absolute md:bottom-0 md:right-0 md:top-0 md:w-1/2"
+		class="max-h-full w-full md:absolute md:bottom-0 md:right-0 md:top-0 md:w-1/2 md:overflow-y-auto"
 	>
-		<div class=" top-0 z-10 h-10 xs:h-14">
+		<div class="sticky top-0 z-10 h-10 xs:h-14">
 			<div class="card variant-glass flex h-full items-center space-x-1 p-0">
 				<div class="flex w-full items-center">
 					<span class="line-clamp-1 pl-2 text-2xl font-medium md:text-3xl">
@@ -342,10 +341,20 @@
 		</div>
 		<MediaQuery query="(min-width: {screens.md})">
 			{#snippet children({ matches })}
-				<VList itemCount={sortedChapters.length} itemSize={80}>
-					{#snippet item({ index, style })}
-						{@const chapter = sortedChapters[index]}
-						<div id="c-{chapter.id}" {style}>
+				{#each sortedChapters as chapter (chapter.id + ' ' + MangaID)}
+					<div
+						use:IntersectionObserverAction={{
+							rootMargin: '400px 0px 400px 0px',
+							root:
+								(matches
+									? chapterSideElement
+									: document.querySelector('#page')) ?? undefined,
+							callback: MakeSimpleCallback(intersecting, chapter.id)
+						}}
+						id="c-{chapter.id}"
+						class="h-20"
+					>
+						{#if intersecting.has(chapter.id)}
 							<a
 								in:fade
 								class="card variant-glass flex h-full items-center space-x-1 p-2"
@@ -509,9 +518,9 @@
 								</div>
 								<div class="bg-surface-100-800-token arrow"></div>
 							</div>
-						</div>
-					{/snippet}
-				</VList>
+						{/if}
+					</div>
+				{/each}
 			{/snippet}
 		</MediaQuery>
 	</div>
