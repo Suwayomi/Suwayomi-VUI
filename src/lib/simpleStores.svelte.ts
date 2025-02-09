@@ -188,7 +188,7 @@ function convertOldTriState(value: unknown): TriState {
 }
 
 class GMState {
-	private store = localStore<typeof trueDefaults>('GlobalMeta', trueDefaults);
+	private store = localStore('GlobalMeta', trueDefaults);
 	private runningMutations = false;
 	private mutations: Map<
 		string,
@@ -212,9 +212,9 @@ class GMState {
 			});
 
 			this.unSub = Meta.subscribe((queryResult) => {
+				if (queryResult.fetching) return;
 				this.store.value = this.extractGlobalMeta(queryResult);
 				this.fixOldTriStates();
-				if (queryResult.fetching) return;
 				this.traverse(this.store.value, trueDefaults);
 				this.unSub();
 			});
@@ -473,8 +473,8 @@ class MMState {
 			variables: { id: val }
 		});
 		this.#unSub = this.#MMeta.subscribe((queryResult) => {
-			this.#store = this.extractMangaMeta(queryResult);
 			if (queryResult.fetching) return;
+			this.#store = this.extractMangaMeta(queryResult);
 			this.#unSub();
 		});
 	}
