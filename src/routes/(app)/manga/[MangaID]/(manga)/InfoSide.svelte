@@ -254,7 +254,9 @@
 					</a>
 					{#if mangaFrag.inLibrary}
 						<a
-							href="/browse/migrate/manga/{mangaFrag.id}?q={mangaFrag.title}"
+							href="/browse/migrate/manga/{mangaFrag.id}?q={encodeURIComponent(
+								mangaFrag.title
+							)}"
 							class="variant-soft btn flex h-12 items-center px-2 sm:px-5"
 						>
 							<IconWrapper
