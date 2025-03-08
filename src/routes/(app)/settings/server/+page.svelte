@@ -549,6 +549,7 @@
 			title="Socks Proxy Password"
 			bind:value={socksProxyPassword}
 			onchange={() => setSettings({ socksProxyPassword })}
+			type="password"
 		/>
 		<!-- socksProxyUsername -->
 		<Text

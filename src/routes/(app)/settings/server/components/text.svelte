@@ -31,7 +31,7 @@
 				{onchange}
 				class="input max-w-32 sm:max-w-[36.5rem]"
 				bind:value
-				title="basicAuthPassword"
+				{title}
 				type="password"
 			/>
 		{:else}
@@ -39,7 +39,7 @@
 				{onchange}
 				class="input max-w-32 sm:max-w-[36.5rem]"
 				bind:value
-				title="basicAuthPassword"
+				{title}
 				type="text"
 			/>
 		{/if}
