@@ -31,6 +31,7 @@
 	import ThreeStateSwitchCustom from '$lib/components/ThreeStateSwitchCustom.svelte';
 	import { getSources } from '$lib/gql/Queries';
 	import { getContextClient } from '@urql/svelte';
+	import { longPress } from '$lib/press';
 	const modalStore = getModalStore();
 	let tabSetArch = localStorageStore('libraryModalTabsArch', 0);
 	let tabSet = localStorageStore('libraryModalTabs', 0);
@@ -66,6 +67,8 @@
 		query: getSources,
 		variables: { isNsfw: gmState.value.nsfw ? null : false }
 	});
+	let LongTapped = $state(false);
+	$inspect(LongTapped);
 </script>
 
 {#if $modalStore[0]}
@@ -160,12 +163,17 @@
 							</Tab>
 							<!-- Tab Panels --->
 							<svelte:fragment slot="panel">
-								<div class="mx-4 mb-4">
+								<div
+									class="mx-4 mb-4"
+									use:longPress
+									onlongPress={() => (LongTapped = true)}
+								>
 									{#if $tabSet === 0}
 										<ThreeStateSwitchCustom
-											title="shift click to toggle per or default"
+											title="long press to toggle per or default"
 											onclick={(e: MouseEvent) => {
-												if (e.shiftKey) {
+												if (LongTapped) {
+													LongTapped = false;
 													e.preventDefault();
 													e.stopPropagation();
 													UnreadUseDefault.value = !UnreadUseDefault.value;
@@ -180,9 +188,10 @@
 											<span>Unread</span>
 										</ThreeStateSwitchCustom>
 										<ThreeStateSwitchCustom
-											title="shift click to toggle per or default"
+											title="long press to toggle per or default"
 											onclick={(e: MouseEvent) => {
-												if (e.shiftKey) {
+												if (LongTapped) {
+													LongTapped = false;
 													e.preventDefault();
 													e.stopPropagation();
 													DownloadedUseDefault.value = !DownloadedUseDefault.value;
@@ -197,9 +206,10 @@
 											<span>Downloaded</span>
 										</ThreeStateSwitchCustom>
 										<ThreeStateSwitchCustom
-											title="shift click to toggle per or default"
+											title="long press to toggle per or default"
 											onclick={(e: MouseEvent) => {
-												if (e.shiftKey) {
+												if (LongTapped) {
+													LongTapped = false;
 													e.preventDefault();
 													e.stopPropagation();
 													TrackedUseDefault.value = !TrackedUseDefault.value;
@@ -222,10 +232,11 @@
 													{#if sources.data?.sources?.nodes}
 														{#each sources.data.sources.nodes as source (source.id)}
 															<Switch
-																title="shift click to toggle per or default"
+																title="long press to toggle per or default"
 																checked={SourceFilter.value.includes(source.id)}
 																onclick={(e: MouseEvent) => {
-																	if (e.shiftKey) {
+																	if (LongTapped) {
+																		LongTapped = false;
 																		e.preventDefault();
 																		e.stopPropagation();
 																		SourceFilterUseDefault.value = !SourceFilterUseDefault.value;
@@ -253,14 +264,15 @@
 										</Accordion>
 									{:else if $tabSet === 1}
 										<Switch
-											title="shift click to toggle per or default"
+											title="long press to toggle per or default"
 											triState={false}
 											bind:checked={Ascending.value}
 											label={'Ascending'}
 											class="w-full p-1 pl-2 hover:variant-glass-surface focus:outline-0
 											{AscendingUseDefault.value && 'opacity-20'}"
 											onclick={(e: MouseEvent) => {
-												if (e.shiftKey) {
+												if (LongTapped) {
+													LongTapped = false;
 													e.preventDefault();
 													e.stopPropagation();
 													AscendingUseDefault.value = !AscendingUseDefault.value;
@@ -281,13 +293,14 @@
 										>
 											{#each enumEntries(sort) as [key, display]}
 												<RadioItem
-													title="shift click to toggle per or default"
+													title="long press to toggle per or default"
 													bind:group={Sort.value}
 													class="focus:outline-0"
 													name="justify"
 													value={key}
 													onclick={(e: MouseEvent) => {
-														if (e.shiftKey) {
+														if (LongTapped) {
+															LongTapped = false;
 															e.preventDefault();
 															e.stopPropagation();
 															SortUseDefault.value = !SortUseDefault.value;
@@ -300,12 +313,13 @@
 										</RadioGroup>
 									{:else if $tabSet === 2}
 										<Switch
-											title="shift click to toggle per or default"
+											title="long press to toggle per or default"
 											bind:checked={TotalCounts.value}
 											class="w-full p-1 pl-2 outline-0 hover:variant-glass-surface
 											{TotalCountsUseDefault.value && 'opacity-20'}"
 											onclick={(e: MouseEvent) => {
-												if (e.shiftKey) {
+												if (LongTapped) {
+													LongTapped = false;
 													e.preventDefault();
 													e.stopPropagation();
 													TotalCountsUseDefault.value = !TotalCountsUseDefault.value;
@@ -315,12 +329,13 @@
 											Category Total Counts
 										</Switch>
 										<Switch
-											title="shift click to toggle per or default"
+											title="long press to toggle per or default"
 											bind:checked={DownloadsBadge.value}
 											class="w-full p-1 pl-2 outline-0 hover:variant-glass-surface
 											{DownloadsBadgeUseDefault.value && 'opacity-20'}"
 											onclick={(e: MouseEvent) => {
-												if (e.shiftKey) {
+												if (LongTapped) {
+													LongTapped = false;
 													e.preventDefault();
 													e.stopPropagation();
 													DownloadsBadgeUseDefault.value = !DownloadsBadgeUseDefault.value;
@@ -330,12 +345,13 @@
 											Downloads Badge
 										</Switch>
 										<Switch
-											title="shift click to toggle per or default"
+											title="long press to toggle per or default"
 											bind:checked={UnreadBadge.value}
 											class="w-full p-1 pl-2 outline-0 hover:variant-glass-surface
 											{UnreadBadgeUseDefault.value && 'opacity-20'}"
 											onclick={(e: MouseEvent) => {
-												if (e.shiftKey) {
+												if (LongTapped) {
+													LongTapped = false;
 													e.preventDefault();
 													e.stopPropagation();
 													UnreadBadgeUseDefault.value = !UnreadBadgeUseDefault.value;
@@ -355,13 +371,14 @@
 										>
 											{#each enumEntries(display) as [value, _]}
 												<RadioItem
-													title="shift click to toggle per or default"
+													title="long press to toggle per or default"
 													bind:group={Display.value}
 													class="focus:outline-0"
 													name="justify"
 													{value}
 													onclick={(e: MouseEvent) => {
-														if (e.shiftKey) {
+														if (LongTapped) {
+															LongTapped = false;
 															e.preventDefault();
 															e.stopPropagation();
 															DisplayUseDefault.value = !DisplayUseDefault.value;
@@ -427,11 +444,16 @@
 							</Tab>
 							<!-- Tab Panels --->
 							<svelte:fragment slot="panel">
-								<div class="mx-4 mb-4">
+								<div
+									class="mx-4 mb-4"
+									use:longPress
+									onlongPress={() => (LongTapped = true)}
+								>
 									{#if $tabSet === 0}
 										<ThreeStateSwitchCustom
 											onclick={(e: MouseEvent) => {
-												if (e.shiftKey) {
+												if (LongTapped) {
+													LongTapped = false;
 													e.preventDefault();
 													e.stopPropagation();
 													UnreadUseDefault.value = !UnreadUseDefault.value;
@@ -447,7 +469,8 @@
 										</ThreeStateSwitchCustom>
 										<ThreeStateSwitchCustom
 											onclick={(e: MouseEvent) => {
-												if (e.shiftKey) {
+												if (LongTapped) {
+												LongTapped = false;
 													e.preventDefault();
 													e.stopPropagation();
 													DownloadedUseDefault.value = !DownloadedUseDefault.value;
@@ -463,7 +486,8 @@
 										</ThreeStateSwitchCustom>
 										<ThreeStateSwitchCustom
 											onclick={(e: MouseEvent) => {
-												if (e.shiftKey) {
+												if (LongTapped) {
+													LongTapped = false;
 													e.preventDefault();
 													e.stopPropagation();
 													TrackedUseDefault.value = !TrackedUseDefault.value;
@@ -486,12 +510,13 @@
 													{#if sources.data?.sources?.nodes}
 														{#each sources.data.sources.nodes as source (source.id)}
 															<Switch
-																title="shift click to toggle per or default"
+																title="long press to toggle per or default"
 																checked={gmState.value.SourceFilter.includes(
 																	source.id
 																)}
 																onclick={(e: MouseEvent) => {
-																	if (e.shiftKey) {
+																	if (LongTapped) {
+																		LongTapped = false;
 																		e.preventDefault();
 																		e.stopPropagation();
 																		SourceFilterUseDefault.value = !SourceFilterUseDefault.value;
@@ -526,7 +551,8 @@
 											{!AscendingUseDefault.value && 'opacity-20'}"
 											labelClass="w-full"
 											onclick={(e: MouseEvent) => {
-												if (e.shiftKey) {
+												if (LongTapped) {
+													LongTapped = false;
 													e.preventDefault();
 													e.stopPropagation();
 													AscendingUseDefault.value = !AscendingUseDefault.value;
@@ -551,7 +577,8 @@
 													name="justify"
 													value={key}
 													onclick={(e: MouseEvent) => {
-														if (e.shiftKey) {
+														if (LongTapped) {
+															LongTapped = false;
 															e.preventDefault();
 															e.stopPropagation();
 															SortUseDefault.value = !SortUseDefault.value;
@@ -568,7 +595,8 @@
 											class="w-full p-1 pl-2 outline-0 hover:variant-glass-surface
 											{!TotalCountsUseDefault.value && 'opacity-20'}"
 											onclick={(e: MouseEvent) => {
-												if (e.shiftKey) {
+												if (LongTapped) {
+													LongTapped = false;
 													e.preventDefault();
 													e.stopPropagation();
 													TotalCountsUseDefault.value = !TotalCountsUseDefault.value;
@@ -582,7 +610,8 @@
 											class="w-full p-1 pl-2 outline-0 hover:variant-glass-surface
 											{!DownloadsBadgeUseDefault.value && 'opacity-20'}"
 											onclick={(e: MouseEvent) => {
-												if (e.shiftKey) {
+												if (LongTapped) {
+													LongTapped = false;
 													e.preventDefault();
 													e.stopPropagation();
 													DownloadsBadgeUseDefault.value = !DownloadsBadgeUseDefault.value;
@@ -595,7 +624,8 @@
 											class="w-full p-1 pl-2 outline-0 hover:variant-glass-surface
 											{!UnreadBadgeUseDefault.value && 'opacity-20'}"
 											onclick={(e: MouseEvent) => {
-												if (e.shiftKey) {
+												if (LongTapped) {
+													LongTapped = false;
 													e.preventDefault();
 													e.stopPropagation();
 													UnreadBadgeUseDefault.value = !UnreadBadgeUseDefault.value;
@@ -619,7 +649,8 @@
 													name="justify"
 													value={key}
 													onclick={(e: MouseEvent) => {
-														if (e.shiftKey) {
+														if (LongTapped) {
+															LongTapped = false;
 															e.preventDefault();
 															e.stopPropagation();
 															DisplayUseDefault.value = !DisplayUseDefault.value;
