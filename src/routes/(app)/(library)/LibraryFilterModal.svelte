@@ -73,8 +73,6 @@
 
 {#if $modalStore[0]}
 	<div class="card w-modal max-h-svh overflow-auto rounded-lg p-0 shadow-xl">
-		<!-- svelte-ignore a11y_no_static_element_interactions -->
-		<!-- svelte-ignore a11y_click_events_have_key_events -->
 		<TabGroup
 			justify="justify-center"
 			flex="flex"
