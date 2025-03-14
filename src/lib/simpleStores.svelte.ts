@@ -579,16 +579,19 @@ class categoryMetaStoreSingle<T> {
 			});
 
 			$effect(() => {
-				if (this.serialize(this.value) === this.serialize(item.value)) return;
-				writeOver = false;
-				item.value = $state.snapshot(this.value) as T;
-				client
-					.mutation(setCategoryMeta, {
-						id,
-						key,
-						value: this.serialize(this.value)
-					})
-					.toPromise();
+				const _ = this.value;
+				untrack(() => {
+					if (this.serialize(this.value) === this.serialize(item.value)) return;
+					writeOver = false;
+					item.value = $state.snapshot(this.value) as T;
+					client
+						.mutation(setCategoryMeta, {
+							id,
+							key,
+							value: this.serialize(this.value)
+						})
+						.toPromise();
+				});
 			});
 
 			return;
