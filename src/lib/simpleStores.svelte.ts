@@ -539,61 +539,60 @@ class categoryMetaStoreSingle<T> {
 	}
 
 	public setId(id: number) {
-		if (this.id !== id) {
-			this.cleanup();
+		if (this.id === id) return;
+		this.cleanup();
+		this.cleanup = $effect.root(() => {
 			this.id = id;
 			const key = `VUI3_${this.id}_${this.key}`;
-			if (browser) {
-				const item = localStore(key, this.value, this.serializer);
-				this.value = $state.snapshot(item.value) as T;
-				let writeOver = true;
-				const data = queryStore({
-					client,
-					query: getCategory,
-					variables: { id }
-				});
-				let unSubscribe = () => {};
-				new Promise((resolve) => {
-					unSubscribe = data.subscribe((e) => {
-						if (e.data?.category) {
-							const val = e.data.category.meta.find(
-								(meta) => meta.key === key
-							)?.value;
+			if (!browser) return;
+			const item = localStore(key, this.value, this.serializer);
+			this.value = $state.snapshot(item.value) as T;
+			let writeOver = true;
+			const data = queryStore({
+				client,
+				query: getCategory,
+				variables: { id }
+			});
+			let unSubscribe = () => {};
+			new Promise((resolve) => {
+				unSubscribe = data.subscribe((e) => {
+					if (!e.data?.category) return;
+					const val = e.data.category.meta.find(
+						(meta) => meta.key === key
+					)?.value;
 
-							if (
-								val &&
-								writeOver &&
-								val !== this.serialize(this.value) &&
-								id === this.id
-							) {
-								this.value = this.deserialize(val);
-							}
-							resolve(true);
-						}
-					});
-					setTimeout(() => {
-						resolve(true);
-					}, 10000);
-				}).then(() => {
-					unSubscribe();
+					if (
+						val &&
+						writeOver &&
+						val !== this.serialize(this.value) &&
+						id === this.id
+					) {
+						this.value = this.deserialize(val);
+					}
+					resolve(true);
 				});
-				this.cleanup = $effect.root(() => {
-					$effect(() => {
-						if (this.serialize(this.value) !== this.serialize(item.value)) {
-							writeOver = false;
-							item.value = $state.snapshot(this.value) as T;
-							client
-								.mutation(setCategoryMeta, {
-									id,
-									key,
-									value: this.serialize(this.value)
-								})
-								.toPromise();
-						}
-					});
-				});
-			}
-		}
+				setTimeout(() => {
+					resolve(true);
+				}, 10000);
+			}).then(() => {
+				unSubscribe();
+			});
+
+			$effect(() => {
+				if (this.serialize(this.value) === this.serialize(item.value)) return;
+				writeOver = false;
+				item.value = $state.snapshot(this.value) as T;
+				client
+					.mutation(setCategoryMeta, {
+						id,
+						key,
+						value: this.serialize(this.value)
+					})
+					.toPromise();
+			});
+
+			return;
+		});
 	}
 
 	private serialize(value: T): string {
