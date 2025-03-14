@@ -68,7 +68,6 @@
 		variables: { isNsfw: gmState.value.nsfw ? null : false }
 	});
 	let LongTapped = $state(false);
-	$inspect(LongTapped);
 </script>
 
 {#if $modalStore[0]}
