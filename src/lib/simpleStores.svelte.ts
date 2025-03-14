@@ -529,72 +529,75 @@ class categoryMetaStoreSingle<T> {
 	value = $state<T>() as T;
 	private id = -1;
 	private serializer: json<T> = JSON;
-	private cleanup = () => {};
+	private writeOver = false;
+	private item!: LocalStore<T>;
 
 	constructor(key: string, value: T, serializer: json<T> = JSON) {
 		this.key = key;
 		this.value = value;
 		this.serializer = serializer;
 		this.setId(0);
-	}
-
-	public setId(id: number) {
-		if (this.id === id) return;
-		this.cleanup();
-		this.cleanup = $effect.root(() => {
-			this.id = id;
-			const key = `VUI3_${this.id}_${this.key}`;
-			if (!browser) return;
-			const item = localStore(key, this.value, this.serializer);
-			this.value = $state.snapshot(item.value) as T;
-			let writeOver = true;
-			const data = queryStore({
-				client,
-				query: getCategory,
-				variables: { id }
-			});
-			let unSubscribe = () => {};
-			new Promise((resolve) => {
-				unSubscribe = data.subscribe((e) => {
-					if (!e.data?.category) return;
-					const val = e.data.category.meta.find(
-						(meta) => meta.key === key
-					)?.value;
-
-					if (
-						val &&
-						writeOver &&
-						val !== this.serialize(this.value) &&
-						id === this.id
-					) {
-						this.value = this.deserialize(val);
-					}
-					resolve(true);
-				});
-				setTimeout(() => {
-					resolve(true);
-				}, 10000);
-			}).then(() => {
-				unSubscribe();
-			});
-
+		$effect.root(() => {
 			$effect(() => {
 				const _ = this.value;
 				untrack(() => {
-					if (this.serialize(this.value) === this.serialize(item.value)) return;
-					writeOver = false;
-					item.value = $state.snapshot(this.value) as T;
+					if (this.serialize(this.value) === this.serialize(this.item.value))
+						return;
+					this.writeOver = false;
+					this.item.value = $state.snapshot(this.value) as T;
 					client
 						.mutation(setCategoryMeta, {
-							id,
-							key,
+							id: this.id,
+							key: this.StoreKey(),
 							value: this.serialize(this.value)
 						})
 						.toPromise();
 				});
 			});
-
 			return;
+		});
+	}
+
+	private StoreKey() {
+		return `VUI3_${this.id}_${this.key}`;
+	}
+
+	public setId(id: number) {
+		if (this.id === id) return;
+		this.id = id;
+		if (!browser) return;
+		const key = this.StoreKey();
+		this.item = localStore(key, this.value, this.serializer);
+		this.value = $state.snapshot(this.item.value) as T;
+		this.writeOver = true;
+		const data = queryStore({
+			client,
+			query: getCategory,
+			variables: { id }
+		});
+		let unSubscribe = () => {};
+		new Promise((resolve) => {
+			unSubscribe = data.subscribe((e) => {
+				if (!e.data?.category) return;
+				const val = e.data.category.meta.find(
+					(meta) => meta.key === key
+				)?.value;
+
+				if (
+					val &&
+					this.writeOver &&
+					val !== this.serialize(this.value) &&
+					id === this.id
+				) {
+					this.value = this.deserialize(val);
+				}
+				resolve(true);
+			});
+			setTimeout(() => {
+				resolve(true);
+			}, 10000);
+		}).then(() => {
+			unSubscribe();
 		});
 	}
 
