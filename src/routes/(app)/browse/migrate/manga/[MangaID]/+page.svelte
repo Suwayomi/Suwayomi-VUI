@@ -15,6 +15,7 @@
 	import { getManga } from '$lib/gql/Queries';
 	import { queryState } from '$lib/util.svelte';
 	import { mmState } from '$lib/simpleStores.svelte';
+	import { untrack } from 'svelte';
 
 	interface Props {
 		data: PageData;
@@ -45,8 +46,16 @@
 			}
 		});
 	}
+
+	function getTitle() {
+		return untrack(() => {
+			if (manga.data?.manga?.title) {
+				return manga.data.manga.title;
+			}
+		});
+	}
 </script>
 
 {#if manga.data?.manga?.title}
-	<GlobalSearch title={manga.data.manga.title} {OpenModal} />
+	<GlobalSearch title={getTitle()} {OpenModal} />
 {/if}
