@@ -10,7 +10,7 @@
 	import GlobalSearchActions from './globalsearch/GlobalSearchActions.svelte';
 	import PQueue from 'p-queue';
 	import { queryParam, ssp } from 'sveltekit-search-params';
-	import { onDestroy } from 'svelte';
+	import { onDestroy, untrack } from 'svelte';
 	import MediaQuery2 from '$lib/components/MediaQuery2.svelte';
 	import { SpecificSourceFilter } from './BrowseStores';
 	import HorisontalmangaElement from './HorisontalmangaElement.svelte';
@@ -34,7 +34,7 @@
 	const queue = new PQueue({ concurrency: 4 });
 	const query = queryParam('q', ssp.string(), { pushHistory: false });
 
-	let lastQuery = $state($query);
+	let lastQuery: string | null = null;
 
 	const client = getContextClient();
 
@@ -62,30 +62,39 @@
 	let alterableRaw: sourceWithManga[] | undefined = $state(undefined);
 
 	function onQueryChange() {
-		const Query = $query;
+		if (
+			$query === lastQuery &&
+			alterableRaw?.length === filteredSources?.length
+		)
+			return;
 		alterableRaw = $state.snapshot(filteredSources);
-		queue.clear();
-		if (Query) {
-			filteredSources?.forEach(async (souc) => {
-				await queue.add(async () => {
-					if (!alterableRaw) return;
-					const id = alterableRaw?.findIndex((ele) => ele.id === souc.id);
-					if (id === -1) return;
-					alterableRaw[id].Loading = true;
-					try {
-						let response = await getMangasFromSource(souc.id, Query);
-						if (Query === $query) {
+		lastQuery = $query;
+		const Query = $query;
+		untrack(() => {
+			queue.clear();
+			if (Query) {
+				filteredSources?.forEach(async (souc) => {
+					await queue.add(async () => {
+						if (!alterableRaw) return;
+						const id = alterableRaw?.findIndex((ele) => ele.id === souc.id);
+						if (id === -1) return;
+						alterableRaw[id].Loading = true;
+						try {
+							let response = await getMangasFromSource(souc.id, Query);
+							if (Query === $query) {
+								alterableRaw[id].Loading = false;
+								alterableRaw[id].mangas =
+									response.data?.fetchSourceManga?.mangas;
+							}
+						} catch (error) {
+							console.error(error);
 							alterableRaw[id].Loading = false;
-							alterableRaw[id].mangas = response.data?.fetchSourceManga?.mangas;
+							alterableRaw[id].error = error;
 						}
-					} catch (error) {
-						console.error(error);
-						alterableRaw[id].Loading = false;
-						alterableRaw[id].error = error;
-					}
+					});
 				});
-			});
-		}
+			}
+		});
 	}
 
 	function getMangasFromSource(source: string, query: string) {
@@ -119,11 +128,6 @@
 
 	onDestroy(() => {
 		queue.clear();
-	});
-	$effect(() => {
-		if ($query !== lastQuery) {
-			lastQuery = $query;
-		}
 	});
 	let langs = $derived(getLanguages(fetchSources.data));
 
