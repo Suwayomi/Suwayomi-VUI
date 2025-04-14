@@ -626,6 +626,7 @@
 							<Image
 								reload_button={true}
 								src={page}
+								fit="object-contain"
 								height={mmState.value.Scale &&
 								mmState.value.ReaderMode !== Mode.Vertical
 									? 'max-h-screen h-full'
