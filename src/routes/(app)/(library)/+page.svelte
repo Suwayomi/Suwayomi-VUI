@@ -351,6 +351,12 @@
 							case 'Alphabetical':
 								tru = a.title > b.title;
 								break;
+							case 'Artist':
+								tru = (a.artist ?? '') > (b.artist ?? '');
+								break;
+							case 'Author':
+								tru = (a.author ?? '') > (b.author ?? '');
+								break;
 							case 'Read':
 								tru =
 									parseInt(a.lastReadChapter?.lastReadAt ?? '0') >

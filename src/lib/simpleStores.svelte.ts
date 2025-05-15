@@ -69,6 +69,8 @@ export type TLayout = keyof typeof Layout;
 export const sort = {
 	Unread: 'Unread',
 	Alphabetical: 'Alphabetical',
+	Artist: 'Artist',
+	Author: 'Author',
 	ID: 'ID',
 	Added: 'Latest Added',
 	Read: 'Latest Read',
