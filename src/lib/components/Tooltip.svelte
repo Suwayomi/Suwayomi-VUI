@@ -43,7 +43,7 @@
 	};
 </script>
 
-<div use:popup={popupHover} class={rest.class as string | undefined ?? ''}>
+<div use:popup={popupHover} class={(rest.class as string | undefined) ?? ''}>
 	{@render children?.()}
 </div>
 

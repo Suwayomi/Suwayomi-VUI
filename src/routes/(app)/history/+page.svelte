@@ -65,7 +65,10 @@
 	});
 </script>
 
-{#snippet mangaText(updat: NonNullable<typeof all>['nodes'][0], absolute=true)}
+{#snippet mangaText(
+	updat: NonNullable<typeof all>['nodes'][0],
+	absolute = true
+)}
 	<div
 		class={absolute
 			? 'variant-glass absolute bottom-0 left-0 right-0 rounded-b-olg'

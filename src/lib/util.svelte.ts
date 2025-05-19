@@ -4,7 +4,7 @@
 // License, v. 2.0. If a copy of the MPL was not distributed with this
 // file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
-import { get } from 'svelte/store';
+import { get, type Writable } from 'svelte/store';
 
 import { toastStore } from './simpleStores.svelte';
 import { client } from './gql/graphqlClient';
@@ -462,4 +462,15 @@ export function subscriptionState<
 export function OTT<T>(these: unknown[], fn: () => T): T {
 	const _ = [...these];
 	return untrack(fn);
+}
+
+export function storeToState<T>(store: Writable<T>): { value: T } {
+	let state = $state(get(store));
+	store.subscribe((value) => {
+		state = value;
+	});
+	$effect(() => {
+		store.set(state);
+	});
+	return { value: state };
 }

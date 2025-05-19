@@ -38,8 +38,9 @@
 			Delete all chapters when remove manga from library
 		</Slide>
 		<Slide
-			bind:checked={gmState.value
-				.RemoveChaptersFromDownloadQueueOnRemoveFromLibrary}
+			bind:checked={
+				gmState.value.RemoveChaptersFromDownloadQueueOnRemoveFromLibrary
+			}
 			class="my-1 p-1 pl-2 hover:variant-glass-surface focus:outline-0"
 		>
 			Remove chapters from download queue when remove manga from library

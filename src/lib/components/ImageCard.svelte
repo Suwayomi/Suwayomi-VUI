@@ -39,7 +39,7 @@
 </script>
 
 <div
-	class="relative h-full w-full {rest.class as string | undefined ?? ''}"
+	class="relative h-full w-full {(rest.class as string | undefined) ?? ''}"
 	in:fade
 >
 	<Image

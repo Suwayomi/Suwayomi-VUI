@@ -193,7 +193,8 @@
 													LongTapped = false;
 													e.preventDefault();
 													e.stopPropagation();
-													DownloadedUseDefault.value = !DownloadedUseDefault.value;
+													DownloadedUseDefault.value =
+														!DownloadedUseDefault.value;
 												}
 											}}
 											bind:state={Downloaded.value}
@@ -238,13 +239,15 @@
 																		LongTapped = false;
 																		e.preventDefault();
 																		e.stopPropagation();
-																		SourceFilterUseDefault.value = !SourceFilterUseDefault.value;
+																		SourceFilterUseDefault.value =
+																			!SourceFilterUseDefault.value;
 																		return;
 																	}
 																	if (SourceFilter.value.includes(source.id)) {
-																		SourceFilter.value = SourceFilter.value.filter(
-																			(e) => e !== source.id
-																		);
+																		SourceFilter.value =
+																			SourceFilter.value.filter(
+																				(e) => e !== source.id
+																			);
 																		return;
 																	}
 																	SourceFilter.value.push(source.id);
@@ -274,7 +277,8 @@
 													LongTapped = false;
 													e.preventDefault();
 													e.stopPropagation();
-													AscendingUseDefault.value = !AscendingUseDefault.value;
+													AscendingUseDefault.value =
+														!AscendingUseDefault.value;
 												}
 											}}
 											labelClass="w-full"
@@ -321,7 +325,8 @@
 													LongTapped = false;
 													e.preventDefault();
 													e.stopPropagation();
-													TotalCountsUseDefault.value = !TotalCountsUseDefault.value;
+													TotalCountsUseDefault.value =
+														!TotalCountsUseDefault.value;
 												}
 											}}
 										>
@@ -337,7 +342,8 @@
 													LongTapped = false;
 													e.preventDefault();
 													e.stopPropagation();
-													DownloadsBadgeUseDefault.value = !DownloadsBadgeUseDefault.value;
+													DownloadsBadgeUseDefault.value =
+														!DownloadsBadgeUseDefault.value;
 												}
 											}}
 										>
@@ -353,7 +359,8 @@
 													LongTapped = false;
 													e.preventDefault();
 													e.stopPropagation();
-													UnreadBadgeUseDefault.value = !UnreadBadgeUseDefault.value;
+													UnreadBadgeUseDefault.value =
+														!UnreadBadgeUseDefault.value;
 												}
 											}}
 										>
@@ -380,7 +387,8 @@
 															LongTapped = false;
 															e.preventDefault();
 															e.stopPropagation();
-															DisplayUseDefault.value = !DisplayUseDefault.value;
+															DisplayUseDefault.value =
+																!DisplayUseDefault.value;
 														}
 													}}
 												>
@@ -469,10 +477,11 @@
 										<ThreeStateSwitchCustom
 											onclick={(e: MouseEvent) => {
 												if (LongTapped) {
-												LongTapped = false;
+													LongTapped = false;
 													e.preventDefault();
 													e.stopPropagation();
-													DownloadedUseDefault.value = !DownloadedUseDefault.value;
+													DownloadedUseDefault.value =
+														!DownloadedUseDefault.value;
 												}
 											}}
 											bind:state={gmState.value.Downloaded}
@@ -518,13 +527,19 @@
 																		LongTapped = false;
 																		e.preventDefault();
 																		e.stopPropagation();
-																		SourceFilterUseDefault.value = !SourceFilterUseDefault.value;
+																		SourceFilterUseDefault.value =
+																			!SourceFilterUseDefault.value;
 																		return;
 																	}
-																	if (gmState.value.SourceFilter.includes(source.id)) {
-																		gmState.value.SourceFilter = gmState.value.SourceFilter.filter(
-																			(e) => e !== source.id
-																		);
+																	if (
+																		gmState.value.SourceFilter.includes(
+																			source.id
+																		)
+																	) {
+																		gmState.value.SourceFilter =
+																			gmState.value.SourceFilter.filter(
+																				(e) => e !== source.id
+																			);
 																		return;
 																	}
 																	gmState.value.SourceFilter.push(source.id);
@@ -554,7 +569,8 @@
 													LongTapped = false;
 													e.preventDefault();
 													e.stopPropagation();
-													AscendingUseDefault.value = !AscendingUseDefault.value;
+													AscendingUseDefault.value =
+														!AscendingUseDefault.value;
 												}
 											}}
 										>
@@ -598,7 +614,8 @@
 													LongTapped = false;
 													e.preventDefault();
 													e.stopPropagation();
-													TotalCountsUseDefault.value = !TotalCountsUseDefault.value;
+													TotalCountsUseDefault.value =
+														!TotalCountsUseDefault.value;
 												}
 											}}
 										>
@@ -613,10 +630,10 @@
 													LongTapped = false;
 													e.preventDefault();
 													e.stopPropagation();
-													DownloadsBadgeUseDefault.value = !DownloadsBadgeUseDefault.value;
+													DownloadsBadgeUseDefault.value =
+														!DownloadsBadgeUseDefault.value;
 												}
-											}}
-											>Downloads Badge</Slide
+											}}>Downloads Badge</Slide
 										>
 										<Slide
 											bind:checked={gmState.value.unreadBadge}
@@ -627,10 +644,10 @@
 													LongTapped = false;
 													e.preventDefault();
 													e.stopPropagation();
-													UnreadBadgeUseDefault.value = !UnreadBadgeUseDefault.value;
+													UnreadBadgeUseDefault.value =
+														!UnreadBadgeUseDefault.value;
 												}
-											}}
-											>Unread Badge</Slide
+											}}>Unread Badge</Slide
 										>
 										<RadioGroup
 											rounded="rounded-container-token"
@@ -652,7 +669,8 @@
 															LongTapped = false;
 															e.preventDefault();
 															e.stopPropagation();
-															DisplayUseDefault.value = !DisplayUseDefault.value;
+															DisplayUseDefault.value =
+																!DisplayUseDefault.value;
 														}
 													}}
 												>

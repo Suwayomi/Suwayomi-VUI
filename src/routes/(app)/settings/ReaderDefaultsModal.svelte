@@ -74,8 +74,9 @@
 		</Slide>
 		<Slide
 			class="p-1 outline-0 hover:variant-glass-surface"
-			bind:checked={gmState.value.mangaMetaDefaults
-				.mobileFullScreenOnChapterPage}
+			bind:checked={
+				gmState.value.mangaMetaDefaults.mobileFullScreenOnChapterPage
+			}
 		>
 			mobile Full Screen On Chapter Page
 		</Slide>
