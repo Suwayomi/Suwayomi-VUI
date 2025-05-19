@@ -15,12 +15,17 @@
 		gmState
 	} from '$lib/simpleStores.svelte';
 	import { Tab, TabGroup } from '@skeletonlabs/skeleton';
-	import { queryParam, ssp } from 'sveltekit-search-params';
+	import { queryParameters, ssp } from 'sveltekit-search-params';
 	import LibraryActions from './libraryActions.svelte';
 	import { selectState, type MangaType } from './LibraryStores.svelte';
 	import { onMount } from 'svelte';
 	import { actionState } from '$lib/MountTitleAction.svelte';
-	import { errortoast, gridValues, queryState } from '$lib/util.svelte';
+	import {
+		errortoast,
+		gridValues,
+		queryState,
+		storeToState
+	} from '$lib/util.svelte';
 	import IconWrapper from '$lib/components/IconWrapper.svelte';
 	import { parseQuery, type ANO, type parsedQueryType } from './queryParse';
 	import { getCategories, getCategory } from '$lib/gql/Queries';
@@ -55,10 +60,14 @@
 
 	let lastSelected: MangaType | undefined = $state();
 
-	const query = queryParam('q', ssp.string(), { pushHistory: false });
-	const tab = queryParam('tab', ssp.number(), { pushHistory: false });
+	const params = storeToState(
+		queryParameters({
+			tab: ssp.number(0),
+			q: ssp.string()
+		})
+	);
 
-	let FilterMeta = $derived(categoryFilterMetasReadOnly($tab ?? 0));
+	let FilterMeta = $derived(categoryFilterMetasReadOnly(params.value.tab));
 
 	function validateParsedQuery(query: parsedQueryType) {
 		if (query === null) return;
@@ -207,7 +216,7 @@
 	function selectAll() {
 		selectState.SelectAll(sortedMangas);
 	}
-	let [err, parsedQuery] = $derived(parseQuery($query));
+	let [err, parsedQuery] = $derived(parseQuery(params.value.query));
 
 	$effect(() => {
 		if (err !== null) {
@@ -227,10 +236,10 @@
 	$effect(() => {
 		if (
 			orderedCategories.length &&
-			orderedCategories.find((e) => e.id === $tab) === undefined
+			orderedCategories.find((e) => e.id === params.value.tab) === undefined
 		) {
 			window.requestAnimationFrame(() => {
-				$tab = orderedCategories[0]?.id;
+				params.value.tab = orderedCategories[0]?.id;
 			});
 		}
 	});
@@ -250,7 +259,11 @@
 		if (!reloadManga) return;
 		reloadManga = false;
 		client
-			.query(getCategory, { id: $tab ?? 0 }, { requestPolicy: 'network-only' })
+			.query(
+				getCategory,
+				{ id: params.value.tab },
+				{ requestPolicy: 'network-only' }
+			)
 			.toPromise();
 	}
 
@@ -265,7 +278,7 @@
 		queryState({
 			client,
 			query: getCategory,
-			variables: { id: $tab ?? 0 },
+			variables: { id: params.value.tab },
 			requestPolicy: 'cache-first'
 		})
 	);
@@ -405,7 +418,7 @@
 	<TabGroup>
 		{#if orderedCategories}
 			{#each orderedCategories as cat}
-				<Tab bind:group={$tab} name={cat.name} value={cat.id}>
+				<Tab bind:group={params.value.tab} name={cat.name} value={cat.id}>
 					{#snippet lead()}
 						{cat.name}
 						{#if FilterMeta.value.TotalCounts}
@@ -424,8 +437,8 @@
 				<div class="yoy m-2 grid gap-2 {gridValues}">
 					<FakeMangaItem
 						active={true}
-						count={orderedCategories.find((e) => e.id === $tab)?.mangas
-							.totalCount ?? 10}
+						count={orderedCategories.find((e) => e.id === params.value.tab)
+							?.mangas.totalCount ?? 10}
 					/>
 				</div>
 			{:else if mangas.error}

@@ -687,7 +687,7 @@ export function categoryFilterMetasReadOnly(id: number) {
 		SourceFilterUseDefault
 	} = untrack(() => categoryFilterMetas(id));
 
-	const value = $derived({
+	let value = {
 		Unread: UnreadUseDefault.value ? gmState.value.Unread : Unread.value,
 		Downloaded: DownloadedUseDefault.value
 			? gmState.value.Downloaded
@@ -708,7 +708,59 @@ export function categoryFilterMetasReadOnly(id: number) {
 		SourceFilter: SourceFilterUseDefault.value
 			? gmState.value.SourceFilter
 			: SourceFilter.value
-	} as const);
+	};
+
+	$effect(() => {
+		value = {
+			Unread: UnreadUseDefault.value ? gmState.value.Unread : Unread.value,
+			Downloaded: DownloadedUseDefault.value
+				? gmState.value.Downloaded
+				: Downloaded.value,
+			Tracked: TrackedUseDefault.value ? gmState.value.Tracked : Tracked.value,
+			Ascending: AscendingUseDefault.value
+				? gmState.value.Asc
+				: Ascending.value,
+			Sort: SortUseDefault.value ? gmState.value.Sort : Sort.value,
+			TotalCounts: TotalCountsUseDefault.value
+				? gmState.value.libraryCategoryTotalCounts
+				: TotalCounts.value,
+			DownloadsBadge: DownloadsBadgeUseDefault.value
+				? gmState.value.downloadsBadge
+				: DownloadsBadge.value,
+			UnreadBadge: UnreadBadgeUseDefault.value
+				? gmState.value.unreadBadge
+				: UnreadBadge.value,
+			Display: DisplayUseDefault.value ? gmState.value.Display : Display.value,
+			SourceFilter: SourceFilterUseDefault.value
+				? gmState.value.SourceFilter
+				: SourceFilter.value
+		};
+	});
+
+	// no idea why $derived doesnt work here but $effect does
+
+	// let value = $derived({
+	// 	Unread: UnreadUseDefault.value ? gmState.value.Unread : Unread.value,
+	// 	Downloaded: DownloadedUseDefault.value
+	// 		? gmState.value.Downloaded
+	// 		: Downloaded.value,
+	// 	Tracked: TrackedUseDefault.value ? gmState.value.Tracked : Tracked.value,
+	// 	Ascending: AscendingUseDefault.value ? gmState.value.Asc : Ascending.value,
+	// 	Sort: SortUseDefault.value ? gmState.value.Sort : Sort.value,
+	// 	TotalCounts: TotalCountsUseDefault.value
+	// 		? gmState.value.libraryCategoryTotalCounts
+	// 		: TotalCounts.value,
+	// 	DownloadsBadge: DownloadsBadgeUseDefault.value
+	// 		? gmState.value.downloadsBadge
+	// 		: DownloadsBadge.value,
+	// 	UnreadBadge: UnreadBadgeUseDefault.value
+	// 		? gmState.value.unreadBadge
+	// 		: UnreadBadge.value,
+	// 	Display: DisplayUseDefault.value ? gmState.value.Display : Display.value,
+	// 	SourceFilter: SourceFilterUseDefault.value
+	// 		? gmState.value.SourceFilter
+	// 		: SourceFilter.value
+	// })
 
 	return { value };
 }
