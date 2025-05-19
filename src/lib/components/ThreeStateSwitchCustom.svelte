@@ -6,7 +6,7 @@
  file, You can obtain one at https://mozilla.org/MPL/2.0/.
 -->
 <script lang="ts">
-	import { ThreeStateSwitch } from 'svelte-skeleton-three-state-switch';
+	import ThreeStateSwitch from './Three-state-switch.svelte';
 	import type { ComponentProps } from 'svelte';
 	import { scale } from 'svelte/transition';
 
