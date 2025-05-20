@@ -6,6 +6,12 @@
 		"comment2": "because its the preview version that implemented the breaking changes"
 	},
 	{
+		"uiVersion": "STABLEPREVIEW",
+		"serverVersion": "r1610",
+		"comment": "the server version is between 1.1.0 and 2.0.0 release",
+		"comment2": "because its the preview version that implemented the breaking changes"
+	},
+	{
 		"tag": "v1.1.0",
 		"uiVersion": "r1153",
 		"serverVersion": "r1502",

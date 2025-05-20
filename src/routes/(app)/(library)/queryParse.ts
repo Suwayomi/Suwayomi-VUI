@@ -33,18 +33,26 @@ export function parseQuery(
 	if (!query) {
 		return [null, null];
 	}
-	const titleAndSpecific = query.split('@');
-	if (titleAndSpecific.length === 1) {
-		return [null, [parseAnd('title:' + titleAndSpecific[0])]];
-	}
-	if (titleAndSpecific.length > 2) {
-		return ["Too many ' @ '", null];
-	}
-	titleAndSpecific[1] = `title:${titleAndSpecific[0]} ${titleAndSpecific[1]}`;
+	const TitleSpecific = query.match(/(\{.*\}|\S*:\S*) *|(\S*)/g);
+	const toBeParsed: string[] = [];
+	TitleSpecific?.forEach((e, i) => {
+		if (e === '') return;
+		if (!e.includes(':')) {
+			if (TitleSpecific[i - 1] === '') {
+				toBeParsed[toBeParsed.length - 1] += `_${e}`;
+				return;
+			}
+			toBeParsed.push(`title:${e}`);
+			return;
+		}
+		toBeParsed.push(e.trim());
+	});
 
-	const specifics = titleAndSpecific[1].split(' ').filter((e) => e.length > 0);
-	const openbrackets = [...titleAndSpecific[1]].filter((e) => e === '{');
-	const closebrackets = [...titleAndSpecific[1]].filter((e) => e === '}');
+	const titleAndSpecific = toBeParsed.join(' ');
+
+	const specifics = titleAndSpecific.split(' ').filter((e) => e.length > 0);
+	const openbrackets = [...titleAndSpecific].filter((e) => e === '{');
+	const closebrackets = [...titleAndSpecific].filter((e) => e === '}');
 	if (openbrackets.length !== closebrackets.length) {
 		return ["Mismatched '{' and '}'", null];
 	}

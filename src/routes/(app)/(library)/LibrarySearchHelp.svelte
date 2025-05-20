@@ -15,24 +15,21 @@
 		<!-- eslint-disable-next-line svelte/no-at-html-tags -->
 		{@html `<h2>Basic Info:</h2>specific search is based on the style of searching that booru sites often support
 
-regular title search and specific search is separated by an "@"
-
-specific search does not respect Escape Characters.
-you can't use "@" in search at all
-you cant use "{", "}", "_" or ":" in the specific search
+search does not respect Escape Characters.
+you cant use "{", "}", "_" or ":" in the search
 
 you must replace " " with "_" in the specific search
 so "space monster" would be "space_monster"
 it will still search for "space monster" 
 
 <h2>Searching:</h2>
-@ title:isekai title:life
+title:isekai title:life
 title contains both isekai and life
 
-@ -title:isekai
+-title:isekai
 title does not contain isekai
 
-@ {title:isekai title:life | title:space}
+{title:isekai title:life | title:space}
 title contains either isekai AND life, OR space
 
 <h2>Metatags:</h2>
@@ -64,6 +61,10 @@ search for manga with mangadex in the source name
 status:completed
 sorthand st:completed
 search for manga with completed in the status
+
+tracked:anilist
+tr st:anilist
+search for manga tracked by anilist
 `}
 	</p>
 </ModalTemplate>
