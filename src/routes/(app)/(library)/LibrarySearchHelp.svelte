@@ -63,7 +63,7 @@ sorthand st:completed
 search for manga with completed in the status
 
 tracked:anilist
-tr st:anilist
+sorthand tr:anilist
 search for manga tracked by anilist
 `}
 	</p>
