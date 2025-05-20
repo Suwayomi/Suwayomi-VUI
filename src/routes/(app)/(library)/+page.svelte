@@ -28,7 +28,7 @@
 	} from '$lib/util.svelte';
 	import IconWrapper from '$lib/components/IconWrapper.svelte';
 	import { parseQuery, type ANO, type parsedQueryType } from './queryParse';
-	import { getCategories, getCategory } from '$lib/gql/Queries';
+	import { getCategories, getCategory, trackers } from '$lib/gql/Queries';
 	import { getContextClient } from '@urql/svelte';
 	import {
 		IntersectionObserverAction,
@@ -42,6 +42,11 @@
 	const categories = queryState({
 		client,
 		query: getCategories
+	});
+
+	const trackers_data = queryState({
+		client,
+		query: trackers
 	});
 
 	actionState.AppBarData('Library', {
@@ -60,14 +65,12 @@
 
 	let lastSelected: MangaType | undefined = $state();
 
-	const params = storeToState(
-		queryParameters({
-			tab: ssp.number(0),
-			q: ssp.string()
-		})
-	);
+	const params = queryParameters({
+		tab: ssp.number(0),
+		q: ssp.string()
+	});
 
-	let FilterMeta = $derived(categoryFilterMetasReadOnly(params.value.tab));
+	let FilterMeta = $derived(categoryFilterMetasReadOnly($params.tab));
 
 	function validateParsedQuery(query: parsedQueryType) {
 		if (query === null) return;
@@ -192,6 +195,14 @@
 			case 'st':
 			case 'status':
 				return manga.status.toLowerCase().includes(compare.toLowerCase());
+			case 'tr':
+			case 'tracked':
+				return manga.trackRecords.nodes.some((e) =>
+					trackers_data.data?.trackers.nodes
+						.find((f) => f.id === e.trackerId)
+						?.name.toLowerCase()
+						.includes(compare.toLowerCase())
+				);
 			default:
 				return true;
 		}
@@ -216,8 +227,10 @@
 	function selectAll() {
 		selectState.SelectAll(sortedMangas);
 	}
-	let [err, parsedQuery] = $derived(parseQuery(params.value.query));
 
+	$inspect('query', $params.q);
+	let [err, parsedQuery] = $derived(parseQuery($params.q));
+	$inspect('parsedQuery', parsedQuery);
 	$effect(() => {
 		if (err !== null) {
 			errortoast('Invalid Query', err);
@@ -236,10 +249,10 @@
 	$effect(() => {
 		if (
 			orderedCategories.length &&
-			orderedCategories.find((e) => e.id === params.value.tab) === undefined
+			orderedCategories.find((e) => e.id === $params.tab) === undefined
 		) {
 			window.requestAnimationFrame(() => {
-				params.value.tab = orderedCategories[0]?.id;
+				$params.tab = orderedCategories[0]?.id;
 			});
 		}
 	});
@@ -261,7 +274,7 @@
 		client
 			.query(
 				getCategory,
-				{ id: params.value.tab },
+				{ id: $params.tab },
 				{ requestPolicy: 'network-only' }
 			)
 			.toPromise();
@@ -278,7 +291,7 @@
 		queryState({
 			client,
 			query: getCategory,
-			variables: { id: params.value.tab },
+			variables: { id: $params.tab },
 			requestPolicy: 'cache-first'
 		})
 	);
@@ -291,13 +304,14 @@
 		mangas.data?.category?.mangas.nodes.filter((manga) => {
 			if (!manga.inLibrary) return false;
 			if (gmState.value.ignoreFiltersWhenSearching) {
+				// console.log(parsedQuery);
 				if (
 					parsedQuery !== null &&
-					specificSearch(manga, parsedQuery).findIndex((e) => e === false) ===
+					specificSearch(manga, parsedQuery).findIndex((e) => e === false) !==
 						-1
-				) {
-					return true;
-				}
+				)
+					return false;
+				return true;
 			}
 
 			if (FilterMeta.value.Downloaded === 'on' && manga.downloadCount === 0)
@@ -321,6 +335,7 @@
 			)
 				return false;
 
+			console.log('dont ignoreFiltersWhenSearching');
 			if (
 				parsedQuery !== null &&
 				specificSearch(manga, parsedQuery).findIndex((e) => e === false) !== -1
@@ -418,7 +433,7 @@
 	<TabGroup>
 		{#if orderedCategories}
 			{#each orderedCategories as cat}
-				<Tab bind:group={params.value.tab} name={cat.name} value={cat.id}>
+				<Tab bind:group={$params.tab} name={cat.name} value={cat.id}>
 					{#snippet lead()}
 						{cat.name}
 						{#if FilterMeta.value.TotalCounts}
@@ -437,8 +452,8 @@
 				<div class="yoy m-2 grid gap-2 {gridValues}">
 					<FakeMangaItem
 						active={true}
-						count={orderedCategories.find((e) => e.id === params.value.tab)
-							?.mangas.totalCount ?? 10}
+						count={orderedCategories.find((e) => e.id === $params.tab)?.mangas
+							.totalCount ?? 10}
 					/>
 				</div>
 			{:else if mangas.error}
