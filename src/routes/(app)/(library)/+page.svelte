@@ -20,12 +20,7 @@
 	import { selectState, type MangaType } from './LibraryStores.svelte';
 	import { onMount } from 'svelte';
 	import { actionState } from '$lib/MountTitleAction.svelte';
-	import {
-		errortoast,
-		gridValues,
-		queryState,
-		storeToState
-	} from '$lib/util.svelte';
+	import { errortoast, gridValues, queryState } from '$lib/util.svelte';
 	import IconWrapper from '$lib/components/IconWrapper.svelte';
 	import { parseQuery, type ANO, type parsedQueryType } from './queryParse';
 	import { getCategories, getCategory, trackers } from '$lib/gql/Queries';
