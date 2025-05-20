@@ -299,14 +299,12 @@
 		mangas.data?.category?.mangas.nodes.filter((manga) => {
 			if (!manga.inLibrary) return false;
 			if (gmState.value.ignoreFiltersWhenSearching) {
-				// console.log(parsedQuery);
 				if (
 					parsedQuery !== null &&
-					specificSearch(manga, parsedQuery).findIndex((e) => e === false) !==
+					specificSearch(manga, parsedQuery).findIndex((e) => e !== false) !==
 						-1
 				)
-					return false;
-				return true;
+					return true;
 			}
 
 			if (FilterMeta.value.Downloaded === 'on' && manga.downloadCount === 0)
@@ -330,7 +328,6 @@
 			)
 				return false;
 
-			console.log('dont ignoreFiltersWhenSearching');
 			if (
 				parsedQuery !== null &&
 				specificSearch(manga, parsedQuery).findIndex((e) => e === false) !== -1
