@@ -151,27 +151,29 @@
 										{@const track = tracks.find(
 											(e) => e.id === RecordItem.trackerId
 										)}
-										<a
-											class="flex h-14 rounded-lg hover:variant-glass-surface"
-											href={RecordItem.remoteUrl}
-											target="_blank"
-										>
-											<div class="m-1">
-												<Image
-													src={track?.icon}
-													alt={track?.name}
-													width="w-auto"
-													height="h-full"
-													aspect="aspect-square"
-													draggable={false}
-													class=""
-												/>
-											</div>
-											<div class="flex flex-1 flex-col justify-center">
-												<div class="line-clamp-2">
-													{RecordItem.title}
+										<div class="flex h-14 justify-between rounded-lg">
+											<a
+												class="flex h-14 flex-1 rounded-lg hover:variant-glass-surface"
+												href={RecordItem.remoteUrl}
+												target="_blank"
+											>
+												<div class="m-1">
+													<Image
+														src={track?.icon}
+														alt={track?.name}
+														width="w-auto"
+														height="h-full"
+														aspect="aspect-square"
+														draggable={false}
+														class=""
+													/>
 												</div>
-											</div>
+												<div class="flex flex-col justify-center">
+													<div class="line-clamp-2">
+														{RecordItem.title}
+													</div>
+												</div>
+											</a>
 											<div class="my-1 mr-1 flex space-x-1">
 												<select
 													class="input w-auto"
@@ -206,7 +208,7 @@
 													height="h-full"
 												/>
 											</div>
-										</a>
+										</div>
 									{:else}
 										Not Currently Tracking
 									{/each}
