@@ -22,7 +22,12 @@
 	import { actionState } from '$lib/MountTitleAction.svelte';
 	import { errortoast, gridValues, queryState } from '$lib/util.svelte';
 	import IconWrapper from '$lib/components/IconWrapper.svelte';
-	import { parseQuery, type ANO, type parsedQueryType } from './queryParse';
+	import {
+		makeSearchPart,
+		parseQuery,
+		type ANO,
+		type parsedQueryType
+	} from './queryParse';
 	import { getCategories, getCategory, trackers } from '$lib/gql/Queries';
 	import { getContextClient } from '@urql/svelte';
 	import {
@@ -135,13 +140,9 @@
 		const comparason = query.flatMap((e) => {
 			switch (e.type) {
 				case 'and':
-					return compareToBaseData(manga, e.base, e.value.replaceAll('_', ' '));
+					return compareToBaseData(manga, e.base, e.value);
 				case 'not':
-					return !compareToBaseData(
-						manga,
-						e.base,
-						e.value.replaceAll('_', ' ')
-					);
+					return !compareToBaseData(manga, e.base, e.value);
 				case 'or':
 					return OrSearch(manga, e.value);
 			}
@@ -158,45 +159,34 @@
 		switch (base) {
 			case 't':
 			case 'title':
-				return manga.title.toLowerCase().includes(compare.toLowerCase());
+				return makeSearchPart(manga.title).includes(compare);
 			case 'd':
 			case 'description':
-				return (
-					manga.description?.toLowerCase().includes(compare.toLowerCase()) ??
-					false
-				);
+				return makeSearchPart(manga.description).includes(compare) ?? false;
 			case 'g':
 			case 'genre':
-				return manga.genre.some((e) =>
-					e.toLowerCase().includes(compare.toLowerCase())
-				);
+				return manga.genre.some((e) => makeSearchPart(e).includes(compare));
 			case 'a':
 			case 'artist':
-				return (
-					manga.artist?.toLowerCase().includes(compare.toLowerCase()) ?? false
-				);
+				return makeSearchPart(manga.artist).includes(compare) ?? false;
 			case 'au':
 			case 'author':
-				return (
-					manga.author?.toLowerCase().includes(compare.toLowerCase()) ?? false
-				);
+				return makeSearchPart(manga.author).includes(compare) ?? false;
 			case 's':
 			case 'source':
 				return (
-					manga.source?.displayName
-						?.toLowerCase()
-						.includes(compare.toLowerCase()) ?? false
+					makeSearchPart(manga.source?.displayName).includes(compare) ?? false
 				);
 			case 'st':
 			case 'status':
-				return manga.status.toLowerCase().includes(compare.toLowerCase());
+				return makeSearchPart(manga.status).includes(compare);
 			case 'tr':
 			case 'tracked':
 				return manga.trackRecords.nodes.some((e) =>
-					trackers_data.data?.trackers.nodes
-						.find((f) => f.id === e.trackerId)
-						?.name.toLowerCase()
-						.includes(compare.toLowerCase())
+					makeSearchPart(
+						trackers_data.data?.trackers.nodes.find((f) => f.id === e.trackerId)
+							?.name
+					).includes(compare)
 				);
 			default:
 				return true;

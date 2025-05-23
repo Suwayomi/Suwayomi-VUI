@@ -27,6 +27,16 @@ export type parsedQueryType = ANO[] | null;
 
 type err = string;
 
+export function makeSearchPart(query: string | null = ''): string {
+	return (query ?? '')
+		.replaceAll(' ', '_')
+		.replaceAll('¦', '')
+		.replaceAll('{', '')
+		.replaceAll('}', '')
+		.replaceAll(':', '')
+		.toLowerCase();
+}
+
 export function parseQuery(
 	query: string | null
 ): [null, parsedQueryType] | [err, null] {
@@ -48,7 +58,7 @@ export function parseQuery(
 		toBeParsed.push(e.trim());
 	});
 
-	const titleAndSpecific = toBeParsed.join(' ');
+	const titleAndSpecific = toBeParsed.join(' ').toLowerCase();
 
 	const specifics = titleAndSpecific.split(' ').filter((e) => e.length > 0);
 	const openbrackets = [...titleAndSpecific].filter((e) => e === '{');
@@ -72,12 +82,15 @@ function specificToJson(
 	string: string
 ): [null, recursaveStringArray] | [err, null] {
 	string = string
-		.replace(/\{/g, '[')
-		.replace(/\}\s/g, '], ')
-		.replace(/\}/g, ']')
-		.replace(/\s+/, ', ');
+		.replaceAll(/\{/g, '[')
+		.replaceAll(/\}\s/g, ']¦ ')
+		.replaceAll(/\}/g, ']')
+		.replaceAll(/\s+/g, '¦ ');
 	string = '[' + string + ']';
-	string = string.replace(/[^[\],\s]+/g, '"$&"').replace(/" /g, '", ');
+	string = string
+		.replaceAll(/[^[\]¦\s]+/g, '"$&"')
+		.replaceAll(/" /g, '"¦ ')
+		.replaceAll('¦', ',');
 	try {
 		return [null, JSON.parse(string)];
 	} catch (error) {
