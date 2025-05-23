@@ -16,7 +16,7 @@
 		{@html `<h2>Basic Info:</h2>specific search is based on the style of searching that booru sites often support
 
 search does not respect Escape Characters.
-you cant use "{", "}", "_" or ":" in the search
+you cant use "{", "}", "¦", "_" or ":" in the search
 
 you must replace " " with "_" in the specific search
 so "space monster" would be "space_monster"

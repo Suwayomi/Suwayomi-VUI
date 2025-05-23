@@ -27,6 +27,7 @@
 	import { getToastStore } from '$lib/components/Toast/stores';
 	import { longPress } from '$lib/press';
 	import { manga } from './mangaStores.svelte';
+	import { makeSearchPart } from '../../../(library)/queryParse';
 
 	const toastStore = getToastStore();
 	const modalStore = getModalStore();
@@ -217,10 +218,29 @@
 					{mangaFrag.title}
 				</h1>
 				<div class="space-y-1 lg:space-y-2">
-					<InfoSubTitles text={mangaFrag.author} name="Author" />
-					<InfoSubTitles text={mangaFrag.artist} name="Artist" />
-					<InfoSubTitles text={mangaFrag.status} name="Status" />
-					<InfoSubTitles text={mangaFrag.source?.displayName} name="Source" />
+					<InfoSubTitles
+						text={mangaFrag.author}
+						name="Author"
+						href="/?q=author:{makeSearchPart(mangaFrag.author)}"
+					/>
+
+					<InfoSubTitles
+						text={mangaFrag.artist}
+						name="Artist"
+						href="/?q=artist:{makeSearchPart(mangaFrag.artist)}"
+					/>
+
+					<InfoSubTitles
+						text={mangaFrag.status}
+						name="Status"
+						href="/?q=status:{makeSearchPart(mangaFrag.status)}"
+					/>
+
+					<InfoSubTitles
+						text={mangaFrag.source?.displayName}
+						name="Source"
+						href="/browse/source/{mangaFrag.source?.id}/popular"
+					/>
 				</div>
 			</div>
 		</div>
@@ -298,7 +318,13 @@
 		<div class="flex w-full flex-wrap gap-2">
 			{#each mangaFrag?.genre as genre (genre)}
 				{#if genre}
-					<div class="variant-outline-primary badge">{genre}</div>
+					<a
+						href="/?q=genre:{makeSearchPart(genre)}"
+						target="_blank"
+						class="variant-outline-primary badge hover:opacity-75"
+					>
+						{genre}
+					</a>
 				{/if}
 			{:else}
 				<div></div>

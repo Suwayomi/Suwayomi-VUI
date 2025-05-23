@@ -10,14 +10,15 @@
 	interface Props {
 		text?: undefined | string | null;
 		name?: string;
+		href?: string;
 	}
 
-	let { text = undefined, name = 'undefined' }: Props = $props();
+	let { text = undefined, name = 'undefined', href = '' }: Props = $props();
 </script>
 
 {#if text}
 	<h3 class="h6 flex items-center space-x-2 xs:h3 md:h5 lg:h4 xl:h3">
 		<span>{name}:</span>
-		<span class="line-clamp-1">{text}</span>
+		<a {href} target="_blank" class="line-clamp-1 hover:opacity-75">{text}</a>
 	</h3>
 {/if}
