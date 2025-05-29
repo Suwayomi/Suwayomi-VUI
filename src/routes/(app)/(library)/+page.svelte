@@ -12,7 +12,8 @@
 	import {
 		categoryFilterMetasReadOnly,
 		display,
-		gmState
+		gmState,
+		rotate
 	} from '$lib/simpleStores.svelte';
 	import { Tab, TabGroup } from '@skeletonlabs/skeleton';
 	import { queryParameters, ssp } from 'sveltekit-search-params';
@@ -20,7 +21,7 @@
 	import { selectState, type MangaType } from './LibraryStores.svelte';
 	import { onMount } from 'svelte';
 	import { actionState } from '$lib/MountTitleAction.svelte';
-	import { errortoast, gridValues, queryState } from '$lib/util.svelte';
+	import { errortoast, queryState } from '$lib/util.svelte';
 	import IconWrapper from '$lib/components/IconWrapper.svelte';
 	import {
 		makeSearchPart,
@@ -404,7 +405,7 @@
 		<div class="placeholder w-20 animate-pulse"></div>
 		<div class="placeholder w-20 animate-pulse"></div>
 	</div>
-	<div class="yoy m-2 grid gap-2 {gridValues}">
+	<div class="yoy m-2 grid gap-2 {rotate.gridValues}">
 		<FakeMangaItem active={true} count={30} />
 	</div>
 {:else if categories.error}
@@ -431,7 +432,7 @@
 		{/if}
 		<svelte:fragment slot="panel">
 			{#if mangas.fetching}
-				<div class="yoy m-2 grid gap-2 {gridValues}">
+				<div class="yoy m-2 grid gap-2 {rotate.gridValues}">
 					<FakeMangaItem
 						active={true}
 						count={orderedCategories.find((e) => e.id === $params.tab)?.mangas
@@ -443,7 +444,7 @@
 					Error loading mangas: {JSON.stringify(mangas.error, null, 4)}
 				</div>
 			{:else if sortedMangas}
-				<div class="yoy grid {gridValues} m-2 gap-2">
+				<div class="yoy grid {rotate.gridValues} m-2 gap-2">
 					{#each sortedMangas as manga (manga.id)}
 						<div
 							class="aspect-cover"

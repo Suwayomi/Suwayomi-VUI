@@ -9,7 +9,7 @@
 <script lang="ts">
 	import { actionState } from '$lib/MountTitleAction.svelte';
 
-	import { gridValues, queryState } from '$lib/util.svelte';
+	import { queryState } from '$lib/util.svelte';
 	import { getContextClient } from '@urql/svelte';
 	import type { PageData } from './$types';
 	import {
@@ -23,6 +23,7 @@
 	import { SvelteSet } from 'svelte/reactivity';
 	import NonLibraryMangaDisplay from '$lib/components/NonLibraryMangaDisplay.svelte';
 	import FakeMangaItem from '$lib/components/FakeMangaItem.svelte';
+	import { rotate } from '$lib/simpleStores.svelte';
 
 	interface Props {
 		data: PageData;
@@ -51,7 +52,7 @@
 </script>
 
 {#if Manga.fetching}
-	<div class="yoy m-2 grid gap-2 {gridValues}">
+	<div class="yoy m-2 grid gap-2 {rotate.gridValues}">
 		<FakeMangaItem active={true} count={30} />
 	</div>
 {:else if Manga.error}
@@ -59,7 +60,7 @@
 		{JSON.stringify(Manga.error, null, 4)}
 	</div>
 {:else if Manga.data}
-	<div class="yoy grid {gridValues} m-2 gap-2">
+	<div class="yoy grid {rotate.gridValues} m-2 gap-2">
 		{#each Manga.data.mangas.nodes as manga}
 			<div
 				use:IntersectionObserverAction={{

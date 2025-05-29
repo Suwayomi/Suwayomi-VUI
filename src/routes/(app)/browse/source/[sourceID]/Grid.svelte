@@ -8,7 +8,7 @@
 
 <script lang="ts">
 	import type { LayoutData } from './$types';
-	import { errortoast, gridValues, OTT, queryState } from '$lib/util.svelte';
+	import { errortoast, OTT, queryState } from '$lib/util.svelte';
 	import IconWrapper from '$lib/components/IconWrapper.svelte';
 	import PreferencesModal from './PreferencesModal.svelte';
 	import { getModalStore } from '@skeletonlabs/skeleton';
@@ -25,6 +25,7 @@
 	import NonLibraryMangaDisplay from '$lib/components/NonLibraryMangaDisplay.svelte';
 	import FakeMangaItem from '$lib/components/FakeMangaItem.svelte';
 	import { untrack } from 'svelte';
+	import { rotate } from '$lib/simpleStores.svelte';
 
 	interface Props {
 		data: LayoutData;
@@ -145,7 +146,7 @@
 {/if}
 
 {#if all.mangas}
-	<div class="m-2 grid gap-2 {gridValues}">
+	<div class="m-2 grid gap-2 {rotate.gridValues}">
 		{#each all.mangas.filter((e, i, s) => i === s.findIndex((ee) => e.id === ee.id)) as manga (manga.id)}
 			<div
 				class="aspect-cover"

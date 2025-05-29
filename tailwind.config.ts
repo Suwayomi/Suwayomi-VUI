@@ -2,6 +2,7 @@ import { join } from 'path';
 import type { Config } from 'tailwindcss';
 import forms from '@tailwindcss/forms';
 import typography from '@tailwindcss/typography';
+import plugin from 'tailwindcss/plugin';
 import { skeleton } from '@skeletonlabs/tw-plugin';
 import { preset } from './src/lib/presets';
 import { screens } from './src/lib/screens';
@@ -38,6 +39,11 @@ export default {
 		}
 	},
 	plugins: [
+		plugin(function ({ addVariant }) {
+			Object.entries(screens).forEach((e) => {
+				addVariant(`h-${e[0]}`, `@media (min-height: ${e[1]})`);
+			});
+		}),
 		forms,
 		typography,
 		skeleton({

@@ -11,10 +11,10 @@
 	import { getContextClient } from '@urql/svelte';
 	import { History } from '$lib/gql/Queries';
 	import type { ResultOf } from '$lib/gql/graphql';
-	import { formatDate, gridValues, OTT, queryState } from '$lib/util.svelte';
+	import { formatDate, OTT, queryState } from '$lib/util.svelte';
 	import ImageCard from '$lib/components/ImageCard.svelte';
 	import IconWrapper from '$lib/components/IconWrapper.svelte';
-	import { display, gmState } from '$lib/simpleStores.svelte';
+	import { display, gmState, rotate } from '$lib/simpleStores.svelte';
 	import {
 		IntersectionObserverAction,
 		MakeSimpleCallback
@@ -90,7 +90,7 @@
 {/snippet}
 
 {#if !all && CurrentHistory.fetching}
-	<div class="grid {gridValues} m-2 gap-2">
+	<div class="grid {rotate.gridValues} m-2 gap-2">
 		<FakeMangaItem active={true} count={100} lines={3} />
 	</div>
 {:else if !all && CurrentHistory.error}
@@ -98,7 +98,7 @@
 		{JSON.stringify(CurrentHistory.error, null, 4)}
 	</div>
 {:else if all?.nodes}
-	<div class="grid {gridValues} m-2 gap-2">
+	<div class="grid {rotate.gridValues} m-2 gap-2">
 		{#each all.nodes as updat (updat.id + updat.lastReadAt)}
 			<div
 				use:IntersectionObserverAction={{

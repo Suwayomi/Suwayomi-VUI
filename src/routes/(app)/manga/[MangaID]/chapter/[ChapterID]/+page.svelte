@@ -154,13 +154,13 @@
 			}
 			return;
 		}
-		if (keyEvent.code === 'ArrowRight') {
+		if (keyEvent.code === 'ArrowRight' && !keyEvent.altKey) {
 			keyEvent.preventDefault();
 			keyEvent.stopPropagation();
 			doScroll();
 			return;
 		}
-		if (keyEvent.code === 'ArrowLeft') {
+		if (keyEvent.code === 'ArrowLeft' && !keyEvent.altKey) {
 			goBackChapter();
 			keyEvent.preventDefault();
 			keyEvent.stopPropagation();
