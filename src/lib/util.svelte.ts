@@ -230,9 +230,6 @@ export async function ErrorHelpUntyped(
 	}
 }
 
-export const gridValues =
-	'xs:grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-7 2xl:grid-cols-8 3xl:grid-cols-10';
-
 export function errortoast(failMessage: string, errorMessage: string) {
 	getToastStore().trigger({
 		hoverable: true,

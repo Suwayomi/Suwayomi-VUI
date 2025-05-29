@@ -14,14 +14,8 @@
 	import { selectState } from './UpdatesStores';
 	import IconWrapper from '$lib/components/IconWrapper.svelte';
 	import type { UpdateNode } from './UpdatesStores';
-	import {
-		dlreabook,
-		formatDate,
-		gridValues,
-		OTT,
-		queryState
-	} from '$lib/util.svelte';
-	import { display, gmState } from '$lib/simpleStores.svelte';
+	import { dlreabook, formatDate, OTT, queryState } from '$lib/util.svelte';
+	import { display, gmState, rotate } from '$lib/simpleStores.svelte';
 
 	import { getContextClient } from '@urql/svelte';
 	import { updates } from '$lib/gql/Queries';
@@ -135,7 +129,7 @@
 {/snippet}
 
 {#if !all && update.fetching}
-	<div class="grid {gridValues} m-2 gap-2">
+	<div class="grid {rotate.gridValues} m-2 gap-2">
 		<FakeMangaItem active={true} count={100} lines={3} />
 	</div>
 {:else if !all && update.error}
@@ -143,7 +137,7 @@
 		{JSON.stringify(update.error, null, 4)}
 	</div>
 {:else if all?.nodes}
-	<div class="grid {gridValues} m-2 gap-2">
+	<div class="grid {rotate.gridValues} m-2 gap-2">
 		{#each all.nodes as updat}
 			<div
 				use:IntersectionObserverAction={{

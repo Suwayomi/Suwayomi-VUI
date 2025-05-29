@@ -28,6 +28,7 @@ import type { presetConst } from './presets';
 import { getObjectKeys, type TriState } from './util.svelte';
 import { browser } from '$app/environment';
 import { untrack } from 'svelte';
+import type { CssClasses } from '@skeletonlabs/skeleton';
 
 export const toastStore = writable<ToastStore | null>(null);
 
@@ -764,3 +765,43 @@ export function categoryFilterMetasReadOnly(id: number) {
 
 	return { value };
 }
+
+class rotation {
+	private v: 0 | 90 | 180 | 270 = $state(0);
+	private rotateClassMap: Record<number, CssClasses> = {
+		0: 'w-screen h-screen',
+		90: 'w-[100dvh] h-[100dvw] overflow-hidden rotate-90',
+		180: 'w-screen h-screen overflow-hidden rotate-180',
+		270: 'w-[100dvh] h-[100dvw] overflow-hidden rotate-[270deg]'
+	};
+	public left() {
+		if (this.v === 0) {
+			this.value = 270;
+		} else {
+			this.value -= 90;
+		}
+	}
+	public right() {
+		if (this.v === 270) {
+			this.value = 0;
+		} else {
+			this.value += 90;
+		}
+	}
+	public get value() {
+		return this.v;
+	}
+	public set value(v: 0 | 90 | 180 | 270) {
+		this.v = v;
+		document.body.className = this.rotateClassMap[v];
+	}
+
+	public get gridValues() {
+		if (this.v === 0 || this.v === 180) {
+			return 'xs:grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-7 2xl:grid-cols-8 3xl:grid-cols-10';
+		}
+		return 'h-xs:grid-cols-2 h-sm:grid-cols-3 h-md:grid-cols-4 h-lg:grid-cols-5 h-xl:grid-cols-7 h-2xl:grid-cols-8 h-3xl:grid-cols-10';
+	}
+}
+
+export const rotate = new rotation();

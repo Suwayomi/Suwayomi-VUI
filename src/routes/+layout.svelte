@@ -9,7 +9,7 @@
 <script lang="ts">
 	import { actionState } from '$lib/MountTitleAction.svelte';
 	import Toast from '$lib/components/Toast/Toast.svelte';
-	import { gmState, toastStore } from '$lib/simpleStores.svelte';
+	import { gmState, rotate, toastStore } from '$lib/simpleStores.svelte';
 	import '../app.postcss';
 	// Floating UI for Popups
 	import { getToastStore } from '$lib/components/Toast/stores';
@@ -64,7 +64,7 @@
 	const drawerStore = getDrawerStore();
 	const modalStore = getModalStore();
 
-	function openQuickSearch(e: KeyboardEvent) {
+	function handleKeyDown(e: KeyboardEvent) {
 		if ((e.code === 'Slash' || e.code === 'KeyP') && e.ctrlKey) {
 			e.preventDefault();
 			if (!$modalStore.find((e) => e.meta?.id === 'QuickSearchModal'))
@@ -76,10 +76,21 @@
 					meta: { id: 'QuickSearchModal' }
 				});
 		}
+		if (e.altKey) {
+			if (e.code === 'ArrowRight') {
+				e.preventDefault();
+				e.stopPropagation();
+				rotate.right();
+			} else if (e.code === 'ArrowLeft') {
+				e.preventDefault();
+				e.stopPropagation();
+				rotate.left();
+			}
+		}
 	}
 
 	onMount(() => {
-		window.addEventListener('keydown', openQuickSearch);
+		window.addEventListener('keydown', handleKeyDown);
 		detectSWUpdate();
 	});
 
