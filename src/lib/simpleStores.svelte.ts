@@ -774,6 +774,27 @@ class rotation {
 		180: 'w-screen h-screen overflow-hidden rotate-180',
 		270: 'w-[100dvh] h-[100dvw] overflow-hidden rotate-[270deg]'
 	};
+	public gridValues = $state(
+		'xs:grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-7 2xl:grid-cols-8 3xl:grid-cols-10'
+	);
+	constructor() {
+		switch (localStorage.getItem('rotation')) {
+			case '0':
+				this.value = 0;
+				break;
+			case '90':
+				this.value = 90;
+				break;
+			case '180':
+				this.value = 180;
+				break;
+			case '270':
+				this.value = 270;
+				break;
+			default:
+				this.value = 0;
+		}
+	}
 	public left() {
 		if (this.v === 0) {
 			this.value = 270;
@@ -788,19 +809,19 @@ class rotation {
 			this.value += 90;
 		}
 	}
-	public get value() {
+	private get value() {
 		return this.v;
 	}
-	public set value(v: 0 | 90 | 180 | 270) {
+	private set value(v: 0 | 90 | 180 | 270) {
 		this.v = v;
+		localStorage.setItem('rotation', v.toString());
 		document.body.className = this.rotateClassMap[v];
-	}
-
-	public get gridValues() {
-		if (this.v === 0 || this.v === 180) {
-			return 'xs:grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-7 2xl:grid-cols-8 3xl:grid-cols-10';
-		}
-		return 'h-xs:grid-cols-2 h-sm:grid-cols-3 h-md:grid-cols-4 h-lg:grid-cols-5 h-xl:grid-cols-7 h-2xl:grid-cols-8 h-3xl:grid-cols-10';
+		if (v === 0 || v === 180)
+			this.gridValues =
+				'xs:grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-7 2xl:grid-cols-8 3xl:grid-cols-10';
+		else
+			this.gridValues =
+				'h-xs:grid-cols-2 h-sm:grid-cols-3 h-md:grid-cols-4 h-lg:grid-cols-5 h-xl:grid-cols-7 h-2xl:grid-cols-8 h-3xl:grid-cols-10';
 	}
 }
 
