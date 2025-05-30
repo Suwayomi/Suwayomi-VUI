@@ -769,9 +769,9 @@ export function categoryFilterMetasReadOnly(id: number) {
 class rotation {
 	private v: 0 | 90 | 180 | 270 = $state(0);
 	private rotateClassMap: Record<number, CssClasses> = {
-		0: 'w-screen h-screen',
+		0: 'w-dvw h-dvh',
 		90: 'w-[100dvh] h-[100dvw] overflow-hidden rotate-90',
-		180: 'w-screen h-screen overflow-hidden rotate-180',
+		180: 'w-dvw h-dvh overflow-hidden rotate-180',
 		270: 'w-[100dvh] h-[100dvw] overflow-hidden rotate-[270deg]'
 	};
 	public gridValues = $state(
