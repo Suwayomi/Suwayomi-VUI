@@ -75,6 +75,7 @@
 			if (Query) {
 				filteredSources?.forEach(async (souc) => {
 					await queue.add(async () => {
+						const timeStart = performance.now();
 						if (!alterableRaw) return;
 						const id = alterableRaw?.findIndex((ele) => ele.id === souc.id);
 						if (id === -1) return;
@@ -85,11 +86,13 @@
 								alterableRaw[id].Loading = false;
 								alterableRaw[id].mangas =
 									response.data?.fetchSourceManga?.mangas;
+								alterableRaw[id].time = performance.now() - timeStart;
 							}
 						} catch (error) {
 							console.error(error);
 							alterableRaw[id].Loading = false;
 							alterableRaw[id].error = error;
+							alterableRaw[id].time = performance.now() - timeStart;
 						}
 					});
 				});
@@ -115,6 +118,7 @@
 		>['mangas'];
 		Loading?: boolean;
 		error?: unknown;
+		time?: number;
 	};
 
 	function doGroupSources(
@@ -192,7 +196,14 @@
 				</div>
 				{#each sous as source}
 					{@const sorcFrag = source}
-					<div class="my-4 ml-8 text-4xl">{sorcFrag.displayName}</div>
+					<div class="flex items-center justify-between">
+						<span class="my-4 ml-8 text-4xl">
+							{sorcFrag.displayName}
+						</span>
+						<span class="text-xs opacity-60">
+							{sorcFrag.time ? `${Math.round(sorcFrag.time)}ms` : null}
+						</span>
+					</div>
 					{#if source.Loading}
 						<div class="overflow-x-auto">
 							<div
