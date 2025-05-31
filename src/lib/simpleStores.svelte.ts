@@ -131,7 +131,13 @@ const trueDefaults = {
 	DownloadAllChaptersOnAddToLibrary: false,
 	DeleteAllChaptersOnRemoveFromLibrary: false,
 	RemoveChaptersFromDownloadQueueOnRemoveFromLibrary: false,
-	SourceFilter: [] as string[]
+	SourceFilter: [] as string[],
+	migrateDownloadNew: true,
+	migratedoChapters: true,
+	migratedoCategories: true,
+	migratedoTracking: true,
+	migratedoNotes: true,
+	migratedeleteDownloaded: true
 };
 
 const metaKeyBase = 'VUI3_';
