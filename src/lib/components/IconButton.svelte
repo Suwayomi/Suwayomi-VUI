@@ -17,6 +17,7 @@
 		tabindex?: number | null | undefined;
 		class?: CssClasses;
 		onclick?: (e: MouseEvent) => void;
+		padding?: CssClasses;
 		[key: string]: unknown;
 	}
 
@@ -26,6 +27,7 @@
 		height = 'h-full',
 		tabindex = undefined,
 		class: classname,
+		padding = 'p-2',
 		onclick = () => {},
 		...propsrest
 	}: Props = $props();
@@ -37,5 +39,10 @@
 	{onclick}
 	class="{height} aspect-square {hover} {classname ?? ''}"
 >
-	<IconWrapper width="100%" height="100%" {name} class="m-0  p-2 text-5xl" />
+	<IconWrapper
+		width="100%"
+		height="100%"
+		{name}
+		class="m-0 {padding} text-5xl"
+	/>
 </button>

@@ -164,10 +164,6 @@
 									all?.nodes
 								);
 							}
-							//  else {
-							// 	e.preventDefault();
-							// 	goto(`/manga/${updat.manga.id}#${updat.id}`);
-							// }
 						}}
 						class="h-full cursor-pointer hover:opacity-70"
 						tabindex="-1"

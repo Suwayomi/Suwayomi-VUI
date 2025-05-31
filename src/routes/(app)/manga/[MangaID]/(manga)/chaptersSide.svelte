@@ -339,6 +339,20 @@
 				/>
 			</div>
 		</div>
+		{#if manga.value.data?.manga.chapters.nodes && manga.value.data?.manga.lastReadChapter}
+			{@const chapters = manga.value.data.manga.chapters.nodes}
+			{@const lastReadChapter = chapters.find(
+				(e) => e.id === manga.value?.data?.manga.lastReadChapter?.id
+			)}
+			{#if lastReadChapter}
+				<a
+					href="#{lastReadChapter.id}"
+					class="card variant-glass flex items-center space-x-1 pl-2 opacity-50"
+				>
+					Last Read: {lastReadChapter?.name}
+				</a>
+			{/if}
+		{/if}
 		<MediaQuery query="(min-width: {screens.md})">
 			{#snippet children({ matches })}
 				{#each sortedChapters as chapter (chapter.id + ' ' + MangaID)}
