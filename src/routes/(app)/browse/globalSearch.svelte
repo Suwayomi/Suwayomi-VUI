@@ -87,6 +87,20 @@
 								alterableRaw[id].mangas =
 									response.data?.fetchSourceManga?.mangas;
 								alterableRaw[id].time = performance.now() - timeStart;
+								const oldAverageTimes: number[] = JSON.parse(
+									localStorage.getItem(`avgTimes${id}`) ?? '[]'
+								);
+								oldAverageTimes.push(alterableRaw[id].time);
+								if (oldAverageTimes.length > 10) {
+									oldAverageTimes.shift();
+								}
+								localStorage.setItem(
+									`avgTimes${id}`,
+									JSON.stringify(oldAverageTimes)
+								);
+								alterableRaw[id].averageTime =
+									oldAverageTimes.reduce((a, b) => a + b, 0) /
+									oldAverageTimes.length;
 							}
 						} catch (error) {
 							console.error(error);
@@ -119,6 +133,7 @@
 		Loading?: boolean;
 		error?: unknown;
 		time?: number;
+		averageTime?: number;
 	};
 
 	function doGroupSources(
@@ -201,7 +216,11 @@
 							{sorcFrag.displayName}
 						</span>
 						<span class="text-xs opacity-60">
-							{sorcFrag.time ? `${Math.round(sorcFrag.time)}ms` : null}
+							{#if sorcFrag.time && sorcFrag.averageTime}
+								{Math.round(sorcFrag.time)}ms ({Math.round(
+									sorcFrag.averageTime
+								)} avg)
+							{/if}
 						</span>
 					</div>
 					{#if source.Loading}
