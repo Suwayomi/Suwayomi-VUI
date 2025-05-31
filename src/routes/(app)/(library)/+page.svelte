@@ -226,8 +226,8 @@
 		validateParsedQuery(parsedQuery);
 	});
 	let orderedCategories = $derived(
-		[...(categories.data?.categories?.nodes ?? [])]
-			// .filter((e) => e.mangas.totalCount)
+		(categories.data?.categories?.nodes ?? [])
+			.filter((e) => e.mangas.totalCount)
 			.sort((a, b) => {
 				return a.order > b.order ? 1 : -1;
 			})
