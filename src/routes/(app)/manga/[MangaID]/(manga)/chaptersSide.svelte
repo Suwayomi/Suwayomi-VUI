@@ -340,10 +340,7 @@
 			</div>
 		</div>
 		{#if manga.value.data?.manga.chapters.nodes && manga.value.data?.manga.lastReadChapter}
-			{@const chapters = manga.value.data.manga.chapters.nodes}
-			{@const lastReadChapter = chapters.find(
-				(e) => e.id === manga.value?.data?.manga.lastReadChapter?.id
-			)}
+			{@const lastReadChapter = sortedChapters.find((e) => e.isRead)}
 			{#if lastReadChapter}
 				<a
 					href="#{lastReadChapter.id}"
