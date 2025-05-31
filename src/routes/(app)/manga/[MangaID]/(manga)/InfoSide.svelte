@@ -25,9 +25,9 @@
 
 	import NotesModal from './NotesModal.svelte';
 	import { getToastStore } from '$lib/components/Toast/stores';
-	import { longPress } from '$lib/press';
 	import { manga } from './mangaStores.svelte';
 	import { makeSearchPart } from '../../../(library)/queryParse';
+	import IconButton from '$lib/components/IconButton.svelte';
 
 	const toastStore = getToastStore();
 	const modalStore = getModalStore();
@@ -81,7 +81,7 @@
 	}
 	let ImageFailed = $state(false);
 
-	function LongHandler() {
+	function copyTitle() {
 		if (manga.value?.data?.manga?.title) {
 			navigator.clipboard.writeText(manga.value?.data?.manga?.title);
 			toastStore.trigger({
@@ -209,14 +209,26 @@
 				/>
 			</div>
 			<div class="space-y-2 md:mt-8 md:min-w-[66%] md:flex-1 lg:space-y-8">
-				<h1
-					class="h1 line-clamp-2 select-none md:h3 lg:h2 xl:h1 hover:cursor-pointer xl:leading-[4rem]"
-					use:longPress
-					onlongPress={LongHandler}
-					title="long press to copy title"
-				>
-					{mangaFrag.title}
-				</h1>
+				<div class="flex flex-nowrap items-start justify-between">
+					<h1
+						class="h1 select-none hover:cursor-pointer
+						{mangaFrag.title.length <= 60 &&
+							'line-clamp-2 md:text-2xl lg:text-3xl xl:text-4xl'}
+						{mangaFrag.title.length > 60 &&
+							mangaFrag.title.length <= 120 &&
+							'line-clamp-3 md:text-xl lg:text-2xl xl:text-3xl'}
+						{mangaFrag.title.length > 120 &&
+							'line-clamp-4 md:text-sm lg:text-base xl:text-xl'}"
+					>
+						{mangaFrag.title}
+					</h1>
+					<IconButton
+						onclick={copyTitle}
+						name="mdi:clipboard-outline"
+						padding="p-0"
+						class="m-0 w-12 cursor-pointer"
+					/>
+				</div>
 				<div class="space-y-1 lg:space-y-2">
 					<InfoSubTitles
 						text={mangaFrag.author}
