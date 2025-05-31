@@ -31,7 +31,7 @@
 	import type { SvelteComponent } from 'svelte';
 	import { ErrorHelp } from '$lib/util.svelte';
 	import ModalTemplate from '$lib/components/ModalTemplate.svelte';
-	import { mmState } from '$lib/simpleStores.svelte';
+	import { gmState, mmState } from '$lib/simpleStores.svelte';
 
 	const modalStore = getModalStore();
 	interface Props {
@@ -43,12 +43,11 @@
 	let { parent, id, manga }: Props = $props();
 
 	const client = getContextClient();
-	let doChapters = $state(true);
-	let doCategories = $state(true);
-	let doTracking = $state(true);
-	let doNotes = $state(true);
-	let deleteDownloaded = $state(manga.downloadCount > 0 ? true : false);
-	let DownloadNew = $state(true);
+	// let doChapters = $state(true);
+	// let doCategories = $state(true);
+	// let doTracking = $state(true);
+	// let doNotes = $state(true);
+	// let deleteDownloaded = $state(manga.downloadCount > 0 ? true : false);
 
 	let MigrateLoading = $state(false);
 	let CopyLoading = $state(false);
@@ -85,12 +84,14 @@
 			.toPromise();
 		const ToDo: Promise<void>[] = [];
 
-		if (doCategories) ToDo.push(CopyMangaCategories());
-		if (doTracking) ToDo.push(CopyMangaTracking());
-		if (deleteDownloaded) ToDo.push(deleteDownloadedMangas());
-		if (mmState.value.notes && doNotes) ToDo.push(CopyMangaNotes());
+		if (gmState.value.migratedoCategories) ToDo.push(CopyMangaCategories());
+		if (gmState.value.migratedoTracking) ToDo.push(CopyMangaTracking());
+		if (gmState.value.migratedeleteDownloaded && manga.downloadCount > 0)
+			ToDo.push(deleteDownloadedMangas());
+		if (mmState.value.notes && gmState.value.migratedoNotes)
+			ToDo.push(CopyMangaNotes());
 
-		if (!doChapters && !DownloadNew) {
+		if (!gmState.value.migratedoChapters && !gmState.value.migrateDownloadNew) {
 			await Promise.all(ToDo);
 			return;
 		}
@@ -99,8 +100,10 @@
 			.mutation(fetchChaptersMigration, { id })
 			.toPromise();
 
-		if (doChapters) ToDo.push(CopyMangaChapters(newChapters));
-		if (DownloadNew) ToDo.push(DownloadNewChapters(newChapters));
+		if (gmState.value.migratedoChapters)
+			ToDo.push(CopyMangaChapters(newChapters));
+		if (gmState.value.migrateDownloadNew)
+			ToDo.push(DownloadNewChapters(newChapters));
 		await Promise.all(ToDo);
 	}
 
@@ -231,43 +234,43 @@
 		{#snippet children()}
 			<Slide
 				class="p-1 pl-2 outline-0 hover:variant-glass-surface"
-				bind:checked={doChapters}
+				bind:checked={gmState.value.migratedoChapters}
 			>
 				Chapters
 			</Slide>
 			<Slide
 				class="p-1 pl-2 outline-0 hover:variant-glass-surface"
-				bind:checked={doCategories}
+				bind:checked={gmState.value.migratedoCategories}
 			>
 				Categories
 			</Slide>
 			{#if mmState.value.notes}
 				<Slide
 					class="p-1 pl-2 outline-0 hover:variant-glass-surface"
-					bind:checked={doTracking}
+					bind:checked={gmState.value.migratedoTracking}
 				>
 					Tracking
 				</Slide>
 			{/if}
 			<Slide
 				class="p-1 pl-2 outline-0 hover:variant-glass-surface"
-				bind:checked={doNotes}
+				bind:checked={gmState.value.migratedoNotes}
 			>
 				Notes
 			</Slide>
 			{#if manga.downloadCount > 0}
 				<Slide
 					class="p-1 pl-2 outline-0 hover:variant-glass-surface"
-					bind:checked={deleteDownloaded}
+					bind:checked={gmState.value.migratedeleteDownloaded}
 				>
 					Delete old Downloaded chapters
 				</Slide>
 			{/if}
 			<Slide
 				class="p-1 pl-2 outline-0 hover:variant-glass-surface"
-				bind:checked={DownloadNew}
+				bind:checked={gmState.value.migrateDownloadNew}
 			>
-				Downloaded all new chapters
+				Download all new chapters
 			</Slide>
 		{/snippet}
 		{#snippet footer()}
