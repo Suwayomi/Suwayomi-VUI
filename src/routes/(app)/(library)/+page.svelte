@@ -226,8 +226,8 @@
 		validateParsedQuery(parsedQuery);
 	});
 	let orderedCategories = $derived(
-		(categories.data?.categories?.nodes ?? [])
-			.filter((e) => e.mangas.totalCount)
+		[...(categories.data?.categories?.nodes ?? [])]
+			// .filter((e) => e.mangas.totalCount)
 			.sort((a, b) => {
 				return a.order > b.order ? 1 : -1;
 			})
@@ -336,6 +336,14 @@
 			return true;
 		})
 	);
+
+	const updatedTotals: SvelteMap<number, number> = $state(new SvelteMap());
+
+	$effect(() => {
+		if (!filteredMangas) return;
+		updatedTotals.set($params.tab, filteredMangas.length);
+	});
+
 	$effect(() => {
 		if (selectState.selectMode && selectState.selected.size > 0) {
 			selectState.selected.keys().forEach((ele) => {
@@ -419,11 +427,15 @@
 				<Tab bind:group={$params.tab} name={cat.name} value={cat.id}>
 					{#snippet lead()}
 						{cat.name}
-						{#if FilterMeta.value.TotalCounts}
+						{#if FilterMeta.value.TotalCounts && cat.mangas.totalCount > 0}
 							<span
 								class="variant-filled-surface m-0 rounded-full px-1 text-sm"
 							>
-								{cat.mangas.totalCount}
+								{#if updatedTotals.has(cat.id)}
+									{updatedTotals.get(cat.id)}
+								{:else}
+									{cat.mangas.totalCount}
+								{/if}
 							</span>
 						{/if}
 					{/snippet}
