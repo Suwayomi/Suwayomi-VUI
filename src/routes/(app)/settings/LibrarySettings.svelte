@@ -23,5 +23,11 @@
 		>
 			Ignore Filters When Searching
 		</Slide>
+		<Slide
+			bind:checked={gmState.value.highlightMangadexDmca}
+			class="my-1 p-1 pl-2 hover:variant-glass-surface focus:outline-0"
+		>
+			highlight mangadex entries effected by the mass DMCA in may 2025
+		</Slide>
 	</ModalTemplate>
 {/if}
