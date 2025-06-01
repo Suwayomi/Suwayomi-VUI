@@ -38,6 +38,87 @@
 	import { SvelteMap, SvelteSet } from 'svelte/reactivity';
 	import FakeMangaItem from '$lib/components/FakeMangaItem.svelte';
 
+	function parseCSV(str: string) {
+		const arr: string[][] = [];
+		let quote = false; // 'true' means we're inside a quoted field
+
+		// Iterate over each character, keep track of current row and column (of the returned array)
+		for (let row = 0, col = 0, c = 0; c < str.length; c++) {
+			let cc = str[c],
+				nc = str[c + 1]; // Current character, next character
+			arr[row] = arr[row] || []; // Create a new row if necessary
+			arr[row][col] = arr[row][col] || ''; // Create a new column (start with empty string) if necessary
+
+			// If the current character is a quotation mark, and we're inside a
+			// quoted field, and the next character is also a quotation mark,
+			// add a quotation mark to the current column and skip the next character
+			if (cc == '"' && quote && nc == '"') {
+				arr[row][col] += cc;
+				++c;
+				continue;
+			}
+
+			// If it's just one quotation mark, begin/end quoted field
+			if (cc == '"') {
+				quote = !quote;
+				continue;
+			}
+
+			// If it's a comma and we're not in a quoted field, move on to the next column
+			if (cc == ',' && !quote) {
+				++col;
+				continue;
+			}
+
+			// If it's a newline (CRLF) and we're not in a quoted field, skip the next character
+			// and move on to the next row and move to column 0 of that new row
+			if (cc == '\r' && nc == '\n' && !quote) {
+				++row;
+				col = 0;
+				++c;
+				continue;
+			}
+
+			// If it's a newline (LF or CR) and we're not in a quoted field,
+			// move on to the next row and move to column 0 of that new row
+			if (cc == '\n' && !quote) {
+				++row;
+				col = 0;
+				continue;
+			}
+			if (cc == '\r' && !quote) {
+				++row;
+				col = 0;
+				continue;
+			}
+
+			// Otherwise, append the current character to the current column
+			arr[row][col] += cc;
+		}
+		return arr;
+	}
+
+	let dmcaList: Set<string> = $state(new Set());
+	async function getMangadexMassacreIdList(): Promise<void> {
+		if (!gmState.value.highlightMangadexDmca || dmcaList.size > 0) {
+			return;
+		}
+		const SHEET_ID = '1vxvAHxmLLgAEEq-jWbDw5fxHMdz1N_PNWe3OPXtrin0';
+		const GID = '0';
+		const CSV_URL = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/export?format=csv&id=${SHEET_ID}&gid=${GID}`;
+		const res = await fetch(CSV_URL);
+		if (!res.ok) throw new Error('Failed to fetch Mangadex Massacre CSV');
+		const csvText = await res.text();
+		dmcaList = new Set(
+			parseCSV(csvText)
+				.slice(2)
+				.map((e) => e[2])
+		);
+	}
+	$effect(() => {
+		getMangadexMassacreIdList();
+	});
+
 	const client = getContextClient();
 
 	const categories = queryState({
@@ -467,6 +548,9 @@
 							}}
 						>
 							{#if intersecting.has(manga.id)}
+								{@const inDMCA = dmcaList.has(
+									manga.realUrl?.match(/title\/([^/]*)/)?.[1] ?? ''
+								)}
 								<a
 									draggable={false}
 									use:longPress
@@ -485,18 +569,21 @@
 											);
 										}
 									}}
+									title={inDMCA
+										? 'manga was part of the mangadex mass dmca'
+										: null}
 									class="h-full cursor-pointer hover:opacity-70"
 									tabindex="-1"
 								>
 									<MangaCard
 										draggable={false}
 										thumbnailUrl={manga.thumbnailUrl ?? ''}
-										title={manga.title}
 										class="select-none {selectState.selectMode && 'opacity-80'}"
 										rounded="{FilterMeta.value.Display === display.Compact &&
 											'rounded-lg'}
 													{FilterMeta.value.Display === display.Comfortable &&
-											'rounded-none rounded-t-lg'}"
+											'rounded-none rounded-t-lg'} {inDMCA &&
+											'outline-8 outline-error-600 outline'}"
 									>
 										<div class="absolute left-2 top-2 flex">
 											{#if manga.downloadCount && FilterMeta.value.DownloadsBadge}

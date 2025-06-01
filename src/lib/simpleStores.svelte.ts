@@ -137,7 +137,8 @@ const trueDefaults = {
 	migratedoCategories: true,
 	migratedoTracking: true,
 	migratedoNotes: true,
-	migratedeleteDownloaded: true
+	migratedeleteDownloaded: true,
+	highlightMangadexDmca: false
 };
 
 const metaKeyBase = 'VUI3_';
