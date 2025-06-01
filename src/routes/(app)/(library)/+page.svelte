@@ -549,7 +549,7 @@
 						>
 							{#if intersecting.has(manga.id)}
 								{@const inDMCA = dmcaList.has(
-									manga.realUrl?.match(/title\/([^\/]*)/)?.[0] ?? ''
+									manga.realUrl?.match(/title\/([^/]*)/)?.[0] ?? ''
 								)}
 								<a
 									draggable={false}
