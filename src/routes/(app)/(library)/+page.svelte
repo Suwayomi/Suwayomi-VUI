@@ -549,7 +549,7 @@
 						>
 							{#if intersecting.has(manga.id)}
 								{@const inDMCA = dmcaList.has(
-									manga.realUrl?.match(/title\/([^/]*)/)?.[0] ?? ''
+									manga.realUrl?.match(/title\/([^/]*)/)?.[1] ?? ''
 								)}
 								<a
 									draggable={false}
@@ -569,21 +569,21 @@
 											);
 										}
 									}}
+									title={inDMCA
+										? 'manga was part of the mangadex mass dmca'
+										: null}
 									class="h-full cursor-pointer hover:opacity-70"
 									tabindex="-1"
 								>
 									<MangaCard
 										draggable={false}
 										thumbnailUrl={manga.thumbnailUrl ?? ''}
-										title={inDMCA
-											? 'manga was part of the mangadex mass dmca'
-											: manga.title}
 										class="select-none {selectState.selectMode && 'opacity-80'}"
 										rounded="{FilterMeta.value.Display === display.Compact &&
 											'rounded-lg'}
 													{FilterMeta.value.Display === display.Comfortable &&
 											'rounded-none rounded-t-lg'} {inDMCA &&
-											'outline-3 outline-error-600 outline'}"
+											'outline-8 outline-error-600 outline'}"
 									>
 										<div class="absolute left-2 top-2 flex">
 											{#if manga.downloadCount && FilterMeta.value.DownloadsBadge}
@@ -627,9 +627,7 @@
 											>
 												<div
 													class="line-clamp-2 h-12 px-2 text-center"
-													title={inDMCA
-														? 'manga was part of the mangadex mass dmca'
-														: manga.title}
+													title={manga.title}
 												>
 													{manga.title}
 												</div>
