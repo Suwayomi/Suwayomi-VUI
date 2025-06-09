@@ -213,25 +213,26 @@
 					<h1
 						class="h1
 						{mangaFrag.title.length <= 60 &&
-							'line-clamp-2 md:text-2xl lg:text-3xl xl:text-4xl'}
+							'line-clamp-2 md:line-clamp-3 md:text-lg lg:text-xl xl:text-3xl'}
 						{mangaFrag.title.length > 60 &&
-							mangaFrag.title.length <= 120 &&
-							'line-clamp-3 md:text-xl lg:text-2xl xl:text-3xl'}
-						{mangaFrag.title.length > 120 &&
-							'line-clamp-4 md:text-sm lg:text-base xl:text-xl'}"
+							mangaFrag.title.length <= 90 &&
+							'line-clamp-3 md:line-clamp-4 md:text-xl lg:text-xl xl:text-2xl'}
+						{mangaFrag.title.length > 90 &&
+							'line-clamp-5 md:text-sm lg:line-clamp-4 lg:text-base xl:line-clamp-4 xl:text-xl 2xl:line-clamp-4 3xl:line-clamp-4'}"
 					>
 						{mangaFrag.title}
 					</h1>
 					<IconButton
 						onclick={copyTitle}
+						title="Copy Title"
 						name="mdi:clipboard-outline"
 						padding="p-0"
-						class="m-0 flex-shrink-0 {mangaFrag.title.length <= 60 &&
+						class="m-0 w-9 flex-shrink-0 {mangaFrag.title.length <= 60 &&
 							'md:w-8 lg:w-9 xl:w-10'}
 						{mangaFrag.title.length > 60 &&
-							mangaFrag.title.length <= 120 &&
+							mangaFrag.title.length <= 90 &&
 							'md:w-7 lg:w-8 xl:w-9'}
-						{mangaFrag.title.length > 120 && 'md:w-5  lg:w-6 xl:w-7'} cursor-pointer"
+						{mangaFrag.title.length > 90 && 'md:w-5  lg:w-6 xl:w-7'} cursor-pointer"
 					/>
 				</div>
 				<div class="space-y-1 lg:space-y-2">
