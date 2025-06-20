@@ -207,10 +207,12 @@ export const updates = graphql(
 	`
 		query updates($offset: Int = 0) {
 			chapters(
-				orderBy: FETCHED_AT
+				order: [
+					{ by: FETCHED_AT, byType: DESC }
+					{ by: UPLOAD_DATE, byType: DESC }
+				]
 				offset: $offset
 				first: 100
-				orderByType: DESC
 				filter: { inLibrary: { equalTo: true } }
 			) {
 				nodes {
