@@ -15,7 +15,7 @@
 		queryState,
 		type queryStateReturn
 	} from '$lib/util.svelte';
-	import { queryParam, ssp } from 'sveltekit-search-params';
+	import { queryParam, ssp } from '$lib/queryParam.svelte';
 	import Nav from '../Nav.svelte';
 	import { FindLangName } from '../languages';
 	import ExtensionsActions from './ExtensionsActions.svelte';
@@ -112,8 +112,8 @@
 	let filteredExtensions = $derived(
 		extensions?.data?.extensions.nodes?.filter((ele) => {
 			if (!$langFilter.has(ele.lang)) return false;
-			if ($query !== '' && $query !== null) {
-				return ele.name.toLowerCase().includes($query.toLocaleLowerCase());
+			if (query.value) {
+				return ele.name.toLowerCase().includes(query.value.toLocaleLowerCase());
 			}
 			return true;
 		}) as TExtension[] | undefined

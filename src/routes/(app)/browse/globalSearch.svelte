@@ -9,7 +9,7 @@
 <script lang="ts">
 	import GlobalSearchActions from './globalsearch/GlobalSearchActions.svelte';
 	import PQueue from 'p-queue';
-	import { queryParam, ssp } from 'sveltekit-search-params';
+	import { queryParam, ssp } from '$lib/queryParam.svelte';
 	import { onDestroy, untrack } from 'svelte';
 	import MediaQuery2 from '$lib/components/MediaQuery2.svelte';
 	import { SpecificSourceFilter } from './BrowseStores';
@@ -34,7 +34,7 @@
 	const queue = new PQueue({ concurrency: 4 });
 	const query = queryParam('q', ssp.string(), { pushHistory: false });
 
-	let lastQuery: string | null = null;
+	let lastQuery: string | null | undefined = null;
 
 	const client = getContextClient();
 
@@ -63,13 +63,13 @@
 
 	function onQueryChange() {
 		if (
-			$query === lastQuery &&
+			query.value === lastQuery &&
 			alterableRaw?.length === filteredSources?.length
 		)
 			return;
 		alterableRaw = $state.snapshot(filteredSources);
-		lastQuery = $query;
-		const Query = $query;
+		lastQuery = query.value;
+		const Query = query.value;
 		untrack(() => {
 			queue.clear();
 			if (Query) {
@@ -82,7 +82,7 @@
 						alterableRaw[id].Loading = true;
 						try {
 							let response = await getMangasFromSource(souc.id, Query);
-							if (Query === $query) {
+							if (Query === query.value) {
 								alterableRaw[id].Loading = false;
 								alterableRaw[id].mangas =
 									response.data?.fetchSourceManga?.mangas;
@@ -177,14 +177,14 @@
 	});
 
 	$effect(() => {
-		OTT([filteredSources, $query], onQueryChange);
+		OTT([filteredSources, query.value], onQueryChange);
 	});
 	let groupSources = $derived(doGroupSources(alterableRaw));
 </script>
 
 <MediaQuery2>
 	{#snippet children({ gridnumber })}
-		{#if $query === null || $query === ''}
+		{#if !query.value}
 			<div class="flex justify-center p-8">
 				Try searching for a manga in the top right
 			</div>

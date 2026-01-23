@@ -7,7 +7,7 @@
 -->
 
 <script lang="ts">
-	import { queryParam, ssp } from 'sveltekit-search-params';
+	import { queryParam, ssp } from '$lib/queryParam.svelte';
 	import type { LayoutData } from '../$types';
 	import { filtersState } from './stores.svelte';
 	import Grid from '../Grid.svelte';
@@ -48,11 +48,11 @@
 	const query = queryParam('q', ssp.string(), { pushHistory: false });
 
 	function doSearch() {
-		queryfilter.query = $query ?? '';
+		queryfilter.query = query.value ?? '';
 	}
 
 	let queryfilter = $state({
-		query: $query === '' ? undefined : ($query ?? undefined),
+		query: query.value === '' ? undefined : (query.value ?? undefined),
 		filters: filtersState.filters?.length ? filtersState.filters : undefined
 	});
 
@@ -64,7 +64,10 @@
 			query: queryy === '' ? undefined : (queryy ?? undefined),
 			filters: filterss?.length ? filterss : undefined
 		};
-		$query = queryy === '' ? null : (queryy ?? null);
+		query.value =
+			queryy === ''
+				? (null as unknown as string)
+				: (queryy ?? (null as unknown as string));
 		filtersState.filters = filterss?.length ? filterss : [];
 	}
 	$effect(doSearch);

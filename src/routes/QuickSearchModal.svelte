@@ -14,7 +14,7 @@
 	import { goto } from '$app/navigation';
 	import { untrack, type SvelteComponent } from 'svelte';
 	import { SourceLangFilter } from './(app)/browse/sources/SourcesStores';
-	import { queryParam, ssp } from 'sveltekit-search-params';
+	import { queryParam, ssp } from '$lib/queryParam.svelte';
 	import { page } from '$app/state';
 	import { getContextClient } from '@urql/svelte';
 	import {
@@ -328,7 +328,7 @@
 							`$1filter?q=${value}`
 						)
 					);
-				} else query.set(value);
+				} else query.value = value;
 			}
 			parent.onClose();
 		}
