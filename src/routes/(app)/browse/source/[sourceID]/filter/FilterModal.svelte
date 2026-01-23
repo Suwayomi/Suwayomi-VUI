@@ -19,7 +19,7 @@
 	import type { LayoutData } from '../$types';
 	import { filtersState } from './stores.svelte';
 	import type { SvelteComponent } from 'svelte';
-	import { queryParam, ssp } from 'sveltekit-search-params';
+	import { queryParam, ssp } from '$lib/queryParam.svelte';
 	import type { VariablesOf } from '$lib/gql/graphql';
 	import type { fetchSourceManga } from '$lib/gql/Mutations';
 	import { getContextClient } from '@urql/svelte';
@@ -52,20 +52,19 @@
 		});
 	});
 
-	const queryy = queryParam('q', ssp.string(), { pushHistory: false });
+	const query = queryParam('q', ssp.string(), { pushHistory: false });
 
-	let query = $state($queryy ?? '');
 	let filters: VariablesOf<typeof fetchSourceManga>['filters'] = $state(
 		filtersState.filters
 	);
 
 	function Search() {
-		submit(filters, query);
+		submit(filters, query.value ?? '');
 		parent.onClose();
 	}
 
 	function reset() {
-		query = '';
+		query.value = '';
 		filters = [];
 		Search();
 	}
@@ -76,7 +75,7 @@
 		{#snippet title()}
 			<div class="mx-4 mt-4">
 				<input
-					bind:value={query}
+					bind:value={query.value}
 					class="input"
 					title="Search"
 					type="text"

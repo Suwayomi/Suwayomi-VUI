@@ -49,7 +49,9 @@
 			>
 				{#if intersecting.has(manga.id)}
 					<a
-						href="{OpenModal === undefined ? '..' : ''}/manga/{manga.id}"
+						href="{OpenModal === undefined
+							? location.pathname.split('/').slice(0, -2).join('/')
+							: ''}/manga/{manga.id}"
 						onclick={(e) => {
 							if (OpenModal !== undefined && !e.ctrlKey) {
 								e.preventDefault();

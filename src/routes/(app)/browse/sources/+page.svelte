@@ -9,7 +9,7 @@
 <script lang="ts">
 	import ImageCard from '$lib/components/ImageCard.svelte';
 	import { actionState } from '$lib/MountTitleAction.svelte';
-	import { queryParam, ssp } from 'sveltekit-search-params';
+	import { queryParam, ssp } from '$lib/queryParam.svelte';
 	import { FindLangName } from '../languages';
 	import Nav from '../Nav.svelte';
 	import SourcesActions from './SourcesActions.svelte';
@@ -86,10 +86,10 @@
 		sources.data?.sources?.nodes.filter((ele) => {
 			if (ele.meta.find((e) => e.key === 'pinned')) return true;
 			if (!$SourceLangFilter.has(ele.lang)) return false;
-			if ($query !== '' && $query !== null) {
+			if (query.value) {
 				return ele.displayName
 					.toLowerCase()
-					.includes($query.toLocaleLowerCase());
+					.includes(query.value.toLocaleLowerCase());
 			}
 			return true;
 		}) as Tsource[] | undefined

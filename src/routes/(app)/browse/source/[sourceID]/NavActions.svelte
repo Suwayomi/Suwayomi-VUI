@@ -18,7 +18,7 @@
 
 <div class="flex h-full space-x-1">
 	<a
-		href="./popular"
+		href={location.pathname.split('/').slice(0, -1).join('/') + '/popular'}
 		class="btn rounded-none
   {page.url.pathname.includes('/popular')
 			? 'variant-filled-secondary'
@@ -28,7 +28,7 @@
 	</a>
 	{#if supportsLatest}
 		<a
-			href="./latest"
+			href={location.pathname.split('/').slice(0, -1).join('/') + '/latest'}
 			class="btn rounded-none
   {page.url.pathname.includes('/latest')
 				? 'variant-filled-secondary'
@@ -38,7 +38,7 @@
 		</a>
 	{/if}
 	<a
-		href="./filter"
+		href={location.pathname.split('/').slice(0, -1).join('/') + '/filter'}
 		class="btn rounded-none
   {page.url.pathname.includes('/filter')
 			? 'variant-filled-secondary'

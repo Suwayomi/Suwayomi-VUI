@@ -7,7 +7,7 @@
 -->
 
 <script lang="ts">
-	import { queryParam, ssp } from 'sveltekit-search-params';
+	import { queryParam, ssp } from '$lib/queryParam.svelte';
 	import TooltipIconButton from './TooltipIconButton.svelte';
 	interface Props {
 		children?: import('svelte').Snippet;
@@ -20,11 +20,11 @@
 	const query = queryParam('q', ssp.string(), { pushHistory: false });
 	let searchElementHidden = $state(false);
 	$effect(() => {
-		searchElementHidden = $query === null || $query === '';
+		searchElementHidden = query.value === null || query.value === '';
 	});
 	let value = $state('');
 	$effect(() => {
-		value = $query || '';
+		value = query.value || '';
 	});
 
 	function handelSearch() {
@@ -36,13 +36,13 @@
 			return;
 		}
 		clearTimeout(timeoutCancel);
-		$query = '';
+		query.value = '';
 		value = '';
 	}
 
 	function handelChange() {
 		timeoutCancel = setTimeout(() => {
-			$query = value;
+			query.value = value;
 		}, 100);
 	}
 	function handelEscapeInput(
