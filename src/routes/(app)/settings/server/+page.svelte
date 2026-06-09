@@ -12,8 +12,10 @@
 		errortoast,
 		queryState,
 		setSettings,
+		showSyncProgressToast,
 		subscriptionState
 	} from '$lib/util.svelte';
+	import { syncSettings } from '$lib/simpleStores.svelte';
 	import { getContextClient } from '@urql/svelte';
 	import Select from './components/Select.svelte';
 	import ExtensionReposModal from './components/extensionReposModal.svelte';
@@ -26,7 +28,8 @@
 		updateWebUI,
 		type setServerSettings,
 		runUpdateLibraryManga,
-		updateMangasCategories
+		updateMangasCategories,
+		startSync
 	} from '$lib/gql/Mutations';
 	import { type VariablesOf } from '$lib/gql/graphql';
 	import {
@@ -117,6 +120,21 @@
 	);
 	let webUIUpdateCheckInterval = $state(23);
 
+	let syncDataCategories = $state(false);
+	let syncDataChapters = $state(false);
+	let syncDataHistory = $state(false);
+	let syncDataManga = $state(false);
+	let syncDataTracking = $state(false);
+	let syncInterval = $state('PT0S');
+	let syncOnChapterOpen = $state(false);
+	let syncOnChapterRead = $state(false);
+	let syncOnWebUIResume = $state(false);
+	let syncOnWebUIStart = $state(false);
+	let syncYomiApiKey = $state('');
+	let syncYomiEnabled = $state(false);
+	let syncYomiHost = $state('');
+	let syncYomiSyncing = $state(false);
+
 	$effect(() => {
 		if (settingsData.data?.settings) {
 			autoDownloadNewChapters =
@@ -171,6 +189,24 @@
 			webUIInterface = settingsData.data.settings.webUIInterface;
 			webUIUpdateCheckInterval =
 				settingsData.data.settings.webUIUpdateCheckInterval;
+			syncDataCategories = settingsData.data.settings.syncDataCategories;
+			syncDataChapters = settingsData.data.settings.syncDataChapters;
+			syncDataHistory = settingsData.data.settings.syncDataHistory;
+			syncDataManga = settingsData.data.settings.syncDataManga;
+			syncDataTracking = settingsData.data.settings.syncDataTracking;
+			syncInterval = settingsData.data.settings.syncInterval;
+			syncOnChapterOpen = settingsData.data.settings.syncOnChapterOpen;
+			syncOnChapterRead = settingsData.data.settings.syncOnChapterRead;
+			syncOnWebUIResume = settingsData.data.settings.syncOnWebUIResume;
+			syncOnWebUIStart = settingsData.data.settings.syncOnWebUIStart;
+			syncYomiApiKey = settingsData.data.settings.syncYomiApiKey;
+			syncYomiEnabled = settingsData.data.settings.syncYomiEnabled;
+			syncYomiHost = settingsData.data.settings.syncYomiHost;
+			syncSettings.set({
+				syncYomiEnabled: settingsData.data.settings.syncYomiEnabled,
+				syncOnWebUIStart: settingsData.data.settings.syncOnWebUIStart,
+				syncOnWebUIResume: settingsData.data.settings.syncOnWebUIResume
+			});
 		}
 	});
 
@@ -201,6 +237,16 @@
 				props: { update }
 			}
 		});
+	}
+
+	async function syncNow() {
+		syncYomiSyncing = true;
+		showSyncProgressToast();
+		try {
+			await client.mutation(startSync, {}).toPromise();
+		} finally {
+			syncYomiSyncing = false;
+		}
 	}
 
 	let removingNoCategoriesManga = $state(false);
@@ -575,6 +621,107 @@
 			title="Update Mangas"
 			bind:checked={updateMangas}
 			onchange={() => setSettings({ updateMangas })}
+		/>
+		<!-- SyncYomi -->
+		<div class="flex h-8 w-full items-center px-4 text-sm font-semibold opacity-70">SyncYomi</div>
+		<!-- syncYomiEnabled -->
+		<Toggle
+			title="Enable SyncYomi"
+			bind:checked={syncYomiEnabled}
+			onchange={() => setSettings({ syncYomiEnabled })}
+		/>
+		<!-- syncYomiHost -->
+		<Text
+			title="Server address"
+			bind:value={syncYomiHost}
+			onchange={() => setSettings({ syncYomiHost })}
+		/>
+		<!-- syncYomiApiKey -->
+		<Text
+			title="API key"
+			bind:value={syncYomiApiKey}
+			onchange={() => setSettings({ syncYomiApiKey })}
+		/>
+		<!-- syncInterval -->
+		<Select
+			title="Auto-sync interval"
+			bind:value={syncInterval}
+			options={[
+				{ value: 'PT0S', label: 'Disabled' },
+				{ value: 'PT15M', label: '15 minutes' },
+				{ value: 'PT30M', label: '30 minutes' },
+				{ value: 'PT1H', label: '1 hour' },
+				{ value: 'PT2H', label: '2 hours' },
+				{ value: 'PT6H', label: '6 hours' },
+				{ value: 'PT12H', label: '12 hours' },
+				{ value: 'PT24H', label: '24 hours' }
+			]}
+			onchange={() => setSettings({ syncInterval })}
+		/>
+		<!-- Sync now -->
+		<button
+			class="flex h-16 w-full cursor-pointer items-center justify-between text-left hover:variant-glass-surface disabled:opacity-50"
+			disabled={!syncYomiEnabled || syncYomiSyncing}
+			onclick={syncNow}
+		>
+			Sync now
+			{#if syncYomiSyncing}
+				<span class="text-sm opacity-50">Syncing...</span>
+			{/if}
+		</button>
+		<!-- syncDataManga -->
+		<Toggle
+			title="Manga"
+			bind:checked={syncDataManga}
+			onchange={() => setSettings({ syncDataManga })}
+		/>
+		<!-- syncDataChapters -->
+		<Toggle
+			title="Chapters"
+			bind:checked={syncDataChapters}
+			onchange={() => setSettings({ syncDataChapters })}
+		/>
+		<!-- syncDataTracking -->
+		<Toggle
+			title="Tracking"
+			bind:checked={syncDataTracking}
+			onchange={() => setSettings({ syncDataTracking })}
+		/>
+		<!-- syncDataHistory -->
+		<Toggle
+			title="History"
+			bind:checked={syncDataHistory}
+			onchange={() => setSettings({ syncDataHistory })}
+		/>
+		<!-- syncDataCategories -->
+		<Toggle
+			title="Categories"
+			bind:checked={syncDataCategories}
+			onchange={() => setSettings({ syncDataCategories })}
+		/>
+		<!-- syncOnChapterRead -->
+		<Toggle
+			title="Trigger on chapter read"
+			bind:checked={syncOnChapterRead}
+			onchange={() => setSettings({ syncOnChapterRead })}
+		/>
+		<!-- syncOnChapterOpen -->
+		<Toggle
+			title="Trigger on chapter open"
+			bind:checked={syncOnChapterOpen}
+			onchange={() => setSettings({ syncOnChapterOpen })}
+		/>
+		<!-- syncOnWebUIStart -->
+		<Toggle
+			title="Trigger on client start"
+			bind:checked={syncOnWebUIStart}
+			onchange={() => setSettings({ syncOnWebUIStart })}
+		/>
+		<!-- syncOnWebUIResume -->
+		<Toggle
+			title="Trigger on client resume"
+			bind:checked={syncOnWebUIResume}
+			onchange={() => setSettings({ syncOnWebUIResume })}
 		/>
 		<!-- webUIChannel -->
 		<Select

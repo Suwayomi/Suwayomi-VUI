@@ -19,13 +19,18 @@ self.addEventListener('install', (event) => {
 	async function addFilesToCache() {
 		await caches.open(CACHE);
 		// await cache.addAll(ASSETS);
+		await self.skipWaiting();
 	}
 
 	event.waitUntil(addFilesToCache());
 });
 
 self.addEventListener('activate', (event) => {
-	event.waitUntil(deleteOldCaches());
+	async function activate() {
+		await deleteOldCaches();
+		await self.clients.claim();
+	}
+	event.waitUntil(activate());
 });
 
 self.addEventListener('fetch', (event) => {

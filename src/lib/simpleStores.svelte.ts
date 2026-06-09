@@ -32,6 +32,12 @@ import type { CssClasses } from '@skeletonlabs/skeleton';
 
 export const toastStore = writable<ToastStore | null>(null);
 
+export const syncSettings = writable<{
+	syncYomiEnabled: boolean;
+	syncOnWebUIStart: boolean;
+	syncOnWebUIResume: boolean;
+} | null>(null);
+
 type Themes = (typeof presetConst)[number]['name'];
 
 export const ChapterTitle = {

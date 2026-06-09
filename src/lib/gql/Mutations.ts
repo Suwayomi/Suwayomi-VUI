@@ -949,3 +949,14 @@ export const setCategoryMeta = graphql(`
 		}
 	}
 `);
+
+export const startSync = graphql(
+	`
+		mutation startSync {
+			startSync(input: {}) {
+				result
+			}
+		}
+	`,
+	[]
+);

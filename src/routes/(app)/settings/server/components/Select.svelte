@@ -6,10 +6,12 @@
  file, You can obtain one at http://mozilla.org/MPL/2.0/.
 -->
 <script lang="ts">
+	type SelectOption = string | { value: string; label: string };
+
 	interface Props {
 		value: string;
 		title: string;
-		options: Array<string>;
+		options: Array<SelectOption>;
 		onchange: () => void;
 	}
 
@@ -19,6 +21,14 @@
 		options,
 		onchange = () => {}
 	}: Props = $props();
+
+	function optionValue(opt: SelectOption): string {
+		return typeof opt === 'string' ? opt : opt.value;
+	}
+
+	function optionLabel(opt: SelectOption): string {
+		return typeof opt === 'string' ? opt.toLocaleLowerCase() : opt.label;
+	}
 </script>
 
 <label
@@ -28,9 +38,7 @@
 	<div class="flex flex-1 flex-nowrap items-center justify-end space-x-2">
 		<select class="input max-w-32 sm:max-w-[36.5rem]" bind:value {onchange}>
 			{#each options as option}
-				<option class="capitalize" value={option}
-					>{option.toLocaleLowerCase()}</option
-				>
+				<option value={optionValue(option)}>{optionLabel(option)}</option>
 			{/each}
 		</select>
 	</div>

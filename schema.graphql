@@ -304,6 +304,9 @@ type CreateCategoryPayload {
 """A location in a connection that can be used for resuming pagination."""
 scalar Cursor
 
+"""An ISO-8601 duration value."""
+scalar Duration
+
 input DeleteCategoryInput {
   categoryId: Int!
   clientMutationId: String
@@ -1109,6 +1112,7 @@ type Mutation {
   updateCategoryManga(input: UpdateCategoryMangaInput!): UpdateCategoryMangaPayload
   updateLibraryManga(input: UpdateLibraryMangaInput!): UpdateLibraryMangaPayload
   updateStop(input: UpdateStopInput!): UpdateStopPayload!
+  startSync(input: StartSyncInput!): StartSyncPayload!
 }
 
 union Node = CategoryMetaType | CategoryType | ChapterMetaType | ChapterType | DownloadType | DownloadUpdate | ExtensionType | GlobalMetaType | MangaMetaType | MangaType | PartialSettingsType | SettingsType | SourceMetaType | SourceType | TrackRecordType | TrackerType
@@ -1192,6 +1196,19 @@ type PartialSettingsType implements Settings {
   webUIFlavor: WebUIFlavor
   webUIInterface: WebUIInterface
   webUIUpdateCheckInterval: Float
+  syncDataCategories: Boolean
+  syncDataChapters: Boolean
+  syncDataHistory: Boolean
+  syncDataManga: Boolean
+  syncDataTracking: Boolean
+  syncInterval: Duration
+  syncOnChapterOpen: Boolean
+  syncOnChapterRead: Boolean
+  syncOnWebUIResume: Boolean
+  syncOnWebUIStart: Boolean
+  syncYomiApiKey: String
+  syncYomiEnabled: Boolean
+  syncYomiHost: String
 }
 
 input PartialSettingsTypeInput {
@@ -1241,6 +1258,19 @@ input PartialSettingsTypeInput {
   webUIFlavor: WebUIFlavor
   webUIInterface: WebUIInterface
   webUIUpdateCheckInterval: Float
+  syncDataCategories: Boolean
+  syncDataChapters: Boolean
+  syncDataHistory: Boolean
+  syncDataManga: Boolean
+  syncDataTracking: Boolean
+  syncInterval: Duration
+  syncOnChapterOpen: Boolean
+  syncOnChapterRead: Boolean
+  syncOnWebUIResume: Boolean
+  syncOnWebUIStart: Boolean
+  syncYomiApiKey: String
+  syncYomiEnabled: Boolean
+  syncYomiHost: String
 }
 
 union Preference = CheckBoxPreference | EditTextPreference | ListPreference | MultiSelectListPreference | SwitchPreference
@@ -1435,6 +1465,19 @@ interface Settings {
   webUIFlavor: WebUIFlavor
   webUIInterface: WebUIInterface
   webUIUpdateCheckInterval: Float
+  syncDataCategories: Boolean
+  syncDataChapters: Boolean
+  syncDataHistory: Boolean
+  syncDataManga: Boolean
+  syncDataTracking: Boolean
+  syncInterval: Duration
+  syncOnChapterOpen: Boolean
+  syncOnChapterRead: Boolean
+  syncOnWebUIResume: Boolean
+  syncOnWebUIStart: Boolean
+  syncYomiApiKey: String
+  syncYomiEnabled: Boolean
+  syncYomiHost: String
 }
 
 type SettingsType implements Settings {
@@ -1486,6 +1529,19 @@ type SettingsType implements Settings {
   webUIFlavor: WebUIFlavor!
   webUIInterface: WebUIInterface!
   webUIUpdateCheckInterval: Float!
+  syncDataCategories: Boolean!
+  syncDataChapters: Boolean!
+  syncDataHistory: Boolean!
+  syncDataManga: Boolean!
+  syncDataTracking: Boolean!
+  syncInterval: Duration!
+  syncOnChapterOpen: Boolean!
+  syncOnChapterRead: Boolean!
+  syncOnWebUIResume: Boolean!
+  syncOnWebUIStart: Boolean!
+  syncYomiApiKey: String!
+  syncYomiEnabled: Boolean!
+  syncYomiHost: String!
 }
 
 type SortFilter {
@@ -1600,6 +1656,39 @@ type StartDownloaderPayload {
   downloadStatus: DownloadStatus!
 }
 
+input StartSyncInput {
+  clientMutationId: String
+}
+
+type StartSyncPayload {
+  clientMutationId: String
+  result: StartSyncResult!
+}
+
+enum StartSyncResult {
+  SUCCESS
+  SYNC_DISABLED
+  SYNC_IN_PROGRESS
+}
+
+enum SyncState {
+  STARTED
+  CREATING_BACKUP
+  DOWNLOADING
+  MERGING
+  UPLOADING
+  RESTORING
+  SUCCESS
+  ERROR
+}
+
+type SyncStatus {
+  state: SyncState!
+  startDate: LongString!
+  endDate: LongString
+  errorMessage: String
+}
+
 input StopDownloaderInput {
   clientMutationId: String
 }
@@ -1690,6 +1779,7 @@ type Subscription {
   downloadStatusChanged(input: DownloadChangedInput!): DownloadUpdates!
   webUIUpdateStatusChange: WebUIUpdateStatus!
   updateStatusChanged: UpdateStatus!
+  syncStatusChanged: SyncStatus!
 }
 
 type SwitchPreference {

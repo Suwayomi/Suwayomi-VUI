@@ -85,6 +85,15 @@ export const updateStatusChanged = graphql(`
 	}
 `);
 
+export const syncStatusChangedSub = graphql(`
+	subscription syncStatusChangedSub {
+		syncStatusChanged {
+			state
+			errorMessage
+		}
+	}
+`);
+
 export const DownloadChanged = graphql(`
 	subscription DownloadChanged {
 		downloadStatusChanged(input: {}) {

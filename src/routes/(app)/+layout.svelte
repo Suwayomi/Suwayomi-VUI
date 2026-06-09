@@ -11,6 +11,7 @@
 	import MainAppRail from '$lib/components/MainAppRail.svelte';
 	import MediaQuery from '$lib/components/MediaQuery.svelte';
 	import MobileAppNavigation from '$lib/components/MobileAppNavigation.svelte';
+	import SyncTriggerHandler from '$lib/components/SyncTriggerHandler.svelte';
 	import { screens } from '$lib/screens';
 	import { AppBar } from '@skeletonlabs/skeleton';
 	interface Props {
@@ -50,6 +51,7 @@
 			{/snippet}
 		</MediaQuery>
 	{/snippet}
+	<SyncTriggerHandler />
 	{@render children?.()}
 	{#snippet footer()}
 		<MediaQuery query="(max-width: {screens.md})">

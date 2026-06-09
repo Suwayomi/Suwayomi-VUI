@@ -455,6 +455,19 @@ export const serverSettings = graphql(
 				socksProxyPassword
 				socksProxyUsername
 				socksProxyVersion
+				syncDataCategories
+				syncDataChapters
+				syncDataHistory
+				syncDataManga
+				syncDataTracking
+				syncInterval
+				syncOnChapterOpen
+				syncOnChapterRead
+				syncOnWebUIResume
+				syncOnWebUIStart
+				syncYomiApiKey
+				syncYomiEnabled
+				syncYomiHost
 			}
 		}
 	`,

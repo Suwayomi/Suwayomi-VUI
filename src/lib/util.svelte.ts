@@ -241,6 +241,31 @@ export function errortoast(failMessage: string, errorMessage: string) {
 	});
 }
 
+let _syncProgressToastId: string | null = null;
+
+export function showSyncProgressToast(): void {
+	if (_syncProgressToastId) return;
+	_syncProgressToastId = getToastStore().trigger({
+		message: 'Syncing library...',
+		autoHide: false,
+		hoverable: false,
+		background: 'bg-warning-500'
+	});
+}
+
+export function closeSyncProgressToast(): void {
+	if (!_syncProgressToastId) return;
+	getToastStore().close(_syncProgressToastId);
+	_syncProgressToastId = null;
+}
+
+export function successToast(message: string): void {
+	getToastStore().trigger({
+		message,
+		background: 'bg-success-500'
+	});
+}
+
 export function Partition<T>(
 	arr: T[],
 	comparator: (e: T) => boolean
