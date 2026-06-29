@@ -181,7 +181,7 @@ export const setSourceMeta = graphql(
 				meta {
 					source {
 						...SourceTypeFragment
-						contentRating
+						contentWarning
 						extension {
 							pkgName
 							repo
@@ -200,7 +200,7 @@ export const deleteSourceMeta = graphql(
 			deleteSourceMeta(input: { key: $key, sourceId: $sourceId }) {
 				source {
 					...SourceTypeFragment
-					contentRating
+					contentWarning
 					extension {
 						pkgName
 						repo
@@ -274,7 +274,7 @@ export const updateExtension = graphql(
 					source {
 						nodes {
 							...SourceTypeFragment
-							contentRating
+							contentWarning
 							extension {
 								pkgName
 								repo
@@ -712,7 +712,7 @@ export const installExternalExtension = graphql(
 					source {
 						nodes {
 							...SourceTypeFragment
-							contentRating
+							contentWarning
 							extension {
 								pkgName
 								storeIndexUrl

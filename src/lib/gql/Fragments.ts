@@ -121,7 +121,7 @@ export const ExtensionTypeFragment = graphql(
 			pkgName
 			lang
 			iconUrl
-			contentRating
+			contentWarning
 			isInstalled
 			isObsolete
 			hasUpdate

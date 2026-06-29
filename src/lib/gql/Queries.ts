@@ -96,7 +96,7 @@ export const getSources = graphql(
 			sources {
 				nodes {
 					...SourceTypeFragment
-					contentRating
+					contentWarning
 					extension {
 						pkgName
 						repo
@@ -542,13 +542,15 @@ export const MangasByTitle = graphql(`
 export const extensionStores = graphql(`
 	query extensionStores {
 		extensionStores {
-			signingKey
-			name
-			isLegacy
-			indexUrl
-			contactWebsite
-			contactDiscord
-			badgeLabel
+			nodes {
+				signingKey
+				name
+				isLegacy
+				indexUrl
+				contactWebsite
+				contactDiscord
+				badgeLabel
+			}
 		}
 	}
 `);

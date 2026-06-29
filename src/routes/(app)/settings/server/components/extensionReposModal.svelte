@@ -18,6 +18,10 @@
 		query: extensionStores
 	});
 
+	$effect(() => {
+		console.log(Stores);
+	});
+
 	const modalStore = getModalStore();
 	let newrepo = $state('');
 </script>
@@ -45,7 +49,7 @@
 					>
 				</div>
 				<div class="w-full space-y-1">
-					{#each Stores.data?.extensionStores as value}
+					{#each Stores.data?.extensionStores.nodes as value}
 						<div
 							class="flex flex-nowrap items-center justify-between space-x-1"
 						>

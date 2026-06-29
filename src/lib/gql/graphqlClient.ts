@@ -280,7 +280,7 @@ function removeExtensionStoreUpdater(
 		},
 		(data) => {
 			if (!data) return data;
-			data.extensionStores = data.extensionStores.filter(
+			data.extensionStores.nodes = data.extensionStores.nodes.filter(
 				(e) => e.indexUrl !== variables.indexUrl
 			);
 			return data;
@@ -300,7 +300,7 @@ function addExtensionStoreUpdater(
 		(data) => {
 			if (!data) return data;
 			if (!res.addExtensionStore) return data;
-			data.extensionStores.push(res.addExtensionStore.extensionStore);
+			data.extensionStores.nodes.push(res.addExtensionStore.extensionStore);
 			return data;
 		}
 	);

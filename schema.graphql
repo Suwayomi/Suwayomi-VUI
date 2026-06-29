@@ -342,11 +342,28 @@ input ConnectKoSyncAccountInput {
   username: String!
 }
 
-enum ContentRating {
+enum ContentWarning {
   SAFE
-  SUGGESTIVE
-  EROTICA
-  PORNOGRAPHIC
+  MIXED
+  NSFW
+}
+
+input ContentWarningFilterInput {
+  distinctFrom: ContentWarning
+  distinctFromAll: [ContentWarning!]
+  distinctFromAny: [ContentWarning!]
+  equalTo: ContentWarning
+  greaterThan: ContentWarning
+  greaterThanOrEqualTo: ContentWarning
+  in: [ContentWarning!]
+  isNull: Boolean
+  lessThan: ContentWarning
+  lessThanOrEqualTo: ContentWarning
+  notDistinctFrom: ContentWarning
+  notEqualTo: ContentWarning
+  notEqualToAll: [ContentWarning!]
+  notEqualToAny: [ContentWarning!]
+  notIn: [ContentWarning!]
 }
 
 input CreateBackupInput {
@@ -717,7 +734,7 @@ type EnqueueChapterDownloadsPayload {
 input ExtensionConditionInput {
   apkName: String
   apkUrl: String
-  contentRating: ContentRating
+  contentWarning: ContentWarning
   extensionLib: String
   hasUpdate: Boolean
   iconUrl: String
@@ -741,6 +758,7 @@ input ExtensionFilterInput {
   and: [ExtensionFilterInput!]
   apkName: StringFilterInput
   apkUrl: StringFilterInput
+  contentWarning: ContentWarningFilterInput
   extensionLib: StringFilterInput
   hasUpdate: BooleanFilterInput
   iconUrl: StringFilterInput
@@ -774,27 +792,64 @@ input ExtensionOrderInput {
   byType: SortOrder
 }
 
+input ExtensionStoreConditionInput {
+  id: Int
+  indexUrl: String
+  name: String
+}
+
+type ExtensionStoreEdge implements Edge {
+  cursor: Cursor!
+  node: ExtensionStoreType!
+}
+
+input ExtensionStoreFilterInput {
+  and: [ExtensionStoreFilterInput!]
+  indexUrl: StringFilterInput
+  name: StringFilterInput
+  not: ExtensionStoreFilterInput
+  or: [ExtensionStoreFilterInput!]
+}
+
+type ExtensionStoreNodeList implements NodeList {
+  edges: [ExtensionStoreEdge!]!
+  nodes: [ExtensionStoreType!]!
+  pageInfo: PageInfo!
+  totalCount: Int!
+}
+
+enum ExtensionStoreOrderBy {
+  NAME
+  INDEX_URL
+}
+
+input ExtensionStoreOrderInput {
+  by: ExtensionStoreOrderBy!
+  byType: SortOrder
+}
+
 type ExtensionStoreType {
   badgeLabel: String!
   contactDiscord: String
   contactWebsite: String!
+  extensionListUrl: String
   indexUrl: String!
   isLegacy: Boolean!
   name: String!
   signingKey: String!
-  extension: ExtensionNodeList!
+  extensions: ExtensionNodeList!
 }
 
 type ExtensionType {
   """This will be nullable in the future"""
   apkName: String
   apkUrl: String
-  contentRating: ContentRating!
+  contentWarning: ContentWarning!
   extensionLib: String
   hasUpdate: Boolean!
   iconUrl: String!
   isInstalled: Boolean!
-  isNsfw: Boolean! @deprecated(reason: "Removed in extension api v1.6, replace with contentRating")
+  isNsfw: Boolean! @deprecated(reason: "Removed in extension api v1.6, replace with contentWarning")
   isObsolete: Boolean!
   lang: String!
   name: String!
@@ -837,6 +892,7 @@ input FetchExtensionsInput {
 
 type FetchExtensionsPayload {
   clientMutationId: String
+  extensionStores: [ExtensionStoreType!]!
   extensions: [ExtensionType!]!
 }
 
@@ -1481,8 +1537,7 @@ type PartialSettingsType implements Settings {
   excludeEntryWithUnreadChapters: Boolean
   excludeNotStarted: Boolean
   excludeUnreadChapters: Boolean
-  extensionRepos: [String!] @deprecated(reason: "Replaced with extensionStores, replace with extensionStores")
-  extensionStores: [String!]
+  extensionRepos: [String!] @deprecated(reason: "Replaced with addExtensionStore and removeExtensionStore mutations")
   flareSolverrAsResponseFallback: Boolean
   flareSolverrEnabled: Boolean
   flareSolverrSessionName: String
@@ -1577,7 +1632,6 @@ input PartialSettingsTypeInput {
   excludeEntryWithUnreadChapters: Boolean
   excludeNotStarted: Boolean
   excludeUnreadChapters: Boolean
-  extensionStores: [String!]
   flareSolverrAsResponseFallback: Boolean
   flareSolverrEnabled: Boolean
   flareSolverrSessionName: String
@@ -1669,8 +1723,8 @@ type Query {
   downloadStatus: DownloadStatus!
   extension(pkgName: String!): ExtensionType!
   extensions(condition: ExtensionConditionInput, filter: ExtensionFilterInput, order: [ExtensionOrderInput!], before: Cursor, after: Cursor, first: Int, last: Int, offset: Int): ExtensionNodeList!
-  extensionStore(indexUrl: String!): ExtensionStoreType
-  extensionStores: [ExtensionStoreType!]!
+  extensionStore(indexUrl: String!): ExtensionStoreType!
+  extensionStores(condition: ExtensionStoreConditionInput, filter: ExtensionStoreFilterInput, order: [ExtensionStoreOrderInput!], before: Cursor, after: Cursor, first: Int, last: Int, offset: Int): ExtensionStoreNodeList!
   aboutServer: AboutServerPayload!
   aboutWebUI: AboutWebUI!
   checkForServerUpdates: [CheckForServerUpdatesPayload!]!
@@ -1935,8 +1989,7 @@ interface Settings {
   excludeEntryWithUnreadChapters: Boolean
   excludeNotStarted: Boolean
   excludeUnreadChapters: Boolean
-  extensionRepos: [String!] @deprecated(reason: "Replaced with extensionStores, replace with extensionStores")
-  extensionStores: [String!]
+  extensionRepos: [String!] @deprecated(reason: "Replaced with addExtensionStore and removeExtensionStore mutations")
   flareSolverrAsResponseFallback: Boolean
   flareSolverrEnabled: Boolean
   flareSolverrSessionName: String
@@ -2077,8 +2130,7 @@ type SettingsType implements Settings {
   excludeEntryWithUnreadChapters: Boolean!
   excludeNotStarted: Boolean!
   excludeUnreadChapters: Boolean!
-  extensionRepos: [String!]! @deprecated(reason: "Replaced with extensionStores, replace with extensionStores")
-  extensionStores: [String!]!
+  extensionRepos: [String!]! @deprecated(reason: "Replaced with addExtensionStore and removeExtensionStore mutations")
   flareSolverrAsResponseFallback: Boolean!
   flareSolverrEnabled: Boolean!
   flareSolverrSessionName: String!
@@ -2168,7 +2220,7 @@ input SortSelectionInput {
 }
 
 input SourceConditionInput {
-  contentRating: ContentRating
+  contentWarning: ContentWarning
   id: LongString
   lang: String
   name: String
@@ -2181,6 +2233,7 @@ type SourceEdge implements Edge {
 
 input SourceFilterInput {
   and: [SourceFilterInput!]
+  contentWarning: ContentWarningFilterInput
   id: LongFilterInput
   lang: StringFilterInput
   name: StringFilterInput
@@ -2230,15 +2283,14 @@ input SourcePreferenceChangeInput {
 
 type SourceType {
   baseUrl: String @deprecated(reason: ", replace with homeUrl")
-  contentRating: ContentRating!
+  contentWarning: ContentWarning!
   displayName: String!
   homeUrl: String
   iconUrl: String!
   id: LongString!
   isConfigurable: Boolean!
-  isNsfw: Boolean! @deprecated(reason: ", replace with contentRating")
+  isNsfw: Boolean! @deprecated(reason: ", replace with contentWarning")
   lang: String!
-  message: String
   name: String!
   supportsLatest: Boolean!
   extension: ExtensionType!
