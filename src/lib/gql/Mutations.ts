@@ -181,7 +181,7 @@ export const setSourceMeta = graphql(
 				meta {
 					source {
 						...SourceTypeFragment
-						isNsfw
+						contentWarning
 						extension {
 							pkgName
 							repo
@@ -200,7 +200,7 @@ export const deleteSourceMeta = graphql(
 			deleteSourceMeta(input: { key: $key, sourceId: $sourceId }) {
 				source {
 					...SourceTypeFragment
-					isNsfw
+					contentWarning
 					extension {
 						pkgName
 						repo
@@ -274,7 +274,7 @@ export const updateExtension = graphql(
 					source {
 						nodes {
 							...SourceTypeFragment
-							isNsfw
+							contentWarning
 							extension {
 								pkgName
 								repo
@@ -712,10 +712,10 @@ export const installExternalExtension = graphql(
 					source {
 						nodes {
 							...SourceTypeFragment
-							isNsfw
+							contentWarning
 							extension {
 								pkgName
-								repo
+								storeIndexUrl
 							}
 						}
 					}
@@ -834,9 +834,9 @@ export const setServerSettings = graphql(
 					backupPath
 					backupTTL
 					backupTime
-					basicAuthEnabled
-					basicAuthPassword
-					basicAuthUsername
+					authMode
+					authPassword
+					authUsername
 					debugLogsEnabled
 					downloadAsCbz
 					downloadsPath
@@ -946,6 +946,34 @@ export const setCategoryMeta = graphql(`
 				value
 				categoryId
 			}
+		}
+	}
+`);
+
+export const addExtensionStore = graphql(`
+	mutation addExtensionStore($indexUrl: String!) {
+		addExtensionStore(input: { indexUrl: $indexUrl }) {
+			extensionStore {
+				badgeLabel
+				contactDiscord
+				contactWebsite
+				indexUrl
+				isLegacy
+				name
+				signingKey
+			}
+		}
+	}
+`);
+
+// removeExtensionStore(input: {indexUrl: $indexUrl1}) {
+//     clientMutationId
+//   }
+
+export const removeExtensionStore = graphql(`
+	mutation removeExtensionStore($indexUrl: String!) {
+		removeExtensionStore(input: { indexUrl: $indexUrl }) {
+			clientMutationId
 		}
 	}
 `);

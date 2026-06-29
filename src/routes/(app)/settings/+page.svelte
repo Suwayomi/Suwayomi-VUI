@@ -14,7 +14,6 @@
 	import { display, gmState } from '$lib/simpleStores.svelte';
 
 	import { presetWithIcons } from '$lib/presets';
-	import Slide from '$lib/components/Slide.svelte';
 	import { getModalStore } from '@skeletonlabs/skeleton';
 	import ReaderDefaultsModal from './ReaderDefaultsModal.svelte';
 	import BackupModal from './BackupModal.svelte';
@@ -119,19 +118,6 @@
 		{/each}
 	</select>
 </label>
-<button
-	onclick={() => {
-		gmState.value.nsfw = !gmState.value.nsfw;
-	}}
-	class="flex h-16 w-full cursor-pointer items-center text-left hover:variant-glass-surface"
->
-	<IconWrapper class="h-full w-auto p-2" name="mdi:heart" />
-	<div class="w-full">Show Nsfw</div>
-	<Slide
-		bind:checked={gmState.value.nsfw}
-		class="p-1 hover:variant-glass-surface focus:outline-0"
-	/>
-</button>
 <button
 	onclick={() =>
 		modalStore.trigger({

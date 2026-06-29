@@ -116,15 +116,16 @@ export const ExtensionTypeFragment = graphql(
 	`
 		fragment ExtensionTypeFragment on ExtensionType {
 			name
-			repo
+			storeIndexUrl
 			versionName
 			pkgName
 			lang
 			iconUrl
-			isNsfw
+			contentWarning
 			isInstalled
 			isObsolete
 			hasUpdate
+			apkName
 		}
 	`,
 	[]

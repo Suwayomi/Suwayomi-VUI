@@ -6,7 +6,6 @@
 
 import { browser } from '$app/environment';
 import { getExtensions } from '$lib/gql/Queries';
-import { gmState } from '$lib/simpleStores.svelte';
 import type { PageLoad } from './$types';
 
 export const load: PageLoad = ({ fetch }) => {
@@ -16,7 +15,7 @@ export const load: PageLoad = ({ fetch }) => {
 			mod.client
 				.query(
 					getExtensions,
-					{ isNsfw: gmState.value.nsfw ? null : false },
+					{},
 					{
 						fetch
 					}

@@ -5,6 +5,7 @@ import { defineConfig, loadEnv } from 'vite';
 // @ts-ignore
 export default defineConfig(({ mode }) => {
 	process.env = Object.assign(process.env, loadEnv(mode, process.cwd(), ''));
+	console.log(process.env);
 	return {
 		// @ts-ignore
 		plugins: [sveltekit(), purgeCss()],
@@ -22,7 +23,8 @@ export default defineConfig(({ mode }) => {
 						}
 					}
 				}
-			}
+			},
+			port: 5172
 		},
 		optimizeDeps: {
 			exclude: ['@urql/svelte']

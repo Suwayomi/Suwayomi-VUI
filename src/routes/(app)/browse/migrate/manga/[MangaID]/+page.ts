@@ -8,7 +8,6 @@ import { error } from '@sveltejs/kit';
 import type { PageLoad } from './$types';
 import { browser } from '$app/environment';
 import { getManga, getSources } from '$lib/gql/Queries';
-import { gmState } from '$lib/simpleStores.svelte';
 
 export const load: PageLoad = ({ params, fetch }) => {
 	const MangaID = parseInt(params.MangaID);
@@ -30,7 +29,7 @@ export const load: PageLoad = ({ params, fetch }) => {
 			mod.client
 				.query(
 					getSources,
-					{ isNsfw: gmState.value.nsfw ? null : false },
+					{},
 					{
 						fetch
 					}

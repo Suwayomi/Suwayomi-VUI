@@ -22,7 +22,6 @@
 	import { getContextClient } from '@urql/svelte';
 	import { SourceTypeFragment } from '$lib/gql/Fragments';
 	import { deleteSourceMeta, setSourceMeta } from '$lib/gql/Mutations';
-	import { gmState } from '$lib/simpleStores.svelte';
 	import { SvelteSet } from 'svelte/reactivity';
 	import {
 		IntersectionObserverAction,
@@ -35,8 +34,7 @@
 	const client = getContextClient();
 	const sources = queryState({
 		client,
-		query: getSources,
-		variables: { isNsfw: gmState.value.nsfw ? null : false }
+		query: getSources
 	});
 	const query = queryParam('q', ssp.string(), { pushHistory: false });
 

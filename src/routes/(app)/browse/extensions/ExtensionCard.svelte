@@ -86,12 +86,18 @@
 					{ext.name}
 					<div class="text-sm opacity-70">
 						{ext.versionName}
-						{#if ext.isNsfw}
-							<span class="text-red-600">18+</span>
-						{/if}
+						<span
+							class={{
+								'text-red-600': ext.contentWarning === 'NSFW',
+								'text-yellow-400': ext.contentWarning === 'MIXED',
+								'text-green-500': ext.contentWarning === 'SAFE'
+							}}
+						>
+							{ext.contentWarning}
+						</span>
 					</div>
 					<div class="line-clamp-1 break-all text-sm opacity-70">
-						{ext.repo}
+						{ext.storeIndexUrl}
 					</div>
 				</div>
 				<div class="flex flex-1 flex-wrap justify-end">

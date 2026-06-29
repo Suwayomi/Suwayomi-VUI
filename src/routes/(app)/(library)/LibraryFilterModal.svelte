@@ -64,8 +64,7 @@
 	const client = getContextClient();
 	const sources = queryState({
 		client,
-		query: getSources,
-		variables: { isNsfw: gmState.value.nsfw ? null : false }
+		query: getSources
 	});
 	let LongTapped = $state(false);
 </script>

@@ -15,7 +15,6 @@
 	import { SpecificSourceFilter } from './BrowseStores';
 	import HorisontalmangaElement from './HorisontalmangaElement.svelte';
 	import { actionState } from '$lib/MountTitleAction.svelte';
-	import { gmState } from '$lib/simpleStores.svelte';
 
 	import { groupBy, OTT, queryState } from '$lib/util.svelte';
 	import { getContextClient } from '@urql/svelte';
@@ -40,8 +39,7 @@
 
 	let fetchSources = queryState({
 		client,
-		query: getSources,
-		variables: { isNsfw: gmState.value.nsfw ? null : false }
+		query: getSources
 	});
 
 	function getLanguages(extensions: ResultOf<typeof getSources> | undefined) {

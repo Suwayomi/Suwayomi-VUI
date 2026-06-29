@@ -79,8 +79,8 @@ export const getSingleChapter = graphql(
 
 export const getExtensions = graphql(
 	`
-		query getExtensions($isNsfw: Boolean = null) {
-			extensions(condition: { isNsfw: $isNsfw }) {
+		query getExtensions {
+			extensions {
 				nodes {
 					...ExtensionTypeFragment
 				}
@@ -92,11 +92,11 @@ export const getExtensions = graphql(
 
 export const getSources = graphql(
 	`
-		query getSources($isNsfw: Boolean = null) {
-			sources(condition: { isNsfw: $isNsfw }) {
+		query getSources {
+			sources {
 				nodes {
 					...SourceTypeFragment
-					isNsfw
+					contentWarning
 					extension {
 						pkgName
 						repo
@@ -417,9 +417,9 @@ export const serverSettings = graphql(
 				backupPath
 				backupTTL
 				backupTime
-				basicAuthEnabled
-				basicAuthPassword
-				basicAuthUsername
+				authMode
+				authPassword
+				authUsername
 				debugLogsEnabled
 				downloadAsCbz
 				downloadsPath
@@ -534,6 +534,22 @@ export const MangasByTitle = graphql(`
 				id
 				title
 				thumbnailUrl
+			}
+		}
+	}
+`);
+
+export const extensionStores = graphql(`
+	query extensionStores {
+		extensionStores {
+			nodes {
+				signingKey
+				name
+				isLegacy
+				indexUrl
+				contactWebsite
+				contactDiscord
+				badgeLabel
 			}
 		}
 	}
