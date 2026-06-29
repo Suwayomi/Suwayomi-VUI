@@ -7,6 +7,7 @@ import { Client, fetchExchange, subscriptionExchange } from '@urql/svelte';
 import { cacheExchange, type Cache } from '@urql/exchange-graphcache';
 import { createClient as createWSClient } from 'graphql-ws';
 import {
+	extensionStores,
 	getCategories,
 	getCategory,
 	getExtensions,
@@ -23,6 +24,7 @@ import {
 	TrackRecordTypeFragment
 } from './Fragments';
 import type {
+	addExtensionStore,
 	bindTrack,
 	createCategory,
 	deleteGlobalMeta,
@@ -32,6 +34,7 @@ import type {
 	fetchMangaInfo,
 	fetchTrack,
 	installExternalExtension,
+	removeExtensionStore,
 	setGlobalMeta,
 	setMangaMeta,
 	setServerSettings,
@@ -44,7 +47,6 @@ import type {
 } from './Mutations';
 import type { ResultOf, VariablesOf } from '$lib/gql/graphql';
 import { introspection } from '../../graphql-env';
-import { gmState } from '$lib/simpleStores.svelte';
 import type { DownloadChanged } from './Subscriptions';
 
 export const client = new Client({
@@ -206,6 +208,20 @@ export const client = new Client({
 							typeof trackProgress
 						>;
 						trackProgressUpdater(res, variables, cache);
+					},
+					removeExtensionStore(result, _, cache, info) {
+						const res = result as ResultOf<typeof removeExtensionStore>;
+						const variables = info.variables as VariablesOf<
+							typeof removeExtensionStore
+						>;
+						removeExtensionStoreUpdater(res, variables, cache);
+					},
+					addExtensionStore(result, _, cache, info) {
+						const res = result as ResultOf<typeof addExtensionStore>;
+						const variables = info.variables as VariablesOf<
+							typeof addExtensionStore
+						>;
+						addExtensionStoreUpdater(res, variables, cache);
 					}
 				},
 				Query: {
@@ -252,6 +268,43 @@ export const client = new Client({
 		})
 	]
 });
+
+function removeExtensionStoreUpdater(
+	_res: ResultOf<typeof removeExtensionStore>,
+	variables: VariablesOf<typeof removeExtensionStore>,
+	cache: Cache
+) {
+	cache.updateQuery(
+		{
+			query: extensionStores
+		},
+		(data) => {
+			if (!data) return data;
+			data.extensionStores = data.extensionStores.filter(
+				(e) => e.indexUrl !== variables.indexUrl
+			);
+			return data;
+		}
+	);
+}
+
+function addExtensionStoreUpdater(
+	res: ResultOf<typeof addExtensionStore>,
+	_variables: VariablesOf<typeof addExtensionStore>,
+	cache: Cache
+) {
+	cache.updateQuery(
+		{
+			query: extensionStores
+		},
+		(data) => {
+			if (!data) return data;
+			if (!res.addExtensionStore) return data;
+			data.extensionStores.push(res.addExtensionStore.extensionStore);
+			return data;
+		}
+	);
+}
 
 function newDownloadChangedUpdater(
 	data: ResultOf<typeof DownloadChanged> | undefined,
@@ -631,22 +684,15 @@ function fetchExtensionsUpdater(
 	cache: Cache
 ) {
 	if (!data?.fetchExtensions) return;
-	let filteredExtensions = data.fetchExtensions.extensions;
-	import('$lib/simpleStores.svelte').then((mod) => {
-		const gmState = mod.gmState;
-		if (!gmState.value.nsfw)
-			filteredExtensions = filteredExtensions.filter((e) => !e.isNsfw);
-		filteredExtensions.forEach((e) => {
-			cache.writeFragment(ExtensionTypeFragment, e, {
-				isNsfw: gmState.value.nsfw ? null : false
-			});
-		});
-		import('../../../src/routes/(app)/browse/extensions/ExtensionsStores').then(
-			(mod) => {
-				mod.lastFetched.value = new Date();
-			}
-		);
+	data.fetchExtensions.extensions.forEach((e) => {
+		cache.writeFragment(ExtensionTypeFragment, e);
 	});
+	import('../../../src/routes/(app)/browse/extensions/ExtensionsStores').then(
+		(mod) => {
+			mod.lastFetched.value = new Date();
+		}
+	);
+	// });
 }
 
 function updateMangasCategoriesUpdater(
@@ -745,8 +791,7 @@ function updateExtentionsList<T extends { pkgName: string }>(
 ) {
 	cache.updateQuery(
 		{
-			query: getExtensions,
-			variables: { isNsfw: gmState.value.nsfw ? null : false }
+			query: getExtensions
 		},
 		(extensionsData) => {
 			if (!extensionsData) return extensionsData;
@@ -771,8 +816,7 @@ function updateSourcesList<T extends { pkgName: string }>(
 ) {
 	cache.updateQuery(
 		{
-			query: getSources,
-			variables: { isNsfw: gmState.value.nsfw ? null : false }
+			query: getSources
 		},
 		(sourcesData) => {
 			if (!sourcesData) return sourcesData;

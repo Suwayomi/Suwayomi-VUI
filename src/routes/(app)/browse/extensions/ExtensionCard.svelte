@@ -86,12 +86,12 @@
 					{ext.name}
 					<div class="text-sm opacity-70">
 						{ext.versionName}
-						{#if ext.isNsfw}
+						{#if ext.contentRating === 'PORNOGRAPHIC'}
 							<span class="text-red-600">18+</span>
 						{/if}
 					</div>
 					<div class="line-clamp-1 break-all text-sm opacity-70">
-						{ext.repo}
+						{ext.storeIndexUrl}
 					</div>
 				</div>
 				<div class="flex flex-1 flex-wrap justify-end">

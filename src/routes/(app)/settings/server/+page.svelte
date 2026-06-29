@@ -48,6 +48,8 @@
 
 	const webUIFlavors = GetEnumArray('WebUIFlavor');
 
+	const authMethods = GetEnumArray('AuthMode');
+
 	const webUIInterfaces = GetEnumArray('WebUIInterface');
 
 	const webuiUpdateStatus = subscriptionState({
@@ -62,9 +64,13 @@
 	let backupPath = $state('');
 	let backupTTL = $state(183);
 	let backupTime = $state('00 =00');
-	let basicAuthEnabled = $state(false);
-	let basicAuthPassword = $state('');
-	let basicAuthUsername = $state('');
+	let authMode = $state(
+		'NONE' as NonNullable<
+			NonNullable<VariablesOf<typeof setServerSettings>['settings']>['authMode']
+		>
+	);
+	let authPassword = $state('');
+	let authUsername = $state('');
 	let debugLogsEnabled = $state(true);
 	let downloadAsCbz = $state(true);
 	let downloadsPath = $state('');
@@ -129,9 +135,10 @@
 			backupPath = settingsData.data.settings.backupPath;
 			backupTTL = settingsData.data.settings.backupTTL;
 			backupTime = settingsData.data.settings.backupTime;
-			basicAuthEnabled = settingsData.data.settings.basicAuthEnabled;
-			basicAuthPassword = settingsData.data.settings.basicAuthPassword;
-			basicAuthUsername = settingsData.data.settings.basicAuthUsername;
+			// basicAuthEnabled = settingsData.data.settings.basicAuthEnabled;
+			authMode = settingsData.data.settings.authMode;
+			authPassword = settingsData.data.settings.authPassword;
+			authUsername = settingsData.data.settings.authUsername;
 			debugLogsEnabled = settingsData.data.settings.debugLogsEnabled;
 			downloadAsCbz = settingsData.data.settings.downloadAsCbz;
 			downloadsPath = settingsData.data.settings.downloadsPath;
@@ -308,24 +315,24 @@
 				backupTime = settings.backupTime;
 			}}
 		/>
-		<!-- basicAuthEnabled -->
-		<Toggle
-			title="Basic Auth"
-			bind:checked={basicAuthEnabled}
-			onchange={() => setSettings({ basicAuthEnabled })}
+		<Select
+			title="Auth"
+			bind:value={authMode}
+			options={authMethods}
+			onchange={() => setSettings({ authMode })}
 		/>
-		<!-- basicAuthPassword -->
+		<!-- authPassword -->
 		<Text
-			title="Basic Auth Password"
-			bind:value={basicAuthPassword}
-			onchange={() => setSettings({ basicAuthPassword })}
+			title="Auth Password"
+			bind:value={authPassword}
+			onchange={() => setSettings({ authPassword })}
 			type="password"
 		/>
-		<!-- basicAuthUsername -->
+		<!-- authUsername -->
 		<Text
-			title="Basic Auth Username"
-			bind:value={basicAuthUsername}
-			onchange={() => setSettings({ basicAuthUsername })}
+			title="Auth Username"
+			bind:value={authUsername}
+			onchange={() => setSettings({ authUsername })}
 		/>
 		<!-- debugLogsEnabled -->
 		<Toggle

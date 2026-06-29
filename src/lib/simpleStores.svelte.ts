@@ -114,7 +114,6 @@ const mangaMetaDefaults = {
 };
 
 const trueDefaults = {
-	nsfw: true,
 	ignoreFiltersWhenSearching: false,
 	theme: 'skeleton' as Themes,
 	dark: true,

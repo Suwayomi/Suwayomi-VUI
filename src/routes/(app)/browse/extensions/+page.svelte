@@ -27,7 +27,6 @@
 	import { ExtensionTypeFragment } from '$lib/gql/Fragments';
 	import { type ResultOf, type VariablesOf } from '$lib/gql/graphql';
 	import { fetchExtensions } from '$lib/gql/Mutations';
-	import { gmState } from '$lib/simpleStores.svelte';
 
 	const client = getContextClient();
 
@@ -53,8 +52,7 @@
 		}
 		extensions = queryState({
 			client,
-			query: getExtensions,
-			variables: { isNsfw: gmState.value.nsfw ? null : false }
+			query: getExtensions
 		});
 	}
 
@@ -160,7 +158,7 @@
 					<h2 class="h2 p-2">
 						{FindLangName(lang)}
 					</h2>
-					{#each sause as ext (ext.pkgName + ext.repo)}
+					{#each sause as ext (ext.pkgName + ext.storeIndexUrl)}
 						<ExtensionCard {ext} />
 					{/each}
 				{/each}

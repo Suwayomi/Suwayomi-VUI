@@ -6,15 +6,17 @@
  file, You can obtain one at http://mozilla.org/MPL/2.0/.
 -->
 <script lang="ts">
-	import { setSettings } from '$lib/util.svelte';
+	import { queryState } from '$lib/util.svelte';
 	import { getModalStore } from '@skeletonlabs/skeleton';
 	import ModalTemplate from '$lib/components/ModalTemplate.svelte';
-
-	interface Props {
-		repos: string[];
-	}
-
-	let { repos = $bindable() }: Props = $props();
+	import { extensionStores } from '$lib/gql/Queries';
+	import { getContextClient } from '@urql/svelte';
+	import { addExtensionStore, removeExtensionStore } from '$lib/gql/Mutations';
+	const client = getContextClient();
+	let Stores = queryState({
+		client,
+		query: extensionStores
+	});
 
 	const modalStore = getModalStore();
 	let newrepo = $state('');
@@ -32,26 +34,31 @@
 						bind:value={newrepo}
 					/>
 					<button
-						onclick={() => {
-							repos = [...repos, newrepo];
+						onclick={async () => {
+							await client
+								.mutation(addExtensionStore, { indexUrl: newrepo })
+								.toPromise();
+
 							newrepo = '';
-							setSettings({ extensionRepos: repos });
 						}}
 						class="variant-filled-primary btn h-full">add</button
 					>
 				</div>
 				<div class="w-full space-y-1">
-					{#each repos as value}
+					{#each Stores.data?.extensionStores as value}
 						<div
 							class="flex flex-nowrap items-center justify-between space-x-1"
 						>
 							<div>
-								{value}
+								{value.name}
 							</div>
 							<button
-								onclick={() => {
-									repos = repos.filter((x) => x !== value);
-									setSettings({ extensionRepos: repos });
+								onclick={async () => {
+									await client
+										.mutation(removeExtensionStore, {
+											indexUrl: value.indexUrl
+										})
+										.toPromise();
 								}}
 								class="variant-filled-error btn">remove</button
 							>
