@@ -9,13 +9,13 @@
 	import { queryState } from '$lib/util.svelte';
 	import { getModalStore } from '@skeletonlabs/skeleton';
 	import ModalTemplate from '$lib/components/ModalTemplate.svelte';
-	import { extensionStores } from '$lib/gql/Queries';
+	import { extensionStores as query } from '$lib/gql/Queries';
 	import { getContextClient } from '@urql/svelte';
 	import { addExtensionStore, removeExtensionStore } from '$lib/gql/Mutations';
 	const client = getContextClient();
 	let Stores = queryState({
 		client,
-		query: extensionStores
+		query
 	});
 
 	$effect(() => {
@@ -49,25 +49,32 @@
 					>
 				</div>
 				<div class="w-full space-y-1">
-					{#each Stores.data?.extensionStores.nodes as value}
-						<div
-							class="flex flex-nowrap items-center justify-between space-x-1"
-						>
-							<div>
-								{value.name}
-							</div>
-							<button
-								onclick={async () => {
-									await client
-										.mutation(removeExtensionStore, {
-											indexUrl: value.indexUrl
-										})
-										.toPromise();
-								}}
-								class="variant-filled-error btn">remove</button
+					{#if Stores.data}
+						{#each Stores.data.extensionStores.nodes as value}
+							{@const indexUrl = value.indexUrl}
+							<div
+								class="flex flex-nowrap items-center justify-between space-x-1"
 							>
-						</div>
-					{/each}
+								<div>
+									{value.name}
+								</div>
+								<button
+									onclick={async () => {
+										await client
+											.mutation(removeExtensionStore, {
+												indexUrl
+											})
+											.toPromise();
+									}}
+									class="variant-filled-error btn"
+								>
+									remove
+								</button>
+							</div>
+						{/each}
+					{:else}
+						no extension stores, add one above
+					{/if}
 				</div>
 			</div>
 		{/snippet}
