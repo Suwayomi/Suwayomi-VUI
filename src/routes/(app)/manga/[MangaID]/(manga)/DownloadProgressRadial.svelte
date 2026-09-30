@@ -12,8 +12,7 @@
 
 	interface Props {
 		download:
-			| NonNullable<(typeof downloadChanged)['downlaods']>[number]
-			| undefined;
+			NonNullable<(typeof downloadChanged)['downlaods']>[number] | undefined;
 	}
 
 	let { download }: Props = $props();

@@ -99,6 +99,18 @@ const introspection = {
             "isDeprecated": false
           },
           {
+            "name": "platformInfo",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "OBJECT",
+                "name": "PlatformInfo"
+              }
+            },
+            "args": [],
+            "isDeprecated": false
+          },
+          {
             "name": "revision",
             "type": {
               "kind": "NON_NULL",
@@ -273,6 +285,10 @@ const introspection = {
           {
             "name": "RESTORING_SETTINGS",
             "isDeprecated": false
+          },
+          {
+            "name": "RESTORING_USER_SETTINGS",
+            "isDeprecated": false
           }
         ]
       },
@@ -373,6 +389,68 @@ const introspection = {
       {
         "kind": "OBJECT",
         "name": "BindTrackPayload",
+        "fields": [
+          {
+            "name": "clientMutationId",
+            "type": {
+              "kind": "SCALAR",
+              "name": "String"
+            },
+            "args": [],
+            "isDeprecated": false
+          },
+          {
+            "name": "trackRecord",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "OBJECT",
+                "name": "TrackRecordType"
+              }
+            },
+            "args": [],
+            "isDeprecated": false
+          }
+        ],
+        "interfaces": []
+      },
+      {
+        "kind": "INPUT_OBJECT",
+        "name": "BindTrackRecordInput",
+        "inputFields": [
+          {
+            "name": "clientMutationId",
+            "type": {
+              "kind": "SCALAR",
+              "name": "String"
+            }
+          },
+          {
+            "name": "mangaId",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "Int"
+              }
+            }
+          },
+          {
+            "name": "trackRecordId",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "Int"
+              }
+            }
+          }
+        ],
+        "isOneOf": false
+      },
+      {
+        "kind": "OBJECT",
+        "name": "BindTrackRecordPayload",
         "fields": [
           {
             "name": "clientMutationId",
@@ -569,6 +647,13 @@ const introspection = {
             }
           },
           {
+            "name": "isDefaultCategory",
+            "type": {
+              "kind": "SCALAR",
+              "name": "Boolean"
+            }
+          },
+          {
             "name": "name",
             "type": {
               "kind": "SCALAR",
@@ -650,6 +735,13 @@ const introspection = {
             "type": {
               "kind": "INPUT_OBJECT",
               "name": "IntFilterInput"
+            }
+          },
+          {
+            "name": "isDefaultCategory",
+            "type": {
+              "kind": "INPUT_OBJECT",
+              "name": "BooleanFilterInput"
             }
           },
           {
@@ -967,6 +1059,18 @@ const introspection = {
             "isDeprecated": false
           },
           {
+            "name": "isDefaultCategory",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "Boolean"
+              }
+            },
+            "args": [],
+            "isDeprecated": false
+          },
+          {
             "name": "mangas",
             "type": {
               "kind": "NON_NULL",
@@ -1186,6 +1290,33 @@ const introspection = {
             "type": {
               "kind": "SCALAR",
               "name": "String"
+            }
+          }
+        ],
+        "isOneOf": false
+      },
+      {
+        "kind": "INPUT_OBJECT",
+        "name": "ChapterDownloadReorderInput",
+        "inputFields": [
+          {
+            "name": "chapterId",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "Int"
+              }
+            }
+          },
+          {
+            "name": "to",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "Int"
+              }
             }
           }
         ],
@@ -1663,7 +1794,7 @@ const introspection = {
               }
             },
             "args": [],
-            "isDeprecated": false
+            "isDeprecated": true
           },
           {
             "name": "isDownloaded",
@@ -1675,7 +1806,7 @@ const introspection = {
               }
             },
             "args": [],
-            "isDeprecated": false
+            "isDeprecated": true
           },
           {
             "name": "isRead",
@@ -1687,7 +1818,7 @@ const introspection = {
               }
             },
             "args": [],
-            "isDeprecated": false
+            "isDeprecated": true
           },
           {
             "name": "lastPageRead",
@@ -1699,7 +1830,7 @@ const introspection = {
               }
             },
             "args": [],
-            "isDeprecated": false
+            "isDeprecated": true
           },
           {
             "name": "lastReadAt",
@@ -1711,7 +1842,7 @@ const introspection = {
               }
             },
             "args": [],
-            "isDeprecated": false
+            "isDeprecated": true
           },
           {
             "name": "manga",
@@ -1828,6 +1959,97 @@ const introspection = {
               "ofType": {
                 "kind": "SCALAR",
                 "name": "String"
+              }
+            },
+            "args": [],
+            "isDeprecated": false
+          },
+          {
+            "name": "user",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "OBJECT",
+                "name": "ChapterUserType"
+              }
+            },
+            "args": [],
+            "isDeprecated": false
+          }
+        ],
+        "interfaces": []
+      },
+      {
+        "kind": "OBJECT",
+        "name": "ChapterUserType",
+        "fields": [
+          {
+            "name": "chapterId",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "Int"
+              }
+            },
+            "args": [],
+            "isDeprecated": false
+          },
+          {
+            "name": "isBookmarked",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "Boolean"
+              }
+            },
+            "args": [],
+            "isDeprecated": false
+          },
+          {
+            "name": "isDownloaded",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "Boolean"
+              }
+            },
+            "args": [],
+            "isDeprecated": false
+          },
+          {
+            "name": "isRead",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "Boolean"
+              }
+            },
+            "args": [],
+            "isDeprecated": false
+          },
+          {
+            "name": "lastPageRead",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "Int"
+              }
+            },
+            "args": [],
+            "isDeprecated": false
+          },
+          {
+            "name": "lastReadAt",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "LongString"
               }
             },
             "args": [],
@@ -2060,6 +2282,36 @@ const introspection = {
             "type": {
               "kind": "SCALAR",
               "name": "Boolean"
+            },
+            "args": [],
+            "isDeprecated": false
+          }
+        ],
+        "interfaces": []
+      },
+      {
+        "kind": "INPUT_OBJECT",
+        "name": "ClearCookiesAndCacheInput",
+        "inputFields": [
+          {
+            "name": "clientMutationId",
+            "type": {
+              "kind": "SCALAR",
+              "name": "String"
+            }
+          }
+        ],
+        "isOneOf": false
+      },
+      {
+        "kind": "OBJECT",
+        "name": "ClearCookiesAndCachePayload",
+        "fields": [
+          {
+            "name": "clientMutationId",
+            "type": {
+              "kind": "SCALAR",
+              "name": "String"
             },
             "args": [],
             "isDeprecated": false
@@ -2441,6 +2693,137 @@ const introspection = {
             "type": {
               "kind": "SCALAR",
               "name": "String"
+            },
+            "args": [],
+            "isDeprecated": false
+          }
+        ],
+        "interfaces": []
+      },
+      {
+        "kind": "INPUT_OBJECT",
+        "name": "CreateRecoveryCodeInput",
+        "inputFields": [
+          {
+            "name": "clientMutationId",
+            "type": {
+              "kind": "SCALAR",
+              "name": "String"
+            }
+          },
+          {
+            "name": "userId",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "Int"
+              }
+            }
+          }
+        ],
+        "isOneOf": false
+      },
+      {
+        "kind": "OBJECT",
+        "name": "CreateRecoveryCodePayload",
+        "fields": [
+          {
+            "name": "clientMutationId",
+            "type": {
+              "kind": "SCALAR",
+              "name": "String"
+            },
+            "args": [],
+            "isDeprecated": false
+          },
+          {
+            "name": "code",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "String"
+              }
+            },
+            "args": [],
+            "isDeprecated": false
+          },
+          {
+            "name": "expiresAt",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "LongString"
+              }
+            },
+            "args": [],
+            "isDeprecated": false
+          }
+        ],
+        "interfaces": []
+      },
+      {
+        "kind": "INPUT_OBJECT",
+        "name": "CreateRegistrationCodeInput",
+        "inputFields": [
+          {
+            "name": "clientMutationId",
+            "type": {
+              "kind": "SCALAR",
+              "name": "String"
+            }
+          },
+          {
+            "name": "permissions",
+            "type": {
+              "kind": "LIST",
+              "ofType": {
+                "kind": "NON_NULL",
+                "ofType": {
+                  "kind": "ENUM",
+                  "name": "UserPermission"
+                }
+              }
+            }
+          }
+        ],
+        "isOneOf": false
+      },
+      {
+        "kind": "OBJECT",
+        "name": "CreateRegistrationCodePayload",
+        "fields": [
+          {
+            "name": "clientMutationId",
+            "type": {
+              "kind": "SCALAR",
+              "name": "String"
+            },
+            "args": [],
+            "isDeprecated": false
+          },
+          {
+            "name": "code",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "String"
+              }
+            },
+            "args": [],
+            "isDeprecated": false
+          },
+          {
+            "name": "expiresAt",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "LongString"
+              }
             },
             "args": [],
             "isDeprecated": false
@@ -4316,6 +4699,10 @@ const introspection = {
           {
             "kind": "OBJECT",
             "name": "TrackerEdge"
+          },
+          {
+            "kind": "OBJECT",
+            "name": "UserEdge"
           }
         ]
       },
@@ -4593,6 +4980,13 @@ const introspection = {
             }
           },
           {
+            "name": "jarUrl",
+            "type": {
+              "kind": "SCALAR",
+              "name": "String"
+            }
+          },
+          {
             "name": "lang",
             "type": {
               "kind": "SCALAR",
@@ -4751,6 +5145,13 @@ const introspection = {
             "type": {
               "kind": "INPUT_OBJECT",
               "name": "BooleanFilterInput"
+            }
+          },
+          {
+            "name": "jarUrl",
+            "type": {
+              "kind": "INPUT_OBJECT",
+              "name": "StringFilterInput"
             }
           },
           {
@@ -5315,11 +5716,8 @@ const introspection = {
           {
             "name": "extensionStore",
             "type": {
-              "kind": "NON_NULL",
-              "ofType": {
-                "kind": "OBJECT",
-                "name": "ExtensionStoreType"
-              }
+              "kind": "OBJECT",
+              "name": "ExtensionStoreType"
             },
             "args": [],
             "isDeprecated": false
@@ -5380,6 +5778,15 @@ const introspection = {
                 "kind": "SCALAR",
                 "name": "Boolean"
               }
+            },
+            "args": [],
+            "isDeprecated": false
+          },
+          {
+            "name": "jarUrl",
+            "type": {
+              "kind": "SCALAR",
+              "name": "String"
             },
             "args": [],
             "isDeprecated": false
@@ -6534,6 +6941,61 @@ const introspection = {
           }
         ],
         "isOneOf": false
+      },
+      {
+        "kind": "OBJECT",
+        "name": "JvmInfo",
+        "fields": [
+          {
+            "name": "javaVersion",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "String"
+              }
+            },
+            "args": [],
+            "isDeprecated": false
+          },
+          {
+            "name": "vmName",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "String"
+              }
+            },
+            "args": [],
+            "isDeprecated": false
+          },
+          {
+            "name": "vmVendor",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "String"
+              }
+            },
+            "args": [],
+            "isDeprecated": false
+          },
+          {
+            "name": "vmVersion",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "String"
+              }
+            },
+            "args": [],
+            "isDeprecated": false
+          }
+        ],
+        "interfaces": []
       },
       {
         "kind": "OBJECT",
@@ -8293,7 +8755,7 @@ const introspection = {
               }
             },
             "args": [],
-            "isDeprecated": false
+            "isDeprecated": true
           },
           {
             "name": "inLibraryAt",
@@ -8305,7 +8767,7 @@ const introspection = {
               }
             },
             "args": [],
-            "isDeprecated": false
+            "isDeprecated": true
           },
           {
             "name": "initialized",
@@ -8501,6 +8963,18 @@ const introspection = {
             },
             "args": [],
             "isDeprecated": false
+          },
+          {
+            "name": "user",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "OBJECT",
+                "name": "MangaUserType"
+              }
+            },
+            "args": [],
+            "isDeprecated": false
           }
         ],
         "interfaces": []
@@ -8528,6 +9002,49 @@ const introspection = {
               "ofType": {
                 "kind": "ENUM",
                 "name": "MangaJobStatus"
+              }
+            },
+            "args": [],
+            "isDeprecated": false
+          }
+        ],
+        "interfaces": []
+      },
+      {
+        "kind": "OBJECT",
+        "name": "MangaUserType",
+        "fields": [
+          {
+            "name": "inLibrary",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "Boolean"
+              }
+            },
+            "args": [],
+            "isDeprecated": false
+          },
+          {
+            "name": "inLibraryAt",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "LongString"
+              }
+            },
+            "args": [],
+            "isDeprecated": false
+          },
+          {
+            "name": "mangaId",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "Int"
               }
             },
             "args": [],
@@ -8955,6 +9472,26 @@ const introspection = {
             "isDeprecated": false
           },
           {
+            "name": "bindTrackRecord",
+            "type": {
+              "kind": "OBJECT",
+              "name": "BindTrackRecordPayload"
+            },
+            "args": [
+              {
+                "name": "input",
+                "type": {
+                  "kind": "NON_NULL",
+                  "ofType": {
+                    "kind": "INPUT_OBJECT",
+                    "name": "BindTrackRecordInput"
+                  }
+                }
+              }
+            ],
+            "isDeprecated": false
+          },
+          {
             "name": "clearCachedImages",
             "type": {
               "kind": "NON_NULL",
@@ -8972,6 +9509,26 @@ const introspection = {
                     "kind": "INPUT_OBJECT",
                     "name": "ClearCachedImagesInput"
                   }
+                }
+              }
+            ],
+            "isDeprecated": false
+          },
+          {
+            "name": "clearCookiesAndCache",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "OBJECT",
+                "name": "ClearCookiesAndCachePayload"
+              }
+            },
+            "args": [
+              {
+                "name": "input",
+                "type": {
+                  "kind": "INPUT_OBJECT",
+                  "name": "ClearCookiesAndCacheInput"
                 }
               }
             ],
@@ -9054,6 +9611,52 @@ const introspection = {
                   "ofType": {
                     "kind": "INPUT_OBJECT",
                     "name": "CreateCategoryInput"
+                  }
+                }
+              }
+            ],
+            "isDeprecated": false
+          },
+          {
+            "name": "createRecoveryCode",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "OBJECT",
+                "name": "CreateRecoveryCodePayload"
+              }
+            },
+            "args": [
+              {
+                "name": "input",
+                "type": {
+                  "kind": "NON_NULL",
+                  "ofType": {
+                    "kind": "INPUT_OBJECT",
+                    "name": "CreateRecoveryCodeInput"
+                  }
+                }
+              }
+            ],
+            "isDeprecated": false
+          },
+          {
+            "name": "createRegistrationCode",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "OBJECT",
+                "name": "CreateRegistrationCodePayload"
+              }
+            },
+            "args": [
+              {
+                "name": "input",
+                "type": {
+                  "kind": "NON_NULL",
+                  "ofType": {
+                    "kind": "INPUT_OBJECT",
+                    "name": "CreateRegistrationCodeInput"
                   }
                 }
               }
@@ -9719,6 +10322,52 @@ const introspection = {
             "isDeprecated": false
           },
           {
+            "name": "redeemRecoveryCode",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "OBJECT",
+                "name": "RedeemRecoveryCodePayload"
+              }
+            },
+            "args": [
+              {
+                "name": "input",
+                "type": {
+                  "kind": "NON_NULL",
+                  "ofType": {
+                    "kind": "INPUT_OBJECT",
+                    "name": "RedeemRecoveryCodeInput"
+                  }
+                }
+              }
+            ],
+            "isDeprecated": false
+          },
+          {
+            "name": "redeemRegistrationCode",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "OBJECT",
+                "name": "RedeemRegistrationCodePayload"
+              }
+            },
+            "args": [
+              {
+                "name": "input",
+                "type": {
+                  "kind": "NON_NULL",
+                  "ofType": {
+                    "kind": "INPUT_OBJECT",
+                    "name": "RedeemRegistrationCodeInput"
+                  }
+                }
+              }
+            ],
+            "isDeprecated": false
+          },
+          {
             "name": "refreshToken",
             "type": {
               "kind": "NON_NULL",
@@ -9735,6 +10384,29 @@ const introspection = {
                   "ofType": {
                     "kind": "INPUT_OBJECT",
                     "name": "RefreshTokenInput"
+                  }
+                }
+              }
+            ],
+            "isDeprecated": false
+          },
+          {
+            "name": "register",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "OBJECT",
+                "name": "RegisterPayload"
+              }
+            },
+            "args": [
+              {
+                "name": "input",
+                "type": {
+                  "kind": "NON_NULL",
+                  "ofType": {
+                    "kind": "INPUT_OBJECT",
+                    "name": "RegisterInput"
                   }
                 }
               }
@@ -9782,6 +10454,26 @@ const introspection = {
             "isDeprecated": false
           },
           {
+            "name": "reorderChapterDownloads",
+            "type": {
+              "kind": "OBJECT",
+              "name": "ReorderChapterDownloadPayload"
+            },
+            "args": [
+              {
+                "name": "input",
+                "type": {
+                  "kind": "NON_NULL",
+                  "ofType": {
+                    "kind": "INPUT_OBJECT",
+                    "name": "ReorderChapterDownloadsInput"
+                  }
+                }
+              }
+            ],
+            "isDeprecated": false
+          },
+          {
             "name": "resetSettings",
             "type": {
               "kind": "NON_NULL",
@@ -9798,6 +10490,29 @@ const introspection = {
                   "ofType": {
                     "kind": "INPUT_OBJECT",
                     "name": "ResetSettingsInput"
+                  }
+                }
+              }
+            ],
+            "isDeprecated": false
+          },
+          {
+            "name": "resetUserSettings",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "OBJECT",
+                "name": "ResetUserSettingsPayload"
+              }
+            },
+            "args": [
+              {
+                "name": "input",
+                "type": {
+                  "kind": "NON_NULL",
+                  "ofType": {
+                    "kind": "INPUT_OBJECT",
+                    "name": "ResetUserSettingsInput"
                   }
                 }
               }
@@ -9830,6 +10545,29 @@ const introspection = {
                   "ofType": {
                     "kind": "INPUT_OBJECT",
                     "name": "RestoreBackupInput"
+                  }
+                }
+              }
+            ],
+            "isDeprecated": false
+          },
+          {
+            "name": "revokeUserCode",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "OBJECT",
+                "name": "RevokeUserCodePayload"
+              }
+            },
+            "args": [
+              {
+                "name": "input",
+                "type": {
+                  "kind": "NON_NULL",
+                  "ofType": {
+                    "kind": "INPUT_OBJECT",
+                    "name": "RevokeUserCodeInput"
                   }
                 }
               }
@@ -9997,6 +10735,29 @@ const introspection = {
             "isDeprecated": false
           },
           {
+            "name": "setPassword",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "OBJECT",
+                "name": "SetPasswordPayload"
+              }
+            },
+            "args": [
+              {
+                "name": "input",
+                "type": {
+                  "kind": "NON_NULL",
+                  "ofType": {
+                    "kind": "INPUT_OBJECT",
+                    "name": "SetPasswordInput"
+                  }
+                }
+              }
+            ],
+            "isDeprecated": false
+          },
+          {
             "name": "setSettings",
             "type": {
               "kind": "NON_NULL",
@@ -10053,6 +10814,29 @@ const introspection = {
                   "ofType": {
                     "kind": "INPUT_OBJECT",
                     "name": "SetSourceMetasInput"
+                  }
+                }
+              }
+            ],
+            "isDeprecated": false
+          },
+          {
+            "name": "setUserSettings",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "OBJECT",
+                "name": "SetUserSettingsPayload"
+              }
+            },
+            "args": [
+              {
+                "name": "input",
+                "type": {
+                  "kind": "NON_NULL",
+                  "ofType": {
+                    "kind": "INPUT_OBJECT",
+                    "name": "SetUserSettingsInput"
                   }
                 }
               }
@@ -10512,6 +11296,29 @@ const introspection = {
             "isDeprecated": false
           },
           {
+            "name": "updateUser",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "OBJECT",
+                "name": "UpdateUserPayload"
+              }
+            },
+            "args": [
+              {
+                "name": "input",
+                "type": {
+                  "kind": "NON_NULL",
+                  "ofType": {
+                    "kind": "INPUT_OBJECT",
+                    "name": "UpdateUserInput"
+                  }
+                }
+              }
+            ],
+            "isDeprecated": false
+          },
+          {
             "name": "updateWebUI",
             "type": {
               "kind": "OBJECT",
@@ -10556,6 +11363,10 @@ const introspection = {
           },
           {
             "kind": "OBJECT",
+            "name": "ChapterUserType"
+          },
+          {
+            "kind": "OBJECT",
             "name": "DownloadType"
           },
           {
@@ -10584,7 +11395,15 @@ const introspection = {
           },
           {
             "kind": "OBJECT",
+            "name": "MangaUserType"
+          },
+          {
+            "kind": "OBJECT",
             "name": "PartialSettingsType"
+          },
+          {
+            "kind": "OBJECT",
+            "name": "PartialUserSettingsType"
           },
           {
             "kind": "OBJECT",
@@ -10605,6 +11424,14 @@ const introspection = {
           {
             "kind": "OBJECT",
             "name": "TrackerType"
+          },
+          {
+            "kind": "OBJECT",
+            "name": "UserSettingsType"
+          },
+          {
+            "kind": "OBJECT",
+            "name": "UserType"
           }
         ]
       },
@@ -10714,8 +11541,52 @@ const introspection = {
           {
             "kind": "OBJECT",
             "name": "TrackerNodeList"
+          },
+          {
+            "kind": "OBJECT",
+            "name": "UserNodeList"
           }
         ]
+      },
+      {
+        "kind": "OBJECT",
+        "name": "OSInfo",
+        "fields": [
+          {
+            "name": "build",
+            "type": {
+              "kind": "SCALAR",
+              "name": "String"
+            },
+            "args": [],
+            "isDeprecated": false
+          },
+          {
+            "name": "name",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "String"
+              }
+            },
+            "args": [],
+            "isDeprecated": false
+          },
+          {
+            "name": "version",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "String"
+              }
+            },
+            "args": [],
+            "isDeprecated": false
+          }
+        ],
+        "interfaces": []
       },
       {
         "kind": "OBJECT",
@@ -10814,6 +11685,13 @@ const introspection = {
           },
           {
             "name": "includeTracking",
+            "type": {
+              "kind": "SCALAR",
+              "name": "Boolean"
+            }
+          },
+          {
+            "name": "includeUserSettings",
             "type": {
               "kind": "SCALAR",
               "name": "Boolean"
@@ -10917,6 +11795,15 @@ const introspection = {
             "isDeprecated": false
           },
           {
+            "name": "autoBackupIncludeUserSettings",
+            "type": {
+              "kind": "SCALAR",
+              "name": "Boolean"
+            },
+            "args": [],
+            "isDeprecated": false
+          },
+          {
             "name": "autoDownloadAheadLimit",
             "type": {
               "kind": "SCALAR",
@@ -10932,7 +11819,7 @@ const introspection = {
               "name": "Boolean"
             },
             "args": [],
-            "isDeprecated": false
+            "isDeprecated": true
           },
           {
             "name": "autoDownloadNewChapters",
@@ -10941,7 +11828,7 @@ const introspection = {
               "name": "Boolean"
             },
             "args": [],
-            "isDeprecated": false
+            "isDeprecated": true
           },
           {
             "name": "autoDownloadNewChaptersLimit",
@@ -10950,7 +11837,7 @@ const introspection = {
               "name": "Int"
             },
             "args": [],
-            "isDeprecated": false
+            "isDeprecated": true
           },
           {
             "name": "backupInterval",
@@ -11109,7 +11996,7 @@ const introspection = {
               "name": "Boolean"
             },
             "args": [],
-            "isDeprecated": false
+            "isDeprecated": true
           },
           {
             "name": "excludeEntryWithUnreadChapters",
@@ -11118,7 +12005,7 @@ const introspection = {
               "name": "Boolean"
             },
             "args": [],
-            "isDeprecated": false
+            "isDeprecated": true
           },
           {
             "name": "excludeNotStarted",
@@ -11127,7 +12014,7 @@ const introspection = {
               "name": "Boolean"
             },
             "args": [],
-            "isDeprecated": false
+            "isDeprecated": true
           },
           {
             "name": "excludeUnreadChapters",
@@ -11136,7 +12023,7 @@ const introspection = {
               "name": "Boolean"
             },
             "args": [],
-            "isDeprecated": false
+            "isDeprecated": true
           },
           {
             "name": "extensionRepos",
@@ -11286,7 +12173,7 @@ const introspection = {
               "name": "KoreaderSyncChecksumMethod"
             },
             "args": [],
-            "isDeprecated": false
+            "isDeprecated": true
           },
           {
             "name": "koreaderSyncDeviceId",
@@ -11304,7 +12191,7 @@ const introspection = {
               "name": "Float"
             },
             "args": [],
-            "isDeprecated": false
+            "isDeprecated": true
           },
           {
             "name": "koreaderSyncServerUrl",
@@ -11331,7 +12218,7 @@ const introspection = {
               "name": "KoreaderSyncConflictStrategy"
             },
             "args": [],
-            "isDeprecated": false
+            "isDeprecated": true
           },
           {
             "name": "koreaderSyncStrategyForward",
@@ -11340,7 +12227,7 @@ const introspection = {
               "name": "KoreaderSyncConflictStrategy"
             },
             "args": [],
-            "isDeprecated": false
+            "isDeprecated": true
           },
           {
             "name": "koreaderSyncUserkey",
@@ -11412,7 +12299,7 @@ const introspection = {
               "name": "CbzMediaType"
             },
             "args": [],
-            "isDeprecated": false
+            "isDeprecated": true
           },
           {
             "name": "opdsChapterSortOrder",
@@ -11421,7 +12308,7 @@ const introspection = {
               "name": "SortOrder"
             },
             "args": [],
-            "isDeprecated": false
+            "isDeprecated": true
           },
           {
             "name": "opdsEnablePageReadProgress",
@@ -11430,7 +12317,7 @@ const introspection = {
               "name": "Boolean"
             },
             "args": [],
-            "isDeprecated": false
+            "isDeprecated": true
           },
           {
             "name": "opdsItemsPerPage",
@@ -11439,7 +12326,7 @@ const introspection = {
               "name": "Int"
             },
             "args": [],
-            "isDeprecated": false
+            "isDeprecated": true
           },
           {
             "name": "opdsMarkAsReadOnDownload",
@@ -11448,7 +12335,7 @@ const introspection = {
               "name": "Boolean"
             },
             "args": [],
-            "isDeprecated": false
+            "isDeprecated": true
           },
           {
             "name": "opdsShowOnlyDownloadedChapters",
@@ -11457,7 +12344,7 @@ const introspection = {
               "name": "Boolean"
             },
             "args": [],
-            "isDeprecated": false
+            "isDeprecated": true
           },
           {
             "name": "opdsShowOnlyUnreadChapters",
@@ -11466,7 +12353,7 @@ const introspection = {
               "name": "Boolean"
             },
             "args": [],
-            "isDeprecated": false
+            "isDeprecated": true
           },
           {
             "name": "opdsSkipChapterMetadataFeed",
@@ -11475,7 +12362,7 @@ const introspection = {
               "name": "Boolean"
             },
             "args": [],
-            "isDeprecated": false
+            "isDeprecated": true
           },
           {
             "name": "opdsUseBinaryFileSizes",
@@ -11484,7 +12371,7 @@ const introspection = {
               "name": "Boolean"
             },
             "args": [],
-            "isDeprecated": false
+            "isDeprecated": true
           },
           {
             "name": "port",
@@ -11508,7 +12395,7 @@ const introspection = {
               }
             },
             "args": [],
-            "isDeprecated": false
+            "isDeprecated": true
           },
           {
             "name": "socksProxyEnabled",
@@ -11571,7 +12458,7 @@ const introspection = {
               "name": "Boolean"
             },
             "args": [],
-            "isDeprecated": false
+            "isDeprecated": true
           },
           {
             "name": "syncDataChapters",
@@ -11580,7 +12467,7 @@ const introspection = {
               "name": "Boolean"
             },
             "args": [],
-            "isDeprecated": false
+            "isDeprecated": true
           },
           {
             "name": "syncDataHistory",
@@ -11589,7 +12476,7 @@ const introspection = {
               "name": "Boolean"
             },
             "args": [],
-            "isDeprecated": false
+            "isDeprecated": true
           },
           {
             "name": "syncDataManga",
@@ -11598,7 +12485,7 @@ const introspection = {
               "name": "Boolean"
             },
             "args": [],
-            "isDeprecated": false
+            "isDeprecated": true
           },
           {
             "name": "syncDataTracking",
@@ -11607,7 +12494,7 @@ const introspection = {
               "name": "Boolean"
             },
             "args": [],
-            "isDeprecated": false
+            "isDeprecated": true
           },
           {
             "name": "syncInterval",
@@ -11616,7 +12503,7 @@ const introspection = {
               "name": "Duration"
             },
             "args": [],
-            "isDeprecated": false
+            "isDeprecated": true
           },
           {
             "name": "syncYomiApiKey",
@@ -11625,7 +12512,7 @@ const introspection = {
               "name": "String"
             },
             "args": [],
-            "isDeprecated": false
+            "isDeprecated": true
           },
           {
             "name": "syncYomiEnabled",
@@ -11634,7 +12521,7 @@ const introspection = {
               "name": "Boolean"
             },
             "args": [],
-            "isDeprecated": false
+            "isDeprecated": true
           },
           {
             "name": "syncYomiHost",
@@ -11643,7 +12530,7 @@ const introspection = {
               "name": "String"
             },
             "args": [],
-            "isDeprecated": false
+            "isDeprecated": true
           },
           {
             "name": "systemTrayEnabled",
@@ -11661,7 +12548,7 @@ const introspection = {
               "name": "Boolean"
             },
             "args": [],
-            "isDeprecated": false
+            "isDeprecated": true
           },
           {
             "name": "useHikariConnectionPool",
@@ -11791,24 +12678,10 @@ const introspection = {
             }
           },
           {
-            "name": "autoDownloadIgnoreReUploads",
+            "name": "autoBackupIncludeUserSettings",
             "type": {
               "kind": "SCALAR",
               "name": "Boolean"
-            }
-          },
-          {
-            "name": "autoDownloadNewChapters",
-            "type": {
-              "kind": "SCALAR",
-              "name": "Boolean"
-            }
-          },
-          {
-            "name": "autoDownloadNewChaptersLimit",
-            "type": {
-              "kind": "SCALAR",
-              "name": "Int"
             }
           },
           {
@@ -11909,34 +12782,6 @@ const introspection = {
             }
           },
           {
-            "name": "excludeCompleted",
-            "type": {
-              "kind": "SCALAR",
-              "name": "Boolean"
-            }
-          },
-          {
-            "name": "excludeEntryWithUnreadChapters",
-            "type": {
-              "kind": "SCALAR",
-              "name": "Boolean"
-            }
-          },
-          {
-            "name": "excludeNotStarted",
-            "type": {
-              "kind": "SCALAR",
-              "name": "Boolean"
-            }
-          },
-          {
-            "name": "excludeUnreadChapters",
-            "type": {
-              "kind": "SCALAR",
-              "name": "Boolean"
-            }
-          },
-          {
             "name": "flareSolverrAsResponseFallback",
             "type": {
               "kind": "SCALAR",
@@ -12028,34 +12873,6 @@ const introspection = {
             }
           },
           {
-            "name": "koreaderSyncChecksumMethod",
-            "type": {
-              "kind": "ENUM",
-              "name": "KoreaderSyncChecksumMethod"
-            }
-          },
-          {
-            "name": "koreaderSyncPercentageTolerance",
-            "type": {
-              "kind": "SCALAR",
-              "name": "Float"
-            }
-          },
-          {
-            "name": "koreaderSyncStrategyBackward",
-            "type": {
-              "kind": "ENUM",
-              "name": "KoreaderSyncConflictStrategy"
-            }
-          },
-          {
-            "name": "koreaderSyncStrategyForward",
-            "type": {
-              "kind": "ENUM",
-              "name": "KoreaderSyncConflictStrategy"
-            }
-          },
-          {
             "name": "localSourcePath",
             "type": {
               "kind": "SCALAR",
@@ -12088,6 +12905,478 @@ const introspection = {
             "type": {
               "kind": "SCALAR",
               "name": "Int"
+            }
+          },
+          {
+            "name": "port",
+            "type": {
+              "kind": "SCALAR",
+              "name": "Int"
+            }
+          },
+          {
+            "name": "socksProxyEnabled",
+            "type": {
+              "kind": "SCALAR",
+              "name": "Boolean"
+            }
+          },
+          {
+            "name": "socksProxyHost",
+            "type": {
+              "kind": "SCALAR",
+              "name": "String"
+            }
+          },
+          {
+            "name": "socksProxyPassword",
+            "type": {
+              "kind": "SCALAR",
+              "name": "String"
+            }
+          },
+          {
+            "name": "socksProxyPort",
+            "type": {
+              "kind": "SCALAR",
+              "name": "String"
+            }
+          },
+          {
+            "name": "socksProxyUsername",
+            "type": {
+              "kind": "SCALAR",
+              "name": "String"
+            }
+          },
+          {
+            "name": "socksProxyVersion",
+            "type": {
+              "kind": "SCALAR",
+              "name": "Int"
+            }
+          },
+          {
+            "name": "systemTrayEnabled",
+            "type": {
+              "kind": "SCALAR",
+              "name": "Boolean"
+            }
+          },
+          {
+            "name": "useHikariConnectionPool",
+            "type": {
+              "kind": "SCALAR",
+              "name": "Boolean"
+            }
+          },
+          {
+            "name": "webUIChannel",
+            "type": {
+              "kind": "ENUM",
+              "name": "WebUIChannel"
+            }
+          },
+          {
+            "name": "webUIFlavor",
+            "type": {
+              "kind": "ENUM",
+              "name": "WebUIFlavor"
+            }
+          },
+          {
+            "name": "webUIInterface",
+            "type": {
+              "kind": "ENUM",
+              "name": "WebUIInterface"
+            }
+          },
+          {
+            "name": "webUIUpdateCheckInterval",
+            "type": {
+              "kind": "SCALAR",
+              "name": "Float"
+            }
+          }
+        ],
+        "isOneOf": false
+      },
+      {
+        "kind": "OBJECT",
+        "name": "PartialUserSettingsType",
+        "fields": [
+          {
+            "name": "autoDownloadIgnoreReUploads",
+            "type": {
+              "kind": "SCALAR",
+              "name": "Boolean"
+            },
+            "args": [],
+            "isDeprecated": false
+          },
+          {
+            "name": "autoDownloadNewChapters",
+            "type": {
+              "kind": "SCALAR",
+              "name": "Boolean"
+            },
+            "args": [],
+            "isDeprecated": false
+          },
+          {
+            "name": "autoDownloadNewChaptersLimit",
+            "type": {
+              "kind": "SCALAR",
+              "name": "Int"
+            },
+            "args": [],
+            "isDeprecated": false
+          },
+          {
+            "name": "excludeCompleted",
+            "type": {
+              "kind": "SCALAR",
+              "name": "Boolean"
+            },
+            "args": [],
+            "isDeprecated": false
+          },
+          {
+            "name": "excludeEntryWithUnreadChapters",
+            "type": {
+              "kind": "SCALAR",
+              "name": "Boolean"
+            },
+            "args": [],
+            "isDeprecated": false
+          },
+          {
+            "name": "excludeNotStarted",
+            "type": {
+              "kind": "SCALAR",
+              "name": "Boolean"
+            },
+            "args": [],
+            "isDeprecated": false
+          },
+          {
+            "name": "excludeUnreadChapters",
+            "type": {
+              "kind": "SCALAR",
+              "name": "Boolean"
+            },
+            "args": [],
+            "isDeprecated": false
+          },
+          {
+            "name": "koreaderSyncChecksumMethod",
+            "type": {
+              "kind": "ENUM",
+              "name": "KoreaderSyncChecksumMethod"
+            },
+            "args": [],
+            "isDeprecated": false
+          },
+          {
+            "name": "koreaderSyncPercentageTolerance",
+            "type": {
+              "kind": "SCALAR",
+              "name": "Float"
+            },
+            "args": [],
+            "isDeprecated": false
+          },
+          {
+            "name": "koreaderSyncStrategyBackward",
+            "type": {
+              "kind": "ENUM",
+              "name": "KoreaderSyncConflictStrategy"
+            },
+            "args": [],
+            "isDeprecated": false
+          },
+          {
+            "name": "koreaderSyncStrategyForward",
+            "type": {
+              "kind": "ENUM",
+              "name": "KoreaderSyncConflictStrategy"
+            },
+            "args": [],
+            "isDeprecated": false
+          },
+          {
+            "name": "opdsCbzMimetype",
+            "type": {
+              "kind": "ENUM",
+              "name": "CbzMediaType"
+            },
+            "args": [],
+            "isDeprecated": false
+          },
+          {
+            "name": "opdsChapterSortOrder",
+            "type": {
+              "kind": "ENUM",
+              "name": "SortOrder"
+            },
+            "args": [],
+            "isDeprecated": false
+          },
+          {
+            "name": "opdsEnablePageReadProgress",
+            "type": {
+              "kind": "SCALAR",
+              "name": "Boolean"
+            },
+            "args": [],
+            "isDeprecated": false
+          },
+          {
+            "name": "opdsItemsPerPage",
+            "type": {
+              "kind": "SCALAR",
+              "name": "Int"
+            },
+            "args": [],
+            "isDeprecated": false
+          },
+          {
+            "name": "opdsMarkAsReadOnDownload",
+            "type": {
+              "kind": "SCALAR",
+              "name": "Boolean"
+            },
+            "args": [],
+            "isDeprecated": false
+          },
+          {
+            "name": "opdsShowOnlyDownloadedChapters",
+            "type": {
+              "kind": "SCALAR",
+              "name": "Boolean"
+            },
+            "args": [],
+            "isDeprecated": false
+          },
+          {
+            "name": "opdsShowOnlyUnreadChapters",
+            "type": {
+              "kind": "SCALAR",
+              "name": "Boolean"
+            },
+            "args": [],
+            "isDeprecated": false
+          },
+          {
+            "name": "opdsSkipChapterMetadataFeed",
+            "type": {
+              "kind": "SCALAR",
+              "name": "Boolean"
+            },
+            "args": [],
+            "isDeprecated": false
+          },
+          {
+            "name": "opdsUseBinaryFileSizes",
+            "type": {
+              "kind": "SCALAR",
+              "name": "Boolean"
+            },
+            "args": [],
+            "isDeprecated": false
+          },
+          {
+            "name": "serveConversions",
+            "type": {
+              "kind": "LIST",
+              "ofType": {
+                "kind": "NON_NULL",
+                "ofType": {
+                  "kind": "OBJECT",
+                  "name": "SettingsDownloadConversionType"
+                }
+              }
+            },
+            "args": [],
+            "isDeprecated": false
+          },
+          {
+            "name": "syncDataCategories",
+            "type": {
+              "kind": "SCALAR",
+              "name": "Boolean"
+            },
+            "args": [],
+            "isDeprecated": false
+          },
+          {
+            "name": "syncDataChapters",
+            "type": {
+              "kind": "SCALAR",
+              "name": "Boolean"
+            },
+            "args": [],
+            "isDeprecated": false
+          },
+          {
+            "name": "syncDataHistory",
+            "type": {
+              "kind": "SCALAR",
+              "name": "Boolean"
+            },
+            "args": [],
+            "isDeprecated": false
+          },
+          {
+            "name": "syncDataManga",
+            "type": {
+              "kind": "SCALAR",
+              "name": "Boolean"
+            },
+            "args": [],
+            "isDeprecated": false
+          },
+          {
+            "name": "syncDataTracking",
+            "type": {
+              "kind": "SCALAR",
+              "name": "Boolean"
+            },
+            "args": [],
+            "isDeprecated": false
+          },
+          {
+            "name": "syncInterval",
+            "type": {
+              "kind": "SCALAR",
+              "name": "Duration"
+            },
+            "args": [],
+            "isDeprecated": false
+          },
+          {
+            "name": "syncYomiApiKey",
+            "type": {
+              "kind": "SCALAR",
+              "name": "String"
+            },
+            "args": [],
+            "isDeprecated": false
+          },
+          {
+            "name": "syncYomiEnabled",
+            "type": {
+              "kind": "SCALAR",
+              "name": "Boolean"
+            },
+            "args": [],
+            "isDeprecated": false
+          },
+          {
+            "name": "syncYomiHost",
+            "type": {
+              "kind": "SCALAR",
+              "name": "String"
+            },
+            "args": [],
+            "isDeprecated": false
+          },
+          {
+            "name": "updateMangas",
+            "type": {
+              "kind": "SCALAR",
+              "name": "Boolean"
+            },
+            "args": [],
+            "isDeprecated": false
+          }
+        ],
+        "interfaces": [
+          {
+            "kind": "INTERFACE",
+            "name": "UserSettings"
+          }
+        ]
+      },
+      {
+        "kind": "INPUT_OBJECT",
+        "name": "PartialUserSettingsTypeInput",
+        "inputFields": [
+          {
+            "name": "autoDownloadIgnoreReUploads",
+            "type": {
+              "kind": "SCALAR",
+              "name": "Boolean"
+            }
+          },
+          {
+            "name": "autoDownloadNewChapters",
+            "type": {
+              "kind": "SCALAR",
+              "name": "Boolean"
+            }
+          },
+          {
+            "name": "autoDownloadNewChaptersLimit",
+            "type": {
+              "kind": "SCALAR",
+              "name": "Int"
+            }
+          },
+          {
+            "name": "excludeCompleted",
+            "type": {
+              "kind": "SCALAR",
+              "name": "Boolean"
+            }
+          },
+          {
+            "name": "excludeEntryWithUnreadChapters",
+            "type": {
+              "kind": "SCALAR",
+              "name": "Boolean"
+            }
+          },
+          {
+            "name": "excludeNotStarted",
+            "type": {
+              "kind": "SCALAR",
+              "name": "Boolean"
+            }
+          },
+          {
+            "name": "excludeUnreadChapters",
+            "type": {
+              "kind": "SCALAR",
+              "name": "Boolean"
+            }
+          },
+          {
+            "name": "koreaderSyncChecksumMethod",
+            "type": {
+              "kind": "ENUM",
+              "name": "KoreaderSyncChecksumMethod"
+            }
+          },
+          {
+            "name": "koreaderSyncPercentageTolerance",
+            "type": {
+              "kind": "SCALAR",
+              "name": "Float"
+            }
+          },
+          {
+            "name": "koreaderSyncStrategyBackward",
+            "type": {
+              "kind": "ENUM",
+              "name": "KoreaderSyncConflictStrategy"
+            }
+          },
+          {
+            "name": "koreaderSyncStrategyForward",
+            "type": {
+              "kind": "ENUM",
+              "name": "KoreaderSyncConflictStrategy"
             }
           },
           {
@@ -12154,13 +13443,6 @@ const introspection = {
             }
           },
           {
-            "name": "port",
-            "type": {
-              "kind": "SCALAR",
-              "name": "Int"
-            }
-          },
-          {
             "name": "serveConversions",
             "type": {
               "kind": "LIST",
@@ -12171,48 +13453,6 @@ const introspection = {
                   "name": "SettingsDownloadConversionTypeInput"
                 }
               }
-            }
-          },
-          {
-            "name": "socksProxyEnabled",
-            "type": {
-              "kind": "SCALAR",
-              "name": "Boolean"
-            }
-          },
-          {
-            "name": "socksProxyHost",
-            "type": {
-              "kind": "SCALAR",
-              "name": "String"
-            }
-          },
-          {
-            "name": "socksProxyPassword",
-            "type": {
-              "kind": "SCALAR",
-              "name": "String"
-            }
-          },
-          {
-            "name": "socksProxyPort",
-            "type": {
-              "kind": "SCALAR",
-              "name": "String"
-            }
-          },
-          {
-            "name": "socksProxyUsername",
-            "type": {
-              "kind": "SCALAR",
-              "name": "String"
-            }
-          },
-          {
-            "name": "socksProxyVersion",
-            "type": {
-              "kind": "SCALAR",
-              "name": "Int"
             }
           },
           {
@@ -12279,56 +13519,189 @@ const introspection = {
             }
           },
           {
-            "name": "systemTrayEnabled",
-            "type": {
-              "kind": "SCALAR",
-              "name": "Boolean"
-            }
-          },
-          {
             "name": "updateMangas",
             "type": {
               "kind": "SCALAR",
               "name": "Boolean"
             }
+          }
+        ],
+        "isOneOf": false
+      },
+      {
+        "kind": "INPUT_OBJECT",
+        "name": "PermissionsFilterInput",
+        "inputFields": [
+          {
+            "name": "distinctFrom",
+            "type": {
+              "kind": "ENUM",
+              "name": "UserPermission"
+            }
           },
           {
-            "name": "useHikariConnectionPool",
+            "name": "distinctFromAll",
+            "type": {
+              "kind": "LIST",
+              "ofType": {
+                "kind": "NON_NULL",
+                "ofType": {
+                  "kind": "ENUM",
+                  "name": "UserPermission"
+                }
+              }
+            }
+          },
+          {
+            "name": "distinctFromAny",
+            "type": {
+              "kind": "LIST",
+              "ofType": {
+                "kind": "NON_NULL",
+                "ofType": {
+                  "kind": "ENUM",
+                  "name": "UserPermission"
+                }
+              }
+            }
+          },
+          {
+            "name": "equalTo",
+            "type": {
+              "kind": "ENUM",
+              "name": "UserPermission"
+            }
+          },
+          {
+            "name": "in",
+            "type": {
+              "kind": "LIST",
+              "ofType": {
+                "kind": "NON_NULL",
+                "ofType": {
+                  "kind": "ENUM",
+                  "name": "UserPermission"
+                }
+              }
+            }
+          },
+          {
+            "name": "isNull",
             "type": {
               "kind": "SCALAR",
               "name": "Boolean"
             }
           },
           {
-            "name": "webUIChannel",
+            "name": "notDistinctFrom",
             "type": {
               "kind": "ENUM",
-              "name": "WebUIChannel"
+              "name": "UserPermission"
             }
           },
           {
-            "name": "webUIFlavor",
+            "name": "notEqualTo",
             "type": {
               "kind": "ENUM",
-              "name": "WebUIFlavor"
+              "name": "UserPermission"
             }
           },
           {
-            "name": "webUIInterface",
+            "name": "notEqualToAll",
             "type": {
-              "kind": "ENUM",
-              "name": "WebUIInterface"
+              "kind": "LIST",
+              "ofType": {
+                "kind": "NON_NULL",
+                "ofType": {
+                  "kind": "ENUM",
+                  "name": "UserPermission"
+                }
+              }
             }
           },
           {
-            "name": "webUIUpdateCheckInterval",
+            "name": "notEqualToAny",
             "type": {
-              "kind": "SCALAR",
-              "name": "Float"
+              "kind": "LIST",
+              "ofType": {
+                "kind": "NON_NULL",
+                "ofType": {
+                  "kind": "ENUM",
+                  "name": "UserPermission"
+                }
+              }
+            }
+          },
+          {
+            "name": "notIn",
+            "type": {
+              "kind": "LIST",
+              "ofType": {
+                "kind": "NON_NULL",
+                "ofType": {
+                  "kind": "ENUM",
+                  "name": "UserPermission"
+                }
+              }
             }
           }
         ],
         "isOneOf": false
+      },
+      {
+        "kind": "OBJECT",
+        "name": "PlatformInfo",
+        "fields": [
+          {
+            "name": "arch",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "String"
+              }
+            },
+            "args": [],
+            "isDeprecated": false
+          },
+          {
+            "name": "headless",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "Boolean"
+              }
+            },
+            "args": [],
+            "isDeprecated": false
+          },
+          {
+            "name": "jvm",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "OBJECT",
+                "name": "JvmInfo"
+              }
+            },
+            "args": [],
+            "isDeprecated": false
+          },
+          {
+            "name": "os",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "OBJECT",
+                "name": "OSInfo"
+              }
+            },
+            "args": [],
+            "isDeprecated": false
+          }
+        ],
+        "interfaces": []
       },
       {
         "kind": "UNION",
@@ -13545,6 +14918,139 @@ const introspection = {
             "isDeprecated": true
           },
           {
+            "name": "user",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "OBJECT",
+                "name": "UserType"
+              }
+            },
+            "args": [
+              {
+                "name": "id",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Int"
+                }
+              }
+            ],
+            "isDeprecated": false
+          },
+          {
+            "name": "userCodes",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "LIST",
+                "ofType": {
+                  "kind": "NON_NULL",
+                  "ofType": {
+                    "kind": "OBJECT",
+                    "name": "UserCodeType"
+                  }
+                }
+              }
+            },
+            "args": [
+              {
+                "name": "forUserId",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Int"
+                }
+              }
+            ],
+            "isDeprecated": false
+          },
+          {
+            "name": "userSettings",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "OBJECT",
+                "name": "UserSettingsType"
+              }
+            },
+            "args": [],
+            "isDeprecated": false
+          },
+          {
+            "name": "users",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "OBJECT",
+                "name": "UserNodeList"
+              }
+            },
+            "args": [
+              {
+                "name": "after",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Cursor"
+                }
+              },
+              {
+                "name": "before",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Cursor"
+                }
+              },
+              {
+                "name": "condition",
+                "type": {
+                  "kind": "INPUT_OBJECT",
+                  "name": "UserConditionInput"
+                }
+              },
+              {
+                "name": "filter",
+                "type": {
+                  "kind": "INPUT_OBJECT",
+                  "name": "UserFilterInput"
+                }
+              },
+              {
+                "name": "first",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Int"
+                }
+              },
+              {
+                "name": "last",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Int"
+                }
+              },
+              {
+                "name": "offset",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Int"
+                }
+              },
+              {
+                "name": "order",
+                "type": {
+                  "kind": "LIST",
+                  "ofType": {
+                    "kind": "NON_NULL",
+                    "ofType": {
+                      "kind": "INPUT_OBJECT",
+                      "name": "UserOrderInput"
+                    }
+                  }
+                }
+              }
+            ],
+            "isDeprecated": false
+          },
+          {
             "name": "validateBackup",
             "type": {
               "kind": "NON_NULL",
@@ -13565,6 +15071,188 @@ const introspection = {
                 }
               }
             ],
+            "isDeprecated": false
+          }
+        ],
+        "interfaces": []
+      },
+      {
+        "kind": "INPUT_OBJECT",
+        "name": "RedeemRecoveryCodeInput",
+        "inputFields": [
+          {
+            "name": "clientMutationId",
+            "type": {
+              "kind": "SCALAR",
+              "name": "String"
+            }
+          },
+          {
+            "name": "code",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "String"
+              }
+            }
+          },
+          {
+            "name": "newPassword",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "String"
+              }
+            }
+          }
+        ],
+        "isOneOf": false
+      },
+      {
+        "kind": "OBJECT",
+        "name": "RedeemRecoveryCodePayload",
+        "fields": [
+          {
+            "name": "accessToken",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "String"
+              }
+            },
+            "args": [],
+            "isDeprecated": false
+          },
+          {
+            "name": "clientMutationId",
+            "type": {
+              "kind": "SCALAR",
+              "name": "String"
+            },
+            "args": [],
+            "isDeprecated": false
+          },
+          {
+            "name": "refreshToken",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "String"
+              }
+            },
+            "args": [],
+            "isDeprecated": false
+          },
+          {
+            "name": "user",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "OBJECT",
+                "name": "UserType"
+              }
+            },
+            "args": [],
+            "isDeprecated": false
+          }
+        ],
+        "interfaces": []
+      },
+      {
+        "kind": "INPUT_OBJECT",
+        "name": "RedeemRegistrationCodeInput",
+        "inputFields": [
+          {
+            "name": "clientMutationId",
+            "type": {
+              "kind": "SCALAR",
+              "name": "String"
+            }
+          },
+          {
+            "name": "code",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "String"
+              }
+            }
+          },
+          {
+            "name": "password",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "String"
+              }
+            }
+          },
+          {
+            "name": "username",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "String"
+              }
+            }
+          }
+        ],
+        "isOneOf": false
+      },
+      {
+        "kind": "OBJECT",
+        "name": "RedeemRegistrationCodePayload",
+        "fields": [
+          {
+            "name": "accessToken",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "String"
+              }
+            },
+            "args": [],
+            "isDeprecated": false
+          },
+          {
+            "name": "clientMutationId",
+            "type": {
+              "kind": "SCALAR",
+              "name": "String"
+            },
+            "args": [],
+            "isDeprecated": false
+          },
+          {
+            "name": "refreshToken",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "String"
+              }
+            },
+            "args": [],
+            "isDeprecated": false
+          },
+          {
+            "name": "user",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "OBJECT",
+                "name": "UserType"
+              }
+            },
+            "args": [],
             "isDeprecated": false
           }
         ],
@@ -13610,6 +15298,69 @@ const introspection = {
             "args": [],
             "isDeprecated": false
           },
+          {
+            "name": "clientMutationId",
+            "type": {
+              "kind": "SCALAR",
+              "name": "String"
+            },
+            "args": [],
+            "isDeprecated": false
+          }
+        ],
+        "interfaces": []
+      },
+      {
+        "kind": "INPUT_OBJECT",
+        "name": "RegisterInput",
+        "inputFields": [
+          {
+            "name": "clientMutationId",
+            "type": {
+              "kind": "SCALAR",
+              "name": "String"
+            }
+          },
+          {
+            "name": "password",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "String"
+              }
+            }
+          },
+          {
+            "name": "userPermissions",
+            "type": {
+              "kind": "LIST",
+              "ofType": {
+                "kind": "NON_NULL",
+                "ofType": {
+                  "kind": "ENUM",
+                  "name": "UserPermission"
+                }
+              }
+            }
+          },
+          {
+            "name": "username",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "String"
+              }
+            }
+          }
+        ],
+        "isOneOf": false
+      },
+      {
+        "kind": "OBJECT",
+        "name": "RegisterPayload",
+        "fields": [
           {
             "name": "clientMutationId",
             "type": {
@@ -13735,6 +15486,36 @@ const introspection = {
       },
       {
         "kind": "INPUT_OBJECT",
+        "name": "ReorderChapterDownloadsInput",
+        "inputFields": [
+          {
+            "name": "clientMutationId",
+            "type": {
+              "kind": "SCALAR",
+              "name": "String"
+            }
+          },
+          {
+            "name": "reorders",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "LIST",
+                "ofType": {
+                  "kind": "NON_NULL",
+                  "ofType": {
+                    "kind": "INPUT_OBJECT",
+                    "name": "ChapterDownloadReorderInput"
+                  }
+                }
+              }
+            }
+          }
+        ],
+        "isOneOf": false
+      },
+      {
+        "kind": "INPUT_OBJECT",
         "name": "ResetSettingsInput",
         "inputFields": [
           {
@@ -13767,6 +15548,48 @@ const introspection = {
               "ofType": {
                 "kind": "OBJECT",
                 "name": "SettingsType"
+              }
+            },
+            "args": [],
+            "isDeprecated": false
+          }
+        ],
+        "interfaces": []
+      },
+      {
+        "kind": "INPUT_OBJECT",
+        "name": "ResetUserSettingsInput",
+        "inputFields": [
+          {
+            "name": "clientMutationId",
+            "type": {
+              "kind": "SCALAR",
+              "name": "String"
+            }
+          }
+        ],
+        "isOneOf": false
+      },
+      {
+        "kind": "OBJECT",
+        "name": "ResetUserSettingsPayload",
+        "fields": [
+          {
+            "name": "clientMutationId",
+            "type": {
+              "kind": "SCALAR",
+              "name": "String"
+            },
+            "args": [],
+            "isDeprecated": false
+          },
+          {
+            "name": "userSettings",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "OBJECT",
+                "name": "UserSettingsType"
               }
             },
             "args": [],
@@ -13836,6 +15659,46 @@ const introspection = {
             "type": {
               "kind": "OBJECT",
               "name": "BackupRestoreStatus"
+            },
+            "args": [],
+            "isDeprecated": false
+          }
+        ],
+        "interfaces": []
+      },
+      {
+        "kind": "INPUT_OBJECT",
+        "name": "RevokeUserCodeInput",
+        "inputFields": [
+          {
+            "name": "clientMutationId",
+            "type": {
+              "kind": "SCALAR",
+              "name": "String"
+            }
+          },
+          {
+            "name": "id",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "Int"
+              }
+            }
+          }
+        ],
+        "isOneOf": false
+      },
+      {
+        "kind": "OBJECT",
+        "name": "RevokeUserCodePayload",
+        "fields": [
+          {
+            "name": "clientMutationId",
+            "type": {
+              "kind": "SCALAR",
+              "name": "String"
             },
             "args": [],
             "isDeprecated": false
@@ -14600,6 +16463,56 @@ const introspection = {
       },
       {
         "kind": "INPUT_OBJECT",
+        "name": "SetPasswordInput",
+        "inputFields": [
+          {
+            "name": "clientMutationId",
+            "type": {
+              "kind": "SCALAR",
+              "name": "String"
+            }
+          },
+          {
+            "name": "newPassword",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "String"
+              }
+            }
+          },
+          {
+            "name": "oldPassword",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "String"
+              }
+            }
+          }
+        ],
+        "isOneOf": false
+      },
+      {
+        "kind": "OBJECT",
+        "name": "SetPasswordPayload",
+        "fields": [
+          {
+            "name": "clientMutationId",
+            "type": {
+              "kind": "SCALAR",
+              "name": "String"
+            },
+            "args": [],
+            "isDeprecated": false
+          }
+        ],
+        "interfaces": []
+      },
+      {
+        "kind": "INPUT_OBJECT",
         "name": "SetSettingsInput",
         "inputFields": [
           {
@@ -14824,6 +16737,58 @@ const introspection = {
         "interfaces": []
       },
       {
+        "kind": "INPUT_OBJECT",
+        "name": "SetUserSettingsInput",
+        "inputFields": [
+          {
+            "name": "clientMutationId",
+            "type": {
+              "kind": "SCALAR",
+              "name": "String"
+            }
+          },
+          {
+            "name": "userSettings",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "INPUT_OBJECT",
+                "name": "PartialUserSettingsTypeInput"
+              }
+            }
+          }
+        ],
+        "isOneOf": false
+      },
+      {
+        "kind": "OBJECT",
+        "name": "SetUserSettingsPayload",
+        "fields": [
+          {
+            "name": "clientMutationId",
+            "type": {
+              "kind": "SCALAR",
+              "name": "String"
+            },
+            "args": [],
+            "isDeprecated": false
+          },
+          {
+            "name": "userSettings",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "OBJECT",
+                "name": "UserSettingsType"
+              }
+            },
+            "args": [],
+            "isDeprecated": false
+          }
+        ],
+        "interfaces": []
+      },
+      {
         "kind": "INTERFACE",
         "name": "Settings",
         "fields": [
@@ -14918,6 +16883,15 @@ const introspection = {
             "isDeprecated": false
           },
           {
+            "name": "autoBackupIncludeUserSettings",
+            "type": {
+              "kind": "SCALAR",
+              "name": "Boolean"
+            },
+            "args": [],
+            "isDeprecated": false
+          },
+          {
             "name": "autoDownloadAheadLimit",
             "type": {
               "kind": "SCALAR",
@@ -14933,7 +16907,7 @@ const introspection = {
               "name": "Boolean"
             },
             "args": [],
-            "isDeprecated": false
+            "isDeprecated": true
           },
           {
             "name": "autoDownloadNewChapters",
@@ -14942,7 +16916,7 @@ const introspection = {
               "name": "Boolean"
             },
             "args": [],
-            "isDeprecated": false
+            "isDeprecated": true
           },
           {
             "name": "autoDownloadNewChaptersLimit",
@@ -14951,7 +16925,7 @@ const introspection = {
               "name": "Int"
             },
             "args": [],
-            "isDeprecated": false
+            "isDeprecated": true
           },
           {
             "name": "backupInterval",
@@ -15110,7 +17084,7 @@ const introspection = {
               "name": "Boolean"
             },
             "args": [],
-            "isDeprecated": false
+            "isDeprecated": true
           },
           {
             "name": "excludeEntryWithUnreadChapters",
@@ -15119,7 +17093,7 @@ const introspection = {
               "name": "Boolean"
             },
             "args": [],
-            "isDeprecated": false
+            "isDeprecated": true
           },
           {
             "name": "excludeNotStarted",
@@ -15128,7 +17102,7 @@ const introspection = {
               "name": "Boolean"
             },
             "args": [],
-            "isDeprecated": false
+            "isDeprecated": true
           },
           {
             "name": "excludeUnreadChapters",
@@ -15137,7 +17111,7 @@ const introspection = {
               "name": "Boolean"
             },
             "args": [],
-            "isDeprecated": false
+            "isDeprecated": true
           },
           {
             "name": "extensionRepos",
@@ -15287,7 +17261,7 @@ const introspection = {
               "name": "KoreaderSyncChecksumMethod"
             },
             "args": [],
-            "isDeprecated": false
+            "isDeprecated": true
           },
           {
             "name": "koreaderSyncDeviceId",
@@ -15305,7 +17279,7 @@ const introspection = {
               "name": "Float"
             },
             "args": [],
-            "isDeprecated": false
+            "isDeprecated": true
           },
           {
             "name": "koreaderSyncServerUrl",
@@ -15332,7 +17306,7 @@ const introspection = {
               "name": "KoreaderSyncConflictStrategy"
             },
             "args": [],
-            "isDeprecated": false
+            "isDeprecated": true
           },
           {
             "name": "koreaderSyncStrategyForward",
@@ -15341,7 +17315,7 @@ const introspection = {
               "name": "KoreaderSyncConflictStrategy"
             },
             "args": [],
-            "isDeprecated": false
+            "isDeprecated": true
           },
           {
             "name": "koreaderSyncUserkey",
@@ -15413,7 +17387,7 @@ const introspection = {
               "name": "CbzMediaType"
             },
             "args": [],
-            "isDeprecated": false
+            "isDeprecated": true
           },
           {
             "name": "opdsChapterSortOrder",
@@ -15422,7 +17396,7 @@ const introspection = {
               "name": "SortOrder"
             },
             "args": [],
-            "isDeprecated": false
+            "isDeprecated": true
           },
           {
             "name": "opdsEnablePageReadProgress",
@@ -15431,7 +17405,7 @@ const introspection = {
               "name": "Boolean"
             },
             "args": [],
-            "isDeprecated": false
+            "isDeprecated": true
           },
           {
             "name": "opdsItemsPerPage",
@@ -15440,7 +17414,7 @@ const introspection = {
               "name": "Int"
             },
             "args": [],
-            "isDeprecated": false
+            "isDeprecated": true
           },
           {
             "name": "opdsMarkAsReadOnDownload",
@@ -15449,7 +17423,7 @@ const introspection = {
               "name": "Boolean"
             },
             "args": [],
-            "isDeprecated": false
+            "isDeprecated": true
           },
           {
             "name": "opdsShowOnlyDownloadedChapters",
@@ -15458,7 +17432,7 @@ const introspection = {
               "name": "Boolean"
             },
             "args": [],
-            "isDeprecated": false
+            "isDeprecated": true
           },
           {
             "name": "opdsShowOnlyUnreadChapters",
@@ -15467,7 +17441,7 @@ const introspection = {
               "name": "Boolean"
             },
             "args": [],
-            "isDeprecated": false
+            "isDeprecated": true
           },
           {
             "name": "opdsSkipChapterMetadataFeed",
@@ -15476,7 +17450,7 @@ const introspection = {
               "name": "Boolean"
             },
             "args": [],
-            "isDeprecated": false
+            "isDeprecated": true
           },
           {
             "name": "opdsUseBinaryFileSizes",
@@ -15485,7 +17459,7 @@ const introspection = {
               "name": "Boolean"
             },
             "args": [],
-            "isDeprecated": false
+            "isDeprecated": true
           },
           {
             "name": "port",
@@ -15509,7 +17483,7 @@ const introspection = {
               }
             },
             "args": [],
-            "isDeprecated": false
+            "isDeprecated": true
           },
           {
             "name": "socksProxyEnabled",
@@ -15572,7 +17546,7 @@ const introspection = {
               "name": "Boolean"
             },
             "args": [],
-            "isDeprecated": false
+            "isDeprecated": true
           },
           {
             "name": "syncDataChapters",
@@ -15581,7 +17555,7 @@ const introspection = {
               "name": "Boolean"
             },
             "args": [],
-            "isDeprecated": false
+            "isDeprecated": true
           },
           {
             "name": "syncDataHistory",
@@ -15590,7 +17564,7 @@ const introspection = {
               "name": "Boolean"
             },
             "args": [],
-            "isDeprecated": false
+            "isDeprecated": true
           },
           {
             "name": "syncDataManga",
@@ -15599,7 +17573,7 @@ const introspection = {
               "name": "Boolean"
             },
             "args": [],
-            "isDeprecated": false
+            "isDeprecated": true
           },
           {
             "name": "syncDataTracking",
@@ -15608,7 +17582,7 @@ const introspection = {
               "name": "Boolean"
             },
             "args": [],
-            "isDeprecated": false
+            "isDeprecated": true
           },
           {
             "name": "syncInterval",
@@ -15617,7 +17591,7 @@ const introspection = {
               "name": "Duration"
             },
             "args": [],
-            "isDeprecated": false
+            "isDeprecated": true
           },
           {
             "name": "syncYomiApiKey",
@@ -15626,7 +17600,7 @@ const introspection = {
               "name": "String"
             },
             "args": [],
-            "isDeprecated": false
+            "isDeprecated": true
           },
           {
             "name": "syncYomiEnabled",
@@ -15635,7 +17609,7 @@ const introspection = {
               "name": "Boolean"
             },
             "args": [],
-            "isDeprecated": false
+            "isDeprecated": true
           },
           {
             "name": "syncYomiHost",
@@ -15644,7 +17618,7 @@ const introspection = {
               "name": "String"
             },
             "args": [],
-            "isDeprecated": false
+            "isDeprecated": true
           },
           {
             "name": "systemTrayEnabled",
@@ -15662,7 +17636,7 @@ const introspection = {
               "name": "Boolean"
             },
             "args": [],
-            "isDeprecated": false
+            "isDeprecated": true
           },
           {
             "name": "useHikariConnectionPool",
@@ -16165,6 +18139,18 @@ const introspection = {
             "isDeprecated": false
           },
           {
+            "name": "autoBackupIncludeUserSettings",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "Boolean"
+              }
+            },
+            "args": [],
+            "isDeprecated": false
+          },
+          {
             "name": "autoDownloadAheadLimit",
             "type": {
               "kind": "NON_NULL",
@@ -16186,7 +18172,7 @@ const introspection = {
               }
             },
             "args": [],
-            "isDeprecated": false
+            "isDeprecated": true
           },
           {
             "name": "autoDownloadNewChapters",
@@ -16198,7 +18184,7 @@ const introspection = {
               }
             },
             "args": [],
-            "isDeprecated": false
+            "isDeprecated": true
           },
           {
             "name": "autoDownloadNewChaptersLimit",
@@ -16210,7 +18196,7 @@ const introspection = {
               }
             },
             "args": [],
-            "isDeprecated": false
+            "isDeprecated": true
           },
           {
             "name": "backupInterval",
@@ -16420,7 +18406,7 @@ const introspection = {
               }
             },
             "args": [],
-            "isDeprecated": false
+            "isDeprecated": true
           },
           {
             "name": "excludeEntryWithUnreadChapters",
@@ -16432,7 +18418,7 @@ const introspection = {
               }
             },
             "args": [],
-            "isDeprecated": false
+            "isDeprecated": true
           },
           {
             "name": "excludeNotStarted",
@@ -16444,7 +18430,7 @@ const introspection = {
               }
             },
             "args": [],
-            "isDeprecated": false
+            "isDeprecated": true
           },
           {
             "name": "excludeUnreadChapters",
@@ -16456,7 +18442,7 @@ const introspection = {
               }
             },
             "args": [],
-            "isDeprecated": false
+            "isDeprecated": true
           },
           {
             "name": "extensionRepos",
@@ -16654,7 +18640,7 @@ const introspection = {
               }
             },
             "args": [],
-            "isDeprecated": false
+            "isDeprecated": true
           },
           {
             "name": "koreaderSyncDeviceId",
@@ -16678,7 +18664,7 @@ const introspection = {
               }
             },
             "args": [],
-            "isDeprecated": false
+            "isDeprecated": true
           },
           {
             "name": "koreaderSyncServerUrl",
@@ -16714,7 +18700,7 @@ const introspection = {
               }
             },
             "args": [],
-            "isDeprecated": false
+            "isDeprecated": true
           },
           {
             "name": "koreaderSyncStrategyForward",
@@ -16726,7 +18712,7 @@ const introspection = {
               }
             },
             "args": [],
-            "isDeprecated": false
+            "isDeprecated": true
           },
           {
             "name": "koreaderSyncUserkey",
@@ -16822,7 +18808,7 @@ const introspection = {
               }
             },
             "args": [],
-            "isDeprecated": false
+            "isDeprecated": true
           },
           {
             "name": "opdsChapterSortOrder",
@@ -16834,7 +18820,7 @@ const introspection = {
               }
             },
             "args": [],
-            "isDeprecated": false
+            "isDeprecated": true
           },
           {
             "name": "opdsEnablePageReadProgress",
@@ -16846,7 +18832,7 @@ const introspection = {
               }
             },
             "args": [],
-            "isDeprecated": false
+            "isDeprecated": true
           },
           {
             "name": "opdsItemsPerPage",
@@ -16858,7 +18844,7 @@ const introspection = {
               }
             },
             "args": [],
-            "isDeprecated": false
+            "isDeprecated": true
           },
           {
             "name": "opdsMarkAsReadOnDownload",
@@ -16870,7 +18856,7 @@ const introspection = {
               }
             },
             "args": [],
-            "isDeprecated": false
+            "isDeprecated": true
           },
           {
             "name": "opdsShowOnlyDownloadedChapters",
@@ -16882,7 +18868,7 @@ const introspection = {
               }
             },
             "args": [],
-            "isDeprecated": false
+            "isDeprecated": true
           },
           {
             "name": "opdsShowOnlyUnreadChapters",
@@ -16894,7 +18880,7 @@ const introspection = {
               }
             },
             "args": [],
-            "isDeprecated": false
+            "isDeprecated": true
           },
           {
             "name": "opdsSkipChapterMetadataFeed",
@@ -16906,7 +18892,7 @@ const introspection = {
               }
             },
             "args": [],
-            "isDeprecated": false
+            "isDeprecated": true
           },
           {
             "name": "opdsUseBinaryFileSizes",
@@ -16918,7 +18904,7 @@ const introspection = {
               }
             },
             "args": [],
-            "isDeprecated": false
+            "isDeprecated": true
           },
           {
             "name": "port",
@@ -16948,7 +18934,7 @@ const introspection = {
               }
             },
             "args": [],
-            "isDeprecated": false
+            "isDeprecated": true
           },
           {
             "name": "socksProxyEnabled",
@@ -17032,7 +19018,7 @@ const introspection = {
               }
             },
             "args": [],
-            "isDeprecated": false
+            "isDeprecated": true
           },
           {
             "name": "syncDataChapters",
@@ -17044,7 +19030,7 @@ const introspection = {
               }
             },
             "args": [],
-            "isDeprecated": false
+            "isDeprecated": true
           },
           {
             "name": "syncDataHistory",
@@ -17056,7 +19042,7 @@ const introspection = {
               }
             },
             "args": [],
-            "isDeprecated": false
+            "isDeprecated": true
           },
           {
             "name": "syncDataManga",
@@ -17068,7 +19054,7 @@ const introspection = {
               }
             },
             "args": [],
-            "isDeprecated": false
+            "isDeprecated": true
           },
           {
             "name": "syncDataTracking",
@@ -17080,7 +19066,7 @@ const introspection = {
               }
             },
             "args": [],
-            "isDeprecated": false
+            "isDeprecated": true
           },
           {
             "name": "syncInterval",
@@ -17092,7 +19078,7 @@ const introspection = {
               }
             },
             "args": [],
-            "isDeprecated": false
+            "isDeprecated": true
           },
           {
             "name": "syncYomiApiKey",
@@ -17104,7 +19090,7 @@ const introspection = {
               }
             },
             "args": [],
-            "isDeprecated": false
+            "isDeprecated": true
           },
           {
             "name": "syncYomiEnabled",
@@ -17116,7 +19102,7 @@ const introspection = {
               }
             },
             "args": [],
-            "isDeprecated": false
+            "isDeprecated": true
           },
           {
             "name": "syncYomiHost",
@@ -17128,7 +19114,7 @@ const introspection = {
               }
             },
             "args": [],
-            "isDeprecated": false
+            "isDeprecated": true
           },
           {
             "name": "systemTrayEnabled",
@@ -17152,7 +19138,7 @@ const introspection = {
               }
             },
             "args": [],
-            "isDeprecated": false
+            "isDeprecated": true
           },
           {
             "name": "useHikariConnectionPool",
@@ -22071,6 +24057,78 @@ const introspection = {
         "interfaces": []
       },
       {
+        "kind": "INPUT_OBJECT",
+        "name": "UpdateUserInput",
+        "inputFields": [
+          {
+            "name": "clientMutationId",
+            "type": {
+              "kind": "SCALAR",
+              "name": "String"
+            }
+          },
+          {
+            "name": "permissions",
+            "type": {
+              "kind": "LIST",
+              "ofType": {
+                "kind": "NON_NULL",
+                "ofType": {
+                  "kind": "ENUM",
+                  "name": "UserPermission"
+                }
+              }
+            }
+          },
+          {
+            "name": "role",
+            "type": {
+              "kind": "ENUM",
+              "name": "UserRole"
+            }
+          },
+          {
+            "name": "userId",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "Int"
+              }
+            }
+          }
+        ],
+        "isOneOf": false
+      },
+      {
+        "kind": "OBJECT",
+        "name": "UpdateUserPayload",
+        "fields": [
+          {
+            "name": "clientMutationId",
+            "type": {
+              "kind": "SCALAR",
+              "name": "String"
+            },
+            "args": [],
+            "isDeprecated": false
+          },
+          {
+            "name": "user",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "OBJECT",
+                "name": "UserType"
+              }
+            },
+            "args": [],
+            "isDeprecated": false
+          }
+        ],
+        "interfaces": []
+      },
+      {
         "kind": "OBJECT",
         "name": "UpdaterJobsInfoType",
         "fields": [
@@ -22216,6 +24274,1183 @@ const introspection = {
       {
         "kind": "SCALAR",
         "name": "Upload"
+      },
+      {
+        "kind": "ENUM",
+        "name": "UserCodePurpose",
+        "enumValues": [
+          {
+            "name": "RECOVERY",
+            "isDeprecated": false
+          },
+          {
+            "name": "REGISTRATION",
+            "isDeprecated": false
+          }
+        ]
+      },
+      {
+        "kind": "OBJECT",
+        "name": "UserCodeType",
+        "fields": [
+          {
+            "name": "createdAt",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "LongString"
+              }
+            },
+            "args": [],
+            "isDeprecated": false
+          },
+          {
+            "name": "createdBy",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "OBJECT",
+                "name": "UserType"
+              }
+            },
+            "args": [],
+            "isDeprecated": false
+          },
+          {
+            "name": "expiresAt",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "LongString"
+              }
+            },
+            "args": [],
+            "isDeprecated": false
+          },
+          {
+            "name": "id",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "Int"
+              }
+            },
+            "args": [],
+            "isDeprecated": false
+          },
+          {
+            "name": "permissions",
+            "type": {
+              "kind": "LIST",
+              "ofType": {
+                "kind": "NON_NULL",
+                "ofType": {
+                  "kind": "ENUM",
+                  "name": "UserPermission"
+                }
+              }
+            },
+            "args": [],
+            "isDeprecated": false
+          },
+          {
+            "name": "purpose",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "ENUM",
+                "name": "UserCodePurpose"
+              }
+            },
+            "args": [],
+            "isDeprecated": false
+          },
+          {
+            "name": "user",
+            "type": {
+              "kind": "OBJECT",
+              "name": "UserType"
+            },
+            "args": [],
+            "isDeprecated": false
+          }
+        ],
+        "interfaces": []
+      },
+      {
+        "kind": "INPUT_OBJECT",
+        "name": "UserConditionInput",
+        "inputFields": [
+          {
+            "name": "id",
+            "type": {
+              "kind": "SCALAR",
+              "name": "Int"
+            }
+          },
+          {
+            "name": "permission",
+            "type": {
+              "kind": "ENUM",
+              "name": "UserPermission"
+            }
+          },
+          {
+            "name": "role",
+            "type": {
+              "kind": "SCALAR",
+              "name": "String"
+            }
+          },
+          {
+            "name": "username",
+            "type": {
+              "kind": "SCALAR",
+              "name": "String"
+            }
+          }
+        ],
+        "isOneOf": false
+      },
+      {
+        "kind": "OBJECT",
+        "name": "UserEdge",
+        "fields": [
+          {
+            "name": "cursor",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "Cursor"
+              }
+            },
+            "args": [],
+            "isDeprecated": false
+          },
+          {
+            "name": "node",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "OBJECT",
+                "name": "UserType"
+              }
+            },
+            "args": [],
+            "isDeprecated": false
+          }
+        ],
+        "interfaces": [
+          {
+            "kind": "INTERFACE",
+            "name": "Edge"
+          }
+        ]
+      },
+      {
+        "kind": "INPUT_OBJECT",
+        "name": "UserFilterInput",
+        "inputFields": [
+          {
+            "name": "and",
+            "type": {
+              "kind": "LIST",
+              "ofType": {
+                "kind": "NON_NULL",
+                "ofType": {
+                  "kind": "INPUT_OBJECT",
+                  "name": "UserFilterInput"
+                }
+              }
+            }
+          },
+          {
+            "name": "id",
+            "type": {
+              "kind": "INPUT_OBJECT",
+              "name": "IntFilterInput"
+            }
+          },
+          {
+            "name": "not",
+            "type": {
+              "kind": "INPUT_OBJECT",
+              "name": "UserFilterInput"
+            }
+          },
+          {
+            "name": "or",
+            "type": {
+              "kind": "LIST",
+              "ofType": {
+                "kind": "NON_NULL",
+                "ofType": {
+                  "kind": "INPUT_OBJECT",
+                  "name": "UserFilterInput"
+                }
+              }
+            }
+          },
+          {
+            "name": "permission",
+            "type": {
+              "kind": "INPUT_OBJECT",
+              "name": "PermissionsFilterInput"
+            }
+          },
+          {
+            "name": "role",
+            "type": {
+              "kind": "INPUT_OBJECT",
+              "name": "StringFilterInput"
+            }
+          },
+          {
+            "name": "username",
+            "type": {
+              "kind": "INPUT_OBJECT",
+              "name": "StringFilterInput"
+            }
+          }
+        ],
+        "isOneOf": false
+      },
+      {
+        "kind": "OBJECT",
+        "name": "UserNodeList",
+        "fields": [
+          {
+            "name": "edges",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "LIST",
+                "ofType": {
+                  "kind": "NON_NULL",
+                  "ofType": {
+                    "kind": "OBJECT",
+                    "name": "UserEdge"
+                  }
+                }
+              }
+            },
+            "args": [],
+            "isDeprecated": false
+          },
+          {
+            "name": "nodes",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "LIST",
+                "ofType": {
+                  "kind": "NON_NULL",
+                  "ofType": {
+                    "kind": "OBJECT",
+                    "name": "UserType"
+                  }
+                }
+              }
+            },
+            "args": [],
+            "isDeprecated": false
+          },
+          {
+            "name": "pageInfo",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "OBJECT",
+                "name": "PageInfo"
+              }
+            },
+            "args": [],
+            "isDeprecated": false
+          },
+          {
+            "name": "totalCount",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "Int"
+              }
+            },
+            "args": [],
+            "isDeprecated": false
+          }
+        ],
+        "interfaces": [
+          {
+            "kind": "INTERFACE",
+            "name": "NodeList"
+          }
+        ]
+      },
+      {
+        "kind": "ENUM",
+        "name": "UserOrderBy",
+        "enumValues": [
+          {
+            "name": "ID",
+            "isDeprecated": false
+          },
+          {
+            "name": "USERNAME",
+            "isDeprecated": false
+          }
+        ]
+      },
+      {
+        "kind": "INPUT_OBJECT",
+        "name": "UserOrderInput",
+        "inputFields": [
+          {
+            "name": "by",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "ENUM",
+                "name": "UserOrderBy"
+              }
+            }
+          },
+          {
+            "name": "byType",
+            "type": {
+              "kind": "ENUM",
+              "name": "SortOrder"
+            }
+          }
+        ],
+        "isOneOf": false
+      },
+      {
+        "kind": "ENUM",
+        "name": "UserPermission",
+        "enumValues": [
+          {
+            "name": "INSTALL_EXTENSIONS",
+            "isDeprecated": false
+          },
+          {
+            "name": "INSTALL_EXTERNAL_EXTENSIONS",
+            "isDeprecated": false
+          },
+          {
+            "name": "UNINSTALL_EXTENSIONS",
+            "isDeprecated": false
+          },
+          {
+            "name": "DOWNLOAD_CHAPTERS",
+            "isDeprecated": false
+          },
+          {
+            "name": "ACCESS_NSFW",
+            "isDeprecated": false
+          },
+          {
+            "name": "MANAGE_SETTINGS",
+            "isDeprecated": false
+          },
+          {
+            "name": "MANAGE_USERS",
+            "isDeprecated": false
+          },
+          {
+            "name": "MANAGE_EXTENSION_STORES",
+            "isDeprecated": false
+          },
+          {
+            "name": "MANAGE_SOURCE_PREFERENCES",
+            "isDeprecated": false
+          },
+          {
+            "name": "MANAGE_CACHE",
+            "isDeprecated": false
+          }
+        ]
+      },
+      {
+        "kind": "ENUM",
+        "name": "UserRole",
+        "enumValues": [
+          {
+            "name": "ADMIN",
+            "isDeprecated": false
+          },
+          {
+            "name": "USER",
+            "isDeprecated": false
+          },
+          {
+            "name": "VISITOR",
+            "isDeprecated": false
+          }
+        ]
+      },
+      {
+        "kind": "INTERFACE",
+        "name": "UserSettings",
+        "fields": [
+          {
+            "name": "autoDownloadIgnoreReUploads",
+            "type": {
+              "kind": "SCALAR",
+              "name": "Boolean"
+            },
+            "args": [],
+            "isDeprecated": false
+          },
+          {
+            "name": "autoDownloadNewChapters",
+            "type": {
+              "kind": "SCALAR",
+              "name": "Boolean"
+            },
+            "args": [],
+            "isDeprecated": false
+          },
+          {
+            "name": "autoDownloadNewChaptersLimit",
+            "type": {
+              "kind": "SCALAR",
+              "name": "Int"
+            },
+            "args": [],
+            "isDeprecated": false
+          },
+          {
+            "name": "excludeCompleted",
+            "type": {
+              "kind": "SCALAR",
+              "name": "Boolean"
+            },
+            "args": [],
+            "isDeprecated": false
+          },
+          {
+            "name": "excludeEntryWithUnreadChapters",
+            "type": {
+              "kind": "SCALAR",
+              "name": "Boolean"
+            },
+            "args": [],
+            "isDeprecated": false
+          },
+          {
+            "name": "excludeNotStarted",
+            "type": {
+              "kind": "SCALAR",
+              "name": "Boolean"
+            },
+            "args": [],
+            "isDeprecated": false
+          },
+          {
+            "name": "excludeUnreadChapters",
+            "type": {
+              "kind": "SCALAR",
+              "name": "Boolean"
+            },
+            "args": [],
+            "isDeprecated": false
+          },
+          {
+            "name": "koreaderSyncChecksumMethod",
+            "type": {
+              "kind": "ENUM",
+              "name": "KoreaderSyncChecksumMethod"
+            },
+            "args": [],
+            "isDeprecated": false
+          },
+          {
+            "name": "koreaderSyncPercentageTolerance",
+            "type": {
+              "kind": "SCALAR",
+              "name": "Float"
+            },
+            "args": [],
+            "isDeprecated": false
+          },
+          {
+            "name": "koreaderSyncStrategyBackward",
+            "type": {
+              "kind": "ENUM",
+              "name": "KoreaderSyncConflictStrategy"
+            },
+            "args": [],
+            "isDeprecated": false
+          },
+          {
+            "name": "koreaderSyncStrategyForward",
+            "type": {
+              "kind": "ENUM",
+              "name": "KoreaderSyncConflictStrategy"
+            },
+            "args": [],
+            "isDeprecated": false
+          },
+          {
+            "name": "opdsCbzMimetype",
+            "type": {
+              "kind": "ENUM",
+              "name": "CbzMediaType"
+            },
+            "args": [],
+            "isDeprecated": false
+          },
+          {
+            "name": "opdsChapterSortOrder",
+            "type": {
+              "kind": "ENUM",
+              "name": "SortOrder"
+            },
+            "args": [],
+            "isDeprecated": false
+          },
+          {
+            "name": "opdsEnablePageReadProgress",
+            "type": {
+              "kind": "SCALAR",
+              "name": "Boolean"
+            },
+            "args": [],
+            "isDeprecated": false
+          },
+          {
+            "name": "opdsItemsPerPage",
+            "type": {
+              "kind": "SCALAR",
+              "name": "Int"
+            },
+            "args": [],
+            "isDeprecated": false
+          },
+          {
+            "name": "opdsMarkAsReadOnDownload",
+            "type": {
+              "kind": "SCALAR",
+              "name": "Boolean"
+            },
+            "args": [],
+            "isDeprecated": false
+          },
+          {
+            "name": "opdsShowOnlyDownloadedChapters",
+            "type": {
+              "kind": "SCALAR",
+              "name": "Boolean"
+            },
+            "args": [],
+            "isDeprecated": false
+          },
+          {
+            "name": "opdsShowOnlyUnreadChapters",
+            "type": {
+              "kind": "SCALAR",
+              "name": "Boolean"
+            },
+            "args": [],
+            "isDeprecated": false
+          },
+          {
+            "name": "opdsSkipChapterMetadataFeed",
+            "type": {
+              "kind": "SCALAR",
+              "name": "Boolean"
+            },
+            "args": [],
+            "isDeprecated": false
+          },
+          {
+            "name": "opdsUseBinaryFileSizes",
+            "type": {
+              "kind": "SCALAR",
+              "name": "Boolean"
+            },
+            "args": [],
+            "isDeprecated": false
+          },
+          {
+            "name": "serveConversions",
+            "type": {
+              "kind": "LIST",
+              "ofType": {
+                "kind": "NON_NULL",
+                "ofType": {
+                  "kind": "INTERFACE",
+                  "name": "SettingsDownloadConversion"
+                }
+              }
+            },
+            "args": [],
+            "isDeprecated": false
+          },
+          {
+            "name": "syncDataCategories",
+            "type": {
+              "kind": "SCALAR",
+              "name": "Boolean"
+            },
+            "args": [],
+            "isDeprecated": false
+          },
+          {
+            "name": "syncDataChapters",
+            "type": {
+              "kind": "SCALAR",
+              "name": "Boolean"
+            },
+            "args": [],
+            "isDeprecated": false
+          },
+          {
+            "name": "syncDataHistory",
+            "type": {
+              "kind": "SCALAR",
+              "name": "Boolean"
+            },
+            "args": [],
+            "isDeprecated": false
+          },
+          {
+            "name": "syncDataManga",
+            "type": {
+              "kind": "SCALAR",
+              "name": "Boolean"
+            },
+            "args": [],
+            "isDeprecated": false
+          },
+          {
+            "name": "syncDataTracking",
+            "type": {
+              "kind": "SCALAR",
+              "name": "Boolean"
+            },
+            "args": [],
+            "isDeprecated": false
+          },
+          {
+            "name": "syncInterval",
+            "type": {
+              "kind": "SCALAR",
+              "name": "Duration"
+            },
+            "args": [],
+            "isDeprecated": false
+          },
+          {
+            "name": "syncYomiApiKey",
+            "type": {
+              "kind": "SCALAR",
+              "name": "String"
+            },
+            "args": [],
+            "isDeprecated": false
+          },
+          {
+            "name": "syncYomiEnabled",
+            "type": {
+              "kind": "SCALAR",
+              "name": "Boolean"
+            },
+            "args": [],
+            "isDeprecated": false
+          },
+          {
+            "name": "syncYomiHost",
+            "type": {
+              "kind": "SCALAR",
+              "name": "String"
+            },
+            "args": [],
+            "isDeprecated": false
+          },
+          {
+            "name": "updateMangas",
+            "type": {
+              "kind": "SCALAR",
+              "name": "Boolean"
+            },
+            "args": [],
+            "isDeprecated": false
+          }
+        ],
+        "interfaces": [],
+        "possibleTypes": [
+          {
+            "kind": "OBJECT",
+            "name": "PartialUserSettingsType"
+          },
+          {
+            "kind": "OBJECT",
+            "name": "UserSettingsType"
+          }
+        ]
+      },
+      {
+        "kind": "OBJECT",
+        "name": "UserSettingsType",
+        "fields": [
+          {
+            "name": "autoDownloadIgnoreReUploads",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "Boolean"
+              }
+            },
+            "args": [],
+            "isDeprecated": false
+          },
+          {
+            "name": "autoDownloadNewChapters",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "Boolean"
+              }
+            },
+            "args": [],
+            "isDeprecated": false
+          },
+          {
+            "name": "autoDownloadNewChaptersLimit",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "Int"
+              }
+            },
+            "args": [],
+            "isDeprecated": false
+          },
+          {
+            "name": "excludeCompleted",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "Boolean"
+              }
+            },
+            "args": [],
+            "isDeprecated": false
+          },
+          {
+            "name": "excludeEntryWithUnreadChapters",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "Boolean"
+              }
+            },
+            "args": [],
+            "isDeprecated": false
+          },
+          {
+            "name": "excludeNotStarted",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "Boolean"
+              }
+            },
+            "args": [],
+            "isDeprecated": false
+          },
+          {
+            "name": "excludeUnreadChapters",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "Boolean"
+              }
+            },
+            "args": [],
+            "isDeprecated": false
+          },
+          {
+            "name": "koreaderSyncChecksumMethod",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "ENUM",
+                "name": "KoreaderSyncChecksumMethod"
+              }
+            },
+            "args": [],
+            "isDeprecated": false
+          },
+          {
+            "name": "koreaderSyncPercentageTolerance",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "Float"
+              }
+            },
+            "args": [],
+            "isDeprecated": false
+          },
+          {
+            "name": "koreaderSyncStrategyBackward",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "ENUM",
+                "name": "KoreaderSyncConflictStrategy"
+              }
+            },
+            "args": [],
+            "isDeprecated": false
+          },
+          {
+            "name": "koreaderSyncStrategyForward",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "ENUM",
+                "name": "KoreaderSyncConflictStrategy"
+              }
+            },
+            "args": [],
+            "isDeprecated": false
+          },
+          {
+            "name": "opdsCbzMimetype",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "ENUM",
+                "name": "CbzMediaType"
+              }
+            },
+            "args": [],
+            "isDeprecated": false
+          },
+          {
+            "name": "opdsChapterSortOrder",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "ENUM",
+                "name": "SortOrder"
+              }
+            },
+            "args": [],
+            "isDeprecated": false
+          },
+          {
+            "name": "opdsEnablePageReadProgress",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "Boolean"
+              }
+            },
+            "args": [],
+            "isDeprecated": false
+          },
+          {
+            "name": "opdsItemsPerPage",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "Int"
+              }
+            },
+            "args": [],
+            "isDeprecated": false
+          },
+          {
+            "name": "opdsMarkAsReadOnDownload",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "Boolean"
+              }
+            },
+            "args": [],
+            "isDeprecated": false
+          },
+          {
+            "name": "opdsShowOnlyDownloadedChapters",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "Boolean"
+              }
+            },
+            "args": [],
+            "isDeprecated": false
+          },
+          {
+            "name": "opdsShowOnlyUnreadChapters",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "Boolean"
+              }
+            },
+            "args": [],
+            "isDeprecated": false
+          },
+          {
+            "name": "opdsSkipChapterMetadataFeed",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "Boolean"
+              }
+            },
+            "args": [],
+            "isDeprecated": false
+          },
+          {
+            "name": "opdsUseBinaryFileSizes",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "Boolean"
+              }
+            },
+            "args": [],
+            "isDeprecated": false
+          },
+          {
+            "name": "serveConversions",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "LIST",
+                "ofType": {
+                  "kind": "NON_NULL",
+                  "ofType": {
+                    "kind": "OBJECT",
+                    "name": "SettingsDownloadConversionType"
+                  }
+                }
+              }
+            },
+            "args": [],
+            "isDeprecated": false
+          },
+          {
+            "name": "syncDataCategories",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "Boolean"
+              }
+            },
+            "args": [],
+            "isDeprecated": false
+          },
+          {
+            "name": "syncDataChapters",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "Boolean"
+              }
+            },
+            "args": [],
+            "isDeprecated": false
+          },
+          {
+            "name": "syncDataHistory",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "Boolean"
+              }
+            },
+            "args": [],
+            "isDeprecated": false
+          },
+          {
+            "name": "syncDataManga",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "Boolean"
+              }
+            },
+            "args": [],
+            "isDeprecated": false
+          },
+          {
+            "name": "syncDataTracking",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "Boolean"
+              }
+            },
+            "args": [],
+            "isDeprecated": false
+          },
+          {
+            "name": "syncInterval",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "Duration"
+              }
+            },
+            "args": [],
+            "isDeprecated": false
+          },
+          {
+            "name": "syncYomiApiKey",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "String"
+              }
+            },
+            "args": [],
+            "isDeprecated": false
+          },
+          {
+            "name": "syncYomiEnabled",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "Boolean"
+              }
+            },
+            "args": [],
+            "isDeprecated": false
+          },
+          {
+            "name": "syncYomiHost",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "String"
+              }
+            },
+            "args": [],
+            "isDeprecated": false
+          },
+          {
+            "name": "updateMangas",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "Boolean"
+              }
+            },
+            "args": [],
+            "isDeprecated": false
+          }
+        ],
+        "interfaces": [
+          {
+            "kind": "INTERFACE",
+            "name": "UserSettings"
+          }
+        ]
+      },
+      {
+        "kind": "OBJECT",
+        "name": "UserType",
+        "fields": [
+          {
+            "name": "id",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "Int"
+              }
+            },
+            "args": [],
+            "isDeprecated": false
+          },
+          {
+            "name": "permissions",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "LIST",
+                "ofType": {
+                  "kind": "NON_NULL",
+                  "ofType": {
+                    "kind": "ENUM",
+                    "name": "UserPermission"
+                  }
+                }
+              }
+            },
+            "args": [],
+            "isDeprecated": false
+          },
+          {
+            "name": "roles",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "LIST",
+                "ofType": {
+                  "kind": "NON_NULL",
+                  "ofType": {
+                    "kind": "ENUM",
+                    "name": "UserRole"
+                  }
+                }
+              }
+            },
+            "args": [],
+            "isDeprecated": false
+          },
+          {
+            "name": "username",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "String"
+              }
+            },
+            "args": [],
+            "isDeprecated": false
+          }
+        ],
+        "interfaces": []
       },
       {
         "kind": "INPUT_OBJECT",

@@ -12,6 +12,7 @@ import {
 	deleteDownloadedChapters,
 	enqueueChapterDownloads,
 	setServerSettings,
+	setServerUserSettings,
 	updateChapters
 } from './gql/Mutations';
 import type { VariablesOf } from '$lib/gql/graphql';
@@ -295,6 +296,15 @@ export function setSettings(
 	ErrorHelp(
 		'failed to set server settings',
 		client.mutation(setServerSettings, { settings }).toPromise()
+	);
+}
+
+export function setUserSettings(
+	settings: VariablesOf<typeof setServerUserSettings>['settings']
+) {
+	ErrorHelp(
+		'failed to set user settings',
+		client.mutation(setServerUserSettings, { settings }).toPromise()
 	);
 }
 

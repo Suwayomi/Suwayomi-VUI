@@ -337,8 +337,7 @@
 	function handelArrows(event: KeyboardEvent) {
 		if (event.key === 'ArrowDown') {
 			const tabElements = [...document.querySelectorAll('.tabindex')] as (
-				| HTMLInputElement
-				| HTMLAnchorElement
+				HTMLInputElement | HTMLAnchorElement
 			)[];
 			const index = tabElements.findIndex((e) => e === document.activeElement);
 			let nextIndex: number;
@@ -350,8 +349,7 @@
 		}
 		if (event.key === 'ArrowUp') {
 			const tabElements = [...document.querySelectorAll('.tabindex')] as (
-				| HTMLInputElement
-				| HTMLAnchorElement
+				HTMLInputElement | HTMLAnchorElement
 			)[];
 			const index = tabElements.findIndex((e) => e === document.activeElement);
 			let previousIndex: number;
