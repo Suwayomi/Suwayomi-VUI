@@ -12,6 +12,7 @@
 		errortoast,
 		queryState,
 		setSettings,
+		setUserSettings,
 		subscriptionState
 	} from '$lib/util.svelte';
 	import { getContextClient } from '@urql/svelte';
@@ -264,20 +265,20 @@
 		<Toggle
 			title="Auto Download New Chapters"
 			bind:checked={autoDownloadNewChapters}
-			onchange={() => setSettings({ autoDownloadNewChapters })}
+			onchange={() => setUserSettings({ autoDownloadNewChapters })}
 		/>
 		<!-- autoDownloadIgnoreReUploads -->
 		<Toggle
 			title="Auto Download Ignore Re-Uploads"
 			bind:checked={autoDownloadIgnoreReUploads}
-			onchange={() => setSettings({ autoDownloadIgnoreReUploads })}
+			onchange={() => setUserSettings({ autoDownloadIgnoreReUploads })}
 		/>
 		<!-- autoDownloadNewChaptersLimit -->
 		<Number
 			title="Auto Download New Chapters Limit"
 			bind:value={autoDownloadNewChaptersLimit}
 			max={999}
-			onchange={() => setSettings({ autoDownloadNewChaptersLimit })}
+			onchange={() => setUserSettings({ autoDownloadNewChaptersLimit })}
 		/>
 		<!-- backupInterval -->
 		<Number
@@ -362,19 +363,19 @@
 		<Toggle
 			title="Exclude Completed"
 			bind:checked={excludeCompleted}
-			onchange={() => setSettings({ excludeCompleted })}
+			onchange={() => setUserSettings({ excludeCompleted })}
 		/>
 		<!-- excludeEntryWithUnreadChapters -->
 		<Toggle
 			title="Exclude Entry With Unread Chapters"
 			bind:checked={excludeEntryWithUnreadChapters}
-			onchange={() => setSettings({ excludeEntryWithUnreadChapters })}
+			onchange={() => setUserSettings({ excludeEntryWithUnreadChapters })}
 		/>
 		<!-- excludeNotStarted -->
 		<Toggle
 			title="Exclude Not Started"
 			bind:checked={excludeNotStarted}
-			onchange={() => setSettings({ excludeNotStarted })}
+			onchange={() => setUserSettings({ excludeNotStarted })}
 		/>
 		<!-- extensionRepos -->
 		<button
@@ -396,7 +397,7 @@
 		<Toggle
 			title="Exclude Unread Chapters"
 			bind:checked={excludeUnreadChapters}
-			onchange={() => setSettings({ excludeUnreadChapters })}
+			onchange={() => setUserSettings({ excludeUnreadChapters })}
 		/>
 		<!-- flareSolverrEnabled -->
 		<Toggle
@@ -581,7 +582,7 @@
 		<Toggle
 			title="Update Mangas"
 			bind:checked={updateMangas}
-			onchange={() => setSettings({ updateMangas })}
+			onchange={() => setUserSettings({ updateMangas })}
 		/>
 		<!-- webUIChannel -->
 		<Select

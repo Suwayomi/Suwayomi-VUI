@@ -879,6 +879,61 @@ export const setServerSettings = graphql(
 	[]
 );
 
+export const setServerUserSettings = graphql(
+	`
+		mutation setServerUserSettings(
+			$settings: PartialUserSettingsTypeInput = {}
+		) {
+			setUserSettings(input: { userSettings: $settings }) {
+				userSettings {
+					updateMangas
+					syncYomiHost
+					syncYomiEnabled
+					syncYomiApiKey
+					syncInterval
+					syncDataTracking
+					syncDataManga
+					syncDataHistory
+					syncDataChapters
+					syncDataCategories
+					serveConversions {
+						target
+						mimeType
+						headers {
+							value
+							name
+						}
+						connectTimeout
+						compressionLevel
+						callTimeout
+					}
+					opdsUseBinaryFileSizes
+					opdsSkipChapterMetadataFeed
+					opdsShowOnlyUnreadChapters
+					opdsShowOnlyDownloadedChapters
+					opdsMarkAsReadOnDownload
+					opdsItemsPerPage
+					opdsEnablePageReadProgress
+					opdsChapterSortOrder
+					opdsCbzMimetype
+					koreaderSyncStrategyForward
+					koreaderSyncStrategyBackward
+					koreaderSyncPercentageTolerance
+					koreaderSyncChecksumMethod
+					excludeUnreadChapters
+					excludeNotStarted
+					excludeEntryWithUnreadChapters
+					excludeCompleted
+					autoDownloadNewChaptersLimit
+					autoDownloadNewChapters
+					autoDownloadIgnoreReUploads
+				}
+			}
+		}
+	`,
+	[]
+);
+
 export const updateWebUI = graphql(
 	`
 		mutation updateWebUI {
