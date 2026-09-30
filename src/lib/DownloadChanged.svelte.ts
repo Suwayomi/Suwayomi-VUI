@@ -24,8 +24,8 @@ const downloadSet = new Set([
 class DownloadChanged {
 	#cleanup = () => {};
 	#state:
-		| subscriptionStateReturn<ResultOf<typeof getDownloadChanged>>
-		| undefined = $state();
+		subscriptionStateReturn<ResultOf<typeof getDownloadChanged>> | undefined =
+		$state();
 	#store:
 		| NonNullable<
 				ResultOf<typeof getDownloadChanged>['downloadStatusChanged']['initial']
