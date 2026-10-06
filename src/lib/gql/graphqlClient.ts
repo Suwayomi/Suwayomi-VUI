@@ -51,6 +51,9 @@ import type { DownloadChanged } from './Subscriptions';
 
 export const client = new Client({
 	url: '/api/graphql',
+	fetchOptions: {
+		credentials: 'same-origin'
+	},
 	exchanges: [
 		cacheExchange({
 			keys: {
