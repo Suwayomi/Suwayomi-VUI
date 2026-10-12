@@ -334,7 +334,7 @@
 			<p class="whitespace-pre-line">{mangaFrag.description}</p>
 		</section>
 		<div class="flex w-full flex-wrap gap-2">
-			{#each mangaFrag?.genre as genre (genre)}
+			{#each new Set(mangaFrag?.genre) as genre (genre)}
 				{#if genre}
 					<a
 						href="/?q=genre:{makeSearchPart(genre)}"
@@ -344,8 +344,6 @@
 						{genre}
 					</a>
 				{/if}
-			{:else}
-				<div></div>
 			{/each}
 		</div>
 		<div>
